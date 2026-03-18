@@ -3,34 +3,40 @@ export default async function handler(req, res) {
     return res.status(200).send('OK');
   }
 
-  const body = req.body;
+  try {
+    const body = req.body;
 
-  if (!body.events) {
-    return res.status(200).send('OK');
-  }
+    if (!body.events || body.events.length === 0) {
+      return res.status(200).send('OK');
+    }
 
-  const event = body.events[0];
+    const event = body.events[0];
 
-  if (event.type === 'message') {
-    const replyToken = event.replyToken;
+    if (!event.replyToken) {
+      return res.status(200).send('OK');
+    }
 
+    // ตอบกลับ LINE แบบถูก format
     await fetch('https://api.line.me/v2/bot/message/reply', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer x/mWpT0XYnCfleNji48WWFSVsh1OFgWihA1lT9RdoVL87mfvLeEJqTZJQNLpWSd+bKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEv2eRy6VhfBZObZleYNjur+J47h9oWE1Ta1U+HeMerm6wdB04t89/1O/w1cDnyilFU='
+        'Authorization': 'Bearer RsUsRvXIvffmLup/hOPRpL01dw8MehItJcON7RcTPAkEee9jvChHfM2kJTmlfct+bKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEtJMWYJiBrQZrHt62mohYXm0e8PRjLb5ncmXQX5t+9d9gdB04t89/1O/w1cDnyilFU='
       },
       body: JSON.stringify({
-        replyToken: replyToken,
+        replyToken: event.replyToken,
         messages: [
           {
             type: 'text',
-            text: '💛 ระบบเชื่อมต่อสำเร็จแล้วนะ'
+            text: '💛 ระบบเชื่อมต่อสำเร็จแล้ว'
           }
         ]
       })
     });
-  }
 
-  return res.status(200).send('OK');
+    return res.status(200).send('OK');
+
+  } catch (err) {
+    return res.status(200).send('OK');
+  }
 }
