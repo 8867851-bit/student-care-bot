@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'SKoraNkHpWNwLSIhX88V17tVQaK6pzCnUA6Zdd9AwXzaUY3/00yYkhtJROVISNwobKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEusdJVEzL7jbZu3hEAHco/5IVmY7RrBXsaTbmS6xLSrWQdB04t89/1O/w1cDnyilFU='
+        'Authorization': 'Bearer x/mWpT0XYnCfleNji48WWFSVsh1OFgWihA1lT9RdoVL87mfvLeEJqTZJQNLpWSd+bKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEv2eRy6VhfBZObZleYNjur+J47h9oWE1Ta1U+HeMerm6wdB04t89/1O/w1cDnyilFU='
       },
       body: JSON.stringify({
         replyToken: replyToken,
