@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "4lUD0827K5XXnRyI9tJn9nXncbC9DHUuCSHMSOu01/UYrDLxnQGUKMGSWqoFoc+obKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEsaEgehAEIT0BfXujeuCcQ7maJoTCh/VH11mA3l7NbUbQdB04t89/1O/w1cDnyilFU=";
-
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz6IsrIGC5d9kbhUeMDIfmSsViIor053FdV9g52s0y8P6_WrAOaJqTzfCZmVHNg1i5aBw/exec";
 
 // session (ชั่วคราวพอสำหรับตอนนี้)
 const sessions = {};
@@ -27,7 +27,16 @@ export default async function handler(req, res) {
 
   return res.status(200).send("OK");
 }
-
+//===funtion===
+async function sendToSheet(data) {
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+}
 // ================= MESSAGE =================
 async function handleMessage(event) {
   return sendMainMenu(event.replyToken);
@@ -193,14 +202,25 @@ async function handlePostback(event) {
     sessions[userId].q4 = data;
     return sendQ5(replyToken);
   }
+if (data.startsWith("q5_")) {
+  sessions[userId].q5 = data;
 
-  if (data.startsWith("q5_")) {
-    sessions[userId].q5 = data;
+  const result = classify(sessions[userId]);
+  const caseId = Date.now();
 
-    const result = classify(sessions[userId]);
-    delete sessions[userId];
+  const payload = {
+    caseId,
+    userId,
+    ...sessions[userId],
+    level: result
+  };
 
-    // ===== RESPONSE =====
+  delete sessions[userId];
+
+  // ✅ ส่งไป Google Sheet
+  await sendToSheet(payload);
+
+   // ===== RESPONSE =====
     if (result === "red") {
       return replyText(replyToken,
         "💛 สิ่งที่คุณกำลังเผชิญมันดูหนักมากเลยนะ\n" +
@@ -224,6 +244,7 @@ async function handlePostback(event) {
     );
   }
 }
+
 
 // ================= UTIL =================
 async function replyFlex(replyToken, bubble) {
