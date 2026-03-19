@@ -90,57 +90,58 @@ async function handleMessage(event) {
 }
 
 // ================= POSTBACK =================
-
 async function handlePostback(event) {
   const data = event.postback.data;
   const userId = event.source.userId;
-if (data.startsWith("chooseRole_")) {
-  const caseId = data.replace("chooseRole_", "");
 
-  return replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      contents: [
-        {
-          type: "text",
-          text: "คุณเป็นใคร?",
-          weight: "bold"
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "นักเรียน",
-            data: "accept_" + caseId + "_student"
+  // ===== เลือก role =====
+  if (data.startsWith("chooseRole_")) {
+    const caseId = data.replace("chooseRole_", "");
+
+    return replyFlex(event.replyToken, {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "คุณเป็นใคร?", weight: "bold" },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "นักเรียน",
+              data: "accept_" + caseId + "_student"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "ครู",
+              data: "accept_" + caseId + "_teacher"
+            }
           }
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "ครู",
-            data: "accept_" + caseId + "_teacher"
-          }
-        }
-      ]
-    }
-  });
-}
-if (data.startsWith("accept_")) {
-  const parts = data.split("_");
-  const caseId = parts[1];
-  const role = parts[2];
+        ]
+      }
+    });
+  }
 
-  return acceptCase(caseId, userId, role, event.replyToken);
-}
+  // ===== รับเคส =====
+  if (data.startsWith("accept_")) {
+    const parts = data.split("_");
+    const caseId = parts[1];
+    const role = parts[2];
 
+    return acceptCase(caseId, userId, role, event.replyToken);
+  }
+
+  // ===== เริ่ม flow =====
   if (data.startsWith("start_")) {
     sessions[userId] = { flow: "talk", step: 0, answers: {} };
     return sendStep(userId, event.replyToken);
   }
 
+  // ===== flow ต่อ =====
   const s = sessions[userId];
   const flow = flows[s.flow];
   const step = flow.steps[s.step];
@@ -152,50 +153,34 @@ if (data.startsWith("accept_")) {
     return sendStep(userId, event.replyToken);
   }
 
+  // ===== จบ flow =====
   const level = classify(s.answers);
   const caseId = Date.now();
 
-await fetch(GAS_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ action: "create", caseId, userId, ...s.answers, level })
-});
-await notifyTeam(level, caseId, s.answers);
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "create", caseId, userId, ...s.answers, level })
+  });
 
-// ===== เช็คเวลา =====
-const now = new Date();
-const hour = now.getHours();
-let message = "";
+  await notifyTeam(level, caseId, s.answers);
 
-if (hour >= 8 && hour < 18) {
-  // 🟢 เวลาทำการ
-  message = `💛 เราได้รับเรื่องของคุณแล้วนะ
+  const eta = getExpectedTime();
+
+  const message = `💛 เราได้รับเรื่องของคุณแล้วนะ
 
 ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
-⏳ ปกติจะใช้เวลาไม่เกิน 1–3 ชั่วโมง
-
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียวแล้วนะ`;
-  
-} else {
-  // 🌙 นอกเวลาทำการ
-  message = `💛 เราได้รับเรื่องของคุณแล้วนะ
-
-ตอนนี้อยู่นอกเวลาทำการของทีม  
-(เปิดทุกวัน 08:00–18:00)
-
-🌅 ทีมจะเข้ามาดูเคสของคุณทันทีในช่วงเช้า  
-โดยปกติจะไม่เกิน 10:00 น.
+⏳ โดยปกติจะใช้เวลา ${eta}
 
 ถ้าคุณรู้สึกหนักมาก  
 คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
 
 คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
-}
 
-// 👉 reply ครั้งเดียวพอ
-await replyText(event.replyToken, message);
-delete sessions[userId];
-return;
+  await replyText(event.replyToken, message);
+
+  delete sessions[userId];
+}
   
 // ================= STEP =================
 async function sendStep(userId, replyToken) {
