@@ -203,16 +203,17 @@ async function handlePostback(event) {
 
   // ===== END FLOW =====
   const result = classify(session.answers);
+ const caseId = Date.now();
+await sendToSheet({
+  caseId,
+  userId,
+  ...session.answers,
+  level: result
+});
 
-  await sendToSheet({
-    caseId: Date.now(),
-    userId,
-    ...session.answers,
-    level: result
-  });
-
+// 🔥 เพิ่มบรรทัดนี้
+await notifyTeam(result, caseId, session.answers);
   delete sessions[userId];
-
   return sendResult(replyToken, result);
 }
 
@@ -322,4 +323,28 @@ async function replyText(replyToken, textMsg) {
 
   const text = await res.text();
   console.log("REPLY TEXT:", res.status, text);
+}
+async function notifyTeam(level, caseId, answers) {
+  if (!GROUP_ID) return;
+
+  const text =
+    "📌 เคสใหม่\n" +
+    "Level: " + level + "\n" +
+    "Case: " + caseId + "\n" +
+    "Q1: " + answers.q1;
+
+  const res = await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: GROUP_ID,
+      messages: [{ type: "text", text }]
+    })
+  });
+
+  const txt = await res.text();
+  console.log("PUSH:", res.status, txt);
 }
