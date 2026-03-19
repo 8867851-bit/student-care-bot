@@ -92,12 +92,19 @@ console.log("BODY:", JSON.stringify(body, null, 2));
 // ================= MESSAGE =================
 async function handleMessage(event) {
   const text = event.message.text;
+  const sourceType = event.source.type;
 
-  if (text === "start") {
+  // 👉 ถ้าเป็นแชทส่วนตัว → ขึ้นเมนูเลย
+  if (sourceType === "user") {
     return sendMainMenu(event.replyToken);
   }
 
-  return; // ไม่ตอบอะไร
+  // 👉 ถ้าเป็น group → ต้องพิมพ์ start
+  if (sourceType === "group" && text === "start") {
+    return sendMainMenu(event.replyToken);
+  }
+
+  return;
 }
 // ================= MENU =================
 async function sendMainMenu(replyToken) {
