@@ -308,15 +308,9 @@ async function notifyTeam(level, caseId, answers) {
     console.log("❌ PUSH ERROR:", err);
   }
 }
-
-  await fetch("https://api.line.me/v2/bot/message/push", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-    },
-    body: JSON.stringify({ to: GROUP_ID, messages: [flex] })
-  });
+  } catch (err) {
+    console.log("❌ PUSH ERROR:", err);
+  }
 }
 
 // ================= REPLY =================
