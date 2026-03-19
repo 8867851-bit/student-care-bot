@@ -280,6 +280,7 @@ if (data.status === "FULL") {
   return replyText(replyToken, "❌ เคสนี้เต็มแล้ว");
 }
 } 
+
 // ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers) {
   if (!GROUP_ID) return;
