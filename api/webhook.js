@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxea0yJn487moT_1mN6Mm1ma17yXtXd0jGt1jj4AuaMxKm8HuVLwIOEQtg5M_Tv4RzD3Q/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx-hWjJhcwnPugMTvhkg6QXyEBamHfA27zA8u5Egvcg37O4XAYleGJcHS3Jcf4EugLzWQ/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 // ================= SESSION =================
@@ -162,7 +162,14 @@ if (data.startsWith("accept_")) {
   });
 
   await notifyTeam(level, caseId, s.answers);
+await replyText(event.replyToken,
+`💛 เราได้รับเรื่องของคุณแล้วนะ
 
+ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่
+⏳ ปกติจะใช้เวลาไม่เกิน 1–3 ชั่วโมง (ช่วงเวลาเปิดทำการ)
+
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียวแล้วนะ`
+);
   delete sessions[userId];
 
   return replyText(event.replyToken, "ส่งเรื่องเรียบร้อย 💛");
@@ -259,28 +266,54 @@ async function sendMainMenu(replyToken) {
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, role, replyToken) {
   const name = await getUserName(userId);
+
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ action:"accept", caseId, userId, name, role })
   });
 
-const data = await res.json();
+  const data = await res.json();
 
-if (data.status === "OK") {
-  await replyText(replyToken, "✅ รับเคสแล้ว");
+  if (data.status === "OK") {
+    await replyText(replyToken, "✅ รับเคสแล้ว");
 
-  // 👇 แสดง owner ทั้งหมด
-  let text = `📌 เคส ${caseId}\n`;
-  data.owners.forEach((o, i) => { text += `👤 ${o} (${data.roles[i]})\n`;
+    // 👉 แจ้ง group (เหมือนเดิม)
+    let text = `📌 เคส ${caseId}\n`;
+    data.owners.forEach((o, i) => {
+      text += `👤 ${o} (${data.roles[i]})\n`;
+    });
+    await pushToGroup(text);
+
+    // 🔥🔥🔥 เพิ่มตรงนี้: แจ้ง USER
+    const targetUserId = data.targetUserId; // 👈 ต้องให้ GAS ส่งกลับมา
+
+    if (targetUserId) {
+      await pushToUser(targetUserId,
+`💛 มีพี่มารับเคสของคุณแล้วนะ
+
+พี่กำลังเตรียมติดต่อคุณอยู่
+คุณอยากคุยช่วงเวลาไหนบ้าง? 🌿`
+                       
+      ); } return; }
+  if (data.status === "FULL") {
+    return replyText(replyToken, "❌ เคสนี้เต็มแล้ว"); }
+  return replyText(replyToken, "⚠️ error");}
+
+//====== Push to user ======
+async function pushToUser(userId, text) {
+  await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: userId,
+      messages: [{ type: "text", text }]
+    })
   });
-await pushToGroup(text);
-}  
-if (data.status === "FULL") {
-  return replyText(replyToken, "❌ เคสนี้เต็มแล้ว");
 }
-} 
-
 // ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers) {
   if (!GROUP_ID) return;
