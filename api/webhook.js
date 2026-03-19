@@ -4,6 +4,39 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbwR5EWa2ScoFP3Yalet9mWo
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 // ================= SESSION =================
 const sessions = {};
+//========= Flex=====
+const flex = {
+  type: "flex",
+  altText: "มีเคสใหม่",
+  contents: {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "📌 เคสใหม่", weight: "bold" },
+        { type: "text", text: "Level: " + level },
+        { type: "text", text: "Case: " + caseId },
+        { type: "text", text: "Q1: " + answers.q1, wrap: true }
+      ]
+    },
+    footer: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        {
+          type: "button",
+          style: "primary",
+          action: {
+            type: "postback",
+            label: "รับเคสนี้",
+            data: "accept_" + caseId
+          }
+        }
+      ]
+    }
+  }
+};
 
 // ================= FLOW DEFINITION =================
 const flows = {
@@ -173,6 +206,10 @@ async function handlePostback(event) {
   const replyToken = event.replyToken;
 
   // เริ่ม flow
+  if (data.startsWith("accept_")) {
+  const caseId = data.replace("accept_", "");
+  return acceptCase(caseId, userId, replyToken);
+}
   if (data.startsWith("start_")) {
     const flowName = data.replace("start_", "");
     sessions[userId] = {
@@ -324,6 +361,29 @@ async function replyText(replyToken, textMsg) {
   const text = await res.text();
   console.log("REPLY TEXT:", res.status, text);
 }
+//======== รับเคส=======
+async function acceptCase(caseId, userId, replyToken) {
+  // TODO: ไปเช็คใน sheet ก่อน (เดี๋ยวทำ step ถัดไป)
+
+  await replyText(replyToken, "✅ รับเคสเรียบร้อย");
+
+  await pushToGroup("📌 เคส " + caseId + " มีคนรับแล้ว");
+}
+//====== Push to group ======
+async function pushToGroup(text) {
+  await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: GROUP_ID,
+      messages: [{ type: "text", text }]
+    })
+  });
+}
+//====== Notify team=======
 async function notifyTeam(level, caseId, answers) {
   if (!GROUP_ID) return;
 
