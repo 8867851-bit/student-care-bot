@@ -7,57 +7,57 @@ const sessions = {};
 
 // ================= FLOW DEFINITION =================
 const flows = {
-  flows.talk = {
-  steps: [
-    {
-      key: "q1",
-      text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ\nตอนนี้คุณอยากคุยเกี่ยวกับอะไร?",
-      options: [
-        { label: "ความเครียด", value: "stress" },
-        { label: "เรื่องเรียน", value: "academic" },
-        { label: "ความสัมพันธ์", value: "relationship" },
-        { label: "ความรู้สึกตัวเอง", value: "self" }
-      ]
-    },
-    {
-      key: "q2",
-      text: "เรื่องนี้เกิดมานานแค่ไหนแล้ว?",
-      options: [
-        { label: "เพิ่งเกิด", value: "short" },
-        { label: "สักพักแล้ว", value: "medium" },
-        { label: "นานแล้ว", value: "long" }
-      ]
-    },
-    {
-      key: "q3",
-      text: "เรื่องนี้ส่งผลกับชีวิตคุณแค่ไหน?",
-      options: [
-        { label: "นิดหน่อย", value: "low" },
-        { label: "พอสมควร", value: "medium" },
-        { label: "มาก", value: "high" }
-      ]
-    },
-    {
-      key: "q4",
-      text: "ตอนนี้คุณมีใครคุยเรื่องนี้อยู่ไหม?",
-      options: [
-        { label: "ยังไม่มี", value: "none" },
-        { label: "มีเพื่อน", value: "friend" },
-        { label: "มีครู/ผู้ใหญ่", value: "adult" }
-      ]
-    },
-    {
-      key: "q5",
-      text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหน?",
-      options: [
-        { label: "คุยกับพี่นักเรียน", value: "peer" },
-        { label: "คุยกับครู", value: "teacher" },
-        { label: "แค่ระบาย", value: "listen" }
-      ]
-    }
-  ]
+  talk: {
+    steps: [
+      {
+        key: "q1",
+        text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ\nตอนนี้คุณอยากคุยเกี่ยวกับอะไร?",
+        options: [
+          { label: "ความเครียด", value: "stress" },
+          { label: "เรื่องเรียน", value: "academic" },
+          { label: "ความสัมพันธ์", value: "relationship" },
+          { label: "ความรู้สึกตัวเอง", value: "self" }
+        ]
+      },
+      {
+        key: "q2",
+        text: "เรื่องนี้เกิดมานานแค่ไหนแล้ว?",
+        options: [
+          { label: "เพิ่งเกิด", value: "short" },
+          { label: "สักพักแล้ว", value: "medium" },
+          { label: "นานแล้ว", value: "long" }
+        ]
+      },
+      {
+        key: "q3",
+        text: "เรื่องนี้ส่งผลกับชีวิตคุณแค่ไหน?",
+        options: [
+          { label: "นิดหน่อย", value: "low" },
+          { label: "พอสมควร", value: "medium" },
+          { label: "มาก", value: "high" }
+        ]
+      },
+      {
+        key: "q4",
+        text: "ตอนนี้คุณมีใครคุยเรื่องนี้อยู่ไหม?",
+        options: [
+          { label: "ยังไม่มี", value: "none" },
+          { label: "มีเพื่อน", value: "friend" },
+          { label: "มีครู/ผู้ใหญ่", value: "adult" }
+        ]
+      },
+      {
+        key: "q5",
+        text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหน?",
+        options: [
+          { label: "คุยกับพี่นักเรียน", value: "peer" },
+          { label: "คุยกับครู", value: "teacher" },
+          { label: "แค่ระบาย", value: "listen" }
+        ]
+      }
+    ]
+  }
 };
-
 // ================= MAIN =================
 export default async function handler(req, res) {
   try {
