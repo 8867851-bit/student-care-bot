@@ -229,7 +229,7 @@ async function sendToSheet(data) {
 
 // ================= REPLY =================
 async function replyFlex(replyToken, bubble) {
-  await fetch("https://api.line.me/v2/bot/message/reply", {
+  const res = await fetch("https://api.line.me/v2/bot/message/reply", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -240,10 +240,13 @@ async function replyFlex(replyToken, bubble) {
       messages: [{ type: "flex", altText: "question", contents: bubble }]
     })
   });
+
+  const text = await res.text();
+  console.log("REPLY FLEX:", res.status, text);
 }
 
-async function replyText(replyToken, text) {
-  await fetch("https://api.line.me/v2/bot/message/reply", {
+async function replyText(replyToken, textMsg) {
+  const res = await fetch("https://api.line.me/v2/bot/message/reply", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -251,7 +254,10 @@ async function replyText(replyToken, text) {
     },
     body: JSON.stringify({
       replyToken,
-      messages: [{ type: "text", text }]
+      messages: [{ type: "text", text: textMsg }]
     })
   });
+
+  const text = await res.text();
+  console.log("REPLY TEXT:", res.status, text);
 }
