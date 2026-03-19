@@ -229,7 +229,6 @@ async function acceptCase(caseId, userId, replyToken) {
 
   return replyText(replyToken, "⚠️ error");
 }
-
 // ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers) {
   if (!GROUP_ID) {
@@ -308,11 +307,6 @@ async function notifyTeam(level, caseId, answers) {
     console.log("❌ PUSH ERROR:", err);
   }
 }
-  } catch (err) {
-    console.log("❌ PUSH ERROR:", err);
-  }
-}
-
 // ================= REPLY =================
 async function replyText(token, text) {
   await fetch("https://api.line.me/v2/bot/message/reply", {
