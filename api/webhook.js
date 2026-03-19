@@ -265,13 +265,21 @@ async function acceptCase(caseId, userId, role, replyToken) {
     body: JSON.stringify({ action:"accept", caseId, userId, name, role })
   });
 
-  const txt = await res.text();
+const data = await res.json();
 
-  if (txt === "OK") return replyText(replyToken, "✅ รับเคสแล้ว");
-  if (txt === "TAKEN") return replyText(replyToken, "❌ เคสเต็มแล้ว");
+if (data.status === "OK") {
+  await replyText(replyToken, "✅ รับเคสแล้ว");
 
-  return replyText(replyToken, "⚠️ error");
+  // 👇 แสดง owner ทั้งหมด
+  let text = `📌 เคส ${caseId}\n`;
+  data.owners.forEach((o, i) => { text += `👤 ${o} (${data.roles[i]})\n`;
+  });
+await pushToGroup(text);
+}  
+if (data === "FULL") {
+  return replyText(replyToken, "❌ เคสนี้เต็มแล้ว");
 }
+  
 // ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers) {
   if (!GROUP_ID) return;
@@ -369,4 +377,15 @@ async function replyFlex(replyToken, bubble) {
       }]
     })
   });
+}
+//======== เพิ่มชื่อคน ========
+async function getUserName(userId) {
+  const res = await fetch(`https://api.line.me/v2/bot/profile/${userId}`, {
+    headers: {
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    }
+  });
+
+  const data = await res.json();
+  return data.displayName || userId;
 }
