@@ -90,14 +90,54 @@ async function sendMainMenu(replyToken) {
     body: {
       type: "box",
       layout: "vertical",
+      spacing: "md",
       contents: [
-        { type: "text", text: "💛 Student Care TU", weight: "bold" },
-        { type: "text", text: "วันนี้คุณอยากทำอะไร?" },
-
-        { type: "button", action: { type: "postback", label: "คุยเรื่องที่หนักใจ", data: "start_talk" }},
-        { type: "button", action: { type: "postback", label: "รวมข้อมูล", data: "menu_resource" }},
-        { type: "button", action: { type: "postback", label: "กิจกรรม", data: "menu_activity" }},
-        { type: "button", action: { type: "postback", label: "เหตุการณ์เร่งด่วน", data: "menu_urgent" }}
+        {
+          type: "text",
+          text: "💛 Student Care TU",
+          weight: "bold",
+          size: "lg"
+        },
+        {
+          type: "text",
+          text: "วันนี้คุณอยากทำอะไร?"
+        },
+        {
+          type: "button",
+          style: "primary",
+          action: {
+            type: "postback",
+            label: "คุยเรื่องที่หนักใจ",
+            data: "start_talk"
+          }
+        },
+        {
+          type: "button",
+          style: "secondary",
+          action: {
+            type: "postback",
+            label: "รวมข้อมูล",
+            data: "menu_resource"
+          }
+        },
+        {
+          type: "button",
+          style: "secondary",
+          action: {
+            type: "postback",
+            label: "กิจกรรม",
+            data: "menu_activity"
+          }
+        },
+        {
+          type: "button",
+          style: "secondary",
+          action: {
+            type: "postback",
+            label: "เหตุการณ์เร่งด่วน",
+            data: "menu_urgent"
+          }
+        }
       ]
     }
   });
