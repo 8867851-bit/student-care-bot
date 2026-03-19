@@ -4,39 +4,6 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbwR5EWa2ScoFP3Yalet9mWo
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 // ================= SESSION =================
 const sessions = {};
-//========= Flex=====
-const flex = {
-  type: "flex",
-  altText: "มีเคสใหม่",
-  contents: {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      contents: [
-        { type: "text", text: "📌 เคสใหม่", weight: "bold" },
-        { type: "text", text: "Level: " + level },
-        { type: "text", text: "Case: " + caseId },
-        { type: "text", text: "Q1: " + answers.q1, wrap: true }
-      ]
-    },
-    footer: {
-      type: "box",
-      layout: "vertical",
-      contents: [
-        {
-          type: "button",
-          style: "primary",
-          action: {
-            type: "postback",
-            label: "รับเคสนี้",
-            data: "accept_" + caseId
-          }
-        }
-      ]
-    }
-  }
-};
 
 // ================= FLOW DEFINITION =================
 const flows = {
@@ -406,5 +373,6 @@ async function notifyTeam(level, caseId, answers) {
   });
 
   const txt = await res.text();
+  
   console.log("PUSH:", res.status, txt);
 }
