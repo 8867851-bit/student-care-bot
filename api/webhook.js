@@ -276,10 +276,10 @@ if (data.status === "OK") {
   });
 await pushToGroup(text);
 }  
-if (data === "FULL") {
+if (data.status === "FULL") {
   return replyText(replyToken, "❌ เคสนี้เต็มแล้ว");
 }
-  
+} 
 // ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers) {
   if (!GROUP_ID) return;
@@ -377,15 +377,4 @@ async function replyFlex(replyToken, bubble) {
       }]
     })
   });
-}
-//======== เพิ่มชื่อคน ========
-async function getUserName(userId) {
-  const res = await fetch(`https://api.line.me/v2/bot/profile/${userId}`, {
-    headers: {
-      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-    }
-  });
-
-  const data = await res.json();
-  return data.displayName || userId;
 }
