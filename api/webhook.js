@@ -80,7 +80,13 @@ const events = body.events || [];
 
 // ================= MESSAGE =================
 async function handleMessage(event) {
-  return sendMainMenu(event.replyToken);
+  const text = event.message.text;
+
+  if (text === "start") {
+    return sendMainMenu(event.replyToken);
+  }
+
+  return; // ไม่ตอบอะไร
 }
 // ================= MENU =================
 async function sendMainMenu(replyToken) {
