@@ -1,7 +1,8 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "4lUD0827K5XXnRyI9tJn9nXncbC9DHUuCSHMSOu01/UYrDLxnQGUKMGSWqoFoc+obKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEsaEgehAEIT0BfXujeuCcQ7maJoTCh/VH11mA3l7NbUbQdB04t89/1O/w1cDnyilFU=";
 
-// session
+
+// session (ชั่วคราวพอสำหรับตอนนี้)
 const sessions = {};
 
 // ================= MAIN =================
@@ -34,28 +35,23 @@ async function handleMessage(event) {
 
 // ================= MAIN MENU =================
 async function sendMainMenu(replyToken) {
-  const flex = {
-    type: "flex",
-    altText: "เมนูหลัก",
-    contents: {
-      type: "bubble",
-      body: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-          { type: "text", text: "💛 Student Care TU", weight: "bold" },
-          { type: "text", text: "วันนี้คุณอยากทำอะไร" },
+  return replyFlex(replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+        { type: "text", text: "💛 Student Care TU", weight: "bold" },
+        { type: "text", text: "วันนี้คุณอยากทำอะไร?" },
 
-          { type: "button", action: { type: "postback", label: "คุยเรื่องที่หนักใจ", data: "menu_talk" }},
-          { type: "button", action: { type: "postback", label: "รวมข้อมูล", data: "menu_resource" }},
-          { type: "button", action: { type: "postback", label: "กิจกรรม / โครงการ", data: "menu_activity" }},
-          { type: "button", action: { type: "postback", label: "เหตุการณ์เร่งด่วน", data: "menu_urgent" }}
-        ]
-      }
+        { type: "button", action: { type: "postback", label: "คุยเรื่องที่หนักใจ", data: "menu_talk" }},
+        { type: "button", action: { type: "postback", label: "รวมข้อมูล", data: "menu_resource" }},
+        { type: "button", action: { type: "postback", label: "กิจกรรม / โครงการ", data: "menu_activity" }},
+        { type: "button", action: { type: "postback", label: "เหตุการณ์เร่งด่วน", data: "menu_urgent" }}
+      ]
     }
-  };
-
-  return replyFlex(replyToken, flex);
+  });
 }
 
 // ================= Q1 =================
@@ -67,7 +63,7 @@ async function sendQ1(replyToken) {
       layout: "vertical",
       contents: [
         { type: "text", text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ", weight: "bold" },
-        { type: "text", text: "ตอนนี้คุณอยากคุยเกี่ยวกับอะไร" },
+        { type: "text", text: "ตอนนี้คุณอยากคุยเกี่ยวกับอะไร?" },
 
         { type: "button", action: { type: "postback", label: "ความเครียด", data: "q1_stress" }},
         { type: "button", action: { type: "postback", label: "เรื่องเรียน", data: "q1_academic" }},
@@ -86,7 +82,7 @@ async function sendQ2(replyToken) {
       type: "box",
       layout: "vertical",
       contents: [
-        { type: "text", text: "เรื่องนี้เกิดมานานแค่ไหนแล้ว", weight: "bold" },
+        { type: "text", text: "เรื่องนี้เกิดมานานแค่ไหนแล้ว?" , weight: "bold" },
 
         { type: "button", action: { type: "postback", label: "เพิ่งเกิด", data: "q2_short" }},
         { type: "button", action: { type: "postback", label: "สักพักแล้ว", data: "q2_medium" }},
@@ -104,7 +100,7 @@ async function sendQ3(replyToken) {
       type: "box",
       layout: "vertical",
       contents: [
-        { type: "text", text: "เรื่องนี้ส่งผลกับชีวิตคุณแค่ไหน", weight: "bold" },
+        { type: "text", text: "เรื่องนี้ส่งผลกับชีวิตคุณแค่ไหน?" , weight: "bold" },
 
         { type: "button", action: { type: "postback", label: "นิดหน่อย", data: "q3_low" }},
         { type: "button", action: { type: "postback", label: "พอสมควร", data: "q3_medium" }},
@@ -112,6 +108,62 @@ async function sendQ3(replyToken) {
       ]
     }
   });
+}
+
+// ================= Q4 =================
+async function sendQ4(replyToken) {
+  return replyFlex(replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "ตอนนี้คุณมีใครคุยเรื่องนี้อยู่ไหม?" , weight: "bold" },
+
+        { type: "button", action: { type: "postback", label: "ยังไม่มี", data: "q4_none" }},
+        { type: "button", action: { type: "postback", label: "มีเพื่อน", data: "q4_friend" }},
+        { type: "button", action: { type: "postback", label: "มีครู/ผู้ใหญ่", data: "q4_adult" }}
+      ]
+    }
+  });
+}
+
+// ================= Q5 =================
+async function sendQ5(replyToken) {
+  return replyFlex(replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหน?" , weight: "bold" },
+
+        { type: "button", action: { type: "postback", label: "คุยกับพี่นักเรียน", data: "q5_peer" }},
+        { type: "button", action: { type: "postback", label: "คุยกับครู", data: "q5_teacher" }},
+        { type: "button", action: { type: "postback", label: "แค่อยากระบาย", data: "q5_listen" }}
+      ]
+    }
+  });
+}
+
+// ================= CLASSIFY =================
+function classify(s) {
+  let score = 0;
+
+  // duration
+  if (s.q2 === "q2_long") score += 2;
+  if (s.q2 === "q2_medium") score += 1;
+
+  // impact
+  if (s.q3 === "q3_high") score += 3;
+  if (s.q3 === "q3_medium") score += 2;
+
+  // support
+  if (s.q4 === "q4_none") score += 2;
+
+  if (score >= 5) return "red";
+  if (score >= 3) return "yellow";
+  return "green";
 }
 
 // ================= POSTBACK =================
@@ -134,7 +186,42 @@ async function handlePostback(event) {
 
   if (data.startsWith("q3_")) {
     sessions[userId].q3 = data;
-    return replyText(replyToken, "🔥 อีก 2 ข้อจะจบแล้ว");
+    return sendQ4(replyToken);
+  }
+
+  if (data.startsWith("q4_")) {
+    sessions[userId].q4 = data;
+    return sendQ5(replyToken);
+  }
+
+  if (data.startsWith("q5_")) {
+    sessions[userId].q5 = data;
+
+    const result = classify(sessions[userId]);
+    delete sessions[userId];
+
+    // ===== RESPONSE =====
+    if (result === "red") {
+      return replyText(replyToken,
+        "💛 สิ่งที่คุณกำลังเผชิญมันดูหนักมากเลยนะ\n" +
+        "คุณไม่จำเป็นต้องรับมือกับมันคนเดียว\n\n" +
+        "ทีมของเราจะช่วยประสานให้คุณได้คุยกับผู้ใหญ่ที่สามารถช่วยคุณได้\n" +
+        "และเราจะอยู่ข้างคุณในขั้นตอนนี้นะ"
+      );
+    }
+
+    if (result === "yellow") {
+      return replyText(replyToken,
+        "💛 ขอบคุณที่เล่าให้เราฟังนะ\n" +
+        "เดี๋ยวเราจะหาพี่นักเรียนที่ผ่านการเทรนแล้ว\n" +
+        "มาคุยและอยู่เป็นเพื่อนคุณนะ"
+      );
+    }
+
+    return replyText(replyToken,
+      "🌿 ขอบคุณที่เปิดใจนะ\n" +
+      "คุณอาจลองเริ่มจาก resource หรือเล่าให้เราฟังเพิ่มเติมก็ได้เสมอเลยนะ"
+    );
   }
 }
 
