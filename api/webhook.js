@@ -2,10 +2,15 @@
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
 const GAS_URL = "https://script.google.com/macros/s/AKfycbz8eTq55lV4wuMZs5xbTeO7D5YnoHuqyqVOKTscLSRUQDr5Njae3qMosYJCqpQT19IS_Q/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
+// ================= CONFIG =================
+const CHANNEL_ACCESS_TOKEN = "YOUR_TOKEN";
+const GAS_URL = "YOUR_GAS_URL";
+const GROUP_ID = "YOUR_GROUP_ID";
+
 // ================= SESSION =================
 const sessions = {};
 
-// ================= FLOW DEFINITION =================
+// ================= FLOW =================
 const flows = {
   talk: {
     steps: [
@@ -58,173 +63,77 @@ const flows = {
     ]
   }
 };
+
 // ================= MAIN =================
 export default async function handler(req, res) {
-  try {
-    if (req.method === "GET") return res.status(200).send("OK");
+  if (req.method === "GET") return res.status(200).send("OK");
 
- let body;
+  const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  const events = body?.events || [];
 
-try {
-  body = typeof req.body === "string"
-    ? JSON.parse(req.body)
-    : req.body;
-} catch (e) {
-  body = {};
-}
-
-const events = body?.events || [];
-
-console.log("BODY:", JSON.stringify(body, null, 2));
-
-    for (const event of events) {
-      if (event.type === "message") await handleMessage(event);
-      if (event.type === "postback") await handlePostback(event);
-    }
-  } catch (err) {
-    console.log("ERROR:", err);
+  for (const event of events) {
+    if (event.type === "message") await handleMessage(event);
+    if (event.type === "postback") await handlePostback(event);
   }
+
   return res.status(200).send("OK");
 }
+
 // ================= MESSAGE =================
 async function handleMessage(event) {
   const text = event.message.text;
-  const sourceType = event.source.type;
+  const type = event.source.type;
 
-  // 👉 ถ้าเป็นแชทส่วนตัว → ขึ้นเมนูเลย
-  if (sourceType === "user") {
-    return sendMainMenu(event.replyToken);
-  }
-
-  // 👉 ถ้าเป็น group → ต้องพิมพ์ start
-  if (sourceType === "group" && text === "start") {
-    return sendMainMenu(event.replyToken);
-  }
-
-  return;
-}
-// ================= MENU =================
-async function sendMainMenu(replyToken) {
-  return replyFlex(replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents: [
-        {
-          type: "text",
-          text: "💛 Student Care TU",
-          weight: "bold",
-          size: "lg"
-        },
-        {
-          type: "text",
-          text: "วันนี้คุณอยากทำอะไร?"
-        },
-        {
-          type: "button",
-          style: "primary",
-          action: {
-            type: "postback",
-            label: "คุยเรื่องที่หนักใจ",
-            data: "start_talk"
-          }
-        },
-        {
-          type: "button",
-          style: "secondary",
-          action: {
-            type: "postback",
-            label: "รวมข้อมูล",
-            data: "menu_resource"
-          }
-        },
-        {
-          type: "button",
-          style: "secondary",
-          action: {
-            type: "postback",
-            label: "กิจกรรม",
-            data: "menu_activity"
-          }
-        },
-        {
-          type: "button",
-          style: "secondary",
-          action: {
-            type: "postback",
-            label: "เหตุการณ์เร่งด่วน",
-            data: "menu_urgent"
-          }
-        }
-      ]
-    }
-  });
+  if (type === "user") return sendMainMenu(event.replyToken);
+  if (type === "group" && text === "start") return sendMainMenu(event.replyToken);
 }
 
-// ================= ENGINE =================
+// ================= POSTBACK =================
 async function handlePostback(event) {
   const data = event.postback.data;
   const userId = event.source.userId;
-  const replyToken = event.replyToken;
 
-  // เริ่ม flow
   if (data.startsWith("accept_")) {
-  const caseId = data.replace("accept_", "");
-  return acceptCase(caseId, userId, replyToken);
-}
+    const caseId = data.replace("accept_", "");
+    return acceptCase(caseId, userId, event.replyToken);
+  }
+
   if (data.startsWith("start_")) {
-    const flowName = data.replace("start_", "");
-    sessions[userId] = {
-      flow: flowName,
-      step: 0,
-      answers: {}
-    };
-    return sendStep(userId, replyToken);
+    sessions[userId] = { flow: "talk", step: 0, answers: {} };
+    return sendStep(userId, event.replyToken);
   }
 
-  const session = sessions[userId];
- if (!session || !flows[session.flow]) {
-  return sendMainMenu(replyToken);
-}
+  const s = sessions[userId];
+  const flow = flows[s.flow];
+  const step = flow.steps[s.step];
 
-  const flow = flows[session.flow];
-  const currentStep = flow.steps[session.step];
+  s.answers[step.key] = data;
+  s.step++;
 
-  // save answer
-  session.answers[currentStep.key] = data;
-
-  // next step
-  session.step++;
-
-  if (session.step < flow.steps.length) {
-    return sendStep(userId, replyToken);
+  if (s.step < flow.steps.length) {
+    return sendStep(userId, event.replyToken);
   }
 
-  // ===== END FLOW =====
-  const result = classify(session.answers);
- const caseId = Date.now();
-await sendToSheet({
-  caseId,
-  userId,
-  ...session.answers,
-  level: result,
-  status: "pending",
-  owner: ""
-});
+  const level = classify(s.answers);
+  const caseId = Date.now();
 
-// 🔥 เพิ่มบรรทัดนี้
-await notifyTeam(result, caseId, session.answers);
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "create", caseId, userId, ...s.answers, level })
+  });
+
+  await notifyTeam(level, caseId, s.answers);
+
   delete sessions[userId];
-  return sendResult(replyToken, result);
+
+  return replyText(event.replyToken, "ส่งเรื่องเรียบร้อย 💛");
 }
 
-// ================= SEND STEP =================
+// ================= STEP =================
 async function sendStep(userId, replyToken) {
-  const session = sessions[userId];
-  const flow = flows[session.flow];
-  const step = flow.steps[session.step];
+  const s = sessions[userId];
+  const step = flows[s.flow].steps[s.step];
 
   return replyFlex(replyToken, {
     type: "bubble",
@@ -233,13 +142,9 @@ async function sendStep(userId, replyToken) {
       layout: "vertical",
       contents: [
         { type: "text", text: step.text, wrap: true },
-        ...step.options.map(opt => ({
+        ...step.options.map(o => ({
           type: "button",
-          action: {
-            type: "postback",
-            label: opt.label,
-            data: opt.value
-          }
+          action: { type: "postback", label: o.label, data: o.value }
         }))
       ]
     }
@@ -249,13 +154,8 @@ async function sendStep(userId, replyToken) {
 // ================= CLASSIFY =================
 function classify(s) {
   let score = 0;
-
   if (s.q2 === "long") score += 2;
-  if (s.q2 === "medium") score += 1;
-
   if (s.q3 === "high") score += 3;
-  if (s.q3 === "medium") score += 2;
-
   if (s.q4 === "none") score += 2;
 
   if (score >= 5) return "red";
@@ -263,120 +163,27 @@ function classify(s) {
   return "green";
 }
 
-// ================= RESULT =================
-function sendResult(replyToken, level) {
-  if (level === "red") {
-    return replyText(replyToken,
-      "💛 เรื่องนี้หนักมากเลยนะ\nเราจะช่วยพาคุณไปหาผู้ใหญ่ที่ช่วยได้ทันทีนะ"
-    );
-  }
-
-  if (level === "yellow") {
-    return replyText(replyToken,
-      "💛 เดี๋ยวเราจะหาพี่ไปคุยกับคุณนะ"
-    );
-  }
-
-  return replyText(replyToken,
-    "🌿 ลองเริ่มจาก resource หรือเล่ากับเราเพิ่มได้เลยนะ"
-  );
-}
-
-// ================= SHEET =================
-async function sendToSheet(data) {
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      action: "create",   // 👈 สำคัญมาก
-      ...data
-    })
-  });
-}
-//======== รับเคส=======
+// ================= ACCEPT =================
 async function acceptCase(caseId, userId, replyToken) {
-
   const res = await fetch(GAS_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      action: "accept",   // 👈 สำคัญมาก
-      caseId,
-      userId
-    })
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ action:"accept", caseId, userId })
   });
 
-  const result = await res.text();
+  const txt = await res.text();
 
-  if (result === "OK") {
-    await replyText(replyToken, "✅ รับเคสเรียบร้อย");
-    await pushToGroup("📌 เคส " + caseId + " มีคนรับแล้ว");
-  } else if (result === "TAKEN") {
-    await replyText(replyToken, "❌ เคสนี้มีคนรับไปแล้ว");
-  } else {
-    await replyText(replyToken, "⚠️ เกิดข้อผิดพลาด");
-  }
-}
-// ================= REPLY =================
-async function replyFlex(replyToken, bubble) {
-  const res = await fetch("https://api.line.me/v2/bot/message/reply", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-    },
-    body: JSON.stringify({
-      replyToken,
-      messages: [{ type: "flex", altText: "question", contents: bubble }]
-    })
-  });
+  if (txt === "OK") return replyText(replyToken, "✅ รับเคสแล้ว");
+  if (txt === "TAKEN") return replyText(replyToken, "❌ เคสเต็มแล้ว");
 
-  const text = await res.text();
-  console.log("REPLY FLEX:", res.status, text);
+  return replyText(replyToken, "⚠️ error");
 }
 
-async function replyText(replyToken, textMsg) {
-  const res = await fetch("https://api.line.me/v2/bot/message/reply", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-    },
-    body: JSON.stringify({
-      replyToken,
-      messages: [{ type: "text", text: textMsg }]
-    })
-  });
-
-  const text = await res.text();
-  console.log("REPLY TEXT:", res.status, text);
-}
-//====== Push to group ======
-async function pushToGroup(text) {
-  await fetch("https://api.line.me/v2/bot/message/push", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-    },
-    body: JSON.stringify({
-      to: GROUP_ID,
-      messages: [{ type: "text", text }]
-    })
-  });
-}
-
-//==== Notify team ====
+// ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers) {
-  if (!GROUP_ID) return;
-
   const flex = {
     type: "flex",
-    altText: "มีเคสใหม่",
+    altText: "เคสใหม่",
     contents: {
       type: "bubble",
       body: {
@@ -385,41 +192,49 @@ async function notifyTeam(level, caseId, answers) {
         contents: [
           { type: "text", text: "📌 เคสใหม่", weight: "bold" },
           { type: "text", text: "Level: " + level },
-          { type: "text", text: "Case: " + caseId },
+          { type: "text", text: "Need: " + answers.q5 },
           { type: "text", text: answers.q1, wrap: true }
         ]
       },
       footer: {
         type: "box",
-        layout: "vertical",
-        contents: [
-          {
-            type: "button",
-            style: "primary",
-            action: {
-              type: "postback",
-              label: "รับเคสนี้",
-              data: "accept_" + caseId
-            }
+        contents: [{
+          type: "button",
+          action: {
+            type: "postback",
+            label: "รับเคส",
+            data: "accept_" + caseId
           }
-        ]
+        }]
       }
     }
   };
 
-  const res = await fetch("https://api.line.me/v2/bot/message/push", {
+  await fetch("https://api.line.me/v2/bot/message/push", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
     },
-    body: JSON.stringify({
-      to: GROUP_ID,
-      messages: [flex]
-    })
+    body: JSON.stringify({ to: GROUP_ID, messages: [flex] })
   });
-
-  const txt = await res.text();
-  console.log("PUSH:", res.status, txt);
 }
 
+// ================= REPLY =================
+async function replyText(token, text) {
+  await fetch("https://api.line.me/v2/bot/message/reply", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      replyToken: token,
+      messages:[{ type:"text", text }]
+    })
+  });
+}
+
+async function replyFlex(token, contents) {
+  await replyText(token, "...");
+}
