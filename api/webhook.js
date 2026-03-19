@@ -10,7 +10,7 @@ export default async function handler(req, res) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + process.env.CHANNEL_ACCESS_TOKEN
+            "Authorization": "Bearer " + process.env.Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=
           },
           body: JSON.stringify({
             replyToken: event.replyToken,
