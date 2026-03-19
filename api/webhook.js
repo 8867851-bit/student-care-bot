@@ -81,14 +81,11 @@ console.log("BODY:", JSON.stringify(body, null, 2));
       if (event.type === "message") await handleMessage(event);
       if (event.type === "postback") await handlePostback(event);
     }
-
   } catch (err) {
     console.log("ERROR:", err);
   }
-
   return res.status(200).send("OK");
 }
-
 // ================= MESSAGE =================
 async function handleMessage(event) {
   const text = event.message.text;
@@ -346,7 +343,13 @@ async function pushToGroup(text) {
     },
     body: JSON.stringify({
       to: GROUP_ID,
- async function notifyTeam(level, caseId, answers) {
+      messages: [{ type: "text", text }]
+    })
+  });
+}
+
+//==== Notify team ====
+async function notifyTeam(level, caseId, answers) {
   if (!GROUP_ID) return;
 
   const flex = {
@@ -397,32 +400,4 @@ async function pushToGroup(text) {
   const txt = await res.text();
   console.log("PUSH:", res.status, txt);
 }
-    })
-  });
-}
-//====== Notify team=======
-async function notifyTeam(level, caseId, answers) {
-  if (!GROUP_ID) return;
 
-  const text =
-    "📌 เคสใหม่\n" +
-    "Level: " + level + "\n" +
-    "Case: " + caseId + "\n" +
-    "Q1: " + answers.q1;
-
-  const res = await fetch("https://api.line.me/v2/bot/message/push", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-    },
-    body: JSON.stringify({
-      to: GROUP_ID,
-      messages: [{ type: "text", text }]
-    })
-  });
-
-  const txt = await res.text();
-  
-  console.log("PUSH:", res.status, txt);
-}
