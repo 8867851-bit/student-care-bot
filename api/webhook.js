@@ -221,10 +221,11 @@ async function sendMainMenu(replyToken) {
 }
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, replyToken) {
+  const name = await getUserName(userId);
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ action:"accept", caseId, userId })
+    body: JSON.stringify({ action:"accept", caseId, userId, name })
   });
 
   const txt = await res.text();
@@ -285,6 +286,20 @@ const text = await res.text();
 console.log("STATUS:", res.status);
 console.log("RESPONSE:", text);
 
+}
+//====== ดึงชื่อ ========
+async function getUserName(userId) {
+  const res = await fetch(
+    `https://api.line.me/v2/bot/profile/${userId}`,
+    {
+      headers: {
+        "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+      }
+    }
+  );
+
+  const data = await res.json();
+  return data.displayName;
 }
 // ================= REPLY =================
 async function replyText(token, text) {
