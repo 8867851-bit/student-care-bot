@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzbOgGGwOGwwSrt_Mht8dzA6n4ed-MzINv2T_dig8wrw39M1mzqI3uK55Jtl86IFbs_kQ/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwibL0EQmO5Mc2tzXG84dtFJBoiRPFj_ToBjEsMvRe4Jfu8wZK1OJVQdbQLC5fUgkauEg/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 // ================= SESSION =================
@@ -222,10 +222,11 @@ async function sendMainMenu(replyToken) {
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, replyToken) {
   const name = await getUserName(userId);
+  const role = "student"; // หรือ "teacher"
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ action:"accept", caseId, userId, name })
+    body: JSON.stringify({ action:"accept", caseId, userId, name, role })
   });
 
   const txt = await res.text();
