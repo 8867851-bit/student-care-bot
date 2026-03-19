@@ -27,6 +27,36 @@ export default async function handler(req, res) {
 
   return res.status(200).send("OK");
 }
+// ======test test ====
+export default async function handler(req, res) {
+  try {
+
+    const testData = {
+      caseId: Date.now(),
+      userId: "test_user",
+      q1: "stress",
+      q2: "recent",
+      q3: "high",
+      q4: "none",
+      q5: "talk",
+      level: "yellow"
+    };
+
+    // 👉 ยิงไป Apps Script
+    await fetch("URL_APPS_SCRIPT_เธอ", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(testData)
+    });
+
+    res.status(200).send("OK");
+
+  } catch (err) {
+    res.status(200).send("OK");
+  }
+}
 //===funtion===
 async function sendToSheet(data) {
   await fetch(GAS_URL, {
