@@ -1,20 +1,25 @@
+// ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "ใส่ของเธอ";
+
+// เก็บ session ชั่วคราว
+const sessions = {};
 
 // ================= MAIN =================
 export default async function handler(req, res) {
   try {
-
-    if (req.method !== "POST") {
+    // 🔥 LINE VERIFY จะเป็น GET
+    if (req.method === "GET") {
       return res.status(200).send("OK");
     }
 
-    const body = req.body;
-
-    if (!body || !body.events) {
+    // 🔥 กัน request แปลก ๆ
+    if (!req.body || !req.body.events) {
       return res.status(200).send("OK");
     }
 
-    for (const event of body.events) {
+    const events = req.body.events;
+
+    for (const event of events) {
 
       if (event.type === "message") {
         await handleMessage(event);
@@ -23,10 +28,11 @@ export default async function handler(req, res) {
       if (event.type === "postback") {
         await handlePostback(event);
       }
+
     }
 
   } catch (err) {
-    console.error(err);
+    console.log("ERROR:", err);
   }
 
   return res.status(200).send("OK");
@@ -34,89 +40,127 @@ export default async function handler(req, res) {
 
 // ================= MESSAGE =================
 async function handleMessage(event) {
-  const text = event.message.text;
-  const userId = event.source.userId;
+  const replyToken = event.replyToken;
 
-  if (text.startsWith("done_")) {
-    const caseId = text.replace("done_", "");
-    await markDone(caseId);
-    return replyText(event.replyToken, "✅ ปิดเคสเรียบร้อย");
-  }
+  // 👉 เริ่ม flow = ส่ง Q1
+  return sendQ1(replyToken);
+}
 
-  const answers = {
-    q1: text,
-    q2: "-",
-    q3: "-",
-    q4: "-",
-    q5: "-"
+// ================= Q1 FLEX =================
+async function sendQ1(replyToken) {
+  const url = "https://api.line.me/v2/bot/message/reply";
+
+  const flex = {
+    type: "flex",
+    altText: "เลือกเรื่องที่อยากคุย",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        spacing: "md",
+        contents: [
+          {
+            type: "text",
+            text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ",
+            weight: "bold",
+            size: "md",
+            wrap: true
+          },
+          {
+            type: "text",
+            text: "ตอนนี้คุณอยากคุยเกี่ยวกับอะไร",
+            size: "sm",
+            wrap: true
+          },
+
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "ความเครียด",
+              data: "q1_stress"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "เรื่องเรียน",
+              data: "q1_academic"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "ความสัมพันธ์",
+              data: "q1_relationship"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "ความรู้สึกตัวเอง",
+              data: "q1_self"
+            }
+          }
+        ]
+      }
+    }
   };
 
-  return processResult(event.replyToken, userId, answers);
-}
-
-// ================= PROCESS =================
-async function processResult(replyToken, userId, answers) {
-  const level = classify(answers);
-  const caseId = Date.now();
-
-  // 🔥 ตอนนี้ยังไม่ต่อ Google Sheet (เดี๋ยวเราค่อยต่อทีหลัง)
-  // await saveToSheet(...)
-
-  if (level === "red") {
-    return replyText(replyToken,
-      "💛 สิ่งที่คุณกำลังเผชิญมันดูหนักมากเลยนะ\n" +
-      "คุณไม่จำเป็นต้องรับมือกับมันคนเดียว\n\n" +
-      "ทีมของเราจะช่วยประสานให้คุณได้คุยกับผู้ใหญ่ที่สามารถช่วยคุณได้\n" +
-      "และเราจะอยู่ข้างคุณในขั้นตอนนี้นะ"
-    );
-
-  } else if (level === "yellow") {
-    return replyText(replyToken,
-      "💛 ขอบคุณที่เล่าให้เราฟังนะ\n" +
-      "เดี๋ยวเราจะหาพี่นักเรียนที่ผ่านการเทรนแล้ว\n" +
-      "มาคุยและอยู่เป็นเพื่อนคุณนะ"
-    );
-
-  } else {
-    return replyText(replyToken,
-      "🌿 ขอบคุณที่เปิดใจนะ\n" +
-      "ถ้าคุณอยาก ลองเริ่มจากการดูข้อมูลหรือเครื่องมือช่วยเหลือเบื้องต้นก่อนได้\n" +
-      "หรือจะเล่าให้เราฟังเพิ่มเติมก็ได้เสมอเลยนะ"
-    );
-  }
-}
-
-// ================= CLASSIFY =================
-function classify(answers) {
-  return "yellow"; // เดี๋ยวเราทำ scoring จริงทีหลัง
-}
-
-// ================= POSTBACK =================
-async function handlePostback(event) {
-  const data = event.postback.data;
-
-  if (data.startsWith("accept_")) {
-    const caseId = data.replace("accept_", "");
-    return replyText(event.replyToken, "✅ รับเคสแล้ว");
-  }
-}
-
-// ================= DONE =================
-async function markDone(caseId) {
-  // placeholder
-}
-
-// ================= UTIL =================
-async function replyText(replyToken, text) {
-  await fetch("https://api.line.me/v2/bot/message/reply", {
+  await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
     },
     body: JSON.stringify({
-      replyToken,
-      messages: [{ type: "text", text }]
+      replyToken: replyToken,
+      messages: [flex]
+    })
+  });
+}
+
+// ================= POSTBACK =================
+async function handlePostback(event) {
+  const data = event.postback.data;
+  const userId = event.source.userId;
+  const replyToken = event.replyToken;
+
+  // 👉 เริ่ม session
+  if (!sessions[userId]) {
+    sessions[userId] = {};
+  }
+
+  // 👉 เก็บ Q1
+  if (data.startsWith("q1_")) {
+    sessions[userId].q1 = data;
+
+    return replyText(replyToken, "📌 (ต่อไปเราจะถาม Q2)");
+  }
+}
+
+// ================= REPLY TEXT =================
+async function replyText(replyToken, text) {
+  const url = "https://api.line.me/v2/bot/message/reply";
+
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      replyToken: replyToken,
+      messages: [
+        {
+          type: "text",
+          text: text
+        }
+      ]
     })
   });
 }
