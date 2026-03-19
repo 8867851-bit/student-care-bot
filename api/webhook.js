@@ -155,26 +155,48 @@ if (data.startsWith("accept_")) {
   const level = classify(s.answers);
   const caseId = Date.now();
 
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "create", caseId, userId, ...s.answers, level })
-  });
+await fetch(GAS_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ action: "create", caseId, userId, ...s.answers, level })
+});
+await notifyTeam(level, caseId, s.answers);
 
-  await notifyTeam(level, caseId, s.answers);
-await replyText(event.replyToken,
-`💛 เราได้รับเรื่องของคุณแล้วนะ
+// ===== เช็คเวลา =====
+const now = new Date();
+const hour = now.getHours();
+let message = "";
 
-ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่
-⏳ ปกติจะใช้เวลาไม่เกิน 1–3 ชั่วโมง (ช่วงเวลาเปิดทำการ)
+if (hour >= 8 && hour < 18) {
+  // 🟢 เวลาทำการ
+  message = `💛 เราได้รับเรื่องของคุณแล้วนะ
 
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียวแล้วนะ`
-);
-  delete sessions[userId];
+ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
+⏳ ปกติจะใช้เวลาไม่เกิน 1–3 ชั่วโมง
 
-  return replyText(event.replyToken, "ส่งเรื่องเรียบร้อย 💛");
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียวแล้วนะ`;
+  
+} else {
+  // 🌙 นอกเวลาทำการ
+  message = `💛 เราได้รับเรื่องของคุณแล้วนะ
+
+ตอนนี้อยู่นอกเวลาทำการของทีม  
+(เปิดทุกวัน 08:00–18:00)
+
+🌅 ทีมจะเข้ามาดูเคสของคุณทันทีในช่วงเช้า  
+โดยปกติจะไม่เกิน 10:00 น.
+
+ถ้าคุณรู้สึกหนักมาก  
+คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
+
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
 }
 
+// 👉 reply ครั้งเดียวพอ
+await replyText(event.replyToken, message);
+delete sessions[userId];
+return;
+  
 // ================= STEP =================
 async function sendStep(userId, replyToken) {
   const s = sessions[userId];
@@ -380,6 +402,50 @@ async function getUserName(userId) {
   const data = await res.json();
   return data.displayName;
 }
+//===== Working time=====
+function isWorkingHours() {
+  const now = new Date();
+  const hour = now.getHours();
+ return hour >= 8 && hour < 18;}
+  
+  function getExpectedTime() {
+  const now = new Date();
+  const hour = now.getHours();
+    
+  // ก่อนเปิด
+  if (hour < 8) {
+    return "วันนี้ก่อน 10:00 น.";}
+  // ระหว่างวัน
+  if (hour >= 8 && hour < 18) {
+    return "ภายใน 1–3 ชั่วโมง"; }
+  // หลังปิด
+  return "พรุ่งนี้ก่อน 10:00 น.";}
+  await fetch(GAS_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ action: "create", caseId, userId, ...s.answers, level })
+});
+
+await notifyTeam(level, caseId, s.answers);
+
+// ===== expected time =====
+const eta = getExpectedTime();
+
+const message = `💛 เราได้รับเรื่องของคุณแล้วนะ
+
+ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
+⏳ โดยปกติจะใช้เวลา ${eta}
+
+ถ้าคุณรู้สึกหนักมาก  
+คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
+
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
+
+await replyText(event.replyToken, message);
+
+delete sessions[userId];
+
+return;
 // ================= REPLY =================
 async function replyText(token, text) {
   await fetch("https://api.line.me/v2/bot/message/reply", {
