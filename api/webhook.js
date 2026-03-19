@@ -1,6 +1,6 @@
 // ================= CONFIG =================
-const GAS_URL = "PUT_YOUR_APPS_SCRIPT_URL_HERE";
-const CHANNEL_ACCESS_TOKEN = process.env.CHANNEL_ACCESS_TOKEN;
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwBcroUViA_w7mq1-PI1EetJGG7X-de6zXTqrtj-sjLSczoBT2HgeGCSRzMbjHIOZkzmA/exec";
+const CHANNEL_ACCESS_TOKEN = process.env.4lUD0827K5XXnRyI9tJn9nXncbC9DHUuCSHMSOu01/UYrDLxnQGUKMGSWqoFoc+obKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEsaEgehAEIT0BfXujeuCcQ7maJoTCh/VH11mA3l7NbUbQdB04t89/1O/w1cDnyilFU=;
 
 // ================= SESSION (simple) =================
 const sessions = {}; // { userId: { q1,q2,q3,q4,q5 } }
