@@ -1,5 +1,4 @@
 // ================= CONFIG =================
-import fetch from "node-fetch";
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
 const GAS_URL = "https://script.google.com/macros/s/AKfycbzMsXUhu6RmkIIXq_E5IvnaUJvX7pMOrV20t_5vpQlNteTLBBhcJkddpmGkoOA8Z8T8-Q/exec";
 
