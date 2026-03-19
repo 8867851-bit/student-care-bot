@@ -142,11 +142,11 @@ async function handlePostback(event) {
   const result = classify(session.answers);
 
   //await sendToSheet({
-    caseId: Date.now(),
-    userId,
-    ...session.answers,
-    level: result
-  });
+   // caseId: Date.now(),
+    //userId,
+   // ...session.answers,
+   // level: result
+ // });
 
   delete sessions[userId];
 
