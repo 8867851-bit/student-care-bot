@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "4lUD0827K5XXnRyI9tJn9nXncbC9DHUuCSHMSOu01/UYrDLxnQGUKMGSWqoFoc+obKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEsaEgehAEIT0BfXujeuCcQ7maJoTCh/VH11mA3l7NbUbQdB04t89/1O/w1cDnyilFU=";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbz6IsrIGC5d9kbhUeMDIfmSsViIor053FdV9g52s0y8P6_WrAOaJqTzfCZmVHNg1i5aBw/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyIavZtM7UEVHHJheINZ8E8gy5hZACa-ouoe6cUA2GPKoHtgV_4k521Mz7SXxq8TPEe/exec";
 
 // session (ชั่วคราวพอสำหรับตอนนี้)
 const sessions = {};
