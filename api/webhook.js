@@ -255,6 +255,7 @@ async function notifyTeam(level, caseId, answers) {
       },
       footer: {
         type: "box",
+        layout: "vertical",   // 👈 เพิ่มบรรทัดนี้
         contents: [{
           type: "button",
           action: {
