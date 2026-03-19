@@ -63,8 +63,19 @@ export default async function handler(req, res) {
   try {
     if (req.method === "GET") return res.status(200).send("OK");
 
-   const body = req.body || {};
-const events = body.events || [];
+ let body;
+
+try {
+  body = typeof req.body === "string"
+    ? JSON.parse(req.body)
+    : req.body;
+} catch (e) {
+  body = {};
+}
+
+const events = body?.events || [];
+
+console.log("BODY:", JSON.stringify(body, null, 2));
 
     for (const event of events) {
       if (event.type === "message") await handleMessage(event);
