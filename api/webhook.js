@@ -80,9 +80,8 @@ const events = body.events || [];
 
 // ================= MESSAGE =================
 async function handleMessage(event) {
-  return replyText(event.replyToken, "hello test");
+  return sendMainMenu(event.replyToken);
 }
-
 // ================= MENU =================
 async function sendMainMenu(replyToken) {
   return replyFlex(replyToken, {
