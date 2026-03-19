@@ -158,7 +158,62 @@ function classify(s) {
   if (score >= 3) return "yellow";
   return "green";
 }
-
+// ================= MENU =================
+async function sendMainMenu(replyToken) {
+  return replyFlex(replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+        {
+          type: "text",
+          text: "💛 Student Care TU",
+          weight: "bold",
+          size: "lg"
+        },
+        {
+          type: "text",
+          text: "วันนี้คุณอยากทำอะไร?"
+        },
+        {
+          type: "button",
+          style: "primary",
+          action: {
+            type: "postback",
+            label: "คุยเรื่องที่หนักใจ",
+            data: "start_talk"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "รวมข้อมูล",
+            data: "menu_resource"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "กิจกรรม",
+            data: "menu_activity"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "เหตุการณ์เร่งด่วน",
+            data: "menu_urgent"
+          }
+        }
+      ]
+    }
+  });
+}
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, replyToken) {
   const res = await fetch(GAS_URL, {
@@ -231,6 +286,20 @@ async function replyText(token, text) {
   });
 }
 
-async function replyFlex(token, contents) {
-  await replyText(token, "...");
+async function replyFlex(replyToken, bubble) {
+  await fetch("https://api.line.me/v2/bot/message/reply", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      replyToken,
+      messages: [{
+        type: "flex",
+        altText: "menu",
+        contents: bubble
+      }]
+    })
+  });
 }
