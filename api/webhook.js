@@ -4,7 +4,7 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbwibL0EQmO5Mc2tzXG84dtF
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 // ================= SESSION =================
-const sessions = {};
+const sessions = {};t
 
 // ================= FLOW =================
 const flows = {
@@ -259,7 +259,6 @@ async function sendMainMenu(replyToken) {
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, role, replyToken) {
   const name = await getUserName(userId);
-  const role = "student"; // หรือ "teacher"
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
