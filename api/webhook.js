@@ -402,32 +402,7 @@ function isWorkingHours() {
     return "วันนี้ก่อน 10:00 น.";}
   // หลังปิด
   return "พรุ่งนี้ก่อน 10:00 น.";}
-  await fetch(GAS_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ action: "create", caseId, userId, ...s.answers, level })
-});
 
-await notifyTeam(level, caseId, s.answers);
-
-// ===== expected time =====
-const eta = getExpectedTime();
-
-const message = `💛 เราได้รับเรื่องของคุณแล้วนะ
-
-ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
-⏳ โดยปกติจะใช้เวลา ${eta}
-
-ถ้าคุณรู้สึกหนักมาก  
-คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
-
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
-
-await replyText(event.replyToken, message);
-
-delete sessions[userId];
-
-return;
 // ================= REPLY =================
 async function replyText(token, text) {
   await fetch("https://api.line.me/v2/bot/message/reply", {
