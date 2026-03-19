@@ -346,7 +346,57 @@ async function pushToGroup(text) {
     },
     body: JSON.stringify({
       to: GROUP_ID,
-      messages: [{ type: "text", text }]
+ async function notifyTeam(level, caseId, answers) {
+  if (!GROUP_ID) return;
+
+  const flex = {
+    type: "flex",
+    altText: "มีเคสใหม่",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "📌 เคสใหม่", weight: "bold" },
+          { type: "text", text: "Level: " + level },
+          { type: "text", text: "Case: " + caseId },
+          { type: "text", text: answers.q1, wrap: true }
+        ]
+      },
+      footer: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "button",
+            style: "primary",
+            action: {
+              type: "postback",
+              label: "รับเคสนี้",
+              data: "accept_" + caseId
+            }
+          }
+        ]
+      }
+    }
+  };
+
+  const res = await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: GROUP_ID,
+      messages: [flex]
+    })
+  });
+
+  const txt = await res.text();
+  console.log("PUSH:", res.status, txt);
+}
     })
   });
 }
