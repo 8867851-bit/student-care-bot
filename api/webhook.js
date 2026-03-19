@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzMsXUhu6RmkIIXq_E5IvnaUJvX7pMOrV20t_5vpQlNteTLBBhcJkddpmGkoOA8Z8T8-Q/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwR5EWa2ScoFP3Yalet9mWo4rcbTMVXSmKxCJQY7anmYvnsGJISQvtbY16w5MpcGKOxtA/exec";
 
 // ================= SESSION =================
 const sessions = {};
@@ -180,12 +180,12 @@ async function handlePostback(event) {
   // ===== END FLOW =====
   const result = classify(session.answers);
 
-  //await sendToSheet({
-   // caseId: Date.now(),
-    //userId,
-   // ...session.answers,
-   // level: result
- // });
+  await sendToSheet({
+    caseId: Date.now(),
+    userId,
+    ...session.answers,
+    level: result
+  });
 
   delete sessions[userId];
 
