@@ -400,9 +400,6 @@ function isWorkingHours() {
   // ก่อนเปิด
   if (hour < 8) {
     return "วันนี้ก่อน 10:00 น.";}
-  // ระหว่างวัน
-  if (hour >= 8 && hour < 18) {
-    return "ภายใน 1–3 ชั่วโมง"; }
   // หลังปิด
   return "พรุ่งนี้ก่อน 10:00 น.";}
   await fetch(GAS_URL, {
