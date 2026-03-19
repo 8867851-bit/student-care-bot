@@ -276,6 +276,7 @@ async function notifyTeam(level, caseId, answers) {
 
   const text = await res.text();
   console.log("PUSH:", res.status, text);
+  console.log("SOURCE:", event.source);
 }
 // ================= REPLY =================
 async function replyText(token, text) {
