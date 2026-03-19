@@ -24,7 +24,7 @@ export default async function handler(req, res) {
           level: "yellow"
         };
 
-        await fetch("https://script.google.com/macros/s/AKfycbzPYVcTG54Lfn6iKi9PJTYdp3FSXZ5BObGnagPq6_HCDKOKgc0ZJWzFBKcljx0ksg10eQ/exec", {
+        await fetch("https://script.google.com/macros/s/AKfycbz5Kxx0piGkUdofEno-fwVUe3d71dxrwKUkpDp8GF6nKKiKqTaQZmskflcdV8-gptg7GQ/exec", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
