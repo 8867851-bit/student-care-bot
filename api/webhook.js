@@ -279,8 +279,10 @@ async function notifyTeam(level, caseId, answers) {
     })
   });
 
-  const text = await res.text();
-  console.log("PUSH:", res.status, text);
+// 👇 เพิ่มตรงนี้เท่านั้น
+const text = await res.text();
+console.log("STATUS:", res.status);
+console.log("RESPONSE:", text);
 
 }
 // ================= REPLY =================
