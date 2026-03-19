@@ -90,14 +90,51 @@ async function handleMessage(event) {
 }
 
 // ================= POSTBACK =================
+
 async function handlePostback(event) {
   const data = event.postback.data;
   const userId = event.source.userId;
+if (data.startsWith("chooseRole_")) {
+  const caseId = data.replace("chooseRole_", "");
 
-  if (data.startsWith("accept_")) {
-    const caseId = data.replace("accept_", "");
-    return acceptCase(caseId, userId, event.replyToken);
-  }
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        {
+          type: "text",
+          text: "คุณเป็นใคร?",
+          weight: "bold"
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "นักเรียน",
+            data: "accept_" + caseId + "_student"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "ครู",
+            data: "accept_" + caseId + "_teacher"
+          }
+        }
+      ]
+    }
+  });
+}
+if (data.startsWith("accept_")) {
+  const parts = data.split("_");
+  const caseId = parts[1];
+  const role = parts[2];
+
+  return acceptCase(caseId, userId, role, event.replyToken);
+}
 
   if (data.startsWith("start_")) {
     sessions[userId] = { flow: "talk", step: 0, answers: {} };
@@ -220,7 +257,7 @@ async function sendMainMenu(replyToken) {
   });
 }
 // ================= ACCEPT =================
-async function acceptCase(caseId, userId, replyToken) {
+async function acceptCase(caseId, userId, role, replyToken) {
   const name = await getUserName(userId);
   const role = "student"; // หรือ "teacher"
   const res = await fetch(GAS_URL, {
@@ -263,7 +300,7 @@ async function notifyTeam(level, caseId, answers) {
           action: {
             type: "postback",
             label: "รับเคส",
-            data: "accept_" + caseId
+            data: "chooseRole_" + caseId
           }
         }]
       }
