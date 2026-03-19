@@ -61,10 +61,15 @@ const flows = {
 };
 
 // ================= MAIN =================
-module.exports = async function handler(req, res) {
+module.exports = async (req, res) => {
   if (req.method === "GET") return res.status(200).send("OK");
 
-  const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  const body = typeof req.body === "string"
+    ? JSON.parse(req.body)
+    : req.body;
+
+  console.log("BODY:", JSON.stringify(body, null, 2)); // 👈 ใส่ตรงนี้
+
   const events = body?.events || [];
 
   for (const event of events) {
