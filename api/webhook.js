@@ -4,7 +4,7 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbwibL0EQmO5Mc2tzXG84dtF
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 // ================= SESSION =================
-const sessions = {};t
+const sessions = {};
 
 // ================= FLOW =================
 const flows = {
