@@ -231,10 +231,7 @@ async function acceptCase(caseId, userId, replyToken) {
 }
 // ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers) {
-  if (!GROUP_ID) {
-    console.log("❌ GROUP_ID missing");
-    return;
-  }
+  if (!GROUP_ID) return;
 
   const flex = {
     type: "flex",
@@ -244,68 +241,41 @@ async function notifyTeam(level, caseId, answers) {
       body: {
         type: "box",
         layout: "vertical",
-        spacing: "md",
         contents: [
-          {
-            type: "text",
-            text: "📌 เคสใหม่",
-            weight: "bold",
-            size: "lg"
-          },
-          {
-            type: "text",
-            text: "Level: " + level
-          },
-          {
-            type: "text",
-            text: "Need: " + answers.q5
-          },
-          {
-            type: "text",
-            text: answers.q1,
-            wrap: true
-          }
+          { type: "text", text: "📌 เคสใหม่", weight: "bold" },
+          { type: "text", text: "Level: " + level },
+          { type: "text", text: "Need: " + answers.q5 },
+          { type: "text", text: answers.q1, wrap: true }
         ]
       },
       footer: {
         type: "box",
-        layout: "vertical",
-        contents: [
-          {
-            type: "button",
-            style: "primary",
-            action: {
-              type: "postback",
-              label: "รับเคส",
-              data: "accept_" + caseId
-            }
+        contents: [{
+          type: "button",
+          action: {
+            type: "postback",
+            label: "รับเคส",
+            data: "accept_" + caseId
           }
-        ]
+        }]
       }
     }
   };
 
-  try {
-    const res = await fetch("https://api.line.me/v2/bot/message/push", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-      },
-      body: JSON.stringify({
-        to: GROUP_ID,
-        messages: [flex]
-      })
-    });
+  const res = await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: GROUP_ID,
+      messages: [flex]
+    })
+  });
 
-    const text = await res.text();
-
-    console.log("📤 PUSH STATUS:", res.status);
-    console.log("📤 PUSH RESPONSE:", text);
-
-  } catch (err) {
-    console.log("❌ PUSH ERROR:", err);
-  }
+  const text = await res.text();
+  console.log("PUSH:", res.status, text);
 }
 // ================= REPLY =================
 async function replyText(token, text) {
