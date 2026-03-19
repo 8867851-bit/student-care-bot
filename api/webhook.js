@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwBcroUViA_w7mq1-PI1EetJGG7X-de6zXTqrtj-sjLSczoBT2HgeGCSRzMbjHIOZkzmA/exec";
-const CHANNEL_ACCESS_TOKEN = process.env.4lUD0827K5XXnRyI9tJn9nXncbC9DHUuCSHMSOu01/UYrDLxnQGUKMGSWqoFoc+obKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEsaEgehAEIT0BfXujeuCcQ7maJoTCh/VH11mA3l7NbUbQdB04t89/1O/w1cDnyilFU=;
+const CHANNEL_ACCESS_TOKEN = process.env.Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=;
 
 // ================= SESSION (simple) =================
 const sessions = {}; // { userId: { q1,q2,q3,q4,q5 } }
