@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbx-hWjJhcwnPugMTvhkg6QXyEBamHfA27zA8u5Egvcg37O4XAYleGJcHS3Jcf4EugLzWQ/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycby2_qBSNuOy0epiSBJPtO6qvbY5ohH3njD6yqEbJ4NT3AgbxgOxDFA80NQCHhf16hx7Cw/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 // ================= SESSION =================
@@ -164,7 +164,8 @@ async function handlePostback(event) {
   });
 
   await notifyTeam(level, caseId, s.answers);
-
+await scheduleFollowUp(caseId, userId);
+  
   const eta = getExpectedTime();
 
   const message = `💛 เราได้รับเรื่องของคุณแล้วนะ
@@ -320,6 +321,40 @@ async function pushToUser(userId, text) {
       messages: [{ type: "text", text }]
     })
   });
+}
+// ===== Anti-ghost follow up =====
+async function scheduleFollowUp(caseId, userId) {
+  setTimeout(async () => {
+    try {
+      // 🔍 เช็คสถานะจาก GAS
+      const res = await fetch(GAS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "check",
+          caseId
+        })
+      });
+
+      const data = await res.json();
+
+      // ❗ ถ้ายัง pending = ยังไม่มีคนรับ
+      if (data.status === "pending") {
+        await pushToUser(userId,
+`💛 เรากำลังตามหาพี่ให้คุณอยู่นะ
+
+ขอบคุณที่รอ และเราไม่ลืมคุณแน่นอน  
+ถ้าคุณอยากเล่าเพิ่ม สามารถพิมพ์มาได้เลยนะ 🌿`
+        );
+
+        // 🔔 ping ทีม
+        await pushToGroup(`🚨 เคส ${caseId} ยังไม่มีคนรับ (30 นาทีแล้ว)`);
+      }
+
+    } catch (err) {
+      console.log("FOLLOW UP ERROR:", err);
+    }
+  }, 30 * 60 * 1000); // 30 นาที
 }
 // ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers) {
