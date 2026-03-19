@@ -289,10 +289,38 @@ async function sendToSheet(data) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify({
+      action: "create",   // 👈 สำคัญมาก
+      ...data
+    })
   });
 }
+//======== รับเคส=======
+async function acceptCase(caseId, userId, replyToken) {
 
+  const res = await fetch(GAS_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      action: "accept",   // 👈 สำคัญมาก
+      caseId,
+      userId
+    })
+  });
+
+  const result = await res.text();
+
+  if (result === "OK") {
+    await replyText(replyToken, "✅ รับเคสเรียบร้อย");
+    await pushToGroup("📌 เคส " + caseId + " มีคนรับแล้ว");
+  } else if (result === "TAKEN") {
+    await replyText(replyToken, "❌ เคสนี้มีคนรับไปแล้ว");
+  } else {
+    await replyText(replyToken, "⚠️ เกิดข้อผิดพลาด");
+  }
+}
 // ================= REPLY =================
 async function replyFlex(replyToken, bubble) {
   const res = await fetch("https://api.line.me/v2/bot/message/reply", {
@@ -326,14 +354,6 @@ async function replyText(replyToken, textMsg) {
 
   const text = await res.text();
   console.log("REPLY TEXT:", res.status, text);
-}
-//======== รับเคส=======
-async function acceptCase(caseId, userId, replyToken) {
-  // TODO: ไปเช็คใน sheet ก่อน (เดี๋ยวทำ step ถัดไป)
-
-  await replyText(replyToken, "✅ รับเคสเรียบร้อย");
-
-  await pushToGroup("📌 เคส " + caseId + " มีคนรับแล้ว");
 }
 //====== Push to group ======
 async function pushToGroup(text) {
