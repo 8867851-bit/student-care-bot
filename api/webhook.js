@@ -1,5 +1,5 @@
 // ================= CONFIG =================
-const CHANNEL_ACCESS_TOKEN = process.env.Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=;
+const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
 const GAS_URL = "https://script.google.com/macros/s/AKfycbzMsXUhu6RmkIIXq_E5IvnaUJvX7pMOrV20t_5vpQlNteTLBBhcJkddpmGkoOA8Z8T8-Q/exec";
 
 // ================= SESSION =================
@@ -63,7 +63,8 @@ export default async function handler(req, res) {
   try {
     if (req.method === "GET") return res.status(200).send("OK");
 
-    const events = req.body?.events || [];
+   const body = req.body || {};
+const events = body.events || [];
 
     for (const event of events) {
       if (event.type === "message") await handleMessage(event);
@@ -140,7 +141,7 @@ async function handlePostback(event) {
   // ===== END FLOW =====
   const result = classify(session.answers);
 
-  await sendToSheet({
+  //await sendToSheet({
     caseId: Date.now(),
     userId,
     ...session.answers,
