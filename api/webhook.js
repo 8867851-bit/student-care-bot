@@ -103,8 +103,8 @@ if (data.startsWith("chooseRole_")) {
   // ===== FLOW =====
   const s = sessions[userId];
 
-  if (s && s.step < 5) {
-    const keys = ["q1","q2","q3","q4","q5"];
+  if (s && s.step < 6) {
+    const keys = ["q1","q2","q3","q4","q5",,"q6"];
     s.answers[keys[s.step]] = data;
     s.step++;
 
