@@ -3,7 +3,7 @@ const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyR0siRWKlScIozsxY1DCSFMdJ1BaGX49GJtdCQuGCfXT81ppnW8NliliRQ-pyCaHo0lQ/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
-// ================= MEMORY =================
+// ================= MEMORY ================
 const sessions = {};
 if (!global.caseMap) global.caseMap = {};
 
