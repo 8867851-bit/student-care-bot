@@ -163,7 +163,7 @@ async function handlePostback(event) {
     body: JSON.stringify({ action: "create", caseId, userId, ...s.answers, level })
   });
 
-  await notifyTeam(level, caseId, s.answers);
+  await notifyTeam(level, caseId, s.answers, Date.now());
 await scheduleFollowUp(caseId, userId);
   
   const eta = getExpectedTime();
@@ -172,6 +172,11 @@ await scheduleFollowUp(caseId, userId);
 
 ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
 ⏳ โดยปกติจะใช้เวลา ${eta}
+
+🕒 เวลาทำการ: 08:00–18:00
+
+หากอยู่นอกเวลาทำการ  
+ทีมจะเข้ามาดูเคสของคุณในช่วงเช้า
 
 ถ้าคุณรู้สึกหนักมาก  
 คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
@@ -335,10 +340,10 @@ async function scheduleFollowUp(caseId, userId) {
       body: JSON.stringify({ action: "check", caseId })
     });
 
-    const text = await res.text();
+    const data = await res.json();
     console.log("⏰ GAS RESPONSE:", text);
 
-    if (text === "PENDING") {
+    if (data.status === "PENDING") {
       console.log("🚨 case still pending");
 
       await pushToUser(userId,
@@ -350,8 +355,10 @@ async function scheduleFollowUp(caseId, userId) {
 
   }, 60 * 1000); // 🔥 1 นาที
 }
+
 // ================= NOTIFY =================
-async function notifyTeam(level, caseId, answers) {
+const p = getPriorityLabel(level, createdAt);
+async function notifyTeam(level, caseId, answers, createdAt) {
   if (!GROUP_ID) return;
 
   const flex = {
@@ -363,8 +370,14 @@ async function notifyTeam(level, caseId, answers) {
         type: "box",
         layout: "vertical",
     contents: [
-  { type: "text", text: "📌 เคส #" + caseId, weight: "bold", size: "lg" },
-  { type: "text", text: "Level: " + level },
+  { type: "text", text: `📌 เคส #${caseId}`, weight: "bold", size: "lg" },
+
+  { type: "text", text: `${p.label}`, weight: "bold", size: "md" },
+
+  { type: "text", text: ⏳ รอมาแล้ว ${p.wait} นาที },
+
+  { type: "separator", margin: "md" },
+
   { type: "text", text: "Need: " + answers.q5 },
   { type: "text", text: "Topic: " + answers.q1, wrap: true }
 ]
@@ -427,8 +440,7 @@ function getExpectedTime() {
   const hour = now.getHours();
 
   // 🌙 ก่อนเปิด
-  if (hour < 8) {
-    return "วันนี้ก่อน 10:00 น.";
+  if (hour < 8) {return "ในช่วงเช้าวันนี้";
   }
 
   // 🟢 เวลาทำการ
@@ -437,9 +449,38 @@ function getExpectedTime() {
   }
 
   // 🌙 หลังปิด
-  return "พรุ่งนี้ก่อน 10:00 น.";
+  return "ในช่วงเช้าวันถัดไป";
 }
+//=======Smart Piority ======
+function getPriorityLabel(level, createdAt) {
+  const now = Date.now();
+  const diffMin = Math.floor((now - createdAt) / 1000 / 60);
 
+  let priority = "";
+
+  if (level === "red") {
+    if (diffMin >= 10) priority = "🚨🔥 CRITICAL";
+    else if (diffMin >= 5) priority = "🚨 URGENT";
+    else priority = "🔴 HIGH";
+  }
+
+  else if (level === "yellow") {
+    if (diffMin >= 20) priority = "🚨 URGENT";
+    else if (diffMin >= 10) priority = "🔴 HIGH";
+    else priority = "🟡 MEDIUM";
+  }
+
+  else {
+    if (diffMin >= 30) priority = "🔴 HIGH";
+    else if (diffMin >= 15) priority = "🟡 MEDIUM";
+    else priority = "🟢 LOW";
+  }
+
+  return {
+    label: priority,
+    wait: diffMin
+  };
+}
 // ================= REPLY =================
 async function replyText(token, text) {
   await fetch("https://api.line.me/v2/bot/message/reply", {
