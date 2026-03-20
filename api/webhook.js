@@ -210,18 +210,35 @@ async function notifyTeam(caseId, level, answers) {
     },
     body: JSON.stringify({
       to: GROUP_ID,
-      messages: [{
-        type: "text",
-        text:
-`📌 เคส #${caseId}
-ระดับ: ${level}
-👉 เหมาะกับ: ${answers.q5}
-
-${text}`
+ messages: [{
+  type: "flex",
+  altText: "มีเคสใหม่",
+  contents: {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: `📌 เคส #${caseId}`, weight: "bold" },
+        { type: "text", text: ระดับ: ${level} },
+        { type: "text", text: 👉 เหมาะกับ: ${answers.q5} },
+        { type: "text", text: text }
+      ]
+    },
+    footer: {
+      type: "box",
+      layout: "vertical",
+      contents: [{
+        type: "button",
+        action: {
+          type: "postback",
+          label: "รับเคส",
+          data: "chooseRole_" + caseId   // 👈 จุดสำคัญ
+        }
       }]
-    })
-  });
-}
+    }
+  }
+}]
 
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, replyToken) {
