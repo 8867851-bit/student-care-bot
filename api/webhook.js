@@ -255,7 +255,7 @@ async function notifyTeam(caseId, level, answers) {
       layout: "vertical",
       contents: [
         { type: "text", text: `📌 เคส #${caseId}`, weight: "bold" },
-        { type: "text", text: ระดับ  ${level} },
+        { type: "text", text: ระดับ: ${level} },
         { type: "text", text: 👉 เหมาะกับ: ${answers.q5} },
         { type: "text", text: text }
       ]
