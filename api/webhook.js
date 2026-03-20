@@ -153,7 +153,7 @@ if (s && s.step === 5) {
 
   delete sessions[userId];
   return;
-
+} 
  // ===== ACCEPT =====
 if (data.startsWith("accept_")) {
   const parts = data.split("_");
@@ -312,9 +312,9 @@ async function sendStep(userId, replyToken) {
 // ================= CLASSIFY =================
 function classify(s) {
   let score = 0;
-  if (s.q2 === "long") score += 2;
-  if (s.q3 === "high") score += 3;
-  if (s.q4 === "none") score += 2;
+if (s.q2 === "q2_long") score += 2;
+if (s.q3 === "q3_high") score += 3;
+if (s.q4 === "q4_none") score += 2;
 
   if (score >= 5) return "red";
   if (score >= 3) return "yellow";
@@ -573,4 +573,4 @@ async function sendMainMenu(replyToken) {
       ]
     }
   });
-  }}
+  }
