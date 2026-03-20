@@ -143,8 +143,13 @@ async function handlePostback(event) {
 
   // ===== flow ต่อ =====
   const s = sessions[userId];
-  const flow = flows[s.flow];
-  const step = flow.steps[s.step];
+
+if (!s) {
+  return replyText(event.replyToken, "⚠️ session หมดอายุแล้ว กรุณาเริ่มใหม่");
+}
+
+const flow = flows[s.flow];
+const step = flow.steps[s.step];
 
   s.answers[step.key] = data;
   s.step++;
@@ -361,7 +366,6 @@ async function notifyTeam(level, caseId, answers, createdAt) {
   if (!GROUP_ID) return;
 
   const p = getPriorityLabel(level, createdAt);
-
   const flex = {
     type: "flex",
     altText: "📌 มีเคสใหม่",
