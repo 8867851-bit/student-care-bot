@@ -231,46 +231,46 @@ async function sendStep(userId, replyToken) {
     {
       text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ\nตอนนี้คุณอยากคุยเกี่ยวกับอะไร?",
       opts: [
-        { label: "ความเครียด 😣", value: "stress" },
-        { label: "เรื่องเรียน 📚", value: "academic" },
-        { label: "ความสัมพันธ์ 💬", value: "relationship" },
-        { label: "ความรู้สึกตัวเอง 🌱", value: "self" }
+        { label: "ความเครียด 😣", value: "q1_stress" },
+        { label: "เรื่องเรียน 📚", value: "q1_academic" },
+        { label: "ความสัมพันธ์ 💬", value: "q1_relationship" },
+        { label: "ความรู้สึกตัวเอง 🌱", value: "q1_self" }
       ]
     },
 
     {
       text: "เรื่องนี้เกิดมานานแค่ไหนแล้ว?",
       opts: [
-        { label: "เพิ่งเกิด", value: "short" },
-        { label: "สักพักแล้ว", value: "medium" },
-        { label: "นานแล้ว", value: "long" }
+        { label: "เพิ่งเกิด", value: "q2_short" },
+        { label: "สักพักแล้ว", value: "q2_medium" },
+        { label: "นานแล้ว", value: "q2_long" }
       ]
     },
 
     {
       text: "เรื่องนี้ส่งผลกับชีวิตคุณแค่ไหน?",
       opts: [
-        { label: "นิดหน่อย", value: "low" },
-        { label: "พอสมควร", value: "medium" },
-        { label: "มาก", value: "high" }
+        { label: "นิดหน่อย", value: "q3_low" },
+        { label: "พอสมควร", value: "q3_medium" },
+        { label: "มาก", value: "q3_high" }
       ]
     },
 
     {
       text: "ตอนนี้คุณมีใครคุยเรื่องนี้อยู่ไหม?",
       opts: [
-        { label: "ยังไม่มี", value: "none" },
-        { label: "มีเพื่อน", value: "friend" },
-        { label: "มีครู/ผู้ใหญ่", value: "adult" }
+        { label: "ยังไม่มี", value: "q4_none" },
+        { label: "มีเพื่อน", value: "q4_friend" },
+        { label: "มีครู/ผู้ใหญ่", value: "q4_adult" }
       ]
     },
 
     {
       text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหน?",
       opts: [
-        { label: "คุยกับพี่นักเรียน", value: "peer" },
-        { label: "คุยกับครู", value: "teacher" },
-        { label: "แค่ระบาย", value: "listen" }
+        { label: "คุยกับพี่นักเรียน", value: "q5_peer" },
+        { label: "คุยกับครู", value: "q5_teacher" },
+        { label: "แค่ระบาย", value: "q5_listen" }
       ]
     },
 
