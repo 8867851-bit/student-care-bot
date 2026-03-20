@@ -125,7 +125,101 @@ async function handlePostback(event) {
       }
     });
   }
+// ===== เลือกเวลา =====
+if (data.startsWith("slot_")) {
+  const slot = data.replace("slot_", "");
 
+  sessions[userId].selectedSlot = slot;
+
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "เลือกสถานที่คุยกันนะ 💛" },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "ห้องแนะแนว",
+            data: "place_guidance"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "ห้องสมุด (โซนเงียบ)",
+            data: "place_library"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "มุมเงียบในโรงเรียน",
+            data: "place_quiet"
+          }
+        }
+      ]
+    }
+  });
+}
+  // ===== เลือกสถานที่ =====
+if (data.startsWith("place_")) {
+  const place = data.replace("place_", "");
+  const s = sessions[userId];
+
+  s.place = place;
+
+  return replyText(event.replyToken,
+`✅ นัดเรียบร้อย
+
+🕒 เวลา: ${s.selectedSlot}
+📍 สถานที่: ${place}
+
+💛 เจอกันนะ`);
+}
+  //====== function time=====
+  async function sendTimeSlots(userId) {
+  return pushFlexToUser(userId, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "คุณว่างช่วงไหนบ้าง?" },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "จันทร์ 16:00",
+            data: "slot_mon_1600"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "อังคาร 17:00",
+            data: "slot_tue_1700"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "ศุกร์ 13:30",
+            data: "slot_fri_1330"
+          }
+        }
+      ]
+    }
+  });
+}
   // ===== รับเคส =====
   if (data.startsWith("accept_")) {
     const parts = data.split("_");
