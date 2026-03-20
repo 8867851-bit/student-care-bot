@@ -341,7 +341,7 @@ async function scheduleFollowUp(caseId, userId) {
     });
 
     const data = await res.json();
-    console.log("⏰ GAS RESPONSE:", text);
+    console.log("⏰ GAS RESPONSE:", data);
 
     if (data.status === "PENDING") {
       console.log("🚨 case still pending");
@@ -357,9 +357,10 @@ async function scheduleFollowUp(caseId, userId) {
 }
 
 // ================= NOTIFY =================
-const p = getPriorityLabel(level, createdAt);
 async function notifyTeam(level, caseId, answers, createdAt) {
   if (!GROUP_ID) return;
+
+  const p = getPriorityLabel(level, createdAt);
 
   const flex = {
     type: "flex",
@@ -369,22 +370,18 @@ async function notifyTeam(level, caseId, answers, createdAt) {
       body: {
         type: "box",
         layout: "vertical",
-    contents: [
-  { type: "text", text: `📌 เคส #${caseId}`, weight: "bold", size: "lg" },
-
-  { type: "text", text: `${p.label}`, weight: "bold", size: "md" },
-
-  { type: "text", text: "⏳ รอมาแล้ว " + p.wait + " นาที" },
-
-  { type: "separator", margin: "md" },
-
-  { type: "text", text: "Need: " + answers.q5 },
-  { type: "text", text: "Topic: " + answers.q1, wrap: true }
-]
+        contents: [
+          { type: "text", text: `📌 เคส #${caseId}`, weight: "bold", size: "lg" },
+          { type: "text", text: p.label, weight: "bold", size: "md" },
+          { type: "text", text: "⏳ รอมาแล้ว " + p.wait + " นาที" },
+          { type: "separator", margin: "md" },
+          { type: "text", text: "Need: " + answers.q5 },
+          { type: "text", text: "Topic: " + answers.q1, wrap: true }
+        ]
       },
       footer: {
         type: "box",
-        layout: "vertical",   // 👈 เพิ่มบรรทัดนี้
+        layout: "vertical",
         contents: [{
           type: "button",
           action: {
@@ -409,12 +406,11 @@ async function notifyTeam(level, caseId, answers, createdAt) {
     })
   });
 
-// 👇 เพิ่มตรงนี้เท่านั้น
-const text = await res.text();
-console.log("STATUS:", res.status);
-console.log("RESPONSE:", text);
-
+  const text = await res.text();
+  console.log("STATUS:", res.status);
+  console.log("RESPONSE:", text);
 }
+
 //====== ดึงชื่อ ========
 async function getUserName(userId) {
   const res = await fetch(
