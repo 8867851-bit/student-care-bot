@@ -171,23 +171,17 @@ const step = flow.steps[s.step];
   await notifyTeam(level, caseId, s.answers, Date.now());
 await scheduleFollowUp(caseId, userId, level);
   
-  const eta = getExpectedTime();
+const eta = getExpectedTime();
 
-  const message = `💛 เราได้รับเรื่องของคุณแล้วนะ
+const message = `💛 เราได้รับเรื่องของคุณแล้วนะ
 
-ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
+ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่นะ  
 ⏳ โดยปกติจะใช้เวลา ${eta}
-
-🕒 เวลาทำการ: 08:00–18:00
-
-หากอยู่นอกเวลาทำการ  
-ทีมจะเข้ามาดูเคสของคุณในช่วงเช้า
 
 ถ้าคุณรู้สึกหนักมาก  
 คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
 
 คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
-
   await replyText(event.replyToken, message);
 
   delete sessions[userId];
@@ -469,25 +463,18 @@ async function getUserName(userId) {
   return data.displayName;
 }
 //===== Working time=====
-function isWorkingHours() {
-  const now = new Date();
-  const hour = now.getHours();
- return hour >= 8 && hour < 18;}
-  
 function getExpectedTime() {
   const now = new Date();
   const hour = now.getHours();
 
-  // 🌙 ก่อนเปิด
-  if (hour < 8) {return "ในช่วงเช้าวันนี้";
+  if (hour < 8) {
+    return "ในช่วงเช้าวันนี้";
   }
 
-  // 🟢 เวลาทำการ
   if (hour >= 8 && hour < 18) {
     return "ภายใน 1–3 ชั่วโมง";
   }
 
-  // 🌙 หลังปิด
   return "ในช่วงเช้าวันถัดไป";
 }
 //=======Smart Piority ======
