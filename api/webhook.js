@@ -301,7 +301,7 @@ async function acceptCase(caseId, userId, replyToken) {
     };
 
     await replyText(replyToken, "✅ รับเคสแล้ว");
-
+    await sendTimeSlots(data.targetUserId, caseId);
     await pushToUser(data.targetUserId,
 `💛 มีพี่มารับเคสของคุณแล้วนะ
 
@@ -350,7 +350,43 @@ async function pushToUser(userId, text) {
     })
   });
 }
+async function pushToUser(...) {
+  ...
+}
 
+// 👇 วางตรงนี้เลย (ต่อท้าย)
+async function sendTimeSlots(userId, caseId) {
+  return pushToUser(userId, {
+    type: "flex",
+    altText: "เลือกเวลา",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "คุณสะดวกช่วงไหน?" },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "จันทร์ 16:00",
+              data: "slot_" + caseId + "_mon_1600"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "อังคาร 17:00",
+              data: "slot_" + caseId + "_tue_1700"
+            }
+          }
+        ]
+      }
+    }
+  });
+}
 async function replyText(token, text) {
   await fetch("https://api.line.me/v2/bot/message/reply", {
     method:"POST",
