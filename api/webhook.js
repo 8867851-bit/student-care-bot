@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyyIdBODUbtxPHf2c4v416jz7j5Xx4KUp7Pv3ej0FL2O49_VMOzC1dhX9qFVsyCQkSt/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzTpRjr8Q0GGxcOPQJs-Qoue5018VQf4bjClO9h0W3ddxS9OrHza5cv1t6NIbz6dP-Xfw/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 // ================= SESSION =================
