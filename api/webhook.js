@@ -182,41 +182,110 @@ if (data.startsWith("place_")) {
 
 💛 เจอกันนะ`);
 }
-  //====== function time=====
-  async function sendTimeSlots(userId) {
-  return pushFlexToUser(userId, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      contents: [
-        { type: "text", text: "คุณว่างช่วงไหนบ้าง?" },
+  if (data.startsWith("start_")) {
+  sessions[userId] = { flow: "talk", step: 0, answers: {} };
+  return sendStep(userId, event.replyToken);
+}
+// ===== SLOT (peer → user) =====
+if (data.startsWith("slot_")) {
+  const parts = data.split("_");
+  const caseId = parts[1];
+  const slot = parts.slice(2).join("_");
 
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "จันทร์ 16:00",
-            data: "slot_mon_1600"
+  const map = global.caseMap[caseId];
+
+  // กันพัง
+  if (!map) {
+    return replyText(event.replyToken, "❌ case not found");
+  }
+
+  // 👉 ส่งให้ USER
+  await pushToUser(map.userId, {
+    type: "flex",
+    altText: "เลือกเวลา",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "💛 พี่ว่างช่วงนี้นะ" },
+          { type: "text", text: slot, weight: "bold" },
+
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "เลือกเวลานี้",
+              data: "confirm_" + caseId + "_" + slot
+            }
           }
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "อังคาร 17:00",
-            data: "slot_tue_1700"
+        ]
+      }
+    }
+  });
+
+  return; // 🔥 สำคัญมาก
+}
+  // ===== CONFIRM =====
+if (data.startsWith("confirm_")) {
+  const parts = data.split("_");
+  const caseId = parts[1];
+  const slot = parts.slice(2).join("_");
+
+  const map = global.caseMap[caseId];
+
+  if (!map) {
+    return replyText(event.replyToken, "❌ case not found");
+  }
+
+  // 👉 แจ้ง user
+  await pushToUser(map.userId,
+`✅ นัดเรียบร้อย
+
+🕒 ${slot}
+💛 เจอกันนะ`);
+
+  // 👉 แจ้ง peer
+  await pushToUser(map.peerId,
+`✅ นัดเรียบร้อย
+
+🕒 ${slot}
+เตรียมตัวคุยได้เลย 💛`);
+
+  return; // 🔥 สำคัญ
+}
+  //====== function time=====
+async function sendTimeSlots(userId, caseId) {
+  return pushToUser(userId, {
+    type: "flex",
+    altText: "เลือกเวลา",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "คุณว่างช่วงไหนบ้าง?" },
+
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "จันทร์ 16:00",
+              data: "slot_" + caseId + "_mon_1600"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "อังคาร 17:00",
+              data: "slot_" + caseId + "_tue_1700"
+            }
           }
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "ศุกร์ 13:30",
-            data: "slot_fri_1330"
-          }
-        }
-      ]
+        ]
+      }
     }
   });
 }
@@ -406,6 +475,13 @@ async function acceptCase(caseId, userId, role, replyToken) {
     return replyText(replyToken, "❌ เคสนี้เต็มแล้ว"); }
   return replyText(replyToken, "⚠️ error");}
 
+// เก็บ session mapping
+if (!global.caseMap) global.caseMap = {};
+global.caseMap[caseId] = {
+  userId: data.targetUserId,
+  peerId: userId
+};
+
 //====== Push to user ======
 async function pushToUser(userId, text) {
   await fetch("https://api.line.me/v2/bot/message/push", {
@@ -419,6 +495,11 @@ async function pushToUser(userId, text) {
       messages: [{ type: "text", text }]
     })
   });
+  await pushToUser(userId,
+คุณว่างช่วงไหนบ้าง? เลือกเวลาได้เลย 👇
+);
+
+await sendTimeSlots(userId, caseId);
 }
 // ===== Anti-ghost follow up =====
 async function scheduleFollowUp(caseId, userId, level) {
