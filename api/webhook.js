@@ -51,6 +51,18 @@ async function handlePostback(event) {
     sessions[userId] = { step: 0, answers: {} };
     return sendStep(userId, event.replyToken);
   }
+  // ===== MENU =====
+if (data === "menu_resource") {
+  return replyText(event.replyToken, "📚 เดี๋ยวเพิ่มนะ");
+}
+
+if (data === "menu_activity") {
+  return replyText(event.replyToken, "🎯 เดี๋ยวเพิ่มนะ");
+}
+
+if (data === "menu_urgent") {
+  return replyText(event.replyToken, "🚨 ถ้าด่วน โทร 1323 ได้เลยนะ");
+}
 // ===== CHOOSE ROLE =====
 if (data.startsWith("chooseRole_")) {
   const caseId = data.replace("chooseRole_", "");
@@ -136,11 +148,14 @@ if (data.startsWith("chooseRole_")) {
     return;
   }
 
-  // ===== ACCEPT =====
-  if (data.startsWith("accept_")) {
-    const caseId = data.replace("accept_", "");
-    return acceptCase(caseId, userId, event.replyToken);
-  }
+ // ===== ACCEPT =====
+if (data.startsWith("accept_")) {
+  const parts = data.split("_");
+  const caseId = parts[1];
+  const role = parts[2];
+
+  return acceptCase(caseId, userId, role, event.replyToken);
+}
 
   // ===== SLOT =====
   if (data.startsWith("slot_")) {
@@ -151,12 +166,29 @@ if (data.startsWith("chooseRole_")) {
     const map = global.caseMap[caseId];
     if (!map) return;
 
-    await pushToUser(map.userId,
-`💛 พี่ว่างช่วงนี้นะ
-
-👉 ${slot}
-
-คุณสะดวกไหม?`);
+   await pushToUser(map.userId, {
+  type: "flex",
+  altText: "เลือกเวลา",
+  contents: {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "💛 พี่ว่างช่วงนี้นะ" },
+        { type: "text", text: slot, weight: "bold" },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "เลือกเวลานี้",
+            data: "confirm_" + caseId + "_" + slot
+          }
+        }
+      ]
+    }
+  }
+});
 
     return;
   }
@@ -436,13 +468,49 @@ async function sendMainMenu(replyToken) {
     body: {
       type: "box",
       layout: "vertical",
+      spacing: "md",
       contents: [
-        { type: "text", text: "💛 Student Care TU", weight: "bold" },
-        { type: "button",
+        {
+          type: "text",
+          text: "💛 Student Care TU",
+          weight: "bold",
+          size: "lg"
+        },
+        {
+          type: "text",
+          text: "วันนี้คุณอยากทำอะไร?"
+        },
+        {
+          type: "button",
+          style: "primary",
           action: {
             type: "postback",
             label: "คุยเรื่องที่หนักใจ",
             data: "start_talk"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "รวมข้อมูล",
+            data: "menu_resource"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "กิจกรรม",
+            data: "menu_activity"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "เหตุการณ์เร่งด่วน",
+            data: "menu_urgent"
           }
         }
       ]
