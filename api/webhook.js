@@ -221,6 +221,39 @@ if (data.startsWith("accept_")) {
 
 // =================1.flow STEP =================
 async function sendStep(userId, replyToken) {
+  const userId = event.source.userId;
+const text = event.message.text;
+
+const s = sessions[userId];
+
+// 👉 ถ้าอยู่ Q6
+if (s && s.step === 5) {
+  s.answers["q6"] = text;
+
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
+
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "create",
+      caseId,
+      userId,
+      ...s.answers,
+      level
+    })
+  });
+
+  await notifyTeam(caseId, level, s.answers);
+  await replyText(event.replyToken,
+`💛 ขอบคุณที่เล่าให้ฟังนะ
+เรากำลังหาพี่ให้คุณอยู่ 🙏`);
+
+  scheduleFollowUp(caseId, userId, level);
+  delete sessions[userId];
+  return;
+}
   const flow = [
     {
       text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ\nตอนนี้คุณอยากคุยเกี่ยวกับอะไร?",
@@ -267,6 +300,10 @@ async function sendStep(userId, replyToken) {
         { label: "แค่ระบาย", value: "listen" }
       ]
     }
+    {
+  text: "ถ้าคุณอยากเล่าเพิ่มเติม พิมพ์ได้เลยนะ (ไม่บังคับ)",
+  input: true
+}
   ];
 
   const s = sessions[userId];
@@ -283,14 +320,14 @@ async function sendStep(userId, replyToken) {
           wrap: true
         },
 
-        ...flow[s.step].opts.map(o => ({
+        ...(flow[s.step].opts.map(o => ({
           type: "button",
           action: {
             type: "postback",
             label: o.label,   // 👈 USER เห็น (ไทย)
             data: o.value     // 👈 ระบบใช้ (อังกฤษ)
           }
-        }))
+        })))
       ]
     }
   });
