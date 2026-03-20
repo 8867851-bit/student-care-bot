@@ -347,35 +347,41 @@ async function scheduleFollowUp(caseId, userId, level) {
     const data = await res.json();
     console.log("⏰ GAS RESPONSE:", data);
 
-    if (data.status === "PENDING") {
-      await pushFlexToGroup({
-        type: "bubble",
-        body: {
-          type: "box",
-          layout: "vertical",
-          contents: [
-            { type: "text", text: `📌 เคส #${caseId}`, weight: "bold" },
-            { type: "text", text: "⏳ ยังไม่มีคนรับ", color: "#ff5555" }
-          ]
-        },
-        footer: {
-          type: "box",
-          layout: "vertical",
-          contents: [{
-            type: "button",
-            style: "primary",
-            action: {
-              type: "postback",
-              label: "รับเคส",
-              data: "chooseRole_" + caseId
-            }
-          }]
+      if (data.status === "PENDING") {
+         let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
+  if (level === "red") {
+      text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ"; }
+        
+  await pushToUser(userId,
+`💛 เรายังอยู่ตรงนี้นะ  
+ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่ 🙏`);
+  await pushFlexToGroup({
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: `⏳ เคส #${caseId}`, weight: "bold" },
+        { type: "text", text: "ยังไม่มีคนดูแล", color: "#ff5555" },
+        { type: "text", text: text }
+      ]
+    },
+    footer: {
+      type: "box",
+      layout: "vertical",
+      contents: [{
+        type: "button",
+        style: "primary",
+        action: {
+          type: "postback",
+          label: "รับเคส",
+          data: "chooseRole_" + caseId
         }
-      });
+      }]
     }
-
-  }, delay);
+  });
 }
+      
 //===== flextogroup ====
 async function pushFlexToGroup(bubble) {
   await fetch("https://api.line.me/v2/bot/message/push", {
@@ -407,14 +413,17 @@ async function notifyTeam(level, caseId, answers, createdAt) {
       body: {
         type: "box",
         layout: "vertical",
-        contents: [
-          { type: "text", text: `📌 เคส #${caseId}`, weight: "bold", size: "lg" },
-          { type: "text", text: p.label, weight: "bold", size: "md" },
-          { type: "text", text: "⏳ รอมาแล้ว " + p.wait + " นาที" },
-          { type: "separator", margin: "md" },
-          { type: "text", text: "Need: " + answers.q5 },
-          { type: "text", text: "Topic: " + answers.q1, wrap: true }
-        ]
+   contents: [
+      { type: "text", text: `📌 เคส #${caseId}`, weight: "bold", size: "lg" },
+      { type: "text", text: p.label, weight: "bold", size: "md" },
+        ...(p.wait >= 2 ? [
+      { type: "text", text: "⏳ รอมาแล้ว " + p.wait + " นาที" }
+        ] : []),
+      { type: "separator", margin: "md" },
+              // 🔥 เพิ่มตรงนี้
+      { type: "text", text: 👉 เหมาะกับ: ${answers.q5} },
+      { type: "text", text: "Topic: " + answers.q1, wrap: true }
+    ]
       },
       footer: {
         type: "box",
