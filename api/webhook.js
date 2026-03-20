@@ -127,20 +127,8 @@ async function handlePostback(event) {
   }
   
   // ===== เลือกสถานที่ =====
-if (data.startsWith("place_")) {
-  const place = data.replace("place_", "");
-  const s = sessions[userId];
-
-  s.place = place;
-
-  return replyText(event.replyToken,
-`✅ นัดเรียบร้อย
-
-🕒 เวลา: ${s.selectedSlot}
-📍 สถานที่: ${place}
-
-💛 เจอกันนะ`);
-}
+  
+  //====......====
   if (data.startsWith("start_")) {
   sessions[userId] = { flow: "talk", step: 0, answers: {} };
   return sendStep(userId, event.replyToken);
@@ -151,7 +139,7 @@ if (data.startsWith("slot_")) {
   const caseId = parts[1];
   const slot = parts.slice(2).join("_");
 
-  const map = global.caseMap[caseId];
+  const map = global.caseMap?.[caseId];
 
   // กันพัง
   if (!map) {
@@ -212,39 +200,7 @@ if (data.startsWith("confirm_")) {
 
   return; // 🔥 สำคัญ
 }
-  
-async function sendTimeSlots(userId, caseId) {
-  return pushToUser(userId, {
-    type: "flex",
-    altText: "เลือกเวลา",
-    contents: {
-      type: "bubble",
-      body: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-          { type: "text", text: "คุณว่างช่วงไหนบ้าง?" },
-          {
-            type: "button",
-            action: {
-              type: "postback",
-              label: "จันทร์ 16:00",
-              data: "slot_" + caseId + "_mon_1600"
-            }
-          },
-          {
-            type: "button",
-            action: {
-              type: "postback",
-              label: "อังคาร 17:00",
-              data: "slot_" + caseId + "_tue_1700"
-            }
-          }
-        ]
-      }
-    }
-  });
-}
+
   // ===== รับเคส =====
   if (data.startsWith("accept_")) {
     const parts = data.split("_");
@@ -659,7 +615,6 @@ async function replyText(token, text) {
     })
   });
 }
-
 async function replyFlex(replyToken, bubble) {
   await fetch("https://api.line.me/v2/bot/message/reply", {
     method: "POST",
@@ -675,5 +630,37 @@ async function replyFlex(replyToken, bubble) {
         contents: bubble
       }]
     })
+  });
+}
+ async function sendTimeSlots(userId, caseId) {
+  return pushToUser(userId, {
+    type: "flex",
+    altText: "เลือกเวลา",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "คุณว่างช่วงไหนบ้าง?" },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "จันทร์ 16:00",
+              data: "slot_" + caseId + "_mon_1600"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "อังคาร 17:00",
+              data: "slot_" + caseId + "_tue_1700"
+            }
+          }
+        ]
+      }
+    }
   });
 }
