@@ -155,7 +155,7 @@ async function handlePostback(event) {
 
   // ===== จบ flow =====
   const level = classify(s.answers);
-  const caseId = Date.now();
+  const caseId = Date.now().toString().slice(-6);
 
   await fetch(GAS_URL, {
     method: "POST",
@@ -362,12 +362,12 @@ async function notifyTeam(level, caseId, answers) {
       body: {
         type: "box",
         layout: "vertical",
-        contents: [
-          { type: "text", text: "📌 เคสใหม่", weight: "bold" },
-          { type: "text", text: "Level: " + level },
-          { type: "text", text: "Need: " + answers.q5 },
-          { type: "text", text: answers.q1, wrap: true }
-        ]
+    contents: [
+  { type: "text", text: "📌 เคส #" + caseId, weight: "bold", size: "lg" },
+  { type: "text", text: "Level: " + level },
+  { type: "text", text: "Need: " + answers.q5 },
+  { type: "text", text: "Topic: " + answers.q1, wrap: true }
+]
       },
       footer: {
         type: "box",
