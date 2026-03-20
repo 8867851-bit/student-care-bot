@@ -117,27 +117,28 @@ if (s && s.step < 5) {
   return sendStep(userId, event.replyToken);
 }
 
-    // ===== CREATE CASE =====
-    const caseId = Date.now().toString().slice(-6);
-    const level = classify(s.answers);
+   // ===== CREATE CASE (เฉพาะตอนจบจริง) =====
+if (s && s.step === 5) {
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
 
-    await fetch(GAS_URL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        action: "create",
-        caseId,
-        userId,
-        ...s.answers,
-        level
-      })
-    });
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "create",
+      caseId,
+      userId,
+      ...s.answers,
+      level
+    })
+  });
 
-    await notifyTeam(caseId, level, s.answers);
+  await notifyTeam(caseId, level, s.answers);
 
-    const eta = getETA();
+  const eta = getETA();
 
-    await replyText(event.replyToken,
+  await replyText(event.replyToken,
 `💛 เราได้รับเรื่องของคุณแล้วนะ
 
 ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
@@ -148,11 +149,11 @@ if (s && s.step < 5) {
 
 คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`);
 
-    scheduleFollowUp(caseId, userId, level);
+  scheduleFollowUp(caseId, userId, level);
 
-    delete sessions[userId];
-    return;
-  }
+  delete sessions[userId];
+  return;
+}
 
  // ===== ACCEPT =====
 if (data.startsWith("accept_")) {
