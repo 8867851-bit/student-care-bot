@@ -127,12 +127,8 @@ async function handlePostback(event) {
   }
   
   // ===== เลือกสถานที่ =====
+
   
-  //====......====
-  if (data.startsWith("start_")) {
-  sessions[userId] = { flow: "talk", step: 0, answers: {} };
-  return sendStep(userId, event.replyToken);
-}
 // ===== SLOT (peer → user) =====
 if (data.startsWith("slot_")) {
   const parts = data.split("_");
@@ -178,7 +174,7 @@ if (data.startsWith("confirm_")) {
   const caseId = parts[1];
   const slot = parts.slice(2).join("_");
 
-  const map = global.caseMap[caseId];
+  const map = global.caseMap?.[caseId]
 
   if (!map) {
     return replyText(event.replyToken, "❌ case not found");
