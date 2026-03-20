@@ -51,8 +51,15 @@ async function handleMessage(event) {
 
     await notifyTeam(caseId, level, s.answers);
     await replyText(event.replyToken,
-`💛 ขอบคุณที่เล่าให้ฟังนะ
-เรากำลังหาพี่ให้คุณอยู่ 🙏`);
+`💛 เราได้รับเรื่องของคุณแล้วนะ
+
+ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
+⏳ โดยปกติจะใช้เวลา ${getETA()}
+
+ถ้าคุณรู้สึกหนักมาก  
+คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
+
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`);
 
     scheduleFollowUp(caseId, userId, level);
 
@@ -307,7 +314,7 @@ async function sendStep(userId, replyToken) {
     },
 
     {
-      text: "ถ้าคุณอยากเล่าเพิ่มเติม พิมพ์ได้เลยนะ (ไม่บังคับ)",
+      text: "อยากเล่าอะไรเพิ่มไหม?💛 [พิมพ์ 1 เพื่อข้าม] ",
       input: true
     }
   ];
@@ -428,22 +435,57 @@ async function acceptCase(caseId, userId, replyToken) {
   const data = await res.json();
 
   if (data.status === "OK") {
+
+    // 🔗 map user ↔ peer
     global.caseMap[caseId] = {
       userId: data.targetUserId,
       peerId: userId
     };
 
+    // ✅ ตอบ peer
     await replyText(replyToken, "✅ รับเคสแล้ว");
-    await sendTimeSlots(data.targetUserId, caseId);
-    await pushToUser(data.targetUserId,
-`💛 มีพี่มารับเคสของคุณแล้วนะ
 
-คุณอยากคุยช่วงเวลาไหนบ้าง? 🌿`);
+    // 🔥 ดึง slot จริงจาก sheet
+    const name = "peer"; // (เดี๋ยว upgrade ทีหลัง)
+    const slots = await getSlots(name);
+
+    // ✅ ส่ง slot ให้ user
+    await pushToUser(data.targetUserId, {
+      type: "flex",
+      altText: "เลือกเวลา",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            { type: "text", text: "💛 พี่ว่างช่วงนี้นะ" },
+
+            ...(slots.length > 0
+              ? slots.slice(0,5).map(s => ({
+                  type: "button",
+                  action: {
+                    type: "postback",
+                    label: s,
+                    data: "slot_" + caseId + "_" + s
+                  }
+                }))
+              : [
+                  { type: "text", text: "⚠️ ยังไม่มีเวลาว่าง" }
+                ])
+          ]
+        }
+      }
+    });
+
+    return;
   }
 
   if (data.status === "FULL") {
     return replyText(replyToken, "❌ เคสนี้มีคนดูแลแล้ว");
   }
+
+  return replyText(replyToken, "⚠️ error");
 }
 
 // ================= FOLLOW-UP =================
@@ -487,7 +529,20 @@ async function pushToUser(userId, message) {
     })
   });
 }
+// ================= GET SLOTS =================
+async function getSlots(peerName) {
+  const res = await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "getSlots",
+      name: peerName
+    })
+  });
 
+  const data = await res.json();
+  return data.slots || [];
+}
 // 👇 วางตรงนี้เลย (ต่อท้าย)
 async function sendTimeSlots(userId, caseId) {
   return pushToUser(userId, {
