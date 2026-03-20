@@ -3,7 +3,7 @@ const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyR0siRWKlScIozsxY1DCSFMdJ1BaGX49GJtdCQuGCfXT81ppnW8NliliRQ-pyCaHo0lQ/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 const sessions = {};
-// ================= SESSION =================
+// ================= MEMORY =================
 const sessions = {};
 if (!global.caseMap) global.caseMap = {};
 
@@ -35,13 +35,13 @@ async function handlePostback(event) {
   const data = event.postback.data;
   const userId = event.source.userId;
 
-  // ===== START FLOW =====
+  // ===== START =====
   if (data === "start_talk") {
     sessions[userId] = { step: 0, answers: {} };
     return sendStep(userId, event.replyToken);
   }
 
-  // ===== FLOW ANSWER =====
+  // ===== FLOW =====
   const s = sessions[userId];
 
   if (s && s.step < 5) {
@@ -71,11 +71,20 @@ async function handlePostback(event) {
 
     await notifyTeam(caseId, level, s.answers);
 
+    const eta = getETA();
+
     await replyText(event.replyToken,
 `💛 เราได้รับเรื่องของคุณแล้วนะ
-ทีมกำลังหาพี่ให้คุณอยู่
+
+ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
+⏳ โดยปกติจะใช้เวลา ${eta}
+
+ถ้าคุณรู้สึกหนักมาก  
+คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
 
 คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`);
+
+    scheduleFollowUp(caseId, userId, level);
 
     delete sessions[userId];
     return;
@@ -97,7 +106,8 @@ async function handlePostback(event) {
     if (!map) return;
 
     await pushToUser(map.userId,
-`💛 พี่ว่างช่วงนี้
+`💛 พี่ว่างช่วงนี้นะ
+
 👉 ${slot}
 
 คุณสะดวกไหม?`);
@@ -116,11 +126,15 @@ async function handlePostback(event) {
 
     await pushToUser(map.userId,
 `✅ นัดเรียบร้อย
-🕒 ${slot}`);
+
+🕒 ${slot}
+💛 เจอกันนะ`);
 
     await pushToUser(map.peerId,
 `✅ นัดเรียบร้อย
-🕒 ${slot}`);
+
+🕒 ${slot}
+เตรียมตัวคุยได้เลย 💛`);
 
     return;
   }
@@ -128,20 +142,21 @@ async function handlePostback(event) {
 
 // ================= STEP =================
 async function sendStep(userId, replyToken) {
-  const questions = [
-    "คุณอยากคุยเรื่องอะไร?",
-    "เกิดมานานแค่ไหน?",
-    "ส่งผลแค่ไหน?",
-    "มีใครคุยด้วยไหม?",
-    "อยากได้ความช่วยเหลือแบบไหน?"
-  ];
+  const flow = [
+    { text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ\nตอนนี้คุณอยากคุยเกี่ยวกับอะไร?",
+      opts: ["stress","academic","relationship","self"] },
 
-  const options = [
-    ["stress","academic","relationship","self"],
-    ["short","medium","long"],
-    ["low","medium","high"],
-    ["none","friend","adult"],
-    ["peer","teacher","listen"]
+    { text: "เรื่องนี้เกิดมานานแค่ไหนแล้ว?",
+      opts: ["short","medium","long"] },
+
+    { text: "เรื่องนี้ส่งผลกับชีวิตคุณแค่ไหน?",
+      opts: ["low","medium","high"] },
+
+    { text: "ตอนนี้คุณมีใครคุยเรื่องนี้อยู่ไหม?",
+      opts: ["none","friend","adult"] },
+
+    { text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหน?",
+      opts: ["peer","teacher","listen"] }
   ];
 
   const s = sessions[userId];
@@ -152,8 +167,8 @@ async function sendStep(userId, replyToken) {
       type: "box",
       layout: "vertical",
       contents: [
-        { type: "text", text: questions[s.step] },
-        ...options[s.step].map(o => ({
+        { type: "text", text: flow[s.step].text, wrap: true },
+        ...flow[s.step].opts.map(o => ({
           type: "button",
           action: { type: "postback", label: o, data: o }
         }))
@@ -174,8 +189,19 @@ function classify(s) {
   return "green";
 }
 
+// ================= ETA =================
+function getETA() {
+  const h = new Date().getHours();
+  if (h < 8) return "ในช่วงเช้าวันนี้";
+  if (h < 18) return "ภายใน 1–3 ชั่วโมง";
+  return "ในช่วงเช้าวันถัดไป";
+}
+
 // ================= NOTIFY =================
 async function notifyTeam(caseId, level, answers) {
+  let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
+  if (level === "red") text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
+
   await fetch("https://api.line.me/v2/bot/message/push", {
     method: "POST",
     headers: {
@@ -186,7 +212,12 @@ async function notifyTeam(caseId, level, answers) {
       to: GROUP_ID,
       messages: [{
         type: "text",
-        text: 📌 เคส #${caseId}\nระดับ: ${level}\n👉 ${answers.q5}
+        text:
+`📌 เคส #${caseId}
+ระดับ: ${level}
+👉 เหมาะกับ: ${answers.q5}
+
+${text}`
       }]
     })
   });
@@ -201,8 +232,8 @@ async function acceptCase(caseId, userId, replyToken) {
       action: "accept",
       caseId,
       userId,
-      role: "student",
-      name: "peer"
+      name: "peer",
+      role: "student"
     })
   });
 
@@ -217,8 +248,37 @@ async function acceptCase(caseId, userId, replyToken) {
     await replyText(replyToken, "✅ รับเคสแล้ว");
 
     await pushToUser(data.targetUserId,
-"💛 มีพี่มารับเคสแล้วนะ\nคุณว่างช่วงไหน?");
+`💛 มีพี่มารับเคสของคุณแล้วนะ
+
+คุณอยากคุยช่วงเวลาไหนบ้าง? 🌿`);
   }
+
+  if (data.status === "FULL") {
+    return replyText(replyToken, "❌ เคสนี้มีคนดูแลแล้ว");
+  }
+}
+
+// ================= FOLLOW-UP =================
+async function scheduleFollowUp(caseId, userId, level) {
+  let delay = 15 * 60 * 1000;
+  if (level === "red") delay = 5 * 60 * 1000;
+  if (level === "yellow") delay = 10 * 60 * 1000;
+
+  setTimeout(async () => {
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "check", caseId })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "PENDING") {
+      await pushToUser(userId,
+`💛 เรายังอยู่ตรงนี้นะ  
+ทีมกำลังตามหาพี่ให้คุณอยู่ 🙏`);
+    }
+  }, delay);
 }
 
 // ================= UTIL =================
@@ -265,9 +325,5 @@ async function replyFlex(replyToken, bubble) {
         contents: bubble
       }]
     })
-  });
-}
-      }
-    }
   });
 }
