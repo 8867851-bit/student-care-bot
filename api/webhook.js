@@ -644,7 +644,7 @@ async function sendMainMenu(replyToken) {
           type: "button",
           action: {
             type: "postback",
-            label: "สมัครเป็นพี่",
+            label: "สําหรับ P.S.",
             data: "become_peer"
           }
         },
