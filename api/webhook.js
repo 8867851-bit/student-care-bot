@@ -218,23 +218,54 @@ if (data.startsWith("accept_")) {
   }
 }
 
-// ================= STEP =================
+// =================1.flow STEP =================
 async function sendStep(userId, replyToken) {
   const flow = [
-    { text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ\nตอนนี้คุณอยากคุยเกี่ยวกับอะไร?",
-      opts: ["stress","academic","relationship","self"] },
+    {
+      text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ\nตอนนี้คุณอยากคุยเกี่ยวกับอะไร?",
+      opts: [
+        { label: "ความเครียด 😣", value: "stress" },
+        { label: "เรื่องเรียน 📚", value: "academic" },
+        { label: "ความสัมพันธ์ 💬", value: "relationship" },
+        { label: "ความรู้สึกตัวเอง 🌱", value: "self" }
+      ]
+    },
 
-    { text: "เรื่องนี้เกิดมานานแค่ไหนแล้ว?",
-      opts: ["short","medium","long"] },
+    {
+      text: "เรื่องนี้เกิดมานานแค่ไหนแล้ว?",
+      opts: [
+        { label: "เพิ่งเกิด", value: "short" },
+        { label: "สักพักแล้ว", value: "medium" },
+        { label: "นานแล้ว", value: "long" }
+      ]
+    },
 
-    { text: "เรื่องนี้ส่งผลกับชีวิตคุณแค่ไหน?",
-      opts: ["low","medium","high"] },
+    {
+      text: "เรื่องนี้ส่งผลกับชีวิตคุณแค่ไหน?",
+      opts: [
+        { label: "นิดหน่อย", value: "low" },
+        { label: "พอสมควร", value: "medium" },
+        { label: "มาก", value: "high" }
+      ]
+    },
 
-    { text: "ตอนนี้คุณมีใครคุยเรื่องนี้อยู่ไหม?",
-      opts: ["none","friend","adult"] },
+    {
+      text: "ตอนนี้คุณมีใครคุยเรื่องนี้อยู่ไหม?",
+      opts: [
+        { label: "ยังไม่มี", value: "none" },
+        { label: "มีเพื่อน", value: "friend" },
+        { label: "มีครู/ผู้ใหญ่", value: "adult" }
+      ]
+    },
 
-    { text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหน?",
-      opts: ["peer","teacher","listen"] }
+    {
+      text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหน?",
+      opts: [
+        { label: "คุยกับพี่นักเรียน", value: "peer" },
+        { label: "คุยกับครู", value: "teacher" },
+        { label: "แค่ระบาย", value: "listen" }
+      ]
+    }
   ];
 
   const s = sessions[userId];
@@ -245,16 +276,24 @@ async function sendStep(userId, replyToken) {
       type: "box",
       layout: "vertical",
       contents: [
-        { type: "text", text: flow[s.step].text, wrap: true },
+        {
+          type: "text",
+          text: flow[s.step].text,
+          wrap: true
+        },
+
         ...flow[s.step].opts.map(o => ({
           type: "button",
-          action: { type: "postback", label: o, data: o }
+          action: {
+            type: "postback",
+            label: o.label,   // 👈 USER เห็น (ไทย)
+            data: o.value     // 👈 ระบบใช้ (อังกฤษ)
+          }
         }))
       ]
     }
   });
 }
-
 // ================= CLASSIFY =================
 function classify(s) {
   let score = 0;
