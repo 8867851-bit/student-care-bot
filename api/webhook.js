@@ -144,10 +144,10 @@ if (data.startsWith("chooseRole_")) {
   if (data === "become_peer") {
   const userId = event.source.userId;
 
-  await replyText(event.replyToken,
-`💛 สมัครเป็นพี่สำเร็จ
+  return replyText(event.replyToken,
+`💛 ขอให้โชคดีกับการผจญภัย Peer Support รุ่นที่1!
 
-📌 นี่คือรหัสของคุณ:
+📌 นี่คือรหัส (User Id) ของคุณ:
 ${userId}
 
 👉 กรุณาก๊อปไปใส่ใน Google Form`);
@@ -638,6 +638,17 @@ async function sendMainMenu(replyToken) {
           type: "text",
           text: "วันนี้คุณอยากทำอะไร?"
         },
+
+        // 👇 ปุ่มนี้ต้องอยู่ตรงนี้
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "สมัครเป็นพี่",
+            data: "become_peer"
+          }
+        },
+
         {
           type: "button",
           style: "primary",
@@ -671,15 +682,7 @@ async function sendMainMenu(replyToken) {
             data: "menu_urgent"
           }
         }
-        {
-  type: "button",
-  action: {
-    type: "postback",
-    label: "สมัครเป็นพี่",
-    data: "become_peer"
-  }
-}
       ]
     }
   });
-  }
+}
