@@ -100,6 +100,7 @@ if (data === "menu_activity") {
   return replyText(event.replyToken, "🎯 เดี๋ยวเพิ่มนะ");
 }
 
+
 if (data === "menu_urgent") {
   return replyText(event.replyToken, "🚨 ถ้าด่วน โทร 1323 ได้เลยนะ");
 }
@@ -138,6 +139,18 @@ if (data.startsWith("chooseRole_")) {
       ]
     }
   });
+}
+  //======= Become Peer=====
+  if (data === "become_peer") {
+  const userId = event.source.userId;
+
+  await replyText(event.replyToken,
+`💛 สมัครเป็นพี่สำเร็จ
+
+📌 นี่คือรหัสของคุณ:
+${userId}
+
+👉 กรุณาก๊อปไปใส่ใน Google Form`);
 }
     // ===== FLOW =====
   const s = sessions[userId];
@@ -447,7 +460,7 @@ async function acceptCase(caseId, userId, replyToken) {
 
     // 🔥 ดึง slot จริงจาก sheet
     const name = "peer"; // (เดี๋ยว upgrade ทีหลัง)
-    const slots = await getSlots(name);
+    const slots = await getSlots(userId);
 
     // ✅ ส่ง slot ให้ user
     await pushToUser(data.targetUserId, {
@@ -536,7 +549,7 @@ async function getSlots(peerName) {
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
       action: "getSlots",
-      name: peerName
+      userId
     })
   });
 
@@ -658,6 +671,14 @@ async function sendMainMenu(replyToken) {
             data: "menu_urgent"
           }
         }
+        {
+  type: "button",
+  action: {
+    type: "postback",
+    label: "สมัครเป็นพี่",
+    data: "become_peer"
+  }
+}
       ]
     }
   });
