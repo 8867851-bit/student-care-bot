@@ -153,7 +153,6 @@ if (s && s.step === 5) {
 
   delete sessions[userId];
   return;
-}
 
  // ===== ACCEPT =====
 if (data.startsWith("accept_")) {
