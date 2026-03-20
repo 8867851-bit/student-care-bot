@@ -27,16 +27,16 @@ module.exports = async (req, res) => {
 async function handleMessage(event) {
   const type = event.source.type;
 
-  // ✅ user แชทส่วนตัว → แสดงเมนูเสมอ
+  // ✅ ถ้าเป็นแชทส่วนตัว → แสดงเมนูเสมอ
   if (type === "user") {
-    return sendMainMenu(event.replyToken);
+    return await sendMainMenu(event.replyToken);
   }
 
-  // ✅ group → ต้องพิมพ์ start
+  // ✅ ถ้าเป็น group → ต้องพิมพ์ start
   if (type === "group") {
     const text = event.message?.text;
     if (text === "start") {
-      return sendMainMenu(event.replyToken);
+      return await sendMainMenu(event.replyToken);
     }
   }
 }
@@ -428,5 +428,24 @@ async function replyFlex(replyToken, bubble) {
         contents: bubble
       }]
     })
+  });
+}
+async function sendMainMenu(replyToken) {
+  return replyFlex(replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "💛 Student Care TU", weight: "bold" },
+        { type: "button",
+          action: {
+            type: "postback",
+            label: "คุยเรื่องที่หนักใจ",
+            data: "start_talk"
+          }
+        }
+      ]
+    }
   });
 }
