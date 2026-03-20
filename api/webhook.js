@@ -26,18 +26,50 @@ module.exports = async (req, res) => {
 
 // ================= MESSAGE =================
 async function handleMessage(event) {
-  const type = event.source.type;
+  const userId = event.source.userId;
+  const text = event.message.text;
+  const s = sessions[userId];
 
-  // ✅ ถ้าเป็นแชทส่วนตัว → แสดงเมนูเสมอ
-  if (type === "user") {
-    return await sendMainMenu(event.replyToken);
+  // ✅ ถ้าอยู่ Q6 → รับข้อความจริง
+  if (s && s.step === 5) {
+    s.answers["q6"] = text;
+
+    const caseId = Date.now().toString().slice(-6);
+    const level = classify(s.answers);
+
+    await fetch(GAS_URL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        action: "create",
+        caseId,
+        userId,
+        ...s.answers,
+        level
+      })
+    });
+
+    await notifyTeam(caseId, level, s.answers);
+    await replyText(event.replyToken,
+`💛 ขอบคุณที่เล่าให้ฟังนะ
+เรากำลังหาพี่ให้คุณอยู่ 🙏`);
+
+    scheduleFollowUp(caseId, userId, level);
+
+    delete sessions[userId];
+    return;
   }
 
-  // ✅ ถ้าเป็น group → ต้องพิมพ์ start
+  // ✅ ปกติ → เมนู
+  const type = event.source.type;
+
+  if (type === "user") {
+    return sendMainMenu(event.replyToken);
+  }
+
   if (type === "group") {
-    const text = event.message?.text;
     if (text === "start") {
-      return await sendMainMenu(event.replyToken);
+      return sendMainMenu(event.replyToken);
     }
   }
 }
@@ -357,6 +389,7 @@ contents: [
   { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
   { type: "text", text: "ระดับ: " + levelEmoji },
   { type: "text", text: "👉 เหมาะกับ: " + answers.q5 },
+  { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
   { type: "text", text: text }
 ]
     },
