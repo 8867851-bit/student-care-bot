@@ -40,7 +40,42 @@ async function handlePostback(event) {
     sessions[userId] = { step: 0, answers: {} };
     return sendStep(userId, event.replyToken);
   }
+// ===== CHOOSE ROLE =====
+if (data.startsWith("chooseRole_")) {
+  const caseId = data.replace("chooseRole_", "");
 
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        {
+          type: "text",
+          text: "คุณจะรับเคสนี้ในบทบาทไหน?",
+          weight: "bold"
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "👩‍🎓 นักเรียน",
+            data: "accept_" + caseId + "_student"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "👨‍🏫 ครู",
+            data: "accept_" + caseId + "_teacher"
+          }
+        }
+      ]
+    }
+  });
+}
   // ===== FLOW =====
   const s = sessions[userId];
 
