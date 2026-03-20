@@ -422,15 +422,23 @@ function isWorkingHours() {
   const hour = now.getHours();
  return hour >= 8 && hour < 18;}
   
-  function getExpectedTime() {
+function getExpectedTime() {
   const now = new Date();
   const hour = now.getHours();
-    
-  // ก่อนเปิด
+
+  // 🌙 ก่อนเปิด
   if (hour < 8) {
-    return "วันนี้ก่อน 10:00 น.";}
-  // หลังปิด
-  return "พรุ่งนี้ก่อน 10:00 น.";}
+    return "วันนี้ก่อน 10:00 น.";
+  }
+
+  // 🟢 เวลาทำการ
+  if (hour >= 8 && hour < 18) {
+    return "ภายใน 1–3 ชั่วโมง";
+  }
+
+  // 🌙 หลังปิด
+  return "พรุ่งนี้ก่อน 10:00 น.";
+}
 
 // ================= REPLY =================
 async function replyText(token, text) {
