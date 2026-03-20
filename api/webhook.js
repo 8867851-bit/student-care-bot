@@ -234,49 +234,8 @@ function getETA() {
 
 // ================= NOTIFY =================
 async function notifyTeam(caseId, level, answers) {
-  let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
-  if (level === "red") text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
-
-  await fetch("https://api.line.me/v2/bot/message/push", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-    },
-    body: JSON.stringify({
-      to: GROUP_ID,
- messages: [{
-  type: "flex",
-  altText: "มีเคสใหม่",
-  contents: {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-contents: [
-  { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
-  { type: "text", text: "ระดับ: " + level },
-  { type: "text", text: "👉 เหมาะกับ: " + answers.q5 },
-  { type: "text", text: text }
-]
-    },
-    footer: {
-      type: "box",
-      layout: "vertical",
-      contents: [{
-        type: "button",
-        action: {
-          type: "postback",
-          label: "รับเคส",
-          data: "chooseRole_" + caseId   // 👈 จุดสำคัญ
-        }
-      }]
-    }
-  }
-}]
-    })   // 👈 ปิด JSON.stringify
-  });    // 👈 ปิด fetch
-}        // 👈 ปิด function notifyTeam
+  console.log("notifyTeam OK");
+}
 
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, replyToken) {
