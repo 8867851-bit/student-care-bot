@@ -100,19 +100,20 @@ if (data.startsWith("chooseRole_")) {
     }
   });
 }
-  // ===== FLOW =====
-  const s = sessions[userId];
-
     // ===== FLOW =====
   const s = sessions[userId];
 
-  if (s && s.step < 5) {
-    const keys = ["q1","q2","q3","q4","q5"];
-    s.answers[keys[s.step]] = data;
-    s.step++;
+if (s && s.step < 5) {
+  const keys = ["q1","q2","q3","q4","q5"];
+  s.answers[keys[s.step]] = data;
+  s.step++;
 
-    // 👉 หลังจบ Q5 → ไป Q6
-if (s && s.step === 5) {
+  // 👉 ถ้าเป็น Q6
+  if (s.step === 5) {
+    return sendStep(userId, event.replyToken);
+  }
+
+  // 👉 ปกติ (Q1–Q4)
   return sendStep(userId, event.replyToken);
 }
 
