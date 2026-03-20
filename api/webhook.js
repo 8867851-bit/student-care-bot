@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
-const GAS_URL = "https://script.google.com/macros/s/AKfycby2_qBSNuOy0epiSBJPtO6qvbY5ohH3njD6yqEbJ4NT3AgbxgOxDFA80NQCHhf16hx7Cw/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyyIdBODUbtxPHf2c4v416jz7j5Xx4KUp7Pv3ej0FL2O49_VMOzC1dhX9qFVsyCQkSt/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 // ================= SESSION =================
@@ -324,37 +324,31 @@ async function pushToUser(userId, text) {
 }
 // ===== Anti-ghost follow up =====
 async function scheduleFollowUp(caseId, userId) {
+  console.log("⏰ scheduleFollowUp START:", caseId);
+
   setTimeout(async () => {
-    try {
-      // 🔍 เช็คสถานะจาก GAS
-      const res = await fetch(GAS_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "check",
-          caseId
-        })
-      });
+    console.log("⏰ checking case:", caseId);
 
-      const data = await res.json();
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "check", caseId })
+    });
 
-      // ❗ ถ้ายัง pending = ยังไม่มีคนรับ
-      if (data.status === "pending") {
-        await pushToUser(userId,
-`💛 เรากำลังตามหาพี่ให้คุณอยู่นะ
+    const text = await res.text();
+    console.log("⏰ GAS RESPONSE:", text);
 
-ขอบคุณที่รอ และเราไม่ลืมคุณแน่นอน  
-ถ้าคุณอยากเล่าเพิ่ม สามารถพิมพ์มาได้เลยนะ 🌿`
-        );
+    if (text === "PENDING") {
+      console.log("🚨 case still pending");
 
-        // 🔔 ping ทีม
-        await pushToGroup(`🚨 เคส ${caseId} ยังไม่มีคนรับ (30 นาทีแล้ว)`);
-      }
+      await pushToUser(userId,
+`💛 เรายังอยู่ตรงนี้นะ
+ตอนนี้ทีมกำลังตามหาพี่ให้คุณอยู่ 🙏`);
 
-    } catch (err) {
-      console.log("FOLLOW UP ERROR:", err);
+      await pushToGroup(`🚨 เคส ${caseId} ยังไม่มีคนรับ`);
     }
-  }, 30 * 60 * 1000); // 30 นาที
+
+  }, 60 * 1000); // 🔥 1 นาที
 }
 // ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers) {
