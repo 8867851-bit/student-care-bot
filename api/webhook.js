@@ -274,6 +274,9 @@ contents: [
     }
   }
 }]
+    })   // 👈 ปิด JSON.stringify
+  });    // 👈 ปิด fetch
+}        // 👈 ปิด function notifyTeam
 
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, replyToken) {
