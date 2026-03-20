@@ -348,7 +348,11 @@ async function scheduleFollowUp(caseId, userId, level) {
 }
 
 // ================= UTIL =================
-async function pushToUser(userId, text) {
+async function pushToUser(userId, message) {
+  const msg = typeof message === "string"
+    ? [{ type: "text", text: message }]
+    : [message];
+
   await fetch("https://api.line.me/v2/bot/message/push", {
     method: "POST",
     headers: {
@@ -357,12 +361,9 @@ async function pushToUser(userId, text) {
     },
     body: JSON.stringify({
       to: userId,
-      messages: [{ type: "text", text }]
+      messages: msg
     })
   });
-}
-async function pushToUser(...) {
-  ...
 }
 
 // 👇 วางตรงนี้เลย (ต่อท้าย)
