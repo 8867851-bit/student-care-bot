@@ -25,8 +25,19 @@ module.exports = async (req, res) => {
 
 // ================= MESSAGE =================
 async function handleMessage(event) {
-  if (event.source.type === "user") {
+  const type = event.source.type;
+
+  // ✅ user แชทส่วนตัว → แสดงเมนูเสมอ
+  if (type === "user") {
     return sendMainMenu(event.replyToken);
+  }
+
+  // ✅ group → ต้องพิมพ์ start
+  if (type === "group") {
+    const text = event.message?.text;
+    if (text === "start") {
+      return sendMainMenu(event.replyToken);
+    }
   }
 }
 
