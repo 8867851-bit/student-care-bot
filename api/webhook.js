@@ -374,7 +374,7 @@ async function notifyTeam(level, caseId, answers, createdAt) {
 
   { type: "text", text: `${p.label}`, weight: "bold", size: "md" },
 
-  { type: "text", text: ⏳ รอมาแล้ว ${p.wait} นาที },
+  { type: "text", text: "⏳ รอมาแล้ว " + p.wait + " นาที" },
 
   { type: "separator", margin: "md" },
 
