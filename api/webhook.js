@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzGBFEAhqHNzMCaJlGa-ILGzjRg49AV4-SqOAr-roCs6vd9_0GzLafqzI5Bk3nwI90E/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyR0siRWKlScIozsxY1DCSFMdJ1BaGX49GJtdCQuGCfXT81ppnW8NliliRQ-pyCaHo0lQ/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 // ================= SESSION =================
@@ -169,7 +169,7 @@ const step = flow.steps[s.step];
   });
 
   await notifyTeam(level, caseId, s.answers, Date.now());
-await scheduleFollowUp(caseId, userId);
+await scheduleFollowUp(caseId, userId, level);
   
   const eta = getExpectedTime();
 
@@ -333,8 +333,13 @@ async function pushToUser(userId, text) {
   });
 }
 // ===== Anti-ghost follow up =====
-async function scheduleFollowUp(caseId, userId) {
+async function scheduleFollowUp(caseId, userId, level) {
   console.log("⏰ scheduleFollowUp START:", caseId);
+
+  let delay = 15 * 60 * 1000; // default green
+
+  if (level === "red") delay = 5 * 60 * 1000;
+  if (level === "yellow") delay = 10 * 60 * 1000;
 
   setTimeout(async () => {
     console.log("⏰ checking case:", caseId);
@@ -349,18 +354,52 @@ async function scheduleFollowUp(caseId, userId) {
     console.log("⏰ GAS RESPONSE:", data);
 
     if (data.status === "PENDING") {
-      console.log("🚨 case still pending");
-
-      await pushToUser(userId,
-`💛 เรายังอยู่ตรงนี้นะ
-ตอนนี้ทีมกำลังตามหาพี่ให้คุณอยู่ 🙏`);
-
-      await pushToGroup(`🚨 เคส ${caseId} ยังไม่มีคนรับ`);
+      await pushFlexToGroup({
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            { type: "text", text: `📌 เคส #${caseId}`, weight: "bold" },
+            { type: "text", text: "⏳ ยังไม่มีคนรับ", color: "#ff5555" }
+          ]
+        },
+        footer: {
+          type: "box",
+          layout: "vertical",
+          contents: [{
+            type: "button",
+            style: "primary",
+            action: {
+              type: "postback",
+              label: "รับเคส",
+              data: "chooseRole_" + caseId
+            }
+          }]
+        }
+      });
     }
 
-  }, 60 * 1000); // 🔥 1 นาที
+  }, delay);
 }
-
+//===== flextogroup ====
+async function pushFlexToGroup(bubble) {
+  await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: GROUP_ID,
+      messages: [{
+        type: "flex",
+        altText: "เคสรอรับ",
+        contents: bubble
+      }]
+    })
+  });
+}
 // ================= NOTIFY =================
 async function notifyTeam(level, caseId, answers, createdAt) {
   if (!GROUP_ID) return;
