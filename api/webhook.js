@@ -3,6 +3,7 @@ const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyR0siRWKlScIozsxY1DCSFMdJ1BaGX49GJtdCQuGCfXT81ppnW8NliliRQ-pyCaHo0lQ/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
+if (!global.caseMap) global.caseMap = {};
 // ================= MEMORY ================
 const sessions = {};
 if (!global.caseMap) global.caseMap = {};
@@ -317,6 +318,9 @@ function getETA() {
 // ================= NOTIFY =================
 async function notifyTeam(caseId, level, answers) {
   let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
+  let levelEmoji = "🟢";
+   if (level === "yellow") levelEmoji = "🟡";
+  if (level === "red") levelEmoji = "🔴";
   if (level === "red") text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
 
   await fetch("https://api.line.me/v2/bot/message/push", {
@@ -337,7 +341,7 @@ async function notifyTeam(caseId, level, answers) {
       layout: "vertical",
 contents: [
   { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
-  { type: "text", text: "ระดับ: " + level },
+  { type: "text", text: "ระดับ: " + levelEmoji },
   { type: "text", text: "👉 เหมาะกับ: " + answers.q5 },
   { type: "text", text: text }
 ]
