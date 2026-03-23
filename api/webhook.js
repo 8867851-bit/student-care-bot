@@ -33,77 +33,27 @@ async function handleMessage(event) {
   const userId = event.source.userId;
   const text = event.message.text;
   const s = sessions[userId];
-  
+
+  // ===== RESET =====
   if (text === "reset") {
-  delete sessions[userId];
-  sessions[userId] = undefined;
-  return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛");
-}
-  // ✅ ถ้าอยู่ Q6 → รับข้อความจริง
-  if (s && s.step === 5) {
-    s.answers["q6"] = text;
-    
-if (s.answers.q5 === "q5_advice") {
-
-  const highEmotional =
-    s.answers.q3 === "q3_high" ||
-    s.answers.q4 === "q4_none";
-
-  // 👉 ถ้า emotional สูง → ส่งเข้าระบบจริง
-  if (highEmotional) {
-    const caseId = Date.now().toString().slice(-6);
-    const level = classify(s.answers);
-    const route = "teacher"; // 🔥 force ไปครู
-
-    await fetch(GAS_URL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        action: "create",
-        caseId,
-        userId,
-        ...s.answers,
-        level,
-        route
-      })
-    });
-
-    await notifyTeam(caseId, level, s.answers, route);
-
     delete sessions[userId];
-
-    return replyText(event.replyToken,
-`💛 เข้าใจเลยนะว่ามันหนักสำหรับคุณ
-
-เรื่องแบบนี้ ครูน่าจะช่วยคุณได้ดีเลยนะ 👩‍🏫  
-⏳ ทีมกำลังหาครูในโครงการ ที่เหมาะสมให้คุณอยู่
-
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`);
+    return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛");
   }
 
-  // 👉 ถ้าไม่ emotional → ไปเว็บเหมือนเดิม
-  delete sessions[userId];
+  // ===== Q6 INPUT =====
+  if (s && s.step === 5) {
+    s.answers["q6"] = text;
 
-  return replyText(event.replyToken,
-`💛 เข้าใจเลยนะว่าคุณกำลังหาทางออกอยู่
-
-👇 คุณสามารถเข้าไปดูครูแต่ละคน  
-และเลือกคนที่เหมาะกับคุณได้เลย
-
-https://hub2-theta.vercel.app
-
-เลือกแบบที่คุณสบายใจได้เลยนะ 💛`);
-}
-if (s.answers.q5 === "q5_confused") {
-  delete sessions[userId];
-  sessions[userId] = undefined;
-  return sendExploreMenu(event.replyToken);
-}  
-// ===== END ROUTING =====
     const caseId = Date.now().toString().slice(-6);
     const level = classify(s.answers);
     const route = decideRoute(s.answers);
-    
+
+    // ===== EMOTIONAL CHECK =====
+    const highEmotional =
+      s.answers.q3 === "q3_high" ||
+      s.answers.q4 === "q4_none";
+
+    // ===== CREATE CASE =====
     await fetch(GAS_URL, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
@@ -118,9 +68,11 @@ if (s.answers.q5 === "q5_confused") {
     });
 
     await notifyTeam(caseId, level, s.answers, route);
+
+    // ===== RESPONSE =====
     let msg = "";
 
-if (route === "teacher") {
+    if (route === "teacher") {
   msg = `💛 เราได้รับเรื่องของคุณแล้วนะ
 
 เรื่องแบบนี้ ครูน่าจะช่วยคุณได้ดีเลยนะ 👩‍🏫  
@@ -144,16 +96,23 @@ https://hub2-theta.vercel.app
 คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
 }
 
-await replyText(event.replyToken, msg);
+    // ===== HIGH EMOTIONAL BOOST =====
+    if (highEmotional) {
+      msg += `
+
+💛 ถ้าคุณรู้สึกว่ามันหนักมาก  
+ทีมจะพยายามรีบหาคนให้คุณเร็วที่สุดนะ`;
+    }
+
+    await replyText(event.replyToken, msg);
 
     scheduleFollowUp(caseId, userId, level);
 
     delete sessions[userId];
-    sessions[userId] = undefined;
     return;
   }
 
-  // ✅ ปกติ → เมนู
+  // ===== DEFAULT MENU =====
   const type = event.source.type;
 
   if (type === "user") {
