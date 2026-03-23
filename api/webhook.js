@@ -645,21 +645,11 @@ async function sendMainMenu(replyToken) {
 
         {
           type: "button",
-          action: {
-            type: "postback",
-            label: "สําหรับ P.S.",
-            data: "become_peer"
-          }
-        },
-
-        // 🔥 อันนี้คือจุดสำคัญ (เปลี่ยนแล้ว)
-        {
-          type: "button",
           style: "primary",
           action: {
-            type: "uri",
+            type: "postback",
             label: "💛 คุยเรื่องที่หนักใจ",
-            uri: "https://liff.line.me/2009570074-zg0zMFN2"
+            data: "start_talk"
           }
         },
 
@@ -667,24 +657,35 @@ async function sendMainMenu(replyToken) {
           type: "button",
           action: {
             type: "postback",
-            label: "รวมข้อมูล",
-            data: "menu_resource"
+            label: "🌱 สำรวจตัวเอง",
+            data: "menu_explore"
           }
         },
+
+        {
+          type: "button",
+          action: {
+            type: "uri",
+            label: "📚 ดูตัวเลือกทั้งหมด",
+            uri: "https://hub2-theta.vercel.app"
+          }
+        },
+
         {
           type: "button",
           action: {
             type: "postback",
-            label: "กิจกรรม",
-            data: "menu_activity"
-          }
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "เหตุการณ์เร่งด่วน",
+            label: "🚨 ขอความช่วยเหลือด่วน",
             data: "menu_urgent"
+          }
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "👥 สำหรับ Peer Support",
+            data: "become_peer"
           }
         }
       ]
