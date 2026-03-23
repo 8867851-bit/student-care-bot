@@ -89,7 +89,63 @@ async function handleMessage(event) {
 async function handlePostback(event) {
   const data = event.postback.data;
   const userId = event.source.userId;
+  console.log("SESSION:", sessions[userId]);
+// ===== STEP FLOW (สำคัญมาก) =====
+if (data.startsWith("step_")) {
+  const parts = data.split("_");
 
+  const step = parseInt(parts[1]);     // เช่น 0
+  const value = parts.slice(2).join("_"); // เช่น q1_stress
+
+  const keys = ["q1","q2","q3","q4","q5"];
+
+  if (!sessions[userId]) {
+    sessions[userId] = { step: 0, answers: {} };
+  }
+
+  sessions[userId].answers[keys[step]] = value;
+sessions[userId].step = step + 1;
+
+// 👉 ถ้าจบ Q5 → ไป Q6
+if (sessions[userId].step === 5) {
+  return sendStep(userId, event.replyToken);
+}
+
+// ✅ รับ Q6 (ข้อความสุดท้าย)
+if (sessions[userId] && sessions[userId].step === 5) {
+  const s = sessions[userId];
+  s.answers["q6"] = text;
+
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
+
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "create",
+      caseId,
+      userId,
+      ...s.answers,
+      level
+    })
+  });
+
+  await notifyTeam(caseId, level, s.answers);
+
+  const eta = getETA();
+
+  await replyText(event.replyToken,
+`💛 เราได้รับเรื่องของคุณแล้วนะ
+
+ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
+⏳ โดยปกติจะใช้เวลา ${eta}
+
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`);
+
+  delete sessions[userId];
+  return;
+}
   // ===== START =====
   if (data === "start_talk") {
     sessions[userId] = { step: 0, answers: {} };
@@ -111,7 +167,7 @@ if (data === "menu_activity") {
 if (data === "menu_urgent") {
   return replyText(event.replyToken, "🚨 ถ้าด่วน โทร 1323 ได้เลยนะ");
 }
-  cc
+  
 // ===== CHOOSE ROLE =====
 if (data.startsWith("chooseRole_")) {
   const caseId = data.replace("chooseRole_", "");
@@ -160,60 +216,7 @@ ${userId}
 
 👉 กรุณาก๊อปไปใส่ใน Google Form`);
 }
-    // ===== FLOW =====
-  const s = sessions[userId];
-
-if (s && s.step < 5) {
-  const keys = ["q1","q2","q3","q4","q5"];
-  s.answers[keys[s.step]] = data;
-  s.step++;
-
-  // 👉 ถ้าเป็น Q6
-  if (s.step === 5) {
-    return sendStep(userId, event.replyToken);
-  }
-
-  // 👉 ปกติ (Q1–Q4)
-  return sendStep(userId, event.replyToken);
-}
-
-   // ===== CREATE CASE (เฉพาะตอนจบจริง) =====
-if (s && s.step === 5) {
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "create",
-      caseId,
-      userId,
-      ...s.answers,
-      level
-    })
-  });
-
-  await notifyTeam(caseId, level, s.answers);
-
-  const eta = getETA();
-
-  await replyText(event.replyToken,
-`💛 เราได้รับเรื่องของคุณแล้วนะ
-
-ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
-⏳ โดยปกติจะใช้เวลา ${eta}
-
-ถ้าคุณรู้สึกหนักมาก  
-คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
-
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`);
-
-  scheduleFollowUp(caseId, userId, level);
-
-  delete sessions[userId];
-  return;
-} 
+   
  // ===== ACCEPT =====
 if (data.startsWith("accept_")) {
   const parts = data.split("_");
@@ -363,7 +366,7 @@ async function sendStep(userId, replyToken) {
               action: {
                 type: "postback",
                 label: o.label,
-                data: o.value
+                data: "step_" + s.step + "_" + o.value
               }
             })))
       ]
