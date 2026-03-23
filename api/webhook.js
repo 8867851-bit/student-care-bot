@@ -446,13 +446,47 @@ function classify(s) {
 function decideRoute(answers) {
   let peerScore = 0;
   let teacherScore = 0;
+  
+// ===== HARD RULES (สำคัญมาก) =====
 
+// relationship → peer เสมอ
+if (answers.q1 === "q1_relationship") {
+  return "peer";}
+// academic → teacher เสมอ
+if (answers.q1 === "q1_academic") {
+  return "teacher";}
+  // ===== SELF LOGIC =====
+if (answers.q1 === "q1_self") {
+  const text = (answers.q6 || "").toLowerCase();
+
+  // ถ้ามี keyword แนว planning → teacher
+  if (
+    text.includes("อนาคต") ||
+    text.includes("เป้าหมาย") ||
+    text.includes("แผน") ||
+    text.includes("เรียนต่อ") ||
+    text.includes("คณะ") ||
+    text.includes("อาชีพ")
+  ) {
+    return "teacher";
+  }
+
+  // default → peer
+  return "peer";
+}
   // ===== Q1 =====
   if (answers.q1 === "q1_academic") teacherScore += 2;
   if (answers.q1 === "q1_self") peerScore += 2;
   if (answers.q1 === "q1_relationship") peerScore += 3;
   if (answers.q1 === "q1_stress") peerScore += 2;
-
+  
+// stress + หนักมาก + ไม่มีใคร → teacher
+if (
+  answers.q1 === "q1_stress" &&
+  answers.q3 === "q3_high" &&
+  answers.q4 === "q4_none"
+) { return "teacher";}
+  
   // ===== Q5 =====
   if (answers.q5 === "q5_advice") teacherScore += 2;
   if (answers.q5 === "q5_listen") peerScore += 3;
