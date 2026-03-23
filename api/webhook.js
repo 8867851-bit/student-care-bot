@@ -45,7 +45,17 @@ async function handleMessage(event) {
 // ===== ROUTING =====
 if (s.answers.q5 === "q5_advice") {
   delete sessions[userId];
-  return replyText(event.replyToken, "💛 ลองเริ่มจากอ่านอะไรเบา ๆ ก่อนนะ: https://hub2-theta.vercel.app");
+  return replyText(event.replyToken,
+`💛 เข้าใจเลยนะว่าคุณกำลังหาทางออกอยู่
+
+คุณสามารถเลือกได้เลยนะว่าอยาก:
+• อ่านและค่อย ๆ คิดก่อน 🧠
+• หรือ "นัดคุยกับคนจริง" 💬
+
+ลองเข้าไปดูตรงนี้ได้เลย 👇
+https://hub2-theta.vercel.app/booking
+
+เลือกแบบที่คุณสบายใจได้เลยนะ 💛`);
 }
 
 if (s.answers.q5 === "q5_confused") {
@@ -365,13 +375,46 @@ if (!s) {
 // ================= CLASSIFY =================
 function classify(s) {
   let score = 0;
-if (s.q2 === "q2_long") score += 2;
-if (s.q3 === "q3_high") score += 3;
-if (s.q4 === "q4_none") score += 2;
+  if (s.q2 === "q2_long") score += 2;
+  if (s.q3 === "q3_high") score += 3;
+  if (s.q4 === "q4_none") score += 2;
 
   if (score >= 5) return "red";
   if (score >= 3) return "yellow";
   return "green";
+}
+
+// ================= ROUTE (NEW) =================
+function decideRoute(answers) {
+  let peerScore = 0;
+  let teacherScore = 0;
+
+  // ===== Q1 =====
+  if (answers.q1 === "q1_academic") teacherScore += 2;
+  if (answers.q1 === "q1_self") peerScore += 2;
+  if (answers.q1 === "q1_relationship") peerScore += 3;
+  if (answers.q1 === "q1_stress") peerScore += 2;
+
+  // ===== Q5 =====
+  if (answers.q5 === "q5_advice") teacherScore += 2;
+  if (answers.q5 === "q5_listen") peerScore += 3;
+  if (answers.q5 === "q5_understand") peerScore += 2;
+  if (answers.q5 === "q5_confused") peerScore += 1;
+
+  // ===== Q6 (optional) =====
+  const text = (answers.q6 || "").toLowerCase();
+
+  if (text.includes("สอบ") || text.includes("tcas") || text.includes("พอร์ต")) {
+    teacherScore += 2;
+  }
+
+  if (text.includes("เครียด") || text.includes("เหนื่อย") || text.includes("ท้อ")) {
+    peerScore += 1;
+  }
+
+  // ===== FINAL =====
+  if (teacherScore > peerScore) return "teacher";
+  return "peer";
 }
 
 // ================= ETA =================
