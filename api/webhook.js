@@ -89,7 +89,8 @@ async function handleMessage(event) {
 async function handlePostback(event) {
   const data = event.postback.data;
   const userId = event.source.userId;
-  console.log("SESSION:", sessions[userId]);
+  console.log("DATA:", data);
+  console.log("SESSION:", sessions[userId])
 // ===== STEP FLOW (สำคัญมาก) =====
 if (data.startsWith("step_")) {
   const parts = data.split("_");
