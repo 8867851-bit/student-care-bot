@@ -93,9 +93,8 @@ async function handlePostback(event) {
 // ===== STEP FLOW (สำคัญมาก) =====
 if (data.startsWith("step_")) {
   const parts = data.split("_");
-
-  const step = parseInt(parts[1]);     // เช่น 0
-  const value = parts.slice(2).join("_"); // เช่น q1_stress
+  const step = parseInt(parts[1]);
+  const value = parts.slice(2).join("_");
 
   const keys = ["q1","q2","q3","q4","q5"];
 
@@ -104,12 +103,14 @@ if (data.startsWith("step_")) {
   }
 
   sessions[userId].answers[keys[step]] = value;
-sessions[userId].step = step + 1;
+  sessions[userId].step = step + 1;
 
-// 👉 ถ้าจบ Q5 → ไป Q6
-if (sessions[userId].step === 5) {
+  if (sessions[userId].step === 5) {
+    return sendStep(userId, event.replyToken);
+  }
+
   return sendStep(userId, event.replyToken);
-}
+} 
   // ===== START =====
   if (data === "start_talk") {
     sessions[userId] = { step: 0, answers: {} };
@@ -438,7 +439,7 @@ async function acceptCase(caseId, userId, replyToken) {
     await replyText(replyToken, "✅ รับเคสแล้ว");
 
     // 🔥 ดึง slot จริงจาก sheet
-    const name = "peer"; // (เดี๋ยว upgrade ทีหลัง)
+    //const name = "peer"; // (เดี๋ยว upgrade ทีหลัง)
     const slots = await getSlots(userId);
 
     // ✅ ส่ง slot ให้ user
@@ -733,4 +734,4 @@ async function sendExploreMenu(replyToken) {
     })
   });
 }
-}
+
