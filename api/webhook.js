@@ -33,12 +33,28 @@ async function handleMessage(event) {
   const userId = event.source.userId;
   const text = event.message.text;
   const s = sessions[userId];
-
+  
+  if (text === "reset") {
+  delete sessions[userId];
+  return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛");
+}
   // ✅ ถ้าอยู่ Q6 → รับข้อความจริง
   if (s && s.step === 5) {
     s.answers["q6"] = text;
 
-    const caseId = Date.now().toString().slice(-6);
+// ===== ROUTING =====
+if (s.answers.q5 === "q5_advice") {
+  delete sessions[userId];
+  return replyText(event.replyToken, "💛 ลองเริ่มจากอ่านอะไรเบา ๆ ก่อนนะ: https://hub2-theta.vercel.app");
+}
+
+if (s.answers.q5 === "q5_confused") {
+  delete sessions[userId];
+  return sendExploreMenu(event.replyToken);
+}
+// ===== END ROUTING =====
+
+const caseId = Date.now().toString().slice(-6);
     const level = classify(s.answers);
 
     await fetch(GAS_URL, {
@@ -113,10 +129,14 @@ if (data.startsWith("step_")) {
   return sendStep(userId, event.replyToken);
 } 
   // ===== START =====
-  if (data === "start_talk") {
-    sessions[userId] = { step: 0, answers: {} };
-    return sendStep(userId, event.replyToken);
+ if (data === "start_talk") {
+  if (sessions[userId]) {
+    return replyText(event.replyToken, "คุณกำลังอยู่ในบทสนทนาอยู่แล้วนะ 💛");
   }
+
+  sessions[userId] = { step: 0, answers: {} };
+  return sendStep(userId, event.replyToken);
+}
   // ===== MENU =====
   if (data === "menu_explore") {
   return sendExploreMenu(event.replyToken);
@@ -389,7 +409,8 @@ async function notifyTeam(caseId, level, answers) {
 contents: [
   { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
   { type: "text", text: "ระดับ: " + levelEmoji },
-  { type: "text", text: "👉 เหมาะกับ: " + answers.q5 },
+  { type: "text", text: "🧠 ประเภท: " + answers.q1 },
+  { type: "text", text: "🎯 ต้องการ: " + answers.q5 },
   { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
   { type: "text", text: text }
 ]
