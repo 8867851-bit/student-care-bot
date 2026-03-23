@@ -96,6 +96,9 @@ async function handlePostback(event) {
     return sendStep(userId, event.replyToken);
   }
   // ===== MENU =====
+  if (data === "menu_explore") {
+  return sendExploreMenu(event.replyToken);
+}
 if (data === "menu_resource") {
   return replyText(event.replyToken, "📚 เดี๋ยวเพิ่มนะ");
 }
@@ -108,6 +111,7 @@ if (data === "menu_activity") {
 if (data === "menu_urgent") {
   return replyText(event.replyToken, "🚨 ถ้าด่วน โทร 1323 ได้เลยนะ");
 }
+  cc
 // ===== CHOOSE ROLE =====
 if (data.startsWith("chooseRole_")) {
   const caseId = data.replace("chooseRole_", "");
