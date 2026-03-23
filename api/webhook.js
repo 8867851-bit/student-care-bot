@@ -44,38 +44,56 @@ async function handleMessage(event) {
     s.answers["q6"] = text;
     
 if (s.answers.q5 === "q5_advice") {
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-  const route = decideRoute(s.answers);
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "create",
-      caseId,
-      userId,
-      ...s.answers,
-      level,
-      route
-    })
-  });
 
-  await notifyTeam(caseId, level, s.answers, route);
+  const highEmotional =
+    s.answers.q3 === "q3_high" ||
+    s.answers.q4 === "q4_none";
+
+  // 👉 ถ้า emotional สูง → ส่งเข้าระบบจริง
+  if (highEmotional) {
+    const caseId = Date.now().toString().slice(-6);
+    const level = classify(s.answers);
+    const route = "teacher"; // 🔥 force ไปครู
+
+    await fetch(GAS_URL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        action: "create",
+        caseId,
+        userId,
+        ...s.answers,
+        level,
+        route
+      })
+    });
+
+    await notifyTeam(caseId, level, s.answers, route);
+
+    delete sessions[userId];
+
+    return replyText(event.replyToken,
+`💛 เข้าใจเลยนะว่ามันหนักสำหรับคุณ
+
+เรื่องแบบนี้ ครูน่าจะช่วยคุณได้ดีเลยนะ 👩‍🏫  
+⏳ ทีมกำลังหาคนที่เหมาะสมให้คุณอยู่
+
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`);
+  }
+
+  // 👉 ถ้าไม่ emotional → ไปเว็บเหมือนเดิม
   delete sessions[userId];
-  sessions[userId] = undefined;
+
   return replyText(event.replyToken,
 `💛 เข้าใจเลยนะว่าคุณกำลังหาทางออกอยู่
 
-คุณสามารถเลือกได้เลยนะว่าอยาก:
-• อ่านและค่อย ๆ คิดก่อน 🧠
-• หรือ "นัดคุยกับคนจริง" 💬
+👇 คุณสามารถเข้าไปดูครูแต่ละคน  
+และเลือกคนที่เหมาะกับคุณได้เลย
 
-ลองเข้าไปดูตรงนี้ได้เลย 👇
 https://hub2-theta.vercel.app
 
 เลือกแบบที่คุณสบายใจได้เลยนะ 💛`);
 }
-
 if (s.answers.q5 === "q5_confused") {
   delete sessions[userId];
   sessions[userId] = undefined;
