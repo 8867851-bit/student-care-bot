@@ -66,7 +66,8 @@ if (s.answers.q5 === "q5_confused") {
 
 const caseId = Date.now().toString().slice(-6);
     const level = classify(s.answers);
-
+    const route = decideRoute(s.answers);
+    
     await fetch(GAS_URL, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
@@ -75,7 +76,8 @@ const caseId = Date.now().toString().slice(-6);
         caseId,
         userId,
         ...s.answers,
-        level
+        level,
+        route
       })
     });
 
@@ -770,7 +772,7 @@ async function sendExploreMenu(replyToken) {
                   action: {
                     type: "uri",
                     label: "🧠 อ่าน / เลื่อนดู",
-                    uri: "https://hub2-theta.vercel.app/scroll"
+                    uri: "https://hub2-theta.vercel.app"
                   }
                 },
 
