@@ -110,42 +110,6 @@ sessions[userId].step = step + 1;
 if (sessions[userId].step === 5) {
   return sendStep(userId, event.replyToken);
 }
-
-// ✅ รับ Q6 (ข้อความสุดท้าย)
-if (sessions[userId] && sessions[userId].step === 5) {
-  const s = sessions[userId];
-  s.answers["q6"] = text;
-
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "create",
-      caseId,
-      userId,
-      ...s.answers,
-      level
-    })
-  });
-
-  await notifyTeam(caseId, level, s.answers);
-
-  const eta = getETA();
-
-  await replyText(event.replyToken,
-`💛 เราได้รับเรื่องของคุณแล้วนะ
-
-ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
-⏳ โดยปกติจะใช้เวลา ${eta}
-
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`);
-
-  delete sessions[userId];
-  return;
-}
   // ===== START =====
   if (data === "start_talk") {
     sessions[userId] = { step: 0, answers: {} };
@@ -345,7 +309,10 @@ async function sendStep(userId, replyToken) {
   ];
 
   const s = sessions[userId];
-
+if (!s) {
+  return replyText(replyToken, "ลองกดเริ่มใหม่อีกครั้งนะ 💛");
+}
+  
   return replyFlex(replyToken, {
     type: "bubble",
     body: {
