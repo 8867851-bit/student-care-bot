@@ -692,3 +692,69 @@ async function sendMainMenu(replyToken) {
     }
   });
 }
+async function sendExploreMenu(replyToken: string) {
+  await fetch("https://api.line.me/v2/bot/message/reply", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_CHANNEL_ACCESS_TOKEN"
+    },
+    body: JSON.stringify({
+      replyToken,
+      messages: [
+        {
+          type: "flex",
+          altText: "สำรวจตัวเอง",
+          contents: {
+            type: "bubble",
+            body: {
+              type: "box",
+              layout: "vertical",
+              spacing: "md",
+              contents: [
+                {
+                  type: "text",
+                  text: "🌱 สำรวจตัวเอง",
+                  weight: "bold",
+                  size: "lg"
+                },
+                {
+                  type: "text",
+                  text: "เริ่มต้นแบบไม่ต้องเล่าอะไร",
+                  size: "sm"
+                },
+
+                {
+                  type: "button",
+                  action: {
+                    type: "uri",
+                    label: "🧠 อ่าน / เลื่อนดู",
+                    uri: "https://hub2-theta.vercel.app/scroll"
+                  }
+                },
+
+                {
+                  type: "button",
+                  action: {
+                    type: "postback",
+                    label: "🪞 สะท้อนความคิดตัวเอง",
+                    data: "start_reflection"
+                  }
+                },
+
+                {
+                  type: "button",
+                  action: {
+                    type: "postback",
+                    label: "😶‍🌫️ ยังไม่รู้จะเริ่มยังไง",
+                    data: "confused_start"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    })
+  });
+}
