@@ -87,6 +87,7 @@ async function handleMessage(event) {
 
 // ================= POSTBACK =================
 async function handlePostback(event) {
+  console.log("POSTBACK:", event.postback.data);
   const data = event.postback.data;
   const userId = event.source.userId;
 
@@ -693,6 +694,7 @@ async function sendMainMenu(replyToken) {
   });
 }
 async function sendExploreMenu(replyToken) {
+  console.log("SENDING EXPLORE MENU");
   await fetch("https://api.line.me/v2/bot/message/reply", {
     method: "POST",
     headers: {
