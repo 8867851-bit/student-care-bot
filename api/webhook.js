@@ -53,7 +53,7 @@ if (s.answers.q5 === "q5_advice") {
 • หรือ "นัดคุยกับคนจริง" 💬
 
 ลองเข้าไปดูตรงนี้ได้เลย 👇
-https://hub2-theta.vercel.app/booking
+https://hub2-theta.vercel.app
 
 เลือกแบบที่คุณสบายใจได้เลยนะ 💛`);
 }
