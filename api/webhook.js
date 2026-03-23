@@ -81,7 +81,7 @@ const caseId = Date.now().toString().slice(-6);
       })
     });
 
-    await notifyTeam(caseId, level, s.answers);
+    await notifyTeam(caseId, level, s.answers, route);
     await replyText(event.replyToken,
 `💛 เราได้รับเรื่องของคุณแล้วนะ
 
@@ -428,7 +428,7 @@ function getETA() {
 }
 
 // ================= NOTIFY =================
-async function notifyTeam(caseId, level, answers) {
+async function notifyTeam(caseId, level, answers, route) {
   let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
   let levelEmoji = "🟢";
    if (level === "yellow") levelEmoji = "🟡";
@@ -455,7 +455,10 @@ contents: [
   { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
   { type: "text", text: "ระดับ: " + levelEmoji },
   { type: "text", text: "🧠 ประเภท: " + answers.q1 },
-  { type: "text", text: "🎯 ต้องการ: " + answers.q5 },
+  {
+  type: "text",
+  text: "🎯 แนะนำ: " + (route === "teacher" ? "👩‍🏫 ครู" : "👩‍🎓 พี่นักเรียน")
+},
   { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
   { type: "text", text: text }
 ]
