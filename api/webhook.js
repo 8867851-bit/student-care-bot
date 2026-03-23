@@ -36,6 +36,7 @@ async function handleMessage(event) {
   
   if (text === "reset") {
   delete sessions[userId];
+  sessions[userId] = undefined;
   return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛");
 }
   // ✅ ถ้าอยู่ Q6 → รับข้อความจริง
@@ -61,6 +62,7 @@ if (s.answers.q5 === "q5_advice") {
 
   await notifyTeam(caseId, level, s.answers, route);
   delete sessions[userId];
+  sessions[userId] = undefined;
   return replyText(event.replyToken,
 `💛 เข้าใจเลยนะว่าคุณกำลังหาทางออกอยู่
 
@@ -76,6 +78,7 @@ https://hub2-theta.vercel.app
 
 if (s.answers.q5 === "q5_confused") {
   delete sessions[userId];
+  sessions[userId] = undefined;
   return sendExploreMenu(event.replyToken);
 }  
 // ===== END ROUTING =====
@@ -124,6 +127,7 @@ await replyText(event.replyToken, msg);
     scheduleFollowUp(caseId, userId, level);
 
     delete sessions[userId];
+    sessions[userId] = undefined;
     return;
   }
 
@@ -155,7 +159,7 @@ if (data.startsWith("step_")) {
 
   const keys = ["q1","q2","q3","q4","q5"];
 
-  if (!sessions[userId]) {
+  if (sessions[userId] && sessions[userId].step !== undefined) {
     sessions[userId] = { step: 0, answers: {} };
   }
 
