@@ -733,3 +733,4 @@ async function sendExploreMenu(replyToken) {
     })
   });
 }
+}
