@@ -41,9 +41,25 @@ async function handleMessage(event) {
   // ✅ ถ้าอยู่ Q6 → รับข้อความจริง
   if (s && s.step === 5) {
     s.answers["q6"] = text;
-
-// ===== ROUTING =====
+    
 if (s.answers.q5 === "q5_advice") {
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
+  const route = decideRoute(s.answers);
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "create",
+      caseId,
+      userId,
+      ...s.answers,
+      level,
+      route
+    })
+  });
+
+  await notifyTeam(caseId, level, s.answers, route);
   delete sessions[userId];
   return replyText(event.replyToken,
 `💛 เข้าใจเลยนะว่าคุณกำลังหาทางออกอยู่
@@ -155,9 +171,11 @@ if (data.startsWith("step_")) {
   // ===== START =====
  if (data === "start_talk") {
   if (sessions[userId]) {
-    return replyText(event.replyToken, "คุณกำลังอยู่ในบทสนทนาอยู่แล้วนะ 💛");
-  }
+  return replyText(event.replyToken,
+`คุณกำลังคุยอยู่แล้วนะ 💛
 
+พิมพ์ "reset" เพื่อเริ่มใหม่ได้เลย`);
+}
   sessions[userId] = { step: 0, answers: {} };
   return sendStep(userId, event.replyToken);
 }
@@ -427,8 +445,8 @@ function decideRoute(answers) {
   }
 
   // ===== FINAL =====
-  if (teacherScore > peerScore) return "teacher";
-  return "peer";
+  if (teacherScore >= peerScore) return "teacher";
+return "peer";
 }
 
 // ================= ETA =================
