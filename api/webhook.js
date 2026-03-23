@@ -7,6 +7,8 @@ if (!global.caseMap) global.caseMap = {};
 // ================= MEMORY ================
 const sessions = {};
 if (!global.caseMap) global.caseMap = {};
+const handledEvents = new Set();
+
 
 // ================= MAIN =================
 module.exports = async (req, res) => {
@@ -17,6 +19,11 @@ module.exports = async (req, res) => {
   const events = body?.events || [];
 
   for (const event of events) {
+  const eventId = event.message?.id || event.postback?.data;
+  if (handledEvents.has(eventId)) {
+    continue;
+  } 
+  handledEvents.add(eventId);
     if (event.type === "follow") {
   await sendMainMenu(event.replyToken);
 }
