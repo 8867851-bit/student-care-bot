@@ -442,71 +442,77 @@ function classify(s) {
   return "green";
 }
 
-// ================= ROUTE (NEW) =================
+// ================= ROUTE (FINAL) =================
 function decideRoute(answers) {
-  let peerScore = 0;
-  let teacherScore = 0;
-  
-// ===== HARD RULES (สำคัญมาก) =====
 
-// relationship → peer เสมอ
-if (answers.q1 === "q1_relationship") {
-  return "peer";}
-// academic → teacher เสมอ
-if (answers.q1 === "q1_academic") {
-  return "teacher";}
+  // ===== HARD RULES =====
+  if (answers.q1 === "q1_relationship") return "peer";
+  if (answers.q1 === "q1_academic") return "teacher";
+
   // ===== SELF LOGIC =====
-if (answers.q1 === "q1_self") {
-  const text = (answers.q6 || "").toLowerCase();
+  if (answers.q1 === "q1_self") {
+    const text = (answers.q6 || "").toLowerCase();
 
-  // ถ้ามี keyword แนว planning → teacher
+    // ถ้ามี keyword แนว planning → teacher
+    if (
+      text.includes("อนาคต") ||
+      text.includes("เป้าหมาย") ||
+      text.includes("แผน") ||
+      text.includes("เรียนต่อ") ||
+      text.includes("คณะ") ||
+      text.includes("อาชีพ")
+    ) {
+      return "teacher";
+    }
+
+    // default → peer
+    return "peer";
+  }
+
+  // ===== STRESS ESCALATION =====
   if (
-    text.includes("อนาคต") ||
-    text.includes("เป้าหมาย") ||
-    text.includes("แผน") ||
-    text.includes("เรียนต่อ") ||
-    text.includes("คณะ") ||
-    text.includes("อาชีพ")
+    answers.q1 === "q1_stress" &&
+    answers.q3 === "q3_high" &&
+    answers.q4 === "q4_none"
   ) {
     return "teacher";
   }
 
-  // default → peer
-  return "peer";
-}
-  // ===== Q1 =====
-  if (answers.q1 === "q1_academic") teacherScore += 2;
-  if (answers.q1 === "q1_self") peerScore += 2;
-  if (answers.q1 === "q1_relationship") peerScore += 3;
+  // ===== SCORING =====
+  let peerScore = 0;
+  let teacherScore = 0;
+
+  // Q1
   if (answers.q1 === "q1_stress") peerScore += 2;
-  
-// stress + หนักมาก + ไม่มีใคร → teacher
-if (
-  answers.q1 === "q1_stress" &&
-  answers.q3 === "q3_high" &&
-  answers.q4 === "q4_none"
-) { return "teacher";}
-  
-  // ===== Q5 =====
+
+  // Q5
   if (answers.q5 === "q5_advice") teacherScore += 2;
   if (answers.q5 === "q5_listen") peerScore += 3;
   if (answers.q5 === "q5_understand") peerScore += 2;
   if (answers.q5 === "q5_confused") peerScore += 1;
 
-  // ===== Q6 (optional) =====
+  // Q6 (keyword)
   const text = (answers.q6 || "").toLowerCase();
 
-  if (text.includes("สอบ") || text.includes("tcas") || text.includes("พอร์ต")) {
+  if (
+    text.includes("สอบ") ||
+    text.includes("tcas") ||
+    text.includes("พอร์ต")
+  ) {
     teacherScore += 2;
   }
 
-  if (text.includes("เครียด") || text.includes("เหนื่อย") || text.includes("ท้อ")) {
+  if (
+    text.includes("เครียด") ||
+    text.includes("เหนื่อย") ||
+    text.includes("ท้อ")
+  ) {
     peerScore += 1;
   }
 
   // ===== FINAL =====
-  if (teacherScore >= peerScore) return "teacher";
-return "peer";
+  if (teacherScore > peerScore) return "teacher";
+  return "peer";
 }
 
 // ================= ETA =================
