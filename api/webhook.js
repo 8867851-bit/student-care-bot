@@ -61,10 +61,9 @@ https://hub2-theta.vercel.app
 if (s.answers.q5 === "q5_confused") {
   delete sessions[userId];
   return sendExploreMenu(event.replyToken);
-}
+}  
 // ===== END ROUTING =====
-
-const caseId = Date.now().toString().slice(-6);
+    const caseId = Date.now().toString().slice(-6);
     const level = classify(s.answers);
     const route = decideRoute(s.answers);
     
@@ -82,16 +81,29 @@ const caseId = Date.now().toString().slice(-6);
     });
 
     await notifyTeam(caseId, level, s.answers, route);
-    await replyText(event.replyToken,
-`💛 เราได้รับเรื่องของคุณแล้วนะ
+    let msg = "";
 
-ตอนนี้ทีมกำลังหาพี่ที่เหมาะสมให้คุณอยู่  
+if (route === "teacher") {
+  msg = `💛 เราได้รับเรื่องของคุณแล้วนะ
+
+เรื่องแบบนี้ ครูน่าจะช่วยคุณได้ดีเลยนะ 👩‍🏫  
 ⏳ โดยปกติจะใช้เวลา ${getETA()}
 
-ถ้าคุณรู้สึกหนักมาก  
-คุณสามารถโทร 1323 ได้ตลอด 24 ชม.
+👇 ระหว่างนี้คุณสามารถเลื่อนลงไปนัดคุยกับครูได้เลย
 
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`);
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
+} else {
+  msg = `💛 เราได้รับเรื่องของคุณแล้วนะ
+
+พี่นักเรียนน่าจะช่วยฟังคุณได้ดีเลยนะ 👩‍🎓  
+⏳ โดยปกติจะใช้เวลา ${getETA()}
+
+👇 ถ้าอยากคุยเร็วขึ้น คุณสามารถเลื่อนลงไปนัดคุยได้เลย
+
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
+}
+
+await replyText(event.replyToken, msg);
 
     scheduleFollowUp(caseId, userId, level);
 
