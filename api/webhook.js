@@ -159,9 +159,9 @@ if (data.startsWith("step_")) {
 
   const keys = ["q1","q2","q3","q4","q5"];
 
-  if (sessions[userId] && sessions[userId].step !== undefined) {
-    sessions[userId] = { step: 0, answers: {} };
-  }
+  if (!sessions[userId]) {
+  sessions[userId] = { step: 0, answers: {} };
+}
 
   sessions[userId].answers[keys[step]] = value;
   sessions[userId].step = step + 1;
@@ -174,7 +174,7 @@ if (data.startsWith("step_")) {
 } 
   // ===== START =====
  if (data === "start_talk") {
-  if (sessions[userId]) {
+  if (sessions[userId] && sessions[userId].step !== undefined) {
   return replyText(event.replyToken,
 `คุณกำลังคุยอยู่แล้วนะ 💛
 
