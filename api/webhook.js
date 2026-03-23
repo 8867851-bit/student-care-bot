@@ -643,7 +643,6 @@ async function sendMainMenu(replyToken) {
           text: "วันนี้คุณอยากทำอะไร?"
         },
 
-        // 👇 ปุ่มนี้ต้องอยู่ตรงนี้
         {
           type: "button",
           action: {
@@ -653,15 +652,17 @@ async function sendMainMenu(replyToken) {
           }
         },
 
+        // 🔥 อันนี้คือจุดสำคัญ (เปลี่ยนแล้ว)
         {
           type: "button",
           style: "primary",
           action: {
-            type: "postback",
-            label: "คุยเรื่องที่หนักใจ",
-            data: "start_talk"
+            type: "uri",
+            label: "💛 คุยเรื่องที่หนักใจ",
+            uri: "https://liff.line.me/2009570074-zg0zMFN2"
           }
         },
+
         {
           type: "button",
           action: {
