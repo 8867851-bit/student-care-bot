@@ -547,7 +547,7 @@ async function pushToUser(userId, message) {
   });
 }
 // ================= GET SLOTS =================
-async function getSlots(peerName) {
+async function getSlots(userId) {
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
@@ -692,12 +692,12 @@ async function sendMainMenu(replyToken) {
     }
   });
 }
-async function sendExploreMenu(replyToken: string) {
+async function sendExploreMenu(replyToken) {
   await fetch("https://api.line.me/v2/bot/message/reply", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer YOUR_CHANNEL_ACCESS_TOKEN"
+      "Authorization": "Bearer" + CHANNEL_ACCESS_TOKEN
     },
     body: JSON.stringify({
       replyToken,
