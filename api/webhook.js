@@ -33,7 +33,11 @@ async function handleMessage(event) {
   const userId = event.source.userId;
   const text = event.message.text;
   const s = sessions[userId];
-
+// กันพิมพ์มั่วระหว่าง flow
+if (s && s.step < 5 && text !== "reset") {
+  return replyText(event.replyToken,
+"💛 ตอนนี้เรากำลังคุยกันอยู่\nลองกดเลือกคำตอบด้านบน หรือพิมพ์ reset เพื่อเริ่มใหม่ได้เลยนะ");
+}
   // ===== RESET =====
   if (text === "reset") {
     delete sessions[userId];
@@ -100,7 +104,8 @@ https://hub2-theta.vercel.app
     if (highEmotional) {
       msg += `
 
-💛 ถ้าคุณรู้สึกว่ามันหนักมาก  
+💛 ถ้าคุณรู้สึกว่ามันหนักมาก
+โทรหา 1323 ได้ 24 ชั่วโมง
 ทีมจะพยายามรีบหาคนให้คุณเร็วที่สุดนะ`;
     }
 
