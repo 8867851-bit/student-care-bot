@@ -326,13 +326,14 @@ async function sendStep(userId, replyToken) {
     },
 
     {
-      text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหน?",
-      opts: [
-        { label: "คุยกับพี่นักเรียน", value: "q5_peer" },
-        { label: "คุยกับครู", value: "q5_teacher" },
-        { label: "แค่ระบาย", value: "q5_listen" }
-      ]
-    },
+  text: "ตอนนี้คุณต้องการอะไรที่สุด?",
+  opts: [
+    { label: "อยากมีคนฟังเฉย ๆ 💛", value: "q5_listen" },
+    { label: "อยากได้คำแนะนำ 🧠", value: "q5_advice" },
+    { label: "อยากคุยกับคนที่เข้าใจ 🫂", value: "q5_understand" },
+    { label: "ยังไม่แน่ใจ แต่อยากเริ่มอะไรสักอย่าง 🌱", value: "q5_confused" }
+  ]
+},
 
     {
       text: "อยากเล่าอะไรเพิ่มไหม?💛 [พิมพ์ 1 เพื่อข้าม] ",
