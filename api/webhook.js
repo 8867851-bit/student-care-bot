@@ -107,7 +107,8 @@ const isHighRisk = isRisk && s.answers.q3 === "q3_high";
     
 // ==== confidence ====    
 const confidence = getConfidence(intent, s.answers);  
-if (confidence <= 1) {
+const hasUserText = text && text.trim().length > 2;
+if (confidence <= 1 && !hasUserText) {
       // 👉 low clarity case
          delete sessions[userId];
   
