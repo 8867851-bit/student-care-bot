@@ -120,7 +120,8 @@ return replyFlex(event.replyToken, {
     contents: [
       {
         type: "text",
-        text: "💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ",
+        text: "💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ
+          บางทีมันอาจจะยังเรียบเรียงไม่ออกก็ได้นะ ",
         weight: "bold",
         wrap: true
       },
@@ -244,11 +245,13 @@ if (!sessions[userId] || sessions[userId].step !== step) {
   sessions[userId].step = step + 1;
 
   if (sessions[userId].step === 5) {
-    return sendStep(userId, event.replyToken);
-  }
+    await replyText(event.replyToken,
+`💛 ขอบคุณที่เล่าให้ฟังนะ
 
-  return sendStep(userId, event.replyToken);
-} 
+หลังจากนี้เราจะช่วยหาคนที่เหมาะกับคุณ
+แล้วนัดเวลาคุยกันนะ`);
+    return sendStep(userId, event.replyToken);}
+
     // ===== START =====
  if (data === "start_talk") {
   // 🔥 force เริ่มใหม่เสมอ
@@ -436,11 +439,11 @@ async function sendStep(userId, replyToken) {
     {
   text: "ตอนนี้คุณต้องการอะไรที่สุด?",
   opts: [
-    { label: "อยากมีคนฟังเฉย ๆ 💛", value: "q5_listen" },
-    { label: "อยากได้คำแนะนำ 🧠", value: "q5_advice" },
-    { label: "อยากคุยกับคนที่เข้าใจ 🫂", value: "q5_understand" },
-    { label: "ยังไม่แน่ใจ แต่อยากเริ่มอะไรสักอย่าง 🌱", value: "q5_confused" }
-  ]
+  { label: "💬 คุยกับพี่นักเรียน (มีคนนั่งฟังจริง ๆ)", value: "q5_listen" },
+  { label: "🫂 คุยกับคนที่เข้าใจ (มีคนนัดคุยจริง)", value: "q5_understand" },
+  { label: "🧠 ขอคำแนะนำจากครู (ช่วยคิดทางออก)", value: "q5_advice" },
+  { label: "🌱 ยังไม่แน่ใจ ขอเริ่มเบา ๆ ก่อน", value: "q5_confused" }
+]
 },
 
     {
@@ -450,9 +453,7 @@ async function sendStep(userId, replyToken) {
   ];
 
   const s = sessions[userId];
-if (!s) {
-  return replyText(replyToken, "ลองกดเริ่มใหม่อีกครั้งนะ 💛");
-}
+if (!s) { return replyText(replyToken, "ลองกดเริ่มใหม่อีกครั้งนะ 💛"); }
   
   return replyFlex(replyToken, {
     type: "bubble",
