@@ -59,7 +59,7 @@ if (sessions[userId]?.done) {
   delete sessions[userId];
   return sendMainMenu(event.replyToken); }
   
-  if (s && s.step < 5) {
+  if (s && s.step < 6) {
   if (text === "reset") {
     delete sessions[userId];
     return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛"); }
@@ -82,7 +82,7 @@ if (sessions[userId]?.done) {
        แล้วค่อยกลับมานะ เราอยู่ตรงนี้ 💛`); }
   
   // ===== Q6 INPUT =====
-  if (s && s.step === 5) {
+  if (s && s.step === 6) {
     s.answers["q6"] = text;
 
     
