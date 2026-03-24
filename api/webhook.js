@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
   const events = body?.events || [];
 
   for (const event of events) {
-  const eventId = event.message?.id || event.postback?.data;
+  const eventId = event.replyToken;
     
   if (handledEvents.has(eventId)) { continue; }  
   handledEvents.add(eventId);
@@ -91,7 +91,7 @@ const isHighRisk = isRisk && s.answers.q3 === "q3_high";
 const confidence = getConfidence(intent, s.answers);  
 if (confidence <= 1) {
       // 👉 low clarity case
-         sessions[userId] = null;
+         delete sessions[userId];
  return replyText(event.replyToken,
 `💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ
 
@@ -172,15 +172,18 @@ if (isHighRisk) {
 
     scheduleFollowUp(caseId, userId, level);
 
-    sessions[userId] = null;
+    delete sessions[userId];
     return;
   }
 
   // ===== DEFAULT MENU =====
   const type = event.source.type;
   
-  if (!sessions[userId] && text) {
-  return sendMainMenu(event.replyToken); }
+if (!sessions[userId]) {
+  if (text === "เมนู") {
+    return sendMainMenu(event.replyToken); }
+    return replyText(event.replyToken,
+`💛 ลองกดจากเมนูด้านล่างได้เลยนะ หรือพิมพ์ "เมนู" เพื่อเริ่มใหม่ 💛`); }
   
   if (type === "user") {
     return sendMainMenu(event.replyToken); }
