@@ -161,8 +161,8 @@ return replyFlex(event.replyToken, {
       }
     ]
   }
-});
-  
+}); 
+}
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
       s.answers.q3 === "q3_high" &&
