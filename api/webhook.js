@@ -19,22 +19,17 @@ module.exports = async (req, res) => {
   const events = body?.events || [];
 
   for (const event of events) {
-  const eventId = event.replyToken;
+  const eventId = event.message?.id || event.postback?.data;
     
-  if (handledEvents.has(eventId)) {
-    continue;
-  } 
+  if (handledEvents.has(eventId)) { continue; }  
   handledEvents.add(eventId);
     if (event.type === "follow") {
-  await sendMainMenu(event.replyToken);
-}
+  await sendMainMenu(event.replyToken); }
 
 if (event.type === "message") await handleMessage(event);
-if (event.type === "postback") await handlePostback(event);
-  }
+if (event.type === "postback") await handlePostback(event); }
 
-  return res.status(200).send("OK");
-};
+  return res.status(200).send("OK"); };
 
 // ================= MESSAGE =================
 async function handleMessage(event) {
@@ -54,29 +49,31 @@ if (s && s.step < 5) {
   // ===== Q6 INPUT =====
   if (s && s.step === 5) {
     s.answers["q6"] = text;
-
+    
+// ===== CONFUSED → EXPLORE (priority สูงสุด) =====
+if (s.answers.q5 === "q5_confused") {
+  delete sessions[userId];
+  return sendExploreMenu(event.replyToken); }
+    
     // ===== INTENT + RISK CHECK =====
+    
 const inputText = (text || "").toLowerCase();
-
 const isPractical = hasKeyword(inputText, practicalKeywords);
 const isEmotional = hasKeyword(inputText, emotionalKeywords);
 const isRisk = hasKeyword(inputText, riskKeywords);
+    
     //======= Highrisk check =====
-const isHighRisk = isRisk && !isPractical && s.answers.q4 === "q4_none";
+const isHighRisk = isRisk && s.answers.q3 === "q3_high";
 
     const caseId = Date.now().toString().slice(-6);
     const level = classify(s.answers);
     const intent = detectIntent(s.answers);
-    const route = decideRoute(s.answers);
+    let route = decideRoute(s.answers);
     
 // ===== INTENT → ROUTE OVERRIDE =====
     
-if (intent === "crisis") {
-  route = "teacher"; }
-if (intent === "practical_advice") {
-  route = "teacher"; }
-if (intent === "emotional_support") {
-  route = "peer"; }
+if (intent === "crisis" || intent === "practical_advice") { route = "teacher"; }
+if (intent === "emotional_support") { route = "peer"; }
     
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
@@ -552,16 +549,18 @@ function detectIntent(answers) {
   const text = (answers.q6 || "").toLowerCase();
 
   const isPractical = hasKeyword(text, practicalKeywords);
-  const isEmotional = hasKeyword(text, emotionalKeywords);
   const isRisk = hasKeyword(text, riskKeywords);
 
   // 🚨 crisis
   if ( isRisk && answers.q4 === "q4_none" ) { return "crisis"; }
 
-  // 🧠 practical
-  if (answers.q5 === "q5_advice" && isPractical ) { return "practical_advice"; }
+  // ===== USER NEED FIRST =====
+  if ( answers.q5 === "q5_listen" || answers.q5 === "q5_understand" ) { return "emotional_support"; }
 
-  // 💛 emotional (default)
+  if ( answers.q5 === "q5_confused") { return "emotional_support"; }
+
+  if ( answers.q5 === "q5_advice" && isPractical ) { return "practical_advice"; }
+
   return "emotional_support"; }
 
 // ================= ETA =================
