@@ -110,16 +110,50 @@ const confidence = getConfidence(intent, s.answers);
 if (confidence <= 1) {
       // 👉 low clarity case
          delete sessions[userId];
- return replyText(event.replyToken,
-`💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ
+  
+return replyFlex(event.replyToken, {
+  type: "bubble",
+  body: {
+    type: "box",
+    layout: "vertical",
+    spacing: "md",
+    contents: [
+      {
+        type: "text",
+        text: "💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ",
+        weight: "bold",
+        wrap: true
+      },
+      {
+        type: "text",
+        text: "ลองเลือกสิ่งที่ใกล้กับคุณตอนนี้",
+        size: "sm",
+        wrap: true
+      },
 
-ลองเลือกสิ่งที่รู้สึกใกล้กับคุณตอนนี้:
-
-• 💬 อยากคุยกับใครสักคน → พิมพ์ "คุย"
-• 🌱 อยากค่อย ๆ เข้าใจตัวเอง → พิมพ์ "เข้าใจ"
-• 💤 อยากพักใจ → พิมพ์ "พัก"
-
-หรือพิมพ์ "เมนู" เพื่อกลับไปเริ่มใหม่ก็ได้นะ 💛`);} 
+      {
+        type: "button",
+        action: {
+          type: "postback",
+          label: "💬 คุยกับคนจริง",
+          data: "start_talk"
+        }
+      },
+      {
+        type: "button",
+        action: {
+          type: "postback",
+          label: "🌱 ค่อย ๆ เข้าใจตัวเอง",
+          data: "menu_explore"
+        }
+      },
+      {
+        type: "button",
+        action: {
+          type: "message",
+          label: "💤 พักสักนิด",
+          text: "พัก"
+        } } ] } }); } 
     
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
@@ -142,49 +176,18 @@ if (confidence <= 1) {
 
     await notifyTeam(caseId, level, s.answers, route);
 
-    // ===== RESPONSE =====
-let msg = "";
+  // ===== RESPONSE =====
+let msg = buildHumanMessage(intent, s.answers, route);
 
-// ===== MESSAGE BY INTENT =====
+msg += `
+⏳ โดยปกติจะใช้เวลา ${getETA()}`;
+msg += `
+💛 ระหว่างนี้เราจะช่วยหาคนที่เหมาะกับคุณให้เร็วที่สุดนะ`;
+    
 if (intent === "crisis") {
-  msg = `💛 เราอยู่ตรงนี้นะ
-
-เรื่องแบบนี้ คุณไม่ต้องรับมือคนเดียว
-ทีมกำลังหาครูหรือผู้ใหญ่ที่เหมาะสมให้คุณอยู่
-
-⏳ จะรีบติดต่อกลับให้เร็วที่สุดนะ`; }
-
-else if (intent === "practical_advice") {
-  msg = `💛 เข้าใจเลยนะว่าคุณกำลังหาทางออกอยู่
-
-เรื่องแบบนี้ ครูน่าจะช่วยคุณได้ดีเลย 👩‍🏫  
-⏳ โดยปกติจะใช้เวลา ${getETA()}
-
-👇 ระหว่างรอ  
-คุณสามารถเข้าไปดูแนวทางหรือข้อมูลเพิ่มเติมได้ที่นี่
-https://hub2-theta.vercel.app`; }
-
-else {
-  msg = `💛 เราได้รับเรื่องของคุณแล้วนะ
-
-พี่นักเรียนน่าจะช่วยฟังคุณได้ดีเลย 👩‍🎓  
-⏳ โดยปกติจะใช้เวลา ${getETA()}
-
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`; }
-
-// ===== EMOTIONAL SUPPORT (soft) =====
-if (highEmotional && !isHighRisk) {
-  msg += `
-💛 เราเห็นเลยนะว่ามันหนักสำหรับคุณ
-ทีมจะพยายามหา คนที่เหมาะกับคุณให้เร็วที่สุดนะ`;
-}
-
-// ===== HIGH RISK HOTLINE =====
-if (isHighRisk) {
   msg += `
 💛 ถ้าคุณรู้สึกว่ามันหนักมาก
-คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`;
-}
+คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`; }
 
     await replyText(event.replyToken, msg);
 
@@ -612,6 +615,26 @@ function detectIntent(answers) {
   if ( answers.q5 === "q5_advice" && isPractical ) { return "practical_advice"; }
 
   return "emotional_support"; }
+
+//======== + EMPHATY===========
+function buildHumanMessage(intent, answers, route) {
+  const text = (answers.q6 || "").toLowerCase();
+
+  // ===== base ====
+  let msg = "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n";
+
+  // ===== intent layer =====
+  if (intent === "crisis") { msg += "\nเรื่องนี้มันหนักมากจริง ๆ\nคุณไม่จำเป็นต้องอยู่กับมันคนเดียวเลยนะ"; }
+    else if (intent === "practical_advice") { msg += "\nดูเหมือนคุณกำลังพยายามหาทางออกอยู่จริง ๆ"; }
+    else { msg += "\nมันโอเคเลยนะที่จะรู้สึกแบบนี้"; }
+
+  // ===== suggestion layer =====
+  if (route === "teacher") { msg += `\n\nถ้าคุณอยากได้คำแนะนำแบบชัดเจน\nครูน่าจะช่วยคุณได้ดีเลย 👩‍🏫`;} 
+    else { msg += `\n\nถ้าคุณอยากมีคนฟัง\nพี่นักเรียนก็อยู่ตรงนี้เหมือนกัน 💛`; }
+
+  // ===== soft autonomy =====
+  msg += `\n\nคุณสามารถเลือกแบบที่คุณสบายใจได้เลยนะ`;
+    return msg; }
 
 // ================= ETA =================
 function getETA() {
