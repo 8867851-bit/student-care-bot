@@ -19,7 +19,8 @@ module.exports = async (req, res) => {
   const events = body?.events || [];
 
   for (const event of events) {
-  const eventId = event.message?.id || event.postback?.data;
+  const eventId = event.replyToken;
+    
   if (handledEvents.has(eventId)) {
     continue;
   } 
@@ -40,16 +41,15 @@ async function handleMessage(event) {
   const userId = event.source.userId;
   const text = event.message.text;
   const s = sessions[userId];
-// กันพิมพ์มั่วระหว่าง flow
-if (s && s.step < 5 && text !== "reset") {
-  return replyText(event.replyToken,
-"💛 ตอนนี้เรากำลังคุยกันอยู่\nลองกดเลือกคำตอบด้านบน หรือพิมพ์ reset เพื่อเริ่มใหม่ได้เลยนะ");
-}
-  // ===== RESET =====
+if (s && s.step < 5) {
   if (text === "reset") {
     delete sessions[userId];
     return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛");
   }
+
+  return replyText(event.replyToken,
+"💛 ตอนนี้เรากำลังคุยกันอยู่\nลองกดเลือกคำตอบด้านบน หรือพิมพ์ reset เพื่อเริ่มใหม่ได้เลยนะ");
+}
 
   // ===== Q6 INPUT =====
   if (s && s.step === 5) {
@@ -165,15 +165,11 @@ if (data.startsWith("step_")) {
 
   return sendStep(userId, event.replyToken);
 } 
-  // ===== START =====
+    // ===== START =====
  if (data === "start_talk") {
-  if (sessions[userId] && sessions[userId].step !== undefined) {
-  return replyText(event.replyToken,
-`คุณกำลังคุยอยู่แล้วนะ 💛
-
-พิมพ์ "reset" เพื่อเริ่มใหม่ได้เลย`);
-}
+  // 🔥 force เริ่มใหม่เสมอ
   sessions[userId] = { step: 0, answers: {} };
+
   return sendStep(userId, event.replyToken);
 }
   // ===== MENU =====
