@@ -33,27 +33,42 @@ if (event.type === "postback") await handlePostback(event); }
 
 // ================= MESSAGE =================
 async function handleMessage(event) {
-  const userId = event.source.userId;
-  const text = event.message.text;
-  const s = sessions[userId];
-if (s && s.step < 5) {
+    const userId = event.source.userId;
+    const text = event.message.text;
+    const s = sessions[userId];
+  if (s && s.step < 5) {
   if (text === "reset") {
-    delete sessions[userId];
-    return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛");
-  }
+    sessions[userId] = null;
+    return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛"); }
+    return replyText(event.replyToken,
+"💛 ตอนนี้เรากำลังคุยกันอยู่\nลองกดเลือกคำตอบด้านบน หรือพิมพ์ reset เพื่อเริ่มใหม่ได้เลยนะ"); }
+  
+  if (text === "เมนู") { delete sessions[userId];
+    return sendMainMenu(event.replyToken); }
 
-  return replyText(event.replyToken,
-"💛 ตอนนี้เรากำลังคุยกันอยู่\nลองกดเลือกคำตอบด้านบน หรือพิมพ์ reset เพื่อเริ่มใหม่ได้เลยนะ");
-}
+  if (text === "คุย") {
+    sessions[userId] = { step: 0, answers: {} };
+    return sendStep(userId, event.replyToken); }
 
+  if (text === "เข้าใจ") {
+    return sendExploreMenu(event.replyToken); }
+
+  if (text === "พัก") {
+    return replyText(event.replyToken, 
+      `💛 ลองพักสักนิดนะ
+       หายใจลึก ๆ 3 ครั้ง  
+       ดื่มน้ำเย็นสักแก้ว  
+       หรือขยับตัวเบา ๆ
+       แล้วค่อยกลับมานะ เราอยู่ตรงนี้ 💛`); }
+  
   // ===== Q6 INPUT =====
   if (s && s.step === 5) {
     s.answers["q6"] = text;
     
 // ===== CONFUSED → EXPLORE (priority สูงสุด) =====
-if (s.answers.q5 === "q5_confused") {
-  delete sessions[userId];
-  return sendExploreMenu(event.replyToken); }
+  if (s.answers.q5 === "q5_confused") {
+    sessions[userId] = null;
+    return sendExploreMenu(event.replyToken); }
     
     // ===== INTENT + RISK CHECK =====
     
@@ -77,18 +92,18 @@ const isHighRisk = isRisk && s.answers.q3 === "q3_high";
 // ==== confidence ====    
 const confidence = getConfidence(intent, s.answers);  
 if (confidence <= 1) {
-  // 👉 low clarity case
-  delete sessions[userId];
-  return replyText(event.replyToken,
+      // 👉 low clarity case
+         sessions[userId] = null;
+ return replyText(event.replyToken,
 `💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ
 
 ลองเลือกสิ่งที่รู้สึกใกล้กับคุณตอนนี้:
 
-• 💬 อยากคุยกับใครสักคน
-• 🌱 อยากค่อย ๆ ทำความเข้าใจตัวเอง
-• 💤 อยากพักใจแป๊บนึงก่อน
+• 💬 อยากคุยกับใครสักคน → พิมพ์ "คุย"
+• 🌱 อยากค่อย ๆ เข้าใจตัวเอง → พิมพ์ "เข้าใจ"
+• 💤 อยากพักใจ → พิมพ์ "พัก"
 
-เลือกแบบที่สบายใจได้เลยนะ 💛`);} 
+หรือพิมพ์ "เมนู" เพื่อกลับไปเริ่มใหม่ก็ได้นะ 💛`);} 
     
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
@@ -159,7 +174,7 @@ if (isHighRisk) {
 
     scheduleFollowUp(caseId, userId, level);
 
-    delete sessions[userId];
+    sessions[userId] = null;
     return;
   }
 
