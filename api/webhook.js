@@ -247,15 +247,16 @@ if (!sessions[userId] || sessions[userId].step !== step) {
 
   sessions[userId].answers[keys[step]] = value;
   sessions[userId].step = step + 1;
+  return sendStep(userId, event.replyToken); }
 
 
     // ===== START =====
  if (data === "start_talk") {
   // 🔥 force เริ่มใหม่เสมอ
   sessions[userId] = { step: 0, answers: {} };
+  return sendStep(userId, event.replyToken); }
 
-  return sendStep(userId, event.replyToken);
-}
+  
   // ===== MENU =====
   if (data === "menu_explore") {
   return sendExploreMenu(event.replyToken);
