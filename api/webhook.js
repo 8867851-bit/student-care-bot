@@ -233,9 +233,64 @@ if (data.startsWith("step_")) {
   const parts = data.split("_");
   const value = parts.slice(2).join("_");
   const keys = ["q1","q2","q3","q4","q5"];
-
   const step = parseInt(parts[1]);
+  
+// ===== SPECIAL CHOICE (transition decision) =====
+if (value === "continue") {
+  sessions[userId].step++;
+  return sendStep(userId, event.replyToken);
+}
 
+if (value === "pause") {
+  delete sessions[userId];
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+        {
+          type: "text",
+          text: "💛 ไม่เป็นไรเลยนะ",
+          weight: "bold"
+        },
+        {
+          type: "text",
+          text: "คุณยังไม่ต้องรีบก็ได้\nเรายังอยู่ตรงนี้เสมอ 💛",
+          wrap: true,
+          size: "sm"
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "🌱 สำรวจตัวเอง",
+            data: "menu_explore"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "message",
+            label: "💤 พักสักนิด",
+            text: "พัก"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "💬 คุยเรื่องที่หนักใจ",
+            data: "start_talk"
+          }
+        }
+      ]
+    }
+  });
+}
+  
 // 🔥 guard: กันกดปุ่มเก่า
 if (!sessions[userId] || sessions[userId].step !== step) {
   return replyText(event.replyToken,
@@ -333,7 +388,16 @@ if (data.startsWith("accept_")) {
 
   return acceptCase(caseId, userId, role, event.replyToken);
 }
+  
+if (value === "continue") {
+  sessions[userId].step++;
+  return sendStep(userId, replyToken);
+}
 
+if (value === "pause") {
+  delete sessions[userId];
+  return replyFlex(...soft menu...);
+}
   // ===== SLOT =====
   if (data.startsWith("slot_")) {
     const parts = data.split("_");
@@ -448,11 +512,17 @@ async function sendStep(userId, replyToken) {
     {
   text: `💛 ขอบคุณที่เล่าให้ฟังนะ
 
-หลังจากนี้เราจะช่วย "จับคู่คุณกับคนจริงๆ"
-ไม่ว่าจะเป็นพี่นักเรียนหรือครู (ในโครงการ)
-แล้วนัดเวลาคุยกันแบบตัวต่อตัวนะ`,
-  noInput: true
+หลังจากนี้เราจะช่วยจับคู่คุณกับคนจริง
+ไม่ว่าจะเป็นพี่นักเรียนหรือครูในโครงการ  
+แล้วนัดเวลาคุยกันแบบตัวต่อตัวนะ
+
+คุณสามารถเลือกได้เลย 💛`,
+  opts: [
+    { label: "💬 ไปต่อ", value: "continue" },
+    { label: "🌱 ขอคิดดูก่อน", value: "pause" }
+  ]
 },
+    
 {
   text: " ถ้าอยากเล่าเพิ่ม เราจะอ่านทุกอย่างนะ💛 [พิมพ์ 1 เพื่อข้าม]",
   input: true
