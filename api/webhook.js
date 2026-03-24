@@ -83,10 +83,12 @@ if (sessions[userId]?.done) {
   
   // ===== Q6 INPUT =====
   if (s && s.step === 6) {
-    s.answers.q6 = text;
-// ===== AI REFLECTION =====
-const ai = await getAIReflection(text);
-    
+    s.answers["q6"] = text;
+// ===== AI ANALYSIS =====
+const ai = await getAIAnalysis(text);
+if (ai && ai.followups) {
+  return buildPersonalizedQ6(event.replyToken, ai);
+}    
     
     // ===== INTENT + RISK CHECK =====
     
@@ -256,6 +258,48 @@ async function handlePostback(event) {
     }
     sessions[userId].answers.q5 = "q5_advice";
     return sendStep(userId, event.replyToken); }
+//===== end3 อัน=====
+
+  // ===== Q6 FOLLOW-UP =====
+if (data.startsWith("q6_follow_")) {
+  const s = sessions[userId];
+  if (!s) return;
+
+  // 👉 treat ว่า Q6 complete แล้ว
+  s.step = 7;
+
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
+  const intent = detectIntent(s.answers);
+  let route = decideRoute(s.answers);
+
+  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
+  if (intent === "emotional_support") route = "peer";
+
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "create",
+      caseId,
+      userId,
+      ...s.answers,
+      level,
+      route
+    })
+  });
+
+  await notifyTeam(caseId, level, s.answers, route);
+
+  await replyText(event.replyToken,
+`💛 ขอบคุณที่แชร์นะ
+เดี๋ยวเราจะหาคนที่เหมาะกับคุณให้`);
+
+  sessions[userId] = { done: true };
+  return;
+}
+
+
   
 // ===== STEP FLOW (สำคัญมาก) =====
 if (data.startsWith("step_")) {
@@ -338,7 +382,7 @@ if (value === "pause") {
   sessions[userId].answers[keys[step]] = value; }
   sessions[userId].step = step + 1;
   return sendStep(userId, event.replyToken); 
-return; }
+ }
 
 
     // ===== START =====
@@ -742,7 +786,7 @@ function buildHumanMessage(intent, answers, route) {
   // ===== soft autonomy =====
   msg += `\n\nคุณสามารถเลือกแบบที่คุณสบายใจได้เลยนะ`;
     return msg; }
-async function getAIReflection(text) {
+async function getAIAnalysis(text) {
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -752,49 +796,42 @@ async function getAIReflection(text) {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
+        temperature: 0.7,
         messages: [
           {
             role: "system",
             content: `
-            คุณคือผู้ช่วยด้าน mental health สำหรับนักเรียนมัธยม
-เป้าหมาย:
-- เข้าใจความรู้สึก
-- สะท้อนแบบปลอดภัย อ่อนโยน
-- ไม่ทำให้ผู้ใช้รู้สึกผิด
-reflection ต้อง:
-- สั้น (1–2 ประโยค)
-- ฟังแล้วรู้สึก “มีคนเข้าใจ”
-- ไม่ใช้ศัพท์ยาก
-ห้าม:
-- สั่งสอน
-- วิเคราะห์ลึกเกิน
-- ใช้คำทางจิตวิทยาหนัก
-- ให้คำแนะนำยาว
-หน้าที่ :
-1. อ่านข้อความของผู้ใช้
-2. สรุปความรู้สึก (emotion)
-3. สะท้อนความรู้สึกแบบอ่อนโยน (reflection)
+คุณคือผู้ช่วยด้าน emotional support สำหรับนักเรียน
 
-ตอบเป็น JSON เท่านั้น:
+วิเคราะห์ข้อความแล้วตอบ JSON เท่านั้น:
+
 {
-  "emotion": "...",
-  "reflection": "..."
-} `
+  "emotion": "stress / sad / confused / overwhelmed / neutral",
+  "reflection": "ประโยคสะท้อนความรู้สึก 1-2 ประโยค",
+  "followups": [
+    "ตัวเลือกที่ 1",
+    "ตัวเลือกที่ 2",
+    "ตัวเลือกที่ 3"
+  ]
+}
+
+กฎ:
+- followups ต้องเป็นภาษาคน
+- ต้องช่วยให้ user เลือกทาง
+- ไม่ยาวเกิน 8 คำ
+- ไม่ซ้ำกัน
+`
           },
           {
             role: "user",
             content: text
           }
-        ],
-        temperature: 0.7
+        ]
       })
     });
 
     const data = await res.json();
-
-    const content = data.choices?.[0]?.message?.content;
-
-    return JSON.parse(content);
+    return JSON.parse(data.choices[0].message.content);
 
   } catch (e) {
     console.log("AI ERROR:", e);
@@ -1087,6 +1124,34 @@ async function replyFlex(replyToken, bubble) {
     })
   });
 }
+  
+function buildPersonalizedQ6(replyToken, ai) {
+  return replyFlex(replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+        {
+          type: "text",
+          text: "💛 " + (ai?.reflection || "เราอยู่ตรงนี้นะ"),
+          wrap: true
+        },
+
+        ...(ai?.followups || []).map((f, i) => ({
+          type: "button",
+          action: {
+            type: "postback",
+            label: f,
+            data: "q6_follow_" + i
+          }
+        }))
+      ]
+    }
+  });
+}
+  
 async function sendMainMenu(replyToken) {
   return replyFlex(replyToken, {
     type: "bubble",
