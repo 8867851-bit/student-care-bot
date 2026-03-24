@@ -31,11 +31,29 @@ if (event.type === "postback") await handlePostback(event); }
 
   return res.status(200).send("OK"); };
 
-// ================= MESSAGE =================
+// ================= MESSAGE ==================
 async function handleMessage(event) {
     const userId = event.source.userId;
     const text = event.message.text;
     const s = sessions[userId];
+
+  // ==== POST SESSION STATE ====
+  
+if (sessions[userId]?.done) {
+  if (text === "เมนู") {
+    delete sessions[userId];
+    return sendMainMenu(event.replyToken); }
+
+  if (text === "คุย") {
+    sessions[userId] = { step: 0, answers: {} };
+    return sendStep(userId, event.replyToken); }
+    return replyText(event.replyToken,
+`💛 เราคุยกันจบแล้วนะ
+
+ถ้ายังอยากคุยต่อ:
+• พิมพ์ "คุย" เพื่อเริ่มใหม่  
+หรือ
+• พิมพ์ "เมนู" เพื่อดูตัวเลือกทั้งหมด 💛`); }
   
   if (text === "เมนู") {
   delete sessions[userId];
@@ -172,7 +190,7 @@ if (isHighRisk) {
 
     scheduleFollowUp(caseId, userId, level);
 
-    delete sessions[userId];
+    sessions[userId] = { done: true };
     return;
   }
 
@@ -183,7 +201,9 @@ if (!sessions[userId]) {
   if (text === "เมนู") {
     return sendMainMenu(event.replyToken); }
     return replyText(event.replyToken,
-`💛 ลองกดจากเมนูด้านล่างได้เลยนะ หรือพิมพ์ "เมนู" เพื่อเริ่มใหม่ 💛`); }
+`💛 ลองกดจากเมนูด้านบนได้เลยนะ 
+
+หรือพิมพ์ "เมนู" เพื่อเริ่มใหม่ 💛`); }
   
   if (type === "user") {
     return sendMainMenu(event.replyToken); }
@@ -551,8 +571,7 @@ function decideRoute(answers) {
 
   // ================= FINAL DECISION =================
   if (teacher > peer) return "teacher";
-  return "peer";
-}
+  return "peer"; }
 
 // ================= KEYWORD SYSTEM (NEW) =================
 
@@ -869,62 +888,45 @@ async function sendMainMenu(replyToken) {
       layout: "vertical",
       spacing: "md",
       contents: [
-        {
-          type: "text",
+        
+        { type: "text",
           text: "💛 Student Care TU",
           weight: "bold",
-          size: "lg"
-        },
-        {
-          type: "text",
-          text: "วันนี้คุณอยากทำอะไร?"
-        },
+          size: "lg" },
+        
+        { type: "text",
+          text: "📍 เมนูหลัก" },
+        
+        { type: "text",
+          text: "เลือกสิ่งที่คุณอยากทำได้เลย 💛",
+          size: "sm" },
 
-        {
-          type: "button",
+        { type: "button",
           style: "primary",
-          action: {
-            type: "postback",
+          action: {type: "postback",
             label: "💛 คุยเรื่องที่หนักใจ",
-            data: "start_talk"
-          }
-        },
+            data: "start_talk" } },
 
-        {
-          type: "button",
-          action: {
-            type: "postback",
+        { type: "button",
+          action: { type: "postback",
             label: "🌱 สำรวจตัวเอง",
-            data: "menu_explore"
-          }
-        },
+            data: "menu_explore" } },
 
-        {
-          type: "button",
-          action: {
-            type: "uri",
+        { type: "button",
+          action: { type: "uri",
             label: "📚 ดูตัวเลือกทั้งหมด",
-            uri: "https://hub2-theta.vercel.app"
-          }
-        },
+            uri: "https://hub2-theta.vercel.app" } },
 
-        {
-          type: "button",
-          action: {
-            type: "postback",
+        { type: "button",
+          action: { type: "postback",
             label: "🚨 ขอความช่วยเหลือด่วน",
-            data: "menu_urgent"
-          }
-        },
+            data: "menu_urgent" } },
 
-        {
-          type: "button",
+        { type: "button",
           action: {
             type: "postback",
             label: "👥 สำหรับ Peer Support",
-            data: "become_peer"
-          }
-        }
+            data: "become_peer" } }
       ]
     }
   });
