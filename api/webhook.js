@@ -226,6 +226,7 @@ async function handlePostback(event) {
   const userId = event.source.userId;
   console.log("DATA:", data);
   console.log("SESSION:", sessions[userId])
+  
 // ===== STEP FLOW (สำคัญมาก) =====
 if (data.startsWith("step_")) {
   const parts = data.split("_");
@@ -252,8 +253,9 @@ if (!sessions[userId] || sessions[userId].step !== step) {
 `💛 ขอบคุณที่เล่าให้ฟังนะ
 
 หลังจากนี้เราจะช่วยหาคนที่เหมาะกับคุณ
-แล้วนัดเวลาคุยกันนะ`);
-    return sendStep(userId, event.replyToken);}
+แล้วนัดเวลาคุยกันนะ`);}
+    return sendStep(userId, event.replyToken);
+  }
 
     // ===== START =====
  if (data === "start_talk") {
