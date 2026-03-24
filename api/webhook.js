@@ -36,15 +36,17 @@ async function handleMessage(event) {
     const userId = event.source.userId;
     const text = event.message.text;
     const s = sessions[userId];
+  
+  if (text === "เมนู") {
+  delete sessions[userId];
+  return sendMainMenu(event.replyToken); }
+  
   if (s && s.step < 5) {
   if (text === "reset") {
-    sessions[userId] = null;
+    delete sessions[userId];
     return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛"); }
     return replyText(event.replyToken,
-"💛 ตอนนี้เรากำลังคุยกันอยู่\nลองกดเลือกคำตอบด้านบน หรือพิมพ์ reset เพื่อเริ่มใหม่ได้เลยนะ"); }
-  
-  if (text === "เมนู") { delete sessions[userId];
-    return sendMainMenu(event.replyToken); }
+`💛 ตอนนี้เรากำลังคุยกันอยู่  ลองกดเลือกคำตอบด้านบน หรือพิมพ์ "เมนู" เพื่อเริ่มใหม่ได้เลยนะ`); }
 
   if (text === "คุย") {
     sessions[userId] = { step: 0, answers: {} };
@@ -176,16 +178,16 @@ if (isHighRisk) {
 
   // ===== DEFAULT MENU =====
   const type = event.source.type;
-
+  
+  if (!sessions[userId] && text) {
+  return sendMainMenu(event.replyToken); }
+  
   if (type === "user") {
-    return sendMainMenu(event.replyToken);
-  }
+    return sendMainMenu(event.replyToken); }
 
   if (type === "group") {
     if (text === "start") {
-      return sendMainMenu(event.replyToken);
-    }
-  }
+      return sendMainMenu(event.replyToken); } }
 }
 
 // ================= POSTBACK =================
