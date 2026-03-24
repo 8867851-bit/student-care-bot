@@ -1026,4 +1026,4 @@ async function sendExploreMenu(replyToken) {
     })
   });
 }
-
+}
