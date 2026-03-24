@@ -147,10 +147,16 @@ async function handlePostback(event) {
 // ===== STEP FLOW (สำคัญมาก) =====
 if (data.startsWith("step_")) {
   const parts = data.split("_");
-  const step = parseInt(parts[1]);
   const value = parts.slice(2).join("_");
-
   const keys = ["q1","q2","q3","q4","q5"];
+
+  const step = parseInt(parts[1]);
+
+// 🔥 guard: กันกดปุ่มเก่า
+if (!sessions[userId] || sessions[userId].step !== step) {
+  return replyText(event.replyToken,
+"💛 ขอเริ่มใหม่อีกครั้งนะ\nลองกด 'คุยเรื่องที่หนักใจ' ใหม่ได้เลย");
+}
 
   if (!sessions[userId]) {
   sessions[userId] = { step: 0, answers: {} };
