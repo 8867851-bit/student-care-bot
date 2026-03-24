@@ -84,7 +84,9 @@ if (sessions[userId]?.done) {
   // ===== Q6 INPUT =====
   if (s && s.step === 6) {
     s.answers.q6 = text;
-
+// ===== AI REFLECTION =====
+const ai = await getAIReflection(text);
+    
     
     // ===== INTENT + RISK CHECK =====
     
@@ -121,13 +123,13 @@ return replyFlex(event.replyToken, {
     contents: [
       {
         type: "text",
-        text: "💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ บางทีมันอาจจะยังเรียบเรียงไม่ออกก็ได้นะ",
+        text: "💛 เราอยากเข้าใจคุณให้ตรงมากขึ้นอีกนิดนะ",
         weight: "bold",
         wrap: true
       },
       {
         type: "text",
-        text: "ลองเลือกสิ่งที่ใกล้กับคุณตอนนี้",
+        text: "สิ่งที่ใกล้กับคุณที่สุดตอนนี้คืออะไร?",
         size: "sm",
         wrap: true
       },
@@ -135,30 +137,30 @@ return replyFlex(event.replyToken, {
         type: "button",
         action: {
           type: "postback",
-          label: "💬 คุยกับคนจริง",
-          data: "start_talk"
+          label: "💬 แค่อยากระบาย",
+          data: "clarify_emotional"
         }
       },
       {
         type: "button",
         action: {
           type: "postback",
-          label: "🌱 ค่อย ๆ เข้าใจตัวเอง",
-          data: "menu_explore"
+          label: "🤝 อยากคุยกับคนจริง",
+          data: "clarify_peer"
         }
       },
       {
         type: "button",
         action: {
-          type: "message",
-          label: "💤 พักสักนิด",
-          text: "พัก"
+          type: "postback",
+          label: "🧠 อยากได้คำแนะนำ",
+          data: "clarify_advice"
         }
       }
     ]
   }
 });
-}    
+  
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
       s.answers.q3 === "q3_high" &&
@@ -181,7 +183,13 @@ return replyFlex(event.replyToken, {
     await notifyTeam(caseId, level, s.answers, route);
 
   // ===== RESPONSE =====
-let msg = buildHumanMessage(intent, s.answers, route);
+let msg = "";
+
+if (ai && ai.reflection) {
+  msg += "💛 " + ai.reflection + "\n\n";} 
+else {
+  msg += "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n\n"; }
+  msg += buildHumanMessage(intent, s.answers, route);
 
 msg += `
 ⏳ โดยปกติจะใช้เวลา ${getETA()}`;
@@ -227,6 +235,27 @@ async function handlePostback(event) {
   const userId = event.source.userId;
   console.log("DATA:", data);
   console.log("SESSION:", sessions[userId])
+  
+
+  //=== เพิ่ม3อัน===
+    if (data === "clarify_emotional") {
+    if (!sessions[userId]) {
+      sessions[userId] = { step: 5, answers: {} }; }
+    sessions[userId].answers.q5 = "q5_listen";
+    return sendStep(userId, event.replyToken); }
+
+  if (data === "clarify_peer") {
+    if (!sessions[userId]) {
+      sessions[userId] = { step: 5, answers: {} }; }
+    sessions[userId].answers.q5 = "q5_understand";
+    return sendStep(userId, event.replyToken);}
+
+  if (data === "clarify_advice") {
+    if (!sessions[userId]) {
+      sessions[userId] = { step: 5, answers: {} };
+    }
+    sessions[userId].answers.q5 = "q5_advice";
+    return sendStep(userId, event.replyToken); }
   
 // ===== STEP FLOW (สำคัญมาก) =====
 if (data.startsWith("step_")) {
@@ -713,7 +742,66 @@ function buildHumanMessage(intent, answers, route) {
   // ===== soft autonomy =====
   msg += `\n\nคุณสามารถเลือกแบบที่คุณสบายใจได้เลยนะ`;
     return msg; }
+async function getAIReflection(text) {
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + process.env.OPENAI_API_KEY
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: `
+            คุณคือผู้ช่วยด้าน mental health สำหรับนักเรียนมัธยม
+เป้าหมาย:
+- เข้าใจความรู้สึก
+- สะท้อนแบบปลอดภัย อ่อนโยน
+- ไม่ทำให้ผู้ใช้รู้สึกผิด
+reflection ต้อง:
+- สั้น (1–2 ประโยค)
+- ฟังแล้วรู้สึก “มีคนเข้าใจ”
+- ไม่ใช้ศัพท์ยาก
+ห้าม:
+- สั่งสอน
+- วิเคราะห์ลึกเกิน
+- ใช้คำทางจิตวิทยาหนัก
+- ให้คำแนะนำยาว
+หน้าที่ :
+1. อ่านข้อความของผู้ใช้
+2. สรุปความรู้สึก (emotion)
+3. สะท้อนความรู้สึกแบบอ่อนโยน (reflection)
 
+ตอบเป็น JSON เท่านั้น:
+{
+  "emotion": "...",
+  "reflection": "..."
+} `
+          },
+          {
+            role: "user",
+            content: text
+          }
+        ],
+        temperature: 0.7
+      })
+    });
+
+    const data = await res.json();
+
+    const content = data.choices?.[0]?.message?.content;
+
+    return JSON.parse(content);
+
+  } catch (e) {
+    console.log("AI ERROR:", e);
+    return null;
+  }
+}
+  
 // ================= ETA =================
 function getETA() {
   const h = new Date().getHours();
@@ -725,16 +813,34 @@ function getETA() {
 function getConfidence(intent, answers) {
   let score = 0;
 
-  // intent weight
-  if (intent === "crisis") score += 3;
+  const text = (answers.q6 || "").trim();
+
+  // ===== INTENT =====
+  if (intent === "crisis") score += 4;
   if (intent === "practical_advice") score += 2;
 
-  // user need
+  // ===== USER NEED =====
   if (answers.q5 === "q5_advice") score += 2;
   if (answers.q5 === "q5_confused") score -= 2;
 
-  // support system
+  // ===== SUPPORT =====
   if (answers.q4 === "q4_none") score += 1;
+
+  // ===== INTENSITY =====
+  if (answers.q3 === "q3_high") score += 1;
+
+  // ===== TEXT QUALITY =====
+  if (text.length > 10) score += 1;
+  if (text.length > 30) score += 1;
+
+  // ===== KEYWORD SIGNAL =====
+  if (hasKeyword(text, practicalKeywords)) score += 1;
+  if (hasKeyword(text, emotionalKeywords)) score += 1;
+
+  // ===== CONSISTENCY CHECK =====
+  if (answers.q5 === "q5_advice" && intent === "emotional_support") {
+    score -= 2;
+  }
 
   return score;
 }
