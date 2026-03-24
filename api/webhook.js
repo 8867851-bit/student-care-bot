@@ -64,11 +64,7 @@ async function handleMessage(event) {
   // ===== Q6 INPUT =====
   if (s && s.step === 5) {
     s.answers["q6"] = text;
-    
-// ===== CONFUSED → EXPLORE (priority สูงสุด) =====
-  if (s.answers.q5 === "q5_confused") {
-    sessions[userId] = null;
-    return sendExploreMenu(event.replyToken); }
+
     
     // ===== INTENT + RISK CHECK =====
     
