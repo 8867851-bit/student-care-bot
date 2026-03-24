@@ -54,20 +54,30 @@ if (s && s.step < 5) {
   // ===== Q6 INPUT =====
   if (s && s.step === 5) {
     s.answers["q6"] = text;
-    
-// ===== RISK CHECK (NEW) =====
+
+    // ===== INTENT + RISK CHECK =====
 const inputText = (text || "").toLowerCase();
-const isHighRisk =
-  s.answers.q4 === "q4_none" &&
-  (
-    inputText.includes("ไม่ไหว") ||
-    inputText.includes("อยากหายไป") ||
-    inputText.includes("หมดหวัง")
-  );
+
+const isPractical = hasKeyword(inputText, practicalKeywords);
+const isEmotional = hasKeyword(inputText, emotionalKeywords);
+const isRisk = hasKeyword(inputText, riskKeywords);
+    //======= Highrisk check =====
+const isHighRisk = isRisk && !isPractical && s.answers.q4 === "q4_none";
+
     const caseId = Date.now().toString().slice(-6);
     const level = classify(s.answers);
+    const intent = detectIntent(s.answers);
     const route = decideRoute(s.answers);
-
+    
+// ===== INTENT → ROUTE OVERRIDE =====
+    
+if (intent === "crisis") {
+  route = "teacher"; }
+if (intent === "practical_advice") {
+  route = "teacher"; }
+if (intent === "emotional_support") {
+  route = "peer"; }
+    
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
       s.answers.q3 === "q3_high" &&
@@ -90,46 +100,48 @@ const isHighRisk =
     await notifyTeam(caseId, level, s.answers, route);
 
     // ===== RESPONSE =====
-    let msg = "";
+let msg = "";
 
-    if (route === "teacher") {
-  msg = `💛 เราได้รับเรื่องของคุณแล้วนะ
+// ===== MESSAGE BY INTENT =====
+if (intent === "crisis") {
+  msg = `💛 เราอยู่ตรงนี้นะ
 
-เรื่องแบบนี้ ครูน่าจะช่วยคุณได้ดีเลยนะ 👩‍🏫  
+เรื่องแบบนี้ คุณไม่ต้องรับมือคนเดียว
+ทีมกำลังหาครูหรือผู้ใหญ่ที่เหมาะสมให้คุณอยู่
+
+⏳ จะรีบติดต่อกลับให้เร็วที่สุดนะ`; }
+
+else if (intent === "practical_advice") {
+  msg = `💛 เข้าใจเลยนะว่าคุณกำลังหาทางออกอยู่
+
+เรื่องแบบนี้ ครูน่าจะช่วยคุณได้ดีเลย 👩‍🏫  
 ⏳ โดยปกติจะใช้เวลา ${getETA()}
 
-👇 ระหว่างรอพี่ติดต่อกลับ  
-คุณสามารถเข้าไปดูข้อมูลหรือสำรวจตัวเองเพิ่มเติมได้ที่นี่ 💛
-https://hub2-theta.vercel.app
+👇 ระหว่างรอ  
+คุณสามารถเข้าไปดูแนวทางหรือข้อมูลเพิ่มเติมได้ที่นี่
+https://hub2-theta.vercel.app`; }
 
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
-} else {
+else {
   msg = `💛 เราได้รับเรื่องของคุณแล้วนะ
 
-พี่นักเรียนน่าจะช่วยฟังคุณได้ดีเลยนะ 👩‍🎓  
+พี่นักเรียนน่าจะช่วยฟังคุณได้ดีเลย 👩‍🎓  
 ⏳ โดยปกติจะใช้เวลา ${getETA()}
 
-👇 ระหว่างรอพี่ติดต่อกลับ  
-คุณสามารถเข้าไปดูข้อมูลหรือสำรวจตัวเองเพิ่มเติมได้ที่นี่ 💛
-https://hub2-theta.vercel.app
+คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`; }
 
-คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
+// ===== EMOTIONAL SUPPORT (soft) =====
+if (highEmotional && !isHighRisk) {
+  msg += `
+💛 เราเห็นเลยนะว่ามันหนักสำหรับคุณ
+ทีมจะพยายามหา คนที่เหมาะกับคุณให้เร็วที่สุดนะ`;
 }
+
 // ===== HIGH RISK HOTLINE =====
 if (isHighRisk) {
   msg += `
-
 💛 ถ้าคุณรู้สึกว่ามันหนักมาก
 คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`;
 }
-    // ===== HIGH EMOTIONAL BOOST =====
-    if (highEmotional) {
-      msg += `
-
-💛 ถ้าคุณรู้สึกว่ามันหนักมาก
-โทรหา 1323 ได้ 24 ชั่วโมง
-ทีมจะพยายามรีบหาคนให้คุณเร็วที่สุดนะ`;
-    }
 
     await replyText(event.replyToken, msg);
 
@@ -440,7 +452,7 @@ function decideRoute(answers) {
 
   // relationship → peer เสมอ
   if (answers.q1 === "q1_relationship") return "peer";
-
+  
   // academic → teacher เสมอ
   if (answers.q1 === "q1_academic") return "teacher";
 
@@ -459,19 +471,15 @@ function decideRoute(answers) {
       return "teacher";
     }
 
-    // emotional self → peer
+    //  self → peer
     return "peer";
   }
 
   // ================= STRESS ESCALATION =================
 
-  if (
-    answers.q1 === "q1_stress" &&
+  if ( answers.q1 === "q1_stress" &&
     answers.q3 === "q3_high" &&
-    answers.q4 === "q4_none"
-  ) {
-    return "teacher";
-  }
+    answers.q4 === "q4_none" ) { return "teacher"; }
 
   // ================= SCORING SYSTEM =================
 
@@ -514,10 +522,48 @@ function decideRoute(answers) {
   }
 
   // ================= FINAL DECISION =================
-
   if (teacher > peer) return "teacher";
   return "peer";
 }
+
+// ================= KEYWORD SYSTEM (NEW) =================
+
+// ===== KEYWORD GROUPS =====
+const practicalKeywords = [
+  "สอบ","เรียน","การบ้าน","ตาราง","คะแนน",
+  "สอบไม่ติด","อ่านหนังสือ","เกรด","gpa",
+  "tcas","กสพท","พอร์ต","คณะ","มหาลัย","ติว"
+];
+const emotionalKeywords = [
+  "เครียด","เหนื่อย","ท้อ","กดดัน",
+  "หมดแรง","ไม่มั่นใจ","กังวล"
+];
+const riskKeywords = [
+  "ไม่ไหว","อยากหายไป","หมดหวัง",
+  "ไม่มีเหตุผลจะอยู่","อยู่ไปก็ไม่มีค่า",
+  "อยากหนีไป","ไม่อยากอยู่แล้ว"
+];
+// ===== HELPER FUNCTION =====
+function hasKeyword(text, keywords) {
+  return keywords.some(k => text.includes(k));
+}
+// ================= INTENT DETECTION (V3) =================
+function detectIntent(answers) {
+  const text = (answers.q6 || "").toLowerCase();
+
+  const isPractical = hasKeyword(text, practicalKeywords);
+  const isEmotional = hasKeyword(text, emotionalKeywords);
+  const isRisk = hasKeyword(text, riskKeywords);
+
+  // 🚨 crisis
+  if ( isRisk && answers.q4 === "q4_none" ) { return "crisis"; }
+
+  // 🧠 practical
+  if (answers.q5 === "q5_advice" && isPractical ) { return "practical_advice"; }
+
+  // 💛 emotional (default)
+  return "emotional_support"; }
+
 // ================= ETA =================
 function getETA() {
   const h = new Date().getHours();
