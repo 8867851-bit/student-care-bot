@@ -149,11 +149,13 @@ return replyFlex(event.replyToken, {
       },
       {
         type: "button",
-        action: {
-          type: "message",
-          label: "💤 พักสักนิด",
-          text: "พัก"
-        } } ] } }); } 
+    action: {
+      type: "message",
+      label: "💤 พักสักนิด",
+      text: "พัก"
+    }
+  }
+]
     
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
@@ -204,9 +206,10 @@ if (!sessions[userId]) {
   if (text === "เมนู") {
     return sendMainMenu(event.replyToken); }
     return replyText(event.replyToken,
-`💛 ลองกดจากเมนูด้านบนได้เลยนะ 
+`💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
 
-หรือพิมพ์ "เมนู" เพื่อเริ่มใหม่ 💛`); }
+พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
+หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`); }
   
   if (type === "user") {
     return sendMainMenu(event.replyToken); }
@@ -436,13 +439,13 @@ async function sendStep(userId, replyToken) {
     },
 
     {
-  text: "ตอนนี้คุณต้องการอะไรที่สุด?",
+  text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหนมากที่สุด?",
   opts: [
-  { label: "💬 คุยกับพี่นักเรียน (มีคนนั่งฟังจริง ๆ)", value: "q5_listen" },
-  { label: "🫂 คุยกับคนที่เข้าใจ (มีคนนัดคุยจริง)", value: "q5_understand" },
-  { label: "🧠 ขอคำแนะนำจากครู (ช่วยคิดทางออก)", value: "q5_advice" },
-  { label: "🌱 ยังไม่แน่ใจ ขอเริ่มเบา ๆ ก่อน", value: "q5_confused" }
-]
+    { label: "💬 อยากมีคนฟังจริง ๆ", value: "q5_listen" },
+    { label: "🫂 อยากคุยกับคนที่เข้าใจ", value: "q5_understand" },
+    { label: "🧠 อยากได้คำแนะนำหรือทางออก", value: "q5_advice" },
+    { label: "🌱 ยังไม่แน่ใจ ขอเริ่มเบา ๆ ก่อน", value: "q5_confused" }
+  ]
 },
 
     {
@@ -629,8 +632,9 @@ function buildHumanMessage(intent, answers, route) {
     else { msg += "\nมันโอเคเลยนะที่จะรู้สึกแบบนี้"; }
 
   // ===== suggestion layer =====
-  if (route === "teacher") { msg += `\n\nถ้าคุณอยากได้คำแนะนำแบบชัดเจน\nครูน่าจะช่วยคุณได้ดีเลย 👩‍🏫`;} 
-    else { msg += `\n\nถ้าคุณอยากมีคนฟัง\nพี่นักเรียนก็อยู่ตรงนี้เหมือนกัน 💛`; }
+  if (route === "teacher") { msg += `\n\nถ้าคุณอยากได้คำแนะนำแบบชัดเจน\nเราจะช่วยจับคู่คุณกับครูในระบบ ที่สามารถช่วยคุณคิดทางออกได้นะ 👩‍🏫`;} 
+    else { msg += `\n\nถ้าคุณอยากมีคนฟัง\nเราจะช่วยจับคู่คุณกับพี่นักเรียนในระบบ  
+ที่พร้อมฟังและเข้าใจคุณนะ 💛`; }
 
   // ===== soft autonomy =====
   msg += `\n\nคุณสามารถเลือกแบบที่คุณสบายใจได้เลยนะ`;
@@ -641,7 +645,7 @@ function getETA() {
   const h = new Date().getHours();
   if (h < 8) return "ในช่วงเช้าวันนี้";
   if (h < 18) return "ภายใน 1–3 ชั่วโมง";
-  return "ในช่วงเช้าวันถัดไป";
+  return "💛 เราจะติดต่อคุณกลับแน่นอน";
 }
 // ================= CONFIDENCE (V3) =================
 function getConfidence(intent, answers) {
