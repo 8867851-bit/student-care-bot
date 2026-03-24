@@ -1027,4 +1027,3 @@ async function sendExploreMenu(replyToken) {
   });
 }
 }
-}
