@@ -120,7 +120,7 @@ return replyFlex(event.replyToken, {
     contents: [
       {
         type: "text",
-        text: "💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ บางทีมันอาจจะยังเรียบเรียงไม่ออกก็ได้นะ ",
+        text: "💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ บางทีมันอาจจะยังเรียบเรียงไม่ออกก็ได้นะ",
         weight: "bold",
         wrap: true
       },
@@ -130,7 +130,6 @@ return replyFlex(event.replyToken, {
         size: "sm",
         wrap: true
       },
-
       {
         type: "button",
         action: {
@@ -148,18 +147,17 @@ return replyFlex(event.replyToken, {
         }
       },
       {
-  type: "button",
-  action: {
-    type: "message",
-    label: "💤 พักสักนิด",
-    text: "พัก"
-  }
-}
+        type: "button",
+        action: {
+          type: "message",
+          label: "💤 พักสักนิด",
+          text: "พัก"
+        }
+      }
     ]
   }
 });
-} 
-    
+}    
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
       s.answers.q3 === "q3_high" &&
