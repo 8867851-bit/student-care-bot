@@ -71,16 +71,31 @@ const isHighRisk = isRisk && s.answers.q3 === "q3_high";
     let route = decideRoute(s.answers);
     
 // ===== INTENT → ROUTE OVERRIDE =====
+    if (intent === "crisis" || intent === "practical_advice") { route = "teacher"; }
+    if (intent === "emotional_support") { route = "peer"; }
     
-if (intent === "crisis" || intent === "practical_advice") { route = "teacher"; }
-if (intent === "emotional_support") { route = "peer"; }
+// ==== confidence ====    
+const confidence = getConfidence(intent, s.answers);  
+if (confidence <= 1) {
+  // 👉 low clarity case
+  delete sessions[userId];
+  return replyText(event.replyToken,
+`💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ
+
+ลองเลือกสิ่งที่รู้สึกใกล้กับคุณตอนนี้:
+
+• 💬 อยากคุยกับใครสักคน
+• 🌱 อยากค่อย ๆ ทำความเข้าใจตัวเอง
+• 💤 อยากพักใจแป๊บนึงก่อน
+
+เลือกแบบที่สบายใจได้เลยนะ 💛`);} 
     
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
       s.answers.q3 === "q3_high" &&
       s.answers.q4 === "q4_none";
 
-    // ===== CREATE CASE =====
+// ============== CREATE CASE ======================
     await fetch(GAS_URL, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
@@ -570,7 +585,23 @@ function getETA() {
   if (h < 18) return "ภายใน 1–3 ชั่วโมง";
   return "ในช่วงเช้าวันถัดไป";
 }
+// ================= CONFIDENCE (V3) =================
+function getConfidence(intent, answers) {
+  let score = 0;
 
+  // intent weight
+  if (intent === "crisis") score += 3;
+  if (intent === "practical_advice") score += 2;
+
+  // user need
+  if (answers.q5 === "q5_advice") score += 2;
+  if (answers.q5 === "q5_confused") score -= 2;
+
+  // support system
+  if (answers.q4 === "q4_none") score += 1;
+
+  return score;
+}
 // ================= NOTIFY =================
 async function notifyTeam(caseId, level, answers, route) {
   let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
