@@ -54,14 +54,23 @@ if (s && s.step < 5) {
   // ===== Q6 INPUT =====
   if (s && s.step === 5) {
     s.answers["q6"] = text;
-
+    
+// ===== RISK CHECK (NEW) =====
+const inputText = (text || "").toLowerCase();
+const isHighRisk =
+  s.answers.q4 === "q4_none" &&
+  (
+    inputText.includes("ไม่ไหว") ||
+    inputText.includes("อยากหายไป") ||
+    inputText.includes("หมดหวัง")
+  );
     const caseId = Date.now().toString().slice(-6);
     const level = classify(s.answers);
     const route = decideRoute(s.answers);
 
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
-      s.answers.q3 === "q3_high" ||
+      s.answers.q3 === "q3_high" &&
       s.answers.q4 === "q4_none";
 
     // ===== CREATE CASE =====
@@ -106,7 +115,13 @@ https://hub2-theta.vercel.app
 
 คุณไม่ต้องอยู่กับเรื่องนี้คนเดียว 💛`;
 }
+// ===== HIGH RISK HOTLINE =====
+if (isHighRisk) {
+  msg += `
 
+💛 ถ้าคุณรู้สึกว่ามันหนักมาก
+คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`;
+}
     // ===== HIGH EMOTIONAL BOOST =====
     if (highEmotional) {
       msg += `
@@ -415,17 +430,23 @@ function classify(s) {
   return "green";
 }
 
-// ================= ROUTE (FINAL) =================
 function decideRoute(answers) {
+  let peer = 0;
+  let teacher = 0;
 
-  // ===== HARD RULES =====
+  const text = (answers.q6 || "").toLowerCase();
+
+  // ================= HARD RULES (ตัดจบทันที) =================
+
+  // relationship → peer เสมอ
   if (answers.q1 === "q1_relationship") return "peer";
+
+  // academic → teacher เสมอ
   if (answers.q1 === "q1_academic") return "teacher";
 
-  // ===== SELF LOGIC =====
-  if (answers.q1 === "q1_self") {
-    const text = (answers.q6 || "").toLowerCase();
+  // ================= SELF LOGIC (priority สูง) =================
 
+  if (answers.q1 === "q1_self") {
     // ถ้ามี keyword แนว planning → teacher
     if (
       text.includes("อนาคต") ||
@@ -438,11 +459,12 @@ function decideRoute(answers) {
       return "teacher";
     }
 
-    // default → peer
+    // emotional self → peer
     return "peer";
   }
 
-  // ===== STRESS ESCALATION =====
+  // ================= STRESS ESCALATION =================
+
   if (
     answers.q1 === "q1_stress" &&
     answers.q3 === "q3_high" &&
@@ -451,43 +473,51 @@ function decideRoute(answers) {
     return "teacher";
   }
 
-  // ===== SCORING =====
-  let peerScore = 0;
-  let teacherScore = 0;
+  // ================= SCORING SYSTEM =================
 
-  // Q1
-  if (answers.q1 === "q1_stress") peerScore += 2;
+  // ----- Q1 -----
+  if (answers.q1 === "q1_stress") peer += 2;
 
-  // Q5
-  if (answers.q5 === "q5_advice") teacherScore += 2;
-  if (answers.q5 === "q5_listen") peerScore += 3;
-  if (answers.q5 === "q5_understand") peerScore += 2;
-  if (answers.q5 === "q5_confused") peerScore += 1;
+  // ----- Q5 -----
+  if (answers.q5 === "q5_advice") teacher += 2;
+  if (answers.q5 === "q5_listen") peer += 3;
+  if (answers.q5 === "q5_understand") peer += 2;
+  if (answers.q5 === "q5_confused") peer += 1;
 
-  // Q6 (keyword)
-  const text = (answers.q6 || "").toLowerCase();
+  // ----- Emotional Weight -----
+  if (answers.q3 === "q3_high") peer += 1;
+  if (answers.q4 === "q4_none") peer += 2;
 
+  // ================= TEXT SIGNAL =================
+
+  // 👉 สายวางแผน → teacher
   if (
     text.includes("สอบ") ||
     text.includes("tcas") ||
-    text.includes("พอร์ต")
+    text.includes("พอร์ต") ||
+    text.includes("คณะ") ||
+    text.includes("อาชีพ") ||
+    text.includes("เรียนต่อ")
   ) {
-    teacherScore += 2;
+    teacher += 3;
   }
 
+  // 👉 emotional → peer
   if (
     text.includes("เครียด") ||
     text.includes("เหนื่อย") ||
-    text.includes("ท้อ")
+    text.includes("ท้อ") ||
+    text.includes("ไม่ไหว") ||
+    text.includes("เสียใจ")
   ) {
-    peerScore += 1;
+    peer += 2;
   }
 
-  // ===== FINAL =====
-  if (teacherScore > peerScore) return "teacher";
+  // ================= FINAL DECISION =================
+
+  if (teacher > peer) return "teacher";
   return "peer";
 }
-
 // ================= ETA =================
 function getETA() {
   const h = new Date().getHours();
