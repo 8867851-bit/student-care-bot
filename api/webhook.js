@@ -148,14 +148,17 @@ return replyFlex(event.replyToken, {
         }
       },
       {
-        type: "button",
-    action: {
-      type: "message",
-      label: "💤 พักสักนิด",
-      text: "พัก"
-    }
+  type: "button",
+  action: {
+    type: "message",
+    label: "💤 พักสักนิด",
+    text: "พัก"
   }
-]
+}
+    ]
+  }
+});
+} 
     
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
@@ -282,51 +285,39 @@ if (data === "menu_urgent") {
 if (data.startsWith("chooseRole_")) {
   const caseId = data.replace("chooseRole_", "");
 
+  return replyFlex(event.replyToken, {
     type: "bubble",
-  body: {
-    type: "box",
-    layout: "vertical",
-    spacing: "md",
-    contents: [
-      {
-        type: "text",
-        text: "💛 ยังไม่ต้องรีบหาคำตอบก็ได้นะ บางทีมันอาจจะยังเรียบเรียงไม่ออกก็ได้นะ",
-        weight: "bold",
-        wrap: true
-      },
-      {
-        type: "text",
-        text: "ลองเลือกสิ่งที่ใกล้กับคุณตอนนี้",
-        size: "sm",
-        wrap: true
-      },
-      {
-        type: "button",
-        action: {
-          type: "postback",
-          label: "💬 คุยกับคนจริง",
-          data: "start_talk"
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        {
+          type: "text",
+          text: "คุณจะรับเคสนี้ในบทบาทไหน?",
+          weight: "bold"
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "👩‍🎓 นักเรียน",
+            data: "accept_" + caseId + "_student"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "👨‍🏫 ครู",
+            data: "accept_" + caseId + "_teacher"
+          }
         }
-      },
-      {
-        type: "button",
-        action: {
-          type: "postback",
-          label: "🌱 ค่อย ๆ เข้าใจตัวเอง",
-          data: "menu_explore"
-        }
-      },
-      {
-        type: "button",
-        action: {
-          type: "message",
-          label: "💤 พักสักนิด",
-          text: "พัก"
-        }
-      }
-    ]
-  }
-});
+      ]
+    }
+  });
+}
+
+   
   //======= Become Peer=====
   if (data === "become_peer") {
   const userId = event.source.userId;
