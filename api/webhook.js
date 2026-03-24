@@ -452,8 +452,7 @@ async function sendStep(userId, replyToken) {
   noInput: true
 },
 {
-  text: " ถ้าอยากเล่าเพิ่ม เราจะอ่านทุกอย่างนะ💛
-[พิมพ์ 1 เพื่อข้าม]",
+  text: " ถ้าอยากเล่าเพิ่ม เราจะอ่านทุกอย่างนะ💛 [พิมพ์ 1 เพื่อข้าม]",
   input: true
 }
   ];
