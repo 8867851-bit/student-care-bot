@@ -248,14 +248,6 @@ if (!sessions[userId] || sessions[userId].step !== step) {
   sessions[userId].answers[keys[step]] = value;
   sessions[userId].step = step + 1;
 
-  if (sessions[userId].step === 5) {
-    await replyText(event.replyToken,
-`💛 ขอบคุณที่เล่าให้ฟังนะ
-
-หลังจากนี้เราจะช่วยหาคนที่เหมาะกับคุณ
-แล้วนัดเวลาคุยกันนะ`);}
-    return sendStep(userId, event.replyToken);
-  }
 
     // ===== START =====
  if (data === "start_talk") {
@@ -451,43 +443,57 @@ async function sendStep(userId, replyToken) {
     { label: "🌱 ยังไม่แน่ใจ ขอเริ่มเบา ๆ ก่อน", value: "q5_confused" }
   ]
 },
-
     {
-      text: "อยากเล่าอะไรเพิ่มไหม?💛 [พิมพ์ 1 เพื่อข้าม] ",
-      input: true
-    }
+  text: `💛 ขอบคุณที่เล่าให้ฟังนะ
+
+หลังจากนี้เราจะช่วย "จับคู่คุณกับคนจริงๆ"
+ไม่ว่าจะเป็นพี่นักเรียนหรือครู (ในโครงการ)
+แล้วนัดเวลาคุยกันแบบตัวต่อตัวนะ`,
+  noInput: true
+},
+{
+  text: " ถ้าอยากเล่าเพิ่ม เราจะอ่านทุกอย่างนะ💛
+[พิมพ์ 1 เพื่อข้าม]",
+  input: true
+}
   ];
 
   const s = sessions[userId];
 if (!s) { return replyText(replyToken, "ลองกดเริ่มใหม่อีกครั้งนะ 💛"); }
   
-  return replyFlex(replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      contents: [
-        {
-          type: "text",
-          text: flow[s.step].text,
-          wrap: true
-        },
+  await replyFlex(replyToken, {
+  type: "bubble",
+  body: {
+    type: "box",
+    layout: "vertical",
+    contents: [
+      {
+        type: "text",
+        text: flow[s.step].text,
+        wrap: true
+      },
 
-        // 👉 ถ้าไม่ใช่ input ค่อยมีปุ่ม
-        ...(flow[s.step].input
-          ? []
-          : flow[s.step].opts.map(o => ({
-              type: "button",
-              action: {
-                type: "postback",
-                label: o.label,
-                data: "step_" + s.step + "_" + o.value
-              }
-            })))
-      ]
-    }
-  });
+      ...(flow[s.step].input || flow[s.step].noInput
+        ? []
+        : flow[s.step].opts.map(o => ({
+            type: "button",
+            action: {
+              type: "postback",
+              label: o.label,
+              data: "step_" + s.step + "_" + o.value
+            }
+          }))
+      )
+    ]
+  }
+});
+// 🔥 AUTO NEXT (Transition step)
+if (flow[s.step].noInput) {
+  sessions[userId].step++;
+  return sendStep(userId, replyToken);
 }
+ return; } 
+  
 // ================= CLASSIFY =================
 function classify(s) {
   let score = 0;
