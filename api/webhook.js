@@ -4,7 +4,7 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbyR0siRWKlScIozsxY1DCSF
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 if (!global.caseMap) global.caseMap = {};
-// ================= MEMORY ================
+// ================= MEMORY =================
 const sessions = {};
 if (!global.caseMap) global.caseMap = {};
 const handledEvents = new Set();
