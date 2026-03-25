@@ -33,7 +33,7 @@ if (event.type === "postback") await handlePostback(event); }
 async function handleMessage(event) {
     const userId = event.source.userId;
     const text = event.message?.text || "";
-    const s = sessions[userId];
+    const s = sessions[userId]; }
 
   // ==== POST SESSION STATE ====
   
@@ -230,6 +230,7 @@ return replyFlex(event.replyToken, {
     const highEmotional =
       s.answers.q3 === "q3_high" &&
       s.answers.q4 === "q4_none"; 
+  
 // ===== AI OVERRIDE =====
 let finalIntent = intent;
 let finalRoute = route;
@@ -238,6 +239,7 @@ if (ai) {
   if (ai.intent) finalIntent = ai.intent;
   if (ai.suggestion) finalRoute = ai.suggestion;
 }
+  
 // ===== CREATE CASE =====
 await fetch(GAS_URL, {
   method: "POST",
