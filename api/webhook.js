@@ -848,8 +848,15 @@ function buildHumanMessage(intent, answers, route) {
   const text = (answers.q6 || "").toLowerCase();
 
   // ===== base ====
-  let msg = "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n";
+  let msg = "";
 
+if (ai && ai.reflection) {
+  msg += "💛 " + ai.reflection + "\n\n";
+} else {
+  msg += "💛 เราอยู่ตรงนี้นะ\n\n";
+}
+
+msg += buildHumanMessage(intent, s.answers, route);
   // ===== intent layer =====
   if (intent === "crisis") { msg += "\nเรื่องนี้มันหนักมากจริง ๆ\nคุณไม่จำเป็นต้องอยู่กับมันคนเดียวเลยนะ"; }
     else if (intent === "practical_advice") { msg += "\nดูเหมือนคุณกำลังพยายามหาทางออกอยู่จริง ๆ"; }
