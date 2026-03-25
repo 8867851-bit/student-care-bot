@@ -50,23 +50,6 @@ if (sessions[userId]?.locked) {
 
 พิมพ์ "เมนู" เพื่อดูตัวเลือกอื่น 💛`);
 }
-
-  // ==== POST SESSION STATE ====
-if (sessions[userId]?.done) {
-  if (text === "เมนู") {
-    delete sessions[userId];
-    return sendMainMenu(event.replyToken); }
-
-  if (text === "คุย") {
-    sessions[userId] = { step: 0, answers: {} };
-    return sendStep(userId, event.replyToken); }
-    return replyText(event.replyToken,
-`💛 เราคุยกันจบแล้วนะ
-
-ถ้ายังอยากคุยต่อ:
-• พิมพ์ "คุย" เพื่อเริ่มใหม่  
-หรือ
-• พิมพ์ "เมนู" เพื่อดูตัวเลือกทั้งหมด 💛`); }
   
   if (text === "เมนู") {
   delete sessions[userId];
@@ -164,7 +147,7 @@ if (isEmpty) {
 
 เดี๋ยวเราจะหาคนที่เหมาะกับคุณให้ 💛`);
 
-  sessions[userId] = { done: true };
+  sessions[userId] = { locked: true };
   return;
 }
         
@@ -391,7 +374,7 @@ if (data.startsWith("q6_follow_")) {
 
   await notifyTeam(caseId, level, s.answers, route);
 
-  sessions[userId] = { done: true };
+  sessions[userId] = { locked: true };
   return;
 }
   
