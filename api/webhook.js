@@ -286,7 +286,6 @@ scheduleFollowUp(caseId, userId, level);
 sessions[userId] = { done: true };
 return;
 }
-}
   
   // ===== DEFAULT MENU =====
   const type = event.source.type;
@@ -305,7 +304,7 @@ if (!sessions[userId]) {
 
   if (type === "group") {
     if (text === "start") {
-      return sendMainMenu(event.replyToken); } }
+      return sendMainMenu(event.replyToken); } } }
 
 // ================= POSTBACK =================
 async function handlePostback(event) {
@@ -380,9 +379,6 @@ if (data.startsWith("q6_follow_")) {
   sessions[userId] = { done: true };
   return;
 }
-}
-
-
   
 // ===== STEP FLOW (สำคัญมาก) =====
 if (data.startsWith("step_")) {
