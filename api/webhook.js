@@ -42,63 +42,7 @@ if (sessions[userId]?.locked) {
     return sendLockedMenu(event.replyToken);
   }
 
-  function sendLockedMenu(replyToken) {
-  return replyFlex(replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents: [
-
-        { type: "text", text: "💛 เคสของคุณส่งไปแล้ว", weight: "bold" },
-
-        {
-          type: "text",
-          text: "ตอนนี้เรากำลังหาคนที่เหมาะกับคุณอยู่\nระหว่างนี้คุณสามารถทำอย่างอื่นได้นะ 💛",
-          size: "sm",
-          wrap: true
-        },
-
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "🌱 สำรวจตัวเอง",
-            data: "menu_explore"
-          }
-        },
-        {
-          type: "button",
-          action: {
-            type: "uri",
-            label: "📚 ดูตัวเลือกทั้งหมด",
-            uri: "https://hub2-theta.vercel.app"
-          }
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "🚨 ขอความช่วยเหลือด่วน",
-            data: "menu_urgent"
-          }
-        },
-        {
-          type: "button",
-          action: {
-            type: "message",
-            label: "💤 พักสักนิด",
-            text: "พัก"
-          }
-        }
-
-      ]
-    }
-  });
-}
-  // 🔥 กันทุก input อื่น
-  return replyFlex(event.replyToken, {
+    return replyFlex(event.replyToken, {
     type: "bubble",
     body: {
       type: "box",
@@ -118,7 +62,6 @@ if (sessions[userId]?.locked) {
       ]
     }
   });
-}
 }
   
   
@@ -218,13 +161,13 @@ if (isEmpty) {
     })
   });
 
+
   await notifyTeam(caseId, level, s.answers, route);
 const assignedPeer = await autoAssign(caseId, level, route);
 
 if (assignedPeer) {
   await pushToUser(assignedPeer.userId,
-    `💛 มีเคสใหม่ถูกมอบหมายให้คุณ\nCase #${caseId}`);
-}
+    `💛 มีเคสใหม่ถูกมอบหมายให้คุณ\nCase #${caseId}`); }
 
   await replyFlex(event.replyToken, {
   type: "bubble",
@@ -275,6 +218,7 @@ if (assignedPeer) {
 sessions[userId] = sessions[userId] || {};
 sessions[userId].locked = true;
 return;
+}
 }
         
     // ===== INTENT + RISK CHECK =====
@@ -356,24 +300,88 @@ return replyFlex(event.replyToken, {
       s.answers.q4 === "q4_none"; 
 
   
-  // ===== DEFAULT MENU =====
-  const type = event.source.type;
-  
+ // ===== DEFAULT MENU =====
+const type = event.source.type;
+
 if (!sessions[userId]) {
   if (text === "เมนู") {
-    return sendMainMenu(event.replyToken); }
-    return replyText(event.replyToken,
+    return sendMainMenu(event.replyToken);
+  }
+
+  return replyText(event.replyToken,
 `💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
 
 พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
-หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`); }
-  
-  if (type === "user") {
-    return sendMainMenu(event.replyToken); }
+หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
+}
 
-  if (type === "group") {
-    if (text === "start") {
-      return sendMainMenu(event.replyToken); } } }
+if (type === "user") {
+  return sendMainMenu(event.replyToken);
+}
+
+if (type === "group") {
+  if (text === "start") {
+    return sendMainMenu(event.replyToken);
+  }
+}
+  
+}
+  
+function sendLockedMenu(replyToken) {
+  return replyFlex(replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+
+        { type: "text", text: "💛 เคสของคุณส่งไปแล้ว", weight: "bold" },
+
+        {
+          type: "text",
+          text: "ตอนนี้เรากำลังหาคนที่เหมาะกับคุณอยู่\nระหว่างนี้คุณสามารถทำอย่างอื่นได้นะ 💛",
+          size: "sm",
+          wrap: true
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "🌱 สำรวจตัวเอง",
+            data: "menu_explore"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "uri",
+            label: "📚 ดูตัวเลือกทั้งหมด",
+            uri: "https://hub2-theta.vercel.app"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "🚨 ขอความช่วยเหลือด่วน",
+            data: "menu_urgent"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "message",
+            label: "💤 พักสักนิด",
+            text: "พัก"
+          }
+        }
+
+      ]
+    }
+  });
+}
 
 // ================= POSTBACK =================
 async function handlePostback(event) {
