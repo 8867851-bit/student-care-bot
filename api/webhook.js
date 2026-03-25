@@ -44,16 +44,40 @@ if (sessions[userId]?.locked) {
       body: {
         type: "box",
         layout: "vertical",
+        spacing: "md",
         contents: [
-          { type: "text", text: "💛 เคสของคุณถูกส่งแล้วนะ", weight: "bold" },
-          { type: "text", text: "เรากำลังหาคนที่เหมาะกับคุณอยู่ 💛", wrap: true },
+
+          { type: "text", text: "💛 เคสของคุณถูกส่งแล้ว", weight: "bold" },
+
+          {
+            type: "text",
+            text: "ตอนนี้เรากำลังหาคนที่เหมาะกับคุณอยู่\nระหว่างนี้คุณสามารถทำอย่างอื่นได้นะ 💛",
+            size: "sm",
+            wrap: true
+          },
 
           {
             type: "button",
             action: {
               type: "postback",
-              label: "📚 ไปดูอย่างอื่น",
+              label: "🌱 สำรวจตัวเอง",
               data: "menu_explore"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "uri",
+              label: "📚 ดูตัวเลือกทั้งหมด",
+              uri: "https://hub2-theta.vercel.app"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "🚨 ขอความช่วยเหลือด่วน",
+              data: "menu_urgent"
             }
           },
           {
@@ -64,19 +88,74 @@ if (sessions[userId]?.locked) {
               text: "พัก"
             }
           }
+
         ]
       }
     });
   }
 
-  return replyText(event.replyToken,
-`💛 ตอนนี้เรากำลังดูแลเคสของคุณอยู่  
-ยังไม่ต้องเริ่มใหม่ก็ได้
+  // 👉 default ตอน locked
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
 
-เราจะรีบหาคนให้คุณนะ 💛`);
-}
+        {
+          type: "text",
+          text: "💛 เราได้รับเรื่องของคุณแล้วนะ",
+          weight: "bold"
+        },
+        {
+          type: "text",
+          text: `ตอนนี้เรากำลังหาคนที่เหมาะกับคุณอยู่\n⏳ ใช้เวลาประมาณ ${getETA()}`,
+          size: "sm",
+          wrap: true
+        },
+        {
+          type: "text",
+          text: "ระหว่างนี้คุณสามารถเลือกได้เลย 💛",
+          size: "sm"
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "message",
+            label: "📍 เมนู",
+            text: "เมนู"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "message",
+            label: "💤 พักสักนิด",
+            text: "พัก"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "🌱 สำรวจตัวเอง",
+            data: "menu_explore"
+          }
+        }
+
+      ]
+    }
+  });
+
+} // ✅ ปิด LOCK ตรงนี้
   
   if (text === "เมนู") {
+     // 🔒 ถ้ายัง locked → ห้าม reset
+  if (sessions[userId]?.locked) {
+    return sendLockedMenu(event.replyToken); }
+    // 🟢 ปกติ → reset ได้
   delete sessions[userId];
   return sendMainMenu(event.replyToken); }
   
@@ -166,17 +245,66 @@ if (isEmpty) {
 
   await notifyTeam(caseId, level, s.answers, route);
 
-  await replyText(event.replyToken,
-`💛 ไม่เป็นไรเลยนะ  
-แค่คุณมาถึงตรงนี้ก็เก่งมากแล้ว  
+  await replyFlex(event.replyToken, {
+  type: "bubble",
+  body: {
+    type: "box",
+    layout: "vertical",
+    spacing: "md",
+    contents: [
 
-💛 เคสของคุณถูกส่งแล้วนะ ทีมได้รับเรื่องแล้ว
+      {
+        type: "text",
+        text: "💛 ไม่เป็นไรเลยนะ",
+        weight: "bold"
+      },
+      {
+        type: "text",
+        text: "แค่คุณมาถึงตรงนี้ก็เก่งมากแล้ว",
+        size: "sm"
+      },
+      {
+        type: "text",
+        text: `⏳ เรากำลังหาคนที่เหมาะกับคุณอยู่\nใช้เวลาประมาณ ${getETA()}`,
+        size: "sm",
+        wrap: true
+      },
 
-ตอนนี้เรากำลังหาคนที่เหมาะกับคุณอยู่  
-⏳ โดยปกติใช้เวลา ${getETA()} `);
+      {
+        type: "text",
+        text: "ระหว่างนี้คุณสามารถเลือกได้เลย 💛",
+        size: "sm"
+      },
 
-  sessions[userId] = { locked: true };
-  return;
+      // ✅ ปุ่ม
+      {
+        type: "button",
+        action: {
+          type: "message",
+          label: "📍 เมนู",
+          text: "เมนู"
+        }
+      },
+      {
+        type: "button",
+        action: {
+          type: "message",
+          label: "💤 พักสักนิด",
+          text: "พัก"
+        }
+      },
+      {
+        type: "button",
+        action: {
+          type: "postback",
+          label: "🌱 สำรวจตัวเอง",
+          data: "menu_explore"
+        }
+      }
+
+    ]
+  }
+});
 }
         
     // ===== INTENT + RISK CHECK =====
