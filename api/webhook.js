@@ -238,7 +238,51 @@ if (ai) {
   if (ai.intent) finalIntent = ai.intent;
   if (ai.suggestion) finalRoute = ai.suggestion;
 }
+// ===== CREATE CASE =====
+await fetch(GAS_URL, {
+  method: "POST",
+  headers: {"Content-Type":"application/json"},
+  body: JSON.stringify({
+    action: "create",
+    caseId,
+    userId,
+    ...s.answers,
+    level,
+    route: finalRoute
+  })
+});
 
+await notifyTeam(caseId, level, s.answers, finalRoute);
+
+// ===== RESPONSE =====
+let msg = "";
+
+if (ai) {
+  if (ai.reflection) msg += "💛 " + ai.reflection + "\n\n";
+  if (ai.summary) msg += "🧠 " + ai.summary + "\n\n";
+} else {
+  msg += "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n\n";
+}
+
+msg += buildHumanMessage(finalIntent, s.answers, finalRoute);
+
+msg += `\n⏳ โดยปกติจะใช้เวลา ${getETA()}`;
+msg += `\n💛 ระหว่างนี้เราจะช่วยหาคนที่เหมาะกับคุณให้เร็วที่สุดนะ`;
+
+if (finalIntent === "crisis") {
+  msg += `\n💛 ถ้าคุณรู้สึกว่ามันหนักมาก
+คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`;
+}
+
+// ===== SEND =====
+await replyText(event.replyToken, msg);
+
+// ===== FOLLOW UP =====
+scheduleFollowUp(caseId, userId, level);
+
+// ===== END =====
+sessions[userId] = { done: true };
+return;
   
   // ===== DEFAULT MENU =====
   const type = event.source.type;
@@ -882,15 +926,14 @@ const data = await res.json();
 
     try {
       return JSON.parse(data.choices[0].message.content);
-    } catch (e) {
+    } 
+    catch (e) {
       console.log("JSON PARSE ERROR:", data.choices[0].message.content);
-      return null;
-    }
-
-  } catch (e) {
+      return null; }
+  } 
+  catch (e) {
     console.log("AI ERROR:", e);
-    return null;
-  }
+    return null; }
 }
 
   
