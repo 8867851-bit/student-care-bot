@@ -6,7 +6,7 @@ const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 if (!global.caseMap) global.caseMap = {};
 const sessions = {};
 const handledEvents = new Set();
-
+const DEV_MODE = true;
 
 // ================= MAIN =================
 module.exports = async (req, res) => {
@@ -39,67 +39,35 @@ async function handleMessage(event){
 if (sessions[userId]?.locked) {
 
   if (text === "เมนู") {
-    return replyFlex(event.replyToken, {
-      type: "bubble",
-      body: {
-        type: "box",
-        layout: "vertical",
-        spacing: "md",
-        contents: [
-
-          { type: "text", text: "💛 เคสของคุณส่งไปแล้ว", weight: "bold" },
-
-          {
-            type: "text",
-            text: "ตอนนี้เรากำลังหาคนที่เหมาะกับคุณอยู่\nระหว่างนี้คุณสามารถทำอย่างอื่นได้นะ 💛",
-            size: "sm",
-            wrap: true
-          },
-
-          {
-            type: "button",
-            action: {
-              type: "postback",
-              label: "🌱 สำรวจตัวเอง",
-              data: "menu_explore"
-            }
-          },
-          {
-            type: "button",
-            action: {
-              type: "uri",
-              label: "📚 ดูตัวเลือกทั้งหมด",
-              uri: "https://hub2-theta.vercel.app"
-            }
-          },
-          {
-            type: "button",
-            action: {
-              type: "postback",
-              label: "🚨 ขอความช่วยเหลือด่วน",
-              data: "menu_urgent"
-            }
-          },
-          {
-            type: "button",
-            action: {
-              type: "message",
-              label: "💤 พักสักนิด",
-              text: "พัก"
-            }
-          }
-
-        ]
-      }
-    });
+    return replyFlex(event.replyToken, { ... });
   }
-} // ✅ ปิด LOCK ตรงนี้
+
+  // 🔥 กันทุก input อื่น
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "💛 เราได้รับเรื่องของคุณแล้วนะ", weight: "bold" },
+        {
+          type: "text",
+          text: `⏳ เรากำลังหาคนที่เหมาะกับคุณอยู่\nใช้เวลาประมาณ ${getETA()}`,
+          wrap: true,
+          size: "sm"
+        },
+        {
+          type: "button",
+          action: { type: "message", label: "📍 เมนู", text: "เมนู" }
+        }
+      ]
+    }
+  });
+}
+}
   
   
   if (text === "เมนู") {
-     // 🔒 ถ้ายัง locked → ห้าม reset
-  if (sessions[userId]?.locked) {
-    return sendLockedMenu(event.replyToken); }
     // 🟢 ปกติ → reset ได้
   delete sessions[userId];
   return sendMainMenu(event.replyToken); }
@@ -112,8 +80,15 @@ if (sessions[userId]?.locked) {
 `💛 ตอนนี้เรากำลังคุยกันอยู่  ลองกดเลือกคำตอบด้านบน หรือพิมพ์ "เมนู" เพื่อเริ่มใหม่ได้เลยนะ`); }
 
   if (text === "คุย") {
-    sessions[userId] = { step: 0, answers: {} };
-    return sendStep(userId, event.replyToken); }
+  // 🔒 production only
+  if (!DEV_MODE && sessions[userId]?.locked) {
+    return replyText(event.replyToken,
+      "💛 ตอนนี้เรากำลังดูแลเคสของคุณอยู่นะ ยังไม่ต้องเริ่มใหม่ก็ได้");
+  }
+
+  sessions[userId] = { step: 0, answers: {} };
+  return sendStep(userId, event.replyToken);
+}
 
   if (text === "เข้าใจ") {
     return sendExploreMenu(event.replyToken); }
@@ -324,16 +299,7 @@ return replyFlex(event.replyToken, {
     const highEmotional =
       s.answers.q3 === "q3_high" &&
       s.answers.q4 === "q4_none"; 
-  
-// ===== AI OVERRIDE =====
-let finalIntent = intent;
-let finalRoute = route;
 
-if (ai) {
-  if (ai.intent) finalIntent = ai.intent;
-  if (ai.suggestion) finalRoute = ai.suggestion;
-}
-}
   
   // ===== DEFAULT MENU =====
   const type = event.source.type;
