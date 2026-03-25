@@ -35,8 +35,16 @@ async function handleMessage(event){
     const text = event.message?.text || "";
     const s = sessions[userId];
 
+  // ===== SESSION LOCK =====
+if (sessions[userId]?.locked) {
+  return replyText(event.replyToken,
+`💛 ตอนนี้เรากำลังหาคนให้คุณอยู่นะ  
+ยังไม่ต้องเริ่มใหม่ก็ได้
+
+พิมพ์ "เมนู" ถ้าต้องการทำอย่างอื่น 💛`);
+}
+
   // ==== POST SESSION STATE ====
-  
 if (sessions[userId]?.done) {
   if (text === "เมนู") {
     delete sessions[userId];
@@ -283,7 +291,7 @@ await replyText(event.replyToken, msg);
 scheduleFollowUp(caseId, userId, level);
 
 // ===== END =====
-sessions[userId] = { done: true };
+sessions[userId] = { done: true, locked: true };
 return;
 }
   
@@ -1056,7 +1064,8 @@ async function acceptCase(caseId, userId, role, replyToken) {
       userId: data.targetUserId,
       peerId: userId
     };
-
+    sessions[data.targetUserId] = { done: false, locked: false };
+    
     // ✅ ตอบ peer
     await replyText(replyToken, "✅ รับเคสแล้ว");
 
