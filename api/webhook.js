@@ -39,9 +39,64 @@ async function handleMessage(event){
 if (sessions[userId]?.locked) {
 
   if (text === "เมนู") {
-    return replyFlex(event.replyToken, { ... });
+    return sendLockedMenu(event.replyToken);
   }
 
+  function sendLockedMenu(replyToken) {
+  return replyFlex(replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+
+        { type: "text", text: "💛 เคสของคุณส่งไปแล้ว", weight: "bold" },
+
+        {
+          type: "text",
+          text: "ตอนนี้เรากำลังหาคนที่เหมาะกับคุณอยู่\nระหว่างนี้คุณสามารถทำอย่างอื่นได้นะ 💛",
+          size: "sm",
+          wrap: true
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "🌱 สำรวจตัวเอง",
+            data: "menu_explore"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "uri",
+            label: "📚 ดูตัวเลือกทั้งหมด",
+            uri: "https://hub2-theta.vercel.app"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "🚨 ขอความช่วยเหลือด่วน",
+            data: "menu_urgent"
+          }
+        },
+        {
+          type: "button",
+          action: {
+            type: "message",
+            label: "💤 พักสักนิด",
+            text: "พัก"
+          }
+        }
+
+      ]
+    }
+  });
+}
   // 🔥 กันทุก input อื่น
   return replyFlex(event.replyToken, {
     type: "bubble",
