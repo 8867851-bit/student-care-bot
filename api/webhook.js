@@ -124,43 +124,10 @@ if (isEmpty) {
   return;
 }
     
-  // ===== SKIP CASE =====
-if (text.trim() === "1") {
-  s.answers["q6"] = "";
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-  const intent = detectIntent(s.answers);
-  let route = decideRoute(s.answers);
-
-  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
-  if (intent === "emotional_support") route = "peer";
-
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "create",
-      caseId,
-      userId,
-      ...s.answers,
-      level,
-      route
-    })
-  });
-
-  await notifyTeam(caseId, level, s.answers, route);
-
-  await replyText(event.replyToken,
-`💛 ไม่เป็นไรเลยนะ ไม่ต้องเล่าทุกอย่างก็ได้  
-เดี๋ยวเราจะหาคนที่เหมาะกับคุณให้`);
-
-  sessions[userId] = { done: true };
-  return;
-}  
 // ===== AI ANALYSIS =====
 const ai = await getAIAnalysis(text);
 if (ai && ai.followups) {
-  return buildPersonalizedQ6(event.replyToken, ai);
+  await buildPersonalizedQ6(event.replyToken, ai);
 }    
     
     // ===== INTENT + RISK CHECK =====
@@ -239,7 +206,7 @@ return replyFlex(event.replyToken, {
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
       s.answers.q3 === "q3_high" &&
-      s.answers.q4 === "q4_none";
+      s.answers.q4 === "q4_none"; 
 
 // ============== CREATE CASE ======================
     await fetch(GAS_URL, {
@@ -338,7 +305,15 @@ if (data.startsWith("q6_follow_")) {
   const s = sessions[userId];
   if (!s) return;
 
-  // 👉 treat ว่า Q6 complete แล้ว
+  const choice = data.replace("q6_follow_", "");
+
+  // 👉 เก็บว่า user เลือกอะไร
+  s.answers.q6 = "follow_" + choice;
+
+  // 👉 soft reflection ก่อนจบ
+  await replyText(event.replyToken,
+  "💛 ขอบคุณที่บอกนะ เราเข้าใจคุณมากขึ้นแล้ว");
+
   s.step = 7;
 
   const caseId = Date.now().toString().slice(-6);
@@ -845,12 +820,10 @@ function detectIntent(answers) {
 
 //======== + EMPHATY===========
 function buildHumanMessage(intent, answers, route) {
-  const text = (answers.q6 || "").toLowerCase();
 
   // ===== base ====
   let msg = "";
 
-msg += buildHumanMessage(intent, s.answers, route);
   // ===== intent layer =====
   if (intent === "crisis") { msg += "\nเรื่องนี้มันหนักมากจริง ๆ\nคุณไม่จำเป็นต้องอยู่กับมันคนเดียวเลยนะ"; }
     else if (intent === "practical_advice") { msg += "\nดูเหมือนคุณกำลังพยายามหาทางออกอยู่จริง ๆ"; }
