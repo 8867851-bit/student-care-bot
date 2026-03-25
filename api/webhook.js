@@ -93,8 +93,14 @@ if (isEmpty) {
 
   const caseId = Date.now().toString().slice(-6);
   const level = classify(s.answers);
-  const intent = detectIntent(s.answers);
+  let intent = detectIntent(s.answers);
   let route = decideRoute(s.answers);
+
+// 👉 AI override
+if (ai) {
+  if (ai.intent) intent = ai.intent;
+  if (ai.suggestion) route = ai.suggestion;
+}
 
   if (intent === "crisis" || intent === "practical_advice") route = "teacher";
   if (intent === "emotional_support") route = "peer";
@@ -224,32 +230,40 @@ return replyFlex(event.replyToken, {
 
     await notifyTeam(caseId, level, s.answers, route);
 
-  // ===== RESPONSE =====
+ // ================ RESPONSE =================
 let msg = "";
 
-if (ai && ai.reflection) {
-  msg += "💛 " + ai.reflection + "\n\n";} 
-else {
-  msg += "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n\n"; }
-  msg += buildHumanMessage(intent, s.answers, route);
+// ===== AI LAYER (ตัวหลัก) =====
+if (ai) {
+  if (ai.reflection) {
+    msg += "💛 " + ai.reflection + "\n\n"; }
+  if (ai.summary) {
+    msg += "🧠 " + ai.summary + "\n\n";}
+} else {
+  msg += "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n\n";}
 
-msg += `
-⏳ โดยปกติจะใช้เวลา ${getETA()}`;
-msg += `
-💛 ระหว่างนี้เราจะช่วยหาคนที่เหมาะกับคุณให้เร็วที่สุดนะ`;
-    
+// ===== HUMAN LAYER (ไม่ซ้ำแล้ว) =====
+msg += buildHumanMessage(intent, s.answers, route);
+
+// ===== SYSTEM LAYER =====
+msg += `\n⏳ โดยปกติจะใช้เวลา ${getETA()}`;
+msg += `\n💛 ระหว่างนี้เราจะช่วยหาคนที่เหมาะกับคุณให้เร็วที่สุดนะ`;
+
+// ===== CRISIS SUPPORT =====
 if (intent === "crisis") {
-  msg += `
-💛 ถ้าคุณรู้สึกว่ามันหนักมาก
-คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`; }
+  msg += `\n💛 ถ้าคุณรู้สึกว่ามันหนักมาก
+คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`;
+}
 
-    await replyText(event.replyToken, msg);
+// ===== SEND =====
+await replyText(event.replyToken, msg);
 
-    scheduleFollowUp(caseId, userId, level);
+// ===== FOLLOW UP =====
+scheduleFollowUp(caseId, userId, level);
 
-    sessions[userId] = { done: true };
-    return;
-  }
+// ===== END SESSION =====
+sessions[userId] = { done: true };
+return;
 
   // ===== DEFAULT MENU =====
   const type = event.source.type;
@@ -853,19 +867,28 @@ async function getAIAnalysis(text) {
           {
             role: "system",
             content: `
-คุณคือผู้ช่วยด้าน emotional support สำหรับนักเรียน
+คุณคือผู้ช่วยด้าน emotional support สำหรับนักเรียนมัธยมปลาย
 
 วิเคราะห์ข้อความแล้วตอบ JSON เท่านั้น:
 
 {
-  "emotion": "stress / sad / confused / overwhelmed / neutral",
-  "reflection": "ประโยคสะท้อนความรู้สึก 1-2 ประโยค",
-  "followups": [
-    "ตัวเลือกที่ 1",
-    "ตัวเลือกที่ 2",
-    "ตัวเลือกที่ 3"
-  ]
+  "emotion": "...",
+  "intent": "...",
+  "intensity": "...",
+  "summary": "...",
+  "reflection": "...",
+  "suggestion": "peer หรือ teacher"
 }
+
+กฎ:
+- summary = factual สั้น ๆ
+- reflection = ฟังแล้วรู้สึก "ถูกเข้าใจ"
+- intent ต้องเลือกจาก:
+  emotional_support / practical_advice / crisis
+- suggestion:
+  ถ้า emotional → peer
+  ถ้า planning → teacher
+  ถ้าเสี่ยง → teacher
 `
           },
           {
