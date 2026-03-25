@@ -93,63 +93,8 @@ if (sessions[userId]?.locked) {
       }
     });
   }
-
-  // 👉 default ตอน locked
-  return replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents: [
-
-        {
-          type: "text",
-          text: "💛 เราได้รับเรื่องของคุณแล้วนะ",
-          weight: "bold"
-        },
-        {
-          type: "text",
-          text: `ตอนนี้เรากำลังหาคนที่เหมาะกับคุณอยู่\n⏳ ใช้เวลาประมาณ ${getETA()}`,
-          size: "sm",
-          wrap: true
-        },
-        {
-          type: "text",
-          text: "ระหว่างนี้คุณสามารถเลือกได้เลย 💛",
-          size: "sm"
-        },
-
-        {
-          type: "button",
-          action: {
-            type: "message",
-            label: "📍 เมนู",
-            text: "เมนู"
-          }
-        },
-        {
-          type: "button",
-          action: {
-            type: "message",
-            label: "💤 พักสักนิด",
-            text: "พัก"
-          }
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "🌱 สำรวจตัวเอง",
-            data: "menu_explore"
-          }
-        }
-
-      ]
-    }
-  });
-
 } // ✅ ปิด LOCK ตรงนี้
+  
   
   if (text === "เมนู") {
      // 🔒 ถ้ายัง locked → ห้าม reset
@@ -388,57 +333,6 @@ if (ai) {
   if (ai.intent) finalIntent = ai.intent;
   if (ai.suggestion) finalRoute = ai.suggestion;
 }
-  
-// ===== CREATE CASE =====
-await fetch(GAS_URL, {
-  method: "POST",
-  headers: {"Content-Type":"application/json"},
-  body: JSON.stringify({
-  action: "create",
-  caseId,
-  userId,
-  ...s.answers,
-  level,
-  route,
-
-  // 🔥 NEW
-  status: "pending",
-  createdAt: Date.now(),
-  acceptedAt: ""
-})
-});
-
-await notifyTeam(caseId, level, s.answers, finalRoute);
-
-// ===== RESPONSE =====
-let msg = "";
-
-if (ai) {
-  if (ai.reflection) msg += "💛 " + ai.reflection + "\n\n";
-  if (ai.summary) msg += "🧠 " + ai.summary + "\n\n";
-} else {
-  msg += "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n\n";
-}
-
-msg += buildHumanMessage(finalIntent, s.answers, finalRoute);
-
-msg += `\n⏳ โดยปกติจะใช้เวลา ${getETA()}`;
-msg += `\n💛 ระหว่างนี้เราจะช่วยหาคนที่เหมาะกับคุณให้เร็วที่สุดนะ`;
-
-if (finalIntent === "crisis") {
-  msg += `\n💛 ถ้าคุณรู้สึกว่ามันหนักมาก
-คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`;
-}
-
-// ===== SEND =====
-await replyText(event.replyToken, msg);
-
-// ===== FOLLOW UP =====
-scheduleFollowUp(caseId, userId, level);
-
-// ===== END =====
-sessions[userId] = { done: true, locked: true };
-return;
 }
   
   // ===== DEFAULT MENU =====
