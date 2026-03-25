@@ -864,6 +864,7 @@ msg += buildHumanMessage(intent, s.answers, route);
   // ===== soft autonomy =====
   msg += `\n\nคุณสามารถเลือกแบบที่คุณสบายใจได้เลยนะ`;
     return msg; }
+
 async function getAIAnalysis(text) {
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -892,12 +893,6 @@ async function getAIAnalysis(text) {
     "ตัวเลือกที่ 3"
   ]
 }
-
-กฎ:
-- followups ต้องเป็นภาษาคน
-- ต้องช่วยให้ user เลือกทาง
-- ไม่ยาวเกิน 8 คำ
-- ไม่ซ้ำกัน
 `
           },
           {
@@ -909,17 +904,18 @@ async function getAIAnalysis(text) {
     });
 
     const data = await res.json();
-    if (!data || !data.choices || !data.choices[0]) {
-  console.log("AI RESPONSE ERROR:", data);
-  return null;
-}
 
-try {
-  return JSON.parse(data.choices[0].message.content);
-} catch (e) {
-  console.log("PARSE ERROR:", data.choices[0].message.content);
-  return null;
-}
+    if (!data.choices || !data.choices[0]) {
+      console.log("AI BAD RESPONSE:", data);
+      return null;
+    }
+
+    return JSON.parse(data.choices[0].message.content);
+
+  } catch (e) {
+    console.log("AI ERROR:", e);
+    return null;
+  }
 }
   
 // ================= ETA =================
