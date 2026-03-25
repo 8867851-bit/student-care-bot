@@ -30,7 +30,7 @@ if (event.type === "postback") await handlePostback(event); }
   return res.status(200).send("OK"); };
 
 // ================= MESSAGE ==================
-async function handleMessage(event){
+async function handleMessage(event) {
     const userId = event.source.userId;
     const text = event.message?.text || "";
     const s = sessions[userId];
@@ -134,6 +134,7 @@ s.aiFollowups = ai.followups;
   });
 }
 
+
    // ===== ZERO INPUT DETECTION =====
 const isEmpty = !text || text.trim() === "" || text.trim() === "1";
 
@@ -219,18 +220,17 @@ sessions[userId] = sessions[userId] || {};
 sessions[userId].locked = true;
 return;
 }
-}
-        
+}    
     // ===== INTENT + RISK CHECK =====
-    
+  
 const inputText = (text || "").toLowerCase();
 // const isPractical = hasKeyword(inputText, practicalKeywords);
 //const isEmotional = hasKeyword(inputText, emotionalKeywords);
 const isRisk = hasKeyword(inputText, riskKeywords);
     
     //======= Highrisk check =====
-const isHighRisk = isRisk && s.answers.q3 === "q3_high";
-
+  
+    const isHighRisk = isRisk && s.answers.q3 === "q3_high";
     const caseId = Date.now().toString().slice(-6);
     const level = classify(s.answers);
     const intent = detectIntent(s.answers);
