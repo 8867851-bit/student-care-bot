@@ -4,9 +4,7 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbyR0siRWKlScIozsxY1DCSF
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
 if (!global.caseMap) global.caseMap = {};
-// ================= MEMORY =================
 const sessions = {};
-if (!global.caseMap) global.caseMap = {};
 const handledEvents = new Set();
 
 
@@ -86,14 +84,34 @@ if (s && s.step === 6) {
   s.answers["q6"] = text;
     // ===== AI ANALYSIS =====
 const ai = await getAIAnalysis(text);
-if (ai && ai.followups) {
-  await replyText(
-    event.replyToken,
-    "💛 " + (ai.reflection || "เราอยู่ตรงนี้นะ")
-  );
 
-  await buildPersonalizedQ6(event.replyToken, ai);
-  return;
+if (ai && ai.followups && ai.followups.length > 0) {
+s.aiFollowups = ai.followups;
+  
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+        {
+          type: "text",
+          text: "💛 " + (ai.reflection || "เราอยู่ตรงนี้นะ"),
+          wrap: true
+        },
+
+        ...ai.followups.map((f, i) => ({
+          type: "button",
+          action: {
+            type: "postback",
+            label: f,
+            data: "q6_follow_" + i
+          }
+        }))
+      ]
+    }
+  });
 }
 
    // ===== ZERO INPUT DETECTION =====
@@ -221,52 +239,6 @@ if (ai) {
   if (ai.suggestion) finalRoute = ai.suggestion;
 }
 
-// ===== CREATE CASE =====
-await fetch(GAS_URL, {
-  method: "POST",
-  headers: {"Content-Type":"application/json"},
-  body: JSON.stringify({
-    action: "create",
-    caseId,
-    userId,
-    ...s.answers,
-    level,
-    route: finalRoute
-  })
-});
-
-await notifyTeam(caseId, level, s.answers, finalRoute);
-
-// ===== RESPONSE =====
-let msg = "";
-
-if (ai) {
-  if (ai.reflection) msg += "💛 " + ai.reflection + "\n\n";
-  if (ai.summary) msg += "🧠 " + ai.summary + "\n\n";
-} else {
-  msg += "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n\n";
-}
-
-msg += buildHumanMessage(finalIntent, s.answers, finalRoute);
-
-msg += `\n⏳ โดยปกติจะใช้เวลา ${getETA()}`;
-msg += `\n💛 ระหว่างนี้เราจะช่วยหาคนที่เหมาะกับคุณให้เร็วที่สุดนะ`;
-
-if (finalIntent === "crisis") {
-  msg += `\n💛 ถ้าคุณรู้สึกว่ามันหนักมาก
-คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`;
-}
-
-// ===== SEND =====
-await replyText(event.replyToken, msg);
-
-// ===== FOLLOW UP =====
-scheduleFollowUp(caseId, userId, level);
-
-// ===== END =====
-sessions[userId] = { done: true };
-return;
-}
   
   // ===== DEFAULT MENU =====
   const type = event.source.type;
@@ -322,17 +294,19 @@ if (data.startsWith("q6_follow_")) {
   const s = sessions[userId];
   if (!s) return;
 
-  const choice = data.replace("q6_follow_", "");
+  const index = parseInt(data.replace("q6_follow_", ""), 10);
 
-  // 👉 เก็บว่า user เลือกอะไร
-  s.answers.q6 = "follow_" + choice;
+  // 👉 ดึง followup ที่ user กด (ถ้ามี AI เก็บไว้)
+  if (s.aiFollowups && s.aiFollowups[index]) {
+    s.answers.q6 = s.aiFollowups[index];
+  } else {
+    s.answers.q6 = "follow_" + index;
+  }
 
-  // 👉 soft reflection ก่อนจบ
   await replyText(event.replyToken,
-  "💛 ขอบคุณที่บอกนะ เราเข้าใจคุณมากขึ้นแล้ว");
+    "💛 ขอบคุณที่บอกนะ เราเข้าใจคุณมากขึ้นแล้ว");
 
-  s.step = 7;
-
+  // ===== FLOW ต่อเหมือน Q6 ปกติ =====
   const caseId = Date.now().toString().slice(-6);
   const level = classify(s.answers);
   const intent = detectIntent(s.answers);
@@ -355,10 +329,6 @@ if (data.startsWith("q6_follow_")) {
   });
 
   await notifyTeam(caseId, level, s.answers, route);
-
-  await replyText(event.replyToken,
-`💛 ขอบคุณที่แชร์นะ
-เดี๋ยวเราจะหาคนที่เหมาะกับคุณให้`);
 
   sessions[userId] = { done: true };
   return;
@@ -876,22 +846,23 @@ async function getAIAnalysis(text) {
 
 {
   "emotion": "...",
-  "intent": "...",
-  "intensity": "...",
-  "summary": "...",
-  "reflection": "...",
-  "suggestion": "peer หรือ teacher"
+  "intent": "emotional_support / practical_advice / crisis",
+  "summary": "สรุปสิ่งที่ผู้ใช้พูดสั้น ๆ",
+  "reflection": "ประโยคสะท้อนความรู้สึก 1-2 ประโยค",
+  "suggestion": "peer หรือ teacher",
+  "followups": [
+    "ตัวเลือกที่ 1",
+    "ตัวเลือกที่ 2",
+    "ตัวเลือกที่ 3"
+  ]
 }
 
 กฎ:
-- summary = factual สั้น ๆ
-- reflection = ฟังแล้วรู้สึก "ถูกเข้าใจ"
-- intent ต้องเลือกจาก:
-  emotional_support / practical_advice / crisis
-- suggestion:
-  ถ้า emotional → peer
-  ถ้า planning → teacher
-  ถ้าเสี่ยง → teacher
+- reflection = ฟังแล้วรู้สึกถูกเข้าใจ
+- followups = เป็นคำถามหรือทางเลือกสั้น ๆ (ไม่เกิน 10 คำ)
+- ถ้าเป็น emotional → suggestion = peer
+- ถ้าเป็น planning → suggestion = teacher
+- ถ้าเสี่ยง → suggestion = teacher
 `
           },
           {
@@ -909,12 +880,12 @@ async function getAIAnalysis(text) {
       return null;
     }
 
-    return JSON.parse(data.choices[0].message.content);
-
-  } catch (e) {
-    console.log("AI ERROR:", e);
-    return null;
-  }
+    try {
+  return JSON.parse(data.choices[0].message.content);
+} catch (e) {
+  console.log("JSON PARSE ERROR:", data.choices[0].message.content);
+  return null;
+}
 }
   
 // ================= ETA =================
@@ -1014,7 +985,7 @@ contents: [
 }        // 👈 ปิด function notifyTeam
 
 // ================= ACCEPT =================
-async function acceptCase(caseId, userId, replyToken) {
+async function acceptCase(caseId, userId, role, replyToken) {
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
