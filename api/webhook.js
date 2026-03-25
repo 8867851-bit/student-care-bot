@@ -84,6 +84,40 @@ if (sessions[userId]?.done) {
   // ===== Q6 INPUT =====
   if (s && s.step === 6) {
     s.answers["q6"] = text;
+    
+  // ===== SKIP CASE =====
+if (text.trim() === "1") {
+  s.answers["q6"] = "";
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
+  const intent = detectIntent(s.answers);
+  let route = decideRoute(s.answers);
+
+  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
+  if (intent === "emotional_support") route = "peer";
+
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "create",
+      caseId,
+      userId,
+      ...s.answers,
+      level,
+      route
+    })
+  });
+
+  await notifyTeam(caseId, level, s.answers, route);
+
+  await replyText(event.replyToken,
+`💛 ไม่เป็นไรเลยนะ ไม่ต้องเล่าทุกอย่างก็ได้  
+เดี๋ยวเราจะหาคนที่เหมาะกับคุณให้`);
+
+  sessions[userId] = { done: true };
+  return;
+}  
 // ===== AI ANALYSIS =====
 const ai = await getAIAnalysis(text);
 if (ai && ai.followups) {
@@ -111,8 +145,8 @@ const isHighRisk = isRisk && s.answers.q3 === "q3_high";
     
 // ==== confidence ====    
 const confidence = getConfidence(intent, s.answers);  
-const hasUserText = text && text.trim().length > 2;
-if (confidence <= 1 && !hasUserText && s.answers.q5 === "q5_confused") {
+const hasMeaningfulSignal = hasKeyword(text, emotionalKeywords) || hasKeyword(text, practicalKeywords) || text.trim().length > 5;
+if (confidence <= 1 && !hasMeaningfulSignal && s.answers.q5 === "q5_confused") {
       // 👉 low clarity case
          delete sessions[userId];
   
@@ -733,8 +767,14 @@ const practicalKeywords = [
   "tcas","กสพท","พอร์ต","คณะ","มหาลัย","ติว"
 ];
 const emotionalKeywords = [
-  "เครียด","เหนื่อย","ท้อ","กดดัน",
-  "หมดแรง","ไม่มั่นใจ","กังวล"
+  "เครียด","เหนื่อย","ท้อ","กดดัน","หมดแรง","กังวล","ไม่ไหว",
+  "เศร้า","เสียใจ","ร้องไห้","ดาวน์","หดหู่","สิ้นหวัง",
+  "ว่างเปล่า","เฉยๆ","ไม่มีความรู้สึก","ชา","ชินชา",
+  "กลัว","แพนิค","ตื่นเต้น","ใจสั่น","คิดมาก","วน","overthink","คิดมาก"
+  "ไร้ค่า","ไม่เก่ง","ไม่ดีพอ","แย่","ล้มเหลว",
+  "เหงา","โดดเดี่ยว","ไม่มีใคร","อยู่คนเดียว","ไม่มีคนเข้าใจ",
+  "หมดไฟ","เบื่อ","ไม่อยากทำอะไร","ขี้เกียจ","ฝืน",
+  "งง","สับสน","ไม่รู้","ไม่แน่ใจ","คิดไม่ออก","มึน"
 ];
 const riskKeywords = [
   "ไม่ไหว","อยากหายไป","หมดหวัง",
