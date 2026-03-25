@@ -30,10 +30,10 @@ if (event.type === "postback") await handlePostback(event); }
   return res.status(200).send("OK"); };
 
 // ================= MESSAGE ==================
-async function handleMessage(event) {
+async function handleMessage(event){
     const userId = event.source.userId;
     const text = event.message?.text || "";
-    const s = sessions[userId]; }
+    const s = sessions[userId];
 
   // ==== POST SESSION STATE ====
   
@@ -285,6 +285,8 @@ scheduleFollowUp(caseId, userId, level);
 // ===== END =====
 sessions[userId] = { done: true };
 return;
+}
+}
   
   // ===== DEFAULT MENU =====
   const type = event.source.type;
@@ -304,7 +306,6 @@ if (!sessions[userId]) {
   if (type === "group") {
     if (text === "start") {
       return sendMainMenu(event.replyToken); } }
-}
 
 // ================= POSTBACK =================
 async function handlePostback(event) {
@@ -378,6 +379,7 @@ if (data.startsWith("q6_follow_")) {
 
   sessions[userId] = { done: true };
   return;
+}
 }
 
 
