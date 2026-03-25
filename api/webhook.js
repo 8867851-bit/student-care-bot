@@ -59,7 +59,7 @@ if (sessions[userId]?.done) {
   delete sessions[userId];
   return sendMainMenu(event.replyToken); }
   
-  if (s && s.step < 7) {
+  if (s && s.step < 6) {
   if (text === "reset") {
     delete sessions[userId];
     return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛"); }
