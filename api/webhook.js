@@ -80,11 +80,7 @@ if (sessions[userId]?.done) {
        ดื่มน้ำเย็นสักแก้ว  
        หรือขยับตัวเบา ๆ
        แล้วค่อยกลับมานะ เราอยู่ตรงนี้ 💛`); }
-  
-  // ===== Q6 INPUT =====
-  if (s && s.step === 6) {
-    s.answers["q6"] = text;
-    // ===== ZERO INPUT DETECTION =====
+   // ===== ZERO INPUT DETECTION =====
 const isEmpty = !text || text.trim() === "" || text.trim() === "1";
 
 if (isEmpty) {
@@ -122,6 +118,10 @@ if (isEmpty) {
   sessions[userId] = { done: true };
   return;
 }
+  // ===== Q6 INPUT =====
+  if (s && s.step === 6) {
+    s.answers["q6"] = text;
+    
     
   // ===== SKIP CASE =====
 if (text.trim() === "1") {
