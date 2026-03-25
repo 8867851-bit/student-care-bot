@@ -38,17 +38,42 @@ async function handleMessage(event){
 // ===== SESSION LOCK =====
 if (sessions[userId]?.locked) {
 
-  // ✅ อนุญาตให้เข้าเมนูได้
   if (text === "เมนู") {
-    delete sessions[userId];
-    return sendMainMenu(event.replyToken);
+    return replyFlex(event.replyToken, {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "💛 เคสของคุณถูกส่งแล้วนะ", weight: "bold" },
+          { type: "text", text: "เรากำลังหาคนที่เหมาะกับคุณอยู่ 💛", wrap: true },
+
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "📚 ไปดูอย่างอื่น",
+              data: "menu_explore"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "message",
+              label: "💤 พักสักนิด",
+              text: "พัก"
+            }
+          }
+        ]
+      }
+    });
   }
 
   return replyText(event.replyToken,
-`💛 ตอนนี้เรากำลังหาคนให้คุณอยู่นะ  
+`💛 ตอนนี้เรากำลังดูแลเคสของคุณอยู่  
 ยังไม่ต้องเริ่มใหม่ก็ได้
 
-พิมพ์ "เมนู" เพื่อดูตัวเลือกอื่น 💛`);
+เราจะรีบหาคนให้คุณนะ 💛`);
 }
   
   if (text === "เมนู") {
@@ -145,7 +170,10 @@ if (isEmpty) {
 `💛 ไม่เป็นไรเลยนะ  
 แค่คุณมาถึงตรงนี้ก็เก่งมากแล้ว  
 
-เดี๋ยวเราจะหาคนที่เหมาะกับคุณให้ 💛`);
+💛 เคสของคุณถูกส่งแล้วนะ ทีมได้รับเรื่องแล้ว
+
+ตอนนี้เรากำลังหาคนที่เหมาะกับคุณอยู่  
+⏳ โดยปกติใช้เวลา ${getETA()} `);
 
   sessions[userId] = { locked: true };
   return;
