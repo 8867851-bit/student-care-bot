@@ -47,7 +47,7 @@ if (sessions[userId]?.locked) {
         spacing: "md",
         contents: [
 
-          { type: "text", text: "💛 เคสของคุณถูกส่งแล้ว", weight: "bold" },
+          { type: "text", text: "💛 เคสของคุณส่งไปแล้ว", weight: "bold" },
 
           {
             type: "text",
