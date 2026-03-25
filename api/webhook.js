@@ -244,44 +244,62 @@ if (isEmpty) {
   });
 
   await notifyTeam(caseId, level, s.answers, route);
+const assignedPeer = await autoAssign(caseId, level, route);
+
+if (assignedPeer) {
+  await pushToUser(assignedPeer.userId,
+    `💛 มีเคสใหม่ถูกมอบหมายให้คุณ\nCase #${caseId}`);
+}
 
   await replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents: [
-        { type: "text", text: "💛 ไม่เป็นไรเลยนะ", weight: "bold" },
-        { type: "text", text: "แค่คุณมาถึงตรงนี้ก็เก่งมากแล้ว", size: "sm" },
-        {
-          type: "text",
-          text: `⏳ เรากำลังหาคนที่เหมาะกับคุณอยู่\nใช้เวลาประมาณ ${getETA()}`,
-          size: "sm",
-          wrap: true
-        },
-        { type: "text", text: "ระหว่างนี้คุณสามารถเลือกได้เลย 💛", size: "sm" },
+  type: "bubble",
+  body: {
+    type: "box",
+    layout: "vertical",
+    spacing: "md",
+    contents: [
 
-        {
-          type: "button",
-          action: { type: "message", label: "📍 เมนู", text: "เมนู" }
-        },
-        {
-          type: "button",
-          action: { type: "message", label: "💤 พักสักนิด", text: "พัก" }
-        },
-        {
-          type: "button",
-          action: { type: "postback", label: "🌱 สำรวจตัวเอง", data: "menu_explore" }
-        }
-      ]
-    }
-  });
+      {
+        type: "text",
+        text: "💛 เคสของคุณถูกส่งเรียบร้อยแล้ว",
+        weight: "bold"
+      },
 
-  // 🔥🔥🔥 สำคัญที่สุด
-  sessions[userId].locked = true;
+      {
+        type: "text",
+        text: assignedPeer
+          ? "มีคนรับเคสของคุณแล้ว 💛"
+          : `⏳ เรากำลังหาคนที่เหมาะกับคุณ\nใช้เวลาประมาณ ${getETA()}`,
+        size: "sm",
+        wrap: true
+      },
 
-  return;
+      {
+        type: "text",
+        text: "ระหว่างนี้คุณสามารถเลือกได้เลย 💛",
+        size: "sm"
+      },
+
+      {
+        type: "button",
+        action: { type: "message", label: "📍 เมนู", text: "เมนู" }
+      },
+      {
+        type: "button",
+        action: { type: "message", label: "💤 พักสักนิด", text: "พัก" }
+      },
+      {
+        type: "button",
+        action: { type: "postback", label: "🌱 สำรวจตัวเอง", data: "menu_explore" }
+      }
+
+    ]
+  }
+});
+
+sessions[userId] = sessions[userId] || {};
+sessions[userId].locked = true;
+return;
 }
         
     // ===== INTENT + RISK CHECK =====
@@ -376,13 +394,18 @@ await fetch(GAS_URL, {
   method: "POST",
   headers: {"Content-Type":"application/json"},
   body: JSON.stringify({
-    action: "create",
-    caseId,
-    userId,
-    ...s.answers,
-    level,
-    route: finalRoute
-  })
+  action: "create",
+  caseId,
+  userId,
+  ...s.answers,
+  level,
+  route,
+
+  // 🔥 NEW
+  status: "pending",
+  createdAt: Date.now(),
+  acceptedAt: ""
+})
 });
 
 await notifyTeam(caseId, level, s.answers, finalRoute);
@@ -1164,8 +1187,34 @@ contents: [
   });    // 👈 ปิด fetch
 }        // 👈 ปิด function notifyTeam
 
+
+async function autoAssign(caseId, level, route) {
+
+  // 🔥 ดึง list peer จาก GAS
+  const res = await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "getAvailablePeers",
+      role: route
+    })
+  });
+
+  const data = await res.json();
+  const peers = data.peers || [];
+
+  if (peers.length === 0) return null;
+
+  // 🔥 เลือกคนแรกก่อน (V1)
+  const chosen = peers[0];
+
+  return chosen;
+}
+
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, role, replyToken) {
+
+  
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
@@ -1179,7 +1228,9 @@ async function acceptCase(caseId, userId, role, replyToken) {
   });
 
   const data = await res.json();
-
+  if (data.status === "ASSIGNED") {
+  return replyText(replyToken, "❌ เคสนี้มีคนรับไปแล้ว"); }
+  
   if (data.status === "OK") {
 
     // 🔗 map user ↔ peer
