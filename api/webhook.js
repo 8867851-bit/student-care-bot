@@ -909,12 +909,17 @@ async function getAIAnalysis(text) {
     });
 
     const data = await res.json();
-    return JSON.parse(data.choices[0].message.content);
+    if (!data || !data.choices || !data.choices[0]) {
+  console.log("AI RESPONSE ERROR:", data);
+  return null;
+}
 
-  } catch (e) {
-    console.log("AI ERROR:", e);
-    return null;
-  }
+try {
+  return JSON.parse(data.choices[0].message.content);
+} catch (e) {
+  console.log("PARSE ERROR:", data.choices[0].message.content);
+  return null;
+}
 }
   
 // ================= ETA =================
