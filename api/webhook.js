@@ -317,9 +317,7 @@ if (!sessions[userId] || sessions[userId].step !== step) {
 
 // ===== SPECIAL CHOICE (transition decision) =====
 if (value === "continue") {
-  if (sessions[userId].step >= 7) {
-  sessions[userId].step = 6;
-}
+  sessions[userId].step = 6; // 👉 บังคับไป Q6
   return sendStep(userId, event.replyToken);
 }
 
