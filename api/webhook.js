@@ -873,7 +873,7 @@ async function getAIAnalysis(text) {
       })
     });
 
-    const data = await res.json();
+const data = await res.json();
 
     if (!data.choices || !data.choices[0]) {
       console.log("AI BAD RESPONSE:", data);
@@ -881,13 +881,18 @@ async function getAIAnalysis(text) {
     }
 
     try {
-  return JSON.parse(data.choices[0].message.content);
-} catch (e) {
-  console.log("JSON PARSE ERROR:", data.choices[0].message.content);
-  return null;
+      return JSON.parse(data.choices[0].message.content);
+    } catch (e) {
+      console.log("JSON PARSE ERROR:", data.choices[0].message.content);
+      return null;
+    }
+
+  } catch (e) {
+    console.log("AI ERROR:", e);
+    return null;
+  }
 }
-}
-}
+
   
 // ================= ETA =================
 function getETA() {
