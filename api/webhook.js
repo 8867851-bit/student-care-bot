@@ -84,6 +84,44 @@ if (sessions[userId]?.done) {
   // ===== Q6 INPUT =====
   if (s && s.step === 6) {
     s.answers["q6"] = text;
+    // ===== ZERO INPUT DETECTION =====
+const isEmpty = !text || text.trim() === "" || text.trim() === "1";
+
+if (isEmpty) {
+  s.answers["q6"] = "";
+
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
+  const intent = detectIntent(s.answers);
+  let route = decideRoute(s.answers);
+
+  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
+  if (intent === "emotional_support") route = "peer";
+
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "create",
+      caseId,
+      userId,
+      ...s.answers,
+      level,
+      route
+    })
+  });
+
+  await notifyTeam(caseId, level, s.answers, route);
+
+  await replyText(event.replyToken,
+`💛 ไม่เป็นไรเลยนะ  
+แค่คุณมาถึงตรงนี้ก็เก่งมากแล้ว  
+
+เดี๋ยวเราจะหาคนที่เหมาะกับคุณให้ 💛`);
+
+  sessions[userId] = { done: true };
+  return;
+}
     
   // ===== SKIP CASE =====
 if (text.trim() === "1") {
