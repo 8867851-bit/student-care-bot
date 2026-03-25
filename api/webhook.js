@@ -850,12 +850,6 @@ function buildHumanMessage(intent, answers, route) {
   // ===== base ====
   let msg = "";
 
-if (ai && ai.reflection) {
-  msg += "💛 " + ai.reflection + "\n\n";
-} else {
-  msg += "💛 เราอยู่ตรงนี้นะ\n\n";
-}
-
 msg += buildHumanMessage(intent, s.answers, route);
   // ===== intent layer =====
   if (intent === "crisis") { msg += "\nเรื่องนี้มันหนักมากจริง ๆ\nคุณไม่จำเป็นต้องอยู่กับมันคนเดียวเลยนะ"; }
