@@ -35,13 +35,20 @@ async function handleMessage(event){
     const text = event.message?.text || "";
     const s = sessions[userId];
 
-  // ===== SESSION LOCK =====
+// ===== SESSION LOCK =====
 if (sessions[userId]?.locked) {
+
+  // ✅ อนุญาตให้เข้าเมนูได้
+  if (text === "เมนู") {
+    delete sessions[userId];
+    return sendMainMenu(event.replyToken);
+  }
+
   return replyText(event.replyToken,
 `💛 ตอนนี้เรากำลังหาคนให้คุณอยู่นะ  
 ยังไม่ต้องเริ่มใหม่ก็ได้
 
-พิมพ์ "เมนู" ถ้าต้องการทำอย่างอื่น 💛`);
+พิมพ์ "เมนู" เพื่อดูตัวเลือกอื่น 💛`);
 }
 
   // ==== POST SESSION STATE ====
