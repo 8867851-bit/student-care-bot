@@ -246,65 +246,42 @@ if (isEmpty) {
   await notifyTeam(caseId, level, s.answers, route);
 
   await replyFlex(event.replyToken, {
-  type: "bubble",
-  body: {
-    type: "box",
-    layout: "vertical",
-    spacing: "md",
-    contents: [
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+        { type: "text", text: "💛 ไม่เป็นไรเลยนะ", weight: "bold" },
+        { type: "text", text: "แค่คุณมาถึงตรงนี้ก็เก่งมากแล้ว", size: "sm" },
+        {
+          type: "text",
+          text: `⏳ เรากำลังหาคนที่เหมาะกับคุณอยู่\nใช้เวลาประมาณ ${getETA()}`,
+          size: "sm",
+          wrap: true
+        },
+        { type: "text", text: "ระหว่างนี้คุณสามารถเลือกได้เลย 💛", size: "sm" },
 
-      {
-        type: "text",
-        text: "💛 ไม่เป็นไรเลยนะ",
-        weight: "bold"
-      },
-      {
-        type: "text",
-        text: "แค่คุณมาถึงตรงนี้ก็เก่งมากแล้ว",
-        size: "sm"
-      },
-      {
-        type: "text",
-        text: `⏳ เรากำลังหาคนที่เหมาะกับคุณอยู่\nใช้เวลาประมาณ ${getETA()}`,
-        size: "sm",
-        wrap: true
-      },
-
-      {
-        type: "text",
-        text: "ระหว่างนี้คุณสามารถเลือกได้เลย 💛",
-        size: "sm"
-      },
-
-      // ✅ ปุ่ม
-      {
-        type: "button",
-        action: {
-          type: "message",
-          label: "📍 เมนู",
-          text: "เมนู"
+        {
+          type: "button",
+          action: { type: "message", label: "📍 เมนู", text: "เมนู" }
+        },
+        {
+          type: "button",
+          action: { type: "message", label: "💤 พักสักนิด", text: "พัก" }
+        },
+        {
+          type: "button",
+          action: { type: "postback", label: "🌱 สำรวจตัวเอง", data: "menu_explore" }
         }
-      },
-      {
-        type: "button",
-        action: {
-          type: "message",
-          label: "💤 พักสักนิด",
-          text: "พัก"
-        }
-      },
-      {
-        type: "button",
-        action: {
-          type: "postback",
-          label: "🌱 สำรวจตัวเอง",
-          data: "menu_explore"
-        }
-      }
+      ]
+    }
+  });
 
-    ]
-  }
-});
+  // 🔥🔥🔥 สำคัญที่สุด
+  sessions[userId].locked = true;
+
+  return;
 }
         
     // ===== INTENT + RISK CHECK =====
