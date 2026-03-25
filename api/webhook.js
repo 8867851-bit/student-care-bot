@@ -79,12 +79,23 @@ if (sessions[userId]?.done) {
        หายใจลึก ๆ 3 ครั้ง  
        ดื่มน้ำเย็นสักแก้ว  
        หรือขยับตัวเบา ๆ
-       แล้วค่อยกลับมานะ เราอยู่ตรงนี้ 💛`); }
+       แล้วค่อยกลับมานะ เราอยู่ตรงนี้ 💛`); } 
    
   // ===== Q6 INPUT =====
-  if (s && s.step === 6) {
-    s.answers["q6"] = text;
-    
+if (s && s.step === 6) {
+  s.answers["q6"] = text;
+    // ===== AI ANALYSIS =====
+const ai = await getAIAnalysis(text);
+if (ai && ai.followups) {
+  await replyText(
+    event.replyToken,
+    "💛 " + (ai.reflection || "เราอยู่ตรงนี้นะ")
+  );
+
+  await buildPersonalizedQ6(event.replyToken, ai);
+  return;
+}
+
    // ===== ZERO INPUT DETECTION =====
 const isEmpty = !text || text.trim() === "" || text.trim() === "1";
 
@@ -95,12 +106,6 @@ if (isEmpty) {
   const level = classify(s.answers);
   let intent = detectIntent(s.answers);
   let route = decideRoute(s.answers);
-
-// 👉 AI override
-if (ai) {
-  if (ai.intent) intent = ai.intent;
-  if (ai.suggestion) route = ai.suggestion;
-}
 
   if (intent === "crisis" || intent === "practical_advice") route = "teacher";
   if (intent === "emotional_support") route = "peer";
@@ -129,18 +134,12 @@ if (ai) {
   sessions[userId] = { done: true };
   return;
 }
-    
-// ===== AI ANALYSIS =====
-const ai = await getAIAnalysis(text);
-if (ai && ai.followups) {
-  await buildPersonalizedQ6(event.replyToken, ai);
-}    
-    
+        
     // ===== INTENT + RISK CHECK =====
     
 const inputText = (text || "").toLowerCase();
-const isPractical = hasKeyword(inputText, practicalKeywords);
-const isEmotional = hasKeyword(inputText, emotionalKeywords);
+// const isPractical = hasKeyword(inputText, practicalKeywords);
+//const isEmotional = hasKeyword(inputText, emotionalKeywords);
 const isRisk = hasKeyword(inputText, riskKeywords);
     
     //======= Highrisk check =====
@@ -213,44 +212,47 @@ return replyFlex(event.replyToken, {
     const highEmotional =
       s.answers.q3 === "q3_high" &&
       s.answers.q4 === "q4_none"; 
+// ===== AI OVERRIDE =====
+let finalIntent = intent;
+let finalRoute = route;
 
-// ============== CREATE CASE ======================
-    await fetch(GAS_URL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        action: "create",
-        caseId,
-        userId,
-        ...s.answers,
-        level,
-        route
-      })
-    });
+if (ai) {
+  if (ai.intent) finalIntent = ai.intent;
+  if (ai.suggestion) finalRoute = ai.suggestion;
+}
 
-    await notifyTeam(caseId, level, s.answers, route);
+// ===== CREATE CASE =====
+await fetch(GAS_URL, {
+  method: "POST",
+  headers: {"Content-Type":"application/json"},
+  body: JSON.stringify({
+    action: "create",
+    caseId,
+    userId,
+    ...s.answers,
+    level,
+    route: finalRoute
+  })
+});
 
- // ================ RESPONSE =================
+await notifyTeam(caseId, level, s.answers, finalRoute);
+
+// ===== RESPONSE =====
 let msg = "";
 
-// ===== AI LAYER (ตัวหลัก) =====
 if (ai) {
-  if (ai.reflection) {
-    msg += "💛 " + ai.reflection + "\n\n"; }
-  if (ai.summary) {
-    msg += "🧠 " + ai.summary + "\n\n";}
+  if (ai.reflection) msg += "💛 " + ai.reflection + "\n\n";
+  if (ai.summary) msg += "🧠 " + ai.summary + "\n\n";
 } else {
-  msg += "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n\n";}
+  msg += "💛 เราได้อ่านสิ่งที่คุณเล่าแล้วนะ\n\n";
+}
 
-// ===== HUMAN LAYER (ไม่ซ้ำแล้ว) =====
-msg += buildHumanMessage(intent, s.answers, route);
+msg += buildHumanMessage(finalIntent, s.answers, finalRoute);
 
-// ===== SYSTEM LAYER =====
 msg += `\n⏳ โดยปกติจะใช้เวลา ${getETA()}`;
 msg += `\n💛 ระหว่างนี้เราจะช่วยหาคนที่เหมาะกับคุณให้เร็วที่สุดนะ`;
 
-// ===== CRISIS SUPPORT =====
-if (intent === "crisis") {
+if (finalIntent === "crisis") {
   msg += `\n💛 ถ้าคุณรู้สึกว่ามันหนักมาก
 คุณสามารถโทร 1323 ได้ตลอด 24 ชั่วโมงนะ`;
 }
@@ -261,10 +263,11 @@ await replyText(event.replyToken, msg);
 // ===== FOLLOW UP =====
 scheduleFollowUp(caseId, userId, level);
 
-// ===== END SESSION =====
+// ===== END =====
 sessions[userId] = { done: true };
 return;
-
+}
+  
   // ===== DEFAULT MENU =====
   const type = event.source.type;
   
