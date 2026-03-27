@@ -34,13 +34,6 @@ async function handleMessage(event) {
     const userId = event.source.userId;
     const text = event.message?.text || "";
     const s = sessions[userId];
-if (!s) {
-  return replyText(event.replyToken,
-`💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
-
-พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
-หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
-}
   
 // ===== SESSION LOCK =====
 if (sessions[userId]?.locked) {
@@ -105,7 +98,14 @@ if (sessions[userId]?.locked) {
        ดื่มน้ำเย็นสักแก้ว  
        หรือขยับตัวเบา ๆ
        แล้วค่อยกลับมานะ เราอยู่ตรงนี้ 💛`); } 
-   
+  
+   if (!s) {
+  return replyText(event.replyToken,
+`💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
+
+พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
+หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
+}
   // ===== Q6 INPUT =====
 if (s && s.step === 6) {
   s.answers["q6"] = text;
