@@ -34,7 +34,14 @@ async function handleMessage(event) {
     const userId = event.source.userId;
     const text = event.message?.text || "";
     const s = sessions[userId];
+if (!s) {
+  return replyText(event.replyToken,
+`💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
 
+พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
+หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
+}
+  
 // ===== SESSION LOCK =====
 if (sessions[userId]?.locked) {
 
@@ -102,6 +109,7 @@ if (sessions[userId]?.locked) {
   // ===== Q6 INPUT =====
 if (s && s.step === 6) {
   s.answers["q6"] = text;
+  
     // ===== AI ANALYSIS =====
 const ai = await getAIAnalysis(text);
 
@@ -244,7 +252,7 @@ const isRisk = hasKeyword(inputText, riskKeywords);
 // ==== confidence ====    
 const confidence = getConfidence(intent, s.answers);  
 const hasMeaningfulSignal = hasKeyword(text, emotionalKeywords) || hasKeyword(text, practicalKeywords) || text.trim().length > 5;
-if (confidence <= 1 && !hasMeaningfulSignal && s.answers.q5 === "q5_confused") {
+if (s && confidence <= 1 && !hasMeaningfulSignal && s.answers.q5 === "q5_confused") {
       // 👉 low clarity case
          delete sessions[userId];
   
