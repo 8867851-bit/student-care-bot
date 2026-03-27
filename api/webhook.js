@@ -106,68 +106,6 @@ if (sessions[userId]?.locked) {
 พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
 หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
 }
-}
-
-async function notifyTeam(caseId, level, answers, route) {
-  console.log("🔥 notifyTeam CALLED", caseId, level, route);
-
-  let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
-  let levelEmoji = "🟢";
-
-  if (level === "yellow") levelEmoji = "🟡";
-  if (level === "red") {
-    levelEmoji = "🔴";
-    text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
-  }
-
-  const res = await fetch("https://api.line.me/v2/bot/message/push", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-    },
-    body: JSON.stringify({
-      to: GROUP_ID,
-      messages: [{
-        type: "flex",
-        altText: "มีเคสใหม่",
-        contents: {
-          type: "bubble",
-          body: {
-            type: "box",
-            layout: "vertical",
-            contents: [
-              { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
-              { type: "text", text: "ระดับ: " + levelEmoji },
-              { type: "text", text: "🧠 ประเภท: " + answers.q1 },
-              {
-                type: "text",
-                text: "🎯 แนะนำ: " + (route === "teacher" ? "👩‍🏫 ครู" : "👩‍🎓 พี่นักเรียน")
-              },
-              { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
-              { type: "text", text: text }
-            ]
-          },
-          footer: {
-            type: "box",
-            layout: "vertical",
-            contents: [{
-              type: "button",
-              action: {
-                type: "postback",
-                label: "รับเคส",
-                data: "chooseRole_" + caseId
-              }
-            }]
-          }
-        }
-      }]
-    })
-  });
-
-  const result = await res.text();
-  console.log("📣 LINE PUSH RESULT:", result);
-}  
   
     // ===== INTENT + RISK CHECK =====
   
@@ -330,6 +268,67 @@ function sendLockedMenu(replyToken) {
     }
   });
 }
+//========= Notify team ========
+async function notifyTeam(caseId, level, answers, route) {
+  console.log("🔥 notifyTeam CALLED", caseId, level, route);
+
+  let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
+  let levelEmoji = "🟢";
+
+  if (level === "yellow") levelEmoji = "🟡";
+  if (level === "red") {
+    levelEmoji = "🔴";
+    text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
+  }
+
+  const res = await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: GROUP_ID,
+      messages: [{
+        type: "flex",
+        altText: "มีเคสใหม่",
+        contents: {
+          type: "bubble",
+          body: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
+              { type: "text", text: "ระดับ: " + levelEmoji },
+              { type: "text", text: "🧠 ประเภท: " + answers.q1 },
+              {
+                type: "text",
+                text: "🎯 แนะนำ: " + (route === "teacher" ? "👩‍🏫 ครู" : "👩‍🎓 พี่นักเรียน")
+              },
+              { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
+              { type: "text", text: text }
+            ]
+          },
+          footer: {
+            type: "box",
+            layout: "vertical",
+            contents: [{
+              type: "button",
+              action: {
+                type: "postback",
+                label: "รับเคส",
+                data: "chooseRole_" + caseId
+              }
+            }]
+          }
+        }
+      }]
+    })
+  });
+
+  const result = await res.text();
+  console.log("📣 LINE PUSH RESULT:", result);
+}  
 
 // ================= POSTBACK =================
 async function handlePostback(event) {
