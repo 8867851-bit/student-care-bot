@@ -164,7 +164,7 @@ if (s && s.step === 6) {
 
   await replyText(event.replyToken, "💛 เราได้รับเรื่องของคุณแล้วนะ");
 
-  sessions[userId].locked = true;
+  sessions[userId].locked = true;  
 
   return;
 }  
