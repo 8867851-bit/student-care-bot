@@ -1148,7 +1148,10 @@ contents: [
   }
 }]
     })   // 👈 ปิด JSON.stringify
-  });    // 👈 ปิด fetch
+  });  // 👈 ปิด fetch
+const result = await res.text();
+console.log("🔥 LINE PUSH:", result);
+  
 }        // 👈 ปิด function notifyTeam
 
 
