@@ -1058,20 +1058,82 @@ function getConfidence(intent, answers) {
   return score;
 }
 // ================= NOTIFY =================
-function test() {
-  return fetch("https://api.line.me/v2/bot/message/push", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-  },
-  body: JSON.stringify({
-    to: GROUP_ID,
-    messages: [
-      { type: "text", text: "🔥 TEST CASE " + caseId }
-    ]
-  })
-});
+async function notifyTeam(caseId, level, answers, route) {
+  let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
+  let levelEmoji = "🟢";
+   if (level === "yellow") levelEmoji = "🟡";
+  if (level === "red") levelEmoji = "🔴";
+  if (level === "red") text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
+
+  await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: GROUP_ID,
+ messages: [{
+  type: "flex",
+  altText: "มีเคสใหม่",
+  contents: {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+contents: [
+  { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
+  { type: "text", text: "ระดับ: " + levelEmoji },
+  { type: "text", text: "🧠 ประเภท: " + answers.q1 },
+  {
+  type: "text",
+  text: "🎯 แนะนำ: " + (route === "teacher" ? "👩‍🏫 ครู" : "👩‍🎓 พี่นักเรียน")
+},
+  { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
+  { type: "text", text: text }
+]
+    },
+    footer: {
+      type: "box",
+      layout: "vertical",
+      contents: [{
+        type: "button",
+        action: {
+          type: "postback",
+          label: "รับเคส",
+          data: "chooseRole_" + caseId   // 👈 จุดสำคัญ
+        }
+      }]
+    }
+  }
+}]
+    })   // 👈 ปิด JSON.stringify
+  });    // 👈 ปิด fetch
+}        // 👈 ปิด function notifyTeam
+
+async function testPushToGroup(caseId) {
+  try {
+    const res = await fetch("https://api.line.me/v2/bot/message/push", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+      },
+      body: JSON.stringify({
+        to: GROUP_ID,
+        messages: [
+          { type: "text", text: "🔥 TEST CASE " + caseId }
+        ]
+      })
+    });
+
+    const text = await res.text();
+    console.log("✅ PUSH RESULT:", text);
+
+  } catch (err) {
+    console.error("❌ PUSH ERROR:", err);
+  }
+} 
 
 
 async function autoAssign(caseId, level, route) {
