@@ -1059,6 +1059,7 @@ function getConfidence(intent, answers) {
 }
 // ================= NOTIFY =================
 async function notifyTeam(caseId, level, answers, route) {
+  console.log("🔥 notifyTeam CALLED", caseId, level, route);
   let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
   let levelEmoji = "🟢";
    if (level === "yellow") levelEmoji = "🟡";
@@ -1110,30 +1111,6 @@ contents: [
     })   // 👈 ปิด JSON.stringify
   });    // 👈 ปิด fetch
 }        // 👈 ปิด function notifyTeam
-
-async function testPushToGroup(caseId) {
-  try {
-    const res = await fetch("https://api.line.me/v2/bot/message/push", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-      },
-      body: JSON.stringify({
-        to: GROUP_ID,
-        messages: [
-          { type: "text", text: "🔥 TEST CASE " + caseId }
-        ]
-      })
-    });
-
-    const text = await res.text();
-    console.log("✅ PUSH RESULT:", text);
-
-  } catch (err) {
-    console.error("❌ PUSH ERROR:", err);
-  }
-} 
 
 
 async function autoAssign(caseId, level, route) {
