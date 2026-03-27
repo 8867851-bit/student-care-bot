@@ -1058,7 +1058,8 @@ function getConfidence(intent, answers) {
   return score;
 }
 // ================= NOTIFY =================
-await fetch("https://api.line.me/v2/bot/message/push", {
+function test() {
+  return fetch("https://api.line.me/v2/bot/message/push", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
