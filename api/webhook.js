@@ -106,161 +106,69 @@ if (sessions[userId]?.locked) {
 พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
 หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
 }
-  // ===== Q6 INPUT =====
-if (s && s.step === 6) {
-  s.answers["q6"] = text;
-  
-    // ===== AI ANALYSIS =====
-const ai = await getAIAnalysis(text);
-
-if (ai && ai.followups && ai.followups.length > 0) {
-  s.aiFollowups = ai.followups;
-
-  return replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents: [
-        {
-          type: "text",
-          text: "💛 " + (ai.reflection || "เราอยู่ตรงนี้นะ"),
-          wrap: true
-        },
-
-        ...ai.followups.map((f, i) => ({
-          type: "button",
-          action: {
-            type: "postback",
-            label: f,
-            data: "q6_follow_" + i
-          }
-        }))
-      ]
-    }
-  });
-}
-  // ✅ fallback กรณีไม่มี followups
-if (!ai || !ai.followups || ai.followups.length === 0) {
-
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-  let intent = detectIntent(s.answers);
-  let route = decideRoute(s.answers);
-
-  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
-  if (intent === "emotional_support") route = "peer";
-
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "create",
-      caseId,
-      userId,
-      ...s.answers,
-      level,
-      route
-    })
-  });
-
-  await notifyTeam(caseId, level, s.answers, route);
-
-  await replyText(event.replyToken, "💛 เราได้รับเรื่องของคุณแล้วนะ");
-
-  sessions[userId].locked = true;
-
-  return;
 }
 
-   // ===== ZERO INPUT DETECTION =====
-const isEmpty = !text || text.trim() === "" || text.trim() === "1";
+async function notifyTeam(caseId, level, answers, route) {
+  console.log("🔥 notifyTeam CALLED", caseId, level, route);
 
-if (isEmpty) {
-  s.answers["q6"] = "";
+  let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
+  let levelEmoji = "🟢";
 
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-  let intent = detectIntent(s.answers);
-  let route = decideRoute(s.answers);
-
-  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
-  if (intent === "emotional_support") route = "peer";
-
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "create",
-      caseId,
-      userId,
-      ...s.answers,
-      level,
-      route
-    })
-  });
-
-
-  await notifyTeam(caseId, level, s.answers, route);
-  console.log("🔥 notifyTeam called", caseId);
-    const assignedPeer = await autoAssign(caseId, level, route);
-
-if (assignedPeer) {
-  await pushToUser(assignedPeer.userId,
-    `💛 มีเคสใหม่ถูกมอบหมายให้คุณ\nCase #${caseId}`); }
-
-  await replyFlex(event.replyToken, {
-  type: "bubble",
-  body: {
-    type: "box",
-    layout: "vertical",
-    spacing: "md",
-    contents: [
-
-      {
-        type: "text",
-        text: "💛 เคสของคุณถูกส่งเรียบร้อยแล้ว",
-        weight: "bold"
-      },
-
-      {
-        type: "text",
-        text: assignedPeer
-          ? "มีคนรับเคสของคุณแล้ว 💛"
-          : `⏳ เรากำลังหาคนที่เหมาะกับคุณ\nใช้เวลาประมาณ ${getETA()}`,
-        size: "sm",
-        wrap: true
-      },
-
-      {
-        type: "text",
-        text: "ระหว่างนี้คุณสามารถเลือกได้เลย 💛",
-        size: "sm"
-      },
-
-      {
-        type: "button",
-        action: { type: "message", label: "📍 เมนู", text: "เมนู" }
-      },
-      {
-        type: "button",
-        action: { type: "message", label: "💤 พักสักนิด", text: "พัก" }
-      },
-      {
-        type: "button",
-        action: { type: "postback", label: "🌱 สำรวจตัวเอง", data: "menu_explore" }
-      }
-
-    ]
+  if (level === "yellow") levelEmoji = "🟡";
+  if (level === "red") {
+    levelEmoji = "🔴";
+    text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
   }
-});
 
-sessions[userId] = sessions[userId] || {};
-sessions[userId].locked = true;
-return;
-}
-}    
+  const res = await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: GROUP_ID,
+      messages: [{
+        type: "flex",
+        altText: "มีเคสใหม่",
+        contents: {
+          type: "bubble",
+          body: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
+              { type: "text", text: "ระดับ: " + levelEmoji },
+              { type: "text", text: "🧠 ประเภท: " + answers.q1 },
+              {
+                type: "text",
+                text: "🎯 แนะนำ: " + (route === "teacher" ? "👩‍🏫 ครู" : "👩‍🎓 พี่นักเรียน")
+              },
+              { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
+              { type: "text", text: text }
+            ]
+          },
+          footer: {
+            type: "box",
+            layout: "vertical",
+            contents: [{
+              type: "button",
+              action: {
+                type: "postback",
+                label: "รับเคส",
+                data: "chooseRole_" + caseId
+              }
+            }]
+          }
+        }
+      }]
+    })
+  });
+
+  const result = await res.text();
+  console.log("📣 LINE PUSH RESULT:", result);
+}  
+  
     // ===== INTENT + RISK CHECK =====
   
 const inputText = (text || "").toLowerCase();
@@ -1096,84 +1004,7 @@ function getConfidence(intent, answers) {
 
   return score;
 }
-// ================= NOTIFY =================
-async function notifyTeam(caseId, level, answers, route) {
-  console.log("🔥 notifyTeam CALLED", caseId, level, route);
-  let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
-  let levelEmoji = "🟢";
-   if (level === "yellow") levelEmoji = "🟡";
-  if (level === "red") levelEmoji = "🔴";
-  if (level === "red") text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
 
-    // ===== Q6 INPUT =====
-if (s && s.step === 6) {
-  s.answers["q6"] = text;
-  
-    // ===== AI ANALYSIS =====
-const ai = await getAIAnalysis(text);
-
-if (ai && ai.followups && ai.followups.length > 0) {
-  s.aiFollowups = ai.followups;
-
-  return replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents: [
-        {
-          type: "text",
-          text: "💛 " + (ai.reflection || "เราอยู่ตรงนี้นะ"),
-          wrap: true
-        },
-
-        ...ai.followups.map((f, i) => ({
-          type: "button",
-          action: {
-            type: "postback",
-            label: f,
-            data: "q6_follow_" + i
-          }
-        }))
-      ]
-    }
-  });
-}
-  // ✅ fallback กรณีไม่มี followups
-if (!ai || !ai.followups || ai.followups.length === 0) {
-
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-  let intent = detectIntent(s.answers);
-  let route = decideRoute(s.answers);
-
-  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
-  if (intent === "emotional_support") route = "peer";
-
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "create",
-      caseId,
-      userId,
-      ...s.answers,
-      level,
-      route
-    })
-  });
-
-  await notifyTeam(caseId, level, s.answers, route);
-
-  await replyText(event.replyToken, "💛 เราได้รับเรื่องของคุณแล้วนะ");
-
-  sessions[userId].locked = true;
-
-  return;
-}
-  
-}  // 👈 ปิด function notifyTeam
 
 
 async function autoAssign(caseId, level, route) {
