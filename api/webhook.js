@@ -114,8 +114,8 @@ if (s && s.step === 6) {
 const ai = await getAIAnalysis(text);
 
 if (ai && ai.followups && ai.followups.length > 0) {
-s.aiFollowups = ai.followups;
-  
+  s.aiFollowups = ai.followups;
+
   return replyFlex(event.replyToken, {
     type: "bubble",
     body: {
@@ -141,7 +141,38 @@ s.aiFollowups = ai.followups;
     }
   });
 }
+  // ✅ fallback กรณีไม่มี followups
+if (!ai || !ai.followups || ai.followups.length === 0) {
 
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
+  let intent = detectIntent(s.answers);
+  let route = decideRoute(s.answers);
+
+  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
+  if (intent === "emotional_support") route = "peer";
+
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "create",
+      caseId,
+      userId,
+      ...s.answers,
+      level,
+      route
+    })
+  });
+
+  await notifyTeam(caseId, level, s.answers, route);
+
+  await replyText(event.replyToken, "💛 เราได้รับเรื่องของคุณแล้วนะ");
+
+  sessions[userId].locked = true;
+
+  return;
+}
 
    // ===== ZERO INPUT DETECTION =====
 const isEmpty = !text || text.trim() === "" || text.trim() === "1";
