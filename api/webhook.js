@@ -3,7 +3,7 @@ const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+
 const GAS_URL = "https://script.google.com/macros/s/AKfycbw-P9DOmLQyDUx4sVeHbz02qdEtc1GbKkd6U8r3f999k0uPUZIDeQk4NwajoBCPIJ45/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
-if (!global.caseMap) global.caseMap = {};
+if (!global.caseMap) global.caseMap = {}; 
 const sessions = {};
 const handledEvents = new Set();
 const DEV_MODE = true; 
@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   const events = body?.events || [];
 
   for (const event of events) {
-  const eventId = event.replyToken;
+  const eventId = event.rep
     
   if (handledEvents.has(eventId)) { continue; }  
   handledEvents.add(eventId);
@@ -35,7 +35,7 @@ async function handleMessage(event) {
     return handleGroupMessage(event);
   }
     const userId = event.source.userId;
-    const text = event.message?.text || "";
+    const text = event.message?.text || ""; 
     const s = sessions[userId];
   
 // ===== SESSION LOCK =====
@@ -175,7 +175,8 @@ console.log("GAS RESPONSE:", textRes);
 
   await notifyTeam(caseId, level, s.answers, route);
 // ===== AUTO ASSIGN =====
-const peer = await autoAssign(caseId, level, route);
+const peer = await autoAssign(caseId, level, route,intent);
+
 
 if (peer) {
   console.log("🤖 AUTO ASSIGN:", peer);
@@ -1095,7 +1096,7 @@ function getConfidence(intent, answers) {
   return score;
 }
 
-async function autoAssign(caseId, level, route) {
+async function autoAssign(caseId, level, route,intent) {
 
   const res = await fetch(GAS_URL, {
     method: "POST",
@@ -1103,6 +1104,7 @@ async function autoAssign(caseId, level, route) {
     body: JSON.stringify({
       action: "getAvailablePeers",
       role: route
+      intent: intent  
     })
   });
 
@@ -1126,7 +1128,7 @@ async function acceptCase(caseId, userId, role, replyToken) {
       caseId,
       userId,
       name: "peer",
-      role: "student"
+      role: role
     })
   });
 
