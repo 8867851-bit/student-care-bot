@@ -1039,7 +1039,6 @@ async function getAIAnalysis(text) {
         ]
       })
     });
-console.log("API KEY:", process.env.OPENAI_API_KEY);
     
 const data = await res.json();
 
@@ -1059,7 +1058,7 @@ const data = await res.json();
     console.log("AI ERROR:", e);
     return null; }
 }
-
+console.log("API KEY:", process.env.OPENAI_API_KEY);
   
 // ================= ETA =================
 function getETA() {
