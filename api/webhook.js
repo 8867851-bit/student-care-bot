@@ -47,10 +47,10 @@ async function handleMessage(event) {
 // ===== SESSION LOCK =====
 if (sessions[userId]?.locked) {
 
-  if (text === "เมนู") {
-    return sendLockedMenu(event.replyToken);
+  if (text === "เมนู" || text === "reset") {
+    delete sessions[userId];
+    return sendMainMenu(event.replyToken);
   }
-
     return replyFlex(event.replyToken, {
     type: "bubble",
     body: {
