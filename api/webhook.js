@@ -24,7 +24,13 @@ module.exports = async (req, res) => {
     if (event.type === "follow") {
   await sendMainMenu(event.replyToken); }
 
-if (event.type === "message") await handleMessage(event);
+if (event.type === "message") {
+  try {
+    await handleMessage(event);
+  } catch (err) {
+    console.log("❌ handleMessage ERROR:", err);
+  }
+}
 if (event.type === "postback") await handlePostback(event); }
 
   return res.status(200).send("OK"); };
