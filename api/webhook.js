@@ -1443,14 +1443,30 @@ async function sendExploreMenu(replyToken) {
   });
 }
 async function handleGroupMessage(event) {
-  const text = event.message?.text || "";
+  try {
+    console.log("🔥 GROUP EVENT:", JSON.stringify(event, null, 2));
 
-  console.log("GROUP ID:", event.source.groupId);
+    const text = event.message?.text;
 
-  if (text === "test") {
-    return replyText(event.replyToken, "group working ✅");
+    // 👉 กันเคสไม่ใช่ text
+    if (event.message?.type !== "text") {
+      return replyText(event.replyToken, "not text");
+    }
+
+    console.log("GROUP TEXT:", text);
+    console.log("GROUP ID:", event.source.groupId);
+
+    // 👉 test command
+    if (text === "test") {
+      await replyText(event.replyToken, "group working ✅");
+      return;
+    }
+
+    // 👉 default response (กันเงียบ)
+    await replyText(event.replyToken, "group alive 🟢");
+    return;
+
+  } catch (err) {
+    console.log("❌ GROUP ERROR:", err);
   }
-
-  // ❌ ไม่ต้องทำอะไรกับ session
-  return;
 }
