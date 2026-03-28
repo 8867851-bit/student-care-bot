@@ -1103,7 +1103,7 @@ async function autoAssign(caseId, level, route,intent) {
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
       action: "getAvailablePeers",
-      role: route
+      role: route,
       intent: intent  
     })
   });
