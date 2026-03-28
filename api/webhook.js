@@ -153,19 +153,22 @@ try {
   if (intent === "crisis" || intent === "practical_advice") route = "teacher";
   if (intent === "emotional_support") route = "peer";
 
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-body: JSON.stringify({
-  action: "create",
-  caseId,
-  userId,
-  ...s.answers,
-  level,
-  route: route,
-  intent: intent // 👈 เพิ่มบรรทัดนี้
-})
-  });
+const res = await fetch(GAS_URL, {
+  method: "POST",
+  headers: {"Content-Type":"application/json"},
+  body: JSON.stringify({
+    action: "create",
+    caseId,
+    userId,
+    ...s.answers,
+    level,
+    route: route,
+    intent: intent
+  })
+});
+
+const textRes = await res.text();
+console.log("GAS RESPONSE:", textRes);
 
   await notifyTeam(caseId, level, s.answers, route);
 
