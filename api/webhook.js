@@ -6,7 +6,7 @@ const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 if (!global.caseMap) global.caseMap = {};
 const sessions = {};
 const handledEvents = new Set();
-const DEV_MODE = true;
+const DEV_MODE = true; 
 
 // ================= MAIN =================
 module.exports = async (req, res) => {
@@ -150,14 +150,15 @@ if (s && s.step === 6) {
   await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "create",
-      caseId,
-      userId,
-      ...s.answers,
-      level,
-      route
-    })
+body: JSON.stringify({
+  action: "create",
+  caseId,
+  userId,
+  ...s.answers,
+  level,
+  route: finalRoute,
+  intent: finalIntent // 👈 เพิ่มบรรทัดนี้
+})
   });
 
   await notifyTeam(caseId, level, s.answers, route);
@@ -889,7 +890,7 @@ function decideRoute(answers) {
   return "peer"; }
 
 // ================= KEYWORD SYSTEM (NEW) =================
-
+ 
 // ===== KEYWORD GROUPS =====
 const practicalKeywords = [
   "สอบ","เรียน","การบ้าน","ตาราง","คะแนน",
@@ -910,7 +911,7 @@ const riskKeywords = [
   "ไม่ไหว","อยากหายไป","หมดหวัง",
   "ไม่มีเหตุผลจะอยู่","อยู่ไปก็ไม่มีค่า",
   "อยากหนีไป","ไม่อยากอยู่แล้ว"
-];
+];  
 // ===== HELPER FUNCTION =====
 function hasKeyword(text, keywords) {
   return keywords.some(k => text.includes(k));
