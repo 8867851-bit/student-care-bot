@@ -31,6 +31,9 @@ if (event.type === "postback") await handlePostback(event); }
 
 // ================= MESSAGE ==================
 async function handleMessage(event) {
+    if (event.source.type === "group") {
+    return handleGroupMessage(event);
+  }
     const userId = event.source.userId;
     const text = event.message?.text || "";
     const s = sessions[userId];
@@ -1438,4 +1441,16 @@ async function sendExploreMenu(replyToken) {
       ]
     })
   });
+}
+async function handleGroupMessage(event) {
+  const text = event.message?.text || "";
+
+  console.log("GROUP ID:", event.source.groupId);
+
+  if (text === "test") {
+    return replyText(event.replyToken, "group working ✅");
+  }
+
+  // ❌ ไม่ต้องทำอะไรกับ session
+  return;
 }
