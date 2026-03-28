@@ -108,8 +108,14 @@ if (sessions[userId]?.locked) {
 }
 if (s && s.step === 6) {
   s.answers["q6"] = text;
-
-  const ai = await getAIAnalysis(text);
+  console.log("STEP:", s?.step, typeof s?.step);
+  
+  let ai = null;
+try {
+  ai = await getAIAnalysis(text);
+} catch (e) {
+  console.log("AI ERROR:", e);
+}
 
   if (ai && ai.followups && ai.followups.length > 0) {
     s.aiFollowups = ai.followups;
@@ -156,8 +162,8 @@ body: JSON.stringify({
   userId,
   ...s.answers,
   level,
-  route: finalRoute,
-  intent: finalIntent // 👈 เพิ่มบรรทัดนี้
+  route: route,
+  intent: intent // 👈 เพิ่มบรรทัดนี้
 })
   });
 
