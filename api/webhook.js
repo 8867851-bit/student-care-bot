@@ -999,6 +999,7 @@ async function getAIAnalysis(text) {
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + process.env.OPENAI_API_KEY
+        console.log("API KEY:", process.env.OPENAI_API_KEY);
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
