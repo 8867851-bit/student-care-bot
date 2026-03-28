@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   const events = body?.events || [];
 
   for (const event of events) {
-  const eventId = event.rep
+  const eventId = event.timestamp + "_" + (event.source.userId || "");
     
   if (handledEvents.has(eventId)) { continue; }  
   handledEvents.add(eventId);
