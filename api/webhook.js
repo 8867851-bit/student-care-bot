@@ -993,6 +993,7 @@ function buildHumanMessage(intent, answers, route) {
     return msg; }
 
 async function getAIAnalysis(text) {
+  console.log("API KEY:", process.env.OPENAI_API_KEY);
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -1058,7 +1059,6 @@ const data = await res.json();
     console.log("AI ERROR:", e);
     return null; }
 }
-console.log("API KEY:", process.env.OPENAI_API_KEY);
   
 // ================= ETA =================
 function getETA() {
