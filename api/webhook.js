@@ -174,7 +174,24 @@ const textRes = await res.text();
 console.log("GAS RESPONSE:", textRes);
 
   await notifyTeam(caseId, level, s.answers, route);
+// ===== AUTO ASSIGN =====
+const peer = await autoAssign(caseId, level, route);
 
+if (peer) {
+  console.log("🤖 AUTO ASSIGN:", peer);
+
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "accept",
+      caseId,
+      userId: peer.userId,
+      name: "auto",
+      role: route === "teacher" ? "teacher" : "student"
+    })
+  });
+}
   await replyText(event.replyToken, "💛 เราได้รับเรื่องของคุณแล้วนะ");
 
   sessions[userId].locked = true;  
@@ -1078,11 +1095,8 @@ function getConfidence(intent, answers) {
   return score;
 }
 
-
-
 async function autoAssign(caseId, level, route) {
 
-  // 🔥 ดึง list peer จาก GAS
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
@@ -1091,53 +1105,14 @@ async function autoAssign(caseId, level, route) {
       role: route
     })
   });
+
   const data = await res.json();
   const peers = data.peers || [];
- ===== AUTO ASSIGN =====
-const matchRes = UrlFetchApp.fetch(GAS_URL, {
-  method: "post",
-  contentType: "application/json",
-  payload: JSON.stringify({
-    action: "getAvailablePeers",
-    role: data.route,
-    intent: data.intent
-  })
-});
 
-const matchData = JSON.parse(matchRes.getContentText());
-
-if (matchData.peers && matchData.peers.length > 0) {
-
-  const selected = matchData.peers[0]; // 🔥 ตัวที่ดีที่สุด
-
-  // 👉 assign ทันที
-  sheet.getRange(sheet.getLastRow(), 11).setValue(selected.userId);
-  sheet.getRange(sheet.getLastRow(), 12).setValue(data.route);
-  sheet.getRange(sheet.getLastRow(), 10).setValue("assigned");
-
-  // 👉 update load
-  const teamSheet = SpreadsheetApp
-    .openById(SHEET_ID)
-    .getSheetByName("Team");
-
-  const teamRows = teamSheet.getDataRange().getValues();
-
-  for (let i = 1; i < teamRows.length; i++) {
-    if (teamRows[i][0] == selected.userId) {
-      let load = parseInt(teamRows[i][3]) || 0;
-      teamSheet.getRange(i + 1, 4).setValue(load + 1);
-      break;
-    }
-  }
-} 
   if (peers.length === 0) return null;
 
-  // 🔥 เลือกคนแรกก่อน (V1)
-  const chosen = peers[0];
-
-  return chosen;
+  return peers[0]; // 🔥 เลือกคนแรก (load ต่ำสุด)
 }
-
 
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, role, replyToken) {
