@@ -497,7 +497,8 @@ if (data.startsWith("q6_follow_")) {
   });
 
   await notifyTeam(caseId, level, s.answers, route);
-
+  console.log("🔥 notifyTeam CALLED", caseId);
+  
   sessions[userId] = { locked: true };
   return;
 }
