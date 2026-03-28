@@ -3,7 +3,6 @@ const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+
 const GAS_URL = "https://script.google.com/macros/s/AKfycbw-P9DOmLQyDUx4sVeHbz02qdEtc1GbKkd6U8r3f999k0uPUZIDeQk4NwajoBCPIJ45/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
-
 if (!global.caseMap) global.caseMap = {};
 const sessions = {};
 const handledEvents = new Set();
