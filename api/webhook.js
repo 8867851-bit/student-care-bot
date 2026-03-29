@@ -40,9 +40,6 @@ if (event.type === "postback") await handlePostback(event); }
 // ================= MESSAGE ==================
 async function handleMessage(event) {
   // ===== CHAT BRIDGE =====
-const userId = event.source.userId;
-const text = event.message?.text || "";
-
 // หาเคสที่ user นี้อยู่
 const caseEntry = Object.entries(global.caseMap).find(
   ([caseId, m]) => m.userId === userId || m.peerId === userId
