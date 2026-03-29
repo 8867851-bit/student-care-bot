@@ -53,7 +53,7 @@ const caseEntry = Object.entries(global.caseMap).find(
   ([caseId, m]) => m.userId === userId || m.peerId === userId
 );
 
-if (caseEntry) {
+if (caseEntry && sessions[userId]?.inChat) {
   const [caseId, map] = caseEntry;
 
   const targetId =
@@ -234,57 +234,64 @@ const res = await fetch(GAS_URL, {
 
 const textRes = await res.text();
 console.log("GAS RESPONSE:", textRes);
+  
+let peerId = null;
 
-  await notifyTeam(caseId, level, s.answers, route);
-  // ===== SEND SLOT TO USER =====
-const slots = await getSlots(peerId);
+try {
+  const parsed = JSON.parse(textRes);
+  peerId = parsed.assignedPeerId;
+} catch (e) {
+  console.log("❌ JSON parse error", textRes);
+}
 
-console.log("🕒 USER SLOTS:", slots);
+// 🔥 MAP USER ↔ PEER 
+if (peerId) {
+  global.caseMap[caseId] = {
+    userId,
+    peerId };
+  sessions[userId].inChat = true;
+  console.log("🔗 MAPPED:", caseId, userId, peerId); }
+  if (!peerId) {
+  await notifyTeam (caseId, level, s.answers, route)}
+  
+// ===== SEND SLOT TO USER =====
+if (peerId) {
+  const slots = await getSlots(peerId);
+  console.log("🕒 USER SLOTS:", slots);
 
-if (slots.length > 0) {
-  await pushToUser(userId, {
-    type: "flex",
-    altText: "เลือกเวลา",
-    contents: {
-      type: "bubble",
-      body: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-          { type: "text", text: "💛 เลือกเวลาที่คุณสะดวก" },
+  if (slots.length > 0) {
+    await pushToUser(userId, {
+      type: "flex",
+      altText: "เลือกเวลา",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            { type: "text", text: "💛 เลือกเวลาที่คุณสะดวก" },
 
-          ...slots.slice(0,5).map(s => ({
-            type: "button",
-            action: {
-              type: "postback",
-              label: s,
-              data: "slot_" + caseId + "_" + s
-            }
-          }))
-        ]
+            ...slots.slice(0,5).map(slot => ({
+              type: "button",
+              action: {
+                type: "postback",
+                label: s,
+                data: "slot_" + caseId + "_" + s
+              }
+            }))
+          ]
+        }
       }
-    }
-  });
+    });
+  } else {
+    console.log("⚠️ NO SLOT FOUND FOR USER:", userId);
+  }
+
 } else {
-  console.log("⚠️ NO SLOT FOUND FOR USER:", userId);
+  console.log("❌ NO PEER ASSIGNED");
 }
   
-// ===== AUTO ASSIGN =====
 
-  await fetch(GAS_URL, {
-  method: "POST",
-  headers: {"Content-Type":"application/json"},
-  body: JSON.stringify({
-    action: "create",
-    caseId,
-    userId,
-    ...s.answers,
-    level,
-    route,
-    intent
-  })
-});
-  
   await replyText(event.replyToken, "💛 เราได้รับเรื่องของคุณแล้วนะ");
   sessions[userId].locked = true;  
 
@@ -807,7 +814,7 @@ if (data.startsWith("accept_")) {
   if (data.startsWith("confirm_")) {
     const parts = data.split("_");
     const caseId = parts[1];
-    const slots = parts.slice(2).join("_");
+    const slot = parts.slice(2).join("_");
 
     const map = global.caseMap[caseId];
     if (!map) return;
@@ -1261,7 +1268,7 @@ sessions[userId] = { inChat: true };
 
     // 🔥 ดึง slot จริงจาก sheet
     //const name = "peer"; // (เดี๋ยว upgrade ทีหลัง)
-    const slots = await getSlots(peerId);
+    const slots = await getSlots(userId);
 
     // ✅ ส่ง slot ให้ user
     await pushToUser(data.targetUserId, {
