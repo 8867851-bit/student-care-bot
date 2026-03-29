@@ -162,11 +162,15 @@ if (s && s.step === 6) {
   s.answers["q6"] = text;
   console.log("STEP:", s?.step, typeof s?.step);
   
-  let ai = null;
+let ai = null;
+
 if (USE_AI) {
-  ai = await getAIAnalysis(text);
-} catch (e) {
-  console.log("AI ERROR:", e);
+  try {
+    ai = await getAIAnalysis(text);
+  } catch (e) {
+    console.log("AI ERROR:", e);
+    ai = null; // 👈 fallback ชัด ๆ
+  }
 }
 
   if (ai && ai.followups && ai.followups.length > 0) {
