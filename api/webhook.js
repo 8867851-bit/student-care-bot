@@ -236,6 +236,39 @@ const textRes = await res.text();
 console.log("GAS RESPONSE:", textRes);
 
   await notifyTeam(caseId, level, s.answers, route);
+  // ===== SEND SLOT TO USER =====
+const slots = await getSlots(peerId);
+
+console.log("🕒 USER SLOTS:", slots);
+
+if (slots.length > 0) {
+  await pushToUser(userId, {
+    type: "flex",
+    altText: "เลือกเวลา",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "💛 เลือกเวลาที่คุณสะดวก" },
+
+          ...slots.slice(0,5).map(s => ({
+            type: "button",
+            action: {
+              type: "postback",
+              label: s,
+              data: "slot_" + caseId + "_" + s
+            }
+          }))
+        ]
+      }
+    }
+  });
+} else {
+  console.log("⚠️ NO SLOT FOUND FOR USER:", userId);
+}
+  
 // ===== AUTO ASSIGN =====
 
   await fetch(GAS_URL, {
@@ -738,7 +771,7 @@ if (data.startsWith("accept_")) {
   if (data.startsWith("slot_")) {
     const parts = data.split("_");
     const caseId = parts[1];
-    const slot = parts.slice(2).join("_");
+    const slots = parts.slice(2).join("_");
 
     const map = global.caseMap[caseId];
     if (!map) return;
@@ -774,7 +807,7 @@ if (data.startsWith("accept_")) {
   if (data.startsWith("confirm_")) {
     const parts = data.split("_");
     const caseId = parts[1];
-    const slot = parts.slice(2).join("_");
+    const slots = parts.slice(2).join("_");
 
     const map = global.caseMap[caseId];
     if (!map) return;
@@ -1181,6 +1214,7 @@ async function autoAssign(caseId, level, route,intent) {
   });
 
   const data = await res.json();
+  const peerId = data.assignedPeerId;
   const peers = data.peers || [];
 
   if (peers.length === 0) return null;
@@ -1227,7 +1261,7 @@ sessions[userId] = { inChat: true };
 
     // 🔥 ดึง slot จริงจาก sheet
     //const name = "peer"; // (เดี๋ยว upgrade ทีหลัง)
-    const slots = await getSlots(userId);
+    const slots = await getSlots(peerId);
 
     // ✅ ส่ง slot ให้ user
     await pushToUser(data.targetUserId, {
