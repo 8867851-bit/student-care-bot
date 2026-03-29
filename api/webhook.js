@@ -172,33 +172,38 @@ if (USE_AI) {
     ai = null; // 👈 fallback ชัด ๆ
   }
 }
+// ===== AI Reflection (มีหรือไม่มี followups ก็ใช้) =====
+if (ai && ai.reflection) {
+  await replyText(event.replyToken, "💛 " + ai.reflection);
+}
 
-  if (ai && ai.followups && ai.followups.length > 0) {
-    s.aiFollowups = ai.followups;
+// ===== ถ้ามี followups ค่อยทำ UI =====
+if (ai && ai.followups && ai.followups.length > 0) {
+  s.aiFollowups = ai.followups;
 
-    return replyFlex(event.replyToken, {
-      type: "bubble",
-      body: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-          {
-            type: "text",
-            text: "💛 " + (ai.reflection || "เราอยู่ตรงนี้นะ"),
-            wrap: true
-          },
-          ...ai.followups.map((f, i) => ({
-            type: "button",
-            action: {
-              type: "postback",
-              label: f,
-              data: "q6_follow_" + i
-            }
-          }))
-        ]
-      }
-    });
-  }
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        {
+          type: "text",
+          text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด",
+          wrap: true
+        },
+        ...ai.followups.map((f, i) => ({
+          type: "button",
+          action: {
+            type: "postback",
+            label: f,
+            data: "q6_follow_" + i
+          }
+        }))
+      ]
+    }
+  });
+}
 
   // fallback
   const caseId = Date.now().toString().slice(-6);
@@ -228,26 +233,22 @@ console.log("GAS RESPONSE:", textRes);
 
   await notifyTeam(caseId, level, s.answers, route);
 // ===== AUTO ASSIGN =====
-const peer = await autoAssign(caseId, level, route,intent);
-
-
-if (peer) {
-  console.log("🤖 AUTO ASSIGN:", peer);
 
   await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "accept",
-      caseId,
-      userId: peer.userId,
-      name: "auto",
-      role: route === "teacher" ? "teacher" : "student"
-    })
-  });
-}
+  method: "POST",
+  headers: {"Content-Type":"application/json"},
+  body: JSON.stringify({
+    action: "create",
+    caseId,
+    userId,
+    ...s.answers,
+    level,
+    route,
+    intent
+  })
+});
+  
   await replyText(event.replyToken, "💛 เราได้รับเรื่องของคุณแล้วนะ");
-
   sessions[userId].locked = true;  
 
   return;
@@ -415,10 +416,6 @@ function sendLockedMenu(replyToken) {
 }
 //========= Notify team ========
 async function notifyTeam(caseId, level, answers, route) {
-    if (DRY_RUN) {
-    console.log("🧪 DRY RUN notifyTeam:", caseId, level, route);
-    return;
-  }
   console.log("🔥 notifyTeam CALLED", caseId, level, route);
 
   let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
@@ -430,6 +427,20 @@ async function notifyTeam(caseId, level, answers, route) {
     text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
   }
 
+  // ===== DRY RUN =====
+  if (DRY_RUN) {
+    console.log("🧪 DRY RUN → NOT SENDING TO GROUP");
+    console.log({
+      caseId,
+      level,
+      route,
+      q1: answers.q1,
+      q6: answers.q6
+    });
+    return; // 🔥 สำคัญ: หยุดตรงนี้
+  }
+
+  // ===== REAL PUSH =====
   const res = await fetch("https://api.line.me/v2/bot/message/push", {
     method: "POST",
     headers: {
@@ -457,27 +468,14 @@ async function notifyTeam(caseId, level, answers, route) {
               { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
               { type: "text", text: text }
             ]
-          },
-          footer: {
-            type: "box",
-            layout: "vertical",
-            contents: [{
-              type: "button",
-              action: {
-                type: "postback",
-                label: "รับเคส",
-                data: "chooseRole_" + caseId
-              }
-            }]
           }
         }
       }]
     })
   });
 
-  const result = await res.text();
-  console.log("📣 LINE PUSH RESULT:", result);
-}  
+  console.log("📣 LINE PUSH RESULT:", await res.text());
+}
 
 // ================= POSTBACK =================
 async function handlePostback(event) {
