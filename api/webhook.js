@@ -7,6 +7,8 @@ if (!global.caseMap) global.caseMap = {};
 const sessions = {};
 const handledEvents = new Set();
 const DEV_MODE = true; 
+const DRY_RUN = true; // 🔥 เปิดตอน quota เต็ม
+const USE_AI = false;
 
 // ================= MAIN =================
 module.exports = async (req, res) => {
@@ -37,6 +39,51 @@ if (event.type === "postback") await handlePostback(event); }
 
 // ================= MESSAGE ==================
 async function handleMessage(event) {
+  // ===== CHAT BRIDGE =====
+const userId = event.source.userId;
+const text = event.message?.text || "";
+
+// หาเคสที่ user นี้อยู่
+const caseEntry = Object.entries(global.caseMap).find(
+  ([caseId, m]) => m.userId === userId || m.peerId === userId
+);
+
+if (caseEntry) {
+  const [caseId, map] = caseEntry;
+
+  const targetId =
+    userId === map.userId
+      ? map.peerId
+      : map.userId;
+
+  // ส่งข้อความข้ามไป
+  await pushToUser(targetId, {
+    type: "text",
+    text:
+      (userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n") +
+      text
+  });
+
+  return; // 🔥 กัน bot ตอบซ้ำ
+}
+  if (text === "จบการคุย") {
+
+  const caseEntry = Object.entries(global.caseMap).find(
+    ([caseId, m]) => m.userId === userId || m.peerId === userId
+  );
+
+  if (caseEntry) {
+    const [caseId] = caseEntry;
+    delete global.caseMap[caseId];
+  }
+  sessions[userId] = {};
+  return replyText(event.replyToken, "💛 จบการคุยแล้วนะ");
+}
+if (sessions[userId]?.inChat) {
+  return;
+}
+
+  
     if (event.source.type === "group") {
     return handleGroupMessage(event);
   }
@@ -120,7 +167,7 @@ if (s && s.step === 6) {
   console.log("STEP:", s?.step, typeof s?.step);
   
   let ai = null;
-try {
+if (USE_AI) {
   ai = await getAIAnalysis(text);
 } catch (e) {
   console.log("AI ERROR:", e);
@@ -368,6 +415,10 @@ function sendLockedMenu(replyToken) {
 }
 //========= Notify team ========
 async function notifyTeam(caseId, level, answers, route) {
+    if (DRY_RUN) {
+    console.log("🧪 DRY RUN notifyTeam:", caseId, level, route);
+    return;
+  }
   console.log("🔥 notifyTeam CALLED", caseId, level, route);
 
   let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
@@ -1144,12 +1195,17 @@ async function acceptCase(caseId, userId, role, replyToken) {
   return replyText(replyToken, "❌ เคสนี้มีคนรับไปแล้ว"); }
   
   if (data.status === "OK") {
-
+    
+// 🔥 เปิด chat mode
+sessions[data.targetUserId] = { inChat: true };
+sessions[userId] = { inChat: true };
+    
     // 🔗 map user ↔ peer
     global.caseMap[caseId] = {
       userId: data.targetUserId,
       peerId: userId
     };
+   
     sessions[data.targetUserId] = { done: false, locked: false };
     
     // ✅ ตอบ peer
@@ -1223,6 +1279,10 @@ async function scheduleFollowUp(caseId, userId, level) {
 
 // ================= UTIL =================
 async function pushToUser(userId, message) {
+    if (DRY_RUN) {
+    console.log("🧪 DRY RUN pushToUser →", userId, message);
+    return; // ❌ ไม่ยิงจริง แต่ flow เดินครบ
+  }
   const msg = typeof message === "string"
     ? [{ type: "text", text: message }]
     : [message];
@@ -1481,7 +1541,9 @@ async function handleGroupMessage(event) {
       await replyText(event.replyToken, "group working ✅");
       return;
     }
-
+    if (text === "status") {
+  return replyText(event.replyToken, "system alive 🟢");
+}
     // 👉 default response (กันเงียบ)
     await replyText(event.replyToken, "group alive 🟢");
     return;
