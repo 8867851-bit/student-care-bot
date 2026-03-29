@@ -3,12 +3,16 @@ const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+
 const GAS_URL = "https://script.google.com/macros/s/AKfycbw-P9DOmLQyDUx4sVeHbz02qdEtc1GbKkd6U8r3f999k0uPUZIDeQk4NwajoBCPIJ45/exec";
 const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
 
+let pushCount = 0;
+let lastReset = Date.now();
+
 if (!global.caseMap) global.caseMap = {}; 
 const sessions = {};
 const handledEvents = new Set();
 const DEV_MODE = true; 
-const DRY_RUN = true; // 🔥 เปิดตอน quota เต็ม
-const USE_AI = false;
+const DRY_RUN = false;     // 🔥 เปิดส่ง LINE จริง
+const USE_AI = false;      // 🔥 ปิด AI ก่อน (กัน quota พัง)
+const MAX_PUSH_PER_DAY = 30; // 🔥 คุมลิมิต (กันทะลุ 500);
 
 // ================= MAIN =================
 module.exports = async (req, res) => {
@@ -171,7 +175,7 @@ if (USE_AI) {
     console.log("AI ERROR:", e);
     ai = null; // 👈 fallback ชัด ๆ
   }
-}
+} 
 // ===== AI Reflection (มีหรือไม่มี followups ก็ใช้) =====
 if (ai && ai.reflection) {
   await replyText(event.replyToken, "💛 " + ai.reflection);
@@ -440,6 +444,18 @@ async function notifyTeam(caseId, level, answers, route) {
     return; // 🔥 สำคัญ: หยุดตรงนี้
   }
 
+if (!canPush()) {
+  console.log("📌 CASE (NOT SENT):", {
+    caseId,
+    level,
+    route,
+    summary: answers.q6
+  });
+  return;
+}
+
+pushCount++;
+  
   // ===== REAL PUSH =====
   const res = await fetch("https://api.line.me/v2/bot/message/push", {
     method: "POST",
@@ -1276,6 +1292,15 @@ async function scheduleFollowUp(caseId, userId, level) {
 }
 
 // ================= UTIL =================
+function canPush() {
+  const now = Date.now();
+
+  // reset ทุก 24 ชม.
+  if (now - lastReset > 24 * 60 * 60 * 1000) {
+    pushCount = 0;
+    lastReset = now;
+  } return pushCount < MAX_PUSH_PER_DAY; }
+
 async function pushToUser(userId, message) {
     if (DRY_RUN) {
     console.log("🧪 DRY RUN pushToUser →", userId, message);
