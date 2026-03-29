@@ -39,6 +39,10 @@ if (event.type === "postback") await handlePostback(event); }
 
 // ================= MESSAGE ==================
 async function handleMessage(event) {
+      const userId = event.source.userId;
+    const text = event.message?.text || ""; 
+    const s = sessions[userId];
+  
   // ===== CHAT BRIDGE =====
 // หาเคสที่ user นี้อยู่
 const caseEntry = Object.entries(global.caseMap).find(
@@ -79,14 +83,9 @@ if (caseEntry) {
 if (sessions[userId]?.inChat) {
   return;
 }
-
-  
     if (event.source.type === "group") {
     return handleGroupMessage(event);
   }
-    const userId = event.source.userId;
-    const text = event.message?.text || ""; 
-    const s = sessions[userId];
   
 // ===== SESSION LOCK =====
 if (sessions[userId]?.locked) {
