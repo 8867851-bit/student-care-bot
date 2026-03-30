@@ -282,8 +282,8 @@ if (peerId) {
               type: "button",
               action: {
                 type: "postback",
-                label: s,
-                data: "slot_" + caseId + "_" + s
+                label: slot,
+                data: "slot_" + caseId + "_" + slot
               }
             }))
           ]
@@ -304,28 +304,6 @@ if (peerId) {
 
   return;
 }  
-    // ===== INTENT + RISK CHECK =====
-  
-const inputText = (text || "").toLowerCase();
-// const isPractical = hasKeyword(inputText, practicalKeywords);
-//const isEmotional = hasKeyword(inputText, emotionalKeywords);
-const isRisk = hasKeyword(inputText, riskKeywords);
-    
-    //======= Highrisk check =====
-  
-    const isHighRisk = isRisk && s.answers.q3 === "q3_high";
-    const caseId = Date.now().toString().slice(-6);
-    const level = classify(s.answers);
-    const intent = detectIntent(s.answers);
-    let route = decideRoute(s.answers);
-    
-// ===== INTENT → ROUTE OVERRIDE =====
-    if (intent === "crisis" || intent === "practical_advice") { route = "teacher"; }
-    if (intent === "emotional_support") { route = "peer"; }
-    
-// ==== confidence ====    
-const confidence = getConfidence(intent, s.answers);  
-const hasMeaningfulSignal = hasKeyword(text, emotionalKeywords) || hasKeyword(text, practicalKeywords) || text.trim().length > 5;
 if (s && confidence <= 1 && !hasMeaningfulSignal && s.answers.q5 === "q5_confused") {
       // 👉 low clarity case
          delete sessions[userId];
@@ -407,7 +385,8 @@ if (type === "group") {
     return sendMainMenu(event.replyToken);
   }
 }
-  
+}
+
 function sendLockedMenu(replyToken) {
   return replyFlex(replyToken, {
     type: "bubble",
@@ -783,7 +762,7 @@ if (data.startsWith("accept_")) {
   if (data.startsWith("slot_")) {
     const parts = data.split("_");
     const caseId = parts[1];
-    const slots = parts.slice(2).join("_");
+    const slot = parts.slice(2).join("_");
 
     const map = global.caseMap[caseId];
     if (!map) return;
