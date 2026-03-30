@@ -174,14 +174,14 @@ if (s && s.step === 6) {
   if (intent === "crisis" || intent === "practical_advice") route = "teacher";
   if (intent === "emotional_support") route = "peer";
 
-  // ✅ ใส่ตรงนี้
+  // ===== CONFIDENCE =====
   const confidence = getConfidence(intent, s.answers);
   const hasMeaningfulSignal =
     hasKeyword(text, emotionalKeywords) ||
     hasKeyword(text, practicalKeywords) ||
     text.trim().length > 5;
 
-  // ✅ LOW CLARITY GUARD (อย่าลบ)
+  // ===== LOW CLARITY GUARD =====
   if (
     confidence <= 1 &&
     !hasMeaningfulSignal &&
@@ -225,198 +225,134 @@ if (s && s.step === 6) {
     });
   }
 
-  // 👉 หลังจากนี้ค่อย call GAS
-}
-  
-let ai = null;
+  // ===== AI (optional) =====
+  let ai = null;
 
-if (USE_AI) {
-  try {
-    ai = await getAIAnalysis(text);
-  } catch (e) {
-    console.log("AI ERROR:", e);
-    ai = null; // 👈 fallback ชัด ๆ
-  }
-} 
-// ===== AI Reflection (มีหรือไม่มี followups ก็ใช้) =====
-if (ai && ai.reflection) {
-  await replyText(event.replyToken, "💛 " + ai.reflection);
-}
-
-// ===== ถ้ามี followups ค่อยทำ UI =====
-if (ai && ai.followups && ai.followups.length > 0) {
-  s.aiFollowups = ai.followups;
-
-  return replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      contents: [
-        {
-          type: "text",
-          text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด",
-          wrap: true
-        },
-        ...ai.followups.map((f, i) => ({
-          type: "button",
-          action: {
-            type: "postback",
-            label: f,
-            data: "q6_follow_" + i
-          }
-        }))
-      ]
+  if (USE_AI) {
+    try {
+      ai = await getAIAnalysis(text);
+    } catch (e) {
+      console.log("AI ERROR:", e);
+      ai = null;
     }
-  });
-}
+  }
 
-  // fallback
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-  let intent = detectIntent(s.answers);
-  let route = decideRoute(s.answers);
+  if (ai && ai.reflection) {
+    await replyText(event.replyToken, "💛 " + ai.reflection);
+  }
 
-  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
-  if (intent === "emotional_support") route = "peer";
-  
-console.log("🚀 CALLING GAS:", GAS_URL);
-const res = await fetch(GAS_URL, {
-  method: "POST",
-  headers: {"Content-Type":"application/json"},
-  body: JSON.stringify({
-    action: "create",
-    caseId,
-    userId,
-    ...s.answers,
-    level,
-    route: route,
-    intent: intent
-  })
-});
-console.log("📡 GAS STATUS:", res.status);
-  
-const textRes = await res.text();
-console.log("GAS RESPONSE:", textRes);
+  if (ai && ai.followups && ai.followups.length > 0) {
+    s.aiFollowups = ai.followups;
 
-let peerId = null; // ✅ ย้ายขึ้นมาก่อน
-
-try {
-  const parsed = JSON.parse(textRes);
-  peerId = parsed.assignedPeerId;
-} catch (e) {
-  console.log("❌ JSON parse error", textRes);
-}
-
-console.log("📦 PARSED:", peerId); // ✅ ย้ายลงมาหลัง parse
-
-// 🔥 MAP USER ↔ PEER 
-if (peerId) {
-  global.caseMap[caseId] = { userId, peerId };
-
-  if (!sessions[userId]) sessions[userId] = {};
-  sessions[userId].inChat = true; // ✅ safe
-}
-  console.log("🔗 MAPPED:", caseId, userId, peerId); }
-  if (!peerId) {
-  await notifyTeam (caseId, level, s.answers, route)}
-  
-// ===== SEND SLOT TO USER =====
-if (peerId) {
-  const slots = await getSlots(peerId);
-  console.log("🎯 PEER ID:", peerId);
-  console.log("📡 CALLING getSlots...");
-  console.log("🕒 USER SLOTS:", slots);
-
-  if (slots.length > 0) {
-    await pushToUser(userId, {
-      type: "flex",
-      altText: "เลือกเวลา",
-      contents: {
-        type: "bubble",
-        body: {
-          type: "box",
-          layout: "vertical",
-          contents: [
-            { type: "text", text: "💛 เลือกเวลาที่คุณสะดวก" },
-
-            ...slots.slice(0,5).map(slot => ({
-              type: "button",
-              action: {
-                type: "postback",
-                label: slot,
-                data: "slot_" + caseId + "_" + slot
-              }
-            }))
-          ]
-        }
+    return replyFlex(event.replyToken, {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด",
+            wrap: true
+          },
+          ...ai.followups.map((f, i) => ({
+            type: "button",
+            action: {
+              type: "postback",
+              label: f,
+              data: "q6_follow_" + i
+            }
+          }))
+        ]
       }
     });
-  } else {
-    console.log("⚠️ NO SLOT FOUND FOR USER:", userId);
   }
 
-} else {
-  console.log("❌ NO PEER ASSIGNED");
-}
-  
+  // ===== CALL GAS =====
+  console.log("🚀 CALLING GAS:", GAS_URL);
+
+  const res = await fetch(GAS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "create",
+      caseId,
+      userId,
+      ...s.answers,
+      level,
+      route,
+      intent
+    })
+  });
+
+  console.log("📡 GAS STATUS:", res.status);
+
+  const textRes = await res.text();
+  console.log("GAS RESPONSE:", textRes);
+
+  let peerId = null;
+
+  try {
+    const parsed = JSON.parse(textRes);
+    peerId = parsed.assignedPeerId;
+  } catch (e) {
+    console.log("❌ JSON parse error", textRes);
+  }
+
+  console.log("📦 PARSED:", peerId);
+
+  // ===== MAP =====
+  if (peerId) {
+    global.caseMap[caseId] = { userId, peerId };
+
+    if (!sessions[userId]) sessions[userId] = {};
+    sessions[userId].inChat = true;
+  }
+
+  console.log("🔗 MAPPED:", caseId, userId, peerId);
+
+  // ===== FALLBACK notify =====
+  if (!peerId) {
+    await notifyTeam(caseId, level, s.answers, route);
+  }
+
+  // ===== SEND SLOT =====
+  if (peerId) {
+    const slots = await getSlots(peerId);
+
+    if (slots.length > 0) {
+      await pushToUser(userId, {
+        type: "flex",
+        altText: "เลือกเวลา",
+        contents: {
+          type: "bubble",
+          body: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              { type: "text", text: "💛 เลือกเวลาที่คุณสะดวก" },
+              ...slots.slice(0, 5).map(slot => ({
+                type: "button",
+                action: {
+                  type: "postback",
+                  label: slot,
+                  data: "slot_" + caseId + "_" + slot
+                }
+              }))
+            ]
+          }
+        }
+      });
+    }
+  }
 
   await replyText(event.replyToken, "💛 เราได้รับเรื่องของคุณแล้วนะ");
-  sessions[userId].locked = true;  
+  sessions[userId].locked = true;
 
   return;
-}  
-if (s && confidence <= 1 && !hasMeaningfulSignal && s.answers.q5 === "q5_confused") {
-      // 👉 low clarity case
-         delete sessions[userId];
-  
-return replyFlex(event.replyToken, {
-  type: "bubble",
-  body: {
-    type: "box",
-    layout: "vertical",
-    spacing: "md",
-    contents: [
-      {
-        type: "text",
-        text: "💛 เราอยากเข้าใจคุณให้ตรงมากขึ้นอีกนิดนะ",
-        weight: "bold",
-        wrap: true
-      },
-      {
-        type: "text",
-        text: "สิ่งที่ใกล้กับคุณที่สุดตอนนี้คืออะไร?",
-        size: "sm",
-        wrap: true
-      },
-      {
-        type: "button",
-        action: {
-          type: "postback",
-          label: "💬 แค่อยากระบาย",
-          data: "clarify_emotional"
-        }
-      },
-      {
-        type: "button",
-        action: {
-          type: "postback",
-          label: "🤝 อยากคุยกับคนจริง",
-          data: "clarify_peer"
-        }
-      },
-      {
-        type: "button",
-        action: {
-          type: "postback",
-          label: "🧠 อยากได้คำแนะนำ",
-          data: "clarify_advice"
-        }
-      }
-    ]
-  }
-}); 
 }
+
+
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
       s.answers.q3 === "q3_high" &&
