@@ -46,6 +46,38 @@ async function handleMessage(event) {
       const userId = event.source.userId;
     const text = event.message?.text || ""; 
     const s = sessions[userId];
+
+  
+ // ===== MENU: MY CASES =====
+if (text === "เคสของฉัน") {
+
+  const myCases = Object.entries(global.caseMap)
+    .filter(([id, m]) => m.peerId === userId);
+
+  if (myCases.length === 0) {
+    return replyText(event.replyToken, "📭 ยังไม่มีเคสนะ");
+  }
+
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "📌 เคสของคุณ", weight: "bold" },
+
+        ...myCases.map(([caseId]) => ({
+          type: "button",
+          action: {
+            type: "postback",
+            label: "เคส " + caseId,
+            data: "openCase_" + caseId
+          }
+        }))
+      ]
+    }
+  });
+} 
   
 // ================= CHAT BRIDGE (NEW - MULTI CASE SAFE) =================
 
@@ -114,7 +146,15 @@ if (text === "จบการคุย") {
     // 🔥 ลบเคส
     delete global.caseMap[caseId];
   }
-
+await fetch(GAS_URL, {
+  method: "POST",
+  headers: {"Content-Type":"application/json"},
+  body: JSON.stringify({
+    action: "removeBooking",
+    caseId
+  })
+});
+  
   sessions[userId] = {};
 
   return replyText(event.replyToken, "💛 จบการคุยแล้วนะ");
@@ -127,9 +167,9 @@ if (userCases.length > 0 && !sessions[userId]?.inChat) {
   // 👉 ถ้ามีหลายเคส แต่ยังไม่ได้เลือก
   if (userCases.length > 1) {
     return replyText(
-      event.replyToken,
-      📌 คุณมี ${userCases.length} เคส\nพิมพ์ "เคส <id>" เพื่อเลือก
-    );
+    event.replyToken,
+      "📌 คุณมี " + userCases.length + " เคส\nพิมพ์ \"เคส <id>\" เพื่อเลือก"
+        );
   }
 
   // 👉 ถ้ามีเคสเดียว → auto เข้า
@@ -141,11 +181,14 @@ if (userCases.length > 0 && !sessions[userId]?.inChat) {
   sessions[userId].inChat = true;
 
   return replyText(
-    event.replyToken,
-    💛 เริ่มคุยเคส ${caseId} ได้เลย
-  );
+  event.replyToken,
+  "💛 เริ่มคุยเคส " + caseId + " ได้เลย"
+    );
 }
-
+if (sessions[userId]?.inChat && !sessions[userId]?.activeCase) {
+  sessions[userId].inChat = false;
+}
+  
 // ===== BLOCK BOT REPLY =====
 if (sessions[userId]?.inChat) {
   return;
@@ -662,7 +705,20 @@ if (data.startsWith("q6_follow_")) {
   sessions[userId] = { locked: true };
   return;
 }
-  
+  //======= Open Case ======
+  if (data.startsWith("openCase_")) {
+  const caseId = data.replace("openCase_", "");
+
+  if (!sessions[userId]) sessions[userId] = {};
+
+  sessions[userId].activeCase = caseId;
+  sessions[userId].inChat = true;
+
+  return replyText(
+    event.replyToken,
+    "💛 คุณกำลังคุยเคส " + caseId
+  );
+}
 // ===== STEP FLOW (สำคัญมาก) =====
 if (data.startsWith("step_")) {
   const parts = data.split("_");
@@ -914,28 +970,50 @@ if (data.startsWith("next_peer_")) {
   }
 
   // ===== CONFIRM =====
-  if (data.startsWith("confirm_")) {
-    const parts = data.split("_");
-    const caseId = parts[1];
-    const slot = parts.slice(2).join("_");
+if (data.startsWith("confirm_")) {
+  const parts = data.split("_");
+  const caseId = parts[1];
+  const slot = parts.slice(2).join("_");
 
-    const map = global.caseMap[caseId];
-    if (!map) return;
+  const map = global.caseMap[caseId];
+  if (!map) return;
 
-    await pushToUser(map.userId,
+  // 🔒 CALL GAS → book slot
+  const res = await fetch(GAS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "bookSlot",
+      caseId,
+      peerId: map.peerId,
+      userId: map.userId,
+      slot
+    })
+  });
+
+  const dataRes = await res.json();
+
+  // ❌ slot เต็ม
+  if (dataRes.status === "FULL") {
+    return replyText(event.replyToken,
+      "❌ เวลานี้มีคนจองแล้ว ลองเลือกใหม่อีกครั้งนะ");
+  }
+
+  // ✅ สำเร็จ
+  await pushToUser(map.userId,
 `✅ นัดเรียบร้อย
 
 🕒 ${slot}
 💛 เจอกันนะ`);
 
-    await pushToUser(map.peerId,
+  await pushToUser(map.peerId,
 `✅ นัดเรียบร้อย
 
 🕒 ${slot}
 เตรียมตัวคุยได้เลย 💛`);
 
-    return;
-  }
+  return;
+}
 }
 
 // =================1.flow STEP =================
@@ -1328,6 +1406,7 @@ async function autoAssign(caseId, level, route,intent) {
 
   if (peers.length === 0) return null;
 
+peers.sort((a, b) => a.load - b.load);
   return peers[0]; // 🔥 เลือกคนแรก (load ต่ำสุด)
 }
 
