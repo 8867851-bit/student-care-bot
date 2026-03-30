@@ -236,9 +236,8 @@ console.log("📡 GAS STATUS:", res.status);
   
 const textRes = await res.text();
 console.log("GAS RESPONSE:", textRes);
-console.log("📦 PARSED:", peerId);
-  
-let peerId = null;
+
+let peerId = null; // ✅ ย้ายขึ้นมาก่อน
 
 try {
   const parsed = JSON.parse(textRes);
@@ -247,12 +246,15 @@ try {
   console.log("❌ JSON parse error", textRes);
 }
 
+console.log("📦 PARSED:", peerId); // ✅ ย้ายลงมาหลัง parse
+
 // 🔥 MAP USER ↔ PEER 
 if (peerId) {
-  global.caseMap[caseId] = {
-    userId,
-    peerId };
-  sessions[userId].inChat = true;
+  global.caseMap[caseId] = { userId, peerId };
+
+  if (!sessions[userId]) sessions[userId] = {};
+  sessions[userId].inChat = true; // ✅ safe
+}
   console.log("🔗 MAPPED:", caseId, userId, peerId); }
   if (!peerId) {
   await notifyTeam (caseId, level, s.answers, route)}
@@ -1226,7 +1228,6 @@ async function autoAssign(caseId, level, route,intent) {
   });
 
   const data = await res.json();
-  const peerId = data.assignedPeerId;
   const peers = data.peers || [];
 
   if (peers.length === 0) return null;
@@ -1292,8 +1293,8 @@ sessions[userId] = { inChat: true };
                   type: "button",
                   action: {
                     type: "postback",
-                    label: s,
-                    data: "slot_" + caseId + "_" + s
+                    label: slot,
+                    data: "slot_" + caseId + "_" + slot
                   }
                 }))
               : [
