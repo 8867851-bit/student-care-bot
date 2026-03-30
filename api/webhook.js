@@ -162,9 +162,71 @@ if (sessions[userId]?.locked) {
 พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
 หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
 }
+  
 if (s && s.step === 6) {
   s.answers["q6"] = text;
-  console.log("STEP:", s?.step, typeof s?.step);
+
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
+  let intent = detectIntent(s.answers);
+  let route = decideRoute(s.answers);
+
+  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
+  if (intent === "emotional_support") route = "peer";
+
+  // ✅ ใส่ตรงนี้
+  const confidence = getConfidence(intent, s.answers);
+  const hasMeaningfulSignal =
+    hasKeyword(text, emotionalKeywords) ||
+    hasKeyword(text, practicalKeywords) ||
+    text.trim().length > 5;
+
+  // ✅ LOW CLARITY GUARD (อย่าลบ)
+  if (
+    confidence <= 1 &&
+    !hasMeaningfulSignal &&
+    s.answers.q5 === "q5_confused"
+  ) {
+    delete sessions[userId];
+
+    return replyFlex(event.replyToken, {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "💛 เราอยากเข้าใจคุณมากขึ้นอีกนิดนะ" },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "💬 แค่อยากระบาย",
+              data: "clarify_emotional"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "🤝 อยากคุยกับคนจริง",
+              data: "clarify_peer"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "🧠 อยากได้คำแนะนำ",
+              data: "clarify_advice"
+            }
+          }
+        ]
+      }
+    });
+  }
+
+  // 👉 หลังจากนี้ค่อย call GAS
+}
   
 let ai = null;
 
