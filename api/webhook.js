@@ -47,49 +47,115 @@ async function handleMessage(event) {
     const text = event.message?.text || ""; 
     const s = sessions[userId];
   
-  // ===== CHAT BRIDGE =====
-// หาเคสที่ user นี้อยู่
-const caseEntry = Object.entries(global.caseMap).find(
-  ([caseId, m]) => m.userId === userId || m.peerId === userId
-);
+// ================= CHAT BRIDGE (NEW - MULTI CASE SAFE) =================
 
-if (caseEntry && sessions[userId]?.inChat) {
-  const [caseId, map] = caseEntry;
-
-  const targetId =
-    userId === map.userId
-      ? map.peerId
-      : map.userId;
-
-  // ส่งข้อความข้ามไป
-  await pushToUser(targetId, {
-    type: "text",
-    text:
-      (userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n") +
-      text
-  });
-
-  return; // 🔥 กัน bot ตอบซ้ำ
-}
-  if (text === "จบการคุย") {
-
-  const caseEntry = Object.entries(global.caseMap).find(
+// 👉 helper หาเคสทั้งหมดของ user นี้
+function getUserCases(userId) {
+  return Object.entries(global.caseMap).filter(
     ([caseId, m]) => m.userId === userId || m.peerId === userId
   );
+}
 
-  if (caseEntry) {
-    const [caseId] = caseEntry;
+// ===== SWITCH CASE =====
+if (text.startsWith("เคส ")) {
+  const caseId = text.replace("เคส ", "").trim();
+
+  if (!sessions[userId]) sessions[userId] = {};
+
+  if (global.caseMap[caseId]) {
+    sessions[userId].activeCase = caseId;
+    sessions[userId].inChat = true;
+
+    return replyText(
+      event.replyToken,
+      "📌 ตอนนี้คุณกำลังคุยเคส " + caseId 
+    );
+  } else {
+    return replyText(event.replyToken, "❌ ไม่พบเคสนี้");
+  }
+}
+
+// ===== CHAT BRIDGE =====
+if (sessions[userId]?.inChat && sessions[userId]?.activeCase) {
+  const caseId = sessions[userId].activeCase;
+  const map = global.caseMap[caseId];
+
+  if (map) {
+    const targetId =
+      userId === map.userId ? map.peerId : map.userId;
+
+    await pushToUser(targetId, {
+      type: "text",
+      text:
+        (userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n") +
+        text
+    });
+
+    return; // 🔥 กัน bot ตอบซ้ำ
+  }
+}
+
+// ===== END CASE =====
+if (text === "จบการคุย") {
+  const caseId = sessions[userId]?.activeCase;
+
+  if (caseId && global.caseMap[caseId]) {
+    const map = global.caseMap[caseId];
+
+    // 🔥 แจ้งอีกฝ่าย
+    const targetId =
+      userId === map.userId ? map.peerId : map.userId;
+
+    await pushToUser(
+      targetId,
+      "💛 เคสนี้ถูกจบแล้ว ขอบคุณมากนะ"
+    );
+
+    // 🔥 ลบเคส
     delete global.caseMap[caseId];
   }
+
   sessions[userId] = {};
+
   return replyText(event.replyToken, "💛 จบการคุยแล้วนะ");
 }
+
+// ===== MULTI CASE ENTRY =====
+const userCases = getUserCases(userId);
+
+if (userCases.length > 0 && !sessions[userId]?.inChat) {
+  // 👉 ถ้ามีหลายเคส แต่ยังไม่ได้เลือก
+  if (userCases.length > 1) {
+    return replyText(
+      event.replyToken,
+      📌 คุณมี ${userCases.length} เคส\nพิมพ์ "เคส <id>" เพื่อเลือก
+    );
+  }
+
+  // 👉 ถ้ามีเคสเดียว → auto เข้า
+  const [caseId] = userCases[0];
+
+  if (!sessions[userId]) sessions[userId] = {};
+
+  sessions[userId].activeCase = caseId;
+  sessions[userId].inChat = true;
+
+  return replyText(
+    event.replyToken,
+    💛 เริ่มคุยเคส ${caseId} ได้เลย
+  );
+}
+
+// ===== BLOCK BOT REPLY =====
 if (sessions[userId]?.inChat) {
   return;
 }
-    if (event.source.type === "group") {
-    return handleGroupMessage(event);
-  }
+
+// ===== GROUP HANDLER =====
+if (event.source.type === "group") {
+  return handleGroupMessage(event);
+}
+
   
 // ===== SESSION LOCK =====
 if (sessions[userId]?.locked) {
@@ -1268,7 +1334,6 @@ async function autoAssign(caseId, level, route,intent) {
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, role, replyToken) {
 
-  
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
@@ -1287,9 +1352,16 @@ async function acceptCase(caseId, userId, role, replyToken) {
   
   if (data.status === "OK") {
     
-// 🔥 เปิด chat mode
-sessions[data.targetUserId] = { inChat: true };
-sessions[userId] = { inChat: true };
+// 🔥 เปิด chat mode + active case
+sessions[userId] = {
+  inChat: true,
+  activeCase: caseId
+};
+
+sessions[data.targetUserId] = {
+  inChat: true,
+  activeCase: caseId
+};
     
     // 🔗 map user ↔ peer
     global.caseMap[caseId] = {
