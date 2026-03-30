@@ -408,8 +408,6 @@ if (type === "group") {
   }
 }
   
-}
-  
 function sendLockedMenu(replyToken) {
   return replyFlex(replyToken, {
     type: "bubble",
