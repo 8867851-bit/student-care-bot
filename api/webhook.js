@@ -338,7 +338,14 @@ if (s && s.step === 6) {
                   label: slot,
                   data: "slot_" + caseId + "_" + slot
                 }
-              }))
+              })), {
+  type: "button",
+  action: {
+    type: "postback",
+    label: "🔄 ดูคนอื่น",
+    data: "next_peer_" + caseId
+  }
+}
             ]
           }
         }
@@ -754,7 +761,55 @@ if (data.startsWith("accept_")) {
 
   return acceptCase(caseId, userId, role, event.replyToken);
 }
+if (data.startsWith("next_peer_")) {
+  const caseId = data.replace("next_peer_", "");
 
+  const map = global.caseMap[caseId];
+  if (!map) return;
+
+  const userId = map.userId;
+
+  // 🔥 ลบ peer เก่า
+  delete global.caseMap[caseId];
+
+  // 🔥 หา peer ใหม่ (ใช้ของเดิม)
+  const newPeerId = await autoAssign(caseId, "yellow", "peer", "emotional_support");
+
+  if (!newPeerId) {
+    return replyText(event.replyToken, "😢 ยังไม่มีพี่คนอื่นตอนนี้");
+  }
+
+  global.caseMap[caseId] = {
+    userId,
+    peerId: newPeerId
+  };
+
+  const slots = await getSlots(newPeerId);
+
+  return pushToUser(userId, {
+    type: "flex",
+    altText: "เลือกเวลาใหม่",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          { type: "text", text: "🔄 ลองพี่คนนี้ดูนะ" },
+
+          ...slots.slice(0,5).map(slot => ({
+            type: "button",
+            action: {
+              type: "postback",
+              label: slot,
+              data: "slot_" + caseId + "_" + slot
+            }
+          }))
+        ]
+      }
+    }
+  });
+}
   
   // ===== SLOT =====
   if (data.startsWith("slot_")) {
