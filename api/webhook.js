@@ -217,7 +217,8 @@ if (ai && ai.followups && ai.followups.length > 0) {
 
   if (intent === "crisis" || intent === "practical_advice") route = "teacher";
   if (intent === "emotional_support") route = "peer";
-
+  
+console.log("🚀 CALLING GAS:", GAS_URL);
 const res = await fetch(GAS_URL, {
   method: "POST",
   headers: {"Content-Type":"application/json"},
@@ -231,9 +232,11 @@ const res = await fetch(GAS_URL, {
     intent: intent
   })
 });
-
+console.log("📡 GAS STATUS:", res.status);
+  
 const textRes = await res.text();
 console.log("GAS RESPONSE:", textRes);
+console.log("📦 PARSED:", peerId);
   
 let peerId = null;
 
@@ -257,6 +260,8 @@ if (peerId) {
 // ===== SEND SLOT TO USER =====
 if (peerId) {
   const slots = await getSlots(peerId);
+  console.log("🎯 PEER ID:", peerId);
+  console.log("📡 CALLING getSlots...");
   console.log("🕒 USER SLOTS:", slots);
 
   if (slots.length > 0) {
