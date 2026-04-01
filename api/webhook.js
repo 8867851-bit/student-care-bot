@@ -1,10 +1,7 @@
 // ================= CONFIG =================
 const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyn4Lwrp2uqhCliS5MMSKiCDp5H4hRKhC3mnvBK8QEJP3WPw-nZpdP2G0cpoHudYIth-g/exec";
-const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5";
-
-let pushCount = 0;
-let lastReset = Date.now();
+/* const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5"; */
 
 if (!global.caseMap) global.caseMap = {}; 
 const sessions = {};
@@ -12,7 +9,7 @@ const handledEvents = new Set();
 const DEV_MODE = true; 
 const DRY_RUN = false;     // 🔥 เปิดส่ง LINE จริง
 const USE_AI = false;      // 🔥 ปิด AI ก่อน (กัน quota พัง)
-const MAX_PUSH_PER_DAY = 30; // 🔥 คุมลิมิต (กันทะลุ 500);
+
 
 // ================= MAIN =================
 module.exports = async (req, res) => {
@@ -449,35 +446,22 @@ if (s && s.step === 6) {
   // ===== CALL GAS =====
   console.log("🚀 CALLING GAS:", GAS_URL);
 
-  const res = await fetch(GAS_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "create",
-      caseId,
-      userId,
-      ...s.answers,
-      level,
-      route,
-      intent
-    })
-  });
+const res = await fetch(GAS_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    action: "create",
+    caseId,
+    userId,
+    ...s.answers,
+    level,
+    route,
+    intent
+  })
+});
 
-  console.log("📡 GAS STATUS:", res.status);
-
-  const textRes = await res.text();
-  console.log("GAS RESPONSE:", textRes);
-
-  let peerId = null;
-
-  try {
-    const parsed = JSON.parse(textRes);
-    peerId = parsed.assignedPeerId;
-  } catch (e) {
-    console.log("❌ JSON parse error", textRes);
-  }
-
-  console.log("📦 PARSED:", peerId);
+// ❌ ไม่มี peer แล้ว
+const peerId = null;
 
   // ===== MAP =====
   if (peerId) {
@@ -529,10 +513,19 @@ if (s && s.step === 6) {
         }
       });
     }
-  }
+  } 
+  
+if (!DEV_MODE) {
+  sessions[userId] = { locked: true };
+}
+  
+await replyText(event.replyToken,
+`💛 เรารับเรื่องของคุณแล้วนะ
 
-  await replyText(event.replyToken, "💛 เราได้รับเรื่องของคุณแล้วนะ");
-  sessions[userId].locked = true;
+ตอนนี้พี่ ๆ ในระบบจะเข้ามาเลือกเคสนี้
+คุณไม่ต้องทำอะไรเพิ่มเลย
+
+⏳ โดยปกติจะใช้เวลาสักพักนะ`);
 
   return;
 }
@@ -625,80 +618,7 @@ function sendLockedMenu(replyToken) {
     }
   });
 }
-//========= Notify team ========
-async function notifyTeam(caseId, level, answers, route) {
-  console.log("🔥 notifyTeam CALLED", caseId, level, route);
 
-  let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
-  let levelEmoji = "🟢";
-
-  if (level === "yellow") levelEmoji = "🟡";
-  if (level === "red") {
-    levelEmoji = "🔴";
-    text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
-  }
-
-  // ===== DRY RUN =====
-  if (DRY_RUN) {
-    console.log("🧪 DRY RUN → NOT SENDING TO GROUP");
-    console.log({
-      caseId,
-      level,
-      route,
-      q1: answers.q1,
-      q6: answers.q6
-    });
-    return; // 🔥 สำคัญ: หยุดตรงนี้
-  }
-
-if (!canPush()) {
-  console.log("📌 CASE (NOT SENT):", {
-    caseId,
-    level,
-    route,
-    summary: answers.q6
-  });
-  return;
-}
-
-pushCount++;
-  
-  // ===== REAL PUSH =====
-  const res = await fetch("https://api.line.me/v2/bot/message/push", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
-    },
-    body: JSON.stringify({
-      to: GROUP_ID,
-      messages: [{
-        type: "flex",
-        altText: "มีเคสใหม่",
-        contents: {
-          type: "bubble",
-          body: {
-            type: "box",
-            layout: "vertical",
-            contents: [
-              { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
-              { type: "text", text: "ระดับ: " + levelEmoji },
-              { type: "text", text: "🧠 ประเภท: " + answers.q1 },
-              {
-                type: "text",
-                text: "🎯 แนะนำ: " + (route === "teacher" ? "👩‍🏫 ครู" : "👩‍🎓 พี่นักเรียน")
-              },
-              { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
-              { type: "text", text: text }
-            ]
-          }
-        }
-      }]
-    })
-  });
-
-  console.log("📣 LINE PUSH RESULT:", await res.text());
-}
 
 // ================= POSTBACK =================
 async function handlePostback(event) {
@@ -1615,14 +1535,6 @@ async function scheduleFollowUp(caseId, userId, level) {
 }
 
 // ================= UTIL =================
-function canPush() {
-  const now = Date.now();
-
-  // reset ทุก 24 ชม.
-  if (now - lastReset > 24 * 60 * 60 * 1000) {
-    pushCount = 0;
-    lastReset = now;
-  } return pushCount < MAX_PUSH_PER_DAY; }
 
 async function pushToUser(userId, message) {
     if (DRY_RUN) {
@@ -1898,3 +1810,96 @@ async function handleGroupMessage(event) {
     console.log("❌ GROUP ERROR:", err);
   }
 }
+
+
+
+
+//------------------ code from the dead -----------------------------------
+ 
+// ========= Notify team ========
+/* async function notifyTeam(caseId, level, answers, route) {
+  console.log("🔥 notifyTeam CALLED", caseId, level, route);
+
+  let text = "👉 ถ้าคุณว่าง ลองรับเคสนี้ได้นะ";
+  let levelEmoji = "🟢";
+
+  if (level === "yellow") levelEmoji = "🟡";
+  if (level === "red") {
+    levelEmoji = "🔴";
+    text = "👉 ขอคนช่วยดูเคสนี้หน่อยนะ";
+  }
+
+  // ===== DRY RUN =====
+  if (DRY_RUN) {
+    console.log("🧪 DRY RUN → NOT SENDING TO GROUP");
+    console.log({
+      caseId,
+      level,
+      route,
+      q1: answers.q1,
+      q6: answers.q6
+    });
+    return; // 🔥 สำคัญ: หยุดตรงนี้
+  }
+
+if (!canPush()) {
+  console.log("📌 CASE (NOT SENT):", {
+    caseId,
+    level,
+    route,
+    summary: answers.q6
+  });
+  return;
+}
+
+pushCount++;
+  
+  // ===== REAL PUSH =====
+  const res = await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      to: GROUP_ID,
+      messages: [{
+        type: "flex",
+        altText: "มีเคสใหม่",
+        contents: {
+          type: "bubble",
+          body: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              { type: "text", text: "📌 เคส #" + caseId, weight: "bold" },
+              { type: "text", text: "ระดับ: " + levelEmoji },
+              { type: "text", text: "🧠 ประเภท: " + answers.q1 },
+              {
+                type: "text",
+                text: "🎯 แนะนำ: " + (route === "teacher" ? "👩‍🏫 ครู" : "👩‍🎓 พี่นักเรียน")
+              },
+              { type: "text", text: "📝 " + (answers.q6 || "-"), wrap: true },
+              { type: "text", text: text }
+            ]
+          }
+        }
+      }]
+    })
+  });
+
+  console.log("📣 LINE PUSH RESULT:", await res.text());
+} */
+
+/* let pushCount = 0;
+let lastReset = Date.now();
+const MAX_PUSH_PER_DAY = 30; // 🔥 คุมลิมิต (กันทะลุ 500);
+
+function canPush() {
+  const now = Date.now();
+
+  // reset ทุก 24 ชม.
+  if (now - lastReset > 24 * 60 * 60 * 1000) {
+    pushCount = 0;
+    lastReset = now;
+  } return pushCount < MAX_PUSH_PER_DAY; } */
