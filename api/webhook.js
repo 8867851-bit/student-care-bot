@@ -406,6 +406,7 @@ if (s && s.step === 6) {
   if (USE_AI) {
     try {
       ai = await getAIAnalysis(text);
+    
     } catch (e) {
       console.log("AI ERROR:", e);
       ai = null;
@@ -473,48 +474,6 @@ const peerId = null;
 
   console.log("🔗 MAPPED:", caseId, userId, peerId);
 
-  // ===== FALLBACK notify =====
-  if (!peerId) {
-    await notifyTeam(caseId, level, s.answers, route);
-  }
-
-  // ===== SEND SLOT =====
-  if (peerId) {
-    const slots = await getSlots(peerId);
-
-    if (slots.length > 0) {
-      await pushToUser(userId, {
-        type: "flex",
-        altText: "เลือกเวลา",
-        contents: {
-          type: "bubble",
-          body: {
-            type: "box",
-            layout: "vertical",
-            contents: [
-              { type: "text", text: "💛 เลือกเวลาที่คุณสะดวก" },
-              ...slots.slice(0, 5).map(slot => ({
-                type: "button",
-                action: {
-                  type: "postback",
-                  label: slot,
-                  data: "slot_" + caseId + "_" + slot
-                }
-              })), {
-  type: "button",
-  action: {
-    type: "postback",
-    label: "🔄 ดูคนอื่น",
-    data: "next_peer_" + caseId
-  }
-}
-            ]
-          }
-        }
-      });
-    }
-  } 
-  
 if (!DEV_MODE) {
   sessions[userId] = { locked: true };
 }
@@ -1903,3 +1862,44 @@ function canPush() {
     pushCount = 0;
     lastReset = now;
   } return pushCount < MAX_PUSH_PER_DAY; } */
+
+/* // ===== FALLBACK notify =====
+  if (!peerId) {
+    await notifyTeam(caseId, level, s.answers, route);
+  }
+   // ===== SEND SLOT =====
+   if (peerId) {
+    const slots = await getSlots(peerId);
+
+    if (slots.length > 0) {
+      await pushToUser(userId, {
+        type: "flex",
+        altText: "เลือกเวลา",
+        contents: {
+          type: "bubble",
+          body: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              { type: "text", text: "💛 เลือกเวลาที่คุณสะดวก" },
+              ...slots.slice(0, 5).map(slot => ({
+                type: "button",
+                action: {
+                  type: "postback",
+                  label: slot,
+                  data: "slot_" + caseId + "_" + slot
+                }
+              })), {
+  type: "button",
+  action: {
+    type: "postback",
+    label: "🔄 ดูคนอื่น",
+    data: "next_peer_" + caseId
+  }
+}
+            ]
+          }
+        }
+      });
+    }
+  } */
