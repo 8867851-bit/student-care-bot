@@ -456,8 +456,9 @@ if (s && s.step === 6) {
     });
   }
 
-  // ===== CALL GAS =====
-  console.log("🚀 CALLING GAS:", GAS_URL);
+  
+// ===== CALL GAS =====
+console.log("🚀 CALLING GAS:", GAS_URL);
 
 const res = await fetch(GAS_URL, {
   method: "POST",
@@ -473,67 +474,38 @@ const res = await fetch(GAS_URL, {
   })
 });
 
-const result = await res.json(); // 👈 เพิ่มบรรทัดนี้
+const result = await res.json();
 
+console.log("✅ CREATE RESULT:", result);
+
+// 👉 ดึง peer ที่ assign มาแล้ว (ถ้ามี)
 const peerId = result.assignedTo || null;
 
-  const res = await fetch(GAS_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    action: "create",
-    caseId,
-    userId,
-    ...s.answers,
-    level,
-    route,
-    intent
-  })
-});
+// ===== SESSION =====
+if (!sessions[userId]) sessions[userId] = {};
 
-const result = await res.json(); // 👈 เพิ่มบรรทัดนี้
-
-const peerId = result.assignedTo || null;
-
-  
-const auto = await fetch(GAS_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    action: "autoAssign",
-    role: route,
-    intent
-  })
-}).then(r => r.json());
-
-const peerId = auto.peerId || null;
-
-  // ===== MAP =====
-  if (peerId) {
-    global.caseMap[caseId] = { userId, peerId };
-
-    if (!sessions[userId]) sessions[userId] = {};
-    sessions[userId].inChat = true;
-  }
-
-  console.log("🔗 MAPPED:", caseId, userId, peerId);
-
-if (!DEV_MODE) {
-  sessions[userId] = { locked: true };
+if (peerId) {
+  // ✅ มี peer → เข้า chat ได้เลย
+  sessions[userId].inChat = true;
+} else {
+  // ⏳ ยังไม่มี peer → รอ
+  sessions[userId].locked = true;
 }
-  
+
+console.log("🔗 CASE:", caseId, "PEER:", peerId);
+
+// ===== REPLY =====
 await replyText(event.replyToken,
 `💛 เรารับเรื่องของคุณแล้วนะ
 
-ตอนนี้พี่ ๆ ในระบบจะเข้ามาเลือกเคสนี้
-คุณไม่ต้องทำอะไรเพิ่มเลย
+${peerId 
+  ? "✨ มีพี่รับเคสแล้ว เริ่มคุยได้เลย"
+  : "⏳ ตอนนี้กำลังหาพี่ให้อยู่นะ"}
 
-⏳ โดยปกติจะใช้เวลาสักพักนะ`);
+คุณไม่ต้องทำอะไรเพิ่มเลย 💛`
+);
 
-  return;
-}
-
-
+return;
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
       s.answers.q3 === "q3_high" &&
