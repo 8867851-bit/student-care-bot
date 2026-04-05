@@ -1581,9 +1581,7 @@ async function replyText(token, text) {
     },
     body: JSON.stringify({
       replyToken: token,
-      messages:[{ type:"text", text NNNNNNHJ Y7777777777P0.........-+
-        
-        +7}]
+      messages:[{ type:"text", text }]
     })
   });
 }
