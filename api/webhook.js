@@ -186,10 +186,12 @@ if (text.startsWith("เคส ")) {
 }
 
 // ===== CHAT BRIDGE =====
-if (sessions[userId]?.inChat && sessions[userId]?.activeCase) {
-  const caseId = sessions[userId].activeCase;
+if (sessions[userId]?.inChat) {
+
   const map = await getMyCase(userId);
-  if (map) {
+
+  if (!map) return;
+
   const targetId =
     userId === map.userId ? map.peerId : map.userId;
 
@@ -200,34 +202,9 @@ if (sessions[userId]?.inChat && sessions[userId]?.activeCase) {
       text
   });
 
-  return;
+  return; // 🔥 กัน bot ตอบซ้ำ
 }
-  const res = await fetch(GAS_URL, {
-  method: "POST",
-  headers: {"Content-Type":"application/json"},
-  body: JSON.stringify({
-    action: "getCaseByUser",
-    userId
-  })
-});
-
-const map = await res.json();
-
-  if (map) {
-    const targetId =
-      userId === map.userId ? map.peerId : map.userId;
-
-    await pushToUser(targetId, {
-      type: "text",
-      text:
-        (userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n") +
-        text
-    });
-
-    return; // 🔥 กัน bot ตอบซ้ำ
-  }
-}
-
+  
 // ===== END CASE =====
 if (text === "จบการคุย") {
   const caseId = sessions[userId]?.activeCase;
