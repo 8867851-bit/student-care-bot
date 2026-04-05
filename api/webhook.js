@@ -461,8 +461,17 @@ const res = await fetch(GAS_URL, {
   })
 });
 
-// ❌ ไม่มี peer แล้ว
-const peerId = null;
+const auto = await fetch(GAS_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    action: "autoAssign",
+    role: route,
+    intent
+  })
+}).then(r => r.json());
+
+const peerId = auto.peerId || null;
 
   // ===== MAP =====
   if (peerId) {
@@ -1572,7 +1581,9 @@ async function replyText(token, text) {
     },
     body: JSON.stringify({
       replyToken: token,
-      messages:[{ type:"text", text }]
+      messages:[{ type:"text", text NNNNNNHJ Y7777777777P0.........-+
+        
+        +7}]
     })
   });
 }
