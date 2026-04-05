@@ -3,7 +3,6 @@ const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyn4Lwrp2uqhCliS5MMSKiCDp5H4hRKhC3mnvBK8QEJP3WPw-nZpdP2G0cpoHudYIth-g/exec";
 /* const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5"; */
 
-if (!global.caseMap) global.caseMap = {}; 
 const sessions = {};
 const handledEvents = new Set();
 const DEV_MODE = true; 
@@ -37,6 +36,19 @@ if (event.type === "message") {
 if (event.type === "postback") await handlePostback(event); }
 
   return res.status(200).send("OK"); };
+
+async function getMyCase(userId) {
+  const res = await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "getCaseByUser",
+      userId
+    })
+  });
+
+  return await res.json();
+}
 
 // ================= MESSAGE ==================
 async function handleMessage(event) {
@@ -176,7 +188,30 @@ if (text.startsWith("เคส ")) {
 // ===== CHAT BRIDGE =====
 if (sessions[userId]?.inChat && sessions[userId]?.activeCase) {
   const caseId = sessions[userId].activeCase;
-  const map = global.caseMap[caseId];
+  const map = await getMyCase(userId);
+  if (map) {
+  const targetId =
+    userId === map.userId ? map.peerId : map.userId;
+
+  await pushToUser(targetId, {
+    type: "text",
+    text:
+      (userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n") +
+      text
+  });
+
+  return;
+}
+  const res = await fetch(GAS_URL, {
+  method: "POST",
+  headers: {"Content-Type":"application/json"},
+  body: JSON.stringify({
+    action: "getCaseByUser",
+    userId
+  })
+});
+
+const map = await res.json();
 
   if (map) {
     const targetId =
@@ -461,6 +496,29 @@ const res = await fetch(GAS_URL, {
   })
 });
 
+const result = await res.json(); // 👈 เพิ่มบรรทัดนี้
+
+const peerId = result.assignedTo || null;
+
+  const res = await fetch(GAS_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    action: "create",
+    caseId,
+    userId,
+    ...s.answers,
+    level,
+    route,
+    intent
+  })
+});
+
+const result = await res.json(); // 👈 เพิ่มบรรทัดนี้
+
+const peerId = result.assignedTo || null;
+
+  
 const auto = await fetch(GAS_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -1452,15 +1510,15 @@ sessions[data.targetUserId] = {
           contents: [
             { type: "text", text: "💛 พี่ว่างช่วงนี้นะ" },
 
-            ...(slots.length > 0
-              ? slots.slice(0,5).map(s => ({
-                  type: "button",
-                  action: {
-                    type: "postback",
-                    label: slot,
-                    data: "slot_" + caseId + "_" + slot
-                  }
-                }))
+               ...(slots.length > 0
+                        ? slots.slice(0,5).map(s => ({
+                            type: "button",
+                            action: {
+                              type: "postback",
+                              label: s,
+                              data: "slot_" + caseId + "_" + s
+                            }
+                          }))
               : [
                   { type: "text", text: "⚠️ ยังไม่มีเวลาว่าง" }
                 ])
