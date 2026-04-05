@@ -536,7 +536,7 @@ if (type === "group") {
     return sendMainMenu(event.replyToken);
   }
 }
-}
+} }
 
 function sendLockedMenu(replyToken) {
   return replyFlex(replyToken, {
