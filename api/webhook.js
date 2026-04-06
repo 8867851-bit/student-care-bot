@@ -80,7 +80,7 @@ async function handleMessage(event) {
   let s = sessions[userId];
 
   // ===== RECONNECT SYSTEM =====
-if (!s) {
+if (!sessions[userId]) {
   try {
     const map = await getMyCase(userId);
 
@@ -90,11 +90,6 @@ if (!s) {
 
       sessions[userId].inChat = true;
       sessions[userId].activeCase = map.caseId;
-
-      // 🔥 กัน step หาย
-      if (sessions[userId].step === undefined) {
-        sessions[userId].step = null;
-      }
 
       console.log("♻️ RECONNECTED:", userId, map.caseId);
     }
