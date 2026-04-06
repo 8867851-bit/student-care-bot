@@ -14,7 +14,7 @@ const DRY_RUN = false;     // 🔥 เปิดส่ง LINE จริง
 const USE_AI = false;      // 🔥 ปิด AI ก่อน (กัน quota พัง)
 
 
-// ================= MAIN =================
+// ================= MAIN ==================
 module.exports = async (req, res) => {
   const body = typeof req.body === "string"
     ? JSON.parse(req.body)
