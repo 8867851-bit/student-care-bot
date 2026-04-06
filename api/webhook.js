@@ -1,239 +1,544 @@
 // ================= CONFIG =================
-const CHANNEL_ACCESS_TOKEN =
-  "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
-const GAS_URL =
-  "[script.google.com](https://script.google.com/macros/s/AKfycbyn4Lwrp2uqhCliS5MMSKiCDp5H4hRKhC3mnvBK8QEJP3WPw-nZpdP2G0cpoHudYIth-g/exec)";
-const sessions = {};
-const handledEvents = new Set();
-const DEV_MODE = true;
-const DRY_RUN = false;
-const USE_AI = false;
-// initialize global case map
+const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyn4Lwrp2uqhCliS5MMSKiCDp5H4hRKhC3mnvBK8QEJP3WPw-nZpdP2G0cpoHudYIth-g/exec";
+/* const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5"; */
 global.caseMap = global.caseMap || {};
+
+const sessions = {};
+if (handledEvents.size > 1000) {
+  handledEvents.clear();
+}
+const DEV_MODE = true; 
+const DRY_RUN = false;     // 🔥 เปิดส่ง LINE จริง
+const USE_AI = false;      // 🔥 ปิด AI ก่อน (กัน quota พัง)
+
+
 // ================= MAIN =================
 module.exports = async (req, res) => {
-  const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  const body = typeof req.body === "string"
+    ? JSON.parse(req.body)
+    : req.body;
+
   const events = body?.events || [];
+
   for (const event of events) {
-    const eventId = event.timestamp + "_" + (event.source.userId || "");
-    if (handledEvents.has(eventId)) continue;
-    handledEvents.add(eventId);
-    if (event.type === "follow") await sendMainMenu(event.replyToken);
-    if (event.type === "message") {
-      try {
-        await handleMessage(event);
-      } catch (err) {
-        console.log("❌ handleMessage ERROR:", err);
-      }
-    }
-    if (event.type === "postback") await handlePostback(event);
+  const eventId = event.timestamp + "_" + (event.source.userId || "");
+    
+  if (handledEvents.has(eventId)) { continue; }  
+  handledEvents.add(eventId);
+    if (event.type === "follow") {
+  await sendMainMenu(event.replyToken); }
+
+if (event.type === "message") {
+  try {
+    await handleMessage(event);
+  } catch (err) {
+    console.log("❌ handleMessage ERROR:", err);
   }
-  return res.status(200).send("OK");
-};
+}
+if (event.type === "postback") await handlePostback(event); }
+
+  return res.status(200).send("OK"); };
+
+async function getMyCase(userId) {
+  const res = await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "getCaseByUser",
+      userId
+    })
+  });
+
+  return await res.json();
+}
+
 // ================= MESSAGE ==================
 async function handleMessage(event) {
-  const userId = event.source.userId;
-  const text = event.message?.text || "";
-  const s = sessions[userId];
-  // ===== MENU: MY CASES =====
-  if (text === "เคสของฉัน") {
-    const myCases = Object.entries(global.caseMap)
-      .filter(([id, m]) => m.peerId === userId);
-    if (myCases.length === 0)
-      return replyText(event.replyToken, "📭 ยังไม่มีเคสนะ");
+      const userId = event.source.userId;
+    const text = event.message?.text || ""; 
+    const s = sessions[userId];
+
+  
+ // ===== MENU: MY CASES =====
+if (text === "เคสของฉัน") {
+
+  const myCases = Object.entries(global.caseMap)
+    .filter(([id, m]) => m.peerId === userId);
+
+  if (myCases.length === 0) {
+    return replyText(event.replyToken, "📭 ยังไม่มีเคสนะ");
+  }
+
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "📌 เคสของคุณ", weight: "bold" },
+
+        ...myCases.map(([caseId]) => ({
+          type: "button",
+          action: {
+            type: "postback",
+            label: "เคส " + caseId,
+            data: "openCase_" + caseId
+          }
+        }))
+      ]
+    }
+  });
+} 
+  // ===== END SESSION (PEER) =====
+if (text === "จบการดูแล") {
+
+  const caseId = sessions[userId]?.activeCase;
+
+  if (!caseId) {
+    return replyText(event.replyToken, "❌ ไม่พบเคส");
+  }
+
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "completeCase",
+      caseId
+    })
+  });
+
+  const map = global.caseMap[caseId];
+
+  if (map) {
+    const targetId =
+      userId === map.userId ? map.peerId : map.userId;
+
+    await pushToUser(targetId, {
+      type: "flex",
+      altText: "feedback",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            { type: "text", text: "💛 วันนี้การคุยโอเคไหม", weight: "bold" },
+
+            {
+              type: "button",
+              action: {
+                type: "postback",
+                label: "🙂 ดีขึ้นนิดหน่อย",
+                data: "feedback_good_" + caseId
+              }
+            },
+            {
+              type: "button",
+              action: {
+                type: "postback",
+                label: "😐 เหมือนเดิม",
+                data: "feedback_same_" + caseId
+              }
+            },
+            {
+              type: "button",
+              action: {
+                type: "postback",
+                label: "💬 อยากคุยต่อ",
+                data: "feedback_continue_" + caseId
+              }
+            }
+          ]
+        }
+      }
+    });
+  }
+
+  delete global.caseMap[caseId];
+  sessions[userId] = {};
+
+  return replyText(event.replyToken, "💛 จบการดูแลเรียบร้อย");
+}
+// ================= CHAT BRIDGE (NEW - MULTI CASE SAFE) =================
+
+// 👉 helper หาเคสทั้งหมดของ user นี้
+function getUserCases(userId) {
+  return Object.entries(global.caseMap).filter(
+    ([caseId, m]) => m.userId === userId || m.peerId === userId
+  );
+}
+
+// ===== SWITCH CASE =====
+if (text.startsWith("เคส ")) {
+  const caseId = text.replace("เคส ", "").trim();
+
+  if (!sessions[userId]) sessions[userId] = {};
+
+  if (global.caseMap[caseId]) {
+    sessions[userId].activeCase = caseId;
+    sessions[userId].inChat = true;
+
+    return replyText(
+      event.replyToken,
+      "📌 ตอนนี้คุณกำลังคุยเคส " + caseId 
+    );
+  } else {
+    return replyText(event.replyToken, "❌ ไม่พบเคสนี้");
+  }
+}
+
+// ===== CHAT BRIDGE =====
+if (sessions[userId]?.inChat) {
+
+  let map = global.caseMap?.[sessions[userId]?.activeCase];
+
+if (!map) {
+  map = await getMyCase(userId);
+}
+
+if (!map) return;
+
+  const targetId =
+    userId === map.userId ? map.peerId : map.userId;
+
+  await pushToUser(targetId, {
+    type: "text",
+    text:
+      (userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n") +
+      text
+  });
+
+  return; // 🔥 กัน bot ตอบซ้ำ
+}
+  
+// ===== END CASE =====
+if (text === "จบการคุย") {
+  const caseId = sessions[userId]?.activeCase;
+
+  if (caseId && global.caseMap[caseId]) {
+    const map = global.caseMap[caseId];
+
+    // 🔥 แจ้งอีกฝ่าย
+    const targetId =
+      userId === map.userId ? map.peerId : map.userId;
+
+    await pushToUser(
+      targetId,
+      "💛 เคสนี้ถูกจบแล้ว ขอบคุณมากนะ"
+    );
+
+    // 🔥 ลบเคส
+    delete global.caseMap[caseId];
+  }
+await fetch(GAS_URL, {
+  method: "POST",
+  headers: {"Content-Type":"application/json"},
+  body: JSON.stringify({
+    action: "removeBooking",
+    caseId
+  })
+});
+  
+  sessions[userId] = {};
+
+  return replyText(event.replyToken, "💛 จบการคุยแล้วนะ");
+}
+
+// ===== MULTI CASE ENTRY =====
+const userCases = getUserCases(userId);
+
+if (userCases.length > 0 && !sessions[userId]?.inChat) {
+  // 👉 ถ้ามีหลายเคส แต่ยังไม่ได้เลือก
+  if (userCases.length > 1) {
+    return replyText(
+    event.replyToken,
+      "📌 คุณมี " + userCases.length + " เคส\nพิมพ์ \"เคส <id>\" เพื่อเลือก"
+        );
+  }
+
+  // 👉 ถ้ามีเคสเดียว → auto เข้า
+  const [caseId] = userCases[0];
+
+  if (!sessions[userId]) sessions[userId] = {};
+
+  sessions[userId].activeCase = caseId;
+  sessions[userId].inChat = true;
+
+  return replyText(
+  event.replyToken,
+  "💛 เริ่มคุยเคส " + caseId + " ได้เลย"
+    );
+}
+if (sessions[userId]?.inChat && !sessions[userId]?.activeCase) {
+  sessions[userId].inChat = false;
+}
+
+// ===== GROUP HANDLER =====
+if (event.source.type === "group") {
+  return handleGroupMessage(event);
+}
+
+  
+// ===== SESSION LOCK =====
+if (sessions[userId]?.locked) {
+
+  if (text === "เมนู" || text === "reset") {
+    delete sessions[userId];
+    return sendMainMenu(event.replyToken);
+  }
+    return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        { type: "text", text: "💛 เราได้รับเรื่องของคุณแล้วนะ", weight: "bold" },
+        {
+          type: "text",
+          text: `⏳ เรากำลังหาคนที่เหมาะกับคุณอยู่\nใช้เวลาประมาณ ${getETA()}`,
+          wrap: true,
+          size: "sm"
+        },
+        {
+          type: "button",
+          action: { type: "message", label: "📍 เมนู", text: "เมนู" }
+        }
+      ]
+    }
+  });
+}
+  
+  
+  if (text === "เมนู") {
+    // 🟢 ปกติ → reset ได้
+  delete sessions[userId];
+  return sendMainMenu(event.replyToken); }
+  
+  if (s && s.step < 6) {
+  if (text === "reset") {
+    delete sessions[userId];
+    return replyText(event.replyToken, "เริ่มใหม่ได้เลยนะ 💛"); }
+    return replyText(event.replyToken,
+`💛 ตอนนี้เรากำลังคุยกันอยู่  ลองกดเลือกคำตอบด้านบน หรือพิมพ์ "เมนู" เพื่อเริ่มใหม่ได้เลยนะ`); }
+
+  if (text === "คุย") {
+  // 🔒 production only
+  if (!DEV_MODE && sessions[userId]?.locked) {
+    return replyText(event.replyToken,
+      "💛 ตอนนี้เรากำลังดูแลเคสของคุณอยู่นะ ยังไม่ต้องเริ่มใหม่ก็ได้");
+  }
+
+  sessions[userId] = { step: 0, answers: {} };
+  return sendStep(userId, event.replyToken);
+}
+
+  if (text === "เข้าใจ") {
+    return sendExploreMenu(event.replyToken); }
+
+  if (text === "พัก") {
+    return replyText(event.replyToken, 
+      `💛 ลองพักสักนิดนะ
+       หายใจลึก ๆ 3 ครั้ง  
+       ดื่มน้ำเย็นสักแก้ว  
+       หรือขยับตัวเบา ๆ
+       แล้วค่อยกลับมานะ เราอยู่ตรงนี้ 💛`); } 
+  
+   if (!s) {
+  return replyText(event.replyToken,
+`💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
+
+พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
+หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
+}
+  
+if (s && s.step === 6) {
+  s.answers["q6"] = text;
+
+  const caseId = Date.now().toString().slice(-6);
+  const level = classify(s.answers);
+  let intent = detectIntent(s.answers);
+  let route = decideRoute(s.answers);
+
+  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
+  if (intent === "emotional_support") route = "peer";
+
+  // ===== CONFIDENCE =====
+  const confidence = getConfidence(intent, s.answers);
+  const hasMeaningfulSignal =
+    hasKeyword(text, emotionalKeywords) ||
+    hasKeyword(text, practicalKeywords) ||
+    text.trim().length > 5;
+
+  // ===== LOW CLARITY GUARD =====
+  if (
+    confidence <= 1 &&
+    !hasMeaningfulSignal &&
+    s.answers.q5 === "q5_confused"
+  ) {
+    delete sessions[userId];
+
     return replyFlex(event.replyToken, {
       type: "bubble",
       body: {
         type: "box",
         layout: "vertical",
         contents: [
-          { type: "text", text: "📌 เคสของคุณ", weight: "bold" },
-          ...myCases.map(([caseId]) => ({
+          { type: "text", text: "💛 เราอยากเข้าใจคุณมากขึ้นอีกนิดนะ" },
+          {
             type: "button",
             action: {
               type: "postback",
-              label: "เคส " + caseId,
-              data: "openCase_" + caseId
+              label: "💬 แค่อยากระบาย",
+              data: "clarify_emotional"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "🤝 อยากคุยกับคนจริง",
+              data: "clarify_peer"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              type: "postback",
+              label: "🧠 อยากได้คำแนะนำ",
+              data: "clarify_advice"
+            }
+          }
+        ]
+      }
+    });
+  }
+
+  // ===== AI (optional) =====
+  let ai = null;
+
+  if (USE_AI) {
+    try {
+      ai = await getAIAnalysis(text);
+    
+    } catch (e) {
+      console.log("AI ERROR:", e);
+      ai = null;
+    }
+  }
+
+  if (ai && ai.reflection) {
+    await replyText(event.replyToken, "💛 " + ai.reflection);
+  }
+
+  if (ai && ai.followups && ai.followups.length > 0) {
+    s.aiFollowups = ai.followups;
+
+    return replyFlex(event.replyToken, {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด",
+            wrap: true
+          },
+          ...ai.followups.map((f, i) => ({
+            type: "button",
+            action: {
+              type: "postback",
+              label: f,
+              data: "q6_follow_" + i
             }
           }))
         ]
       }
     });
   }
-  // ===== END SESSION =====
-  if (text === "จบการดูแล") {
-    const caseId = sessions[userId]?.activeCase;
-    if (!caseId) return replyText(event.replyToken, "❌ ไม่พบเคส");
-    await fetch(GAS_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "completeCase", caseId })
-    });
-    const map = global.caseMap?.[caseId];
-    if (map) {
-      const targetId = userId === map.userId ? map.peerId : map.userId;
-      await pushToUser(targetId, {
-        type: "flex",
-        altText: "feedback",
-        contents: {
-          type: "bubble",
-          body: {
-            type: "box",
-            layout: "vertical",
-            contents: [
-              {
-                type: "text",
-                text: "💛 วันนี้การคุยโอเคไหม",
-                weight: "bold"
-              },
-              {
-                type: "button",
-                action: {
-                  type: "postback",
-                  label: "🙂 ดีขึ้นนิดหน่อย",
-                  data: "feedback_good_" + caseId
-                }
-              },
-              {
-                type: "button",
-                action: {
-                  type: "postback",
-                  label: "😐 เหมือนเดิม",
-                  data: "feedback_same_" + caseId
-                }
-              },
-              {
-                type: "button",
-                action: {
-                  type: "postback",
-                  label: "💬 อยากคุยต่อ",
-                  data: "feedback_continue_" + caseId
-                }
-              }
-            ]
-          }
-        }
-      });
-    }
-    delete global.caseMap?.[caseId];
-    sessions[userId] = {};
-    return replyText(event.replyToken, "💛 จบการดูแลเรียบร้อย");
+
+  
+// ===== CALL GAS =====
+console.log("🚀 CALLING GAS:", GAS_URL);
+
+const res = await fetch(GAS_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    action: "create",
+    caseId,
+    userId,
+    ...s.answers,
+    level,
+    route,
+    intent
+  })
+});
+
+const result = await res.json();
+
+console.log("✅ CREATE RESULT:", result);
+
+// 👉 ดึง peer ที่ assign มาแล้ว (ถ้ามี)
+const peerId = result.assignedTo || null;
+
+// ===== SESSION =====
+if (!sessions[userId]) sessions[userId] = {};
+
+if (peerId) {
+  // ✅ มี peer → เข้า chat ได้เลย
+  sessions[userId].inChat = true;
+} else {
+  // ⏳ ยังไม่มี peer → รอ
+  sessions[userId].locked = true;
+}
+
+console.log("🔗 CASE:", caseId, "PEER:", peerId);
+
+// ===== REPLY =====
+await replyText(event.replyToken,
+`💛 เรารับเรื่องของคุณแล้วนะ
+
+${peerId 
+  ? "✨ มีพี่รับเคสแล้ว เริ่มคุยได้เลย"
+  : "⏳ ตอนนี้กำลังหาพี่ให้อยู่นะ"}
+
+คุณไม่ต้องทำอะไรเพิ่มเลย 💛`
+);
+
+return;
+    // ===== EMOTIONAL CHECK =====
+    const highEmotional =
+      s.answers.q3 === "q3_high" &&
+      s.answers.q4 === "q4_none"; 
+
+  
+ // ===== DEFAULT MENU =====
+const type = event.source.type;
+
+if (!sessions[userId]) {
+  if (text === "เมนู") {
+    return sendMainMenu(event.replyToken);
   }
-  // ===== CHAT BRIDGE =====
-  if (sessions[userId]?.inChat) {
-    const map = await getMyCase(userId);
-    if (!map) return;
-    const targetId = userId === map.userId ? map.peerId : map.userId;
-    await pushToUser(targetId, {
-      type: "text",
-      text:
-        (userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n") +
-        text
-    });
-    return;
-  }
-  // ===== START NEW CASE STEP 6 =====
-  if (s && s.step === 6) {
-    s.answers["q6"] = text;
-    const caseId = Date.now().toString().slice(-6);
-    const level = classify(s.answers);
-    let intent = detectIntent(s.answers);
-    let route = decideRoute(s.answers);
-    if (intent === "crisis" || intent === "practical_advice") route = "teacher";
-    if (intent === "emotional_support") route = "peer";
-    const confidence = getConfidence(intent, s.answers);
-    const hasMeaningfulSignal =
-      hasKeyword(text, emotionalKeywords) ||
-      hasKeyword(text, practicalKeywords) ||
-      text.trim().length > 5;
-    if (confidence <= 1 &&
-      !hasMeaningfulSignal &&
-      s.answers.q5 === "q5_confused") {
-      delete sessions[userId];
-      return replyFlex(event.replyToken, {
-        type: "bubble",
-        body: {
-          type: "box",
-          layout: "vertical",
-          contents: [
-            { type: "text", text: "💛 เราอยากเข้าใจคุณมากขึ้นอีกนิดนะ" },
-            {
-              type: "button",
-              action: { type: "postback", label: "💬 แค่อยากระบาย", data: "clarify_emotional" }
-            },
-            {
-              type: "button",
-              action: { type: "postback", label: "🤝 อยากคุยกับคนจริง", data: "clarify_peer" }
-            },
-            {
-              type: "button",
-              action: { type: "postback", label: "🧠 อยากได้คำแนะนำ", data: "clarify_advice" }
-            }
-          ]
-        }
-      });
-    }
-    let ai = null;
-    if (USE_AI) {
-      try {
-        ai = await getAIAnalysis(text);
-      } catch (e) {
-        console.log("AI ERROR:", e);
-      }
-    }
-    if (ai?.reflection)
-      await replyText(event.replyToken, "💛 " + ai.reflection);
-    if (ai?.followups?.length > 0) {
-      s.aiFollowups = ai.followups;
-      return replyFlex(event.replyToken, {
-        type: "bubble",
-        body: {
-          type: "box",
-          layout: "vertical",
-          contents: [
-            { type: "text", text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด", wrap: true },
-            ...ai.followups.map((f, i) => ({
-              type: "button",
-              action: { type: "postback", label: f, data: "q6_follow_" + i }
-            }))
-          ]
-        }
-      });
-    }
-    console.log("🚀 CALLING GAS:", GAS_URL);
-    const res = await fetch(GAS_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "create",
-        caseId,
-        userId,
-        ...s.answers,
-        level,
-        route,
-        intent
-      })
-    });
-    const result = await res.json();
-    console.log("✅ CREATE RESULT:", result);
-    const peerId = result.assignedTo || null;
-    if (!sessions[userId]) sessions[userId] = {};
-    if (peerId) sessions[userId].inChat = true;
-    else sessions[userId].locked = true;
-    console.log("🔗 CASE:", caseId, "PEER:", peerId);
-    await replyText(event.replyToken, `💛 เรารับเรื่องของคุณแล้วนะ
-${peerId ? "✨ มีพี่รับเคสแล้ว เริ่มคุยได้เลย" : "⏳ ตอนนี้กำลังหาพี่ให้อยู่นะ"}
-คุณไม่ต้องทำอะไรเพิ่มเลย 💛`);
-    return;
-  }
-  // ===== DEFAULT HANDLERS =====
-  if (text === "เมนู") return sendMainMenu(event.replyToken);
-  if (event.source.type === "group") return handleGroupMessage(event);
-  return replyText(event.replyToken, `💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
+
+  return replyText(event.replyToken,
+`💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
+
 พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
 หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
 }
 
+if (type === "user") {
+  return sendMainMenu(event.replyToken);
+}
+
+if (type === "group") {
+  if (text === "start") {
+    return sendMainMenu(event.replyToken);
+  }
+}
+}
 
 function sendLockedMenu(replyToken) {
   return replyFlex(replyToken, {
@@ -1094,7 +1399,7 @@ async function autoAssign(caseId, level, route,intent) {
   if (peers.length === 0) return null;
 
 peers.sort((a, b) => a.load - b.load);
-  return peers[0]; // 🔥 เลือกคนแรก (load ต่ำสุด)
+  return peers[0].userId; // 🔥 เลือกคนแรก (load ต่ำสุด)
 }
 
 // ================= ACCEPT =================
@@ -1135,8 +1440,6 @@ sessions[data.targetUserId] = {
       peerId: userId
     };
    
-    sessions[data.targetUserId] = { done: false, locked: false };
-    
     // ✅ ตอบ peer
     await replyText(replyToken, "✅ รับเคสแล้ว");
 
@@ -1482,8 +1785,6 @@ async function handleGroupMessage(event) {
     console.log("❌ GROUP ERROR:", err);
   }
 }
-
-
 
 
 //------------------ code from the dead -----------------------------------
