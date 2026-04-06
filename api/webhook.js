@@ -243,6 +243,20 @@ if (text.startsWith("เคส ")) {
 
   return replyText(event.replyToken, "❌ ไม่พบเคสนี้");
 }
+  // ===== START FLOW =====
+if (text === "คุย") {
+
+  if (!DEV_MODE && sessions[userId]?.locked) {
+    return replyText(
+      event.replyToken,
+      "💛 ตอนนี้เรากำลังดูแลเคสของคุณอยู่นะ"
+    );
+  }
+
+  sessions[userId] = { step: 0, answers: {} };
+  return sendStep(userId, event.replyToken);
+}
+
 //===============================
 // ===== CHAT BRIDGE =====
 //==============================
@@ -349,20 +363,6 @@ if (s && typeof s.step === "number" && s.step < 6) {
     event.replyToken,
     "💛 ตอนนี้เรากำลังคุยกันอยู่\nลองกดตัวเลือกด้านบน หรือพิมพ์ \"เมนู\" ได้เลยนะ"
   );
-}
-
-// ===== START FLOW =====
-if (text === "คุย") {
-
-  if (!DEV_MODE && sessions[userId]?.locked) {
-    return replyText(
-      event.replyToken,
-      "💛 ตอนนี้เรากำลังดูแลเคสของคุณอยู่นะ"
-    );
-  }
-
-  sessions[userId] = { step: 0, answers: {} };
-  return sendStep(userId, event.replyToken);
 }
 
 
