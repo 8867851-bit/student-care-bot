@@ -191,16 +191,26 @@ if (text.startsWith("เคส ")) {
 // ===== CHAT BRIDGE =====
 if (sessions[userId]?.inChat) {
 
-  let map = global.caseMap?.[sessions[userId]?.activeCase];
+  const caseId = sessions[userId]?.activeCase;
 
-if (!map) {
-  map = await getMyCase(userId);
-}
+if (!caseId) return;
 
-if (!map) return;
+const map = await getCaseById(caseId);
+
+  // 🔥 guard
+  if (!map || !map.caseId) {
+    sessions[userId].inChat = false;
+    return;
+  }
 
   const targetId =
     userId === map.userId ? map.peerId : map.userId;
+
+  // 🔥 อีกฝั่งยังไม่มี → กัน crash
+  if (!targetId) {
+    return replyText(event.replyToken,
+      "💛 ตอนนี้ยังไม่มีคนรับเคสนะ รอสักนิดนะ");
+  }
 
   await pushToUser(targetId, {
     type: "text",
@@ -209,7 +219,7 @@ if (!map) return;
       text
   });
 
-  return; // 🔥 กัน bot ตอบซ้ำ
+  return;
 }
   
 // ===== END CASE =====
@@ -929,8 +939,18 @@ if (data.startsWith("next_peer_")) {
     const caseId = parts[1];
     const slot = parts.slice(2).join("_");
 
-    const map = global.caseMap[caseId];
-    if (!map) return;
+    const res = await fetch(GAS_URL, {
+  method: "POST",
+  headers: {"Content-Type":"application/json"},
+  body: JSON.stringify({
+    action: "getCaseById",
+    caseId
+  })
+});
+
+const map = await res.json();
+
+if (!map) return;
 
    await pushToUser(map.userId, {
   type: "flex",
@@ -1406,50 +1426,76 @@ peers.sort((a, b) => a.load - b.load);
 // ================= ACCEPT =================
 async function acceptCase(caseId, userId, role, replyToken) {
 
-  const res = await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "accept",
-      caseId,
-      userId,
-      name: "peer",
-      role: role
-    })
-  });
+  try {
+    // ===== CALL GAS =====
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        action: "accept",
+        caseId,
+        userId,
+        role
+      })
+    });
 
-  const data = await res.json();
-  if (data.status === "ASSIGNED") {
-  return replyText(replyToken, "❌ เคสนี้มีคนรับไปแล้ว"); }
-  
-  if (data.status === "OK") {
-    
-// 🔥 เปิด chat mode + active case
-sessions[userId] = {
-  inChat: true,
-  activeCase: caseId
-};
+    const data = await res.json();
 
-sessions[data.targetUserId] = {
-  inChat: true,
-  activeCase: caseId
-};
-    
-    // 🔗 map user ↔ peer
-    global.caseMap[caseId] = {
-      userId: data.targetUserId,
-      peerId: userId
-    };
-   
-    // ✅ ตอบ peer
-    await replyText(replyToken, "✅ รับเคสแล้ว");
+    // ===== STATUS HANDLING =====
+    if (data.status === "TAKEN" || data.status === "ASSIGNED") {
+      return replyText(replyToken, "❌ เคสนี้มีคนรับไปแล้ว");
+    }
 
-    // 🔥 ดึง slot จริงจาก sheet
-    //const name = "peer"; // (เดี๋ยว upgrade ทีหลัง)
-    const slots = await getSlots(userId);
+    if (data.status === "FULL") {
+      return replyText(replyToken, "❌ เคสนี้มีคนดูแลแล้ว");
+    }
 
-    // ✅ ส่ง slot ให้ user
-    await pushToUser(data.targetUserId, {
+    if (data.status !== "OK") {
+      return replyText(replyToken, "⚠️ เกิดข้อผิดพลาด ลองใหม่อีกครั้งนะ");
+    }
+
+    const targetUserId = data.targetUserId;
+
+    // ===== SAFETY CHECK =====
+    if (!targetUserId) {
+      return replyText(replyToken, "⚠️ ไม่พบผู้ใช้ของเคสนี้");
+    }
+
+    // ===== SESSION (เฉพาะ memory ชั่วคราว) =====
+    if (!sessions[targetUserId]) {
+  sessions[targetUserId] = {};
+}
+
+sessions[targetUserId].inChat = true;
+sessions[targetUserId].activeCase = caseId;
+
+    if (!sessions[userId]) {
+  sessions[userId] = {};
+}
+
+sessions[userId].inChat = true;
+sessions[userId].activeCase = caseId;
+
+    // ===== REPLY PEER =====
+    await replyText(replyToken, "✅ รับเคสแล้ว เริ่มคุยได้เลย 💛");
+
+    // ===== แจ้ง USER =====
+    await pushToUser(targetUserId,
+      "💛 มีพี่เข้ามาดูแลคุณแล้วนะ\nคุณสามารถเริ่มคุยได้เลย 💬"
+    );
+
+    // ===== GET SLOTS =====
+    let slots = [];
+
+    try {
+      slots = await getSlots(userId);
+    } catch (e) {
+      console.log("❌ getSlots error:", e);
+      slots = [];
+    }
+
+    // ===== SEND SLOT FLEX =====
+    await pushToUser(targetUserId, {
       type: "flex",
       altText: "เลือกเวลา",
       contents: {
@@ -1458,19 +1504,30 @@ sessions[data.targetUserId] = {
           type: "box",
           layout: "vertical",
           contents: [
-            { type: "text", text: "💛 พี่ว่างช่วงนี้นะ" },
 
-               ...(slots.length > 0
-                        ? slots.slice(0,5).map(s => ({
-                            type: "button",
-                            action: {
-                              type: "postback",
-                              label: s,
-                              data: "slot_" + caseId + "_" + s
-                            }
-                          }))
+            {
+              type: "text",
+              text: "💛 เลือกเวลาที่สะดวกคุยกันนะ",
+              weight: "bold",
+              wrap: true
+            },
+
+            ...(slots.length > 0
+              ? slots.slice(0,5).map(s => ({
+                  type: "button",
+                  action: {
+                    type: "postback",
+                    label: s,
+                    data: "slot_" + caseId + "_" + s
+                  }
+                }))
               : [
-                  { type: "text", text: "⚠️ ยังไม่มีเวลาว่าง" }
+                  {
+                    type: "text",
+                    text: "⚠️ ตอนนี้พี่ยังไม่ได้ตั้งเวลาว่าง\nแต่สามารถเริ่มคุยได้เลยนะ 💬",
+                    wrap: true,
+                    size: "sm"
+                  }
                 ])
           ]
         }
@@ -1478,13 +1535,11 @@ sessions[data.targetUserId] = {
     });
 
     return;
-  }
 
-  if (data.status === "FULL") {
-    return replyText(replyToken, "❌ เคสนี้มีคนดูแลแล้ว");
+  } catch (err) {
+    console.log("❌ acceptCase ERROR:", err);
+    return replyText(replyToken, "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ");
   }
-
-  return replyText(replyToken, "⚠️ error");
 }
 
 // ================= FOLLOW-UP =================
