@@ -80,7 +80,7 @@ async function handleMessage(event) {
   let s = sessions[userId];
 
   // ===== RECONNECT SYSTEM =====
-  if (!s) {
+if (!s) {
   try {
     const map = await getMyCase(userId);
 
@@ -99,7 +99,12 @@ async function handleMessage(event) {
       console.log("♻️ RECONNECTED:", userId, map.caseId);
     }
 
-  s = sessions[userId]; // 🔥 refresh session
+  } catch (e) {
+    console.log("❌ RECONNECT ERROR:", e);
+  }
+}
+
+s = sessions[userId]; // 🔥 refresh session
 
   // =========================
   // 📌 MY CASES (ใช้ GAS เท่านั้น)
