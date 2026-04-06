@@ -81,21 +81,23 @@ async function handleMessage(event) {
 
   // ===== RECONNECT SYSTEM =====
   if (!s) {
-    try {
-      const map = await getMyCase(userId);
+  try {
+    const map = await getMyCase(userId);
 
-      if (map && map.status === "active" && map.caseId) {
-        sessions[userId] = {
-          inChat: true,
-          activeCase: map.caseId
-        };
+    if (map && map.status === "active" && map.caseId) {
 
-        console.log("♻️ RECONNECTED:", userId, map.caseId);
+      sessions[userId] = sessions[userId] || {};
+
+      sessions[userId].inChat = true;
+      sessions[userId].activeCase = map.caseId;
+
+      // 🔥 กัน step หาย
+      if (sessions[userId].step === undefined) {
+        sessions[userId].step = null;
       }
-    } catch (e) {
-      console.log("❌ RECONNECT ERROR:", e);
+
+      console.log("♻️ RECONNECTED:", userId, map.caseId);
     }
-  }
 
   s = sessions[userId]; // 🔥 refresh session
 
@@ -378,15 +380,6 @@ if (text === "พัก") {
 }
 
 
-// ===== NOT IN SESSION =====
-if (!s) {
-  return replyText(event.replyToken,
-`💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
-
-พิมพ์ "คุย" เพื่อเริ่มได้เลย  
-หรือพิมพ์ "เมนู" 💛`);
-}
-
 
 // =========================
 // 🚀 FINAL STEP (Q6)
@@ -533,7 +526,15 @@ ${peerId
 คุณไม่ต้องทำอะไรเพิ่มเลย 💛`
   );
 }
+    
+// ===== NOT IN SESSION =====
+if (!s) {
+  return replyText(event.replyToken,
+`💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
 
+พิมพ์ "คุย" เพื่อเริ่มได้เลย  
+หรือพิมพ์ "เมนู" 💛`);
+}
     // ===== EMOTIONAL CHECK =====
     let highEmotional = false;
 
