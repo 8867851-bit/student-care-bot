@@ -261,6 +261,7 @@ if (text === "คุย") {
   }
 
   sessions[userId] = { step: 0, answers: {} };
+  s = sessions[userId];
   return sendStep(userId, event.replyToken);
 }
 
@@ -389,7 +390,7 @@ if (text === "พัก") {
 // =========================
 // 🚀 FINAL STEP (Q6)
 // =========================
-if (s.step === 6) {
+if (s && s.step === 6) {
 
   s.answers["q6"] = text;
 
