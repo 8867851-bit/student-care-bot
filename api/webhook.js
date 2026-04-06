@@ -308,11 +308,6 @@ if (sessions[userId]?.inChat && !sessions[userId]?.locked) {
 
   return;
 }
-  
-// ===== GROUP HANDLER =====
-if (event.source.type === "group") {
-  return handleGroupMessage(event);
-}
 
 ///////////////////////////////////////////////////////////////////////////
   
@@ -547,7 +542,14 @@ ${peerId
           s.answers.q3 === "q3_high" &&
           s.answers.q4 === "q4_none";
       }
+  
+// ===== FINAL FALLBACK =====
+return replyText(
+  event.replyToken,
+  "💛 เราอยู่ตรงนี้นะ\nพิมพ์ \"เมนู\" หรือ \"คุย\" ได้เลย"
+);
 
+} // ✅ ปิด handleMessage 
 
 ///////////////////////////////////////////////////////////////////////////////////
 // ================= POSTBACK =================
