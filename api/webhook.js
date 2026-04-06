@@ -72,6 +72,11 @@ async function handleMessage(event) {
   const userId = event.source.userId;
   const text = event.message?.text || "";
 
+    // 🔥 MUST: group handler ต้องอยู่บนสุด
+  if (event.source.type === "group") {
+      return handleGroupMessage(event);
+  }
+
   let s = sessions[userId];
 
   // ===== RECONNECT SYSTEM =====
@@ -241,7 +246,7 @@ if (text.startsWith("เคส ")) {
 //===============================
 // ===== CHAT BRIDGE =====
 //==============================
-if (sessions[userId]?.inChat) {
+if (sessions[userId]?.inChat && !sessions[userId]?.locked) {
 
   const caseId = sessions[userId]?.activeCase;
   if (!caseId) return;
@@ -261,7 +266,7 @@ if (sessions[userId]?.inChat) {
 
   if (!map) return;
 
-  // 🔥 NEW VALIDATION (production safe)
+  // 🔥 VALIDATION
   if (!map.userId || !map.peerId) {
     return replyText(event.replyToken,
       "💛 ตอนนี้เรายังหาพี่ให้คุณอยู่");
@@ -303,46 +308,7 @@ if (sessions[userId]?.inChat) {
 
   return;
 }
-  // ===== OPTIONAL AI (SAFE MODE) =====
-if (USE_AI && confidence <= 1) {
-  try {
-    const ai = await getAIAnalysis(text);
-
-    if (ai?.followups?.length > 0) {
-
-      s.aiFollowups = ai.followups;
-
-      return replyFlex(event.replyToken, {
-        type: "bubble",
-        body: {
-          type: "box",
-          layout: "vertical",
-          contents: [
-            {
-              type: "text",
-              text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด",
-              wrap: true
-            },
-            ...ai.followups.map((f, i) => ({
-              type: "button",
-              action: {
-                type: "postback",
-                label: f,
-                data: "q6_follow_" + i
-              }
-            }))
-          ]
-        }
-      });
-    }
-
-  } catch (e) {
-    console.log("AI ERROR:", e);
-  }
-}
-}
-
-////////////////////////////////////////////////////////////////////////
+  
 // ===== GROUP HANDLER =====
 if (event.source.type === "group") {
   return handleGroupMessage(event);
@@ -376,9 +342,8 @@ if (text === "เมนู") {
   return sendMainMenu(event.replyToken);
 }
 
-
 // ===== STEP LOCK =====
-if (s && s.step < 6) {
+if (s && typeof s.step === "number" && s.step < 6) {
 
   if (text === "reset") {
     delete sessions[userId];
@@ -390,7 +355,6 @@ if (s && s.step < 6) {
     "💛 ตอนนี้เรากำลังคุยกันอยู่\nลองกดตัวเลือกด้านบน หรือพิมพ์ \"เมนู\" ได้เลยนะ"
   );
 }
-
 
 // ===== START FLOW =====
 if (text === "คุย") {
@@ -451,6 +415,43 @@ if (s.step === 6) {
     hasKeyword(text, emotionalKeywords) ||
     hasKeyword(text, practicalKeywords) ||
     text.trim().length > 5;
+
+     // ===== OPTIONAL AI (SAFE MODE) =====
+if (USE_AI && confidence <= 1) {
+  try {
+    const ai = await getAIAnalysis(text);
+
+    if (ai?.followups?.length > 0) {
+      s.aiFollowups = ai.followups;
+
+      return replyFlex(event.replyToken, {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด",
+              wrap: true
+            },
+            ...ai.followups.map((f, i) => ({
+              type: "button",
+              action: {
+                type: "postback",
+                label: f,
+                data: "q6_follow_" + i
+              }
+            }))
+          ]
+        }
+      });
+    }
+
+  } catch (e) {
+    console.log("AI ERROR:", e);
+  }
+}
 
   // ===== LOW CLARITY GUARD =====
   if (
@@ -537,47 +538,18 @@ ${peerId
 คุณไม่ต้องทำอะไรเพิ่มเลย 💛`
   );
 }
-///////////////////////////////////////////////////////////////////////////
+
     // ===== EMOTIONAL CHECK =====
-    const highEmotional =
-      s.answers.q3 === "q3_high" &&
-      s.answers.q4 === "q4_none"; 
+    let highEmotional = false;
 
-  
-// ===== DEFAULT FALLBACK =====
-const type = event.source.type;
-
-// ❌ อย่าบังคับ menu ทุก message
-// (ลบบล็อก type === "user" ออก)
-
-// ===== NOT IN SESSION =====
-if (!sessions[userId]) {
-
-  // 👉 allow menu
-  if (text === "เมนู") {
-    return sendMainMenu(event.replyToken);
-  }
-
-  // 👉 allow start
-  if (text === "คุย") {
-    sessions[userId] = { step: 0, answers: {} };
-    return sendStep(userId, event.replyToken);
-  }
-
-  return replyText(event.replyToken,
-`💛 ตอนนี้ยังไม่ได้อยู่ในโหมดคุยนะ
-
-พิมพ์ "คุย" เพื่อเริ่มเล่าได้เลย  
-หรือพิมพ์ "เมนู" เพื่อเลือกอย่างอื่น 💛`);
-}
-
-// ===== GROUP HANDLER =====
-if (type === "group") {
-  if (text === "start") {
-    return sendMainMenu(event.replyToken);
-  }
+      if (s && s.answers) {
+        highEmotional =
+          s.answers.q3 === "q3_high" &&
+          s.answers.q4 === "q4_none";
+      }
 
 
+///////////////////////////////////////////////////////////////////////////////////
 // ================= POSTBACK =================
 async function handlePostback(event) {
   const data = event.postback.data;
