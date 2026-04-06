@@ -256,15 +256,30 @@ if (text === "คุย") {
   }
 
   sessions[userId] = { 
-  step: 0, 
-  answers: {},
-  inChat: false,
-  locked: false
-};
-  s = sessions[userId];
-  return sendStep(userId, event.replyToken);
-}
+    step: 0, 
+    answers: {},
+    inChat: false,
+    locked: false
+  };
 
+  s = sessions[userId];
+
+  try {
+    await sendStep(userId, event.replyToken);
+  } catch (e) {
+    console.log("❌ sendStep reply failed → fallback push");
+
+    // 🔥 fallback กัน message หาย
+    await pushToUser(userId, {
+      type: "text",
+      text: "💛 เริ่มคุยกันนะ (fallback)"
+    });
+
+    await sendStep(userId, null); // หรือแก้ sendStep ให้รองรับ push
+  }
+
+  return;
+}
 //===============================
 // ===== CHAT BRIDGE =====
 //==============================
@@ -1241,9 +1256,14 @@ async function sendStep(userId, replyToken) {
   const s = sessions[userId];
 
   // ===== SAFETY =====
-  if (!s || typeof s.step !== "number") {
-    return replyText(replyToken, "ลองเริ่มใหม่อีกครั้งนะ 💛");
-  }
+  if (!s) {
+  return replyText(replyToken, "ลองเริ่มใหม่อีกครั้งนะ 💛");
+}
+
+if (typeof s.step !== "number") {
+  s.step = 0; // 🔥 force เริ่มใหม่
+}
+  
 
   // กัน step หลุด
   if (s.step < 0) s.step = 0;
