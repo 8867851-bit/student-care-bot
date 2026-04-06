@@ -508,6 +508,7 @@ ${peerId
 );
 
 return;
+}
     // ===== EMOTIONAL CHECK =====
     const highEmotional =
       s.answers.q3 === "q3_high" &&
@@ -1785,9 +1786,9 @@ async function handleGroupMessage(event) {
     console.log("❌ GROUP ERROR:", err);
   }
 }
-}
 
 
+  
 //------------------ code from the dead -----------------------------------
  
 // ========= Notify team ========
