@@ -1631,20 +1631,16 @@ function getConfidence(intent, answers) {
   // ===== clamp =====
   if (score < 0) score = 0;
   if (score > 10) score = 10;
+  
+    if (answers.q5 === "q5_advice" && intent === "emotional_support") {
+    score -= 2;
+  }
 
   return score;
 }
 
   ////////////////////////////////////////////////////////////////////////////
   
-  // ===== CONSISTENCY CHECK =====
-  if (answers.q5 === "q5_advice" && intent === "emotional_support") {
-    score -= 2;
-  }
-
-  return score;
-} 
-
 async function autoAssign(caseId, level, route,intent) {
 
   const res = await fetch(GAS_URL, {
