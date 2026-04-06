@@ -255,7 +255,12 @@ if (text === "คุย") {
     );
   }
 
-  sessions[userId] = { step: 0, answers: {} };
+  sessions[userId] = { 
+  step: 0, 
+  answers: {},
+  inChat: false,
+  locked: false
+};
   s = sessions[userId];
   return sendStep(userId, event.replyToken);
 }
@@ -263,7 +268,11 @@ if (text === "คุย") {
 //===============================
 // ===== CHAT BRIDGE =====
 //==============================
-if (sessions[userId]?.inChat && !sessions[userId]?.locked) {
+if (
+  sessions[userId]?.inChat &&
+  !sessions[userId]?.locked &&
+  sessions[userId]?.step === undefined
+) {
 
   const caseId = sessions[userId]?.activeCase;
   if (!caseId) return;
