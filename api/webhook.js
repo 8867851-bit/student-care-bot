@@ -1184,6 +1184,7 @@ if (data.startsWith("confirm_")) {
       "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ");
   }
 }
+} 
 ////////////////////////////////////////////////////////////////////
 // ================= FLOW STEP (PRODUCTION READY) =================
 async function sendStep(userId, replyToken) {
@@ -1642,7 +1643,7 @@ function getConfidence(intent, answers) {
   }
 
   return score;
-}
+} 
 
 async function autoAssign(caseId, level, route,intent) {
 
