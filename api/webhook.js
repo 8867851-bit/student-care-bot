@@ -209,11 +209,7 @@ async function handleMessage(event) {
 
     return replyText(event.replyToken, "💛 จบการดูแลเรียบร้อย");
   }
-}
-
-// ================= CHAT BRIDGE (FINAL PRODUCTION) =================
-
-// ===== SWITCH CASE =====
+  // ===== SWITCH CASE =====
 if (text.startsWith("เคส ")) {
   const caseId = text.replace("เคส ", "").trim();
 
@@ -240,48 +236,6 @@ if (text.startsWith("เคส ")) {
 
   return replyText(event.replyToken, "❌ ไม่พบเคสนี้");
 }
-
-
-
-// ===== END CASE (ต้องอยู่ก่อน CHAT BRIDGE) =====
-if (text === "จบการคุย") {
-
-  const caseId = sessions[userId]?.activeCase;
-
-  if (!caseId) {
-    return replyText(event.replyToken, "❌ ไม่พบเคส");
-  }
-
-  const map = await getCaseById(caseId);
-
-  if (map) {
-    const targetId =
-      userId === map.userId ? map.peerId : map.userId;
-
-    if (targetId) {
-      await pushToUser(
-        targetId,
-        "💛 เคสนี้ถูกจบแล้ว ขอบคุณมากนะ"
-      );
-    }
-  }
-
-  await fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "removeBooking",
-      caseId
-    })
-  });
-
-  delete sessions[userId];
-
-  return replyText(event.replyToken, "💛 จบการคุยแล้วนะ");
-}
-
-
-
 // ===== CHAT BRIDGE =====
 if (sessions[userId]?.inChat) {
 
@@ -375,9 +329,8 @@ if (!sessions[userId]?.inChat) {
       "💛 กลับเข้าสู่การคุยเคส " + map.caseId
     );
   }
+} 
 }
-
-
 
 // ===== GROUP HANDLER =====
 if (event.source.type === "group") {
