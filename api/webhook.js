@@ -303,6 +303,43 @@ if (sessions[userId]?.inChat) {
 
   return;
 }
+  // ===== OPTIONAL AI (SAFE MODE) =====
+if (USE_AI && confidence <= 1) {
+  try {
+    const ai = await getAIAnalysis(text);
+
+    if (ai?.followups?.length > 0) {
+
+      s.aiFollowups = ai.followups;
+
+      return replyFlex(event.replyToken, {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด",
+              wrap: true
+            },
+            ...ai.followups.map((f, i) => ({
+              type: "button",
+              action: {
+                type: "postback",
+                label: f,
+                data: "q6_follow_" + i
+              }
+            }))
+          ]
+        }
+      });
+    }
+
+  } catch (e) {
+    console.log("AI ERROR:", e);
+  }
+}
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -446,43 +483,7 @@ if (s.step === 6) {
       }
     });
   }
-// ===== OPTIONAL AI (SAFE MODE) =====
-if (USE_AI && confidence <= 1) {
-  try {
-    const ai = await getAIAnalysis(text);
 
-    if (ai?.followups?.length > 0) {
-
-      s.aiFollowups = ai.followups;
-
-      return replyFlex(event.replyToken, {
-        type: "bubble",
-        body: {
-          type: "box",
-          layout: "vertical",
-          contents: [
-            {
-              type: "text",
-              text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด",
-              wrap: true
-            },
-            ...ai.followups.map((f, i) => ({
-              type: "button",
-              action: {
-                type: "postback",
-                label: f,
-                data: "q6_follow_" + i
-              }
-            }))
-          ]
-        }
-      });
-    }
-
-  } catch (e) {
-    console.log("AI ERROR:", e);
-  }
-}
   // ===== CREATE CASE =====
   let result;
 
