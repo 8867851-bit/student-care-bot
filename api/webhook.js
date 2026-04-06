@@ -65,6 +65,8 @@ async function getCaseById(caseId) {
 
   return await res.json();
 }
+/////////////////////////////////////////////////////////////////////////
+
 // ================= MESSAGE ==================
 async function handleMessage(event) {
   const userId = event.source.userId;
@@ -236,13 +238,14 @@ if (text.startsWith("เคส ")) {
 
   return replyText(event.replyToken, "❌ ไม่พบเคสนี้");
 }
+//===============================
 // ===== CHAT BRIDGE =====
+//==============================
 if (sessions[userId]?.inChat) {
 
   const caseId = sessions[userId]?.activeCase;
   if (!caseId) return;
 
-  // 🔥 use cache ก่อน
   let map = global.caseMap[caseId];
 
   if (!map) {
@@ -258,15 +261,15 @@ if (sessions[userId]?.inChat) {
 
   if (!map) return;
 
-  // ===== VALIDATION =====
-  if (map.status && map.status !== "active") {
+  // 🔥 NEW VALIDATION (production safe)
+  if (!map.userId || !map.peerId) {
     return replyText(event.replyToken,
-      "💛 เคสนี้จบไปแล้วนะ");
+      "💛 ตอนนี้เรายังหาพี่ให้คุณอยู่");
   }
 
-  if (!map.peerId) {
-    return replyText(event.replyToken,
-      "💛 ตอนนี้เรายังหาพี่ให้คุณอยู่ ขอเวลานิดนึงนะ");
+  // 🔥 GUARD
+  if (userId !== map.userId && userId !== map.peerId) {
+    return replyText(event.replyToken, "❌ คุณไม่อยู่ในเคสนี้");
   }
 
   const targetId =
@@ -278,15 +281,12 @@ if (sessions[userId]?.inChat) {
   const now = Date.now();
   const last = sessions[userId]?.lastMsgTime || 0;
 
-  if (now - last < 800) {
-    console.log("⚠️ spam blocked");
-    return;
-  }
+  if (now - last < 800) return;
 
   sessions[userId].lastMsgTime = now;
 
-  // ===== TEXT VALIDATION =====
-  if (!text || text.trim().length === 0) return;
+  // ===== TEXT FILTER =====
+  if (!text || text.trim().length <= 1) return;
 
   if (text.length > 1000) {
     return replyText(event.replyToken,
@@ -303,35 +303,9 @@ if (sessions[userId]?.inChat) {
 
   return;
 }
-
-
-
-// ===== AUTO RECONNECT =====
-if (!sessions[userId]?.inChat) {
-
-  const map = await getMyCase(userId);
-
-  if (map && map.status === "active") {
-
-    sessions[userId] = {
-      inChat: true,
-      activeCase: map.caseId
-    };
-
-    // 🔥 sync cache
-    global.caseMap[map.caseId] = {
-      userId: map.userId,
-      peerId: map.peerId
-    };
-
-    return replyText(
-      event.replyToken,
-      "💛 กลับเข้าสู่การคุยเคส " + map.caseId
-    );
-  }
-} 
 }
 
+////////////////////////////////////////////////////////////////////////
 // ===== GROUP HANDLER =====
 if (event.source.type === "group") {
   return handleGroupMessage(event);
