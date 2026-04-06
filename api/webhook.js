@@ -1785,6 +1785,7 @@ async function handleGroupMessage(event) {
     console.log("❌ GROUP ERROR:", err);
   }
 }
+}
 
 
 //------------------ code from the dead -----------------------------------
