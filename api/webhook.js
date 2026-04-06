@@ -558,6 +558,61 @@ async function handlePostback(event) {
   const userId = event.source.userId;
   console.log("DATA:", data);
   console.log("SESSION:", sessions[userId])
+
+// ===== GET SLOTS (REPLY MODE) =====
+if (data.startsWith("get_slots_")) {
+  const caseId = data.replace("get_slots_", "");
+
+  // 🔥 ดึง case จาก GAS
+  const res = await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "getCaseById",
+      caseId
+    })
+  });
+
+  const map = await res.json();
+  if (!map || !map.peerId) {
+    return replyText(event.replyToken,
+      "💛 ตอนนี้ยังไม่มีเวลาที่เลือกได้ ลองใหม่อีกทีนะ");
+  }
+
+  // 🔥 ดึง slot ของ peer
+  const slots = await getSlots(map.peerId);
+
+  if (!slots || slots.length === 0) {
+    return replyText(event.replyToken,
+      "💛 พี่ยังไม่ได้ตั้งเวลาว่าง แต่สามารถเริ่มคุยได้เลยนะ 💬");
+  }
+
+  // 🔥 reply (ไม่ push)
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+        {
+          type: "text",
+          text: "📅 เลือกเวลาที่สะดวก",
+          weight: "bold"
+        },
+
+        ...slots.slice(0, 6).map(slot => ({
+          type: "button",
+          action: {
+            type: "postback",
+            label: slot,
+            data: "confirm_" + caseId + "_" + slot
+          }
+        }))
+      ]
+    }
+  });
+}
   
 // ===== RECONNECT (POSTBACK SAFE) =====
 if (!sessions[userId]) {
