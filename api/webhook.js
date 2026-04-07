@@ -115,7 +115,14 @@ s = sessions[userId]; // 🔥 refresh session
       })
     });
 
-    const data = await res.json();
+    const textRes = await res.text();
+
+let data;
+try {
+  data = JSON.parse(textRes);
+} catch (e) {
+  console.log("❌ NOT JSON:", textRes);
+  return replyText(event.replyToken, "⚠️ ระบบ error (ไม่ใช่ JSON)"); } // [ const data = await res.json(); ]
     const myCases = data.myCases || [];
 
     if (myCases.length === 0) {
