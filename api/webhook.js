@@ -287,114 +287,6 @@ if (text === "คุย") {
 
   return;
 }
-//===============================
-// ===== CHAT BRIDGE =====
-//==============================
-if (sessions[userId]?.inChat && !sessions[userId]?.locked) {
-
-  const caseId = sessions[userId]?.activeCase;
-  if (!caseId) {
-    console.log("❌ NO CASE IN SESSION", sessions[userId]);
-    return;
-  }
-
-  let map = global.caseMap[caseId];
-
-  if (!map) {
-    map = await getCaseById(caseId);
-
-    if (map) {
-      global.caseMap[caseId] = {
-        userId: map.userId,
-        peerId: map.peerId
-      };
-    }
-  }
-
-  if (!map) {
-    console.log("❌ MAP NOT FOUND", caseId);
-    return;
-  }
-
-  // 🔥 VALIDATION
-  if (!map.userId || !map.peerId) {
-    return replyText(event.replyToken,
-      "💛 ตอนนี้เรายังหาพี่ให้คุณอยู่");
-  }
-
-  // 🔥 GUARD (กันคนนอก)
-  if (userId !== map.userId && userId !== map.peerId) {
-    console.log("❌ NOT IN CASE", userId, map);
-    return;
-  }
-
-  const targetId =
-    userId === map.userId ? map.peerId : map.userId;
-
-  if (!targetId || targetId === userId) {
-    console.log("❌ INVALID TARGET", targetId);
-    return;
-  }
-
-  // ===== SPAM GUARD =====
-  const now = Date.now();
-  const last = sessions[userId]?.lastMsgTime || 0;
-
-  if (now - last < 800) return;
-
-  sessions[userId].lastMsgTime = now;
-
-  // ===== TEXT FILTER =====
-  if (!text || text.trim().length <= 1) return;
-
-  if (text.length > 1000) {
-    return replyText(event.replyToken,
-      "💛 ข้อความยาวเกินไป ลองแบ่งส่งนะ");
-  }
-
-  if (!sessions[userId]) return;
-// ===== BUFFER *PUSH* (ประหยัด quota) =====
-
-const prefix =
-  userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n";
-
-// init buffer
-if (!sessions[userId].buffer) {
-  sessions[userId].buffer = [];
-}
-
-// เก็บข้อความ
-sessions[userId].buffer.push(prefix + text);
-
-// reset timer
-clearTimeout(sessions[userId].timer);
-
-// รอ 1.5 วิ แล้วรวมส่งทีเดียว
-sessions[userId].timer = setTimeout(async () => {
-
-  const combined = sessions[userId].buffer.join("\n\n");
-
-  try {
-    await pushToUser(targetId, {
-      type: "text",
-      text: combined
-    });
-
-    console.log("✅ BATCH SENT", {
-      from: userId,
-      to: targetId,
-      count: sessions[userId].buffer.length
-    });
-
-  } catch (e) {
-    console.log("❌ PUSH ERROR:", e);
-  }
-
-  sessions[userId].buffer = [];
-
-}, 1500);
-
-return;
   
 ///////////////////////////////////////////////////////////////////////////
   
@@ -614,22 +506,115 @@ if (!s) {
           s.answers.q3 === "q3_high" &&
           s.answers.q4 === "q4_none";
       }
-// ===== START CHAT (FOR PEER & USER RECONNECT) =====
-if (text === "เริ่ม") {
+//===============================
+// ===== CHAT BRIDGE =====
+//==============================
+if (sessions[userId]?.inChat && !sessions[userId]?.locked) {
 
-  const map = await getCaseByUser(userId);
-
-  if (!map || map.status !== "active") {
-    return replyText(event.replyToken, "❌ ยังไม่มีเคสที่กำลังคุย");
+  const caseId = sessions[userId]?.activeCase;
+  if (!caseId) {
+    console.log("❌ NO CASE IN SESSION", sessions[userId]);
+    return;
   }
 
-  sessions[userId] = {
-    inChat: true,
-    activeCase: map.caseId
-  };
+  let map = global.caseMap[caseId];
 
-  return replyText(event.replyToken, "💬 เริ่มคุยได้เลยนะ");
+  if (!map) {
+    map = await getCaseById(caseId);
+
+    if (map) {
+      global.caseMap[caseId] = {
+        userId: map.userId,
+        peerId: map.peerId
+      };
+    }
+  }
+
+  if (!map) {
+    console.log("❌ MAP NOT FOUND", caseId);
+    return;
+  }
+
+  // 🔥 VALIDATION
+  if (!map.userId || !map.peerId) {
+    return replyText(event.replyToken,
+      "💛 ตอนนี้เรายังหาพี่ให้คุณอยู่");
+  }
+
+  // 🔥 GUARD (กันคนนอก)
+  if (userId !== map.userId && userId !== map.peerId) {
+    console.log("❌ NOT IN CASE", userId, map);
+    return;
+  }
+
+  const targetId =
+    userId === map.userId ? map.peerId : map.userId;
+
+  if (!targetId || targetId === userId) {
+    console.log("❌ INVALID TARGET", targetId);
+    return;
+  }
+
+  // ===== SPAM GUARD =====
+  const now = Date.now();
+  const last = sessions[userId]?.lastMsgTime || 0;
+
+  if (now - last < 800) return;
+
+  sessions[userId].lastMsgTime = now;
+
+  // ===== TEXT FILTER =====
+  if (!text || text.trim().length <= 1) return;
+
+  if (text.length > 1000) {
+    return replyText(event.replyToken,
+      "💛 ข้อความยาวเกินไป ลองแบ่งส่งนะ");
+  }
+
+  if (!sessions[userId]) return;
+// ===== BUFFER *PUSH* (ประหยัด quota) =====
+
+const prefix =
+  userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n";
+
+// init buffer
+if (!sessions[userId].buffer) {
+  sessions[userId].buffer = [];
 }
+
+// เก็บข้อความ
+sessions[userId].buffer.push(prefix + text);
+
+// reset timer
+clearTimeout(sessions[userId].timer);
+
+// รอ 1.5 วิ แล้วรวมส่งทีเดียว
+sessions[userId].timer = setTimeout(async () => {
+
+  const combined = sessions[userId].buffer.join("\n\n");
+
+  try {
+    await pushToUser(targetId, {
+      type: "text",
+      text: combined
+    });
+
+    console.log("✅ BATCH SENT", {
+      from: userId,
+      to: targetId,
+      count: sessions[userId].buffer.length
+    });
+
+  } catch (e) {
+    console.log("❌ PUSH ERROR:", e);
+  }
+
+  sessions[userId].buffer = [];
+
+}, 1500);
+
+return;}
+  
 // ===== FINAL FALLBACK =====
 return replyText(
   event.replyToken,
