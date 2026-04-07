@@ -221,7 +221,7 @@ try {
     }
 
     // 🔥 clear session เท่านั้น (ไม่ยุ่ง DB)
-    delete sessions[userId];
+    delete ];
 
     return replyText(event.replyToken, "💛 จบการดูแลเรียบร้อย");
   }
@@ -1051,7 +1051,7 @@ if (data.startsWith("accept_")) {
   const caseId = parts[1];
   const role = parts[2];
 
-  const result = await acceptCase(caseId, userId, role);
+  const result = await acceptCase(caseId, userId, role); 
 
   if (result?.status === "OK") {
 
@@ -1735,12 +1735,14 @@ async function autoAssign(caseId, level, route,intent) {
 peers.sort((a, b) => a.load - b.load);
   return peers[0].userId; // 🔥 เลือกคนแรก (load ต่ำสุด)
 }
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 // ================= ACCEPT (PRODUCTION FINAL) =================
 async function acceptCase(caseId, userId, role, replyToken) {
-
+  
   try {
+
     // ===== CALL GAS =====
     const res = await fetch(GAS_URL, {
       method: "POST",
@@ -1774,41 +1776,56 @@ async function acceptCase(caseId, userId, role, replyToken) {
       return replyText(replyToken, "⚠️ ไม่พบผู้ใช้ของเคสนี้");
     }
 
-    // ===== MAP (กัน overwrite) =====
+    // =========================
+    // 🔥 START CHAT SESSION
+    // =========================
+
+    sessions[targetUserId] = {
+      inChat: true,
+      activeCase: caseId
+    };
+
+    sessions[userId] = {
+      inChat: true,
+      activeCase: caseId
+    };
+
+    // =========================
+    // 🔥 GLOBAL MAP
+    // =========================
+
     global.caseMap = global.caseMap || {};
 
-    if (!global.caseMap[caseId]) {
-      global.caseMap[caseId] = {
-        userId: targetUserId,
-        peerId: userId
-      };
-    }
+    global.caseMap[caseId] = {
+      userId: targetUserId,
+      peerId: userId
+    };
 
-    // ===== SESSION =====
-    if (!sessions[targetUserId]) sessions[targetUserId] = {};
-    if (!sessions[userId]) sessions[userId] = {};
+    // =========================
+    // 🔥 REPLY PEER (ไม่ใช้ push)
+    // =========================
 
-    sessions[targetUserId].inChat = true;
-    sessions[targetUserId].activeCase = caseId;
-
-    sessions[userId].inChat = true;
-    sessions[userId].activeCase = caseId;
-
-    // ===== REPLY PEER (FREE) =====
     await replyText(replyToken, "✅ รับเคสแล้ว เริ่มคุยได้เลย 💛");
 
-    // ===== GET SLOT =====
+    // =========================
+    // 🔥 GET SLOT
+    // =========================
+
     let slots = [];
+
     try {
       slots = await getSlots(userId);
     } catch (e) {
       console.log("❌ getSlots error:", e);
     }
 
-    // ===== BUILD MESSAGE (🔥 push แค่ครั้งเดียว) =====
+    // =========================
+    // 🔥 BUILD MESSAGE
+    // =========================
+
     let message;
 
-    if (slots.length > 0) {
+    if (slots && slots.length > 0) {
       message = {
         type: "flex",
         altText: "เลือกเวลา",
@@ -1846,14 +1863,21 @@ async function acceptCase(caseId, userId, role, replyToken) {
       };
     }
 
-    // ===== PUSH ONCE =====
+    // =========================
+    // 🔥 PUSH USER (ครั้งเดียว)
+    // =========================
+
     await pushToUser(targetUserId, message);
 
     return;
 
   } catch (err) {
     console.log("❌ acceptCase ERROR:", err);
-    return replyText(replyToken, "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ [โปรดติดต่อ 0621572635 (ลี่) ทางเราจะรีบเเก้ไขระบบโดยด่วน] ");
+
+    return replyText(
+      replyToken,
+      "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ [โปรดติดต่อ 0621572635 (ลี่) ทางเราจะรีบเเก้ไขระบบโดยด่วน]"
+    );
   }
 }
   
