@@ -352,18 +352,50 @@ if (sessions[userId]?.inChat && !sessions[userId]?.locked) {
       "💛 ข้อความยาวเกินไป ลองแบ่งส่งนะ");
   }
 
-  // ===== PUSH =====
-  await pushToUser(targetId, {
-    type: "text",
-    text:
-      (userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n") +
-      text
-  });
+  if (!sessions[userId]) return;
+// ===== BUFFER *PUSH* (ประหยัด quota) =====
 
-  console.log("✅ MESSAGE SENT", { from: userId, to: targetId });
+const prefix =
+  userId === map.userId ? "👤 ผู้ใช้:\n" : "🎓 พี่:\n";
 
-  return;
+// init buffer
+if (!sessions[userId].buffer) {
+  sessions[userId].buffer = [];
 }
+
+// เก็บข้อความ
+sessions[userId].buffer.push(prefix + text);
+
+// reset timer
+clearTimeout(sessions[userId].timer);
+
+// รอ 1.5 วิ แล้วรวมส่งทีเดียว
+sessions[userId].timer = setTimeout(async () => {
+
+  const combined = sessions[userId].buffer.join("\n\n");
+
+  try {
+    await pushToUser(targetId, {
+      type: "text",
+      text: combined
+    });
+
+    console.log("✅ BATCH SENT", {
+      from: userId,
+      to: targetId,
+      count: sessions[userId].buffer.length
+    });
+
+  } catch (e) {
+    console.log("❌ PUSH ERROR:", e);
+  }
+
+  sessions[userId].buffer = [];
+
+}, 1500);
+
+return;
+  
 ///////////////////////////////////////////////////////////////////////////
   
 // ===== SESSION LOCK =====
@@ -1159,9 +1191,20 @@ if (data.startsWith("confirm_")) {
   const caseId = parts[1];
   const slot = parts.slice(2).join("_");
 
+  // ===== 🧠 INIT SESSION =====
+  sessions[userId] = sessions[userId] || {};
+
+  // ===== 🔒 กันกดรัว =====่่่่
+  if (sessions[userId].bookingLocked) {
+    return replyText(event.replyToken, "⏳ กำลังจองอยู่...");
+  }
+
+  sessions[userId].bookingLocked = true;
+
+  let dataRes;
+
   try {
 
-    // 🔥 CALL GAS (source of truth)
     const res = await fetch(GAS_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1169,70 +1212,75 @@ if (data.startsWith("confirm_")) {
         action: "bookSlot",
         caseId,
         slot,
-        userId // 🔥 ส่ง user ไป validate ด้วย
+        userId
       })
     });
 
-    const dataRes = await res.json();
+    // 🔥 กัน HTML หลุด (error ที่เธอเจอจริง)
+    const textRes = await res.text();
 
-    // ===== VALIDATION =====
-
-    if (!dataRes || dataRes.status === "NOT_FOUND") {
-      return replyText(event.replyToken,
-        "❌ ไม่พบเคสนี้แล้ว");
+    try {
+      dataRes = JSON.parse(textRes);
+    } catch (e) {
+      console.log("❌ NOT JSON:", textRes);
+      throw new Error("INVALID_JSON");
     }
-
-    if (dataRes.status === "COMPLETED") {
-      return replyText(event.replyToken,
-        "💛 เคสนี้จบไปแล้วนะ");
-    }
-
-    if (dataRes.status === "FULL") {
-      return replyText(event.replyToken,
-        "❌ เวลานี้ถูกจองไปแล้ว ลองเลือกใหม่ได้นะ");
-    }
-
-    if (dataRes.status !== "OK") {
-      return replyText(event.replyToken,
-        "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ");
-    }
-
-    const targetUserId = dataRes.userId;
-    const peerId = dataRes.peerId;
-
-    // ===== SUCCESS =====
-
-    await replyText(event.replyToken,
-`✅ นัดเรียบร้อยแล้ว
-
-🕒 ${slot}
-💛 รอคุยกันได้เลยนะ`);
-
-    // 🔥 push เฉพาะอีกฝั่ง (ลด quota)
-    if (targetUserId !== userId) {
-      pushToUser(targetUserId,
-`💛 นัดเรียบร้อยแล้วนะ
-
-🕒 ${slot}
-พี่จะมาคุยกับคุณตามเวลานี้ 💬`);
-    }
-
-    if (peerId && peerId !== userId) {
-      pushToUser(peerId,
-`✅ มีเคสนัดแล้ว
-
-🕒 ${slot}
-เตรียมตัวได้เลย 💛`);
-    }
-
-    return;
 
   } catch (err) {
-    console.log("❌ confirm error:", err);
 
+    console.log("❌ BOOKING ERROR:", err);
+
+    sessions[userId].bookingLocked = false;
+
+    return replyText(event.replyToken,
+      "⚠️ ระบบขัดข้อง ลองใหม่อีกครั้งนะ");
+  }
+
+  // ===== 🔓 ปลด lock =====
+  sessions[userId].bookingLocked = false;
+
+  // ===== 🔍 SAFETY =====
+  if (!dataRes || !dataRes.status) {
+    return replyText(event.replyToken,
+      "⚠️ ระบบตอบกลับผิดพลาด");
+  }
+
+  // ===== ❌ slot เต็ม =====
+  if (dataRes.status === "FULL") {
+    return replyText(event.replyToken,
+      "❌ เวลานี้ถูกจองแล้ว\nลองเลือกใหม่ได้นะ");
+  }
+
+  // ===== ❌ จองซ้ำ =====
+  if (dataRes.status === "ALREADY_BOOKED") {
+    return replyText(event.replyToken,
+      "💛 คุณจองเวลาไปแล้วนะ");
+  }
+
+  // ===== ❌ เคสหาย =====
+  if (dataRes.status === "NOT_FOUND") {
+    return replyText(event.replyToken,
+      "❌ ไม่พบเคสนี้แล้ว");
+  }
+
+  // ===== ❌ เคสจบ =====
+  if (dataRes.status === "COMPLETED") {
+    return replyText(event.replyToken,
+      "💛 เคสนี้จบไปแล้วนะ");
+  }
+
+  // ===== ❌ fallback =====
+  if (dataRes.status !== "OK") {
     return replyText(event.replyToken,
       "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ");
   }
+
+  // ===== ✅ SUCCESS =====
+  return replyText(event.replyToken,
+`✅ นัดเรียบร้อย
+
+🕒 ${slot}
+💛 เจอกันตามเวลานะ`);
 }
   ////////////////////////
   
