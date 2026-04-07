@@ -614,12 +614,6 @@ if (!s) {
           s.answers.q3 === "q3_high" &&
           s.answers.q4 === "q4_none";
       }
-  
-// ===== FINAL FALLBACK =====
-return replyText(
-  event.replyToken,
-  "💛 เราอยู่ตรงนี้นะ\nพิมพ์ \"เมนู\" หรือ \"คุย\" ได้เลย"
-);
 // ===== START CHAT (FOR PEER & USER RECONNECT) =====
 if (text === "เริ่ม") {
 
@@ -636,6 +630,11 @@ if (text === "เริ่ม") {
 
   return replyText(event.replyToken, "💬 เริ่มคุยได้เลยนะ");
 }
+// ===== FINAL FALLBACK =====
+return replyText(
+  event.replyToken,
+  "💛 เราอยู่ตรงนี้นะ\nพิมพ์ \"เมนู\" หรือ \"คุย\" ได้เลย"
+);
   
 } // ✅ ปิด handleMessage 
 
@@ -1429,26 +1428,6 @@ function classify(s) {
   if (score >= 5) return "red";
   if (score >= 3) return "yellow";
   return "green";
-}
-
-
-// ================= ROUTE =================
-function decideRoute(answers) {
-
-  let peer = 0;
-  let teacher = 0;
-
-  const text = (answers.q6 || "").toLowerCase();
-
-  // 👉 heuristic
-  if (answers.q5 === "q5_advice") teacher += 2;
-  if (answers.q5 === "q5_listen") peer += 2;
-  if (answers.q5 === "q5_understand") peer += 1;
-
-  if (text.includes("เรียน") || text.includes("สอบ")) teacher += 1;
-  if (text.includes("เครียด") || text.includes("รู้สึก")) peer += 1;
-
-  return teacher > peer ? "teacher" : "peer";
 }
   
   //////////////////////////////////////////////////////////////////////////////////
