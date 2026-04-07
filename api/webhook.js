@@ -283,14 +283,13 @@ if (text === "คุย") {
 //===============================
 // ===== CHAT BRIDGE =====
 //==============================
-if (
-  sessions[userId]?.inChat &&
-  !sessions[userId]?.locked &&
-  sessions[userId]?.step === undefined
-) {
+if (sessions[userId]?.inChat && !sessions[userId]?.locked) {
 
   const caseId = sessions[userId]?.activeCase;
-  if (!caseId) return;
+  if (!caseId) {
+    console.log("❌ NO CASE IN SESSION", sessions[userId]);
+    return;
+  }
 
   let map = global.caseMap[caseId];
 
@@ -305,7 +304,10 @@ if (
     }
   }
 
-  if (!map) return;
+  if (!map) {
+    console.log("❌ MAP NOT FOUND", caseId);
+    return;
+  }
 
   // 🔥 VALIDATION
   if (!map.userId || !map.peerId) {
@@ -313,15 +315,19 @@ if (
       "💛 ตอนนี้เรายังหาพี่ให้คุณอยู่");
   }
 
-  // 🔥 GUARD
+  // 🔥 GUARD (กันคนนอก)
   if (userId !== map.userId && userId !== map.peerId) {
-    return replyText(event.replyToken, "❌ คุณไม่อยู่ในเคสนี้");
+    console.log("❌ NOT IN CASE", userId, map);
+    return;
   }
 
   const targetId =
     userId === map.userId ? map.peerId : map.userId;
 
-  if (!targetId || targetId === userId) return;
+  if (!targetId || targetId === userId) {
+    console.log("❌ INVALID TARGET", targetId);
+    return;
+  }
 
   // ===== SPAM GUARD =====
   const now = Date.now();
@@ -347,9 +353,10 @@ if (
       text
   });
 
+  console.log("✅ MESSAGE SENT", { from: userId, to: targetId });
+
   return;
 }
-
 ///////////////////////////////////////////////////////////////////////////
   
 // ===== SESSION LOCK =====
@@ -574,7 +581,23 @@ return replyText(
   event.replyToken,
   "💛 เราอยู่ตรงนี้นะ\nพิมพ์ \"เมนู\" หรือ \"คุย\" ได้เลย"
 );
+// ===== START CHAT (FOR PEER & USER RECONNECT) =====
+if (text === "เริ่ม") {
 
+  const map = await getCaseByUser(userId);
+
+  if (!map || map.status !== "active") {
+    return replyText(event.replyToken, "❌ ยังไม่มีเคสที่กำลังคุย");
+  }
+
+  sessions[userId] = {
+    inChat: true,
+    activeCase: map.caseId
+  };
+
+  return replyText(event.replyToken, "💬 เริ่มคุยได้เลยนะ");
+}
+  
 } // ✅ ปิด handleMessage 
 
 ///////////////////////////////////////////////////////////////////////////////////
