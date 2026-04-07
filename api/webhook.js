@@ -1035,7 +1035,27 @@ if (data.startsWith("accept_")) {
   const caseId = parts[1];
   const role = parts[2];
 
-  return acceptCase(caseId, userId, role, event.replyToken);
+  const result = await acceptCase(caseId, userId, role);
+
+  if (result?.status === "OK") {
+
+    const targetUserId = result.targetUserId;
+
+    // 🔥 สำคัญมาก: เปิด chat bridge
+    sessions[targetUserId] = {
+      inChat: true,
+      activeCase: caseId
+    };
+
+    sessions[userId] = {
+      inChat: true,
+      activeCase: caseId
+    };
+
+    return replyText(event.replyToken, "💛 รับเคสแล้ว เริ่มคุยได้เลย");
+  }
+
+  return replyText(event.replyToken, "❌ มีคนรับเคสนี้ไปแล้ว");
 }
 
 
@@ -1214,7 +1234,19 @@ if (data.startsWith("confirm_")) {
       "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ");
   }
 }
-} 
+  ////////////////////////
+  
+  if (data.startsWith("start_chat_")) {
+  const caseId = data.replace("start_chat_", "");
+
+  sessions[userId] = {
+    inChat: true,
+    activeCase: caseId
+  };
+
+  return replyText(event.replyToken, "💬 เริ่มคุยได้เลย");
+}
+} //ปิด Handle postback
 ////////////////////////////////////////////////////////////////////
 // ================= FLOW STEP (PRODUCTION READY) =================
 async function sendStep(userId, replyToken) {
@@ -1809,7 +1841,7 @@ async function acceptCase(caseId, userId, role, replyToken) {
 
   } catch (err) {
     console.log("❌ acceptCase ERROR:", err);
-    return replyText(replyToken, "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ");
+    return replyText(replyToken, "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ [โปรดติดต่อ 0621572635 (ลี่) ทางเราจะรีบเเก้ไขระบบโดยด่วน] ");
   }
 }
   
