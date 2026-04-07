@@ -221,7 +221,7 @@ try {
     }
 
     // 🔥 clear session เท่านั้น (ไม่ยุ่ง DB)
-    delete ];
+    delete sessions[userId];
 
     return replyText(event.replyToken, "💛 จบการดูแลเรียบร้อย");
   }
@@ -1051,13 +1051,13 @@ if (data.startsWith("accept_")) {
   const caseId = parts[1];
   const role = parts[2];
 
-  const result = await acceptCase(caseId, userId, role); 
+  const result = await acceptCase(caseId, userId, role, event.replyToken); 
 
   if (result?.status === "OK") {
 
     const targetUserId = result.targetUserId;
 
-    // 🔥 สำคัญมาก: เปิด chat bridge
+   /* // 🔥 สำคัญมาก: เปิด chat bridge
     sessions[targetUserId] = {
       inChat: true,
       activeCase: caseId
@@ -1066,7 +1066,7 @@ if (data.startsWith("accept_")) {
     sessions[userId] = {
       inChat: true,
       activeCase: caseId
-    };
+    }; */ //ลบ--Please delete
 
     return replyText(event.replyToken, "💛 รับเคสแล้ว เริ่มคุยได้เลย");
   }
@@ -1446,11 +1446,10 @@ function decideRoute(answers) {
       return "teacher";
     }
 
-    return "peer";
-  }
+    return "peer"; }
 
 
-  // ================= STRESS ESCALATION =================
+// ================= STRESS ESCALATION =================
   if (
     answers.q1 === "q1_stress" &&
     answers.q3 === "q3_high" &&
