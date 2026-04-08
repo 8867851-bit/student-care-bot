@@ -913,52 +913,54 @@ async function handlePostback(event) {
   const userId = event.source.userId;
   console.log("DATA:", data);
   console.log("SESSION:", sessions[userId])
-  
+if (data.startsWith("waitlist_")) {
+
+  const userId = event.source.userId;
+
+  const slot = decodeURIComponent(
+    data.replace("waitlist_", "")
+  );
+
+  await fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "addToWaitlist",
+      userId,
+      slot
+    })
+  });
+
+  return replyText(
+    event.replyToken,
+    "💛 เราจะบอกคุณทันทีถ้ามีเวลาว่างนะ"
+  );
+}    
 if (data === "intro_unsure") {
   return replyFlex(event.replyToken, UI_unsure());
 }
 // ===== GET SLOTS (REPLY MODE) =====
 if (data.startsWith("get_slots_")) {
-  const caseId = data.replace("get_slots_", "");
 
-  // 🔥 ดึง case จาก GAS
   const res = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
-      action: "getCaseById",
-      caseId
+      action: "getAvailableSlots"
     })
   });
 
-  const map = await res.json();
-  if (!map || !map.peerId) {
-    return replyText(event.replyToken,
-      "💛 ตอนนี้ยังไม่มีเวลาที่เลือกได้ ลองใหม่อีกทีนะ");
+  const dataRes = await res.json();
+  const slots = dataRes.slots || [];
+
+  if (slots.length === 0) {
+    return replyFlex(event.replyToken, UI_noSlots());
   }
 
-// 🔥 NEW (ใช้ global slot system)
-const res2 = await fetch(GAS_URL, {
-  method: "POST",
-  headers: {"Content-Type":"application/json"},
-  body: JSON.stringify({
-    action: "getSmartSlots"
-  })
-});
-
-const data = await res2.json();
-const slots = data.slots || [];
-
-  if (!slots || slots.length === 0) {
-    return replyText(event.replyToken,
-      "💛 พี่ยังไม่ได้ตั้งเวลาว่าง แต่สามารถเริ่มคุยได้เลยนะ 💬");
-  }
-
-  // 🔥 reply (ไม่ push)
-    return replyFlex(
-  event.replyToken,
-  UI_slotsPremium(slots, caseId)
-);
+  return replyFlex(
+    event.replyToken,
+    UI_slotsWeekly(slots)
+  );
 }
   
 // ===== RECONNECT (POSTBACK SAFE) =====
@@ -1385,17 +1387,20 @@ if (data.startsWith("slot_")) {
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
   
-// ===== CONFIRM (PRODUCTION SAFE) =====
+// ===== CONFIRM (NEW SLOT-BASED MATCHING) =====
 if (data.startsWith("confirm_")) {
 
-  const parts = data.split("_");
-  const caseId = parts[1];
-  const slot = parts.slice(2).join("_");
+  const userId = event.source.userId;
+
+  // ✅ ดึงเวลาอย่างเดียว
+  const slot = decodeURIComponent(
+    data.replace("confirm_", "")
+  );
 
   // ===== 🧠 INIT SESSION =====
   sessions[userId] = sessions[userId] || {};
 
-  // ===== 🔒 กันกดรัว =====่่่่
+  // ===== 🔒 กันกดรัว =====
   if (sessions[userId].bookingLocked) {
     return replyText(event.replyToken, "⏳ กำลังจองอยู่...");
   }
@@ -1410,14 +1415,12 @@ if (data.startsWith("confirm_")) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        action: "bookSlot",
-        caseId,
-        slot,
-        userId
+        action: "matchAndBook",   // 🔥 เปลี่ยน action
+        userId,
+        slot
       })
     });
 
-    // 🔥 กัน HTML หลุด (error ที่เธอเจอจริง)
     const textRes = await res.text();
 
     try {
@@ -1430,7 +1433,6 @@ if (data.startsWith("confirm_")) {
   } catch (err) {
 
     console.log("❌ BOOKING ERROR:", err);
-
     sessions[userId].bookingLocked = false;
 
     return replyText(event.replyToken,
@@ -1446,28 +1448,16 @@ if (data.startsWith("confirm_")) {
       "⚠️ ระบบตอบกลับผิดพลาด");
   }
 
+  // ===== ❌ ไม่มี peer =====
+  if (dataRes.status === "NO_PEER") {
+    return replyText(event.replyToken,
+      "💛 ช่วงเวลานี้เต็มแล้ว ลองเลือกเวลาอื่นนะ");
+  }
+
   // ===== ❌ slot เต็ม =====
   if (dataRes.status === "FULL") {
     return replyText(event.replyToken,
-      "❌ เวลานี้ถูกจองแล้ว\nลองเลือกใหม่ได้นะ");
-  }
-
-  // ===== ❌ จองซ้ำ =====
-  if (dataRes.status === "ALREADY_BOOKED") {
-    return replyText(event.replyToken,
-      "💛 คุณจองเวลาไปแล้วนะ");
-  }
-
-  // ===== ❌ เคสหาย =====
-  if (dataRes.status === "NOT_FOUND") {
-    return replyText(event.replyToken,
-      "❌ ไม่พบเคสนี้แล้ว");
-  }
-
-  // ===== ❌ เคสจบ =====
-  if (dataRes.status === "COMPLETED") {
-    return replyText(event.replyToken,
-      "💛 เคสนี้จบไปแล้วนะ");
+      "❌ เวลานี้ถูกจองเต็มแล้ว");
   }
 
   // ===== ❌ fallback =====
@@ -1476,8 +1466,15 @@ if (data.startsWith("confirm_")) {
       "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ");
   }
 
-  // ===== ✅ SUCCESS =====
-  return replyFlex(event.replyToken, UI_scheduled(slot));
+  const caseId = dataRes.caseId;
+  const peerId = dataRes.peerId;
+
+  // ===== 🧠 เปิด session chat =====
+  sessions[userId].inChat = true;
+  sessions[userId].activeCase = caseId;
+
+  // ===== 💎 SUCCESS UI =====
+  return replyFlex(event.replyToken, UI_scheduledPremium(slot));
 }
   ////////////////////////
   
@@ -1843,7 +1840,67 @@ peers.sort((a, b) => a.load - b.load);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
+function UI_slotsWeekly(slots) {
 
+  return {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "lg",
+      contents: [
+
+        {
+          type: "text",
+          text: "เลือกเวลาที่สะดวก",
+          weight: "bold",
+          size: "lg"
+        },
+
+        {
+          type: "text",
+          text: "คุณไม่จำเป็นต้องใช้เวลาครบชั่วโมงก็ได้นะ",
+          size: "xs",
+          color: "#888888",
+          wrap: true
+        },
+
+        {
+          type: "separator"
+        },
+
+        ...slots.map(s => {
+
+          const label = `${s.time} (${s.available}/${s.capacity})`;
+
+          return {
+            type: "button",
+            style: "secondary",
+            action: {
+              type: "postback",
+              label,
+              data: confirm_${encodeURIComponent(s.time)}
+            }
+          };
+        }),
+
+        {
+          type: "separator"
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "ไม่มีเวลาที่ต้องการ",
+            data: "no_slot"
+          }
+        }
+
+      ]
+    }
+  };
+}
 // ================= ACCEPT (PRODUCTION FINAL) =================
 async function acceptCase(caseId, userId, role, replyToken) {
   
@@ -2166,79 +2223,75 @@ async function sendMainMenu(replyToken) {
 
   return replyFlex(replyToken, {
     type: "bubble",
-    body:{
-  type: "box",
-  styles: {
-    body: {
-      backgroundColor: "#F7F6F3"
-    }
-      },
+    styles: {
       body: {
-        type: "box",
-        layout: "vertical",
-        spacing: "lg",
-        contents: [
-
-      {
-        type: "text",
-        text: "Student Care",
-        weight: "bold",
-        size: "sm",
-        color: "#888888"
-      },
-
-      {
-        type: "text",
-        text: "เราจะอยู่ข้างคุณนะ",
-        weight: "bold",
-        size: "lg",
-        wrap: true,
-        color: "#2F2F2F"
-      },
-
-      {
-        type: "text",
-        text: "คุณอยากเริ่มแบบไหน",
-        size: "sm",
-        color: "#666666"
-      },
-
-      {
-        type: "separator"
-      },
-
-      {
-        type: "button",
-        style: "primary",
-        color: "#D6B25E",
-        action: {
-          type: "postback",
-          label: "คุยกับคนจริง",
-          data: "start_talk"
-        }
-      },
-
-      {
-        type: "button",
-        action: {
-          type: "uri",
-          label: "สำรวจตัวเอง",
-          uri: "https://your-web.com"
-        }
-      },
-
-      {
-        type: "button",
-        action: {
-          type: "postback",
-          label: "ขอความช่วยเหลือด่วน",
-          data: "menu_urgent"
-        }
+        backgroundColor: "#F7F6F3"
       }
+    },
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "lg",
+      contents: [
 
-    ]
-  }
-}, "main menu");
+        {
+          type: "text",
+          text: "Student Care",
+          weight: "bold",
+          size: "sm",
+          color: "#888888"
+        },
+
+        {
+          type: "text",
+          text: "เราจะอยู่ข้างคุณนะ",
+          weight: "bold",
+          size: "lg",
+          wrap: true,
+          color: "#2F2F2F"
+        },
+
+        {
+          type: "text",
+          text: "คุณอยากเริ่มแบบไหน",
+          size: "sm",
+          color: "#666666"
+        },
+
+        { type: "separator" },
+
+        {
+          type: "button",
+          style: "primary",
+          color: "#1A1A1A",
+          action: {
+            type: "postback",
+            label: "คุยกับคนจริง",
+            data: "start_talk"
+          }
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "uri",
+            label: "สำรวจตัวเอง",
+            uri: "https://your-web.com"
+          }
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "ขอความช่วยเหลือด่วน",
+            data: "menu_urgent"
+          }
+        }
+
+      ]
+    }
+  }, "main menu");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -2694,6 +2747,53 @@ function UI_waiting() {
     }
   };
 } 
+if (body.type === "notify_waitlist") {
+
+  const { userId, slot } = body;
+
+  await pushToUser(userId, {
+    type: "flex",
+    altText: "มีเวลาว่างแล้ว",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+
+          {
+            type: "text",
+            text: "✨ มีเวลาว่างแล้ว",
+            weight: "bold",
+            size: "lg"
+          },
+
+          {
+            type: "text",
+            text: slot,
+            size: "md"
+          },
+
+          {
+            type: "button",
+            style: "primary",
+            action: {
+              type: "postback",
+              label: "เลือกเวลานี้",
+              data: `confirm_${encodeURIComponent(slot)}`
+            }
+          }
+
+        ]
+      }
+    }
+  });
+}
+
+
+
+
+
 //------------------ code from the dead -----------------------------------
  
 // ========= Notify team ========
