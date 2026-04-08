@@ -1,11 +1,20 @@
 // ================= CONFIG =================
-const CHANNEL_ACCESS_TOKEN = "Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=";
+const CHANNEL_ACCESS_TOKEN = process.env.Twl8isjL5FrRh1GMuI7eNURUzeRGykim+Pm6KwgcTt13QEkEe+wCk5k3MVL01MuQbKHhaxMC/GOTnHAJsMuT0s6M28wzzSyaziQG5cPinEs204WutcFmbYIv2ZxiCVwLUrWI53TA5LtG4AEWxUt05wdB04t89/1O/w1cDnyilFU=;
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyn4Lwrp2uqhCliS5MMSKiCDp5H4hRKhC3mnvBK8QEJP3WPw-nZpdP2G0cpoHudYIth-g/exec";
 /* const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5"; */
 global.caseMap = global.caseMap || {};
 
 const handledEvents = new Set();
-const sessions = {};
+let s = getSession(userId);
+function getSession(userId) {
+  if (!sessions[userId]) {
+    sessions[userId] = {
+      step: 0,
+      answers: {}
+    };
+  }
+  return sessions[userId];
+}
 if (handledEvents.size > 1000) {
   handledEvents.clear();
 }
@@ -13,6 +22,198 @@ const DEV_MODE = true;
 const DRY_RUN = false;     // 🔥 เปิดส่ง LINE จริง
 const USE_AI = false;      // 🔥 ปิด AI ก่อน (กัน quota พัง)
 
+//================== CONFIG =============================
+// ================= 🎨 V3 CINEMATIC UI =================
+
+// ===== THEME =====
+const THEME = {
+  text: "#111111",
+  sub: "#6B6B6B",
+  line: "#EAEAEA",
+  primary: "#1A1A1A"
+};
+
+// ===== COMPONENT =====
+
+function header(title, subtitle = "") {
+  return {
+    type: "box",
+    layout: "vertical",
+    spacing: "xs",
+    contents: [
+      {
+        type: "text",
+        text: title,
+        weight: "bold",
+        size: "lg",
+        color: THEME.text
+      },
+      ...(subtitle ? [{
+        type: "text",
+        text: subtitle,
+        size: "sm",
+        color: THEME.sub,
+        wrap: true
+      }] : [])
+    ]
+  };
+}
+
+function divider() {
+  return {
+    type: "separator",
+    margin: "md",
+    color: THEME.line
+  };
+}
+
+function text(t) {
+  return {
+    type: "text",
+    text: t,
+    wrap: true,
+    size: "sm",
+    color: THEME.text
+  };
+}
+
+function hint(t) {
+  return {
+    type: "text",
+    text: t,
+    size: "xs",
+    color: THEME.sub,
+    wrap: true
+  };
+}
+
+function btn(label, data, primary = false) {
+  return {
+    type: "button",
+    style: primary ? "primary" : "secondary",
+    color: primary ? THEME.primary : undefined,
+    action: {
+      type: "postback",
+      label,
+      data
+    }
+  };
+}
+
+function card(contents) {
+  return {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents
+    }
+  };
+}
+
+
+// ================= 🎬 FLOW =================
+
+// INTRO
+function UI_intro() {
+  return card([
+    header("พื้นที่นี้ปลอดภัยนะ 🤍"),
+    text("คุณสามารถเล่าได้ในแบบที่คุณสบายใจ"),
+    divider(),
+    text("เราจะช่วยหาพี่ที่เหมาะกับคุณ\nและนัดเวลาคุยแบบตัวต่อตัว"),
+    hint("📌 ไม่ใช่การคุยในแชทนี้"),
+    divider(),
+    hint("ค่อย ๆ ไปทีละนิดก็พอ"),
+    btn("เริ่มเล่า", "start_talk", true),
+    btn("ยังไม่แน่ใจ", "intro_unsure")
+  ]);
+}
+
+// UNSURE
+function UI_unsure() {
+  return card([
+    header("ไม่เป็นไรเลยนะ 🤍"),
+    text("คุณยังไม่ต้องรีบก็ได้"),
+    divider(),
+    {
+      type: "button",
+      action: {
+        type: "uri",
+        label: "🌱 สำรวจตัวเอง",
+        uri: "https://your-web.com"
+      }
+    },
+    btn("กลับเมนู", "menu")
+  ]);
+}
+
+// Q1
+function UI_q1() {
+  return card([
+    header("มีอะไรบางอย่างอยู่ในใจใช่ไหม"),
+    hint("เลือกสิ่งที่ใกล้กับคุณที่สุด"),
+    divider(),
+    btn("ความเครียด", "step_0_q1_stress"),
+    btn("เรื่องเรียน", "step_0_q1_academic"),
+    btn("ความสัมพันธ์", "step_0_q1_relationship"),
+    btn("ความรู้สึกตัวเอง", "step_0_q1_self")
+  ]);
+}
+
+// Q5
+function UI_q5() {
+  return card([
+    header("ตอนนี้คุณต้องการอะไรจากการคุย"),
+    hint("ไม่มีคำตอบที่ถูกหรือผิด"),
+    divider(),
+    btn("💬 ฟัง", "step_4_q5_listen"),
+    btn("🫂 เข้าใจ", "step_4_q5_understand"),
+    btn("🌱 เบา ๆ", "step_4_q5_confused"),
+    btn("🧠 คำแนะนำ", "step_4_q5_advice")
+  ]);
+}
+
+// TRANSITION
+function UI_transition() {
+  return card([
+    header("ขั้นตอนถัดไป 🤍"),
+    text("เราจะหาพี่และนัดเวลาคุยแบบตัวต่อตัว"),
+    hint("📌 ไม่ใช่การคุยในแชทนี้"),
+    divider(),
+    btn("ไปต่อ", "step_5_continue", true),
+    btn("ขอคิดดูก่อน", "step_5_pause")
+  ]);
+}
+
+// MATCHED
+function UI_matched() {
+  return card([
+    header("มีพี่ที่เหมาะกับคุณแล้ว ✨"),
+    text("เลือกเวลาที่คุณสะดวกได้เลย"),
+    divider(),
+    btn("เลือกเวลา", "get_slots", true),
+    btn("ขอเวลาอื่น", "next_peer"),
+    btn("ยังไม่สะดวก", "pause_case")
+  ]);
+}
+
+// SLOT
+function UI_slots(slots, caseId) {
+  return card([
+    header("เลือกเวลาที่สะดวก 📅"),
+    hint("เลือกช่วงที่คุณพร้อมจริง ๆ"),
+    divider(),
+    ...slots.map(s => ({
+      type: "button",
+      action: {
+        type: "postback",
+        label: s,
+        data: confirm_${caseId}_${s}
+      }
+    }))
+  ]);
+}
 
 // ================= MAIN ==================
 module.exports = async (req, res) => {
@@ -28,7 +229,8 @@ module.exports = async (req, res) => {
   if (handledEvents.has(eventId)) { continue; }  
   handledEvents.add(eventId);
     if (event.type === "follow") {
-  await sendMainMenu(event.replyToken); }
+  return replyFlex(event.replyToken, UI_intro());
+}
 
 if (event.type === "message") {
   try {
@@ -476,6 +678,14 @@ if (USE_AI && confidence <= 1) {
   } else {
     sessions[userId].locked = true;
   }
+  if (!peerId) {
+  sessions[userId].locked = true;
+
+  await pushToUser(userId, {
+    type: "text",
+    text: "💛 เรากำลังหาคนที่เหมาะกับคุณอยู่...\nคุณสามารถพักหรือทำอย่างอื่นได้นะ"
+  });
+}
 
   // ===== SINGLE REPLY ONLY (ประหยัด quota) =====
   return replyText(
@@ -489,7 +699,17 @@ ${peerId
 คุณไม่ต้องทำอะไรเพิ่มเลย 💛`
   );
 }
-    
+  //======= WAITLIST ======
+ if (s?.status === "waitlist") {
+  return replyText(replyToken,
+`💛 ตอนนี้สัปดาห์นี้เต็มแล้วนะ
+
+เราได้จองคิวไว้ให้คุณแล้ว
+คุณจะได้เลือกเวลาก่อนในสัปดาห์หน้า
+
+⏰ เปิดเลือกเวลา: วันอาทิตย์ 18:00`
+  );
+}   
 // ===== NOT IN SESSION =====
 if (!s) {
   return replyText(event.replyToken,
@@ -559,7 +779,10 @@ if (sessions[userId]?.inChat && !sessions[userId]?.locked) {
   const now = Date.now();
   const last = sessions[userId]?.lastMsgTime || 0;
 
-  if (now - last < 800) return;
+  if (now - last < 800) {
+  console.log("🚫 SPAM BLOCKED");
+  return;
+}
 
   sessions[userId].lastMsgTime = now;
 
@@ -630,7 +853,10 @@ async function handlePostback(event) {
   const userId = event.source.userId;
   console.log("DATA:", data);
   console.log("SESSION:", sessions[userId])
-
+  
+if (data === "intro_unsure") {
+  return replyFlex(event.replyToken, UI_unsure());
+}
 // ===== GET SLOTS (REPLY MODE) =====
 if (data.startsWith("get_slots_")) {
   const caseId = data.replace("get_slots_", "");
@@ -651,8 +877,17 @@ if (data.startsWith("get_slots_")) {
       "💛 ตอนนี้ยังไม่มีเวลาที่เลือกได้ ลองใหม่อีกทีนะ");
   }
 
-  // 🔥 ดึง slot ของ peer
-  const slots = await getSlots(map.peerId);
+// 🔥 NEW (ใช้ global slot system)
+const res = await fetch(GAS_URL, {
+  method: "POST",
+  headers: {"Content-Type":"application/json"},
+  body: JSON.stringify({
+    action: "getSmartSlots"
+  })
+});
+
+const data = await res.json();
+const slots = data.slots || [];
 
   if (!slots || slots.length === 0) {
     return replyText(event.replyToken,
@@ -865,29 +1100,7 @@ if (data.startsWith("openCase_")) {
 }
 
 
-// ===== STEP FLOW =====
-if (data.startsWith("step_")) {
-  const parts = data.split("_");
-  const value = parts.slice(2).join("_");
-  const keys = ["q1","q2","q3","q4","q5"];
-  const step = parseInt(parts[1],10);
-
-  if (!sessions[userId] || sessions[userId].step !== step) {
-    return replyText(event.replyToken,
-"💛 ขอเริ่มใหม่อีกครั้งนะ\nลองกด 'คุยเรื่องที่หนักใจ' ใหม่ได้เลย");
-  }
-
-  if (step < keys.length) {
-    sessions[userId].answers[keys[step]] = value;
-  }
-
-  sessions[userId].step = step + 1;
-
-  return sendStep(userId, event.replyToken);
-}
-  
-////////////////////////////////////////////////////////////////////////////////////////
-// ===== STEP FLOW CORE =====
+// ===== STEP FLOW (FINAL CLEAN) =====
 if (data.startsWith("step_")) {
 
   const parts = data.split("_");
@@ -895,13 +1108,12 @@ if (data.startsWith("step_")) {
   const step = parseInt(parts[1], 10);
   const keys = ["q1","q2","q3","q4","q5"];
 
-  // 🔒 กันกดปุ่มเก่า
   if (!sessions[userId] || sessions[userId].step !== step) {
     return replyText(event.replyToken,
-"💛 ขอเริ่มใหม่อีกครั้งนะ\nลองกด 'คุยเรื่องที่หนักใจ' ใหม่ได้เลย");
+      "💛 ขอเริ่มใหม่อีกครั้งนะ\nลองกด 'คุยเรื่องที่หนักใจ' ใหม่ได้เลย");
   }
 
-  // ===== SPECIAL DECISION =====
+  // ===== SPECIAL =====
   if (value === "continue") {
     sessions[userId].step = 6;
     return sendStep(userId, event.replyToken);
@@ -909,51 +1121,10 @@ if (data.startsWith("step_")) {
 
   if (value === "pause") {
     delete sessions[userId];
-
-    return replyFlex(event.replyToken, {
-      type: "bubble",
-      body: {
-        type: "box",
-        layout: "vertical",
-        spacing: "md",
-        contents: [
-          { type: "text", text: "💛 ไม่เป็นไรเลยนะ", weight: "bold" },
-          {
-            type: "text",
-            text: "คุณยังไม่ต้องรีบก็ได้\nเรายังอยู่ตรงนี้เสมอ 💛",
-            wrap: true,
-            size: "sm"
-          },
-          {
-            type: "button",
-            action: {
-              type: "postback",
-              label: "🌱 สำรวจตัวเอง",
-              data: "menu_explore"
-            }
-          },
-          {
-            type: "button",
-            action: {
-              type: "message",
-              label: "💤 พักสักนิด",
-              text: "พัก"
-            }
-          },
-          {
-            type: "button",
-            action: {
-              type: "postback",
-              label: "💬 คุยเรื่องที่หนักใจ",
-              data: "start_talk"
-            }
-          }
-        ]
-      }
-    });
+    return sendLockedMenu(event.replyToken);
   }
 
-  // ===== SAVE ANSWER =====
+  // ===== SAVE =====
   if (step < keys.length) {
     sessions[userId].answers[keys[step]] = value;
   }
@@ -1280,127 +1451,21 @@ if (data.startsWith("confirm_")) {
 }
 } //ปิด Handle postback
 ////////////////////////////////////////////////////////////////////
-// ================= FLOW STEP (PRODUCTION READY) =================
-async function sendStep(userId, replyToken) {
-
-  const flow = [
-    {
-      text: "💛 เราอยู่ตรงนี้เพื่อฟังคุณนะ\nตอนนี้คุณอยากคุยเกี่ยวกับอะไร?",
-      opts: [
-        { label: "ความเครียด 😣", value: "q1_stress" },
-        { label: "เรื่องเรียน 📚", value: "q1_academic" },
-        { label: "ความสัมพันธ์ 💬", value: "q1_relationship" },
-        { label: "ความรู้สึกตัวเอง 🌱", value: "q1_self" }
-      ]
-    },
-
-    {
-      text: "เรื่องนี้เกิดมานานแค่ไหนแล้ว?",
-      opts: [
-        { label: "เพิ่งเกิด", value: "q2_short" },
-        { label: "สักพักแล้ว", value: "q2_medium" },
-        { label: "นานแล้ว", value: "q2_long" }
-      ]
-    },
-
-    {
-      text: "เรื่องนี้ส่งผลกับชีวิตคุณแค่ไหน?",
-      opts: [
-        { label: "นิดหน่อย", value: "q3_low" },
-        { label: "พอสมควร", value: "q3_medium" },
-        { label: "มาก", value: "q3_high" }
-      ]
-    },
-
-    {
-      text: "ตอนนี้คุณมีใครคุยเรื่องนี้อยู่ไหม?",
-      opts: [
-        { label: "ยังไม่มี", value: "q4_none" },
-        { label: "มีเพื่อน", value: "q4_friend" },
-        { label: "มีครู/ผู้ใหญ่", value: "q4_adult" }
-      ]
-    },
-
-    {
-      text: "ตอนนี้คุณอยากได้ความช่วยเหลือแบบไหนมากที่สุด?",
-      opts: [
-        { label: "💬 อยากมีคนฟังจริง ๆ", value: "q5_listen" },
-        { label: "🫂 อยากคุยกับคนที่เข้าใจ", value: "q5_understand" },
-        { label: "🧠 อยากได้คำแนะนำหรือทางออก", value: "q5_advice" },
-        { label: "🌱 ยังไม่แน่ใจ ขอเริ่มเบา ๆ ก่อน", value: "q5_confused" }
-      ]
-    },
-
-    {
-      text: `💛 ขอบคุณที่เล่าให้ฟังนะ
-
-หลังจากนี้เราจะช่วยจับคู่คุณกับคนจริง
-แล้วนัดเวลาคุยกันแบบตัวต่อตัว 💛`,
-      opts: [
-        { label: "💬 ไปต่อ", value: "continue" },
-        { label: "🌱 ขอคิดดูก่อน", value: "pause" }
-      ]
-    },
-
-    {
-      text: "💛 ถ้าอยากเล่าเพิ่ม พิมพ์มาได้เลยนะ\nหรือพิมพ์ 1 เพื่อข้าม",
-      input: true
-    }
-  ];
+async function sendStep(userId, token) {
 
   const s = sessions[userId];
 
-  // ===== SAFETY =====
-  if (!s) {
-  return replyText(replyToken, "ลองเริ่มใหม่อีกครั้งนะ 💛");
+  if (!s) return;
+
+  if (s.step === 0) return replyFlex(token, UI_q1());
+
+  if (s.step === 4) return replyFlex(token, UI_q5());
+
+  if (s.step === 5) return replyFlex(token, UI_transition());
+
+  // step อื่นใช้ text ปกติไปก่อน
+  return replyText(token, "💛 พิมพ์ตอบได้เลยนะ");
 }
-
-if (typeof s.step !== "number") {
-  s.step = 0; // 🔥 force เริ่มใหม่
-}
-  
-
-  // กัน step หลุด
-  if (s.step < 0) s.step = 0;
-  if (s.step >= flow.length) s.step = flow.length - 1;
-
-  const current = flow[s.step];
-
-  // ===== BUILD FLEX =====
-  const contents = [
-    {
-      type: "text",
-      text: current.text,
-      wrap: true
-    }
-  ];
-
-  // 👉 ถ้าเป็น input → ไม่ต้องมีปุ่ม
-  if (!current.input && current.opts) {
-    current.opts.forEach(o => {
-      contents.push({
-        type: "button",
-        action: {
-          type: "postback",
-          label: o.label,
-          data: "step_" + s.step + "_" + o.value
-        }
-      });
-    });
-  }
-
-  // ===== SEND =====
-  return replyFlex(replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents
-    }
-  });
-}
-
 
 // ================= CLASSIFY =================
 function classify(s) {
@@ -1817,50 +1882,13 @@ async function acceptCase(caseId, userId, role, replyToken) {
     } catch (e) {
       console.log("❌ getSlots error:", e);
     }
+    // ===== NEW PREMIUM MATCHED UI =====
 
-    // =========================
-    // 🔥 BUILD MESSAGE
-    // =========================
-
-    let message;
-
-    if (slots && slots.length > 0) {
-      message = {
-        type: "flex",
-        altText: "เลือกเวลา",
-        contents: {
-          type: "bubble",
-          body: {
-            type: "box",
-            layout: "vertical",
-            spacing: "md",
-            contents: [
-              {
-                type: "text",
-                text: "💛 มีพี่มาดูแลคุณแล้ว\nเลือกเวลาคุยได้เลยนะ",
-                weight: "bold",
-                wrap: true
-              },
-              ...slots.slice(0,5).map(s => ({
-                type: "button",
-                action: {
-                  type: "postback",
-                  label: s,
-                  data: "slot_" + caseId + "_" + s
-                }
-              }))
-            ]
-          }
-        }
-      };
-    } else {
-      message = {
-        type: "text",
-        text:
-`💛 มีพี่เข้ามาดูแลคุณแล้วนะ
-สามารถเริ่มคุยได้เลย 💬`
-      };
-    }
+    await pushToUser(targetUserId, {
+      type: "flex",
+      altText: "matched",
+      contents: UI_matched()
+    });
 
     // =========================
     // 🔥 PUSH USER (ครั้งเดียว)
@@ -2098,79 +2126,79 @@ async function sendMainMenu(replyToken) {
 
   return replyFlex(replyToken, {
     type: "bubble",
+    body:{
+  type: "bubble",
+  styles: {
     body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents: [
-
-        {
-          type: "text",
-          text: "💛 Student Care TU",
-          weight: "bold",
-          size: "lg"
-        },
-
-        {
-          type: "text",
-          text: "📍 เมนูหลัก"
-        },
-
-        {
-          type: "text",
-          text: "เลือกสิ่งที่คุณอยากทำได้เลย 💛",
-          size: "sm",
-          wrap: true
-        },
-
-        {
-          type: "button",
-          style: "primary",
-          action: {
-            type: "postback",
-            label: "💛 คุยเรื่องที่หนักใจ",
-            data: "start_talk"
-          }
-        },
-
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "🌱 สำรวจตัวเอง",
-            data: "menu_explore"
-          }
-        },
-
-        {
-          type: "button",
-          action: {
-            type: "uri",
-            label: "📚 ดูตัวเลือกทั้งหมด",
-            uri: "https://hub2-theta.vercel.app"
-          }
-        },
-
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "🚨 ขอความช่วยเหลือด่วน",
-            data: "menu_urgent"
-          }
-        },
-
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "👥 สำหรับ Peer Support",
-            data: "become_peer"
-          }
-        }
-      ]
+      backgroundColor: "#F7F6F3"
     }
-  }, "main menu");
+      },
+      body: {
+        type: "box",
+        layout: "vertical",
+        spacing: "lg",
+        contents: [
+
+      {
+        type: "text",
+        text: "Student Care",
+        weight: "bold",
+        size: "sm",
+        color: "#888888"
+      },
+
+      {
+        type: "text",
+        text: "เราจะอยู่ข้างคุณนะ",
+        weight: "bold",
+        size: "lg",
+        wrap: true,
+        color: "#2F2F2F"
+      },
+
+      {
+        type: "text",
+        text: "คุณอยากเริ่มแบบไหน",
+        size: "sm",
+        color: "#666666"
+      },
+
+      {
+        type: "separator"
+      },
+
+      {
+        type: "button",
+        style: "primary",
+        color: "#D6B25E",
+        action: {
+          type: "postback",
+          label: "คุยกับคนจริง",
+          data: "start_talk"
+        }
+      },
+
+      {
+        type: "button",
+        action: {
+          type: "uri",
+          label: "สำรวจตัวเอง",
+          uri: "https://your-web.com"
+        }
+      },
+
+      {
+        type: "button",
+        action: {
+          type: "postback",
+          label: "ขอความช่วยเหลือด่วน",
+          data: "menu_urgent"
+        }
+      }
+
+    ]
+  }
+}, "main menu");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -2319,7 +2347,7 @@ function sendLockedMenu(replyToken) {
           action: {
             type: "postback",
             label: "🚨 ขอความช่วยเหลือด่วน",
-            data: "menu_urgent"
+            data: "_urgent"
           }
         },
         {
@@ -2467,3 +2495,394 @@ function canPush() {
       });
     }
   } */
+/*// ================= FLOW STEP (PRODUCTION READY) =================
+async function sendStep(userId, replyToken) {
+const progress = `STEP ${s.step + 1} / 7`;
+
+const contents = [
+
+  {
+    type: "text",
+    text: progress,
+    size: "xs",
+    color: "#999999"
+  },
+
+  {
+    type: "text",
+    text: current.text,
+    wrap: true,
+    size: "md"
+  }
+];
+  
+  const flow = [
+    {
+      text: "จากสิ่งที่คุณกำลังรู้สึกอยู่ตอนนี้
+อะไรใกล้เคียงที่สุด?",
+      opts: [
+        { label: "ความเครียด 😣", value: "q1_stress" },
+        { label: "เรื่องเรียน 📚", value: "q1_academic" },
+        { label: "ความสัมพันธ์ 💬", value: "q1_relationship" },
+        { label: "ความรู้สึกตัวเอง 🌱", value: "q1_self" }
+      ]
+    },
+
+    {
+      text: "สิ่งนี้อยู่กับคุณมานานแค่ไหนแล้ว",
+      opts: [
+        { label: "เพิ่งเกิด", value: "q2_short" },
+        { label: "สักพักแล้ว", value: "q2_medium" },
+        { label: "นานแล้ว", value: "q2_long" }
+      ]
+    },
+
+    {
+      text: "มันส่งผลกับชีวิตคุณมากแค่ไหน",
+      opts: [
+        { label: "นิดหน่อย", value: "q3_low" },
+        { label: "พอสมควร", value: "q3_medium" },
+        { label: "มาก", value: "q3_high" }
+      ]
+    },
+
+    {
+      text: "ตอนนี้คุณมีใครที่คุณคุยเรื่องนี้ด้วยอยู่ไหม",
+      opts: [
+        { label: "ยังไม่มี", value: "q4_none" },
+        { label: "มีเพื่อน", value: "q4_friend" },
+        { label: "มีครู/ผู้ใหญ่", value: "q4_adult" }
+      ]
+    },
+
+    {
+      text: "ตอนนี้สิ่งที่คุณต้องการมากที่สุดคืออะไร",
+      opts: [
+        { label: "💬 อยากมีคนฟังจริง ๆ", value: "q5_listen" },
+        { label: "🫂 อยากคุยกับคนที่เข้าใจ", value: "q5_understand" },
+        { label: "🧠 อยากได้คำแนะนำหรือทางออก", value: "q5_advice" },
+        { label: "🌱 ยังไม่แน่ใจ ขอเริ่มเบา ๆ ก่อน", value: "q5_confused" }
+      ]
+    },
+
+    {
+      text: `💛 ขอบคุณที่เล่าให้ฟังนะ
+
+หลังจากนี้เราจะช่วยจับคู่คุณกับคนจริง
+แล้วนัดเวลาคุยกันแบบตัวต่อตัว 💛`,
+      opts: [
+        { label: "💬 ไปต่อ", value: "continue" },
+        { label: "🌱 ขอคิดดูก่อน", value: "pause" }
+      ]
+    },
+
+    {
+      text: "ถ้าคุณอยากเล่าเพิ่ม เราพร้อมฟังนะ [พิมพ์ 1 เพื่อข้าม] ",
+      input: true
+    }
+  ];
+
+  const s = sessions[userId];
+
+  // ===== SAFETY =====
+  if (!s) {
+  return replyText(replyToken, "ลองเริ่มใหม่อีกครั้งนะ 💛");
+}
+
+if (typeof s.step !== "number") {
+  s.step = 0; // 🔥 force เริ่มใหม่
+}
+  
+
+  // กัน step หลุด
+  if (s.step < 0) s.step = 0;
+  if (s.step >= flow.length) s.step = flow.length - 1;
+
+  const current = flow[s.step];
+
+  // ===== BUILD FLEX =====
+  const contents = [
+    {
+      type: "text",
+      text: current.text,
+      wrap: true
+    }
+  ];
+
+  // 👉 ถ้าเป็น input → ไม่ต้องมีปุ่ม
+  if (!current.input && current.opts) {
+    current.opts.forEach(o => {
+      contents.push({
+        type: "button",
+        action: {
+          type: "postback",
+          label: o.label,
+          data: "step_" + s.step + "_" + o.value
+        }
+      });
+    });
+  }
+
+  // ===== SEND =====
+  return replyFlex(replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents
+    }
+  });
+} */
+/* // ================= PREMIUM THEME =================
+const THEME = {
+  primary: "#1A1A1A",
+  surface: "#FFFFFF",
+  bg: "#F6F6F7",
+  accent: "#E7C6C9", // soft neutral pink
+  text: "#111111",
+  subtext: "#6B6B6B",
+  line: "#EAEAEA"
+};
+
+
+// ================= BASE COMPONENT =================
+
+// 🧠 header (Apple style)
+function header(title, subtitle = "") {
+  return {
+    type: "box",
+    layout: "vertical",
+    spacing: "xs",
+    contents: [
+      {
+        type: "text",
+        text: title,
+        weight: "bold",
+        size: "lg",
+        color: THEME.text
+      },
+      ...(subtitle ? [{
+        type: "text",
+        text: subtitle,
+        size: "sm",
+        color: THEME.subtext,
+        wrap: true
+      }] : [])
+    ]
+  };
+}
+
+// 🧠 divider
+function divider() {
+  return {
+    type: "separator",
+    margin: "md",
+    color: THEME.line
+  };
+}
+
+// 🧠 paragraph
+function paragraph(text) {
+  return {
+    type: "text",
+    text,
+    wrap: true,
+    size: "sm",
+    color: THEME.text
+  };
+}
+
+// 🧠 subtle animation illusion (fade feeling)
+function subtleNote(text) {
+  return {
+    type: "text",
+    text,
+    size: "xs",
+    color: THEME.subtext,
+    wrap: true
+  };
+}
+
+// 🧠 button (premium spacing)
+function btn(label, data, style = "secondary") {
+  return {
+    type: "button",
+    style,
+    height: "sm",
+    margin: "sm",
+    action: {
+      type: "postback",
+      label,
+      data
+    }
+  };
+}
+
+// 🧠 primary CTA
+function primaryBtn(label, data) {
+  return {
+    type: "button",
+    style: "primary",
+    color: THEME.primary,
+    action: {
+      type: "postback",
+      label,
+      data
+    }
+  };
+}
+
+// 🧠 base bubble
+function buildCard(contents) {
+  return {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents
+    }
+  };
+}
+
+
+// ================= INTRO =================
+
+function flexIntro() {
+  return buildCard([
+    header("พื้นที่นี้ปลอดภัยนะ 🤍"),
+
+    paragraph("คุณสามารถเล่าได้ในแบบที่คุณสบายใจ"),
+
+    divider(),
+
+    paragraph("เราจะช่วยหาพี่ที่เหมาะกับคุณ\nและนัดเวลาคุยแบบตัวต่อตัว"),
+
+    subtleNote("📌 ไม่ใช่การคุยในแชทนี้"),
+
+    divider(),
+
+    subtleNote("ค่อย ๆ ไปทีละนิดก็พอ"),
+
+    primaryBtn("เริ่มเล่า", "start_talk"),
+    btn("ยังไม่แน่ใจ", "intro_unsure")
+  ]);
+}
+
+
+// ================= UNSURE =================
+
+function flexUnsure() {
+  return buildCard([
+    header("ไม่เป็นไรเลยนะ 🤍"),
+
+    paragraph("ถ้ายังไม่พร้อมเล่า\nคุณลองเริ่มแบบเบา ๆ ก่อนได้"),
+
+    divider(),
+
+    {
+      type: "button",
+      action: {
+        type: "uri",
+        label: "🌱 สำรวจตัวเอง",
+        uri: "https://your-web.com"
+      }
+    },
+
+    btn("กลับเมนู", "menu")
+  ]);
+}
+
+
+// ================= Q1 =================
+
+function flexQ1() {
+  return buildCard([
+    header("มีอะไรบางอย่างอยู่ในใจใช่ไหม"),
+
+    subtleNote("เลือกสิ่งที่ใกล้กับคุณที่สุด"),
+
+    divider(),
+
+    btn("ความเครียด", "step_0_q1_stress"),
+    btn("เรื่องเรียน", "step_0_q1_academic"),
+    btn("ความสัมพันธ์", "step_0_q1_relationship"),
+    btn("ความรู้สึกตัวเอง", "step_0_q1_self")
+  ]);
+}
+
+
+// ================= Q5 =================
+
+function flexQ5() {
+  return buildCard([
+    header("ตอนนี้คุณต้องการอะไรจากการคุย"),
+
+    subtleNote("ไม่มีคำตอบที่ถูกหรือผิด"),
+
+    divider(),
+
+    btn("💬 แค่อยากมีคนฟัง", "step_4_q5_listen"),
+    btn("🫂 อยากให้มีคนเข้าใจ", "step_4_q5_understand"),
+    btn("🌱 อยากเริ่มเบา ๆ", "step_4_q5_confused"),
+    btn("🧠 อยากได้คำแนะนำ", "step_4_q5_advice")
+  ]);
+}
+
+
+// ================= TRANSITION =================
+
+function flexTransition() {
+  return buildCard([
+    header("ขั้นตอนถัดไป 🤍"),
+
+    paragraph("เราจะหาพี่ที่เหมาะกับคุณ\nและนัดเวลาคุยกันแบบตัวต่อตัว"),
+
+    subtleNote("📌 ไม่ใช่การคุยในแชทนี้"),
+
+    divider(),
+
+    primaryBtn("ไปต่อ", "step_5_continue"),
+    btn("ขอคิดดูก่อน", "step_5_pause")
+  ]);
+}
+
+
+// ================= MATCHED =================
+
+function flexMatched() {
+  return buildCard([
+    header("มีพี่ที่เหมาะกับคุณแล้ว ✨"),
+
+    paragraph("ขั้นตอนต่อไปคือเลือกเวลานัดคุย"),
+
+    divider(),
+
+    primaryBtn("เลือกเวลา", "get_slots"),
+    btn("ขอเวลาอื่น", "next_peer"),
+    btn("ยังไม่สะดวก", "pause_case")
+  ]);
+}
+
+
+// ================= SLOT =================
+
+function flexSlots(slots, caseId) {
+  return buildCard([
+    header("เลือกเวลาที่สะดวก 📅"),
+
+    subtleNote("เลือกช่วงที่คุณพร้อมจริง ๆ"),
+
+    divider(),
+
+    ...slots.map(s => ({
+      type: "button",
+      action: {
+        type: "postback",
+        label: s,
+        data: confirm_${caseId}_${s}
+      }
+    }))
+  ]);
+} */
