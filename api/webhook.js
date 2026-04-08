@@ -288,7 +288,7 @@ module.exports = async (req, res) => {
   if (handledEvents.has(eventId)) { continue; }  
   handledEvents.add(eventId);
     if (event.type === "follow") {
-  return replyFlex(event.replyToken, UI_intro());
+  return replyFlex(event.replyToken, UI_onboarding());
 }
 
 if (event.type === "message") {
@@ -741,9 +741,10 @@ if (USE_AI && confidence <= 1) {
   sessions[userId].locked = true;
 
   await pushToUser(userId, {
-    type: "text",
-    text: "💛 เรากำลังหาคนที่เหมาะกับคุณอยู่...\nคุณสามารถพักหรือทำอย่างอื่นได้นะ"
-  });
+  type: "flex",
+  altText: "waiting",
+  contents: UI_waiting()
+});
 }
 
   // ===== SINGLE REPLY ONLY (ประหยัด quota) =====
@@ -1346,7 +1347,7 @@ if (data.startsWith("next_peer_")) {
 if (data.startsWith("slot_")) {
   const parts = data.split("_");
   const caseId = parts[1];
-  const slot = parts.slice(2).join("_");
+  const slot = decodeURIComponent(parts.slice(2).join("_"));
 
   return replyFlex(event.replyToken, {
     type: "bubble",
@@ -1476,11 +1477,7 @@ if (data.startsWith("confirm_")) {
   }
 
   // ===== ✅ SUCCESS =====
-  return replyText(event.replyToken,
-`✅ นัดเรียบร้อย
-
-🕒 ${slot}
-💛 เจอกันตามเวลานะ`);
+  return replyFlex(event.replyToken, UI_scheduled(slot));
 }
   ////////////////////////
   
@@ -2347,6 +2344,55 @@ async function handleGroupMessage(event) {
     console.log("❌ GROUP ERROR:", err);
   }
 }
+//---------------------------------------------------------
+if (data === "reschedule") {
+
+  const caseId = sessions[userId]?.activeCase;
+
+  if (!caseId) {
+    return replyText(event.replyToken, "❌ ไม่พบเคส");
+  }
+
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+
+        {
+          type: "text",
+          text: "ต้องการเปลี่ยนเวลาใช่ไหม",
+          weight: "bold",
+          size: "lg"
+        },
+
+        {
+          type: "text",
+          text: "คุณสามารถเลือกเวลาใหม่ได้เลย",
+          size: "sm",
+          color: "#666666"
+        },
+
+        {
+          type: "separator"
+        },
+
+        {
+          type: "button",
+          style: "primary",
+          action: {
+            type: "postback",
+            label: "เลือกเวลาใหม่",
+            data: `get_slots_${caseId}`
+          }
+        }
+
+      ]
+    }
+  });
+}
 function UI_slotsPremium(slots, caseId) {
   return {
     type: "bubble",
@@ -2392,7 +2438,7 @@ function UI_slotsPremium(slots, caseId) {
               action: {
                 type: "postback",
                 label: "เลือก",
-                data: confirm_${caseId}_${slot}
+                data: `data: confirm_${caseId}_${encodeURIComponent(slot)}` // ✅ FIX
               }
             }
           ]
@@ -2408,14 +2454,74 @@ function UI_slotsPremium(slots, caseId) {
           action: {
             type: "postback",
             label: "ดูเวลาอื่น",
-            data: next_peer_${caseId}
+            data: `next_peer_${caseId}` // ✅ FIX
           }
         }
 
       ]
     }
   };
+}
+function UI_onboarding() {
+  return {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "lg",
+      contents: [
 
+        {
+          type: "text",
+          text: "พื้นที่นี้เป็นของคุณ 🤍",
+          weight: "bold",
+          size: "xl"
+        },
+
+        {
+          type: "text",
+          text: "คุณสามารถเริ่มจากจุดไหนก็ได้\nไม่ต้องรู้ว่าตัวเองเป็นอะไร",
+          size: "sm",
+          wrap: true,
+          color: "#666666"
+        },
+
+        {
+          type: "separator"
+        },
+
+        {
+          type: "button",
+          style: "primary",
+          action: {
+            type: "postback",
+            label: "คุยกับคนจริง",
+            data: "start_talk"
+          }
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "uri",
+            label: "🌱 สำรวจตัวเอง",
+            uri: "https://your-web.com"
+          }
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "🚨 ขอความช่วยเหลือด่วน",
+            data: "menu_urgent"
+          }
+        }
+
+      ]
+    }
+  };
+}
 // ------------ FUNCTION ---------------------
   
 
@@ -2474,8 +2580,120 @@ function sendLockedMenu(replyToken) {
     }
   });
 }
+//------------------------------------------
+function UI_waiting() {
+  return {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "lg",
+      contents: [
 
-  
+        {
+          type: "text",
+          text: "เรากำลังหาคนที่เหมาะกับคุณอยู่ 🤍",
+          weight: "bold",
+          size: "lg"
+        },
+
+        {
+          type: "text",
+          text: "คุณไม่ต้องรีบตอบอะไรตอนนี้ก็ได้นะ\nค่อย ๆ อยู่กับตัวเองไปก่อนก็ได้",
+          size: "sm",
+          wrap: true,
+          color: "#666666"
+        },
+
+        {
+          type: "separator"
+        },
+
+        {
+          type: "text",
+          text: "ระหว่างนี้คุณสามารถ:",
+          size: "xs",
+          color: "#999999"
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "🌱 สำรวจตัวเอง",
+            data: "menu_explore"
+          }
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "message",
+            label: "💤 พักสักนิด",
+            text: "พัก"
+          }
+        }
+
+      ]
+    }
+  };
+}
+ function UI_scheduled(slot) {
+  return {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "lg",
+      contents: [
+
+        {
+          type: "text",
+          text: "นัดเรียบร้อยแล้ว 🤍",
+          weight: "bold",
+          size: "lg"
+        },
+
+        {
+          type: "text",
+          text: slot,
+          weight: "bold",
+          size: "md"
+        },
+
+        {
+          type: "text",
+          text: "เจอกันตามเวลานะ",
+          size: "sm",
+          color: "#666666"
+        },
+
+        {
+          type: "separator"
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "🔄 เปลี่ยนเวลา",
+            data: "reschedule"
+          }
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "❌ ยกเลิก",
+            data: "cancel_booking"
+          }
+        }
+
+      ]
+    }
+  };
+} 
 //------------------ code from the dead -----------------------------------
  
 // ========= Notify team ========
@@ -2992,7 +3210,7 @@ function flexSlots(slots, caseId) {
       action: {
         type: "postback",
         label: s,
-        data: confirm_${caseId}_${s}
+        data: `confirm_${caseId}_${s}`
       }
     }))
   ]);
