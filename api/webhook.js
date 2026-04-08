@@ -209,7 +209,7 @@ function UI_slots(slots, caseId) {
       action: {
         type: "postback",
         label: s,
-        data: confirm_${caseId}_${s}
+        data: `confirm_${caseId}_${s}`
       }
     }))
   ]);
