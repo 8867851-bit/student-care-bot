@@ -5,7 +5,6 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbyn4Lwrp2uqhCliS5MMSKiC
 global.caseMap = global.caseMap || {};
 
 const handledEvents = new Set();
-let s = getSession(userId);
 function getSession(userId) {
   if (!sessions[userId]) {
     sessions[userId] = {
@@ -187,15 +186,75 @@ function UI_transition() {
 }
 
 // MATCHED
-function UI_matched() {
-  return card([
-    header("มีพี่ที่เหมาะกับคุณแล้ว ✨"),
-    text("เลือกเวลาที่คุณสะดวกได้เลย"),
-    divider(),
-    btn("เลือกเวลา", "get_slots", true),
-    btn("ขอเวลาอื่น", "next_peer"),
-    btn("ยังไม่สะดวก", "pause_case")
-  ]);
+function UI_matched(caseId) {
+  return {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "lg",
+      contents: [
+
+        {
+          type: "text",
+          text: "Matched",
+          size: "xs",
+          color: "#888888"
+        },
+
+        {
+          type: "text",
+          text: "มีพี่ที่เหมาะกับคุณแล้ว ✨",
+          weight: "bold",
+          size: "lg",
+          wrap: true
+        },
+
+        {
+          type: "text",
+          text: "ขั้นตอนต่อไปคือเลือกเวลาที่คุณสะดวก",
+          size: "sm",
+          color: "#666666",
+          wrap: true
+        },
+
+        {
+          type: "separator",
+          margin: "md"
+        },
+
+        {
+          type: "button",
+          style: "primary",
+          color: "#1A1A1A",
+          action: {
+            type: "postback",
+            label: "เลือกเวลา",
+            data: `get_slots_${caseId}`
+          }
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "ขอเวลาอื่น",
+            data: `next_peer_${caseId}`
+          }
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "ยังไม่สะดวก",
+            data: "pause_case"
+          }
+        }
+
+      ]
+    }
+  };
 }
 
 // SLOT
@@ -256,7 +315,7 @@ async function getMyCase(userId) {
   return await res.json();
 }
 async function getCaseById(caseId) {
-  const res = await fetch(GAS_URL, {
+  const res1 = await fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
@@ -264,7 +323,7 @@ async function getCaseById(caseId) {
       caseId
     })
   });
-
+const map = await res1.json();
   return await res.json();
 }
 /////////////////////////////////////////////////////////////////////////
@@ -689,15 +748,15 @@ if (USE_AI && confidence <= 1) {
 
   // ===== SINGLE REPLY ONLY (ประหยัด quota) =====
   return replyText(
-    event.replyToken,
+  event.replyToken,
 `💛 เรารับเรื่องของคุณแล้วนะ
 
 ${peerId 
-  ? "✨ มีพี่รับเคสแล้ว เริ่มคุยได้เลย"
+  ? "✨ มีพี่แล้ว กำลังเตรียมเวลานัดให้คุณ"
   : "⏳ ตอนนี้กำลังหาพี่ให้อยู่นะ"}
 
 คุณไม่ต้องทำอะไรเพิ่มเลย 💛`
-  );
+);
 }
   //======= WAITLIST ======
  if (s?.status === "waitlist") {
@@ -878,7 +937,7 @@ if (data.startsWith("get_slots_")) {
   }
 
 // 🔥 NEW (ใช้ global slot system)
-const res = await fetch(GAS_URL, {
+const res2 = await fetch(GAS_URL, {
   method: "POST",
   headers: {"Content-Type":"application/json"},
   body: JSON.stringify({
@@ -886,7 +945,7 @@ const res = await fetch(GAS_URL, {
   })
 });
 
-const data = await res.json();
+const data = await res2.json();
 const slots = data.slots || [];
 
   if (!slots || slots.length === 0) {
@@ -895,30 +954,10 @@ const slots = data.slots || [];
   }
 
   // 🔥 reply (ไม่ push)
-  return replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents: [
-        {
-          type: "text",
-          text: "📅 เลือกเวลาที่สะดวก",
-          weight: "bold"
-        },
-
-        ...slots.slice(0, 6).map(slot => ({
-          type: "button",
-          action: {
-            type: "postback",
-            label: slot,
-            data: "confirm_" + caseId + "_" + slot
-          }
-        }))
-      ]
-    }
-  });
+    return replyFlex(
+  event.replyToken,
+  UI_slotsPremium(slots, caseId)
+);
 }
   
 // ===== RECONNECT (POSTBACK SAFE) =====
@@ -1239,7 +1278,7 @@ if (data.startsWith("accept_")) {
       activeCase: caseId
     }; */ //ลบ--Please delete
 
-    return replyText(event.replyToken, "💛 รับเคสแล้ว เริ่มคุยได้เลย");
+    return replyText(event.replyToken, "✅ รับเคสแล้ว");
   }
 
   return replyText(event.replyToken, "❌ มีคนรับเคสนี้ไปแล้ว");
@@ -1315,7 +1354,8 @@ if (data.startsWith("slot_")) {
       type: "box",
       layout: "vertical",
       contents: [
-        { type: "text", text: "💛 ยืนยันเวลานี้นะ?" },
+        { type: "text", text: "เราจะนัดคุยกันตามเวลานี้นะ
+คุณโอเคไหม" },
         { type: "text", text: slot, weight: "bold" },
         {
           type: "button",
@@ -1887,14 +1927,12 @@ async function acceptCase(caseId, userId, role, replyToken) {
     await pushToUser(targetUserId, {
       type: "flex",
       altText: "matched",
-      contents: UI_matched()
+      contents: UI_matched(caseId)
     });
 
     // =========================
     // 🔥 PUSH USER (ครั้งเดียว)
     // =========================
-
-    await pushToUser(targetUserId, message);
 
     return;
 
@@ -2127,7 +2165,7 @@ async function sendMainMenu(replyToken) {
   return replyFlex(replyToken, {
     type: "bubble",
     body:{
-  type: "bubble",
+  type: "box",
   styles: {
     body: {
       backgroundColor: "#F7F6F3"
@@ -2304,7 +2342,75 @@ async function handleGroupMessage(event) {
     console.log("❌ GROUP ERROR:", err);
   }
 }
+function UI_slotsPremium(slots, caseId) {
+  return {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "lg",
+      contents: [
 
+        {
+          type: "text",
+          text: "เลือกเวลาที่สะดวก",
+          weight: "bold",
+          size: "lg"
+        },
+
+        {
+          type: "text",
+          text: "เลือกช่วงที่คุณพร้อมจริง ๆ",
+          size: "sm",
+          color: "#666666"
+        },
+
+        {
+          type: "separator"
+        },
+
+        ...slots.slice(0, 5).map(slot => ({
+          type: "box",
+          layout: "horizontal",
+          contents: [
+            {
+              type: "text",
+              text: slot,
+              size: "sm",
+              flex: 3
+            },
+            {
+              type: "button",
+              style: "primary",
+              color: "#1A1A1A",
+              height: "sm",
+              action: {
+                type: "postback",
+                label: "เลือก",
+                data: confirm_${caseId}_${slot}
+              }
+            }
+          ]
+        })),
+
+        {
+          type: "separator",
+          margin: "md"
+        },
+
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "ดูเวลาอื่น",
+            data: next_peer_${caseId}
+          }
+        }
+
+      ]
+    }
+  };
+}
 // ------------ FUNCTION ---------------------
   
 
