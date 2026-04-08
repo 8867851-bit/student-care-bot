@@ -2415,7 +2415,7 @@ function UI_slotsPremium(slots, caseId) {
       ]
     }
   };
-}
+
 // ------------ FUNCTION ---------------------
   
 
