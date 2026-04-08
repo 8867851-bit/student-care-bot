@@ -1354,8 +1354,13 @@ if (data.startsWith("slot_")) {
       type: "box",
       layout: "vertical",
       contents: [
-        { type: "text", text: `เราจะนัดคุยกันตามเวลานี้นะ
-คุณโอเคไหม` },
+        {
+  type: "text",
+  text: `เราจะนัดคุยกันตามเวลานี้นะ
+
+คุณโอเคไหม 🤍`,
+  wrap: true
+},
         { type: "text", text: slot, weight: "bold" },
         {
           type: "button",
