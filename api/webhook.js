@@ -1414,7 +1414,7 @@ if (data.startsWith("openCase_")) {
 }
 
 
-// ===== STEP FLOW (FINAL CLEAN) =====
+// ===== STEP FLOW =====
 if (data.startsWith("step_")) {
 
   const parts = data.split("_");
@@ -1423,8 +1423,10 @@ if (data.startsWith("step_")) {
   const keys = ["q1","q2","q3","q4","q5"];
 
   if (!sessions[userId] || sessions[userId].step !== step) {
-    return replyText(event.replyToken,
-      "💛 ขอเริ่มใหม่อีกครั้งนะ\nลองกด 'คุยเรื่องที่หนักใจ' ใหม่ได้เลย");
+    return replyText(
+      event.replyToken,
+      "💛 ขอเริ่มใหม่อีกครั้งนะ\nลองกด 'คุยเรื่องที่หนักใจ' ใหม่ได้เลย"
+    );
   }
 
   // ===== SPECIAL =====
@@ -1439,11 +1441,21 @@ if (data.startsWith("step_")) {
   }
 
   // ===== SAVE =====
-if (step === 1) {
-  sessions[userId].step = step + 1;
-  return replyFlex(event.replyToken, UI_q3_cinematic());
-}
+  if (step < keys.length) {
+    sessions[userId].answers[keys[step]] = value;
+  }
 
+  sessions[userId].step = step + 1;
+
+  // 🎬 cinematic
+  if (step === 1) {
+    return replyFlex(event.replyToken, UI_q3_cinematic());
+  }
+
+  return sendStep(userId, event.replyToken);
+} // 🔥❗❗❗ ปิดตรงนี้เลย
+
+  //============================================
 // ===== START FLOW =====
 if (data === "start_talk") {
 
@@ -1536,21 +1548,8 @@ if (data.startsWith("accept_")) {
   if (result?.status === "OK") {
 
     const targetUserId = result.targetUserId;
-
-   /* // 🔥 สำคัญมาก: เปิด chat bridge
-    sessions[targetUserId] = {
-      inChat: true,
-      activeCase: caseId
-    };
-
-    sessions[userId] = {
-      inChat: true,
-      activeCase: caseId
-    }; */ //ลบ--Please delete
-
     return replyText(event.replyToken, "✅ รับเคสแล้ว");
   }
-
   return replyText(event.replyToken, "❌ มีคนรับเคสนี้ไปแล้ว");
 }
 
