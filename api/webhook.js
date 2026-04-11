@@ -2395,8 +2395,6 @@ async function sendMainMenu(replyToken) {
     }
   }, "main menu");
 }
-
-broadcast 
 /////////////////////////////////////////////////////////////////////////////////////
   
 async function sendExploreMenu(replyToken) {
