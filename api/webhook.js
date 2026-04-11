@@ -978,7 +978,54 @@ async function handlePostback(event) {
   console.log("SESSION:", sessions[userId])
 const data = event.postback.data;
   
+if (data === "reschedule") {
 
+  const caseId = sessions[userId]?.activeCase;
+
+  if (!caseId) {
+    return replyText(event.replyToken, "❌ ไม่พบเคส");
+  }
+
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+
+        {
+          type: "text",
+          text: "ต้องการเปลี่ยนเวลาใช่ไหม",
+          weight: "bold",
+          size: "lg"
+        },
+
+        {
+          type: "text",
+          text: "คุณสามารถเลือกเวลาใหม่ได้เลย",
+          size: "sm",
+          color: "#666666"
+        },
+
+        {
+          type: "separator"
+        },
+
+        {
+          type: "button",
+          style: "primary",
+          action: {
+            type: "postback",
+            label: "เลือกเวลาใหม่",
+            data: `get_slots_${caseId}`
+          }
+        }
+
+      ]
+    }
+  });
+}
 if (data.startsWith("waitlist_")) {
 
   const slot = d.replace("waitlist_", "");
@@ -2499,54 +2546,6 @@ async function handleGroupMessage(event) {
   }
 }
 //---------------------------------------------------------
-if (data === "reschedule") {
-
-  const caseId = sessions[userId]?.activeCase;
-
-  if (!caseId) {
-    return replyText(event.replyToken, "❌ ไม่พบเคส");
-  }
-
-  return replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "md",
-      contents: [
-
-        {
-          type: "text",
-          text: "ต้องการเปลี่ยนเวลาใช่ไหม",
-          weight: "bold",
-          size: "lg"
-        },
-
-        {
-          type: "text",
-          text: "คุณสามารถเลือกเวลาใหม่ได้เลย",
-          size: "sm",
-          color: "#666666"
-        },
-
-        {
-          type: "separator"
-        },
-
-        {
-          type: "button",
-          style: "primary",
-          action: {
-            type: "postback",
-            label: "เลือกเวลาใหม่",
-            data: `get_slots_${caseId}`
-          }
-        }
-
-      ]
-    }
-  });
-}
 function UI_slotsPremium(slots, caseId) {
   return {
     type: "bubble",
