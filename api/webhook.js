@@ -4,6 +4,7 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbyn4Lwrp2uqhCliS5MMSKiC
 /* const GROUP_ID = "Caa4c88f8d6ec0c5a7efa665d27636bb5"; */
 global.caseMap = global.caseMap || {};
 
+const sessions = {};
 const handledEvents = new Set();
 function getSession(userId) {
   if (!sessions[userId]) {
@@ -110,7 +111,13 @@ function card(contents) {
     }
   };
 }
+function isDeadZone() {
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sunday
+  const hour = now.getHours();
 
+  return (day === 6 || day === 0) && hour < 18;
+}
 
 // ================= 🎬 FLOW =================
 
@@ -276,31 +283,88 @@ function UI_slots(slots, caseId) {
 
 // ================= MAIN ==================
 module.exports = async (req, res) => {
+
   const body = typeof req.body === "string"
     ? JSON.parse(req.body)
     : req.body;
 
+  // ================= 🔔 WAITLIST NOTIFY =================
+  if (body.type === "notify_waitlist") {
+
+    const { userId, slot, caseId } = body;
+
+    await pushToUser(userId, {
+      type: "flex",
+      altText: "มีเวลาว่างแล้ว",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          spacing: "md",
+          contents: [
+
+            {
+              type: "text",
+              text: "✨ มีเวลาว่างแล้ว",
+              weight: "bold",
+              size: "lg"
+            },
+
+            {
+              type: "text",
+              text: slot,
+              size: "md"
+            },
+
+            {
+              type: "button",
+              style: "primary",
+              action: {
+                type: "postback",
+                label: "เลือกเวลานี้",
+                data: `confirm_${caseId}_${encodeURIComponent(slot)}`
+              }
+            }
+
+          ]
+        }
+      }
+    });
+
+    return res.status(200).send("OK");
+  }
+
+  // ================= LINE EVENTS =================
   const events = body?.events || [];
 
   for (const event of events) {
-  const eventId = event.timestamp + "_" + (event.source.userId || "");
-    
-  if (handledEvents.has(eventId)) { continue; }  
-  handledEvents.add(eventId);
+
+    const eventId =
+      event.timestamp + "_" + (event.source.userId || "");
+
+    if (handledEvents.has(eventId)) continue;
+    handledEvents.add(eventId);
+
     if (event.type === "follow") {
-  return replyFlex(event.replyToken, UI_onboarding());
-}
+      return replyFlex(event.replyToken, UI_onboarding());
+    }
 
-if (event.type === "message") {
-  try {
-    await handleMessage(event);
-  } catch (err) {
-    console.log("❌ handleMessage ERROR:", err);
+    if (event.type === "message") {
+      try {
+        await handleMessage(event);
+      } catch (err) {
+        console.log("❌ handleMessage ERROR:", err);
+      }
+    }
+
+    if (event.type === "postback") {
+      await handlePostback(event);
+    }
   }
-}
-if (event.type === "postback") await handlePostback(event); }
 
-  return res.status(200).send("OK"); };
+  return res.status(200).send("OK");
+};
 
 async function getMyCase(userId) {
   const res = await fetch(GAS_URL, {
@@ -324,7 +388,7 @@ async function getCaseById(caseId) {
     })
   });
 const map = await res1.json();
-  return await res.json();
+  return map;
 }
 /////////////////////////////////////////////////////////////////////////
 
@@ -909,11 +973,13 @@ return replyText(
 ///////////////////////////////////////////////////////////////////////////////////
 // ================= POSTBACK =================
 async function handlePostback(event) {
-  const data = event.postback.data;
   const userId = event.source.userId;
   console.log("DATA:", data);
   console.log("SESSION:", sessions[userId])
-if (d.startsWith("waitlist_")) {
+const data = event.postback.data;
+  
+
+if (data.startsWith("waitlist_")) {
 
   const slot = d.replace("waitlist_", "");
 
@@ -923,9 +989,51 @@ if (d.startsWith("waitlist_")) {
     "⏳ เราเพิ่มคุณในคิวแล้ว\nถ้ามีที่ว่าง เราจะจัดให้อัตโนมัติ 💛"
   );
 } 
+  if (data === "no_slot") {
+
+  const caseId = sessions[userId]?.activeCase || "temp";
+
+  return replyFlex(event.replyToken, {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      spacing: "md",
+      contents: [
+
+        {
+          type: "text",
+          text: "💛 ตอนนี้ยังไม่มีเวลาที่ตรง",
+          weight: "bold"
+        },
+
+        {
+          type: "text",
+          text: "คุณสามารถกลับมาดูใหม่วันอาทิตย์ 18:00",
+          size: "sm",
+          color: "#666666",
+          wrap: true
+        },
+
+        {
+          type: "button",
+          style: "primary",
+          action: {
+            type: "postback",
+            label: "🔔 แจ้งฉันเมื่อมีรอบใหม่",
+            data: `waitlist_${caseId}_any`
+          }
+        }
+
+      ]
+    }
+  });
+}
 if (data.startsWith("waitlist_")) {
 
-  const slot = decodeURIComponent(data.replace("waitlist_", ""));
+  const parts = data.split("_");
+  const caseId = parts[1];
+  const slot = parts[2] || "any";
 
   await fetch(GAS_URL, {
     method: "POST",
@@ -933,12 +1041,15 @@ if (data.startsWith("waitlist_")) {
     body: JSON.stringify({
       action: "addToWaitlist",
       userId,
+      caseId,
       slot
     })
   });
 
-  return replyText(event.replyToken,
-    "💛 ถ้ามีเวลานี้ว่าง เราจะแจ้งคุณทันที");
+  return replyText(
+    event.replyToken,
+    "💛 เราจะรีบแจ้งคุณทันทีเมื่อมีเวลาว่างนะ"
+  );
 }
   
 if (data === "intro_unsure") {
@@ -1395,22 +1506,13 @@ if (data.startsWith("slot_")) {
 // ===== CONFIRM (NEW SLOT-BASED MATCHING) =====
 if (data.startsWith("confirm_")) {
 
-  const userId = event.source.userId;
-  const peerId = assignPeerFromSlot(slot);
-
-if (!peerId) {
-  return replyText(event.replyToken,
-    "💛 เวลานี้เต็มแล้ว ลองเลือกเวลาอื่นนะ");
-}
-  
-  // ✅ ดึงเวลาอย่างเดียว
+  const parts = data.split("_");
   const caseId = parts[1];
-const slot = decodeURIComponent(parts.slice(2).join("_"));
+  const slot = decodeURIComponent(parts.slice(2).join("_"));
 
-  // ===== 🧠 INIT SESSION =====
   sessions[userId] = sessions[userId] || {};
 
-  // ===== 🔒 กันกดรัว =====
+  // 🔒 กันกดรัว
   if (sessions[userId].bookingLocked) {
     return replyText(event.replyToken, "⏳ กำลังจองอยู่...");
   }
@@ -1423,22 +1525,16 @@ const slot = decodeURIComponent(parts.slice(2).join("_"));
 
     const res = await fetch(GAS_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type":"application/json"},
       body: JSON.stringify({
-        action: "matchAndBook",   // 🔥 เปลี่ยน action
+        action: "matchAndBook",
         userId,
+        caseId,
         slot
       })
     });
 
-    const textRes = await res.text();
-
-    try {
-      dataRes = JSON.parse(textRes);
-    } catch (e) {
-      console.log("❌ NOT JSON:", textRes);
-      throw new Error("INVALID_JSON");
-    }
+    dataRes = await res.json();
 
   } catch (err) {
 
@@ -1449,42 +1545,38 @@ const slot = decodeURIComponent(parts.slice(2).join("_"));
       "⚠️ ระบบขัดข้อง ลองใหม่อีกครั้งนะ");
   }
 
-  // ===== 🔓 ปลด lock =====
   sessions[userId].bookingLocked = false;
 
-  // ===== 🔍 SAFETY =====
+  // ===== RESULT =====
+
   if (!dataRes || !dataRes.status) {
-    return replyText(event.replyToken,
-      "⚠️ ระบบตอบกลับผิดพลาด");
+    return replyText(event.replyToken, "⚠️ ระบบผิดพลาด");
   }
 
-  // ===== ❌ ไม่มี peer =====
-  if (dataRes.status === "NO_PEER") {
-    return replyText(event.replyToken,
-      "💛 ช่วงเวลานี้เต็มแล้ว ลองเลือกเวลาอื่นนะ");
-  }
-
-  // ===== ❌ slot เต็ม =====
   if (dataRes.status === "FULL") {
     return replyText(event.replyToken,
-      "❌ เวลานี้ถูกจองเต็มแล้ว");
+      "💛 เวลานี้เต็มแล้ว ลองเลือกใหม่ได้นะ");
   }
 
-  // ===== ❌ fallback =====
+  if (dataRes.status === "NO_PEER") {
+    return replyText(event.replyToken,
+      "💛 ยังไม่มีพี่ในช่วงเวลานี้นะ");
+  }
+
   if (dataRes.status !== "OK") {
     return replyText(event.replyToken,
-      "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้งนะ");
+      "⚠️ ระบบมีปัญหา ลองใหม่อีกครั้ง");
   }
 
-  const caseId = dataRes.caseId;
-  const peerId = dataRes.peerId;
+  // ===== SUCCESS =====
 
-  // ===== 🧠 เปิด session chat =====
   sessions[userId].inChat = true;
-  sessions[userId].activeCase = caseId;
+  sessions[userId].activeCase = dataRes.caseId;
 
-  // ===== 💎 SUCCESS UI =====
-  return replyFlex(event.replyToken, UI_scheduledPremium(slot));
+  return replyFlex(
+    event.replyToken,
+    UI_scheduledPremium(dataRes.slot || slot)
+  );
 }
   ////////////////////////
   
@@ -1850,7 +1942,7 @@ peers.sort((a, b) => a.load - b.load);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
-function UI_slotsWeekly(slots) {
+function UI_slotsWeekly(slots, caseId) {
 
   return {
     type: "bubble",
@@ -1889,7 +1981,7 @@ function UI_slotsWeekly(slots) {
             action: {
               type: "postback",
               label,
-              data: `confirm_${encodeURIComponent(s.time)}`
+              data: `confirm_${caseId}_${encodeURIComponent(s.time)}`
             }
           };
         }),
@@ -2304,6 +2396,7 @@ async function sendMainMenu(replyToken) {
   }, "main menu");
 }
 
+broadcast 
 /////////////////////////////////////////////////////////////////////////////////////
   
 async function sendExploreMenu(replyToken) {
@@ -2765,51 +2858,19 @@ function UI_waiting() {
     }
   };
 } 
-if (body.type === "notify_waitlist") {
-
-  const { userId, slot } = body;
-
-  await pushToUser(userId, {
-    type: "flex",
-    altText: "มีเวลาว่างแล้ว",
-    contents: {
-      type: "bubble",
-      body: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-
-          {
-            type: "text",
-            text: "✨ มีเวลาว่างแล้ว",
-            weight: "bold",
-            size: "lg"
-          },
-
-          {
-            type: "text",
-            text: slot,
-            size: "md"
-          },
-
-          {
-            type: "button",
-            style: "primary",
-            action: {
-              type: "postback",
-              label: "เลือกเวลานี้",
-              data: `confirm_${encodeURIComponent(slot)}`
-            }
-          }
-
-        ]
-      }
-    }
-  });
-}
 
 
 
+
+
+
+
+
+
+
+
+
+  
 
 
 //------------------ code from the dead -----------------------------------
