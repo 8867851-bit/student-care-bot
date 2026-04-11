@@ -973,10 +973,11 @@ return replyText(
 ///////////////////////////////////////////////////////////////////////////////////
 // ================= POSTBACK =================
 async function handlePostback(event) {
+  const data = event.postback.data;
   const userId = event.source.userId;
   console.log("DATA:", data);
   console.log("SESSION:", sessions[userId])
-const data = event.postback.data;
+  console.log("POSTBACK DATA:", data);
   
 if (data === "reschedule") {
 
