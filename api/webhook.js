@@ -913,13 +913,19 @@ async function handlePostback(event) {
   const userId = event.source.userId;
   console.log("DATA:", data);
   console.log("SESSION:", sessions[userId])
+if (d.startsWith("waitlist_")) {
+
+  const slot = d.replace("waitlist_", "");
+
+  addToWaitlist(caseId, userId, slot);
+
+  return replyText(replyToken,
+    "⏳ เราเพิ่มคุณในคิวแล้ว\nถ้ามีที่ว่าง เราจะจัดให้อัตโนมัติ 💛"
+  );
+} 
 if (data.startsWith("waitlist_")) {
 
-  const userId = event.source.userId;
-
-  const slot = decodeURIComponent(
-    data.replace("waitlist_", "")
-  );
+  const slot = decodeURIComponent(data.replace("waitlist_", ""));
 
   await fetch(GAS_URL, {
     method: "POST",
@@ -931,11 +937,10 @@ if (data.startsWith("waitlist_")) {
     })
   });
 
-  return replyText(
-    event.replyToken,
-    "💛 เราจะบอกคุณทันทีถ้ามีเวลาว่างนะ"
-  );
-}    
+  return replyText(event.replyToken,
+    "💛 ถ้ามีเวลานี้ว่าง เราจะแจ้งคุณทันที");
+}
+  
 if (data === "intro_unsure") {
   return replyFlex(event.replyToken, UI_unsure());
 }
@@ -1391,11 +1396,16 @@ if (data.startsWith("slot_")) {
 if (data.startsWith("confirm_")) {
 
   const userId = event.source.userId;
+  const peerId = assignPeerFromSlot(slot);
 
+if (!peerId) {
+  return replyText(event.replyToken,
+    "💛 เวลานี้เต็มแล้ว ลองเลือกเวลาอื่นนะ");
+}
+  
   // ✅ ดึงเวลาอย่างเดียว
-  const slot = decodeURIComponent(
-    data.replace("confirm_", "")
-  );
+  const caseId = parts[1];
+const slot = decodeURIComponent(parts.slice(2).join("_"));
 
   // ===== 🧠 INIT SESSION =====
   sessions[userId] = sessions[userId] || {};
@@ -1879,7 +1889,7 @@ function UI_slotsWeekly(slots) {
             action: {
               type: "postback",
               label,
-              data: confirm_${encodeURIComponent(s.time)}
+              data: `confirm_${encodeURIComponent(s.time)}`
             }
           };
         }),
@@ -2509,7 +2519,15 @@ function UI_slotsPremium(slots, caseId) {
             label: "ดูเวลาอื่น",
             data: `next_peer_${caseId}` // ✅ FIX
           }
-        }
+        },
+        {
+  type: "button",
+  action: {
+    type: "postback",
+    label: "🔔 แจ้งเตือน",
+    data: `waitlist_${encodeURIComponent(slot)}`
+  }
+}
 
       ]
     }
