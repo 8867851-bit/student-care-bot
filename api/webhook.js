@@ -1281,16 +1281,6 @@ if (data === "reschedule") {
     }
   });
 }
-if (data.startsWith("waitlist_")) {
-
-  const slot = d.replace("waitlist_", "");
-
-  addToWaitlist(caseId, userId, slot);
-
-  return replyText(replyToken,
-    "⏳ เราเพิ่มคุณในคิวแล้ว\nถ้ามีที่ว่าง เราจะจัดให้อัตโนมัติ 💛"
-  );
-} 
   if (data === "no_slot") {
 
   const caseId = sessions[userId]?.activeCase || "temp";
@@ -1560,8 +1550,7 @@ if (data.startsWith("openCase_")) {
   );
 }
 
-
-// ===== STEP FLOW =====
+// ===== STEP FLOW (CLEAN FINAL) =====
 if (data.startsWith("step_")) {
 
   const parts = data.split("_");
@@ -1569,9 +1558,21 @@ if (data.startsWith("step_")) {
   const step = parseInt(parts[1], 10);
   const keys = ["q1","q2","q3","q4","q5"];
 
-    if (!sessions[userId] || sessions[userId].step !== step) {
+  // ❗ กัน session หลุด
+  if (!sessions[userId] || sessions[userId].step !== step) {
     return replyText(event.replyToken,
-      "💛 ขอเริ่มใหม่อีกครั้งนะ\nลองกด 'คุยเรื่องที่หนักใจ' ใหม่ได้เลย");
+      "💛 ขอเริ่มใหม่อีกครั้งนะ\nลองกด 'คุยกับคนจริง' ใหม่ได้เลย");
+  }
+
+  // ===== SPECIAL FIRST =====
+  if (value === "continue") {
+    sessions[userId].step = 6;
+    return sendStep(userId, event.replyToken);
+  }
+
+  if (value === "pause") {
+    delete sessions[userId];
+    return sendLockedMenu(event.replyToken);
   }
 
   // ===== SAVE ANSWER =====
@@ -1583,40 +1584,16 @@ if (data.startsWith("step_")) {
   sessions[userId].step = step + 1;
 
   // ===== FLOW CONTROL =====
-  if (step === 0) return replyFlex(event.replyToken, UI_q2());
-  if (step === 1) return replyFlex(event.replyToken, UI_q3_cinematic());
-  if (step === 2) return replyFlex(event.replyToken, UI_q4());
-  if (step === 3) return replyFlex(event.replyToken, UI_q5());
-  if (step === 4) return replyFlex(event.replyToken, UI_transition_cinematic());
-
-
-
-  // ===== SPECIAL =====
-  if (value === "continue") {
-    sessions[userId].step = 6;
-    return sendStep(userId, event.replyToken);
-  }
-
-  if (value === "pause") {
-    delete sessions[userId];
-    return sendLockedMenu(event.replyToken);
-  }
-
-  // ===== SAVE =====
-  if (step < keys.length) {
-    sessions[userId].answers[keys[step]] = value;
-  }
-
-  sessions[userId].step = step + 1;
-
-  // 🎬 cinematic
-  if (step === 1) {
-    return replyFlex(event.replyToken, UI_q3_cinematic());
+  switch (step) {
+    case 0: return replyFlex(event.replyToken, UI_q2());
+    case 1: return replyFlex(event.replyToken, UI_q3_cinematic());
+    case 2: return replyFlex(event.replyToken, UI_q4());
+    case 3: return replyFlex(event.replyToken, UI_q5());
+    case 4: return replyFlex(event.replyToken, UI_transition_cinematic());
   }
 
   return sendStep(userId, event.replyToken);
-} // 🔥❗❗❗ ปิดตรงนี้เลย
-
+}
   //============================================
 // ===== START FLOW =====
 if (data === "start_talk") {
