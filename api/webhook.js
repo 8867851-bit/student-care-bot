@@ -1589,7 +1589,7 @@ if (data.startsWith("step_")) {
   if (step === 3) return replyFlex(event.replyToken, UI_q5());
   if (step === 4) return replyFlex(event.replyToken, UI_transition_cinematic());
 
-}
+
 
   // ===== SPECIAL =====
   if (value === "continue") {
@@ -2103,19 +2103,6 @@ async function getAIAnalysis(text) {
     return null;
   }
 }
-
-
-
-// ================= ETA =================
-function getETA() {
-  const h = new Date().getHours();
-
-  if (h < 8) return "ช่วงเช้านี้";
-  if (h < 18) return "ภายใน 1–3 ชั่วโมง";
-  return "เร็วที่สุดที่เราทำได้ 💛";
-}
-
-
 
 // ================= CONFIDENCE (FINAL) =================
 function getConfidence(intent, answers) {
