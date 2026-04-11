@@ -1640,7 +1640,7 @@ if (data.startsWith("confirm_")) {
 }
 } //ปิด Handle postback
 ////////////////////////////////////////////////////////////////////
-async function sendStep(userId, token) {
+function sendStep(userId, token) {
 
   const s = sessions[userId];
 
@@ -1648,11 +1648,13 @@ async function sendStep(userId, token) {
 
   if (s.step === 0) return replyFlex(token, UI_q1());
 
-  if (s.step === 4) return replyFlex(token, UI_q5());
+  if (s.step === 1) return replyFlex(token, UI_q2()); // 🔥 เพิ่ม
+  if (s.step === 2) return replyFlex(token, UI_q3()); // 🔥 เพิ่ม
+  if (s.step === 3) return replyFlex(token, UI_q4()); // 🔥 เพิ่ม
 
+  if (s.step === 4) return replyFlex(token, UI_q5());
   if (s.step === 5) return replyFlex(token, UI_transition());
 
-  // step อื่นใช้ text ปกติไปก่อน
   return replyText(token, "💛 พิมพ์ตอบได้เลยนะ");
 }
 
