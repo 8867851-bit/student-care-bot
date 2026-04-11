@@ -30,11 +30,10 @@ const THEME = {
   bg: "#FBFAF8",
   card: "#FFFFFF",
 
-  primary: "#2F2F2F",
+  primary: "#2F2F2F",  // ปุ่มหลัก (ยังคงนิ่ง)
+accent: "#7FBF9F",    // เขียว soft (ใช้เฉพาะบางจุด)
   text: "#2F2F2F",
   sub: "#7A7A7A",
-
-  accent: "#CFAF87",
   line: "#EAEAEA"
 };
 
@@ -138,7 +137,7 @@ function card(contents) {
       spacing: "md",
       contents
     }
-  };
+  };  
 }
 function isDeadZone() {
   const now = new Date();
@@ -176,7 +175,7 @@ function UI_entry_main() {
 
         {
           type: "text",
-          text: "ถ้าวันนี้มีอะไรอยู่ในใจ\nคุณสามารถเริ่มตรงนี้ได้เลย",
+          text: "วันนี้อยากเริ่มแบบไหน",
           size: "sm",
           color: THEME.sub,
           wrap: true
@@ -193,25 +192,41 @@ function UI_entry_main() {
           color: THEME.primary,
           action: {
             type: "postback",
-            label: "💛 คุยกับคนจริง",
+            label: "คุยกับคนจริง",
             data: "start_talk"
           }
+        },
+
+        {
+          type: "text",
+          text: "นัดคุยแบบตัวต่อตัวกับพี่",
+          size: "xs",
+          color: THEME.sub,
+          margin: "sm"
         },
 
         {
           type: "button",
           action: {
             type: "uri",
-            label: "🌿 สำรวจตัวเอง",
+            label: "สำรวจตัวเอง",
             uri: "https://your-web.com"
           }
+        },
+
+        {
+          type: "text",
+          text: "ลองอ่าน / คิด / ทำความเข้าใจตัวเอง",
+          size: "xs",
+          color: THEME.sub,
+          margin: "sm"
         },
 
         {
           type: "button",
           action: {
             type: "postback",
-            label: "🚨 ขอความช่วยเหลือด่วน",
+            label: "ขอความช่วยเหลือด่วน",
             data: "menu_urgent"
           }
         }
@@ -231,7 +246,7 @@ function UI_entry_topping() {
 
         {
           type: "text",
-          text: "🧑‍⚕️ ถ้าคุณอยากคุยกับผู้เชี่ยวชาญ",
+          text: "หากต้องการคำแนะนำจากผู้เชี่ยวชาญ",
           size: "sm",
           color: THEME.text,
           wrap: true
@@ -239,7 +254,7 @@ function UI_entry_topping() {
 
         {
           type: "text",
-          text: "คุณสามารถนัดคุยกับ\nครูแนะแนว หรือ นักจิตวิทยาได้",
+          text: "สามารถนัดคุยกับครูแนะแนว หรือนักจิตวิทยาได้",
           size: "sm",
           color: THEME.sub,
           wrap: true
@@ -261,14 +276,14 @@ function UI_entry_topping() {
 
         {
           type: "text",
-          text: "🤍 พื้นที่นี้ปลอดภัยนะ",
+          text: "พื้นที่นี้ปลอดภัยนะ",
           size: "sm",
           color: THEME.text
         },
 
         {
           type: "text",
-          text: "คุณไม่ต้องรีบ\nหรือเล่าทุกอย่างในครั้งเดียวก็ได้",
+          text: "คุณไม่ต้องรีบ และไม่จำเป็นต้องเล่าทุกอย่างในครั้งเดียว",
           size: "xs",
           color: THEME.sub,
           wrap: true
@@ -282,57 +297,80 @@ function UI_entry_topping() {
 // INTRO
 function UI_intro() {
   return card([
+
     header("พื้นที่นี้ปลอดภัยนะ 🤍"),
-    text("คุณสามารถเล่าได้ในแบบที่คุณสบายใจ"),
+
+    text("คุณสามารถเล่าได้ในแบบที่คุณสบายใจ\nไม่มีถูกหรือผิดเลย"),
+
     divider(),
-    text("เราจะช่วยหาพี่ที่เหมาะกับคุณ\nและนัดเวลาคุยแบบตัวต่อตัว"),
-    hint("📌 ไม่ใช่การคุยในแชทนี้"),
+
+    text("เราจะช่วยคุณเลือกช่วงเวลาที่สะดวก\nเพื่อคุยแบบตัวต่อตัวกับพี่"),
+
+    hint("📌 การพูดคุยจะไม่ได้เกิดในแชทนี้"),
+
     divider(),
-    hint("ค่อย ๆ ไปทีละนิดก็พอ"),
+
+    hint("คุณไม่ต้องรีบก็ได้นะ\nค่อย ๆ ไปทีละนิดก็พอ"),
+
     btn("เริ่มเล่า", "start_talk", true),
     btn("ยังไม่แน่ใจ", "intro_unsure")
-  ]); 
+
+  ]);
 }
 
 // UNSURE
 function UI_unsure() {
   return card([
-    header("ไม่เป็นไรเลยนะ 🤍"),
-    text("คุณยังไม่ต้องรีบก็ได้"),
+
+    header("ยังไม่ต้องรีบก็ได้นะ"),
+
+    text("คุณสามารถเริ่มจากอย่างอื่นก่อนก็ได้"),
+
     divider(),
+
     {
       type: "button",
       action: {
         type: "uri",
-        label: "🌱 สำรวจตัวเอง",
+        label: "ไปดูเครื่องมือและเนื้อหาทั้งหมด",
         uri: "https://your-web.com"
       }
     },
+
+    hint("มีทั้งเรื่องเรียน การวางแผนชีวิต และการดูแลตัวเอง"),
+
     btn("กลับเมนู", "menu")
+
   ]);
 }
 
 // Q1
 function UI_q1() {
   return card([
-    header("มีอะไรบางอย่างอยู่ในใจใช่ไหม"),
-    hint("เลือกสิ่งที่ใกล้กับคุณที่สุด"),
+
+    header("ตอนนี้อะไรใกล้กับคุณที่สุด"),
+
     divider(),
-    btn("ความเครียด", "step_0_q1_stress"),
+
+    btn("ความเครียด / กดดัน", "step_0_q1_stress"),
     btn("เรื่องเรียน", "step_0_q1_academic"),
     btn("ความสัมพันธ์", "step_0_q1_relationship"),
-    btn("ความรู้สึกตัวเอง", "step_0_q1_self")
+    btn("ความรู้สึกของตัวเอง", "step_0_q1_self")
+
   ]);
 }
 // Q2 (TIME)
 function UI_q2() {
   return card([
-    header("เรื่องนี้อยู่กับคุณมาสักพักแล้วหรือยัง"),
-    hint("เลือกสิ่งที่ใกล้กับคุณที่สุด"),
+
+    header("เรื่องนี้เกิดขึ้นมาสักพักแล้วใช่ไหม"),
+
     divider(),
-    btn("เพิ่งเกิดขึ้นไม่นาน", "step_1_q2_short"),
-    btn("เป็นมาสักพักแล้ว", "step_1_q2_mid"),
-    btn("อยู่กับมันมานานแล้ว", "step_1_q2_long")
+
+    btn("เพิ่งเกิดขึ้น", "step_1_q2_short"),
+    btn("เป็นมาสักพัก", "step_1_q2_mid"),
+    btn("เป็นมานานแล้ว", "step_1_q2_long")
+
   ]);
 }
 
@@ -406,13 +444,16 @@ function UI_q4() {
 // Q5
 function UI_q5() {
   return card([
-    header("ตอนนี้คุณต้องการอะไรจากการคุย"),
-    hint("ไม่มีคำตอบที่ถูกหรือผิด"),
+
+    header("คุณอยากได้อะไรจากการคุยครั้งนี้"),
+
     divider(),
-    btn("💬 ฟั ง", "step_4_q5_listen"),
-    btn("🫂 เข้าใจ", "step_4_q5_understand"),
-    btn("🌱 เบา ๆ", "step_4_q5_confused"),
-    btn("🧠 คำแนะนำ", "step_4_q5_advice")
+
+    btn("แค่อยากมีคนฟัง", "step_4_q5_listen"),
+    btn("อยากให้มีคนเข้าใจ", "step_4_q5_understand"),
+    btn("ยังไม่แน่ใจ", "step_4_q5_unsure"),
+    btn("อยากได้คำแนะนำ", "step_4_q5_advice")
+
   ]);
 }
 
@@ -424,9 +465,9 @@ function UI_transition_cinematic() {
 
     pause(),
 
-    text("เราจะช่วยหาพี่ที่เหมาะกับคุณ"),
+    text("ระบบจะจับคู่ให้ทันทีในช่วงเวลานั้น"),
 
-    text("และนัดเวลาคุยแบบตัวต่อตัว"),
+    text("คุยแบบตัวต่อตัวกับ PR"),
 
     hint("📌 ไม่ใช่การคุยในแชทนี้"),
 
@@ -436,78 +477,6 @@ function UI_transition_cinematic() {
     btn("ขอคิดดูก่อน", "step_5_pause")
 
   ]);
-}
-
-// MATCHED
-function UI_matched(caseId) {
-  return {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      spacing: "lg",
-      contents: [
-
-        {
-          type: "text",
-          text: "Matched",
-          size: "xs",
-          color: "#888888"
-        },
-
-        {
-          type: "text",
-          text: "มีพี่ที่เหมาะกับคุณแล้ว ✨",
-          weight: "bold",
-          size: "lg",
-          wrap: true
-        },
-
-        {
-          type: "text",
-          text: "ขั้นตอนต่อไปคือเลือกเวลาที่คุณสะดวก",
-          size: "sm",
-          color: "#666666",
-          wrap: true
-        },
-
-        {
-          type: "separator",
-          margin: "md"
-        },
-
-        {
-          type: "button",
-          style: "primary",
-          color: "#1A1A1A",
-          action: {
-            type: "postback",
-            label: "เลือกเวลา",
-            data: `get_slots_${caseId}`
-          }
-        },
-
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "ขอเวลาอื่น",
-            data: `next_peer_${caseId}`
-          }
-        },
-
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "ยังไม่สะดวก",
-            data: "pause_case"
-          }
-        }
-
-      ]
-    }
-  };
 }
 
 // SLOT
@@ -592,8 +561,10 @@ module.exports = async (req, res) => {
     if (handledEvents.has(eventId)) continue;
     handledEvents.add(eventId);
 
-    if (event.type === "follow") {
-  return safeReply({
+// ===== FOLLOW (ENTRY POINT) =====
+if (event.type === "follow") {
+
+  await safeReply({
     replyToken: event.replyToken,
     messages: [
       {
@@ -608,19 +579,27 @@ module.exports = async (req, res) => {
       }
     ]
   });
+
+  continue;
 }
 
-    if (event.type === "message") {
-      try {
-        await handleMessage(event);
-      } catch (err) {
-        console.log("❌ handleMessage ERROR:", err);
-      }
-    }
 
-    if (event.type === "postback") {
-      await handlePostback(event);
-    }
+// ===== MESSAGE =====
+if (event.type === "message") {
+  try {
+    await handleMessage(event);
+  } catch (err) {
+    console.log("❌ handleMessage ERROR:", err);
+  }
+  continue;
+}
+
+
+// ===== POSTBACK =====
+if (event.type === "postback") {
+  await handlePostback(event);
+  continue;
+}
   }
 
   return res.status(200).send("OK");
@@ -1349,7 +1328,7 @@ if (data === "intro_unsure") {
 }
   
 // ===== GET SLOTS (REPLY MODE) =====
-if (data.startsWith("get_slots_")) {
+if (data.startsWith("get_slots")) {
 
   const res = await fetch(GAS_URL, {
     method: "POST",
@@ -1407,121 +1386,6 @@ function ensureSession(userId) {
   }
 }
 
-// ===== FEEDBACK =====
-if (data.startsWith("feedback_")) {
-  const parts = data.split("_");
-  const type = parts[1];
-  const caseId = parts[2];
-
-  // 🔒 กัน spam feedback
-  if (sessions[userId]?.feedbackSent) {
-    return replyText(event.replyToken, "💛 รับ feedback แล้วนะ");
-  }
-  sessions[userId] = sessions[userId] || {};
-  sessions[userId].feedbackSent = true;
-
-  try {
-    await fetch(GAS_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "saveFeedback",
-        caseId,
-        feedback: type
-      })
-    });
-  } catch (e) {
-    console.log("❌ feedback error:", e);
-  }
-
-  let msg = "💛 ขอบคุณนะที่บอกเรา";
-
-  if (type === "continue") {
-    msg = "💛 เราจะหาพี่ให้คุณคุยต่ออีกครั้งนะ";
-  }
-
-  return replyText(event.replyToken, msg);
-}
-
-
-// ===== CLARIFY =====
-if (data === "clarify_emotional") {
-  ensureSession(userId);
-  sessions[userId].answers.q5 = "q5_listen";
-  return sendStep(userId, event.replyToken);
-}
-
-if (data === "clarify_peer") {
-  ensureSession(userId);
-  sessions[userId].answers.q5 = "q5_understand";
-  return sendStep(userId, event.replyToken);
-}
-
-if (data === "clarify_advice") {
-  ensureSession(userId);
-  sessions[userId].answers.q5 = "q5_advice";
-  return sendStep(userId, event.replyToken);
-}
-
-
-// ===== Q6 FOLLOW-UP =====
-if (data.startsWith("q6_follow_")) {
-  const s = sessions[userId];
-
-  if (!s || !s.answers) {
-    return replyText(event.replyToken, "💛 ลองเริ่มใหม่อีกครั้งนะ");
-  }
-
-  const index = parseInt(data.replace("q6_follow_", ""), 10);
-
-  if (s.aiFollowups && s.aiFollowups[index]) {
-    s.answers.q6 = s.aiFollowups[index];
-  } else {
-    s.answers.q6 = "follow_" + index;
-  }
-
-  await replyText(event.replyToken,
-    "💛 ขอบคุณที่บอกนะ เราเข้าใจคุณมากขึ้นแล้ว");
-
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-  const intent = detectIntent(s.answers);
-  let route = decideRoute(s.answers);
-
-  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
-  if (intent === "emotional_support") route = "peer";
-
-  try {
-    await fetch(GAS_URL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        action: "create",
-        caseId,
-        userId,
-        ...s.answers,
-        level,
-        route,
-        intent // 🔥 FIX สำคัญ
-      })
-    });
-  } catch (e) {
-    console.log("❌ create error:", e);
-  }
-
-  // 🔒 optional notify
-  if (typeof notifyTeam === "function") {
-    try {
-      await notifyTeam(caseId, level, s.answers, route);
-    } catch (e) {
-      console.log("❌ notify error:", e);
-    }
-  }
-
-  sessions[userId] = { locked: true };
-  return;
-}
-
 
 // ===== OPEN CASE =====
 if (data.startsWith("openCase_")) {
@@ -1571,9 +1435,9 @@ if (data.startsWith("step_")) {
   }
 
   if (value === "pause") {
-    delete sessions[userId];
-    return sendLockedMenu(event.replyToken);
-  }
+  sessions[userId].step = 6;
+  return sendStep(userId, event.replyToken);
+}
 
   // ===== SAVE ANSWER =====
   if (step < keys.length) {
@@ -1595,7 +1459,7 @@ if (data.startsWith("step_")) {
   return sendStep(userId, event.replyToken);
 }
   //============================================
-// ===== START FLOW =====
+
 if (data === "start_talk") {
 
   sessions[userId] = {
@@ -1626,96 +1490,6 @@ if (data === "menu_urgent") {
 }
 
 
-// ===== ROLE CHOICE =====
-if (data.startsWith("chooseRole_")) {
-
-  const caseId = data.replace("chooseRole_", "");
-
-  return replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      contents: [
-        {
-          type: "text",
-          text: "คุณจะรับเคสนี้ในบทบาทไหน?",
-          weight: "bold"
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "👩‍🎓 นักเรียน",
-            data: "accept_" + caseId + "_student"
-          }
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "👨‍🏫 ครู",
-            data: "accept_" + caseId + "_teacher"
-          }
-        }
-      ]
-    }
-  });
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////
-   
-// ===== BECOME PEER =====
-if (data === "become_peer") {
-  return replyText(event.replyToken,
-`💛 ขอให้โชคดีกับการผจญภัย Peer Support รุ่นที่ 1!
-
-📌 นี่คือรหัส (User Id) ของคุณ:
-${userId}
-
-👉 กรุณาก๊อปไปใส่ใน Google Form`);
-}
-
-
-// ===== SLOT (NO PUSH SPAM) =====
-if (data.startsWith("slot_")) {
-  const parts = data.split("_");
-  const caseId = parts[1];
-  const slot = decodeURIComponent(parts.slice(2).join("_"));
-
-  return replyFlex(event.replyToken, {
-    type: "bubble",
-    body: {
-      type: "box",
-      layout: "vertical",
-      contents: [
-        {
-  type: "text",
-  text: `เราจะนัดคุยกันตามเวลานี้นะ
-
-คุณโอเคไหม 🤍`,
-  wrap: true
-},
-        { type: "text", text: slot, weight: "bold" },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "✅ ยืนยัน",
-            data: "confirm_" + caseId + "_" + slot
-          }
-        },
-        {
-          type: "button",
-          action: {
-            type: "postback",
-            label: "🔄 เลือกใหม่",
-            data: "next_peer_" + caseId
-          }
-        }
-      ]
-    }
-  });
-}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
   
 // ===== CONFIRM (NEW SLOT-BASED MATCHING) =====
@@ -1810,15 +1584,22 @@ if (data.startsWith("confirm_")) {
 function sendStep(userId, token) {
 
   const s = sessions[userId];
-
   if (!s) return;
 
+  // ===== FLOW =====
   if (s.step === 0) return replyFlex(token, UI_q1());
-  if (s.step === 1) return replyFlex(token, UI_q2()); // 🔥 เพิ่ม
-  if (s.step === 2) return replyFlex(token, UI_q3()); // 🔥 เพิ่ม
-  if (s.step === 3) return replyFlex(token, UI_q4()); // 🔥 เพิ่ม
+  if (s.step === 1) return replyFlex(token, UI_q2());
+  if (s.step === 2) return replyFlex(token, UI_q3_cinematic()); // 🔥 ใช้อันนี้
+  if (s.step === 3) return replyFlex(token, UI_q4());
   if (s.step === 4) return replyFlex(token, UI_q5());
-  if (s.step === 5) return replyFlex(token, UI_transition());
+  if (s.step === 5) return replyFlex(token, UI_transition_cinematic());
+
+  // ===== Q6 (text mode) =====
+  if (s.step === 6) {
+    return replyText(token,
+`คุณสามารถพิมพ์เล่าเพิ่มได้นะ
+หรือพิมพ์ 1 เพื่อข้าม 🤍`);
+  }
 
   return replyText(token, "💛 พิมพ์ตอบได้เลยนะ");
 }
@@ -1912,8 +1693,6 @@ function decideRoute(answers) {
   // ================= FINAL =================
   return teacher > peer ? "teacher" : "peer";
 }
-
-
 
 // ================= KEYWORD SYSTEM =================
 
@@ -3504,23 +3283,6 @@ function flexTransition() {
 
     primaryBtn("ไปต่อ", "step_5_continue"),
     btn("ขอคิดดูก่อน", "step_5_pause")
-  ]);
-}
-
-
-// ================= MATCHED =================
-
-function flexMatched() {
-  return buildCard([
-    header("มีพี่ที่เหมาะกับคุณแล้ว ✨"),
-
-    paragraph("ขั้นตอนต่อไปคือเลือกเวลานัดคุย"),
-
-    divider(),
-
-    primaryBtn("เลือกเวลา", "get_slots"),
-    btn("ขอเวลาอื่น", "next_peer"),
-    btn("ยังไม่สะดวก", "pause_case")
   ]);
 }
 
