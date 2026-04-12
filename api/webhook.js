@@ -434,7 +434,7 @@ function UI_q3_cinematic() {
 // Q4 (SUPPORT)
 function UI_q4() {
   return card([
-    header("ตอนนี้คุณมีใครที่พอจะคุยเรื่องนี้ด้วยไหม"),
+    header("ตอนนี้คุณมีใครที่คุยเรื่องนี้อยู่ไหม?"),
     divider(),
     btn("ยังไม่มีเลย", "step_3_q4_none"),
     btn("มีเพื่อน", "step_3_q4_friend"),
@@ -465,7 +465,7 @@ function UI_transition_cinematic() {
 
     pause(),
 
-    text("ระบบจะจับคู่ให้ทันทีในช่วงเวลานั้น"),
+    text("ระบบจะจับคู่เเบบสุ่มโดยยึดเวลาว่างคุณเป็นสําคัญ"),
 
     text("คุยแบบตัวต่อตัวกับ PR"),
 
@@ -900,162 +900,6 @@ if (text === "พัก") {
 แล้วค่อยกลับมานะ 💛`);
 }
 
-
-
-// =========================
-// 🚀 FINAL STEP (Q6)
-// =========================
-if (s && s.step === 6) {
-
-  s.answers["q6"] = text;
-
-  const caseId = Date.now().toString().slice(-6);
-  const level = classify(s.answers);
-  let intent = detectIntent(s.answers);
-  let route = decideRoute(s.answers);
-
-  if (intent === "crisis" || intent === "practical_advice") route = "teacher";
-  if (intent === "emotional_support") route = "peer";
-
-  // ===== CONFIDENCE =====
-  const confidence = getConfidence(intent, s.answers);
-
-  const hasMeaningfulSignal =
-    hasKeyword(text, emotionalKeywords) ||
-    hasKeyword(text, practicalKeywords) ||
-    text.trim().length > 5;
-
-     // ===== OPTIONAL AI (SAFE MODE) =====
-if (USE_AI && confidence <= 1) {
-  try {
-    const ai = await getAIAnalysis(text);
-
-    if (ai?.followups?.length > 0) {
-      s.aiFollowups = ai.followups;
-
-      return replyFlex(event.replyToken, {
-        type: "bubble",
-        body: {
-          type: "box",
-          layout: "vertical",
-          contents: [
-            {
-              type: "text",
-              text: "💛 เลือกสิ่งที่ใกล้กับคุณที่สุด",
-              wrap: true
-            },
-            ...ai.followups.map((f, i) => ({
-              type: "button",
-              action: {
-                type: "postback",
-                label: f,
-                data: "q6_follow_" + i
-              }
-            }))
-          ]
-        }
-      });
-    }
-
-  } catch (e) {
-    console.log("AI ERROR:", e);
-  }
-}
-
-  // ===== LOW CLARITY GUARD =====
-  if (
-    confidence <= 1 &&
-    !hasMeaningfulSignal &&
-    s.answers.q5 === "q5_confused"
-  ) {
-    delete sessions[userId];
-
-    return replyFlex(event.replyToken, {
-      type: "bubble",
-      body: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-          { type: "text", text: "💛 เราอยากเข้าใจคุณมากขึ้นอีกนิดนะ" },
-          {
-            type: "button",
-            action: { type: "postback", label: "💬 แค่อยากระบาย", data: "clarify_emotional" }
-          },
-          {
-            type: "button",
-            action: { type: "postback", label: "🤝 อยากคุยกับคนจริง", data: "clarify_peer" }
-          },
-          {
-            type: "button",
-            action: { type: "postback", label: "🧠 อยากได้คำแนะนำ", data: "clarify_advice" }
-          }
-        ]
-      }
-    });
-  }
-
-  // ===== CREATE CASE =====
-  let result;
-
-  try {
-    const res = await fetch(GAS_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "create",
-        caseId,
-        userId,
-        ...s.answers,
-        level,
-        route,
-        intent
-      })
-    });
-
-    result = await res.json();
-
-  } catch (e) {
-    console.log("❌ CREATE ERROR:", e);
-
-    return replyText(
-      event.replyToken,
-      "⚠️ ระบบมีปัญหานิดหน่อย ลองใหม่อีกครั้งนะ"
-    );
-  }
-
-  const peerId = result?.assignedTo || null;
-
-  // ===== SESSION STATE =====
-  sessions[userId] = sessions[userId] || {};
-
-  if (peerId) {
-    sessions[userId].inChat = true;
-    sessions[userId].activeCase = caseId;
-  } else {
-    sessions[userId].locked = true;
-  }
-  if (!peerId) {
-  sessions[userId].locked = true;
-
-  await pushToUser(userId, {
-  type: "flex",
-  altText: "waiting",
-  contents: UI_waiting()
-});
-}
-
-  // ===== SINGLE REPLY ONLY (ประหยัด quota) =====
-  return replyText(
-  event.replyToken,
-`💛 เรารับเรื่องของคุณแล้วนะ
-
-${peerId 
-  ? "✨ มีพี่แล้ว กำลังเตรียมเวลานัดให้คุณ"
-  : "⏳ ตอนนี้กำลังหาพี่ให้อยู่นะ"}
-
-คุณไม่ต้องทำอะไรเพิ่มเลย 💛`
-);
-}
   //======= WAITLIST ======
  if (s?.status === "waitlist") {
   return replyText(replyToken,
@@ -1205,7 +1049,7 @@ return replyText(
 
 ///////////////////////////////////////////////////////////////////////////////////
 // ================= POSTBACK =================
-async function handlePostback(event) {
+async function handlePostback(event) { 
   const data = event.postback.data;
   const userId = event.source.userId;
   console.log("DATA:", data);
@@ -1213,7 +1057,8 @@ async function handlePostback(event) {
   console.log("POSTBACK DATA:", data);
 
 
- if (data === "get_slots") {
+
+if (data === "get_slots") {
 
   const res = await fetch(GAS_URL, {
     method: "POST",
@@ -1451,10 +1296,10 @@ if (data.startsWith("step_")) {
   }
 
   // ===== SPECIAL FIRST =====
-  if (value === "continue") {
-    sessions[userId].step = 6;
-    return sendStep(userId, event.replyToken);
-  }
+  
+if (value === "continue") {
+  return handleGetSlots(event); // หรือ inline ก็ได้
+}
 
   if (value === "pause") {
   sessions[userId].step = 6;
@@ -1617,11 +1462,6 @@ function sendStep(userId, token) {
   if (s.step === 5) return replyFlex(token, UI_transition_cinematic());
 
   // ===== Q6 (text mode) =====
-  if (s.step === 6) {
-    return replyText(token,
-`คุณสามารถพิมพ์เล่าเพิ่มได้นะ
-หรือพิมพ์ 1 เพื่อข้าม 🤍`);
-  }
 
   return replyText(token, "💛 พิมพ์ตอบได้เลยนะ");
 }
