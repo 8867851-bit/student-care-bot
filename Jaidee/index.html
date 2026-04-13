@@ -146,7 +146,7 @@
 
   <!-- GREETING -->
   <div class="greeting">
-    <div class="greeting-name">สวัสดี 🤍</div>
+    <div class="greeting-name" id="greeting-name">สวัสดี 🤍</div>
     <div class="greeting-sub">มีอะไรให้ช่วยวันนี้ไหม?</div>
   </div>
 
@@ -213,6 +213,23 @@
 
   <!-- FLOATING BUTTON -->
   <button class="floating">💛 คุยกับพี่ได้เลย</button>
-
+  
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+  liff.init({ liffId: "2009788751-Q45MhORl" })
+    .then(() => {
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+      }
+      liff.getProfile().then(profile => {
+        const name = profile.displayName;
+        document.getElementById("greeting-name").innerText = "สวัสดี " + name + " 🤍";
+      });
+    })
+    .catch(err => {
+      console.error("LIFF error:", err);
+    });
+</script>
 </body>
 </html>
