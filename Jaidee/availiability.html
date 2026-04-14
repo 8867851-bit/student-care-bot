@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ใจดี TU — ลงเวลา</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #FDFCF9;
+      color: #1A1A1A;
+      padding: 32px 20px 100px;
+    }
+
+    .tag {
+      font-size: 12px;
+      font-weight: 600;
+      color: #AAAAAA;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1A1A1A;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .week-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #AAAAAA;
+      margin-bottom: 16px;
+    }
+
+    .day-block {
+      margin-bottom: 20px;
+    }
+
+    .day-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 8px;
+    }
+
+    .slots-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .slot-btn {
+      background: white;
+      border: 1.5px solid #E8E8E8;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .slot-btn.selected {
+      background: #1A1A1A;
+      border-color: #1A1A1A;
+      color: white;
+      font-weight: 600;
+    }
+
+    .divider {
+      height: 1px;
+      background: #F0F0F0;
+      margin: 24px 0;
+    }
+
+    .selected-summary {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 20px;
+      min-height: 20px;
+    }
+
+    .selected-summary span {
+      color: #1A1A1A;
+      font-weight: 600;
+    }
+
+    .btn-confirm {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1A1A1A;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 36px;
+      font-size: 15px;
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      width: calc(100% - 40px);
+      max-width: 400px;
+    }
+
+    .btn-confirm:disabled {
+      background: #CCC;
+      box-shadow: none;
+    }
+
+    /* SUCCESS SCREEN */
+    #screen-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      text-align: center;
+      gap: 16px;
+    }
+
+    .success-emoji {
+      font-size: 48px;
+    }
+
+    .success-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .success-sub {
+      font-size: 14px;
+      color: #888;
+      line-height: 1.7;
+    }
+
+    .success-slots {
+      background: white;
+      border-radius: 16px;
+      padding: 16px 20px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      text-align: left;
+    }
+
+    .success-slot-item {
+      font-size: 14px;
+      color: #1A1A1A;
+      padding: 6px 0;
+      border-bottom: 1px solid #F5F5F5;
+    }
+
+    .success-slot-item:last-child {
+      border-bottom: none;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- MAIN SCREEN -->
+<div id="screen-main">
+
+  <div class="tag">ใจดี TU — Peer Order</div>
+  <div class="title">ลงเวลาสัปดาห์นี้ 💛</div>
+  <div class="subtitle">
+    เลือกช่วงเวลาที่ว่างและพร้อมรับน้อง<br>
+    สามารถเลือกได้หลายช่วงเวลา
+  </div>
+
+  <div class="week-label" id="week-label">สัปดาห์นี้</div>
+
+  <!-- MONDAY -->
+  <div class="day-block">
+    <div class="day-name">จันทร์</div>
+    <div class="slots-row" id="day-mon"></div>
+  </div>
+
+  <!-- TUESDAY -->
+  <div class="day-block">
+    <div class="day-name">อังคาร</div>
+    <div class="slots-row" id="day-tue"></div>
+  </div>
+
+  <!-- WEDNESDAY -->
+  <div class="day-block">
+    <div class="day-name">พุธ</div>
+    <div class="slots-row" id="day-wed"></div>
+  </div>
+
+  <!-- THURSDAY -->
+  <div class="day-block">
+    <div class="day-name">พฤหัสบดี</div>
+    <div class="slots-row" id="day-thu"></div>
+  </div>
+
+  <!-- FRIDAY -->
+  <div class="day-block">
+    <div class="day-name">ศุกร์</div>
+    <div class="slots-row" id="day-fri"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="selected-summary" id="summary-text">
+    ยังไม่ได้เลือกช่วงเวลา
+  </div>
+
+  <button
+    class="btn-confirm"
+    id="confirm-btn"
+    disabled
+    onclick="confirmSlots()">
+    ยืนยันตารางสัปดาห์นี้
+  </button>
+
+</div>
+
+<!-- SUCCESS SCREEN -->
+<div id="screen-success">
+  <div class="success-emoji">💛</div>
+  <div class="success-title">บันทึกแล้วนะ</div>
+  <div class="success-sub">
+    ขอบคุณมากเลย<br>
+    น้องจะได้รับการจับคู่กับพี่ตามเวลาที่เลือก
+  </div>
+  <div class="success-slots" id="success-slot-list"></div>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
+
+const SLOTS = {
+  mon: ["15:30–16:30", "16:00–17:00", "16:30–17:30"],
+  tue: ["15:30–16:30", "16:00–17:00", "16:30–17:30"],
+  wed: ["15:30–16:30", "16:00–17:00", "16:30–17:30"],
+  thu: ["15:30–16:30", "16:00–17:00", "16:30–17:30"],
+  fri: ["12:30–13:30", "13:00–14:00", "13:30–14:30",
+        "14:00–15:00", "14:30–15:30", "15:00–16:00",
+        "15:30–16:30", "16:00–17:00", "16:30–17:30"]
+};
+
+const DAY_NAMES = {
+  mon: "จันทร์",
+  tue: "อังคาร",
+  wed: "พุธ",
+  thu: "พฤหัสบดี",
+  fri: "ศุกร์"
+};
+
+let selected = [];
+let userId = null;
+let weekId = null;
+
+// ===== INIT =====
+window.onload = async () => {
+  // Get weekId (Monday of this week)
+  const now = new Date();
+  const day = now.getDay();
+  const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+  const monday = new Date(now);
+  monday.setDate(diff);
+  weekId = monday.toISOString().split("T")[0];
+
+  document.getElementById("week-label").innerText =
+    "สัปดาห์ " + weekId;
+
+  // Build slot buttons
+  for (const [dayKey, slots] of Object.entries(SLOTS)) {
+    const container = document.getElementById("day-" + dayKey);
+    slots.forEach(time => {
+      const fullSlot = DAY_NAMES[dayKey] + " " + time;
+      const btn = document.createElement("button");
+      btn.className = "slot-btn";
+      btn.innerText = time;
+      btn.dataset.slot = fullSlot;
+      btn.onclick = () => toggleSlot(btn, fullSlot);
+      container.appendChild(btn);
+    });
+  }
+
+  // Init LIFF
+  try {
+    await liff.init({ liffId: "2009788751-Q45MhORl" });
+    if (!liff.isLoggedIn()) {
+      liff.login();
+      return;
+    }
+    const profile = await liff.getProfile();
+    userId = profile.userId;
+  } catch (err) {
+    console.error("LIFF error:", err);
+    userId = "test_user";
+  }
+};
+
+// ===== TOGGLE SLOT =====
+function toggleSlot(btn, slot) {
+  if (selected.includes(slot)) {
+    selected = selected.filter(s => s !== slot);
+    btn.classList.remove("selected");
+  } else {
+    selected.push(slot);
+    btn.classList.add("selected");
+  }
+  updateSummary();
+}
+
+// ===== UPDATE SUMMARY =====
+function updateSummary() {
+  const btn = document.getElementById("confirm-btn");
+  const summary = document.getElementById("summary-text");
+
+  if (selected.length === 0) {
+    summary.innerHTML = "ยังไม่ได้เลือกช่วงเวลา";
+    btn.disabled = true;
+  } else {
+    summary.innerHTML = `เลือกแล้ว <span>${selected.length} ช่วงเวลา</span>`;
+    btn.disabled = false;
+  }
+}
+
+// ===== CONFIRM =====
+async function confirmSlots() {
+  const btn = document.getElementById("confirm-btn");
+  btn.disabled = true;
+  btn.innerText = "กำลังบันทึก...";
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "registerAvailability",
+        userId,
+        weekId,
+        slots: selected
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "OK") {
+      showSuccess();
+    } else {
+      alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+      btn.disabled = false;
+      btn.innerText = "ยืนยันตารางสัปดาห์นี้";
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+    btn.disabled = false;
+    btn.innerText = "ยืนยันตารางสัปดาห์นี้";
+  }
+}
+
+// ===== SHOW SUCCESS =====
+function showSuccess() {
+  document.getElementById("screen-main").style.display = "none";
+
+  const success = document.getElementById("screen-success");
+  success.style.display = "flex";
+
+  const list = document.getElementById("success-slot-list");
+  list.innerHTML = "";
+
+  selected.forEach(slot => {
+    const item = document.createElement("div");
+    item.className = "success-slot-item";
+    item.innerText = "✓ " + slot;
+    list.appendChild(item);
+  });
+}
+
+</script>
+</body>
+</html>
