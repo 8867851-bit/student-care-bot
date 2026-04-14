@@ -345,23 +345,19 @@ async function confirmSlots() {
   btn.innerText = "กำลังบันทึก...";
 
   try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "registerAvailability",
-        userId,
-        weekId,
-        slots: selected
-      })
-    });
+    const params = new URLSearchParams();
+    params.append("action", "registerAvailability");
+    params.append("userId", userId);
+    params.append("weekId", weekId);
+    params.append("slots", JSON.stringify(selected));
 
+    const res = await fetch(API_URL + "?" + params.toString());
     const data = await res.json();
 
     if (data.status === "OK") {
       showSuccess();
     } else {
-      alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+      alert("เกิดข้อผิดพลาด: " + data.message);
       btn.disabled = false;
       btn.innerText = "ยืนยันตารางสัปดาห์นี้";
     }
@@ -374,7 +370,7 @@ async function confirmSlots() {
   }
 }
 
-// ===== SHOW SUCCESS =====
+//======= SHOW SUCCESS =========
 function showSuccess() {
   document.getElementById("screen-main").style.display = "none";
 
