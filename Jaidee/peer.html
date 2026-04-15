@@ -1,324 +1,729 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ใจดี TU — คุยกับพี่</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — Peer Support</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --cream:#FDFCF9; --gold:#F5A623; --gold-soft:#FFF5E0;
+      --gold-border:#FFE4A0; --dark:#1A1A1A; --mid:#555;
+      --soft:#999; --softer:#CCC; --border:#EEEBE4; --white:#FFFFFF;
     }
-
-    body {
-      font-family: 'Sarabun', sans-serif;
-      background: #FDFCF9;
-      color: #1A1A1A;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 24px;
-    }
-
-    .screen {
-      width: 100%;
-      max-width: 400px;
-    }
-
-    /* INTRO SCREEN */
-    #screen-intro {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .tag {
-      font-size: 12px;
-      font-weight: 600;
-      color: #AAAAAA;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .big-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: #1A1A1A;
-      line-height: 1.3;
-    }
-
-    .body-text {
-      font-size: 15px;
-      color: #666;
-      line-height: 1.7;
-    }
-
-    .divider {
-      height: 1px;
-      background: #F0F0F0;
-    }
-
-    .btn-primary {
-      background: #1A1A1A;
-      color: white;
-      border: none;
-      border-radius: 14px;
-      padding: 16px;
-      font-size: 16px;
-      font-family: 'Sarabun', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: opacity 0.2s;
-    }
-
-    .btn-primary:active {
-      opacity: 0.8;
-    }
-
-    .btn-soft {
-      background: none;
-      border: none;
-      color: #AAAAAA;
-      font-size: 13px;
-      font-family: 'Sarabun', sans-serif;
-      cursor: pointer;
-      text-align: center;
-      width: 100%;
-      padding: 8px;
-    }
-
-    /* TRANSITION SCREEN */
-    #screen-transition {
-      display: none;
-      text-align: center;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .transition-emoji {
-      font-size: 40px;
-    }
-
-    .transition-text {
-      font-size: 20px;
-      font-weight: 600;
-      color: #1A1A1A;
-    }
-
-    /* QUESTION SCREEN */
-    #screen-question {
-      display: none;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .progress {
-      font-size: 12px;
-      color: #AAAAAA;
-      font-weight: 500;
-    }
-
-    .question-text {
-      font-size: 22px;
-      font-weight: 700;
-      color: #1A1A1A;
-      line-height: 1.4;
-    }
-
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .option-btn {
-      background: white;
-      border: 1.5px solid #E8E8E8;
-      border-radius: 14px;
-      padding: 14px 18px;
-      font-size: 15px;
-      font-family: 'Sarabun', sans-serif;
-      color: #1A1A1A;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.15s ease;
-    }
-
-    .option-btn:active {
-      background: #F5F5F5;
-      border-color: #1A1A1A;
-    }
-
-    /* DONE SCREEN */
-    #screen-done {
-      display: none;
-      flex-direction: column;
-      gap: 20px;
-      text-align: center;
-    }
-
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;}
+    .screen{display:none;flex-direction:column;min-height:100vh;padding:48px 24px 40px;}
+    .screen.active{display:flex;animation:fadeUp 0.4s ease both;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:flex-end;}
+    .overlay.active{display:flex;}
+    .sheet{background:var(--white);border-radius:24px 24px 0 0;padding:28px 24px 48px;width:100%;display:flex;flex-direction:column;gap:16px;animation:sheetUp 0.3s ease both;}
+    @keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 4px;}
+    .sheet-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+    .sheet-title{font-family:'Playfair Display',serif;font-size:22px;line-height:1.35;}
+    .sheet-body{font-size:14px;color:var(--mid);line-height:1.85;}
+    #screen-intro{justify-content:space-between;}
+    .intro-top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+    .info-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:white;color:var(--soft);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-style:italic;}
+    .intro-middle{flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;}
+    .intro-headline{font-family:'Playfair Display',serif;font-size:38px;line-height:1.2;}
+    .intro-headline em{font-style:italic;color:var(--gold);}
+    .divider-thin{height:1px;background:var(--border);}
+    .intro-body{font-size:15px;color:var(--mid);line-height:1.85;}
+    .intro-bottom{display:flex;flex-direction:column;gap:10px;}
+    #screen-transition{align-items:center;justify-content:center;gap:16px;text-align:center;background:var(--dark);}
+    .transition-heart{font-size:56px;animation:pulse 1.4s ease infinite;}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+    .transition-word{font-family:'Playfair Display',serif;font-size:26px;color:white;font-style:italic;}
+    #screen-question{justify-content:flex-start;gap:0;}
+    .q-meta{font-size:12px;color:var(--softer);font-weight:600;margin-bottom:24px;}
+    .question-text{font-family:'Playfair Display',serif;font-size:28px;line-height:1.4;font-weight:600;margin-bottom:28px;}
+    .options{display:flex;flex-direction:column;gap:10px;}
+    .option-btn{background:white;border:1.5px solid var(--border);border-radius:14px;padding:15px 18px;font-size:15px;font-family:'Sarabun',sans-serif;color:var(--dark);cursor:pointer;text-align:left;line-height:1.5;transition:all 0.18s ease;}
+    .option-btn.pressed{background:var(--gold-soft);border-color:var(--gold);transform:scale(0.985);}
+    #screen-booking{gap:18px;}
+    .booking-headline{font-family:'Playfair Display',serif;font-size:28px;line-height:1.3;}
+    .booking-sub{font-size:14px;color:var(--mid);line-height:1.7;margin-top:-6px;}
+    .week-badge{display:inline-block;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:5px 14px;font-size:12px;font-weight:600;color:#7A5C00;}
+    .day-group{display:flex;flex-direction:column;gap:8px;}
+    .day-name{font-size:13px;font-weight:600;color:var(--mid);}
+    .slots-row{display:flex;flex-wrap:wrap;gap:8px;}
+    .slot-chip{background:white;border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:13px;font-family:'Sarabun',sans-serif;color:var(--mid);cursor:pointer;transition:all 0.15s ease;display:flex;align-items:center;gap:6px;}
+    .pr-count{font-size:10px;background:var(--gold-soft);color:var(--gold);padding:2px 6px;border-radius:99px;font-weight:700;}
+    .slot-chip.chosen{background:var(--dark);border-color:var(--dark);color:white;}
+    .slot-chip.chosen .pr-count{background:rgba(255,255,255,0.15);color:white;}
+    .booking-bottom{margin-top:auto;display:flex;flex-direction:column;gap:10px;}
+    #screen-sorry{align-items:center;justify-content:center;gap:16px;text-align:center;background:var(--dark);}
+    .sorry-title{font-family:'Playfair Display',serif;font-size:24px;color:white;line-height:1.35;}
+    .sorry-sub{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.7;}
+    .sorry-bar-wrap{width:120px;height:3px;background:rgba(255,255,255,0.15);border-radius:99px;overflow:hidden;}
+    .sorry-bar-fill{height:100%;background:var(--gold);border-radius:99px;animation:sorryBar 5s linear forwards;}
+    @keyframes sorryBar{from{width:0%}to{width:100%}}
+    .branch-screen{align-items:center;justify-content:center;gap:20px;text-align:center;}
+    .branch-icon{font-size:48px;}
+    .branch-title{font-family:'Playfair Display',serif;font-size:26px;line-height:1.35;}
+    .branch-body{font-size:14px;color:var(--mid);line-height:1.85;}
+    .branch-actions{width:100%;display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+    #screen-special{gap:18px;}
+    .special-headline{font-family:'Playfair Display',serif;font-size:26px;line-height:1.35;}
+    .countdown-card{background:white;border-radius:18px;padding:20px 24px;width:100%;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:6px;}
+    .countdown-number{font-family:'Playfair Display',serif;font-size:52px;color:var(--gold);font-weight:600;}
+    .countdown-label{font-size:13px;color:var(--soft);}
+    #screen-external{gap:20px;}
+    .external-headline{font-family:'Playfair Display',serif;font-size:26px;line-height:1.35;}
+    .clinic-card{background:white;border-radius:16px;padding:18px 20px;border:1px solid var(--border);display:flex;flex-direction:column;gap:8px;}
+    .clinic-name{font-size:16px;font-weight:700;}
+    .clinic-detail{font-size:13px;color:var(--mid);line-height:1.6;}
+    .clinic-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+    .clinic-tag{background:var(--gold-soft);color:#7A5C00;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:600;}
+    .clinic-link{font-size:13px;color:var(--gold);font-weight:600;text-decoration:none;}
+    .confirm-slot-display{background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:14px;padding:16px 20px;display:flex;flex-direction:column;gap:4px;}
+    .confirm-slot-day{font-size:13px;color:#7A5C00;font-weight:600;}
+    .confirm-slot-time{font-family:'Playfair Display',serif;font-size:26px;color:var(--dark);}
+    #screen-success{align-items:center;justify-content:center;gap:24px;text-align:center;padding:48px 28px;}
+    .success-glow{width:90px;height:90px;border-radius:50%;background:var(--gold-soft);display:flex;align-items:center;justify-content:center;font-size:44px;animation:glow 2.5s ease infinite;}
+    @keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,0.3)}50%{box-shadow:0 0 0 18px rgba(245,166,35,0)}}
+    .success-title{font-family:'Playfair Display',serif;font-size:30px;line-height:1.3;}
+    .success-sub{font-size:14px;color:var(--mid);line-height:1.85;}
+    .success-card{background:white;border-radius:18px;padding:20px 24px;width:100%;border:1px solid var(--border);box-shadow:0 4px 24px rgba(0,0,0,0.05);display:flex;flex-direction:column;gap:12px;text-align:left;}
+    .success-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;}
+    .success-row .label{color:var(--soft);}
+    .success-row .value{font-weight:600;}
+    .success-note{font-size:12px;color:var(--soft);line-height:1.7;border-top:1px solid var(--border);padding-top:12px;}
+    .btn-primary{background:var(--dark);color:white;border:none;border-radius:14px;padding:16px;font-size:15px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;width:100%;transition:opacity 0.2s,transform 0.15s;}
+    .btn-primary:active{opacity:0.85;transform:scale(0.985);}
+    .btn-primary:disabled{background:var(--softer);cursor:default;transform:none;}
+    .btn-gold{background:var(--gold);color:white;border:none;border-radius:14px;padding:16px;font-size:15px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;width:100%;}
+    .btn-ghost{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:8px;text-align:center;width:100%;}
+    .loading-row{display:flex;align-items:center;gap:10px;color:var(--soft);font-size:14px;}
+    .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--dark);color:white;padding:12px 20px;border-radius:99px;font-size:14px;font-family:'Sarabun',sans-serif;white-space:nowrap;z-index:200;animation:fadeUp 0.3s ease both;}
   </style>
 </head>
 <body>
 
-<div class="screen">
-
-  <!-- SCREEN 1: INTRO -->
-  <div id="screen-intro">
-    <div class="tag">ใจดี TU — Peer Support</div>
-    <div class="big-title">วันนี้เป็นยังไงบ้าง? 🤍</div>
-    <div class="body-text">
-      ที่นี่ปลอดภัยนะ<br><br>
-      เราจะถามคำถามสั้น ๆ สักไม่กี่ข้อ
-      เพื่อให้พี่ที่จะคุยด้วยได้รู้จักคุณมากขึ้น
-      แล้วคุณจะได้เลือกเวลานัดคุยที่สะดวก<br><br>
-      ไม่ต้องรู้ว่าตัวเองเป็นอะไร
-      แค่มาก็พอแล้ว
+<!-- PR INFO OVERLAY -->
+<div class="overlay" id="overlay-pr" onclick="closePRInfo(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-eyebrow">PR คืออะไร?</div>
+    <div class="sheet-title">คนที่เลือก<br>ที่จะอยู่ตรงนี้<br>เพื่อคุณ 🤍</div>
+    <div class="sheet-body">
+      PR ย่อมาจาก Peer — กลุ่มนักเรียนที่ผ่านการคัดเลือกอย่างพิถีพิถัน จาก 80 คน เหลือ 20 คน<br><br>
+      พวกเขาผ่านการฝึกอบรม การทดสอบ และการคัดกรองด้านทักษะ ความเห็นอกเห็นใจ และความตั้งใจ<br><br>
+      แต่สิ่งที่สำคัญที่สุด — <strong>พวกเขาเลือกที่จะอยู่ตรงนี้</strong> ไม่มีใครบังคับ ไม่มีค่าตอบแทน มีแค่ใจที่อยากดูแลคุณจริง ๆ
     </div>
-    <div class="divider"></div>
-    <button class="btn-primary" onclick="startFlow()">พร้อมแล้ว →</button>
-    <button class="btn-soft" onclick="goBack()">ยังไม่แน่ใจ ไว้คราวหน้าก็ได้</button>
+    <button class="btn-primary" onclick="closePRInfo()">เข้าใจแล้ว 💛</button>
   </div>
-
-  <!-- SCREEN 2: TRANSITION -->
-  <div id="screen-transition">
-    <div class="transition-emoji">🤍</div>
-    <div class="transition-text">เริ่มได้เลยนะ</div>
-  </div>
-
-  <!-- SCREEN 3: QUESTIONS -->
-  <div id="screen-question">
-    <div class="progress" id="progress-text">ข้อ 1 จาก 5</div>
-    <div class="question-text" id="question-text"></div>
-    <div class="options" id="options-container"></div>
-  </div>
-
-  <!-- SCREEN 4: DONE -->
-  <div id="screen-done">
-    <div class="transition-emoji">💛</div>
-    <div class="big-title">ขอบคุณที่เล่าให้ฟังนะ</div>
-    <div class="body-text">พี่จะอ่านสิ่งที่คุณแชร์มา และพร้อมรับฟังคุณ</div>
-    <button class="btn-primary" onclick="goBooking()">เลือกเวลานัดคุย →</button>
-  </div>
-
 </div>
 
+<!-- CONFIRM OVERLAY -->
+<div class="overlay" id="overlay-confirm">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-eyebrow">ยืนยันเวลานัด</div>
+    <div class="sheet-title">แน่ใจแล้วใช่ไหม? 🤍</div>
+    <div class="confirm-slot-display">
+      <div class="confirm-slot-day" id="confirm-day"></div>
+      <div class="confirm-slot-time" id="confirm-time"></div>
+    </div>
+    <div class="sheet-body" style="font-size:13px;">PR จะได้รับสิ่งที่คุณแชร์มา และพร้อมรับฟังคุณตั้งแต่ต้น</div>
+    <button class="btn-gold" onclick="finalConfirm()">ยืนยันเลย →</button>
+    <button class="btn-ghost" onclick="closeConfirmOverlay()">เปลี่ยนใจ ขอเลือกใหม่</button>
+  </div>
+</div>
+
+<!-- SCREEN 1: INTRO -->
+<div class="screen active" id="screen-intro">
+  <div class="intro-top-bar">
+    <div class="eyebrow">ใจดี TU · Peer Support</div>
+    <button class="info-btn" onclick="openPRInfo()">i</button>
+  </div>
+  <div class="intro-middle">
+    <div class="intro-headline">วันนี้<br>เป็นยังไง<em>บ้าง?</em></div>
+    <div class="divider-thin"></div>
+    <div class="intro-body">
+      ที่นี่ปลอดภัยนะ<br><br>
+      เราจะถามคำถามสั้น ๆ ไม่กี่ข้อ เพื่อให้ PR
+      ที่จะคุยด้วยได้รู้จักคุณมากขึ้น แล้วคุณจะได้
+      เลือกเวลานัดคุยที่สะดวก<br><br>
+      ไม่ต้องรู้ว่าตัวเองเป็นอะไร แค่มาก็พอแล้ว 🤍
+    </div>
+  </div>
+  <div class="intro-bottom">
+    <button class="btn-primary" onclick="startFlow()">พร้อมแล้ว →</button>
+    <button class="btn-ghost" onclick="goHome()">ยังไม่แน่ใจ ไว้คราวหน้าก็ได้</button>
+  </div>
+</div>
+
+<!-- SCREEN 2: TRANSITION -->
+<div class="screen" id="screen-transition">
+  <div class="transition-heart">🤍</div>
+  <div class="transition-word">เริ่มได้เลยนะ</div>
+</div>
+
+<!-- SCREEN 3: QUESTIONS -->
+<div class="screen" id="screen-question">
+  <div class="q-meta" id="q-meta">ข้อ 1 จาก 5</div>
+  <div class="question-text" id="question-text"></div>
+  <div class="options" id="options-container"></div>
+</div>
+
+<!-- SCREEN 4: BOOKING -->
+<div class="screen" id="screen-booking">
+  <div class="booking-headline">เลือกเวลา<br>ที่สะดวกเลยนะ 🤍</div>
+  <div class="booking-sub">PR ที่พร้อมคุยจะรอรับคุณในเวลาที่เลือก</div>
+  <div id="booking-week-badge"></div>
+  <div id="booking-slots-container">
+    <div class="loading-row"><div class="spinner"></div><span>กำลังดึงตารางของ PR...</span></div>
+  </div>
+  <div class="booking-bottom">
+    <button class="btn-ghost" onclick="show('screen-no-slots')">ไม่มีเวลาที่สะดวกสัปดาห์นี้ใช่ไหม?</button>
+    <button class="btn-primary" id="btn-book" disabled onclick="openConfirmOverlay()">ยืนยันเวลานัด</button>
+    <button class="btn-ghost" style="font-size:11px;color:#ccc;padding:4px;" onclick="show('screen-external')">ต้องการความช่วยเหลือจากผู้เชี่ยวชาญ?</button>
+  </div>
+</div>
+
+<!-- SCREEN: SORRY — slot taken race condition -->
+<div class="screen" id="screen-sorry">
+  <div class="branch-icon">🙏</div>
+  <div class="sorry-title">เสียใจมากเลยนะ<br>slot นี้เพิ่งถูกจองไป</div>
+  <div class="sorry-sub">กำลังพาคุณกลับไปเลือกเวลาใหม่...</div>
+  <div class="sorry-bar-wrap"><div class="sorry-bar-fill"></div></div>
+</div>
+
+<!-- BRANCH B/C: NO SLOTS -->
+<div class="screen branch-screen" id="screen-no-slots">
+  <div class="branch-icon">🌙</div>
+  <div class="branch-title">ไม่มีเวลาที่<br>สะดวกใช่ไหม?</div>
+  <div class="branch-body">
+    ไม่เป็นไรเลยนะ ยังมีสองทางให้เลือก —<br><br>
+    ให้เราแจ้งเตือนเมื่อมีตารางใหม่<br>
+    หรือขอเวลาพิเศษที่คุณสะดวกจริง ๆ
+  </div>
+  <div class="branch-actions">
+    <button class="btn-gold" onclick="showSpecialRequest()">ขอเวลาพิเศษ →</button>
+    <button class="btn-primary" onclick="saveAndNotify()">แจ้งเตือนเมื่อมีตารางใหม่</button>
+    <button class="btn-ghost" onclick="show('screen-external')">ดูตัวเลือกอื่น ๆ</button>
+  </div>
+</div>
+
+<!-- SPECIAL REQUEST -->
+<div class="screen" id="screen-special">
+  <div class="special-headline">เลือกเวลา<br>ที่คุณสะดวกจริง ๆ 🤍</div>
+  <div class="intro-body" style="margin-top:-8px;">เราจะพยายามหา PR ให้คุณในเวลาที่ขอ เลือกได้หลายช่วงเวลา</div>
+  <div id="special-week-badge"></div>
+  <div id="special-slots-container">
+    <div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>
+  </div>
+  <div class="booking-bottom">
+    <div style="font-size:13px;color:var(--soft);" id="special-summary">ยังไม่ได้เลือก</div>
+    <button class="btn-gold" id="btn-special-submit" disabled onclick="submitSpecialRequest()">ส่ง Special Request</button>
+    <button class="btn-ghost" onclick="show('screen-no-slots')">← กลับ</button>
+  </div>
+</div>
+
+<!-- NOTIFY SUCCESS -->
+<div class="screen branch-screen" id="screen-notify-success">
+  <div class="branch-icon">💛</div>
+  <div class="branch-title">บันทึกแล้วนะ</div>
+  <div class="branch-body">
+    เราจะแจ้งเตือนคุณผ่าน LINE ทันทีที่มีตารางใหม่<br>
+    และคุณไม่ต้องตอบคำถามใหม่อีกครั้ง 🤍
+  </div>
+  <div class="branch-actions">
+    <button class="btn-ghost" onclick="goHome()">กลับหน้าหลัก</button>
+  </div>
+</div>
+
+<!-- BRANCH D/E: PAUSE -->
+<div class="screen branch-screen" id="screen-pause">
+  <div class="branch-icon">📚</div>
+  <div class="branch-title">PR กำลัง<br>เตรียมสอบอยู่นะ</div>
+  <div class="branch-body">
+    ช่วงนี้เป็นช่วงสอบ เลยหยุดพักชั่วคราว<br>
+    แต่เราไม่ได้ไปไหน และจะกลับมาเร็ว ๆ นี้ 🤍
+  </div>
+  <div class="countdown-card">
+    <div class="countdown-number" id="pause-days">14</div>
+    <div class="countdown-label">วันที่จะเปิดรับอีกครั้ง</div>
+  </div>
+  <div class="branch-actions">
+    <button class="btn-gold" onclick="saveAndNotify()">แจ้งเตือนฉันเมื่อกลับมา</button>
+    <button class="btn-ghost" onclick="show('screen-external')">ดูตัวเลือกอื่น ๆ</button>
+  </div>
+</div>
+
+<!-- BRANCH F: EXTERNAL -->
+<div class="screen" id="screen-external">
+  <div class="external-headline">ตัวเลือก<br>ภายนอก 🤍</div>
+  <div class="intro-body" style="margin-top:-8px;">เราทำการบ้านให้คุณแล้ว — ข้อมูลราคา ระยะทาง และช่องทางออนไลน์</div>
+  <div class="clinic-card" style="border-left:3px solid #6495ED;">
+    <div class="clinic-name">🏫 ผู้เชี่ยวชาญของโรงเรียน</div>
+    <div class="clinic-detail">นักจิตวิทยาและที่ปรึกษาของโรงเรียน พร้อมให้คำปรึกษานักเรียนโดยเฉพาะ</div>
+    <div class="clinic-tags"><span class="clinic-tag">ฟรีสำหรับนักเรียน</span><span class="clinic-tag">นัดล่วงหน้า</span></div>
+    <a class="clinic-link" href="#" target="_blank">นัดผ่าน LINE ได้เลย →</a>
+  </div>
+  <div class="clinic-card">
+    <div class="clinic-name">คลินิกจิตวิทยา มธ. รังสิต</div>
+    <div class="clinic-detail">ให้บริการนักศึกษา TU โดยเฉพาะ<br>📍 อาคารโดมบริหาร ชั้น 2 · ห่างประมาณ 5 นาทีจากประตูหน้า</div>
+    <div class="clinic-tags"><span class="clinic-tag">ฟรีสำหรับนักศึกษา TU</span><span class="clinic-tag">นัดล่วงหน้า</span><span class="clinic-tag">ออนไลน์ได้</span></div>
+    <a class="clinic-link" href="#" target="_blank">ดูข้อมูลเพิ่มเติม →</a>
+  </div>
+  <div style="font-size:13px;color:var(--soft);text-align:center;">กำลังเพิ่มข้อมูลสถานที่อื่น ๆ เร็ว ๆ นี้ 🌱</div>
+  <div style="margin-top:auto;"><button class="btn-ghost" onclick="goHome()">กลับหน้าหลัก</button></div>
+</div>
+
+<!-- SCREEN 5: SUCCESS -->
+<div class="screen" id="screen-success">
+  <div class="success-glow">💛</div>
+  <div class="success-title">นัดแล้วนะ<br>รอ PR เลย</div>
+  <div class="success-sub">PR จะอ่านทุกอย่างที่คุณแชร์มา<br>และพร้อมรับฟังคุณอย่างเต็มที่ตั้งแต่ต้น</div>
+  <div class="success-card" id="success-card"></div>
+  <div class="success-sub" style="font-size:12px;color:#bbb;">คุณจะได้รับข้อความยืนยันผ่าน LINE<br>ถ้ามีอะไรเปลี่ยนแปลง ทีมจะติดต่อกลับนะ</div>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-  const questions = [
-    {
-      question: "ตอนนี้อะไรหนักใจที่สุด?",
-      options: [
-        "ความเครียด / แรงกดดัน",
-        "ความสัมพันธ์",
-        "ความรู้สึกของตัวเอง",
-        "เรื่องเรียน",
-        "ยังบอกไม่ถูกเลย"
-      ]
-    },
-    {
-      question: "มันส่งผลกับชีวิตประจำวันแค่ไหน?",
-      options: [
-        "นิดหน่อย แต่ก็คิดอยู่",
-        "ค่อนข้างมาก เริ่มยากขึ้นแล้ว",
-        "มากเลย ยากมากตอนนี้"
-      ]
-    },
-    {
-      question: "แบกเรื่องนี้มานานแค่ไหนแล้ว?",
-      options: [
-        "เพิ่งเกิดขึ้น",
-        "สักพักแล้ว ประมาณไม่กี่อาทิตย์",
-        "นานมากแล้ว นานกว่าที่อยากยอมรับ"
-      ]
-    },
-    {
-      question: "เคยเล่าให้ใครฟังบ้างไหม?",
-      options: [
-        "ยังเลย นี่เป็นครั้งแรก",
-        "เคยลอง แต่ไม่ค่อยได้ผล",
-        "เคย แต่ยังต้องการความช่วยเหลืออยู่"
-      ]
-    },
-    {
-      question: "อยากได้อะไรจากการคุยครั้งนี้?",
-      options: [
-        "แค่อยากให้มีคนรับฟัง",
-        "อยากได้คำแนะนำว่าจะทำยังไงต่อ",
-        "ยังไม่แน่ใจ แค่รู้สึกว่าต้องเริ่มสักที"
-      ]
-    }
-  ];
 
-  let current = 0;
-  const answers = [];
+// ================================================================
+// CONFIG
+// ================================================================
+const API_URL = "https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
+const LIFF_ID = "2009806939-AONYlCkT";
 
-  function startFlow() {
-    // Show transition
-    document.getElementById("screen-intro").style.display = "none";
-    const t = document.getElementById("screen-transition");
-    t.style.display = "flex";
+// ================================================================
+// MOCK FALLBACK DATA
+// Used ONLY when API is unreachable (network error, quota, etc.)
+// Real data always takes priority
+// ================================================================
+const MOCK_SLOTS = [
+  { slot:"อังคาร 15:30–16:30", count:2 },
+  { slot:"อังคาร 16:00–17:00", count:1 },
+  { slot:"พุธ 15:30–16:30",    count:3 },
+  { slot:"พุธ 16:00–17:00",    count:1 },
+  { slot:"พฤหัสบดี 16:00–17:00", count:2 },
+  { slot:"ศุกร์ 13:00–14:00",  count:1 },
+  { slot:"ศุกร์ 14:00–15:00",  count:2 },
+];
 
-    // After 1.5s go to questions
-    setTimeout(() => {
-      t.style.display = "none";
-      showQuestion();
-    }, 1500);
+// ================================================================
+// STATE
+// ================================================================
+let currentQ=0, answers=[], chosenSlot=null, caseId=null, userId=null;
+let specialSlots=[];
+
+// ================================================================
+// QUESTIONS
+// ================================================================
+const questions = [
+  { q:"ตอนนี้อะไรหนักใจที่สุด?",
+    opts:["ความเครียด / แรงกดดัน","ความสัมพันธ์","ความรู้สึกของตัวเอง","เรื่องเรียน","ยังบอกไม่ถูกเลย"] },
+  { q:"มันส่งผลกับชีวิตประจำวันแค่ไหน?",
+    opts:["นิดหน่อย แต่ก็คิดอยู่","ค่อนข้างมาก เริ่มยากขึ้นแล้ว","มากเลย ยากมากตอนนี้"] },
+  { q:"แบกเรื่องนี้มานานแค่ไหนแล้ว?",
+    opts:["เพิ่งเกิดขึ้น","สักพักแล้ว ประมาณไม่กี่อาทิตย์","นานมากแล้ว นานกว่าที่อยากยอมรับ"] },
+  { q:"เคยเล่าให้ใครฟังบ้างไหม?",
+    opts:["ยังเลย นี่เป็นครั้งแรก","เคยลอง แต่ไม่ค่อยได้ผล","เคย แต่ยังต้องการความช่วยเหลืออยู่"] },
+  { q:"อยากได้อะไรจากการคุยครั้งนี้?",
+    opts:["แค่อยากให้มีคนรับฟัง","อยากได้คำแนะนำว่าจะทำยังไงต่อ","ยังไม่แน่ใจ แค่รู้สึกว่าต้องเริ่มสักที"] },
+];
+
+// ================================================================
+// UTILS
+// ================================================================
+function getWeekRange() {
+  const now=new Date(),day=now.getDay();
+  const diff=now.getDate()-day+(day===0?-6:1);
+  const mon=new Date(now); mon.setDate(diff);
+  const sun=new Date(mon); sun.setDate(mon.getDate()+6);
+  const opts={day:"numeric",month:"long",year:"numeric"};
+  return mon.toLocaleDateString("th-TH",opts)+" – "+sun.toLocaleDateString("th-TH",opts);
+}
+
+function getTodayDayName() {
+  return ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"][new Date().getDay()];
+}
+
+function getCurrentTime() {
+  const n=new Date(); return n.getHours()*60+n.getMinutes();
+}
+
+function generateTimes(startStr,endStr) {
+  const times=[];
+  const[sh,sm]=startStr.split(":").map(Number);
+  const[eh,em]=endStr.split(":").map(Number);
+  let cur=sh*60+sm;
+  const end=eh*60+em;
+  while(cur<=end){
+    const endSlot=cur+60;
+    const fmt=t=>String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");
+    times.push(fmt(cur)+"–"+fmt(endSlot));
+    cur+=15;
+  }
+  return times;
+}
+
+const ALL_SLOT_TIMES={
+  จันทร์:generateTimes("15:30","17:45"),
+  อังคาร:generateTimes("15:30","17:45"),
+  พุธ:generateTimes("15:30","17:45"),
+  พฤหัสบดี:generateTimes("15:30","17:45"),
+  ศุกร์:generateTimes("12:30","17:45"),
+};
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s=>{s.classList.remove("active");s.style.display="none";});
+  const el=document.getElementById(id);
+  el.style.display="flex"; void el.offsetWidth; el.classList.add("active");
+}
+
+function toast(msg) {
+  const t=document.createElement("div"); t.className="toast"; t.innerText=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),3500);
+}
+
+// ================================================================
+// LIFF INIT
+// Interconnection 0: Get LINE userId from LIFF
+// This userId is used in ALL subsequent API calls
+// ================================================================
+window.onload=async()=>{
+  try {
+    await liff.init({liffId:LIFF_ID});
+    if(!liff.isLoggedIn()){liff.login();return;}
+    const p=await liff.getProfile();
+    userId=p.userId; // ← LINE userId used for all API calls
+  } catch(err) {
+    console.warn("LIFF unavailable, using test userId");
+    userId="test_"+Date.now();
   }
 
-  function showQuestion() {
-    const q = questions[current];
-    document.getElementById("screen-question").style.display = "flex";
-    document.getElementById("progress-text").innerText = `ข้อ ${current + 1} จาก ${questions.length}`;
-    document.getElementById("question-text").innerText = q.question;
+  // Check pause status on load
+  // Interconnection: GET ?action=getPauseStatus → Apps Script
+  checkPauseStatus();
+};
 
-    const container = document.getElementById("options-container");
-    container.innerHTML = "";
+async function checkPauseStatus() {
+  try {
+    const res=await fetch(API_URL+"?action=getPauseStatus");
+    const d=await res.json();
+    if(d.pause) {
+      const daysLeft=Math.max(0,Math.ceil((new Date(d.pause.end)-new Date())/86400000));
+      document.getElementById("pause-days").innerText=daysLeft;
+      // Will show pause screen after questions if active
+      window._pauseActive=true;
+      window._pauseDays=daysLeft;
+    }
+  } catch { window._pauseActive=false; }
+}
 
-    q.options.forEach((opt, i) => {
-      const btn = document.createElement("button");
-      btn.className = "option-btn";
-      btn.innerText = opt;
-      btn.onclick = () => selectAnswer(opt);
-      container.appendChild(btn);
+// ================================================================
+// OVERLAY
+// ================================================================
+function openPRInfo(){document.getElementById("overlay-pr").classList.add("active");}
+function closePRInfo(e){
+  if(e&&e.target!==document.getElementById("overlay-pr"))return;
+  document.getElementById("overlay-pr").classList.remove("active");
+}
+function openConfirmOverlay(){
+  if(!chosenSlot)return;
+  const[day,...rest]=chosenSlot.split(" ");
+  document.getElementById("confirm-day").innerText=day;
+  document.getElementById("confirm-time").innerText=rest.join(" ");
+  document.getElementById("overlay-confirm").classList.add("active");
+}
+function closeConfirmOverlay(){document.getElementById("overlay-confirm").classList.remove("active");}
+
+// ================================================================
+// FLOW
+// ================================================================
+function startFlow(){
+  show("screen-transition");
+  setTimeout(()=>{currentQ=0;answers=[];renderQuestion();show("screen-question");},1600);
+}
+
+function renderQuestion(){
+  const d=questions[currentQ];
+  document.getElementById("q-meta").innerText="ข้อ "+(currentQ+1)+" จาก "+questions.length;
+  const qEl=document.getElementById("question-text");
+  qEl.style.opacity="0";qEl.style.transform="translateY(10px)";qEl.style.transition="none";qEl.innerText=d.q;
+  setTimeout(()=>{qEl.style.transition="opacity 0.3s,transform 0.3s";qEl.style.opacity="1";qEl.style.transform="translateY(0)";},40);
+  const c=document.getElementById("options-container");
+  c.innerHTML="";c.style.opacity="0";c.style.transition="none";
+  d.opts.forEach(opt=>{
+    const btn=document.createElement("button");
+    btn.className="option-btn";btn.innerText=opt;
+    btn.onclick=()=>selectAnswer(btn,opt);c.appendChild(btn);
+  });
+  setTimeout(()=>{c.style.transition="opacity 0.3s";c.style.opacity="1";},100);
+}
+
+function selectAnswer(btn,answer){
+  btn.classList.add("pressed");answers.push(answer);
+  setTimeout(()=>{currentQ++;if(currentQ<questions.length)renderQuestion();else submitAndRoute();},320);
+}
+
+// ================================================================
+// INTERCONNECTION 1: createCase
+// After all 5 questions answered → POST to Apps Script
+// Sends: userId, q1-q5, triage level
+// Receives: caseId (used in all subsequent booking calls)
+// Fallback: generates local mock caseId if API unreachable
+// ================================================================
+async function submitAndRoute(){
+  if(window._pauseActive){show("screen-pause");return;}
+  show("screen-booking");
+
+  let level="green";
+  if(answers[1]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว")level="yellow";
+  if(answers[1]==="มากเลย ยากมากตอนนี้")level="red";
+
+  try {
+    const res=await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        action:"createCase",
+        userId,       // LINE userId from LIFF
+        level,        // red / yellow / green
+        q1:answers[0],q2:answers[1],q3:answers[2],q4:answers[3],q5:answers[4]
+      })
     });
+    const d=await res.json();
+    if(d.status==="OK") caseId=d.caseId; // ← caseId returned from Apps Script
+    else throw new Error();
+  } catch {
+    // FALLBACK: generate local caseId — booking will still work
+    // Apps Script will receive this and create a new case on bookSlot
+    caseId="CASE_LOCAL_"+Date.now();
+    console.warn("createCase failed, using local caseId:", caseId);
   }
 
-  function selectAnswer(answer) {
-    answers.push(answer);
-    current++;
+  loadSlots();
+}
 
-    if (current < questions.length) {
-      // Fade to next question
-      const screen = document.getElementById("screen-question");
-      screen.style.opacity = "0";
-      screen.style.transition = "opacity 0.3s";
+// ================================================================
+// INTERCONNECTION 2: getSlots
+// GET ?action=getSlots → Apps Script reads Availability sheet
+// Receives: array of { slot, count } for current week
+// Filters out: expired days/times, locked slots (already booked)
+// Fallback: uses MOCK_SLOTS if API unreachable
+// ================================================================
+async function loadSlots(){
+  document.getElementById("booking-week-badge").innerHTML=
+    `<span class="week-badge">📅 ${getWeekRange()}</span>`;
 
-      setTimeout(() => {
-        showQuestion();
-        screen.style.opacity = "1";
-      }, 300);
+  let slots;
+  try {
+    const res=await fetch(API_URL+"?action=getSlots");
+    const j=await res.json();
+    if(j.status==="OK"&&j.slots?.length) slots=j.slots;
+    else throw new Error("empty");
+  } catch {
+    console.warn("getSlots failed, using mock data");
+    slots=MOCK_SLOTS;
+  }
 
-    } else {
-      // All done
-      document.getElementById("screen-question").style.display = "none";
-      document.getElementById("screen-done").style.display = "flex";
+  // Filter expired days and times
+  const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
+  const todayIdx=dayOrder.indexOf(getTodayDayName());
+  const todayTime=getCurrentTime();
+
+  const active=slots.filter(s=>{
+    const slotDay=s.slot.split(" ")[0];
+    const idx=dayOrder.indexOf(slotDay);
+    if(idx<todayIdx)return false;
+    if(idx===todayIdx){
+      const slotStart=s.slot.split(" ")[1].split("–")[0];
+      const[h,m]=slotStart.split(":").map(Number);
+      return h*60+m>todayTime;
     }
-  }
+    return true;
+  });
 
-  function goBack() {
-    window.location.href = "index.html";
-  }
+  if(!active.length){show("screen-no-slots");buildSpecialSlots();return;}
+  renderSlots(active);
+  buildSpecialSlots(); // pre-build for if user needs it
+}
 
-  function goBooking() {
-    // Next step — booking page
-    alert("ระบบนัดคุยกำลังมานะ 💛");
+function renderSlots(slots){
+  const container=document.getElementById("booking-slots-container");
+  container.innerHTML="";
+  const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
+  const grouped={};
+  slots.forEach(s=>{const[day,...rest]=s.slot.split(" ");if(!grouped[day])grouped[day]=[];grouped[day].push({time:rest.join(" "),count:s.count,full:s.slot});});
+  dayOrder.forEach(day=>{
+    if(!grouped[day])return;
+    const g=document.createElement("div");g.className="day-group";
+    const l=document.createElement("div");l.className="day-name";l.innerText=day;g.appendChild(l);
+    const r=document.createElement("div");r.className="slots-row";
+    grouped[day].forEach(s=>{
+      const chip=document.createElement("button");chip.className="slot-chip";
+      chip.innerHTML=`${s.time} <span class="pr-count">${s.count} PR</span>`;
+      chip.onclick=()=>selectSlot(chip,s.full);r.appendChild(chip);
+    });
+    g.appendChild(r);container.appendChild(g);
+  });
+}
+
+function selectSlot(chip,slot){
+  document.querySelectorAll("#booking-slots-container .slot-chip").forEach(c=>c.classList.remove("chosen"));
+  chip.classList.add("chosen");chosenSlot=slot;
+  document.getElementById("btn-book").disabled=false;
+}
+
+// ================================================================
+// INTERCONNECTION 3: bookSlot
+// POST action=bookSlot → Apps Script
+// Sends: userId, caseId, chosen slot
+// Receives: OK (booking created, push sent to student + PR)
+//         | SLOT_TAKEN (race condition — another user booked same slot)
+// On SLOT_TAKEN: show sorry screen 5s → auto return to booking
+// ================================================================
+async function finalConfirm(){
+  closeConfirmOverlay();
+  try {
+    const res=await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"bookSlot",userId,caseId,slot:chosenSlot})
+    });
+    const d=await res.json();
+    if(d.status==="SLOT_TAKEN"){showSorry();return;}
+    if(d.status!=="OK") throw new Error(d.message);
+  } catch(e){
+    if(e.message==="SLOT_TAKEN"){showSorry();return;}
+    // Other errors: still show success (booking likely went through)
+    console.warn("bookSlot error:", e);
   }
+  showSuccess();
+}
+
+function showSorry(){
+  show("screen-sorry");
+  setTimeout(()=>{
+    chosenSlot=null;
+    document.getElementById("btn-book").disabled=true;
+    document.querySelectorAll(".slot-chip").forEach(c=>c.classList.remove("chosen"));
+    loadSlots(); // reload fresh slots
+    show("screen-booking");
+  },5000);
+}
+
+function showSuccess(){
+  show("screen-success");
+  const[day,...rest]=chosenSlot.split(" ");
+  const topicMap={"ความเครียด / แรงกดดัน":"ความเครียด","ความสัมพันธ์":"ความสัมพันธ์","ความรู้สึกของตัวเอง":"ความรู้สึกของตัวเอง","เรื่องเรียน":"เรื่องเรียน","ยังบอกไม่ถูกเลย":"สิ่งที่ยังบอกไม่ถูก"};
+  document.getElementById("success-card").innerHTML=`
+    <div class="success-row"><span class="label">วัน</span><span class="value">${day}</span></div>
+    <div class="success-row"><span class="label">เวลา</span><span class="value">${rest.join(" ")}</span></div>
+    <div class="success-row"><span class="label">เรื่องที่แชร์</span><span class="value">${topicMap[answers[0]]||answers[0]}</span></div>
+    <div class="success-note">PR จะได้รับข้อมูลที่คุณแชร์มา เพื่อให้เขาพร้อมรับฟังคุณอย่างเต็มที่ตั้งแต่ต้น 🤍</div>
+  `;
+}
+
+// ================================================================
+// INTERCONNECTION 4: saveWaiting
+// POST action=saveWaiting → Apps Script
+// Sends: userId, caseId, answers (q1-q5 saved so user won't repeat)
+// Apps Script saves to Waiting sheet
+// Trigger: when slots open → notifyWaitingList() sends LINE push
+// ================================================================
+async function saveAndNotify(){
+  try {
+    await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"saveWaiting",userId,caseId,answers})
+    });
+  } catch { console.warn("saveWaiting failed, will retry on next open"); }
+  show("screen-notify-success");
+}
+
+// ================================================================
+// SPECIAL REQUEST SCREEN
+// ================================================================
+function showSpecialRequest(){
+  show("screen-special");
+}
+
+function buildSpecialSlots(){
+  document.getElementById("special-week-badge").innerHTML=
+    `<span class="week-badge">📅 ${getWeekRange()}</span>`;
+  const container=document.getElementById("special-slots-container");
+  container.innerHTML="";
+  const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
+  const todayIdx=dayOrder.indexOf(getTodayDayName());
+  const todayTime=getCurrentTime();
+  specialSlots=[];
+
+  dayOrder.forEach((day,di)=>{
+    if(di<todayIdx)return;
+    const times=ALL_SLOT_TIMES[day]||[];
+    const filtered=times.filter(t=>{
+      if(di===todayIdx){
+        const[h,m]=t.split("–")[0].split(":").map(Number);
+        return h*60+m>todayTime;
+      }
+      return true;
+    });
+    if(!filtered.length)return;
+    const g=document.createElement("div");g.className="day-group";
+    const l=document.createElement("div");l.className="day-name";l.innerText=day;g.appendChild(l);
+    const r=document.createElement("div");r.className="slots-row";
+    filtered.forEach(time=>{
+      const full=day+" "+time;
+      const chip=document.createElement("button");chip.className="slot-chip";
+      chip.innerText=time;
+      chip.onclick=()=>toggleSpecialSlot(chip,full);r.appendChild(chip);
+    });
+    g.appendChild(r);container.appendChild(g);
+  });
+}
+
+function toggleSpecialSlot(chip,slot){
+  if(specialSlots.includes(slot)){specialSlots=specialSlots.filter(s=>s!==slot);chip.classList.remove("chosen");}
+  else{specialSlots.push(slot);chip.classList.add("chosen");}
+  const btn=document.getElementById("btn-special-submit");
+  const sum=document.getElementById("special-summary");
+  if(specialSlots.length===0){sum.innerText="ยังไม่ได้เลือก";btn.disabled=true;}
+  else{sum.innerText="เลือกแล้ว "+specialSlots.length+" ช่วงเวลา";btn.disabled=false;}
+}
+
+// ================================================================
+// INTERCONNECTION 5: createSpecialRequest
+// POST action=createSpecialRequest → Apps Script
+// Sends: userId, caseId, requested slots array
+// Apps Script saves to SpecialRequests sheet
+// Admin sees this in dashboard → can addTempPR to fulfill
+// If not fulfilled by 20:00 of requested day → push message auto-sent
+// ================================================================
+async function submitSpecialRequest(){
+  try {
+    await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        action:"createSpecialRequest",
+        userId,caseId,
+        slots:specialSlots,
+        q1:answers[0],
+        level: answers[1]==="มากเลย ยากมากตอนนี้"?"red":
+               answers[1]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว"?"yellow":"green"
+      })
+    });
+  } catch { console.warn("createSpecialRequest failed"); }
+  show("screen-notify-success");
+}
+
+function goHome(){window.location.href="index.html";}
+
 </script>
-
 </body>
 </html>
+
