@@ -1,235 +1,187 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ใจดี TU</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --cream: #FDFCF9;
+      --gold: #F5A623;
+      --gold-soft: #FFF5E0;
+      --gold-border: #FFE4A0;
+      --dark: #1A1A1A;
+      --mid: #555;
+      --soft: #999;
+      --border: #EEEBE4;
     }
+
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
     body {
       font-family: 'Sarabun', sans-serif;
-      background: #FDFCF9;
-      color: #1A1A1A;
+      background: var(--cream);
+      color: var(--dark);
       min-height: 100vh;
-      padding-bottom: 80px;
+      padding-bottom: 120px;
     }
 
-    /* TOP GREETING */
     .greeting {
-      padding: 32px 20px 20px;
-      background: #FDFCF9;
+      padding: 48px 20px 20px;
     }
 
     .greeting-name {
-      font-size: 22px;
-      font-weight: 600;
-      color: #1A1A1A;
+      font-family: 'Playfair Display', serif;
+      font-size: 26px; font-weight: 400;
     }
 
     .greeting-sub {
-      font-size: 15px;
-      color: #888;
-      margin-top: 4px;
+      font-size: 14px; color: var(--soft); margin-top: 4px;
     }
 
-    /* PEER BANNER */
     .peer-banner {
-      margin: 0 16px 24px;
-      background: #FFF8EC;
+      margin: 4px 16px 28px;
+      background: var(--gold-soft);
       border-radius: 16px;
       padding: 14px 18px;
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       justify-content: space-between;
-      border: 1px solid #FFE4A0;
+      border: 1px solid var(--gold-border);
     }
 
     .peer-banner-text {
-      font-size: 14px;
-      color: #7A5C00;
-      font-weight: 500;
+      font-size: 14px; color: #7A5C00; font-weight: 500;
     }
 
     .peer-banner-btn {
-      background: #F5A623;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 13px;
-      font-family: 'Sarabun', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
+      background: var(--gold); color: white; border: none;
+      border-radius: 10px; padding: 8px 16px;
+      font-size: 13px; font-family: 'Sarabun', sans-serif;
+      font-weight: 700; cursor: pointer; white-space: nowrap;
       margin-left: 12px;
     }
 
-    /* SECTION TITLE */
     .section-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: #AAAAAA;
-      letter-spacing: 0.5px;
+      font-size: 11px; font-weight: 700;
+      color: #BBBBBB; letter-spacing: 1.5px;
       text-transform: uppercase;
-      padding: 0 20px;
-      margin-bottom: 12px;
+      padding: 0 20px; margin-bottom: 12px;
     }
 
-    /* GRID */
     .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      padding: 0 16px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; padding: 0 16px;
     }
 
     .world-card {
-      background: white;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      cursor: pointer;
+      background: white; border-radius: 16px;
+      padding: 16px; cursor: pointer;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
       transition: transform 0.15s ease;
-      border: 1px solid #F0F0F0;
     }
 
-    .world-card:active {
-      transform: scale(0.97);
-    }
+    .world-card:active { transform: scale(0.97); }
 
-    .world-icon {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
+    .world-icon { font-size: 24px; margin-bottom: 8px; }
+    .world-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .world-desc { font-size: 12px; color: var(--soft); line-height: 1.4; }
 
-    .world-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #1A1A1A;
-      margin-bottom: 4px;
-    }
-
-    .world-desc {
-      font-size: 12px;
-      color: #999;
-      line-height: 1.4;
-    }
-
-    /* FLOATING BUTTON */
     .floating {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
+      position: fixed; bottom: 20px; left: 50%;
       transform: translateX(-50%);
-      background: #1A1A1A;
-      color: white;
-      border: none;
-      border-radius: 50px;
-      padding: 14px 28px;
-      font-size: 14px;
-      font-family: 'Sarabun', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
+      background: var(--dark); color: white; border: none;
+      border-radius: 50px; padding: 14px 28px;
+      font-size: 14px; font-family: 'Sarabun', sans-serif;
+      font-weight: 600; cursor: pointer;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      white-space: nowrap;
+      white-space: nowrap; z-index: 10;
     }
 
+    .quiet-footer {
+      text-align: center; padding: 32px 20px 16px;
+    }
+
+    .quiet-footer a {
+      font-size: 12px; color: #CCC;
+      text-decoration: none; font-family: 'Sarabun', sans-serif;
+    }
   </style>
 </head>
 <body>
 
-  <!-- GREETING -->
   <div class="greeting">
     <div class="greeting-name" id="greeting-name">สวัสดี 🤍</div>
     <div class="greeting-sub">มีอะไรให้ช่วยวันนี้ไหม?</div>
   </div>
 
-  <!-- PEER BANNER -->
   <div class="peer-banner">
-    <div class="peer-banner-text">💛 พร้อมคุยกับพี่แล้วไหม?</div>
+    <div class="peer-banner-text">💛 พร้อมคุยกับ PR แล้วไหม?</div>
     <button class="peer-banner-btn" onclick="window.location.href='peer.html'">นัดเลย</button>
   </div>
 
-  <!-- WORLDS -->
   <div class="section-title">สำรวจ</div>
 
   <div class="grid">
-
     <div class="world-card">
       <div class="world-icon">🧩</div>
       <div class="world-name">Puzzle Piece</div>
       <div class="world-desc">จิตวิทยาที่เข้าใจง่าย ไม่ต้องรู้มาก่อน</div>
     </div>
-
     <div class="world-card">
       <div class="world-icon">🪞</div>
       <div class="world-name">Reflection Space</div>
       <div class="world-desc">เริ่มจากตรงนี้ ถ้ายังไม่รู้จะไปไหน</div>
     </div>
-
     <div class="world-card">
       <div class="world-icon">📚</div>
       <div class="world-name">Academic Support</div>
       <div class="world-desc">เรียนให้ดีขึ้น ในแบบที่ใช่สำหรับคุณ</div>
     </div>
-
     <div class="world-card">
       <div class="world-icon">🎯</div>
       <div class="world-name">Career Support</div>
       <div class="world-desc">วางแผนอนาคต เริ่มจากตรงนี้</div>
     </div>
-
     <div class="world-card">
       <div class="world-icon">👥</div>
       <div class="world-name">People</div>
       <div class="world-desc">ฟังคนที่ผ่านมาแล้ว เขาพูดอะไรไว้บ้าง</div>
     </div>
-
     <div class="world-card">
       <div class="world-icon">🏫</div>
       <div class="world-name">School Support</div>
       <div class="world-desc">สิ่งที่โรงเรียนลืมบอกคุณ</div>
     </div>
-
     <div class="world-card">
       <div class="world-icon">🌱</div>
       <div class="world-name">Growth Programs</div>
       <div class="world-desc">Workshop และกิจกรรมเดือนนี้</div>
     </div>
-
     <div class="world-card">
       <div class="world-icon">✨</div>
       <div class="world-name">Founder's Pick</div>
       <div class="world-desc">สิ่งที่ผู้สร้างอยากให้คุณรู้</div>
     </div>
-
   </div>
 
-  <!-- FLOATING BUTTON -->
-  <button class="floating" onclick="window.location.href='peer.html'">💛 คุยกับพี่ได้เลย</button>
-  
+  <div class="quiet-footer">
+    <a href="peer.html#external">ต้องการความช่วยเหลือจากผู้เชี่ยวชาญ? →</a>
+  </div>
+
+  <button class="floating" onclick="window.location.href='peer.html'">💛 คุยกับ PR ได้เลย</button>
+
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
   liff.init({ liffId: "2009806939-H06mwKgI" })
     .then(() => {
-      if (!liff.isLoggedIn()) {
-        liff.login();
-        return;
-      }
-      liff.getProfile().then(profile => {
-        const name = profile.displayName;
-        document.getElementById("greeting-name").innerText = "สวัสดี " + name + " 🤍";
+      if (!liff.isLoggedIn()) { liff.login(); return; }
+      liff.getProfile().then(p => {
+        document.getElementById("greeting-name").innerText = "สวัสดี " + p.displayName + " 🤍";
       });
     })
-    .catch(err => {
-      console.error("LIFF error:", err);
-    });
+    .catch(err => console.error("LIFF:", err));
 </script>
 </body>
 </html>
