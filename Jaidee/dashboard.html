@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg:#0F0F0F;--surface:#1A1A1A;--surface2:#242424;--border:#2E2E2E;
+      --gold:#F5A623;--gold-soft:rgba(245,166,35,0.12);--gold-border:rgba(245,166,35,0.25);
+      --red:#E05252;--red-soft:rgba(224,82,82,0.12);
+      --yellow:#F0C040;--yellow-soft:rgba(240,192,64,0.12);
+      --green:#4CAF7D;--green-soft:rgba(76,175,125,0.12);
+      --blue:#6495ED;--blue-soft:rgba(100,149,237,0.12);
+      --text:#F0EDE8;--text-mid:#888;--text-soft:#555;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+    #screen-loading{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+    .loading-heart{font-size:36px;animation:pulse 1.4s ease infinite;}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+    .loading-text{font-size:14px;color:var(--text-mid);}
+    #screen-denied{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:40px;}
+    #app{display:none;flex-direction:column;min-height:100vh;}
+    .header{padding:48px 20px 20px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px;}
+    .header-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+    .header-title{font-family:'Playfair Display',serif;font-size:24px;}
+    .role-badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700;}
+    .role-badge.admin{background:var(--gold-soft);color:var(--gold);}
+    .role-badge.pr{background:var(--green-soft);color:var(--green);}
+    .role-badge.program{background:var(--blue-soft);color:var(--blue);}
+    .tab-nav{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);padding:0 20px;scrollbar-width:none;}
+    .tab-nav::-webkit-scrollbar{display:none;}
+    .tab-btn{background:none;border:none;color:var(--text-soft);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;padding:14px 16px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+    .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+    .tab-content{display:none;padding:20px;flex-direction:column;gap:16px;}
+    .tab-content.active{display:flex;animation:fadeUp 0.3s ease both;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-soft);margin-bottom:-8px;}
+    .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .kpi-card{background:var(--surface);border-radius:14px;padding:16px;border:1px solid var(--border);display:flex;flex-direction:column;gap:4px;}
+    .kpi-number{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;}
+    .kpi-label{font-size:12px;color:var(--text-mid);}
+    .kpi-card.urgent{border-color:var(--red);}
+    .kpi-card.urgent .kpi-number{color:var(--red);}
+    .case-card{background:var(--surface);border-radius:14px;padding:16px;border:1px solid var(--border);border-left:4px solid var(--border);display:flex;flex-direction:column;gap:10px;}
+    .case-card.red{border-left-color:var(--red);}
+    .case-card.yellow{border-left-color:var(--yellow);}
+    .case-card.green{border-left-color:var(--green);}
+    .case-header{display:flex;justify-content:space-between;align-items:flex-start;}
+    .case-id{font-size:12px;color:var(--text-mid);font-weight:600;}
+    .case-status{font-size:11px;color:var(--text-soft);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;}
+    .level-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;text-transform:uppercase;}
+    .level-badge.red{background:var(--red-soft);color:var(--red);}
+    .level-badge.yellow{background:var(--yellow-soft);color:var(--yellow);}
+    .level-badge.green{background:var(--green-soft);color:var(--green);}
+    .case-answers{display:flex;flex-direction:column;gap:6px;}
+    .answer-row{display:flex;flex-direction:column;gap:2px;}
+    .answer-q{font-size:11px;color:var(--text-soft);}
+    .answer-a{font-size:13px;color:var(--text);}
+    .case-footer{padding-top:4px;border-top:1px solid var(--border);font-size:12px;color:var(--text-mid);}
+    .btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+    .btn-sm{border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;}
+    .btn-sm.gold{background:var(--gold);color:#1A1A1A;}
+    .btn-sm.green{background:var(--green-soft);color:var(--green);}
+    .btn-sm.danger{background:var(--red-soft);color:var(--red);}
+    .btn-sm.ghost{background:var(--surface2);color:var(--text-mid);}
+    .btn-full{width:100%;border:none;border-radius:12px;padding:14px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.2s;}
+    .btn-full.gold{background:var(--gold);color:#1A1A1A;}
+    .btn-full.ghost{background:var(--surface2);color:var(--text-mid);}
+    .btn-full:active{opacity:0.8;}
+    .pr-card{background:var(--surface);border-radius:14px;padding:14px 16px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+    .pr-name{font-size:14px;font-weight:600;}
+    .pr-sub{font-size:12px;color:var(--text-mid);margin-top:2px;}
+    .pr-status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;}
+    .pr-status.done{background:var(--green-soft);color:var(--green);}
+    .pr-status.pending{background:var(--red-soft);color:var(--red);}
+    .special-card{background:var(--surface);border-radius:14px;padding:16px;border:1px solid var(--gold-border);display:flex;flex-direction:column;gap:10px;}
+    .special-slots-list{display:flex;flex-wrap:wrap;gap:6px;}
+    .special-slot-tag{background:var(--gold-soft);color:var(--gold);border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600;}
+    .settings-card{background:var(--surface);border-radius:14px;padding:18px;border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;}
+    .settings-title{font-size:15px;font-weight:600;}
+    .settings-sub{font-size:13px;color:var(--text-mid);line-height:1.6;}
+    .input-group{display:flex;flex-direction:column;gap:6px;}
+    .input-label{font-size:12px;color:var(--text-mid);font-weight:600;}
+    .input-field{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Sarabun',sans-serif;color:var(--text);width:100%;}
+    .input-field:focus{outline:none;border-color:var(--gold);}
+    textarea.input-field{resize:vertical;min-height:80px;line-height:1.6;}
+    .waiting-card{background:var(--surface);border-radius:14px;padding:14px 16px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+    .waiting-topic{font-size:13px;font-weight:600;}
+    .waiting-since{font-size:11px;color:var(--text-mid);margin-top:2px;}
+    .pause-active-banner{background:var(--red-soft);border:1px solid var(--red);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;}
+    .pause-active-title{font-size:14px;font-weight:700;color:var(--red);}
+    .pause-active-sub{font-size:12px;color:var(--text-mid);}
+    .program-card{background:var(--surface);border-radius:14px;padding:16px;border:1px solid var(--border);display:flex;flex-direction:column;gap:8px;}
+    .program-name{font-size:15px;font-weight:600;}
+    .program-date{font-size:12px;color:var(--text-mid);}
+    .empty{text-align:center;padding:32px 20px;color:var(--text-soft);font-size:14px;line-height:1.7;}
+    .divider{height:1px;background:var(--border);}
+    .add-form{background:var(--surface);border-radius:14px;padding:16px;border:1px solid var(--gold-border);display:flex;flex-direction:column;gap:12px;}
+
+    /* BROADCAST TYPE TABS */
+    .type-tabs{display:flex;gap:8px;flex-wrap:wrap;}
+    .type-tab{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:12px;font-family:'Sarabun',sans-serif;color:var(--text-mid);cursor:pointer;font-weight:600;transition:all 0.15s;}
+    .type-tab.active{background:var(--gold-soft);border-color:var(--gold);color:var(--gold);}
+
+    /* BROADCAST PREVIEW */
+    .broadcast-preview{background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);display:flex;flex-direction:column;gap:8px;}
+    .preview-label{font-size:11px;color:var(--text-soft);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+    .preview-image{width:100%;border-radius:8px;max-height:200px;object-fit:cover;display:none;}
+    .preview-text{font-size:13px;color:var(--text-mid);line-height:1.6;white-space:pre-wrap;}
+    .preview-video-link{font-size:13px;color:var(--gold);text-decoration:none;}
+
+    /* SCHEDULE */
+    .schedule-day{display:flex;flex-direction:column;gap:8px;}
+    .schedule-day-name{font-size:13px;font-weight:600;color:var(--text-mid);}
+    .schedule-slots{display:flex;flex-wrap:wrap;gap:8px;}
+    .slot-chip{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:13px;font-family:'Sarabun',sans-serif;color:var(--text-mid);cursor:pointer;transition:all 0.15s ease;}
+    .slot-chip.chosen{background:var(--gold-soft);border-color:var(--gold);color:var(--gold);font-weight:600;}
+    .week-badge{background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--gold);display:inline-block;}
+    .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--gold);color:#1A1A1A;padding:12px 20px;border-radius:99px;font-size:13px;font-family:'Sarabun',sans-serif;font-weight:700;white-space:nowrap;z-index:999;animation:fadeUp 0.3s ease both;}
+  </style>
+</head>
+<body>
+
+<div id="screen-loading">
+  <div class="loading-heart">💛</div>
+  <div class="loading-text">กำลังโหลด...</div>
+</div>
+
+<div id="screen-denied">
+  <div style="font-size:48px;">🔒</div>
+  <div style="font-family:'Playfair Display',serif;font-size:22px;">ไม่มีสิทธิ์เข้าถึง</div>
+  <div style="font-size:14px;color:var(--text-mid);line-height:1.7;">หน้านี้สำหรับทีมงานเท่านั้น<br>ถ้าคิดว่าเป็นข้อผิดพลาด ติดต่อ admin ได้เลยนะ</div>
+</div>
+
+<div id="app">
+  <div class="header">
+    <div class="header-eyebrow">ใจดี TU</div>
+    <div class="header-title">Dashboard</div>
+    <div style="margin-top:4px;">
+      <span id="user-name" style="font-size:12px;color:var(--text-mid);"></span>
+      &nbsp;<span class="role-badge" id="role-badge"></span>
+    </div>
+  </div>
+
+  <div class="tab-nav" id="tab-nav"></div>
+
+  <!-- ADMIN: OVERVIEW -->
+  <div class="tab-content" id="tab-overview">
+    <div class="section-label">ภาพรวม</div>
+    <div class="kpi-grid">
+      <div class="kpi-card urgent"><div class="kpi-number" id="kpi-red">—</div><div class="kpi-label">🔴 เร่งด่วน</div></div>
+      <div class="kpi-card"><div class="kpi-number" id="kpi-open">—</div><div class="kpi-label">รอ auto-assign</div></div>
+      <div class="kpi-card"><div class="kpi-number" id="kpi-active">—</div><div class="kpi-label">กำลังดูแล</div></div>
+      <div class="kpi-card"><div class="kpi-number" id="kpi-done">—</div><div class="kpi-label">เสร็จแล้ว</div></div>
+    </div>
+    <div class="section-label">⚠️ Red Cases</div>
+    <div id="overview-urgent"><div class="empty">กำลังโหลด...</div></div>
+    <div class="section-label">📋 Special Requests</div>
+    <div id="overview-special"><div class="empty">กำลังโหลด...</div></div>
+  </div>
+
+  <!-- ADMIN: CASES -->
+  <div class="tab-content" id="tab-cases">
+    <div class="section-label">เคสทั้งหมด</div>
+    <div id="cases-list"><div class="empty">กำลังโหลด...</div></div>
+  </div>
+
+  <!-- ADMIN: PR -->
+  <div class="tab-content" id="tab-pr">
+    <div class="section-label">PR สัปดาห์นี้</div>
+    <div id="pr-list"><div class="empty">กำลังโหลด...</div></div>
+    <div class="divider"></div>
+    <div class="section-label">เพิ่ม PR ใหม่</div>
+    <div class="add-form">
+      <div class="input-group"><div class="input-label">LINE User ID</div><input class="input-field" id="new-pr-id" placeholder="Uxxxxxxxxxxxxxxxx"/></div>
+      <div class="input-group"><div class="input-label">ชื่อ</div><input class="input-field" id="new-pr-name" placeholder="ชื่อ PR"/></div>
+      <button class="btn-full gold" onclick="addPR()">เพิ่ม PR</button>
+    </div>
+  </div>
+
+  <!-- ADMIN: SETTINGS -->
+  <div class="tab-content" id="tab-settings">
+    <div class="section-label">สถานะปัจจุบัน</div>
+    <div id="pause-status-banner"></div>
+    <div class="section-label">ตั้งช่วงหยุดพัก</div>
+    <div class="settings-card">
+      <div class="settings-title">Pause Management</div>
+      <div class="settings-sub">เมื่อตั้งค่าแล้ว นักเรียนจะเห็น countdown และข้อความว่า PR กำลังเตรียมสอบ</div>
+      <div class="input-group"><div class="input-label">ประเภท</div>
+        <select class="input-field" id="pause-type">
+          <option value="midterm">Midterm</option>
+          <option value="finals">Finals</option>
+          <option value="holiday">Holiday</option>
+          <option value="summer">Summer Break</option>
+        </select>
+      </div>
+      <div class="input-group"><div class="input-label">วันเริ่ม</div><input class="input-field" id="pause-start" type="date"/></div>
+      <div class="input-group"><div class="input-label">วันสิ้นสุด</div><input class="input-field" id="pause-end" type="date"/></div>
+      <button class="btn-full gold" onclick="setPause()">บันทึกช่วงหยุด</button>
+      <button class="btn-full ghost" onclick="clearPause()">ยกเลิกช่วงหยุดปัจจุบัน</button>
+    </div>
+    <div class="section-label">Waiting List</div>
+    <div id="waiting-list"><div class="empty">กำลังโหลด...</div></div>
+    <button class="btn-full gold" id="btn-notify-all" onclick="notifyAll()" style="display:none;">แจ้งเตือนทุกคนใน Waiting List</button>
+  </div>
+
+  <!-- PR: MY CASES -->
+  <div class="tab-content" id="tab-my-cases">
+    <div class="section-label">เคสของฉัน</div>
+    <div id="my-cases-list"><div class="empty">กำลังโหลด...</div></div>
+  </div>
+
+  <!-- PR: SCHEDULE -->
+  <div class="tab-content" id="tab-schedule">
+    <div class="section-label">ลงตารางสัปดาห์นี้</div>
+    <div style="font-size:13px;color:var(--text-mid);line-height:1.7;">เลือกช่วงเวลาที่ว่างและพร้อมรับน้อง เลือกได้หลายช่วงเวลา</div>
+    <div class="week-badge" id="schedule-week-label"></div>
+    <div id="schedule-days" style="display:flex;flex-direction:column;gap:16px;"></div>
+    <div style="font-size:13px;color:var(--text-mid);" id="schedule-summary">ยังไม่ได้เลือกช่วงเวลา</div>
+    <button class="btn-full gold" id="btn-save-schedule" onclick="saveSchedule()" disabled>ยืนยันตารางสัปดาห์นี้</button>
+  </div>
+
+  <!-- PROGRAM TEAM -->
+  <div class="tab-content" id="tab-programs">
+    <div class="section-label">Programs เดือนนี้</div>
+    <div id="programs-list"><div class="empty">กำลังโหลด...</div></div>
+    <div class="divider"></div>
+    <div class="section-label">เพิ่ม Program ใหม่</div>
+    <div class="add-form">
+      <div class="input-group"><div class="input-label">ชื่อ Program</div><input class="input-field" id="prog-name" placeholder="ชื่อกิจกรรม"/></div>
+      <div class="input-group"><div class="input-label">วันที่</div><input class="input-field" id="prog-date" type="date"/></div>
+      <div class="input-group"><div class="input-label">รายละเอียด</div><input class="input-field" id="prog-desc" placeholder="เขียนสั้น ๆ"/></div>
+      <button class="btn-full gold" onclick="addProgram()">เพิ่ม Program</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════ BROADCAST ═══════════ -->
+    <div class="section-label">Broadcast ไปยัง LINE</div>
+    <div class="settings-card">
+      <div class="settings-title">ส่งข้อความหาทุกคน</div>
+      <div class="settings-sub">เลือกประเภทข้อความ แล้วกด Preview ก่อนส่งจริง</div>
+
+      <!-- Type selector -->
+      <div class="input-group">
+        <div class="input-label">ประเภทข้อความ</div>
+        <div class="type-tabs">
+          <button class="type-tab active" onclick="setBroadcastType('text',this)">📝 Text</button>
+          <button class="type-tab" onclick="setBroadcastType('image',this)">🖼️ Image</button>
+          <button class="type-tab" onclick="setBroadcastType('video',this)">🎬 Video</button>
+          <button class="type-tab" onclick="setBroadcastType('flex',this)">✨ Image + Text</button>
+        </div>
+      </div>
+
+      <!-- TEXT fields -->
+      <div id="bc-text-fields">
+        <div class="input-group">
+          <div class="input-label">ข้อความ</div>
+          <textarea class="input-field" id="bc-text" placeholder="พิมพ์ข้อความที่อยากส่ง..." oninput="updatePreview()"></textarea>
+        </div>
+      </div>
+
+      <!-- IMAGE fields -->
+      <div id="bc-image-fields" style="display:none;">
+        <div class="input-group" style="gap:10px;">
+          <div class="input-label">Image URL</div>
+          <input class="input-field" id="bc-image-url" placeholder="https://i.imgur.com/xxx.jpg" oninput="updatePreview()"/>
+          <div class="input-label" style="margin-top:4px;">Caption (ไม่บังคับ)</div>
+          <textarea class="input-field" id="bc-image-caption" placeholder="คำบรรยายภาพ..." style="min-height:60px;" oninput="updatePreview()"></textarea>
+        </div>
+        <div class="settings-sub" style="margin-top:8px;">
+          💡 วิธีได้ Image URL: อัปโหลดที่ <a href="https://imgbb.com" target="_blank" style="color:var(--gold);">imgbb.com</a> หรือ Google Drive (Share → Copy link → แก้เป็น direct link)
+        </div>
+      </div>
+
+      <!-- VIDEO fields -->
+      <div id="bc-video-fields" style="display:none;">
+        <div class="input-group" style="gap:10px;">
+          <div class="input-label">Video URL (YouTube หรือ direct .mp4)</div>
+          <input class="input-field" id="bc-video-url" placeholder="https://youtube.com/watch?v=xxx" oninput="updatePreview()"/>
+          <div class="input-label" style="margin-top:4px;">ข้อความประกอบ (ไม่บังคับ)</div>
+          <textarea class="input-field" id="bc-video-text" placeholder="ข้อความที่ส่งพร้อมวิดีโอ..." style="min-height:60px;" oninput="updatePreview()"></textarea>
+        </div>
+      </div>
+
+      <!-- FLEX (Image + Text) fields -->
+      <div id="bc-flex-fields" style="display:none;">
+        <div class="input-group" style="gap:10px;">
+          <div class="input-label">Image URL (รูปด้านบน)</div>
+          <input class="input-field" id="bc-flex-image" placeholder="https://i.imgur.com/xxx.jpg" oninput="updatePreview()"/>
+          <div class="input-label" style="margin-top:4px;">หัวข้อ</div>
+          <input class="input-field" id="bc-flex-title" placeholder="ชื่อ Workshop หรือหัวข้อ" oninput="updatePreview()"/>
+          <div class="input-label" style="margin-top:4px;">รายละเอียด</div>
+          <textarea class="input-field" id="bc-flex-body" placeholder="รายละเอียดเพิ่มเติม..." style="min-height:80px;" oninput="updatePreview()"></textarea>
+          <div class="input-label" style="margin-top:4px;">ปุ่ม (ไม่บังคับ)</div>
+          <input class="input-field" id="bc-flex-btn-label" placeholder="ข้อความบนปุ่ม เช่น สมัครได้เลย"/>
+          <input class="input-field" id="bc-flex-btn-url" placeholder="URL ที่ปุ่มพาไป (Google Form, etc.)" style="margin-top:6px;"/>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="broadcast-preview" id="bc-preview">
+        <div class="preview-label">Preview</div>
+        <div class="preview-text" id="bc-preview-text" style="color:var(--text-soft);font-style:italic;">ยังไม่มีข้อมูล</div>
+      </div>
+
+      <button class="btn-full gold" onclick="broadcast()">ส่ง Broadcast 💛</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+
+const API_URL="https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
+const LIFF_ID="2009806939-AONYlCkT";
+
+const MOCK={
+  role:"admin",name:"Admin Test",
+  cases:[
+    {caseId:"CASE_001",level:"red",status:"booked",slot:"พุธ 16:00–17:00",q1:"ความรู้สึกของตัวเอง",q2:"มากเลย ยากมากตอนนี้",q3:"นานมากแล้ว นานกว่าที่อยากยอมรับ",q4:"ยังเลย นี่เป็นครั้งแรก",q5:"แค่อยากให้มีคนรับฟัง",owner:"PR_001"},
+    {caseId:"CASE_002",level:"yellow",status:"booked",slot:"อังคาร 15:30–16:30",q1:"ความเครียด / แรงกดดัน",q2:"ค่อนข้างมาก เริ่มยากขึ้นแล้ว",q3:"สักพักแล้ว ประมาณไม่กี่อาทิตย์",q4:"เคยลอง แต่ไม่ค่อยได้ผล",q5:"อยากได้คำแนะนำว่าจะทำยังไงต่อ",owner:"PR_002"},
+    {caseId:"CASE_003",level:"green",status:"completed",slot:"ศุกร์ 14:00–15:00",q1:"เรื่องเรียน",q2:"นิดหน่อย แต่ก็คิดอยู่",q3:"เพิ่งเกิดขึ้น",q4:"เคย แต่ยังต้องการความช่วยเหลืออยู่",q5:"ยังไม่แน่ใจ แค่รู้สึกว่าต้องเริ่มสักที",owner:"PR_001"},
+  ],
+  specialRequests:[
+    {caseId:"CASE_SR1",userId:"U_SR1",requestedSlots:["พุธ 14:00–15:00","พุธ 14:15–15:15"],q1:"ความสัมพันธ์",level:"yellow"},
+    {caseId:"CASE_SR2",userId:"U_SR2",requestedSlots:["ศุกร์ 12:30–13:30"],q1:"ความรู้สึกของตัวเอง",level:"red"},
+  ],
+  prList:[
+    {userId:"PR_001",name:"ปลาย",hasSlots:true},
+    {userId:"PR_002",name:"มิ้นท์",hasSlots:true},
+    {userId:"PR_003",name:"เฟิร์น",hasSlots:false},
+    {userId:"PR_004",name:"บอส",hasSlots:false},
+  ],
+  waiting:[
+    {userId:"U_W1",topic:"ความเครียด",since:"3 วันที่แล้ว"},
+    {userId:"U_W2",topic:"ความรู้สึกของตัวเอง",since:"1 วันที่แล้ว"},
+  ],
+  programs:[
+    {name:"Mindfulness Workshop",date:"2025-05-20",desc:"เวิร์คชอปฝึกสติ 2 ชั่วโมง"},
+    {name:"Career Night",date:"2025-05-28",desc:"พูดคุยกับรุ่นพี่เรื่องอนาคต"},
+  ],
+  pause:null,
+};
+
+const SLOT_TIMES={
+  mon:["15:30–16:30","16:00–17:00","16:30–17:30"],
+  tue:["15:30–16:30","16:00–17:00","16:30–17:30"],
+  wed:["15:30–16:30","16:00–17:00","16:30–17:30"],
+  thu:["15:30–16:30","16:00–17:00","16:30–17:30"],
+  fri:["12:30–13:30","13:00–14:00","13:30–14:30","14:00–15:00","14:30–15:30","15:00–16:00","15:30–16:30","16:00–17:00","16:30–17:30"]
+};
+const DAY_LABELS={mon:"จันทร์",tue:"อังคาร",wed:"พุธ",thu:"พฤหัสบดี",fri:"ศุกร์"};
+
+let userRole=null,userId=null,userName=null,selectedSlots=[];
+let broadcastType="text";
+
+// ── INIT ──────────────────────────────────────────────────
+window.onload=async()=>{
+  try{
+    await liff.init({liffId:LIFF_ID});
+    if(!liff.isLoggedIn()){liff.login();return;}
+    const p=await liff.getProfile();userId=p.userId;userName=p.displayName;
+  }catch{userId="test_admin";userName=MOCK.name;}
+  loadRole();
+};
+
+async function loadRole(){
+  try{
+    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"getUserRole",userId})});
+    const d=await res.json();userRole=d.role||"denied";userName=d.name||userName;
+  }catch{userRole=MOCK.role;}
+  if(!userRole||userRole==="student"||userRole==="denied"){
+    document.getElementById("screen-loading").style.display="none";
+    document.getElementById("screen-denied").style.display="flex";return;
+  }
+  bootApp();
+}
+
+function bootApp(){
+  document.getElementById("screen-loading").style.display="none";
+  document.getElementById("app").style.display="flex";
+  document.getElementById("user-name").innerText=userName;
+  const badge=document.getElementById("role-badge");
+  badge.innerText={admin:"Admin",pr:"PR",program:"Program Team"}[userRole]||userRole;
+  badge.className="role-badge "+userRole;
+  buildTabs();loadData();
+}
+
+function buildTabs(){
+  const nav=document.getElementById("tab-nav");nav.innerHTML="";
+  const tabs={
+    admin:[{id:"tab-overview",label:"Overview"},{id:"tab-cases",label:"Cases"},{id:"tab-pr",label:"PR & Slots"},{id:"tab-settings",label:"Settings"}],
+    pr:[{id:"tab-my-cases",label:"เคสของฉัน"},{id:"tab-schedule",label:"ลงตาราง"}],
+    program:[{id:"tab-programs",label:"Programs"}],
+  };
+  (tabs[userRole]||[]).forEach((t,i)=>{
+    const btn=document.createElement("button");
+    btn.className="tab-btn"+(i===0?" active":"");
+    btn.innerText=t.label;btn.onclick=()=>switchTab(t.id,btn);nav.appendChild(btn);
+  });
+  const first=(tabs[userRole]||[])[0];
+  if(first)document.getElementById(first.id).classList.add("active");
+}
+
+function switchTab(tabId,btn){
+  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(tabId).classList.add("active");btn.classList.add("active");
+}
+
+async function loadData(){
+  if(userRole==="admin")loadAdminData();
+  else if(userRole==="pr"){loadPRData();buildScheduleTab();}
+  else if(userRole==="program")loadProgramData();
+}
+
+async function loadAdminData(){
+  let cases,special,prList,waiting,pause;
+  try{
+    const res=await fetch(API_URL+"?action=getDashboardStats");
+    const d=await res.json();
+    cases=d.cases||[];special=d.specialRequests||[];
+    prList=d.prList||[];waiting=d.waiting||[];pause=d.pause||null;
+  }catch{cases=MOCK.cases;special=MOCK.specialRequests;prList=MOCK.prList;waiting=MOCK.waiting;pause=MOCK.pause;}
+  document.getElementById("kpi-red").innerText=cases.filter(c=>c.level==="red"&&c.status!=="completed").length;
+  document.getElementById("kpi-open").innerText=cases.filter(c=>c.status==="open").length;
+  document.getElementById("kpi-active").innerText=cases.filter(c=>c.status==="booked"||c.status==="active").length;
+  document.getElementById("kpi-done").innerText=cases.filter(c=>c.status==="completed").length;
+  renderCasesInto("overview-urgent",cases.filter(c=>c.level==="red"&&c.status!=="completed"),true);
+  renderSpecialRequests(special);
+  renderCasesInto("cases-list",[...cases].sort((a,b)=>({red:0,yellow:1,green:2}[a.level]||2)-({red:0,yellow:1,green:2}[b.level]||2)),true);
+  renderPRList(prList);renderPauseBanner(pause);renderWaitingList(waiting);
+}
+
+async function loadPRData(){
+  let myCases;
+  try{
+    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"getMyCases",userId})});
+    const d=await res.json();myCases=d.cases||[];
+  }catch{myCases=MOCK.cases.filter(c=>c.owner==="PR_001");}
+  renderCasesInto("my-cases-list",myCases,false);
+}
+
+async function loadProgramData(){
+  let programs;
+  try{
+    const res=await fetch(API_URL+"?action=getPrograms");
+    const d=await res.json();programs=d.programs||[];
+  }catch{programs=MOCK.programs;}
+  renderPrograms(programs);
+}
+
+function renderCasesInto(id,cases,isAdmin){
+  const el=document.getElementById(id);
+  if(!cases||cases.length===0){el.innerHTML=`<div class="empty">ไม่มีเคสในขณะนี้ 💛</div>`;return;}
+  el.innerHTML="";cases.forEach(c=>el.appendChild(buildCaseCard(c,isAdmin)));
+}
+
+function buildCaseCard(c,isAdmin){
+  const card=document.createElement("div");card.className=`case-card ${c.level||"green"}`;
+  const statusLabels={open:"รอ auto-assign",active:"กำลังดูแล",booked:"นัดแล้ว",completed:"เสร็จแล้ว"};
+  card.innerHTML=`
+    <div class="case-header">
+      <div><div class="case-id">${c.caseId}</div><div class="case-status">${statusLabels[c.status]||c.status}</div></div>
+      <div class="level-badge ${c.level}">${(c.level||"").toUpperCase()}</div>
+    </div>
+    <div class="case-answers">
+      <div class="answer-row"><div class="answer-q">หนักใจเรื่อง</div><div class="answer-a">${c.q1||"—"}</div></div>
+      <div class="answer-row"><div class="answer-q">ส่งผลแค่ไหน</div><div class="answer-a">${c.q2||"—"}</div></div>
+      <div class="answer-row"><div class="answer-q">แบกมานาน</div><div class="answer-a">${c.q3||"—"}</div></div>
+      <div class="answer-row"><div class="answer-q">เคยเล่าให้ใครฟัง</div><div class="answer-a">${c.q4||"—"}</div></div>
+      <div class="answer-row"><div class="answer-q">อยากได้อะไร</div><div class="answer-a">${c.q5||"—"}</div></div>
+    </div>
+    ${c.slot?`<div class="case-footer">📅 ${c.slot}</div>`:""}
+    <div class="btn-row" id="actions-${c.caseId}"></div>
+  `;
+  const btnRow=card.querySelector(`#actions-${c.caseId}`);
+  if((c.status==="booked"||c.status==="active")&&(isAdmin||c.owner===userId)){
+    const btn=document.createElement("button");btn.className="btn-sm green";
+    btn.innerText="✓ จบเคส";btn.onclick=()=>completeCase(c.caseId);btnRow.appendChild(btn);
+  }
+  return card;
+}
+
+function renderSpecialRequests(list){
+  const el=document.getElementById("overview-special");
+  if(!list||list.length===0){el.innerHTML=`<div class="empty">ไม่มี Special Request ตอนนี้ 💛</div>`;return;}
+  el.innerHTML="";
+  list.forEach(r=>{
+    const card=document.createElement("div");card.className="special-card";
+    card.innerHTML=`
+      <div class="case-header">
+        <div><div class="case-id">${r.caseId}</div><div class="case-status">Special Request</div></div>
+        <div class="level-badge ${r.level}">${(r.level||"").toUpperCase()}</div>
+      </div>
+      <div class="answer-row"><div class="answer-q">หนักใจเรื่อง</div><div class="answer-a">${r.q1||"—"}</div></div>
+      <div class="answer-q" style="margin-top:4px;">เวลาที่ขอ</div>
+      <div class="special-slots-list">${(r.requestedSlots||[]).map(s=>`<span class="special-slot-tag">${s}</span>`).join("")}</div>
+      <div class="btn-row">
+        <button class="btn-sm gold" onclick="addTempPR('${r.caseId}')">เพิ่ม PR ชั่วคราว</button>
+      </div>
+    `;
+    el.appendChild(card);
+  });
+}
+
+function renderPRList(list){
+  const el=document.getElementById("pr-list");
+  if(!list||list.length===0){el.innerHTML=`<div class="empty">ยังไม่มี PR</div>`;return;}
+  el.innerHTML="";
+  list.forEach(pr=>{
+    const card=document.createElement("div");card.className="pr-card";
+    card.innerHTML=`
+      <div><div class="pr-name">${pr.name}</div><div class="pr-sub">${pr.userId}</div></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="pr-status ${pr.hasSlots?'done':'pending'}">${pr.hasSlots?"ลงตารางแล้ว":"ยังไม่ลง"}</span>
+        <button class="btn-sm danger" onclick="removePR('${pr.userId}','${pr.name}')">ลบ</button>
+      </div>
+    `;
+    el.appendChild(card);
+  });
+}
+
+function renderPauseBanner(pause){
+  const el=document.getElementById("pause-status-banner");
+  if(!pause){el.innerHTML=`<div class="settings-card"><div class="settings-sub">ตอนนี้ไม่มีช่วงหยุดพัก — ระบบเปิดรับปกติ ✅</div></div>`;return;}
+  const daysLeft=Math.max(0,Math.ceil((new Date(pause.end)-new Date())/86400000));
+  el.innerHTML=`<div class="pause-active-banner"><div class="pause-active-title">🔴 กำลัง Pause — ${pause.type}</div><div class="pause-active-sub">${pause.start} → ${pause.end} · เหลือ ${daysLeft} วัน</div></div>`;
+}
+
+function renderWaitingList(list){
+  const el=document.getElementById("waiting-list");
+  const btn=document.getElementById("btn-notify-all");
+  if(!list||list.length===0){el.innerHTML=`<div class="empty">ไม่มีคนรออยู่ตอนนี้ 💛</div>`;btn.style.display="none";return;}
+  el.innerHTML="";
+  list.forEach(w=>{
+    const card=document.createElement("div");card.className="waiting-card";
+    card.innerHTML=`<div><div class="waiting-topic">${w.topic}</div><div class="waiting-since">รออยู่ ${w.since}</div></div>`;
+    el.appendChild(card);
+  });
+  btn.style.display="block";btn.innerText=`แจ้งเตือนทุกคน (${list.length} คน)`;
+}
+
+function renderPrograms(list){
+  const el=document.getElementById("programs-list");
+  if(!list||list.length===0){el.innerHTML=`<div class="empty">ยังไม่มี Program</div>`;return;}
+  el.innerHTML="";
+  list.forEach(p=>{
+    const card=document.createElement("div");card.className="program-card";
+    card.innerHTML=`<div class="program-name">${p.name}</div><div class="program-date">📅 ${p.date}</div><div class="pr-sub">${p.desc||""}</div>`;
+    el.appendChild(card);
+  });
+}
+
+// ── BROADCAST ────────────────────────────────────────────
+function setBroadcastType(type,btn){
+  broadcastType=type;
+  document.querySelectorAll(".type-tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("bc-text-fields").style.display=type==="text"?"block":"none";
+  document.getElementById("bc-image-fields").style.display=type==="image"?"block":"none";
+  document.getElementById("bc-video-fields").style.display=type==="video"?"block":"none";
+  document.getElementById("bc-flex-fields").style.display=type==="flex"?"block":"none";
+  updatePreview();
+}
+
+function updatePreview(){
+  const prev=document.getElementById("bc-preview");
+  const text=document.getElementById("bc-preview-text");
+  prev.innerHTML=`<div class="preview-label">Preview</div>`;
+
+  if(broadcastType==="text"){
+    const val=document.getElementById("bc-text").value;
+    const d=document.createElement("div");d.className="preview-text";
+    d.innerText=val||"(ยังไม่มีข้อมูล)";prev.appendChild(d);
+
+  } else if(broadcastType==="image"){
+    const url=document.getElementById("bc-image-url").value;
+    const cap=document.getElementById("bc-image-caption").value;
+    if(url){const img=document.createElement("img");img.className="preview-image";img.src=url;img.style.display="block";prev.appendChild(img);}
+    if(cap){const d=document.createElement("div");d.className="preview-text";d.innerText=cap;prev.appendChild(d);}
+    if(!url&&!cap){const d=document.createElement("div");d.className="preview-text";d.style.color="var(--text-soft)";d.style.fontStyle="italic";d.innerText="ใส่ Image URL เพื่อดู preview";prev.appendChild(d);}
+
+  } else if(broadcastType==="video"){
+    const url=document.getElementById("bc-video-url").value;
+    const txt=document.getElementById("bc-video-text").value;
+    if(url){const a=document.createElement("a");a.className="preview-video-link";a.href=url;a.target="_blank";a.innerText="🎬 "+url;prev.appendChild(a);}
+    if(txt){const d=document.createElement("div");d.className="preview-text";d.style.marginTop="8px";d.innerText=txt;prev.appendChild(d);}
+    if(!url){const d=document.createElement("div");d.className="preview-text";d.style.color="var(--text-soft)";d.style.fontStyle="italic";d.innerText="ใส่ Video URL เพื่อดู preview";prev.appendChild(d);}
+
+  } else if(broadcastType==="flex"){
+    const img=document.getElementById("bc-flex-image").value;
+    const title=document.getElementById("bc-flex-title").value;
+    const body=document.getElementById("bc-flex-body").value;
+    const btnLabel=document.getElementById("bc-flex-btn-label").value;
+    if(img){const i=document.createElement("img");i.className="preview-image";i.src=img;i.style.display="block";prev.appendChild(i);}
+    if(title){const d=document.createElement("div");d.style.cssText="font-weight:700;font-size:15px;margin-top:8px;color:var(--text);";d.innerText=title;prev.appendChild(d);}
+    if(body){const d=document.createElement("div");d.className="preview-text";d.style.marginTop="4px";d.innerText=body;prev.appendChild(d);}
+    if(btnLabel){const b=document.createElement("div");b.style.cssText="background:var(--gold);color:#1A1A1A;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;text-align:center;margin-top:10px;";b.innerText=btnLabel;prev.appendChild(b);}
+    if(!img&&!title){const d=document.createElement("div");d.className="preview-text";d.style.color="var(--text-soft)";d.style.fontStyle="italic";d.innerText="กรอกข้อมูลเพื่อดู preview";prev.appendChild(d);}
+  }
+}
+
+async function broadcast(){
+  let payload={action:"broadcast",type:broadcastType};
+
+  if(broadcastType==="text"){
+    const msg=document.getElementById("bc-text").value.trim();
+    if(!msg){toast("กรุณาพิมพ์ข้อความก่อน");return;}
+    payload.message=msg;
+
+  } else if(broadcastType==="image"){
+    const url=document.getElementById("bc-image-url").value.trim();
+    if(!url){toast("กรุณาใส่ Image URL");return;}
+    payload.imageUrl=url;
+    payload.caption=document.getElementById("bc-image-caption").value.trim();
+
+  } else if(broadcastType==="video"){
+    const url=document.getElementById("bc-video-url").value.trim();
+    if(!url){toast("กรุณาใส่ Video URL");return;}
+    payload.videoUrl=url;
+    payload.message=document.getElementById("bc-video-text").value.trim();
+
+  } else if(broadcastType==="flex"){
+    const title=document.getElementById("bc-flex-title").value.trim();
+    if(!title){toast("กรุณาใส่หัวข้อ");return;}
+    payload.imageUrl=document.getElementById("bc-flex-image").value.trim();
+    payload.title=title;
+    payload.body=document.getElementById("bc-flex-body").value.trim();
+    payload.btnLabel=document.getElementById("bc-flex-btn-label").value.trim();
+    payload.btnUrl=document.getElementById("bc-flex-btn-url").value.trim();
+  }
+
+  if(!confirm("ส่ง broadcast ไปยังทุกคนใช่ไหม?"))return;
+
+  try{
+    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  }catch{}
+  toast("ส่ง Broadcast แล้ว 💛");
+}
+
+// ── SCHEDULE ─────────────────────────────────────────────
+function getWeekRange(){
+  const now=new Date(),day=now.getDay();
+  const diff=now.getDate()-day+(day===0?-6:1);
+  const mon=new Date(now);mon.setDate(diff);
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  const opts={day:"numeric",month:"long",year:"numeric"};
+  return mon.toLocaleDateString("th-TH",opts)+" – "+sun.toLocaleDateString("th-TH",opts);
+}
+
+function buildScheduleTab(){
+  document.getElementById("schedule-week-label").innerText="📅 "+getWeekRange();
+  const container=document.getElementById("schedule-days");container.innerHTML="";
+  Object.entries(SLOT_TIMES).forEach(([key,times])=>{
+    const g=document.createElement("div");g.className="schedule-day";
+    const l=document.createElement("div");l.className="schedule-day-name";l.innerText=DAY_LABELS[key];g.appendChild(l);
+    const r=document.createElement("div");r.className="schedule-slots";
+    times.forEach(time=>{
+      const full=DAY_LABELS[key]+" "+time;
+      const chip=document.createElement("button");chip.className="slot-chip";
+      chip.innerText=time;chip.onclick=()=>toggleSlot(chip,full);r.appendChild(chip);
+    });
+    g.appendChild(r);container.appendChild(g);
+  });
+}
+
+function toggleSlot(chip,slot){
+  if(selectedSlots.includes(slot)){selectedSlots=selectedSlots.filter(s=>s!==slot);chip.classList.remove("chosen");}
+  else{selectedSlots.push(slot);chip.classList.add("chosen");}
+  const btn=document.getElementById("btn-save-schedule");
+  const sum=document.getElementById("schedule-summary");
+  if(selectedSlots.length===0){sum.innerText="ยังไม่ได้เลือกช่วงเวลา";btn.disabled=true;}
+  else{sum.innerText="เลือกแล้ว "+selectedSlots.length+" ช่วงเวลา";btn.disabled=false;}
+}
+
+async function saveSchedule(){
+  const btn=document.getElementById("btn-save-schedule");
+  btn.disabled=true;btn.innerText="กำลังบันทึก...";
+  const now=new Date(),day=now.getDay();
+  const diff=now.getDate()-day+(day===0?-6:1);
+  const mon=new Date(now);mon.setDate(diff);
+  const weekId=mon.toISOString().split("T")[0];
+  try{
+    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"registerAvailability",userId,weekId,slots:selectedSlots})});
+  }catch{}
+  toast("บันทึกตารางแล้ว 💛");
+  btn.innerText="ยืนยันตารางสัปดาห์นี้";btn.disabled=selectedSlots.length===0;
+}
+
+// ── ACTIONS ───────────────────────────────────────────────
+async function completeCase(caseId){
+  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"completeCase",caseId,userId})});}catch{}
+  toast("ปิดเคสแล้ว 💛");loadData();
+}
+
+async function addTempPR(caseId){
+  const prId=prompt("กรอก LINE User ID ของ PR ที่จะเพิ่มชั่วคราว:");
+  if(!prId)return;
+  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"addTempPR",caseId,prId})});}catch{}
+  toast("เพิ่ม PR ชั่วคราวแล้ว ระบบกำลัง match 💛");loadData();
+}
+
+async function addPR(){
+  const id=document.getElementById("new-pr-id").value.trim();
+  const name=document.getElementById("new-pr-name").value.trim();
+  if(!id||!name){toast("กรุณากรอกให้ครบ");return;}
+  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"addPR",userId:id,name,role:"pr"})});}catch{}
+  document.getElementById("new-pr-id").value="";document.getElementById("new-pr-name").value="";
+  toast("เพิ่ม PR แล้ว 💛");loadData();
+}
+
+async function removePR(prId,name){
+  if(!confirm(`ลบ ${name} ออกจากทีม PR?`))return;
+  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"removePR",userId:prId})});}catch{}
+  toast(`ลบ ${name} แล้ว`);loadData();
+}
+
+async function setPause(){
+  const type=document.getElementById("pause-type").value;
+  const start=document.getElementById("pause-start").value;
+  const end=document.getElementById("pause-end").value;
+  if(!start||!end){toast("กรุณาเลือกวันให้ครบ");return;}
+  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"setPause",type,start,end})});}catch{}
+  toast("บันทึกช่วงหยุดแล้ว 💛");loadData();
+}
+
+async function clearPause(){
+  if(!confirm("ยกเลิกช่วงหยุดพักปัจจุบัน?"))return;
+  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"clearPause"})});}catch{}
+  toast("ยกเลิกช่วงหยุดแล้ว");loadData();
+}
+
+async function notifyAll(){
+  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"notifyWaiting"})});}catch{}
+  toast("ส่งแจ้งเตือนแล้ว 💛");
+}
+
+async function addProgram(){
+  const name=document.getElementById("prog-name").value.trim();
+  const date=document.getElementById("prog-date").value;
+  const desc=document.getElementById("prog-desc").value.trim();
+  if(!name||!date){toast("กรุณากรอกชื่อและวันที่");return;}
+  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"addProgram",name,date,desc})});}catch{}
+  document.getElementById("prog-name").value="";document.getElementById("prog-date").value="";document.getElementById("prog-desc").value="";
+  toast("เพิ่ม Program แล้ว 💛");loadData();
+}
+
+function toast(msg){
+  const t=document.createElement("div");t.className="toast";t.innerText=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3000);
+}
+
+</script>
+</body>
+</html>
