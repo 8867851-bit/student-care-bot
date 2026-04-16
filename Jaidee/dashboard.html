@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -7,13 +8,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      --bg:#ba6727;--surface:#1A1A1A;--surface2:#242424;--border:#2E2E2E;
+      --bg:#0A0F1E;--surface:#111827;--surface2:#1E2A3A;--border:#1E3A5F;
+      --accent:#38BDF8;--accent-soft:rgba(56,189,248,0.12);--accent-border:rgba(56,189,248,0.25);
       --gold:#F5A623;--gold-soft:rgba(245,166,35,0.12);--gold-border:rgba(245,166,35,0.25);
       --red:#E05252;--red-soft:rgba(224,82,82,0.12);
       --yellow:#F0C040;--yellow-soft:rgba(240,192,64,0.12);
       --green:#4CAF7D;--green-soft:rgba(76,175,125,0.12);
-      --blue:#6495ED;--blue-soft:rgba(100,149,237,0.12);
-      --text:#F0EDE8;--text-mid:#888;--text-soft:#555;
+      --blue:#38BDF8;--blue-soft:rgba(56,189,248,0.12);
+      --text:#E8F4FD;--text-mid:#6B8FA8;--text-soft:#3D5A73;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
@@ -30,6 +32,7 @@
     .role-badge.admin{background:var(--gold-soft);color:var(--gold);}
     .role-badge.pr{background:var(--green-soft);color:var(--green);}
     .role-badge.program{background:var(--blue-soft);color:var(--blue);}
+    .role-badge.content{background:rgba(168,85,247,0.12);color:#A855F7;}
     .tab-nav{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);padding:0 20px;scrollbar-width:none;}
     .tab-nav::-webkit-scrollbar{display:none;}
     .tab-btn{background:none;border:none;color:var(--text-soft);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;padding:14px 16px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
@@ -139,9 +142,16 @@
   <div class="header">
     <div class="header-eyebrow">ใจดี TU</div>
     <div class="header-title">Dashboard</div>
-    <div style="margin-top:4px;">
+    <div style="margin-top:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <span id="user-name" style="font-size:12px;color:var(--text-mid);"></span>
-      &nbsp;<span class="role-badge" id="role-badge"></span>
+      <span class="role-badge" id="role-badge"></span>
+      <!-- ADMIN ONLY: role switcher -->
+      <select id="role-switcher" style="display:none;background:var(--surface2);border:1px solid var(--border);color:var(--text-mid);border-radius:8px;padding:3px 8px;font-size:11px;font-family:'Sarabun',sans-serif;cursor:pointer;" onchange="switchViewRole(this.value)">
+        <option value="admin">👁 Admin view</option>
+        <option value="pr">👁 PR view</option>
+        <option value="program">👁 Program view</option>
+        <option value="content">👁 Content view</option>
+      </select>
     </div>
   </div>
 
@@ -207,7 +217,56 @@
     <button class="btn-full gold" id="btn-notify-all" onclick="notifyAll()" style="display:none;">แจ้งเตือนทุกคนใน Waiting List</button>
   </div>
 
-  <!-- PR: MY CASES -->
+  <!-- CONTENT TEAM -->
+  <div class="tab-content" id="tab-content">
+    <div class="section-label">จัดการเนื้อหา 8 โลก</div>
+    <div style="font-size:13px;color:var(--text-mid);line-height:1.7;">
+      เลือกโลกที่ต้องการเพิ่มหรือแก้ไขเนื้อหา
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="world-grid">
+      <!-- populated by JS -->
+    </div>
+    <div class="divider"></div>
+    <div class="section-label">เพิ่มเนื้อหาใหม่</div>
+    <div class="add-form">
+      <div class="input-group">
+        <div class="input-label">โลก</div>
+        <select class="input-field" id="content-world">
+          <option value="puzzle">🧩 Puzzle Piece</option>
+          <option value="reflection">🪞 Reflection Space</option>
+          <option value="academic">📚 Academic Support</option>
+          <option value="career">🎯 Career Support</option>
+          <option value="people">👥 People</option>
+          <option value="school">🏫 School Support</option>
+          <option value="growth">🌱 Growth Programs</option>
+          <option value="founder">✨ Founder's Pick</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <div class="input-label">ชื่อเนื้อหา</div>
+        <input class="input-field" id="content-title" placeholder="ชื่อบทความหรือเนื้อหา"/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">ประเภท</div>
+        <select class="input-field" id="content-type">
+          <option value="article">📝 บทความ</option>
+          <option value="video">🎬 วิดีโอ</option>
+          <option value="infographic">🖼️ Infographic</option>
+          <option value="pdf">📄 PDF</option>
+          <option value="link">🔗 Link</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <div class="input-label">URL หรือ Link</div>
+        <input class="input-field" id="content-url" placeholder="https://..."/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">คำอธิบายสั้นๆ</div>
+        <input class="input-field" id="content-desc" placeholder="อธิบายสั้นๆ ว่านี่คืออะไร"/>
+      </div>
+      <button class="btn-full gold" onclick="addContent()">เพิ่มเนื้อหา</button>
+    </div>
+  </div>
   <div class="tab-content" id="tab-my-cases">
     <div class="section-label">เคสของฉัน</div>
     <div id="my-cases-list"><div class="empty">กำลังโหลด...</div></div>
@@ -315,7 +374,7 @@
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
 
-const API_URL="https://script.google.com/macros/s/AKfycbx0NE5llsKxTkodzZxShczikAi21zJTM9tJlMXzowRsqByGewq-V8bQzdx8wmx6iNcIFw/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
 const LIFF_ID="2009806939-AONYlCkT";
 
 const MOCK={
@@ -385,37 +444,105 @@ function bootApp(){
   document.getElementById("app").style.display="flex";
   document.getElementById("user-name").innerText=userName;
   const badge=document.getElementById("role-badge");
-  badge.innerText={admin:"Admin",pr:"PR",program:"Program Team"}[userRole]||userRole;
+  badge.innerText={admin:"Admin",pr:"PR",program:"Program Team",content:"Content Team"}[userRole]||userRole;
   badge.className="role-badge "+userRole;
+  // Show role switcher for admin only
+  if(userRole==="admin"){
+    document.getElementById("role-switcher").style.display="inline-block";
+  }
   buildTabs();loadData();
 }
 
-function buildTabs(){
+function buildTabs(viewRole){
+  const role=viewRole||userRole;
   const nav=document.getElementById("tab-nav");nav.innerHTML="";
   const tabs={
     admin:[{id:"tab-overview",label:"Overview"},{id:"tab-cases",label:"Cases"},{id:"tab-pr",label:"PR & Slots"},{id:"tab-settings",label:"Settings"}],
     pr:[{id:"tab-my-cases",label:"เคสของฉัน"},{id:"tab-schedule",label:"ลงตาราง"}],
     program:[{id:"tab-programs",label:"Programs"}],
+    content:[{id:"tab-content",label:"Content"}],
   };
-  (tabs[userRole]||[]).forEach((t,i)=>{
+  (tabs[role]||[]).forEach((t,i)=>{
     const btn=document.createElement("button");
     btn.className="tab-btn"+(i===0?" active":"");
     btn.innerText=t.label;btn.onclick=()=>switchTab(t.id,btn);nav.appendChild(btn);
   });
-  const first=(tabs[userRole]||[])[0];
-  if(first)document.getElementById(first.id).classList.add("active");
+  // Hide all tab contents first
+  document.querySelectorAll(".tab-content").forEach(t=>{t.classList.remove("active");t.style.display="none";});
+  const first=(tabs[role]||[])[0];
+  if(first){
+    const el=document.getElementById(first.id);
+    el.style.display="flex";
+    el.classList.add("active");
+  }
+}
+
+// Admin only — preview another role's view
+function switchViewRole(role){
+  buildTabs(role);
+  if(role==="pr"){loadPRData();buildScheduleTab();}
+  else if(role==="program")loadProgramData();
+  else if(role==="content")buildWorldGrid();
+  else loadAdminData();
 }
 
 function switchTab(tabId,btn){
-  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(t=>{t.classList.remove("active");t.style.display="none";});
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-  document.getElementById(tabId).classList.add("active");btn.classList.add("active");
+  const el=document.getElementById(tabId);
+  el.style.display="flex";el.classList.add("active");
+  btn.classList.add("active");
 }
 
 async function loadData(){
   if(userRole==="admin")loadAdminData();
   else if(userRole==="pr"){loadPRData();buildScheduleTab();}
   else if(userRole==="program")loadProgramData();
+  else if(userRole==="content")buildWorldGrid();
+}
+
+// ── CONTENT TEAM ──────────────────────────────────────────
+function buildWorldGrid(){
+  const worlds=[
+    {icon:"🧩",name:"Puzzle Piece",id:"puzzle"},
+    {icon:"🪞",name:"Reflection Space",id:"reflection"},
+    {icon:"📚",name:"Academic Support",id:"academic"},
+    {icon:"🎯",name:"Career Support",id:"career"},
+    {icon:"👥",name:"People",id:"people"},
+    {icon:"🏫",name:"School Support",id:"school"},
+    {icon:"🌱",name:"Growth Programs",id:"growth"},
+    {icon:"✨",name:"Founder's Pick",id:"founder"},
+  ];
+  const grid=document.getElementById("world-grid");
+  if(!grid)return;
+  grid.innerHTML="";
+  worlds.forEach(w=>{
+    const card=document.createElement("div");
+    card.style.cssText="background:var(--surface);border-radius:12px;padding:14px;border:1px solid var(--border);display:flex;flex-direction:column;gap:6px;cursor:pointer;";
+    card.innerHTML=`<div style="font-size:22px;">${w.icon}</div><div style="font-size:13px;font-weight:600;">${w.name}</div>`;
+    card.onclick=()=>{
+      document.getElementById("content-world").value=w.id;
+      document.getElementById("content-title").focus();
+    };
+    grid.appendChild(card);
+  });
+}
+
+async function addContent(){
+  const world=document.getElementById("content-world").value;
+  const title=document.getElementById("content-title").value.trim();
+  const type=document.getElementById("content-type").value;
+  const url=document.getElementById("content-url").value.trim();
+  const desc=document.getElementById("content-desc").value.trim();
+  if(!title||!url){toast("กรุณากรอกชื่อและ URL");return;}
+  try{
+    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"addContent",world,title,type,url,desc,addedBy:userId})});
+  }catch{}
+  document.getElementById("content-title").value="";
+  document.getElementById("content-url").value="";
+  document.getElementById("content-desc").value="";
+  toast("เพิ่มเนื้อหาแล้ว 💛");
 }
 
 async function loadAdminData(){
@@ -758,4 +885,3 @@ function toast(msg){
 
 </script>
 </body>
-</html>
