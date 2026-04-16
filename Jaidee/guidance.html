@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — ครูแนะแนว</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
+      --softer:#CCC;--border:#EEEBE4;--white:#FFFFFF;
+      --gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;
+      --blue:#6495ED;--blue-soft:#EEF2FF;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
+
+    /* HEADER */
+    .page-header{padding:48px 24px 24px;}
+    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+    .headline{font-family:'Playfair Display',serif;font-size:30px;line-height:1.25;}
+    .headline em{font-style:italic;color:var(--gold);}
+    .page-sub{font-size:14px;color:var(--mid);line-height:1.7;margin-top:10px;}
+
+    /* TEACHER CARDS */
+    .teachers-list{padding:0 16px;display:flex;flex-direction:column;gap:20px;}
+
+    .teacher-card{background:var(--white);border-radius:20px;border:1px solid var(--border);overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.05);}
+
+    /* PROFILE SECTION */
+    .profile-section{padding:20px;display:flex;gap:16px;align-items:flex-start;}
+    .profile-photo{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#F0EDE8;flex-shrink:0;border:2px solid var(--border);}
+    .profile-photo-placeholder{width:72px;height:72px;border-radius:50%;background:var(--gold-soft);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:2px solid var(--gold-border);}
+    .profile-info{flex:1;}
+    .teacher-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
+    .teacher-nickname{font-size:13px;color:var(--soft);margin-top:2px;}
+    .teacher-role{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-top:6px;}
+
+    /* SPECIALIZATIONS */
+    .spec-tags{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 16px;}
+    .spec-tag{background:var(--blue-soft);color:var(--blue);border-radius:99px;padding:4px 12px;font-size:11px;font-weight:600;}
+
+    /* PERSONAL MESSAGE */
+    .personal-msg{margin:0 20px 16px;padding:14px 16px;background:var(--cream);border-radius:12px;border-left:3px solid var(--gold);}
+    .personal-msg-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--soft);margin-bottom:6px;}
+    .personal-msg-text{font-size:13px;color:var(--mid);line-height:1.75;font-style:italic;}
+
+    /* CALENDAR */
+    .calendar-section{padding:16px 20px;border-top:1px solid var(--border);}
+    .calendar-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--soft);margin-bottom:12px;}
+    .calendar-month{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:10px;text-align:center;}
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+    .cal-day-label{font-size:10px;color:var(--soft);text-align:center;font-weight:600;padding:4px 0;}
+    .cal-day{width:100%;aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all 0.15s ease;}
+    .cal-day.empty{background:none;cursor:default;}
+    .cal-day.no-slot{background:#F5F5F3;color:var(--softer);cursor:default;}
+    .cal-day.has-slot{background:var(--gold-soft);color:var(--dark);font-weight:600;border:1px solid var(--gold-border);}
+    .cal-day.has-slot:active{transform:scale(0.93);}
+    .cal-day.today{outline:2px solid var(--gold);}
+
+    /* SLOT LIST — shown when day is tapped */
+    .slots-popup{background:var(--cream);border-radius:12px;padding:14px 16px;margin-top:12px;border:1px solid var(--border);display:none;flex-direction:column;gap:10px;}
+    .slots-popup.active{display:flex;}
+    .slots-popup-title{font-size:12px;font-weight:700;color:var(--mid);margin-bottom:4px;}
+    .slot-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--white);border-radius:10px;border:1px solid var(--border);}
+    .slot-time{font-size:13px;font-weight:600;}
+    .slot-action{background:var(--gold);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;}
+
+    /* LINE CONTACT */
+    .contact-section{padding:16px 20px 20px;border-top:1px solid var(--border);}
+    .contact-note{font-size:12px;color:var(--soft);line-height:1.6;margin-bottom:12px;}
+    .line-btn{background:var(--dark);color:white;border:none;border-radius:12px;padding:13px 18px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;}
+
+    /* LINE ID COPY */
+    .line-id-row{display:flex;align-items:center;gap:8px;background:var(--cream);border-radius:10px;padding:10px 14px;border:1px solid var(--border);margin-top:8px;}
+    .line-id-text{font-size:13px;font-weight:600;flex:1;}
+    .copy-btn{background:none;border:none;color:var(--gold);font-size:12px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;}
+
+    /* BACK */
+    .back-btn{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:16px 24px;display:block;}
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <div class="eyebrow">ใจดี TU · School Professionals</div>
+    <div class="headline">ครู<em>แนะแนว</em></div>
+    <div class="page-sub">
+      ผู้เชี่ยวชาญด้าน TCAS, university admissions, recommendation letters
+      และการวางแผนอนาคต กดดูตารางเวลาและทักได้เลย
+    </div>
+  </div>
+
+  <div class="teachers-list" id="teachers-list">
+    <!-- Populated by JS from Apps Script -->
+    <!-- MOCK DATA shown below — will be replaced by real data -->
+  </div>
+
+  <button class="back-btn" onclick="window.history.back()">← กลับ</button>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+
+// ================================================================
+// CONFIG
+// ================================================================
+const API_URL = "https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
+
+// ================================================================
+// MOCK DATA
+// Admin: replace by adding real data to "Professionals" Google Sheet
+// Columns: id, name, nickname, role, photo_url, specializations(JSON),
+//          personal_message, line_id, active
+// ================================================================
+const MOCK_TEACHERS = [
+  {
+    id: "T001",
+    name: "อาจารย์สมใจ รักเรียน",
+    nickname: "ครูใจ",
+    role: "guidance",
+    photo_url: "",
+    specializations: ["TCAS ทุกรอบ","Scholarship","มหาวิทยาลัยรัฐ","การเขียน Personal Statement"],
+    personal_message: "ครูอยู่ตรงนี้เพื่อช่วยให้คุณเห็นทางข้างหน้าชัดขึ้น ไม่ว่าจะเพิ่งเริ่มคิดหรือมีแผนแล้ว เรามาคุยกันได้เลยนะ 🌱",
+    line_id: "@teacher_jai",
+    slots: {
+      "2026-04-17": ["10:00–11:00","14:00–15:00"],
+      "2026-04-21": ["13:00–14:00"],
+      "2026-04-24": ["10:00–11:00","15:00–16:00"],
+      "2026-04-28": ["14:00–15:00"],
+    }
+  },
+  {
+    id: "T002",
+    name: "อาจารย์วิชัย ตั้งใจสอน",
+    nickname: "ครูชัย",
+    role: "guidance",
+    photo_url: "",
+    specializations: ["Boarding School","International Programs","Recommendation Letters","Portfolio"],
+    personal_message: "ผมเชี่ยวชาญเรื่อง international pathways และ boarding schools เป็นพิเศษ ถ้ากำลังมองหาทางออกนอกกรอบ มาคุยกันได้ครับ",
+    line_id: "@teacher_chai",
+    slots: {
+      "2026-04-18": ["09:00–10:00","15:30–16:30"],
+      "2026-04-22": ["10:00–11:00"],
+      "2026-04-25": ["13:00–14:00","14:00–15:00"],
+    }
+  }
+];
+
+// ================================================================
+// CALENDAR HELPERS
+// ================================================================
+function getMonthData(year, month) {
+  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  return { firstDay: firstDay===0?6:firstDay-1, daysInMonth }; // Mon-based
+}
+
+function formatDate(year, month, day) {
+  return year+"-"+String(month+1).padStart(2,"0")+"-"+String(day).padStart(2,"0");
+}
+
+// ================================================================
+// RENDER
+// ================================================================
+function renderTeachers(teachers) {
+  const container = document.getElementById("teachers-list");
+  container.innerHTML = "";
+  teachers.forEach(t => container.appendChild(buildTeacherCard(t)));
+}
+
+function buildTeacherCard(t) {
+  const card = document.createElement("div");
+  card.className = "teacher-card";
+
+  // Profile
+  const profileHTML = t.photo_url
+    ? `<img class="profile-photo" src="${t.photo_url}" alt="${t.name}"/>`
+    : `<div class="profile-photo-placeholder">👩‍🏫</div>`;
+
+  const specsHTML = (t.specializations||[]).map(s=>
+    `<span class="spec-tag">${s}</span>`
+  ).join("");
+
+  card.innerHTML = `
+    <div class="profile-section">
+      ${profileHTML}
+      <div class="profile-info">
+        <div class="teacher-name">${t.name}</div>
+        <div class="teacher-nickname">${t.nickname}</div>
+        <div class="teacher-role">ครูแนะแนว</div>
+      </div>
+    </div>
+    <div class="spec-tags">${specsHTML}</div>
+    <div class="personal-msg">
+      <div class="personal-msg-label">จากครู</div>
+      <div class="personal-msg-text">"${t.personal_message}"</div>
+    </div>
+    <div class="calendar-section" id="cal-section-${t.id}"></div>
+    <div class="contact-section">
+      <div class="contact-note">
+        ดูตารางด้านบนแล้วทักครูได้เลยนะ 💛<br>
+        ครูจะตอบกลับและยืนยันเวลาที่นัดไว้
+      </div>
+      <button class="line-btn" onclick="openLine('${t.line_id}')">
+        💬 ทักครู${t.nickname}ได้เลย
+      </button>
+      <div class="line-id-row">
+        <div class="line-id-text">LINE: ${t.line_id}</div>
+        <button class="copy-btn" onclick="copyLineId('${t.line_id}', this)">copy</button>
+      </div>
+    </div>
+  `;
+
+  // Build calendar
+  buildCalendar(card.querySelector(`#cal-section-${t.id}`), t);
+
+  return card;
+}
+
+function buildCalendar(container, teacher) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const today = now.getDate();
+  const { firstDay, daysInMonth } = getMonthData(year, month);
+
+  const monthNames = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  const dayLabels = ["จ","อ","พ","พฤ","ศ","ส","อา"];
+
+  const slots = teacher.slots || {};
+
+  let html = `
+    <div class="calendar-label">ตารางว่าง</div>
+    <div class="calendar-month">${monthNames[month]} ${year+543}</div>
+    <div class="calendar-grid">
+  `;
+
+  // Day labels
+  dayLabels.forEach(d => { html += `<div class="cal-day-label">${d}</div>`; });
+
+  // Empty cells before first day
+  for (let i=0;i<firstDay;i++) { html += `<div class="cal-day empty"></div>`; }
+
+  // Days
+  for (let d=1;d<=daysInMonth;d++) {
+    const dateStr = formatDate(year, month, d);
+    const hasSlot = slots[dateStr] && slots[dateStr].length > 0;
+    const isToday = d === today;
+    let cls = hasSlot ? "has-slot" : "no-slot";
+    if (isToday) cls += " today";
+    const onclick = hasSlot ? `showSlots('${teacher.id}','${dateStr}',${JSON.stringify(slots[dateStr])})` : "";
+    html += `<div class="cal-day ${cls}" onclick="${onclick}">${d}</div>`;
+  }
+
+  html += `</div>`;
+  html += `<div class="slots-popup" id="slots-popup-${teacher.id}"></div>`;
+
+  container.innerHTML = html;
+}
+
+function showSlots(teacherId, dateStr, slotTimes) {
+  // Close all other popups
+  document.querySelectorAll(".slots-popup").forEach(p => p.classList.remove("active"));
+
+  const popup = document.getElementById("slots-popup-"+teacherId);
+  const teacher = (window._teachers||MOCK_TEACHERS).find(t=>t.id===teacherId);
+  if (!popup || !teacher) return;
+
+  // Format date display
+  const d = new Date(dateStr);
+  const dayNames = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+  const dateDisplay = dayNames[d.getDay()] + " " + d.getDate();
+
+  popup.innerHTML = `
+    <div class="slots-popup-title">📅 ${dateDisplay} — เวลาที่ว่าง</div>
+    ${slotTimes.map(slot=>`
+      <div class="slot-item">
+        <div class="slot-time">${slot}</div>
+        <button class="slot-action" onclick="openLine('${teacher.line_id}')">ทักครูนัด</button>
+      </div>
+    `).join("")}
+    <div style="font-size:11px;color:var(--soft);margin-top:4px;">
+      กดทักครูเพื่อยืนยันเวลาที่ต้องการนะ 💛
+    </div>
+  `;
+  popup.classList.add("active");
+}
+
+function openLine(lineId) {
+  // Try to open LINE app directly
+  const cleanId = lineId.replace("@","");
+  window.open("https://line.me/R/ti/p/" + lineId, "_blank");
+}
+
+function copyLineId(lineId, btn) {
+  navigator.clipboard.writeText(lineId).then(()=>{
+    btn.innerText = "✓ copied";
+    setTimeout(()=>btn.innerText="copy", 2000);
+  }).catch(()=>{
+    // Fallback for older browsers
+    btn.innerText = lineId;
+    setTimeout(()=>btn.innerText="copy", 3000);
+  });
+}
+
+// ================================================================
+// LOAD DATA
+// Tries real API first, falls back to mock
+//
+// ADMIN: To add a teacher, go to Google Sheet → "Professionals" tab
+// Add a new row with columns:
+//   id | name | nickname | role | photo_url | specializations(JSON array) |
+//   personal_message | line_id | active(TRUE/FALSE)
+//
+// To add/update slots, go to "ProfessionalSlots" tab:
+//   professional_id | date(YYYY-MM-DD) | time_label(e.g. 10:00–11:00) | available(TRUE)
+//
+// Set active=FALSE to hide a teacher without deleting their data
+// ================================================================
+async function loadTeachers() {
+  try {
+    const res = await fetch(API_URL+"?action=getProfessionals&role=guidance");
+    const d = await res.json();
+    if (d.status==="OK" && d.professionals?.length) {
+      window._teachers = d.professionals;
+      renderTeachers(d.professionals);
+      return;
+    }
+  } catch { /* fall through to mock */ }
+  window._teachers = MOCK_TEACHERS;
+  renderTeachers(MOCK_TEACHERS);
+}
+
+window.onload = () => loadTeachers();
+
+</script>
+</body>
+</html>
