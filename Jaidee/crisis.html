@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — ขอความช่วยเหลือ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
+      --border:#EEEBE4;--red:#E05252;--red-soft:#FFF0F0;
+      --gold:#F5A623;--gold-soft:#FFF5E0;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding:48px 24px 60px;}
+    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+    .headline{font-family:'Playfair Display',serif;font-size:32px;line-height:1.25;margin-bottom:16px;}
+    .headline em{font-style:italic;color:var(--red);}
+    .body-text{font-size:15px;color:var(--mid);line-height:1.85;margin-bottom:28px;}
+    .divider{height:1px;background:var(--border);margin:28px 0;}
+    .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:16px;}
+    .hotline-card{background:white;border-radius:16px;padding:18px 20px;border:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;text-decoration:none;transition:transform 0.15s ease;}
+    .hotline-card:active{transform:scale(0.97);}
+    .hotline-card.urgent{border-left:4px solid var(--red);}
+    .hotline-card.warm{border-left:4px solid var(--gold);}
+    .hotline-info{display:flex;flex-direction:column;gap:3px;}
+    .hotline-number{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--dark);}
+    .hotline-name{font-size:13px;color:var(--mid);}
+    .hotline-hours{font-size:11px;color:var(--soft);}
+    .call-btn{background:var(--red);color:white;border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;white-space:nowrap;}
+    .call-btn.gold{background:var(--gold);}
+    .tool-card{background:white;border-radius:16px;padding:18px 20px;border:1px solid var(--border);margin-bottom:12px;display:flex;flex-direction:column;gap:8px;}
+    .tool-name{font-size:15px;font-weight:700;color:var(--dark);}
+    .tool-desc{font-size:13px;color:var(--mid);line-height:1.6;}
+    .tool-link{font-size:13px;color:var(--gold);font-weight:600;text-decoration:none;}
+    .placeholder-banner{background:var(--gold-soft);border:1px solid #FFE4A0;border-radius:14px;padding:16px 18px;font-size:13px;color:#7A5C00;line-height:1.7;margin-bottom:28px;}
+    .btn-action{background:var(--dark);color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
+    .btn-ghost{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:10px;text-align:center;width:100%;}
+  </style>
+</head>
+<body>
+
+  <div class="eyebrow">ใจดี TU · Crisis Support</div>
+  <div class="headline">คุณไม่ได้<br>อยู่คน<em>เดียว</em></div>
+  <div class="body-text">
+    ถ้าตอนนี้รู้สึกหนักมาก หรืออยู่ในสถานการณ์ที่ต้องการความช่วยเหลือด่วน —
+    มีคนพร้อมรับฟังคุณตลอด 24 ชั่วโมง
+  </div>
+
+  <div class="placeholder-banner">
+    🌱 หน้านี้กำลังพัฒนาต่อเนื่อง เราอยู่ระหว่างการปรึกษาผู้เชี่ยวชาญ
+    เพื่อให้คำแนะนำที่ดีที่สุดสำหรับทุกสถานการณ์
+    ตอนนี้ด้านล่างมีสายด่วนและเครื่องมือที่ช่วยคุณได้ทันที 💛
+  </div>
+
+  <div class="section-label">สายด่วน — โทรได้เลยตอนนี้</div>
+
+  <a class="hotline-card urgent" href="tel:1323">
+    <div class="hotline-info">
+      <div class="hotline-number">1323</div>
+      <div class="hotline-name">กรมสุขภาพจิต</div>
+      <div class="hotline-hours">24 ชั่วโมง ทุกวัน</div>
+    </div>
+    <div class="call-btn">โทรเลย</div>
+  </a>
+
+  <a class="hotline-card urgent" href="tel:1667">
+    <div class="hotline-info">
+      <div class="hotline-number">1667</div>
+      <div class="hotline-name">สายด่วนสุขภาพจิต</div>
+      <div class="hotline-hours">24 ชั่วโมง ทุกวัน</div>
+    </div>
+    <div class="call-btn">โทรเลย</div>
+  </a>
+
+  <a class="hotline-card warm" href="tel:1300">
+    <div class="hotline-info">
+      <div class="hotline-number">1300</div>
+      <div class="hotline-name">ศูนย์ช่วยเหลือสังคม</div>
+      <div class="hotline-hours">24 ชั่วโมง ทุกวัน</div>
+    </div>
+    <div class="call-btn gold">โทรเลย</div>
+  </a>
+
+  <a class="hotline-card urgent" href="tel:191">
+    <div class="hotline-info">
+      <div class="hotline-number">191</div>
+      <div class="hotline-name">ตำรวจ — เหตุฉุกเฉิน</div>
+      <div class="hotline-hours">24 ชั่วโมง ทุกวัน</div>
+    </div>
+    <div class="call-btn">โทรเลย</div>
+  </a>
+
+  <div class="divider"></div>
+
+  <div class="section-label">เครื่องมือที่อาจช่วยได้</div>
+
+  <div class="tool-card">
+    <div class="tool-name">🛡️ Stop NCII</div>
+    <div class="tool-desc">
+      สำหรับกรณีที่มีภาพหรือวิดีโอส่วนตัวถูกแชร์โดยไม่ยินยอม (sextortion)
+      ช่วยให้ platform ต่างๆ ลบเนื้อหาออกได้เร็วขึ้น
+    </div>
+    <a class="tool-link" href="https://stopncii.org" target="_blank">ไปที่ Stop NCII →</a>
+  </div>
+
+  <div class="tool-card" style="border-style:dashed;opacity:0.6;">
+    <div class="tool-name">🔒 การถูกละเมิดความเป็นส่วนตัว</div>
+    <div class="tool-desc">Cyberbullying, blackmail, digital privacy — กำลังรวบรวมข้อมูลที่ดีที่สุด</div>
+    <div class="tool-link" style="color:var(--soft);">เร็วๆ นี้ 🌱</div>
+  </div>
+
+  <div class="tool-card" style="border-style:dashed;opacity:0.6;">
+    <div class="tool-name">💪 การรับมือกับ bullying รุนแรง</div>
+    <div class="tool-desc">ขั้นตอนที่ทำได้ทันที และวิธีขอความช่วยเหลือจากผู้ใหญ่ที่ไว้ใจได้</div>
+    <div class="tool-link" style="color:var(--soft);">เร็วๆ นี้ 🌱</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="font-size:14px;color:var(--mid);line-height:1.85;text-align:center;">
+    ถ้ายังไม่พร้อมโทร แต่อยากคุยกับใครสักคน<br>
+    PR ของเราพร้อมรับฟังคุณ 💛
+  </div>
+
+  <button class="btn-action" onclick="window.location.href='peer.html'" style="margin-top:20px;">
+    💛 คุยกับ PR ได้เลย
+  </button>
+  <button class="btn-ghost" onclick="window.history.back()">← กลับ</button>
+
+</body>
+</html>
