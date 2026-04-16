@@ -1,1 +1,359 @@
 
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — นักจิตวิทยาโรงเรียน</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
+      --softer:#CCC;--border:#EEEBE4;--white:#FFFFFF;
+      --gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;
+      --green:#4CAF7D;--green-soft:#F0FFF4;--green-border:#B2DFCC;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
+    .page-header{padding:48px 24px 24px;}
+    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:12px;}
+    .headline{font-family:'Playfair Display',serif;font-size:30px;line-height:1.25;}
+    .headline em{font-style:italic;color:var(--gold);}
+    .page-sub{font-size:14px;color:var(--mid);line-height:1.7;margin-top:10px;}
+
+    /* QUEUE NOTE */
+    .queue-note{margin:0 16px 24px;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:14px;padding:16px 18px;}
+    .queue-note-title{font-size:14px;font-weight:700;color:#7A5C00;margin-bottom:6px;}
+    .queue-note-text{font-size:13px;color:#7A5C00;line-height:1.7;}
+
+    .teachers-list{padding:0 16px;display:flex;flex-direction:column;gap:20px;}
+    .teacher-card{background:var(--white);border-radius:20px;border:1px solid var(--border);overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.05);}
+    .profile-section{padding:20px;display:flex;gap:16px;align-items:flex-start;}
+    .profile-photo{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#F0EDE8;flex-shrink:0;border:2px solid var(--border);}
+    .profile-photo-placeholder{width:72px;height:72px;border-radius:50%;background:var(--green-soft);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:2px solid var(--green-border);}
+    .profile-info{flex:1;}
+    .teacher-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
+    .teacher-nickname{font-size:13px;color:var(--soft);margin-top:2px;}
+    .teacher-role{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-top:6px;}
+    .spec-tags{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 16px;}
+    .spec-tag{background:var(--green-soft);color:var(--green);border-radius:99px;padding:4px 12px;font-size:11px;font-weight:600;}
+    .personal-msg{margin:0 20px 16px;padding:14px 16px;background:var(--cream);border-radius:12px;border-left:3px solid var(--gold);}
+    .personal-msg-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--soft);margin-bottom:6px;}
+    .personal-msg-text{font-size:13px;color:var(--mid);line-height:1.75;font-style:italic;}
+    .calendar-section{padding:16px 20px;border-top:1px solid var(--border);}
+    .calendar-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--soft);margin-bottom:12px;}
+    .calendar-month{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:10px;text-align:center;}
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+    .cal-day-label{font-size:10px;color:var(--soft);text-align:center;font-weight:600;padding:4px 0;}
+    .cal-day{width:100%;aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all 0.15s ease;}
+    .cal-day.empty{background:none;cursor:default;}
+    .cal-day.no-slot{background:#F5F5F3;color:var(--softer);cursor:default;}
+    .cal-day.has-slot{background:var(--green-soft);color:var(--dark);font-weight:600;border:1px solid var(--green-border);}
+    .cal-day.has-slot:active{transform:scale(0.93);}
+    .cal-day.today{outline:2px solid var(--gold);}
+    .slots-popup{background:var(--cream);border-radius:12px;padding:14px 16px;margin-top:12px;border:1px solid var(--border);display:none;flex-direction:column;gap:10px;}
+    .slots-popup.active{display:flex;}
+    .slots-popup-title{font-size:12px;font-weight:700;color:var(--mid);margin-bottom:4px;}
+    .slot-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--white);border-radius:10px;border:1px solid var(--border);}
+    .slot-time{font-size:13px;font-weight:600;}
+    .slot-action{background:var(--green);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;}
+
+    /* MONTHS NAV */
+    .months-nav{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;}
+    .months-nav::-webkit-scrollbar{display:none;}
+    .month-tab{background:var(--white);border:1.5px solid var(--border);border-radius:99px;padding:6px 14px;font-size:12px;font-family:'Sarabun',sans-serif;font-weight:600;color:var(--soft);cursor:pointer;white-space:nowrap;}
+    .month-tab.active{background:var(--gold-soft);border-color:var(--gold-border);color:#7A5C00;}
+
+    .contact-section{padding:16px 20px 20px;border-top:1px solid var(--border);}
+    .contact-note{font-size:12px;color:var(--soft);line-height:1.6;margin-bottom:12px;}
+    .line-btn{background:var(--dark);color:white;border:none;border-radius:12px;padding:13px 18px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .line-id-row{display:flex;align-items:center;gap:8px;background:var(--cream);border-radius:10px;padding:10px 14px;border:1px solid var(--border);margin-top:8px;}
+    .line-id-text{font-size:13px;font-weight:600;flex:1;}
+    .copy-btn{background:none;border:none;color:var(--gold);font-size:12px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;}
+    .back-btn{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:16px 24px;display:block;}
+
+    /* PR BRIDGE */
+    .pr-bridge{margin:0 16px 24px;background:var(--white);border:1px solid var(--border);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;}
+    .pr-bridge-text{font-size:14px;color:var(--mid);line-height:1.7;}
+    .pr-bridge-btn{background:var(--gold);color:white;border:none;border-radius:12px;padding:12px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;width:100%;}
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <div class="eyebrow">ใจดี TU · School Professionals</div>
+    <div class="headline">นักจิตวิทยา<em>โรงเรียน</em></div>
+    <div class="page-sub">
+      ผู้เชี่ยวชาญด้านสุขภาพจิตของโรงเรียน พร้อมให้คำปรึกษาเชิงลึก
+    </div>
+  </div>
+
+  <!-- QUEUE NOTE -->
+  <div class="queue-note">
+    <div class="queue-note-title">⏳ Queue อาจยาวนะ</div>
+    <div class="queue-note-text">
+      นักจิตวิทยาโรงเรียนมีความต้องการสูงมาก บางครั้งต้องรอนานกว่า 2 เดือน
+      ถ้าต้องการความช่วยเหลือเร็วกว่านั้น PR ของเราพร้อมรับฟังคุณก่อนได้เลย 💛
+    </div>
+  </div>
+
+  <!-- PR BRIDGE -->
+  <div class="pr-bridge">
+    <div class="pr-bridge-text">ในระหว่างรอ คุยกับ PR ก่อนได้นะ ไม่ต้องรอ ไม่มีค่าใช้จ่าย</div>
+    <button class="pr-bridge-btn" onclick="window.location.href='peer.html'">💛 คุยกับ PR ก่อนได้เลย</button>
+  </div>
+
+  <div class="teachers-list" id="teachers-list"></div>
+
+  <button class="back-btn" onclick="window.history.back()">← กลับ</button>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
+
+// ================================================================
+// MOCK DATA — replace with real data via Google Sheet
+//
+// ADMIN: To add a therapist, go to Google Sheet → "Professionals" tab
+// Add a new row with columns:
+//   id | name | nickname | role(therapist) | photo_url |
+//   specializations(JSON array) | personal_message | line_id | active(TRUE)
+//
+// For slots, go to "ProfessionalSlots" tab:
+//   professional_id | date(YYYY-MM-DD) | time_label | available(TRUE)
+//
+// Therapist can provide 1–3 months of slots at once
+// Admin updates the sheet when slots are taken (therapist notifies admin)
+// ================================================================
+const MOCK_THERAPISTS = [
+  {
+    id: "TH001",
+    name: "อาจารย์นภา ใจดี",
+    nickname: "อ.นภา",
+    role: "therapist",
+    photo_url: "",
+    specializations: ["Anxiety","Depression","Self-esteem","Family Issues","School Stress"],
+    personal_message: "ห้องนี้ปลอดภัยสำหรับคุณ ไม่มีการตัดสิน มีแค่การรับฟัง อาจารย์พร้อมอยู่ตรงนี้เสมอ แม้ว่าจะต้องรอสักนิดก็ตาม",
+    line_id: "@therapist_napa",
+    slots: {
+      "2026-04-22": ["10:00–11:00"],
+      "2026-04-29": ["14:00–15:00"],
+      "2026-05-06": ["10:00–11:00","15:00–16:00"],
+      "2026-05-13": ["14:00–15:00"],
+      "2026-05-20": ["10:00–11:00"],
+    }
+  }
+];
+
+// ================================================================
+// CALENDAR (supports multi-month)
+// ================================================================
+let currentMonthOffset = 0;
+
+function getMonthData(year, month) {
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  return { firstDay: firstDay===0?6:firstDay-1, daysInMonth };
+}
+
+function formatDate(year, month, day) {
+  return year+"-"+String(month+1).padStart(2,"0")+"-"+String(day).padStart(2,"0");
+}
+
+function renderTeachers(therapists) {
+  const container = document.getElementById("teachers-list");
+  container.innerHTML = "";
+  therapists.forEach(t => container.appendChild(buildTherapistCard(t)));
+}
+
+function buildTherapistCard(t) {
+  const card = document.createElement("div");
+  card.className = "teacher-card";
+
+  const profileHTML = t.photo_url
+    ? `<img class="profile-photo" src="${t.photo_url}" alt="${t.name}"/>`
+    : `<div class="profile-photo-placeholder">🧠</div>`;
+
+  const specsHTML = (t.specializations||[]).map(s=>
+    `<span class="spec-tag">${s}</span>`
+  ).join("");
+
+  card.innerHTML = `
+    <div class="profile-section">
+      ${profileHTML}
+      <div class="profile-info">
+        <div class="teacher-name">${t.name}</div>
+        <div class="teacher-nickname">${t.nickname}</div>
+        <div class="teacher-role">นักจิตวิทยาโรงเรียน</div>
+      </div>
+    </div>
+    <div class="spec-tags">${specsHTML}</div>
+    <div class="personal-msg">
+      <div class="personal-msg-label">จาก${t.nickname}</div>
+      <div class="personal-msg-text">"${t.personal_message}"</div>
+    </div>
+    <div class="calendar-section" id="cal-section-${t.id}">
+      <div class="calendar-label">ตารางว่าง</div>
+      <div class="months-nav" id="months-nav-${t.id}"></div>
+      <div class="calendar-month" id="cal-month-label-${t.id}"></div>
+      <div class="calendar-grid" id="cal-grid-${t.id}"></div>
+      <div class="slots-popup" id="slots-popup-${t.id}"></div>
+    </div>
+    <div class="contact-section">
+      <div class="contact-note">
+        เมื่อเห็นวันที่ว่างแล้ว ทักมาเพื่อยืนยันเวลานัดได้เลยนะ 💛<br>
+        ${t.nickname}จะตอบกลับและยืนยันกลับมา
+      </div>
+      <button class="line-btn" onclick="openLine('${t.line_id}')">
+        💬 ทัก${t.nickname}ได้เลย
+      </button>
+      <div class="line-id-row">
+        <div class="line-id-text">LINE: ${t.line_id}</div>
+        <button class="copy-btn" onclick="copyLineId('${t.line_id}', this)">copy</button>
+      </div>
+    </div>
+  `;
+
+  // Build month nav + first calendar
+  buildMonthNav(card, t);
+  renderCalendarMonth(card, t, 0);
+
+  return card;
+}
+
+function buildMonthNav(card, t) {
+  const nav = card.querySelector(`#months-nav-${t.id}`);
+  const now = new Date();
+  const monthNames = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+
+  // Determine how many months have slots
+  const slots = t.slots || {};
+  const months = new Set();
+  Object.keys(slots).forEach(dateStr => {
+    const d = new Date(dateStr);
+    months.add(d.getFullYear()+"-"+d.getMonth());
+  });
+
+  // Show up to 3 months from now
+  for (let i=0;i<3;i++) {
+    const d = new Date(now.getFullYear(), now.getMonth()+i, 1);
+    const key = d.getFullYear()+"-"+d.getMonth();
+    const hasData = months.has(key);
+    if (!hasData && i>0) continue; // only show months with slots (except current)
+
+    const tab = document.createElement("button");
+    tab.className = "month-tab" + (i===0?" active":"");
+    tab.innerText = monthNames[d.getMonth()] + " " + (d.getFullYear()+543);
+    tab.onclick = (()=>{
+      const offset = i;
+      return () => {
+        card.querySelectorAll(".month-tab").forEach(t=>t.classList.remove("active"));
+        tab.classList.add("active");
+        renderCalendarMonth(card, t, offset);
+      };
+    })();
+    nav.appendChild(tab);
+  }
+}
+
+function renderCalendarMonth(card, teacher, monthOffset) {
+  const now = new Date();
+  const year = new Date(now.getFullYear(), now.getMonth()+monthOffset, 1).getFullYear();
+  const month = new Date(now.getFullYear(), now.getMonth()+monthOffset, 1).getMonth();
+  const today = now.getDate();
+  const isCurrentMonth = monthOffset === 0;
+  const { firstDay, daysInMonth } = getMonthData(year, month);
+
+  const monthNames = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  const dayLabels = ["จ","อ","พ","พฤ","ศ","ส","อา"];
+  const slots = teacher.slots || {};
+
+  const monthLabel = card.querySelector(`#cal-month-label-${teacher.id}`);
+  const grid = card.querySelector(`#cal-grid-${teacher.id}`);
+  const popup = card.querySelector(`#slots-popup-${teacher.id}`);
+
+  monthLabel.innerText = monthNames[month] + " " + (year+543);
+  popup.classList.remove("active");
+  popup.innerHTML = "";
+
+  let html = "";
+  dayLabels.forEach(d => { html += `<div class="cal-day-label">${d}</div>`; });
+  for (let i=0;i<firstDay;i++) { html += `<div class="cal-day empty"></div>`; }
+
+  for (let d=1;d<=daysInMonth;d++) {
+    const dateStr = formatDate(year, month, d);
+    const hasSlot = slots[dateStr] && slots[dateStr].length > 0;
+    const isPast = isCurrentMonth && d < today;
+    let cls = (hasSlot && !isPast) ? "has-slot" : "no-slot";
+    if (isCurrentMonth && d === today) cls += " today";
+    const onclick = (hasSlot && !isPast)
+      ? `showTherapistSlots('${teacher.id}','${dateStr}',${JSON.stringify(slots[dateStr])})`
+      : "";
+    html += `<div class="cal-day ${cls}" onclick="${onclick}">${d}</div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function showTherapistSlots(teacherId, dateStr, slotTimes) {
+  document.querySelectorAll(".slots-popup").forEach(p=>p.classList.remove("active"));
+  const popup = document.getElementById("slots-popup-"+teacherId);
+  const teacher = (window._therapists||MOCK_THERAPISTS).find(t=>t.id===teacherId);
+  if (!popup||!teacher) return;
+
+  const d = new Date(dateStr);
+  const dayNames = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+  const dateDisplay = dayNames[d.getDay()] + " " + d.getDate();
+
+  popup.innerHTML = `
+    <div class="slots-popup-title">📅 ${dateDisplay} — เวลาที่ว่าง</div>
+    ${slotTimes.map(slot=>`
+      <div class="slot-item">
+        <div class="slot-time">${slot}</div>
+        <button class="slot-action" onclick="openLine('${teacher.line_id}')">ทักนัด</button>
+      </div>
+    `).join("")}
+    <div style="font-size:11px;color:var(--soft);margin-top:4px;">
+      ทักเพื่อยืนยันเวลาที่ต้องการนะ 💛
+    </div>
+  `;
+  popup.classList.add("active");
+}
+
+function openLine(lineId) {
+  window.open("https://line.me/R/ti/p/"+lineId, "_blank");
+}
+
+function copyLineId(lineId, btn) {
+  navigator.clipboard.writeText(lineId).then(()=>{
+    btn.innerText = "✓ copied";
+    setTimeout(()=>btn.innerText="copy", 2000);
+  }).catch(()=>{
+    btn.innerText = lineId;
+    setTimeout(()=>btn.innerText="copy", 3000);
+  });
+}
+
+// ================================================================
+// LOAD DATA — real API first, mock fallback
+// ================================================================
+async function loadTherapists() {
+  try {
+    const res = await fetch(API_URL+"?action=getProfessionals&role=therapist");
+    const d = await res.json();
+    if (d.status==="OK"&&d.professionals?.length) {
+      window._therapists = d.professionals;
+      renderTeachers(d.professionals);
+      return;
+    }
+  } catch { /* fall through */ }
+  window._therapists = MOCK_THERAPISTS;
+  renderTeachers(MOCK_THERAPISTS);
+}
+
+window.onload = () => loadTherapists();
+
+</script>
+</body>
+</html>
