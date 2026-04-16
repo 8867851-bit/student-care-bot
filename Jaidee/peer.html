@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -207,7 +208,7 @@
   </div>
   <div class="branch-actions">
     <button class="btn-gold" onclick="showSpecialRequest()">ขอเวลาพิเศษ →</button>
-    <button class="btn-primary" onclick="saveAndNotify()">แจ้งเตือนเมื่อมีตารางใหม่</button>
+    <button class="btn-primary" onclick="saveAndNotify()">แจ้งเตือนฉันเมื่อ PR ลงตารางสัปดาห์หน้า</button>
     <button class="btn-ghost" onclick="show('screen-external')">ดูตัวเลือกอื่น ๆ</button>
   </div>
 </div>
@@ -275,7 +276,10 @@
     <a class="clinic-link" href="#" target="_blank">ดูข้อมูลเพิ่มเติม →</a>
   </div>
   <div style="font-size:13px;color:var(--soft);text-align:center;">กำลังเพิ่มข้อมูลสถานที่อื่น ๆ เร็ว ๆ นี้ 🌱</div>
-  <div style="margin-top:auto;"><button class="btn-ghost" onclick="goHome()">กลับหน้าหลัก</button></div>
+  <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;">
+    <button class="btn-ghost" onclick="window.history.back()">← กลับ</button>
+    <button class="btn-ghost" onclick="goHome()">กลับหน้าหลัก</button>
+  </div>
 </div>
 
 <!-- SCREEN 5: SUCCESS -->
@@ -293,8 +297,8 @@
 // ================================================================
 // CONFIG
 // ================================================================
-const API_URL = "https://script.google.com/macros/s/AKfycbx0NE5llsKxTkodzZxShczikAi21zJTM9tJlMXzowRsqByGewq-V8bQzdx8wmx6iNcIFw/exec";
-const LIFF_ID = "2009806939-xslRo9A6";
+const API_URL = "https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
+const LIFF_ID = "2009806939-AONYlCkT";
 
 // ================================================================
 // MOCK FALLBACK DATA
