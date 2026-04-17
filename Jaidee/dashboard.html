@@ -322,6 +322,20 @@
     <div class="section-label">Waiting List</div>
     <div id="waiting-list"><div class="empty">กำลังโหลด...</div></div>
     <button class="btn-full gold" id="btn-notify-all" onclick="notifyAll()" style="display:none;">แจ้งเตือนทุกคนใน Waiting List</button>
+
+    <div class="divider"></div>
+    <div class="section-label">เพิ่ม Founder's Pick</div>
+    <div class="add-form">
+      <div class="settings-sub">เพิ่มผู้นำชมรมจิตวิทยาแต่ละรุ่น หลังจากได้รับ Google Form แล้ว</div>
+      <div class="input-group"><div class="input-label">ชื่อ-นามสกุล</div><input class="input-field" id="f-name" placeholder="ชื่อ นามสกุล"/></div>
+      <div class="input-group"><div class="input-label">ปีที่ดำรงตำแหน่ง</div><input class="input-field" id="f-year" placeholder="2567–2568"/></div>
+      <div class="input-group"><div class="input-label">รูป (Cloudinary URL)</div><input class="input-field" id="f-photo" placeholder="https://res.cloudinary.com/..."/></div>
+      <div class="input-group"><div class="input-label">Vision — อยากทำให้เกิดอะไรขึ้น</div><textarea class="input-field" id="f-vision" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
+      <div class="input-group"><div class="input-label">สิ่งที่ภูมิใจที่สุด</div><textarea class="input-field" id="f-proud" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
+      <div class="input-group"><div class="input-label">บทเรียนที่ยากที่สุด</div><textarea class="input-field" id="f-struggle" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
+      <div class="input-group"><div class="input-label">จดหมายถึงผู้นำรุ่นต่อไป</div><textarea class="input-field" id="f-letter" style="min-height:100px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
+      <button class="btn-full gold" onclick="addFounder()">เพิ่มและเผยแพร่</button>
+    </div>
   </div>
 
   <!-- CONTENT TEAM -->
@@ -1144,6 +1158,25 @@ async function addProgram(){
   toast("เพิ่ม Program แล้ว 💛");loadData();
 }
 
+async function addFounder(){
+  const name    = document.getElementById("f-name").value.trim();
+  const year    = document.getElementById("f-year").value.trim();
+  const photo   = document.getElementById("f-photo").value.trim();
+  const vision  = document.getElementById("f-vision").value.trim();
+  const proud   = document.getElementById("f-proud").value.trim();
+  const struggle= document.getElementById("f-struggle").value.trim();
+  const letter  = document.getElementById("f-letter").value.trim();
+  if(!name||!year){toast("กรุณากรอกชื่อและปี");return;}
+  try{
+    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"addFounder",full_name:name,year,photo_url:photo,
+        vision,proudest:proud,struggle,letter_to_next:letter,active:"TRUE"})});
+  }catch{}
+  ["f-name","f-year","f-photo","f-vision","f-proud","f-struggle","f-letter"]
+    .forEach(id=>{document.getElementById(id).value="";});
+  toast("เพิ่ม Founder แล้ว 💛");
+}
+
 // ── DEVELOPER VIEW ────────────────────────────────────────
 function openDevView(){
   document.getElementById("dev-overlay").classList.add("active");
@@ -1160,7 +1193,5 @@ function toast(msg){
 }
 
 </script>
-</body>
-</html>
 </body>
 </html>
