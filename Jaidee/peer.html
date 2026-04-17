@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -591,21 +590,21 @@ function selectSlot(chip,slot){
 // ================================================================
 async function finalConfirm(){
   closeConfirmOverlay();
+  let assignedRoom = null;
   try {
     const res=await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
+      method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({action:"bookSlot",userId,caseId,slot:chosenSlot})
     });
     const d=await res.json();
     if(d.status==="SLOT_TAKEN"){showSorry();return;}
     if(d.status!=="OK") throw new Error(d.message);
-  } catch(e){
+    assignedRoom = d.room;
+  }catch(e){
     if(e.message==="SLOT_TAKEN"){showSorry();return;}
-    // Other errors: still show success (booking likely went through)
-    console.warn("bookSlot error:", e);
+    console.warn("bookSlot error:",e);
   }
-  showSuccess();
+  showSuccess(assignedRoom);
 }
 
 function showSorry(){
@@ -614,20 +613,21 @@ function showSorry(){
     chosenSlot=null;
     document.getElementById("btn-book").disabled=true;
     document.querySelectorAll(".slot-chip").forEach(c=>c.classList.remove("chosen"));
-    loadSlots(); // reload fresh slots
+    loadSlots();
     show("screen-booking");
   },5000);
 }
 
-function showSuccess(){
+function showSuccess(room){
   show("screen-success");
   const[day,...rest]=chosenSlot.split(" ");
   const topicMap={"ความเครียด / แรงกดดัน":"ความเครียด","ความสัมพันธ์":"ความสัมพันธ์","ความรู้สึกของตัวเอง":"ความรู้สึกของตัวเอง","เรื่องเรียน":"เรื่องเรียน","ยังบอกไม่ถูกเลย":"สิ่งที่ยังบอกไม่ถูก"};
   document.getElementById("success-card").innerHTML=`
     <div class="success-row"><span class="label">วัน</span><span class="value">${day}</span></div>
     <div class="success-row"><span class="label">เวลา</span><span class="value">${rest.join(" ")}</span></div>
+    ${room?`<div class="success-row"><span class="label">📍 ห้อง</span><span class="value">ห้อง ${room}</span></div>`:""}
     <div class="success-row"><span class="label">เรื่องที่แชร์</span><span class="value">${topicMap[answers[0]]||answers[0]}</span></div>
-    <div class="success-note">PR จะได้รับข้อมูลที่คุณแชร์มา เพื่อให้เขาพร้อมรับฟังคุณอย่างเต็มที่ตั้งแต่ต้น 🤍</div>
+    <div class="success-note">PR จะได้รับข้อมูลที่คุณแชร์มา เพื่อให้เขาพร้อมรับฟังคุณอย่างเต็มที่ตั้งแต่ต้น 🤍<br><br>พิมพ์ "นัดของฉัน" ใน LINE เพื่อดูข้อมูลนัดอีกครั้งได้เลยนะ</div>
   `;
 }
 
@@ -730,4 +730,3 @@ function goHome(){window.location.href="index.html";}
 </script>
 </body>
 </html>
-
