@@ -7,14 +7,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      --bg:#0A0F1E;--surface:#111827;--surface2:#1E2A3A;--border:#1E3A5F;
-      --accent:#38BDF8;--accent-soft:rgba(56,189,248,0.12);--accent-border:rgba(56,189,248,0.25);
-      --gold:#F5A623;--gold-soft:rgba(245,166,35,0.12);--gold-border:rgba(245,166,35,0.25);
-      --red:#E05252;--red-soft:rgba(224,82,82,0.12);
-      --yellow:#F0C040;--yellow-soft:rgba(240,192,64,0.12);
-      --green:#4CAF7D;--green-soft:rgba(76,175,125,0.12);
-      --blue:#38BDF8;--blue-soft:rgba(56,189,248,0.12);
-      --text:#E8F4FD;--text-mid:#6B8FA8;--text-soft:#3D5A73;
+      --bg:#111214;--surface:#1C1D20;--surface2:#26282C;--border:#35373D;
+      --gold:#F5A623;--gold-soft:rgba(245,166,35,0.15);--gold-border:rgba(245,166,35,0.3);
+      --red:#F87171;--red-soft:rgba(248,113,113,0.12);
+      --yellow:#FBBF24;--yellow-soft:rgba(251,191,36,0.12);
+      --green:#34D399;--green-soft:rgba(52,211,153,0.12);
+      --blue:#60A5FA;--blue-soft:rgba(96,165,250,0.12);
+      --purple:#C084FC;--purple-soft:rgba(192,132,252,0.12);
+      --text:#F5F5F5;--text-mid:#A0A0A0;--text-soft:#606060;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
@@ -31,7 +31,7 @@
     .role-badge.admin{background:var(--gold-soft);color:var(--gold);}
     .role-badge.pr{background:var(--green-soft);color:var(--green);}
     .role-badge.program{background:var(--blue-soft);color:var(--blue);}
-    .role-badge.content{background:rgba(168,85,247,0.12);color:#A855F7;}
+    .role-badge.content{background:var(--purple-soft);color:var(--purple);}
     .tab-nav{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);padding:0 20px;scrollbar-width:none;}
     .tab-nav::-webkit-scrollbar{display:none;}
     .tab-btn{background:none;border:none;color:var(--text-soft);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;padding:14px 16px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
@@ -122,6 +122,53 @@
     .slot-chip.chosen{background:var(--gold-soft);border-color:var(--gold);color:var(--gold);font-weight:600;}
     .week-badge{background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--gold);display:inline-block;}
     .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--gold);color:#1A1A1A;padding:12px 20px;border-radius:99px;font-size:13px;font-family:'Sarabun',sans-serif;font-weight:700;white-space:nowrap;z-index:999;animation:fadeUp 0.3s ease both;}
+
+    /* DEVELOPER VIEW */
+    .dev-btn{
+      position:fixed;bottom:24px;right:20px;
+      width:44px;height:44px;border-radius:50%;
+      background:var(--surface2);border:1px solid var(--border);
+      color:var(--text-mid);font-size:18px;cursor:pointer;
+      display:none;align-items:center;justify-content:center;
+      z-index:50;box-shadow:0 4px 16px rgba(0,0,0,0.3);
+      transition:all 0.2s;
+    }
+    .dev-btn:active{transform:scale(0.92);}
+    .dev-btn.visible{display:flex;}
+
+    .dev-overlay{
+      display:none;position:fixed;inset:0;
+      background:rgba(0,0,0,0.5);z-index:100;
+      align-items:flex-end;
+    }
+    .dev-overlay.active{display:flex;animation:fadeUp 0.2s ease both;}
+
+    .dev-sheet{
+      background:var(--surface);border-radius:24px 24px 0 0;
+      padding:20px 20px 40px;width:100%;
+      display:flex;flex-direction:column;gap:10px;
+      animation:sheetUp 0.25s ease both;
+      border-top:1px solid var(--border);
+    }
+    @keyframes sheetUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+    .dev-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 8px;}
+    .dev-sheet-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-soft);margin-bottom:4px;}
+
+    .dev-option{
+      background:var(--surface2);border:1px solid var(--border);
+      border-radius:12px;padding:14px 16px;
+      display:flex;align-items:center;gap:12px;
+      cursor:pointer;text-decoration:none;
+      transition:border-color 0.15s;
+    }
+    .dev-option:active{border-color:var(--gold);}
+    .dev-option-icon{font-size:20px;flex-shrink:0;}
+    .dev-option-info{display:flex;flex-direction:column;gap:2px;}
+    .dev-option-name{font-size:14px;font-weight:600;color:var(--text);}
+    .dev-option-desc{font-size:12px;color:var(--text-mid);}
+
+    .dev-close{background:none;border:none;color:var(--text-soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:8px;text-align:center;width:100%;margin-top:4px;}
   </style>
 </head>
 <body>
@@ -129,6 +176,67 @@
 <div id="screen-loading">
   <div class="loading-heart">💛</div>
   <div class="loading-text">กำลังโหลด...</div>
+</div>
+
+<!-- DEVELOPER VIEW FLOATING BUTTON — admin only -->
+<button class="dev-btn" id="dev-btn" onclick="openDevView()">👁</button>
+
+<!-- DEVELOPER VIEW OVERLAY -->
+<div class="dev-overlay" id="dev-overlay" onclick="closeDevView(event)">
+  <div class="dev-sheet">
+    <div class="dev-sheet-handle"></div>
+    <div class="dev-sheet-title">Developer View — ดูในฐานะ...</div>
+
+    <a class="dev-option" href="index.html?preview=student" target="_blank">
+      <div class="dev-option-icon">🏠</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Student — Home</div>
+        <div class="dev-option-desc">หน้าแรกที่นักเรียนเห็น (ข้าม role check)</div>
+      </div>
+    </a>
+
+    <a class="dev-option" href="peer.html" target="_blank">
+      <div class="dev-option-icon">💛</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Student — Peer Flow</div>
+        <div class="dev-option-desc">flow การนัด PR ทั้งหมด</div>
+      </div>
+    </a>
+
+    <a class="dev-option" href="programs.html" target="_blank">
+      <div class="dev-option-icon">🌱</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Student — Programs</div>
+        <div class="dev-option-desc">หน้า Growth Programs</div>
+      </div>
+    </a>
+
+    <a class="dev-option" href="crisis.html" target="_blank">
+      <div class="dev-option-icon">🚨</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Student — Crisis</div>
+        <div class="dev-option-desc">หน้าความช่วยเหลือด่วน</div>
+      </div>
+    </a>
+
+    <a class="dev-option" href="guidance.html" target="_blank">
+      <div class="dev-option-icon">🏫</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Student — Guidance</div>
+        <div class="dev-option-desc">หน้าครูแนะแนว</div>
+      </div>
+    </a>
+
+    <a class="dev-option" href="therapist.html" target="_blank">
+      <div class="dev-option-icon">🧠</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Student — Therapist</div>
+        <div class="dev-option-desc">หน้านักจิตวิทยาโรงเรียน</div>
+      </div>
+    </a>
+
+    <button class="dev-close" onclick="closeDevView()">ปิด</button>
+  </div>
 </div>
 
 <div id="screen-denied">
@@ -271,6 +379,22 @@
     <div id="my-cases-list"><div class="empty">กำลังโหลด...</div></div>
   </div>
 
+  <!-- ADMIN: FEEDBACK -->
+  <div class="tab-content" id="tab-feedback">
+    <div class="section-label">Feedback จาก Sessions</div>
+    <div style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:4px;">
+      ส่งให้นักเรียนทันทีหลังจบ session — เพื่อพัฒนา curriculum ไม่ใช่วัด PR
+    </div>
+    <div class="kpi-grid" id="feedback-summary">
+      <div class="kpi-card"><div class="kpi-number" id="fb-great">—</div><div class="kpi-label">💛 รู้สึกดีขึ้น</div></div>
+      <div class="kpi-card"><div class="kpi-number" id="fb-ok">—</div><div class="kpi-label">🤍 ต้องการเพิ่ม</div></div>
+      <div class="kpi-card"><div class="kpi-number" id="fb-unsure">—</div><div class="kpi-label">🌱 ต้องการเวลา</div></div>
+      <div class="kpi-card"><div class="kpi-number" id="fb-total">—</div><div class="kpi-label">ทั้งหมด</div></div>
+    </div>
+    <div class="section-label">รายการล่าสุด</div>
+    <div id="feedback-list"><div class="empty">กำลังโหลด...</div></div>
+  </div>
+
   <!-- PR: SCHEDULE -->
   <div class="tab-content" id="tab-schedule">
     <div class="section-label">ลงตารางสัปดาห์นี้</div>
@@ -289,8 +413,30 @@
     <div class="section-label">เพิ่ม Program ใหม่</div>
     <div class="add-form">
       <div class="input-group"><div class="input-label">ชื่อ Program</div><input class="input-field" id="prog-name" placeholder="ชื่อกิจกรรม"/></div>
-      <div class="input-group"><div class="input-label">วันที่</div><input class="input-field" id="prog-date" type="date"/></div>
-      <div class="input-group"><div class="input-label">รายละเอียด</div><input class="input-field" id="prog-desc" placeholder="เขียนสั้น ๆ"/></div>
+      <div class="input-group"><div class="input-label">คำอธิบายสั้น (แสดงในการ์ด)</div><input class="input-field" id="prog-short-desc" placeholder="1-2 ประโยค"/></div>
+      <div class="input-group"><div class="input-label">รายละเอียดเต็ม (แสดงเมื่อกดเปิด)</div><textarea class="input-field" id="prog-full-desc" placeholder="อธิบายโปรแกรมอย่างละเอียด..." style="min-height:100px;resize:vertical;line-height:1.6;"></textarea></div>
+      <div class="input-group"><div class="input-label">หมวดหมู่</div>
+        <select class="input-field" id="prog-category">
+          <option value="จิตวิทยา">🧠 จิตวิทยา</option>
+          <option value="การเรียน">📚 การเรียน</option>
+          <option value="อาชีพ">🎯 อาชีพ</option>
+          <option value="ทักษะชีวิต">🌱 ทักษะชีวิต</option>
+          <option value="สังคม">👥 สังคม</option>
+          <option value="อื่นๆ">✨ อื่นๆ</option>
+        </select>
+      </div>
+      <div class="input-group"><div class="input-label">วันที่จัดกิจกรรม</div><input class="input-field" id="prog-start-date" type="date"/></div>
+      <div class="input-group"><div class="input-label">วันสิ้นสุด (ถ้ามีหลายวัน)</div><input class="input-field" id="prog-end-date" type="date"/></div>
+      <div class="input-group"><div class="input-label">ปิดรับสมัครวันที่</div><input class="input-field" id="prog-deadline" type="date"/></div>
+      <div class="input-group"><div class="input-label">Google Form URL</div><input class="input-field" id="prog-form-url" placeholder="https://forms.google.com/..."/></div>
+      <div class="input-group"><div class="input-label">รูป (Cloudinary URL)</div><input class="input-field" id="prog-photo" placeholder="https://res.cloudinary.com/..."/></div>
+      <div class="input-group"><div class="input-label">สถานะ</div>
+        <select class="input-field" id="prog-status">
+          <option value="active">🟢 เปิดรับสมัคร</option>
+          <option value="closing">⏳ ใกล้ปิดรับสมัคร</option>
+          <option value="past">📁 จบแล้ว</option>
+        </select>
+      </div>
       <button class="btn-full gold" onclick="addProgram()">เพิ่ม Program</button>
     </div>
 
@@ -448,6 +594,7 @@ function bootApp(){
   // Show role switcher for admin only
   if(userRole==="admin"){
     document.getElementById("role-switcher").style.display="inline-block";
+    document.getElementById("dev-btn").classList.add("visible");
   }
   buildTabs();loadData();
 }
@@ -456,7 +603,13 @@ function buildTabs(viewRole){
   const role=viewRole||userRole;
   const nav=document.getElementById("tab-nav");nav.innerHTML="";
   const tabs={
-    admin:[{id:"tab-overview",label:"Overview"},{id:"tab-cases",label:"Cases"},{id:"tab-pr",label:"PR & Slots"},{id:"tab-settings",label:"Settings"}],
+    admin:[
+      {id:"tab-overview",label:"Overview"},
+      {id:"tab-cases",label:"Cases"},
+      {id:"tab-pr",label:"PR & Slots"},
+      {id:"tab-feedback",label:"Feedback"},
+      {id:"tab-settings",label:"Settings"}
+    ],
     pr:[{id:"tab-my-cases",label:"เคสของฉัน"},{id:"tab-schedule",label:"ลงตาราง"}],
     program:[{id:"tab-programs",label:"Programs"}],
     content:[{id:"tab-content",label:"Content"}],
@@ -466,22 +619,23 @@ function buildTabs(viewRole){
     btn.className="tab-btn"+(i===0?" active":"");
     btn.innerText=t.label;btn.onclick=()=>switchTab(t.id,btn);nav.appendChild(btn);
   });
-  // Hide all tab contents first
   document.querySelectorAll(".tab-content").forEach(t=>{t.classList.remove("active");t.style.display="none";});
   const first=(tabs[role]||[])[0];
   if(first){
     const el=document.getElementById(first.id);
-    el.style.display="flex";
-    el.classList.add("active");
+    if(el){el.style.display="flex";el.classList.add("active");}
   }
 }
 
-// Admin only — preview another role's view
 function switchViewRole(role){
   buildTabs(role);
-  if(role==="pr"){loadPRData();buildScheduleTab();}
-  else if(role==="program")loadProgramData();
-  else if(role==="content")buildWorldGrid();
+  // Load data as that role — admin sees ALL data regardless
+  if(role==="pr"){
+    // Admin viewing PR — show ALL cases not just own
+    loadAdminAsPR();
+    buildScheduleTab();
+  } else if(role==="program") loadProgramData();
+  else if(role==="content") buildWorldGrid();
   else loadAdminData();
 }
 
@@ -494,10 +648,63 @@ function switchTab(tabId,btn){
 }
 
 async function loadData(){
-  if(userRole==="admin")loadAdminData();
+  if(userRole==="admin"){loadAdminData();loadFeedback();}
   else if(userRole==="pr"){loadPRData();buildScheduleTab();}
   else if(userRole==="program")loadProgramData();
   else if(userRole==="content")buildWorldGrid();
+}
+
+// Admin viewing AS PR — sees ALL cases, can complete/cancel any
+async function loadAdminAsPR(){
+  let cases;
+  try{
+    const res=await fetch(API_URL+"?action=getDashboardStats");
+    const d=await res.json();
+    cases=(d.cases||[]).filter(c=>c.status==="booked"||c.status==="active");
+  }catch{cases=MOCK.cases.filter(c=>c.status!=="completed");}
+  renderCasesInto("my-cases-list", cases, true); // isAdmin=true so can complete any
+}
+
+// ── FEEDBACK ──────────────────────────────────────────────
+async function loadFeedback(){
+  let feedbacks;
+  try{
+    const res=await fetch(API_URL+"?action=getFeedback");
+    const d=await res.json();
+    feedbacks=d.feedbacks||[];
+  }catch{
+    feedbacks=[
+      {caseId:"CASE_001",response:"great",slot:"พุธ 16:00–17:00",submittedAt:"2026-04-17"},
+      {caseId:"CASE_002",response:"ok",slot:"อังคาร 15:30–16:30",submittedAt:"2026-04-16"},
+      {caseId:"CASE_003",response:"unsure",slot:"ศุกร์ 14:00–15:00",submittedAt:"2026-04-15"},
+    ];
+  }
+
+  const great  = feedbacks.filter(f=>f.response==="great").length;
+  const ok     = feedbacks.filter(f=>f.response==="ok").length;
+  const unsure = feedbacks.filter(f=>f.response==="unsure").length;
+
+  document.getElementById("fb-great").innerText  = great;
+  document.getElementById("fb-ok").innerText     = ok;
+  document.getElementById("fb-unsure").innerText = unsure;
+  document.getElementById("fb-total").innerText  = feedbacks.length;
+
+  const list = document.getElementById("feedback-list");
+  if(!feedbacks.length){list.innerHTML=`<div class="empty">ยังไม่มี feedback</div>`;return;}
+
+  list.innerHTML="";
+  feedbacks.slice().reverse().forEach(f=>{
+    const card=document.createElement("div");
+    card.className="kpi-card";
+    const emoji = f.response==="great"?"💛":f.response==="ok"?"🤍":"🌱";
+    const label = f.response==="great"?"รู้สึกดีขึ้น":f.response==="ok"?"ต้องการความช่วยเหลือเพิ่ม":"ต้องการเวลาคิด";
+    card.innerHTML=`
+      <div style="font-size:22px;">${emoji}</div>
+      <div style="font-size:13px;font-weight:600;color:var(--text);">${label}</div>
+      <div style="font-size:11px;color:var(--text-soft);">${f.slot||""} · ${f.submittedAt||""}</div>
+    `;
+    list.appendChild(card);
+  });
 }
 
 // ── CONTENT TEAM ──────────────────────────────────────────
@@ -565,10 +772,23 @@ async function loadAdminData(){
 async function loadPRData(){
   let myCases;
   try{
-    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"getMyCases",userId})});
-    const d=await res.json();myCases=d.cases||[];
-  }catch{myCases=MOCK.cases.filter(c=>c.owner==="PR_001");}
-  renderCasesInto("my-cases-list",myCases,false);
+    // Admin acting as PR sees ALL cases, real PR sees only their own
+    const action = (userRole==="admin") ? "getDashboardStats" : "getMyCases";
+    if(userRole==="admin"){
+      const res=await fetch(API_URL+"?action=getDashboardStats");
+      const d=await res.json();
+      myCases=(d.cases||[]).filter(c=>c.status==="booked"||c.status==="active");
+    } else {
+      const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({action:"getMyCases",userId})});
+      const d=await res.json();myCases=d.cases||[];
+    }
+  }catch{
+    myCases=userRole==="admin"
+      ? MOCK.cases.filter(c=>c.status==="booked"||c.status==="active")
+      : MOCK.cases.filter(c=>c.owner==="PR_001");
+  }
+  renderCasesInto("my-cases-list",myCases,userRole==="admin");
 }
 
 async function loadProgramData(){
@@ -601,13 +821,24 @@ function buildCaseCard(c,isAdmin){
       <div class="answer-row"><div class="answer-q">เคยเล่าให้ใครฟัง</div><div class="answer-a">${c.q4||"—"}</div></div>
       <div class="answer-row"><div class="answer-q">อยากได้อะไร</div><div class="answer-a">${c.q5||"—"}</div></div>
     </div>
-    ${c.slot?`<div class="case-footer">📅 ${c.slot}</div>`:""}
+    ${c.slot?`<div class="case-footer">📅 ${c.slot}${c.room?" &nbsp;·&nbsp; 📍 ห้อง "+c.room:""}</div>`:""}
     <div class="btn-row" id="actions-${c.caseId}"></div>
   `;
   const btnRow=card.querySelector(`#actions-${c.caseId}`);
   if((c.status==="booked"||c.status==="active")&&(isAdmin||c.owner===userId)){
-    const btn=document.createElement("button");btn.className="btn-sm green";
-    btn.innerText="✓ จบเคส";btn.onclick=()=>completeCase(c.caseId);btnRow.appendChild(btn);
+    // Complete button
+    const completeBtn=document.createElement("button");
+    completeBtn.className="btn-sm green";
+    completeBtn.innerText="✓ จบเคส";
+    completeBtn.onclick=()=>completeCase(c.caseId,c.userId);
+    btnRow.appendChild(completeBtn);
+
+    // Cancel button — PR only action
+    const cancelBtn=document.createElement("button");
+    cancelBtn.className="btn-sm danger";
+    cancelBtn.innerText="✕ ยกเลิก";
+    cancelBtn.onclick=()=>cancelBooking(c.caseId,c.owner,c.slot,c.userId);
+    btnRow.appendChild(cancelBtn);
   }
   return card;
 }
@@ -820,9 +1051,32 @@ async function saveSchedule(){
 }
 
 // ── ACTIONS ───────────────────────────────────────────────
-async function completeCase(caseId){
-  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"completeCase",caseId,userId})});}catch{}
-  toast("ปิดเคสแล้ว 💛");loadData();
+// Complete case — push feedback to student immediately
+async function completeCase(caseId, studentUserId){
+  try{
+    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"completeCase",caseId,userId,studentUserId})});
+  }catch{}
+  toast("ปิดเคสแล้ว — ส่ง feedback ให้น้องแล้ว 💛");
+  loadData();
+}
+
+// Cancel booking — find replacement PR or notify student
+async function cancelBooking(caseId, prId, slot, studentUserId){
+  if(!confirm("ยืนยันการยกเลิก? ระบบจะพยายามหา PR คนอื่นให้น้องทันที"))return;
+  try{
+    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"cancelBooking",caseId,prId,slot,studentUserId})});
+    const d=await res.json();
+    if(d.reassigned){
+      toast("ยกเลิกแล้ว — จับคู่ PR ใหม่ให้น้องแล้ว 💛");
+    } else {
+      toast("ยกเลิกแล้ว — แจ้งน้องให้เลือกเวลาใหม่แล้ว");
+    }
+  }catch{
+    toast("ยกเลิกแล้ว (mock) 💛");
+  }
+  loadData();
 }
 
 async function addTempPR(caseId){
@@ -869,12 +1123,35 @@ async function notifyAll(){
 
 async function addProgram(){
   const name=document.getElementById("prog-name").value.trim();
-  const date=document.getElementById("prog-date").value;
-  const desc=document.getElementById("prog-desc").value.trim();
-  if(!name||!date){toast("กรุณากรอกชื่อและวันที่");return;}
-  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"addProgram",name,date,desc})});}catch{}
-  document.getElementById("prog-name").value="";document.getElementById("prog-date").value="";document.getElementById("prog-desc").value="";
+  const shortDesc=document.getElementById("prog-short-desc").value.trim();
+  const fullDesc=document.getElementById("prog-full-desc").value.trim();
+  const category=document.getElementById("prog-category").value;
+  const startDate=document.getElementById("prog-start-date").value;
+  const endDate=document.getElementById("prog-end-date").value||startDate;
+  const deadline=document.getElementById("prog-deadline").value||startDate;
+  const formUrl=document.getElementById("prog-form-url").value.trim();
+  const photo=document.getElementById("prog-photo").value.trim();
+  const status=document.getElementById("prog-status").value;
+  if(!name||!startDate){toast("กรุณากรอกชื่อและวันที่");return;}
+  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({action:"addProgram",name,short_desc:shortDesc,full_desc:fullDesc,
+      category,start_date:startDate,end_date:endDate,reg_deadline:deadline,
+      form_url:formUrl,photo_url:photo,status})});}catch{}
+  ["prog-name","prog-short-desc","prog-full-desc","prog-form-url","prog-photo",
+   "prog-start-date","prog-end-date","prog-deadline"].forEach(id=>{
+    document.getElementById(id).value="";
+  });
   toast("เพิ่ม Program แล้ว 💛");loadData();
+}
+
+// ── DEVELOPER VIEW ────────────────────────────────────────
+function openDevView(){
+  document.getElementById("dev-overlay").classList.add("active");
+}
+
+function closeDevView(e){
+  if(e&&e.target!==document.getElementById("dev-overlay"))return;
+  document.getElementById("dev-overlay").classList.remove("active");
 }
 
 function toast(msg){
@@ -883,5 +1160,7 @@ function toast(msg){
 }
 
 </script>
+</body>
+</html>
 </body>
 </html>
