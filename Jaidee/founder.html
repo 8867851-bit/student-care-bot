@@ -2,27 +2,404 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <title>ใจดี TU — Founder's Pick</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <style>
-    :root{--cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;--border:#EEEBE4;--gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;}
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;gap:20px;}
-    .icon{font-size:56px;}
-    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
-    .title{font-family:'Playfair Display',serif;font-size:28px;line-height:1.3;}
-    .body{font-size:14px;color:var(--mid);line-height:1.85;max-width:320px;}
-    .badge{background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:6px 16px;font-size:12px;font-weight:600;color:#7A5C00;}
-    .back{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;margin-top:8px;}
+    :root{
+      --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
+      --softer:#CCC;--border:#EEEBE4;--white:#FFFFFF;
+      --gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
+
+    /* HEADER */
+    .page-header{padding:48px 24px 28px;}
+    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+    .headline{font-family:'Playfair Display',serif;font-size:30px;line-height:1.25;}
+    .headline em{font-style:italic;color:var(--gold);}
+    .page-sub{font-size:14px;color:var(--mid);line-height:1.75;margin-top:10px;}
+
+    /* SECTION LABEL */
+    .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);padding:0 24px;margin-bottom:16px;}
+
+    /* ── LEADERS CAROUSEL ── */
+    .leaders-scroll{
+      display:flex;overflow-x:auto;gap:16px;
+      padding:0 24px 20px;scrollbar-width:none;
+      scroll-snap-type:x mandatory;
+    }
+    .leaders-scroll::-webkit-scrollbar{display:none;}
+
+    .leader-card{
+      flex-shrink:0;width:220px;
+      border-radius:20px;overflow:hidden;
+      background:var(--dark);position:relative;
+      cursor:pointer;scroll-snap-align:start;
+      transition:transform 0.15s ease;
+    }
+    .leader-card:active{transform:scale(0.97);}
+
+    .leader-photo{
+      width:100%;height:280px;object-fit:cover;
+      display:block;opacity:0.75;
+    }
+    .leader-photo-placeholder{
+      width:100%;height:280px;
+      background:linear-gradient(160deg,#2A2A2A,#1A1A1A);
+      display:flex;align-items:center;justify-content:center;
+      font-size:64px;
+    }
+
+    .leader-overlay{
+      position:absolute;bottom:0;left:0;right:0;
+      padding:20px 16px 16px;
+      background:linear-gradient(transparent,rgba(0,0,0,0.88));
+      display:flex;flex-direction:column;gap:10px;
+    }
+
+    .leader-year{
+      font-size:10px;font-weight:700;letter-spacing:2px;
+      text-transform:uppercase;color:rgba(255,255,255,0.5);
+    }
+    .leader-name{
+      font-family:'Playfair Display',serif;
+      font-size:17px;line-height:1.3;color:white;
+    }
+    .leader-read-btn{
+      align-self:flex-start;
+      background:rgba(255,255,255,0.12);
+      border:1px solid rgba(255,255,255,0.2);
+      border-radius:99px;padding:5px 14px;
+      font-size:11px;font-weight:600;
+      font-family:'Sarabun',sans-serif;
+      color:white;cursor:pointer;
+      backdrop-filter:blur(4px);
+      transition:background 0.15s;
+    }
+    .leader-read-btn:active{background:rgba(255,255,255,0.25);}
+
+    /* ── LETTER OVERLAY ── */
+    .overlay{
+      display:none;position:fixed;inset:0;
+      background:rgba(0,0,0,0.55);z-index:100;
+      align-items:flex-end;
+    }
+    .overlay.active{display:flex;animation:overlayIn 0.25s ease both;}
+    @keyframes overlayIn{from{opacity:0}to{opacity:1}}
+
+    .letter-sheet{
+      background:var(--white);border-radius:24px 24px 0 0;
+      width:100%;max-height:90vh;overflow-y:auto;
+      animation:sheetUp 0.3s ease both;
+    }
+    @keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+    .letter-photo{width:100%;height:220px;object-fit:cover;}
+    .letter-photo-placeholder{width:100%;height:220px;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:72px;}
+
+    .letter-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:16px auto 0;}
+
+    .letter-body{padding:20px 24px 48px;display:flex;flex-direction:column;gap:20px;}
+
+    .letter-meta{display:flex;flex-direction:column;gap:4px;}
+    .letter-year-badge{
+      display:inline-block;background:var(--gold-soft);
+      border:1px solid var(--gold-border);border-radius:99px;
+      padding:3px 12px;font-size:11px;font-weight:700;color:#7A5C00;
+      align-self:flex-start;
+    }
+    .letter-name{font-family:'Playfair Display',serif;font-size:26px;line-height:1.3;}
+
+    .letter-section{display:flex;flex-direction:column;gap:8px;}
+    .letter-q{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--soft);}
+    .letter-a{font-size:14px;color:var(--mid);line-height:1.85;white-space:pre-wrap;}
+
+    .letter-divider{height:1px;background:var(--border);}
+
+    .letter-close{
+      background:none;border:none;color:var(--soft);
+      font-size:13px;font-family:'Sarabun',sans-serif;
+      cursor:pointer;padding:8px;text-align:center;width:100%;
+    }
+
+    /* ── FOUNDER SIGNATURE ── */
+    .founder-section{padding:32px 24px 0;}
+
+    .founder-divider{
+      height:1px;background:var(--border);margin-bottom:32px;
+    }
+
+    .founder-card{
+      background:var(--dark);border-radius:20px;
+      padding:28px 24px;color:white;
+      display:flex;flex-direction:column;gap:16px;
+      position:relative;overflow:hidden;
+    }
+
+    .founder-card::before{
+      content:"✨";font-size:120px;
+      position:absolute;right:-20px;top:-20px;
+      opacity:0.06;line-height:1;
+    }
+
+    .founder-eyebrow{
+      font-size:10px;font-weight:700;letter-spacing:2px;
+      text-transform:uppercase;color:var(--gold);
+    }
+
+    .founder-title{
+      font-family:'Playfair Display',serif;
+      font-size:22px;line-height:1.35;
+    }
+
+    .founder-body{
+      font-size:13px;color:rgba(255,255,255,0.6);
+      line-height:1.85;
+    }
+
+    .founder-status{
+      background:rgba(245,166,35,0.15);
+      border:1px solid rgba(245,166,35,0.25);
+      border-radius:12px;padding:14px 16px;
+      font-size:13px;color:rgba(255,255,255,0.7);
+      line-height:1.7;
+    }
+
+    .founder-quote{
+      font-family:'Playfair Display',serif;
+      font-size:18px;font-style:italic;
+      color:rgba(255,255,255,0.85);
+      line-height:1.5;
+      border-left:2px solid var(--gold);
+      padding-left:16px;
+    }
+
+    .founder-date{
+      font-size:11px;color:rgba(255,255,255,0.3);
+      margin-top:4px;
+    }
+
+    /* BACK */
+    .back-btn{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:16px 24px;display:block;}
+
+    /* LOADING */
+    .loading-row{display:flex;align-items:center;gap:10px;color:var(--soft);font-size:14px;padding:0 24px;}
+    .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
-  <div class="icon">✨</div>
+
+<!-- LETTER OVERLAY -->
+<div class="overlay" id="overlay-letter" onclick="closeOverlay(event)">
+  <div class="letter-sheet" id="letter-sheet"></div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
   <div class="eyebrow">ใจดี TU · Founder's Pick</div>
-  <div class="title">Founder's Pick</div>
-  <div class="badge">🌱 กำลังสร้าง — เร็วๆ นี้</div>
-  <div class="body">จดหมายจากผู้นำชมรมจิตวิทยาทุกรุ่น<br><br>กำลังออกแบบและรวบรวม 💛</div>
-  <button class="back" onclick="window.history.back()">← กลับ</button>
+  <div class="headline">จาก<em>รุ่นสู่รุ่น</em></div>
+  <div class="page-sub">
+    ทุกคนที่เคยนำพาชมรมนี้มาข้างหน้า
+    ทิ้งบางอย่างไว้ให้คนที่จะมาทีหลัง
+  </div>
+</div>
+
+<!-- LEADERS SECTION -->
+<div class="section-label">ผู้นำชมรมจิตวิทยา</div>
+
+<div id="loading-row" class="loading-row">
+  <div class="spinner"></div>
+  <span>กำลังโหลด...</span>
+</div>
+
+<div class="leaders-scroll" id="leaders-scroll"></div>
+
+<!-- FOUNDER SIGNATURE -->
+<div class="founder-section">
+  <div class="founder-divider"></div>
+
+  <div class="founder-card">
+    <div class="founder-eyebrow">✨ Founder's Signature</div>
+    <div class="founder-title">จากคนที่เริ่มต้นทั้งหมดนี้</div>
+    <div class="founder-body">
+      พื้นที่นี้สงวนไว้สำหรับสิ่งที่ผู้สร้างอยากทิ้งไว้
+      หนังสือที่เปลี่ยนความคิด แหล่งความรู้ที่ cherish
+      และทุกสิ่งที่ทำให้ project นี้เกิดขึ้น
+    </div>
+
+    <div class="founder-quote">
+      "great things take time,<br>
+      and sometimes you don't see the path<br>
+      — until you're already on it"
+    </div>
+
+    <div class="founder-status">
+      🌱 กำลังเขียนอยู่ — พื้นที่นี้จะสมบูรณ์เมื่อถึงเวลา
+      ผู้สร้างเป็น lifelong learner
+      และทุกอย่างที่เขียนที่นี่จะอัปเดตตามสิ่งที่ค้นพบตลอดชีวิต
+    </div>
+
+    <div class="founder-date">Anonymous · Updated as life goes on</div>
+  </div>
+</div>
+
+<button class="back-btn" onclick="window.history.back()">← กลับ</button>
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
+
+// ================================================================
+// MOCK DATA
+// Admin: add leaders via Google Form → approve → add to "Founders" sheet
+// Columns: id | full_name | year | photo_url | vision | proudest |
+//          struggle | letter_to_next | active
+//
+// GOOGLE FORM QUESTIONS:
+// 1. ชื่อ-นามสกุล และปีที่ดำรงตำแหน่ง
+// 2. เมื่อคุณก้าวเข้ามารับตำแหน่งนี้ คุณอยากทำให้เกิดอะไรขึ้น?
+// 3. สิ่งที่คุณภูมิใจที่สุดในปีนี้คืออะไร และทำไม?
+// 4. บทเรียนที่ยากที่สุดที่คุณเผชิญคืออะไร และมันสอนอะไรคุณ?
+// 5. ถ้าคุณมีโอกาสนั่งคุยกับผู้นำรุ่นต่อไป คุณอยากบอกอะไรเขา?
+// 6. รูปภาพ (Cloudinary URL)
+// ================================================================
+
+const MOCK_LEADERS = [
+  {
+    id: "L001",
+    full_name: "ชื่อ นามสกุล",
+    year: "2567–2568",
+    photo_url: "",
+    vision: "อยากให้ชมรมนี้เป็นพื้นที่ที่ทุกคนรู้สึกว่าตัวเองมีคุณค่า และรู้ว่ามีคนเห็นพวกเขาอยู่เสมอ",
+    proudest: "วันที่นักเรียนคนแรกส่ง feedback มาว่า session ทำให้เขารู้สึกดีขึ้น นั่นคือวันที่รู้ว่าทำถูกแล้ว",
+    struggle: "การ balance ระหว่างการดูแลทีมและดูแลตัวเอง เรียนรู้ว่า leader ที่ดีต้องรู้จัก rest ด้วย",
+    letter_to_next: "เชื่อในทีมของคุณ ความคิดที่ดีที่สุดไม่ได้มาจากคนคนเดียว มันมาจากห้องที่ทุกคนรู้สึกปลอดภัยพอที่จะพูดความจริง",
+    active: true
+  }
+];
+
+// ================================================================
+// LOAD
+// ================================================================
+async function loadLeaders() {
+  let leaders;
+  try {
+    const res = await fetch(API_URL + "?action=getFounders");
+    const d   = await res.json();
+    if (d.status === "OK" && d.founders?.length) {
+      leaders = d.founders;
+    } else throw new Error();
+  } catch {
+    leaders = MOCK_LEADERS;
+  }
+
+  document.getElementById("loading-row").style.display = "none";
+
+  const scroll = document.getElementById("leaders-scroll");
+  scroll.innerHTML = "";
+
+  if (!leaders.length) {
+    scroll.innerHTML = `<div style="padding:0 0 20px;color:var(--soft);font-size:14px;">ยังไม่มีข้อมูล — กำลังรวบรวมอยู่ 🌱</div>`;
+    return;
+  }
+
+  leaders.forEach(l => scroll.appendChild(buildLeaderCard(l)));
+}
+
+// ================================================================
+// LEADER CARD
+// ================================================================
+function buildLeaderCard(l) {
+  const card = document.createElement("div");
+  card.className = "leader-card";
+
+  const photoHTML = l.photo_url
+    ? `<img class="leader-photo" src="${l.photo_url}" alt="${l.full_name}"/>`
+    : `<div class="leader-photo-placeholder">🧠</div>`;
+
+  card.innerHTML = `
+    ${photoHTML}
+    <div class="leader-overlay">
+      <div class="leader-year">${l.year}</div>
+      <div class="leader-name">${l.full_name}</div>
+      <button class="leader-read-btn" onclick="openLetter(event, '${l.id}')">อ่าน →</button>
+    </div>
+  `;
+
+  card._data = l;
+  return card;
+}
+
+// ================================================================
+// LETTER OVERLAY
+// ================================================================
+function openLetter(e, leaderId) {
+  e.stopPropagation();
+
+  const allLeaders = window._leaders || MOCK_LEADERS;
+  const l = allLeaders.find(x => x.id === leaderId);
+  if (!l) return;
+
+  const photoHTML = l.photo_url
+    ? `<img class="letter-photo" src="${l.photo_url}" alt="${l.full_name}"/>`
+    : `<div class="letter-photo-placeholder">🧠</div>`;
+
+  document.getElementById("letter-sheet").innerHTML = `
+    ${photoHTML}
+    <div class="letter-handle"></div>
+    <div class="letter-body">
+      <div class="letter-meta">
+        <span class="letter-year-badge">${l.year}</span>
+        <div class="letter-name">${l.full_name}</div>
+      </div>
+
+      <div class="letter-divider"></div>
+
+      <div class="letter-section">
+        <div class="letter-q">Vision — อยากทำให้เกิดอะไรขึ้น</div>
+        <div class="letter-a">${l.vision || "—"}</div>
+      </div>
+
+      <div class="letter-section">
+        <div class="letter-q">สิ่งที่ภูมิใจที่สุด</div>
+        <div class="letter-a">${l.proudest || "—"}</div>
+      </div>
+
+      <div class="letter-section">
+        <div class="letter-q">บทเรียนที่ยากที่สุด</div>
+        <div class="letter-a">${l.struggle || "—"}</div>
+      </div>
+
+      <div class="letter-section">
+        <div class="letter-q">จดหมายถึงผู้นำรุ่นต่อไป</div>
+        <div class="letter-a">${l.letter_to_next || "—"}</div>
+      </div>
+
+      <div class="letter-divider"></div>
+      <button class="letter-close" onclick="closeOverlay()">ปิด</button>
+    </div>
+  `;
+
+  document.getElementById("overlay-letter").classList.add("active");
+}
+
+function closeOverlay(e) {
+  if (e && e.target !== document.getElementById("overlay-letter")) return;
+  document.getElementById("overlay-letter").classList.remove("active");
+}
+
+// ================================================================
+// INIT
+// ================================================================
+window.onload = () => {
+  loadLeaders().then(() => {
+    window._leaders = MOCK_LEADERS;
+  });
+};
+
+</script>
 </body>
 </html>
