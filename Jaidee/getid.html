@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — หา LINE User ID</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;--border:#EEEBE4;--gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;gap:20px;text-align:center;}
+    .icon{font-size:48px;}
+    .title{font-family:'Playfair Display',serif;font-size:26px;line-height:1.3;}
+    .sub{font-size:14px;color:var(--mid);line-height:1.7;}
+    .id-box{background:white;border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:8px;}
+    .id-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);}
+    .id-value{font-size:14px;font-weight:600;color:var(--dark);word-break:break-all;line-height:1.5;}
+    .id-value.loading{color:var(--soft);font-style:italic;font-weight:400;}
+    .copy-btn{background:var(--dark);color:white;border:none;border-radius:12px;padding:14px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;width:100%;max-width:340px;transition:opacity 0.2s;}
+    .copy-btn:active{opacity:0.8;}
+    .copy-btn.copied{background:var(--gold);}
+    .note{font-size:12px;color:var(--soft);line-height:1.7;max-width:300px;}
+  </style>
+</head>
+<body>
+
+  <div class="icon">🪪</div>
+  <div class="title">LINE User ID ของคุณ</div>
+  <div class="sub">Copy ID นี้แล้วนำไปใส่ใน Google Form สมัครทีมงาน</div>
+
+  <div class="id-box">
+    <div class="id-label">Your LINE User ID</div>
+    <div class="id-value loading" id="id-display">กำลังโหลด...</div>
+  </div>
+
+  <button class="copy-btn" id="copy-btn" onclick="copyId()" disabled>
+    Copy ID
+  </button>
+
+  <div class="note">
+    เปิดหน้านี้ผ่าน LINE browser เท่านั้น<br>
+    ถ้าเปิดผ่าน browser ปกติจะไม่แสดง ID
+  </div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+  const LIFF_ID = "2009806939-H06mwKgI"; // reuse index LIFF
+
+  window.onload = async () => {
+    try {
+      await liff.init({ liffId: LIFF_ID });
+      if (!liff.isLoggedIn()) { liff.login(); return; }
+      const p = await liff.getProfile();
+      const userId = p.userId;
+
+      document.getElementById("id-display").innerText = userId;
+      document.getElementById("id-display").classList.remove("loading");
+      document.getElementById("copy-btn").disabled = false;
+
+      // Store for copy
+      window._userId = userId;
+
+    } catch(err) {
+      document.getElementById("id-display").innerText = "ไม่สามารถอ่านได้ — เปิดผ่าน LINE นะ";
+    }
+  };
+
+  function copyId() {
+    if (!window._userId) return;
+    navigator.clipboard.writeText(window._userId).then(() => {
+      const btn = document.getElementById("copy-btn");
+      btn.innerText = "✓ Copied!";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.innerText = "Copy ID";
+        btn.classList.remove("copied");
+      }, 2500);
+    }).catch(() => {
+      // Fallback — select text
+      const el = document.getElementById("id-display");
+      const range = document.createRange();
+      range.selectNode(el);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    });
+  }
+</script>
+</body>
+</html>
