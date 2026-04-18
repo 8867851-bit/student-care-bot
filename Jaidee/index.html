@@ -174,7 +174,7 @@
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-  const isPreview = new URLSearchParams(window.location.search).get("preview") === "student";
+ const isPreview = new URLSearchParams(window.location.search).get("preview") === "student";
 
 if (isPreview) {
   document.getElementById("greeting-name").innerText = "สวัสดี [Developer Preview] 🤍";
@@ -184,23 +184,18 @@ if (isPreview) {
       if (!liff.isLoggedIn()) { liff.login(); return; }
       liff.getProfile().then(async p => {
         document.getElementById("greeting-name").innerText = "สวัสดี " + p.displayName + " 🤍";
-
-        // Check if team member → redirect to dashboard
         try {
-          const res = await fetch("https://script.google.com/macros/s/AKfycbx0NE5llsKxTkodzZxShczikAi21zJTM9tJlMXzowRsqByGewq-V8bQzdx8wmx6iNcIFw/exec?action=getUserRole&userId=" + p.userId);
+          const API_URL = "https://script.google.com/macros/s/AKfycbx0NE5llsKxTkodzZxShczikAi21zJTM9tJlMXzowRsqByGewq-V8bQzdx8wmx6iNcIFw/exec";
+          const res = await fetch(API_URL + "?action=getUserRole&userId=" + p.userId);
           const d = await res.json();
           if (d.role && d.role !== "student" && d.role !== "Guest") {
             window.location.href = "dashboard.html";
-            return;
           }
-        } catch(e) {
-          // If check fails, just show student view normally
-        }
+        } catch(e) { console.warn("role check failed", e); }
       });
     })
     .catch(err => console.error("LIFF:", err));
 }
-    .catch(err => console.error("LIFF:", err));
 </script>
 </body>
 </html>
