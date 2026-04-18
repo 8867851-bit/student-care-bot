@@ -2,27 +2,301 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ใจดี TU — People</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — ครู</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
   <style>
-    :root{--cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;--border:#EEEBE4;--gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;}
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;gap:20px;}
-    .icon{font-size:56px;}
-    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
-    .title{font-family:'Playfair Display',serif;font-size:28px;line-height:1.3;}
-    .body{font-size:14px;color:var(--mid);line-height:1.85;max-width:320px;}
-    .badge{background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:6px 16px;font-size:12px;font-weight:600;color:#7A5C00;}
-    .back{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;margin-top:8px;}
+    :root{
+      --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
+      --softer:#CCC;--border:#EEEBE4;--white:#FFFFFF;
+      --gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
+
+    /* HEADER */
+    .page-header{padding:48px 24px 8px;text-align:center;}
+    .page-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;}
+    .page-title em{font-style:italic;color:var(--gold);}
+    .page-sub{font-size:14px;color:var(--mid);line-height:1.7;margin-top:8px;}
+
+    /* YEAR GROUP SECTION */
+    .year-section{padding:28px 0 0;}
+    .year-label{
+      font-size:13px;font-weight:700;color:var(--mid);
+      padding:0 24px;margin-bottom:14px;
+      display:flex;align-items:center;gap:10px;
+    }
+    .year-label::after{
+      content:"";flex:1;height:1px;background:var(--border);
+    }
+
+    /* HORIZONTAL SCROLL ROW */
+    .teacher-row{
+      display:flex;overflow-x:auto;gap:14px;
+      padding:0 24px 4px;scrollbar-width:none;
+      scroll-snap-type:x mandatory;
+    }
+    .teacher-row::-webkit-scrollbar{display:none;}
+
+    /* TEACHER CARD */
+    .teacher-card{
+      flex-shrink:0;width:140px;
+      display:flex;flex-direction:column;gap:8px;
+      cursor:pointer;scroll-snap-align:start;
+      transition:transform 0.15s ease;
+    }
+    .teacher-card:active{transform:scale(0.96);}
+
+    .teacher-thumb{
+      width:140px;height:140px;border-radius:16px;
+      object-fit:cover;background:#E8E4DC;
+      position:relative;overflow:hidden;
+    }
+    .teacher-thumb-placeholder{
+      width:140px;height:140px;border-radius:16px;
+      background:linear-gradient(135deg,#E8E4DC,#D4CFBF);
+      display:flex;align-items:center;justify-content:center;
+      font-size:40px;
+    }
+    .play-badge{
+      position:absolute;bottom:8px;right:8px;
+      width:28px;height:28px;border-radius:50%;
+      background:rgba(0,0,0,0.55);
+      display:flex;align-items:center;justify-content:center;
+      font-size:10px;color:white;
+      backdrop-filter:blur(4px);
+    }
+
+    .teacher-name{font-size:13px;font-weight:700;color:var(--dark);line-height:1.3;}
+    .teacher-subject{font-size:11px;color:var(--soft);line-height:1.4;}
+
+    /* EMPTY STATE */
+    .empty-row{
+      padding:0 24px;
+      font-size:13px;color:var(--softer);
+      font-style:italic;
+    }
+
+    /* VIDEO OVERLAY */
+    .overlay{
+      display:none;position:fixed;inset:0;
+      background:rgba(0,0,0,0.92);z-index:100;
+      flex-direction:column;align-items:center;justify-content:center;
+      padding:24px;gap:16px;
+    }
+    .overlay.active{display:flex;animation:fadeIn 0.2s ease both;}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    .video-wrapper{
+      width:100%;max-width:480px;
+      border-radius:14px;overflow:hidden;
+      background:#000;aspect-ratio:16/9;
+    }
+    .video-wrapper iframe{width:100%;height:100%;border:none;display:block;}
+
+    .video-meta{
+      width:100%;max-width:480px;
+      display:flex;flex-direction:column;gap:4px;
+    }
+    .video-name{font-size:16px;font-weight:700;color:white;}
+    .video-subject{font-size:13px;color:rgba(255,255,255,0.5);}
+
+    .close-btn{
+      background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+      border-radius:99px;padding:10px 24px;
+      font-size:13px;font-family:'Sarabun',sans-serif;
+      font-weight:600;color:white;cursor:pointer;
+      transition:background 0.15s;
+    }
+    .close-btn:active{background:rgba(255,255,255,0.2);}
+
+    /* BACK */
+    .back-btn{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:16px 24px;display:block;}
+
+    /* SPINNER */
+    .loading-row{display:flex;align-items:center;gap:10px;color:var(--soft);font-size:14px;padding:28px 24px;}
+    .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
-  <div class="icon">👥</div>
-  <div class="eyebrow">ใจดี TU · People</div>
-  <div class="title">People</div>
-  <div class="badge">🌱 กำลังสร้าง — เร็วๆ นี้</div>
-  <div class="body">วิดีโอครูจากทุก specialty เรียงตามชั้นปี<br><br>กำลังถ่ายทำและรวบรวม 💛</div>
-  <button class="back" onclick="window.history.back()">← กลับ</button>
+
+<!-- VIDEO OVERLAY -->
+<div class="overlay" id="overlay-video" onclick="closeVideo(event)">
+  <div class="video-wrapper" id="video-wrapper"></div>
+  <div class="video-meta">
+    <div class="video-name" id="video-name"></div>
+    <div class="video-subject" id="video-subject"></div>
+  </div>
+  <button class="close-btn" onclick="closeVideo()">✕ ปิด</button>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="page-title"><em>ครู</em></div>
+  <div class="page-sub">วิดีโอจากครูทุกวิชา — ความรู้ มุมมอง และสิ่งที่อยากบอก</div>
+</div>
+
+<div id="loading-row" class="loading-row">
+  <div class="spinner"></div>
+  <span>กำลังโหลด...</span>
+</div>
+
+<!-- YEAR SECTIONS — populated by JS -->
+<div id="section-m4" class="year-section" style="display:none;">
+  <div class="year-label">ม.4</div>
+  <div class="teacher-row" id="row-m4"></div>
+</div>
+
+<div id="section-m5" class="year-section" style="display:none;">
+  <div class="year-label">ม.5</div>
+  <div class="teacher-row" id="row-m5"></div>
+</div>
+
+<div id="section-m6" class="year-section" style="display:none;">
+  <div class="year-label">ม.6</div>
+  <div class="teacher-row" id="row-m6"></div>
+</div>
+
+<div id="section-others" class="year-section" style="display:none;">
+  <div class="year-label">อื่นๆ</div>
+  <div class="teacher-row" id="row-others"></div>
+</div>
+
+<button class="back-btn" onclick="window.history.back()">← กลับ</button>
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
+
+// ================================================================
+// MOCK DATA
+// Admin/Content team: add via dashboard → Content → People tab
+// Each teacher: name, subject, year_group(m4/m5/m6/others),
+//               thumbnail_url, youtube_url, active
+// ================================================================
+const MOCK_TEACHERS = [
+  {id:"T001",name:"ครูสมชาย",subject:"คณิตศาสตร์",year_group:"m4",thumbnail_url:"",youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ",active:true},
+  {id:"T002",name:"ครูสุดา",subject:"ภาษาไทย",year_group:"m4",thumbnail_url:"",youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ",active:true},
+  {id:"T003",name:"ครูวิชัย",subject:"ฟิสิกส์",year_group:"m4",thumbnail_url:"",youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ",active:true},
+  {id:"T004",name:"ครูมาลี",subject:"เคมี",year_group:"m5",thumbnail_url:"",youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ",active:true},
+  {id:"T005",name:"ครูประยุทธ",subject:"ชีววิทยา",year_group:"m5",thumbnail_url:"",youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ",active:true},
+  {id:"T006",name:"ครูอรุณ",subject:"ภาษาอังกฤษ",year_group:"m6",thumbnail_url:"",youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ",active:true},
+  {id:"T007",name:"ครูนภา",subject:"สังคมศึกษา",year_group:"m6",thumbnail_url:"",youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ",active:true},
+  {id:"T008",name:"ครูเกียรติ",subject:"ดนตรี",year_group:"others",thumbnail_url:"",youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ",active:true},
+];
+
+// ================================================================
+// YOUTUBE UTILS
+// ================================================================
+function getYouTubeId(url) {
+  if (!url) return null;
+  const match = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+function getYouTubeThumbnail(url) {
+  const id = getYouTubeId(url);
+  return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null;
+}
+
+function getYouTubeEmbed(url) {
+  const id = getYouTubeId(url);
+  return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : null;
+}
+
+// ================================================================
+// RENDER
+// ================================================================
+function renderTeachers(teachers) {
+  const groups = { m4:[], m5:[], m6:[], others:[] };
+  teachers.filter(t => t.active).forEach(t => {
+    const g = t.year_group || "others";
+    if (groups[g]) groups[g].push(t);
+  });
+
+  document.getElementById("loading-row").style.display = "none";
+
+  Object.entries(groups).forEach(([group, list]) => {
+    const section = document.getElementById("section-" + group);
+    const row     = document.getElementById("row-" + group);
+    if (!section || !row) return;
+
+    if (!list.length) return; // hide empty sections
+
+    section.style.display = "block";
+    row.innerHTML = "";
+    list.forEach(t => row.appendChild(buildCard(t)));
+  });
+}
+
+function buildCard(t) {
+  const card = document.createElement("div");
+  card.className = "teacher-card";
+
+  const thumbUrl = t.thumbnail_url || getYouTubeThumbnail(t.youtube_url);
+
+  const thumbHTML = thumbUrl
+    ? `<div class="teacher-thumb" style="background:url('${thumbUrl}') center/cover no-repeat;">
+         <div class="play-badge">▶</div>
+       </div>`
+    : `<div class="teacher-thumb-placeholder">
+         👨‍🏫
+         <div class="play-badge" style="position:absolute;bottom:8px;right:8px;">▶</div>
+       </div>`;
+
+  card.innerHTML = `
+    ${thumbHTML}
+    <div class="teacher-name">${t.name}</div>
+    <div class="teacher-subject">${t.subject}</div>
+  `;
+
+  card.onclick = () => openVideo(t);
+  return card;
+}
+
+// ================================================================
+// VIDEO OVERLAY
+// ================================================================
+function openVideo(t) {
+  const embedUrl = getYouTubeEmbed(t.youtube_url);
+  if (!embedUrl) return;
+
+  document.getElementById("video-wrapper").innerHTML =
+    `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  document.getElementById("video-name").innerText    = t.name;
+  document.getElementById("video-subject").innerText = t.subject;
+  document.getElementById("overlay-video").classList.add("active");
+}
+
+function closeVideo(e) {
+  if (e && e.target !== document.getElementById("overlay-video")) return;
+  // Stop video by clearing iframe src
+  document.getElementById("video-wrapper").innerHTML = "";
+  document.getElementById("overlay-video").classList.remove("active");
+}
+
+// ================================================================
+// LOAD — real API first, mock fallback
+// ================================================================
+async function loadTeachers() {
+  let teachers;
+  try {
+    const res = await fetch(API_URL + "?action=getPeople");
+    const d   = await res.json();
+    if (d.status === "OK" && d.people?.length) {
+      teachers = d.people;
+    } else throw new Error();
+  } catch {
+    teachers = MOCK_TEACHERS;
+  }
+  window._teachers = teachers;
+  renderTeachers(teachers);
+}
+
+window.onload = () => loadTeachers();
+
+</script>
 </body>
 </html>
