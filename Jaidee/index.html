@@ -187,7 +187,7 @@ if (isPreview) {
 
         // Check if team member → redirect to dashboard
         try {
-          const res = await fetch("YOUR_API_URL?action=getUserRole&userId=" + p.userId);
+          const res = await fetch("https://script.google.com/macros/s/AKfycbx0NE5llsKxTkodzZxShczikAi21zJTM9tJlMXzowRsqByGewq-V8bQzdx8wmx6iNcIFw/exec?action=getUserRole&userId=" + p.userId);
           const d = await res.json();
           if (d.role && d.role !== "student" && d.role !== "Guest") {
             window.location.href = "dashboard.html";
