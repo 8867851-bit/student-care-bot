@@ -296,7 +296,7 @@
 // ================================================================
 // CONFIG
 // ================================================================
-const API_URL = "https://script.google.com/macros/s/AKfycbx0NE5llsKxTkodzZxShczikAi21zJTM9tJlMXzowRsqByGewq-V8bQzdx8wmx6iNcIFw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
 const LIFF_ID = "2009806939-AONYlCkT";
 
 // ================================================================
@@ -528,8 +528,8 @@ async function loadSlots(){
     if(j.status==="OK"&&j.slots?.length) slots=j.slots;
     else throw new Error("empty");
   } catch {
-    console.warn("getSlots failed, using mock data");
-    slots=MOCK_SLOTS;
+    console.warn("getSlots failed");
+    slots = [];
   }
 
   // Filter expired days and times
