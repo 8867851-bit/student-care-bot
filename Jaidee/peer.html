@@ -296,7 +296,7 @@
 // ================================================================
 // CONFIG
 // ================================================================
-const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwmGuCrgx9ttJtIl1w-972hkyFdgANVj08LFtpKh3qxdZhtAOLblmI0VlAM_ZbNDdKsKg/exec";
 const LIFF_ID = "2009806939-AONYlCkT";
 
 // ================================================================
@@ -340,12 +340,13 @@ const questions = [
 // UTILS
 // ================================================================
 function getWeekRange() {
-  const now=new Date(),day=now.getDay();
-  const diff=now.getDate()-day+(day===0?-6:1);
-  const mon=new Date(now); mon.setDate(diff);
-  const sun=new Date(mon); sun.setDate(mon.getDate()+6);
+  const now=new Date(), day=now.getDay();
+  const diff=day===6?0:day===0?-1:-(day+1);
+  const sat=new Date(now); sat.setDate(now.getDate()+diff);
+  const mon=new Date(sat); mon.setDate(sat.getDate()+2);
+  const fri=new Date(sat); fri.setDate(sat.getDate()+6);
   const opts={day:"numeric",month:"long",year:"numeric"};
-  return mon.toLocaleDateString("th-TH",opts)+" – "+sun.toLocaleDateString("th-TH",opts);
+  return mon.toLocaleDateString("th-TH",opts)+" – "+fri.toLocaleDateString("th-TH",opts);
 }
 
 function getTodayDayName() {
