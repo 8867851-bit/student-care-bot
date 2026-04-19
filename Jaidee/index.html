@@ -185,7 +185,7 @@ if (isPreview) {
       liff.getProfile().then(async p => {
         document.getElementById("greeting-name").innerText = "สวัสดี " + p.displayName + " 🤍";
         try {
-          const API_URL = "https://script.google.com/macros/s/AKfycbx0NE5llsKxTkodzZxShczikAi21zJTM9tJlMXzowRsqByGewq-V8bQzdx8wmx6iNcIFw/exec";
+          const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
           const res = await fetch(API_URL + "?action=getUserRole&userId=" + p.userId);
           const d = await res.json();
           if (d.role && d.role !== "student" && d.role !== "Guest") {
