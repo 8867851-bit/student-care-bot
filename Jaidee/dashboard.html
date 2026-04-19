@@ -120,6 +120,8 @@
     .schedule-slots{display:flex;flex-wrap:wrap;gap:8px;}
     .slot-chip{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:13px;font-family:'Sarabun',sans-serif;color:var(--text-mid);cursor:pointer;transition:all 0.15s ease;}
     .slot-chip.chosen{background:var(--gold-soft);border-color:var(--gold);color:var(--gold);font-weight:600;}
+    .slot-chip.locked{background:var(--red-soft);border-color:var(--red);color:var(--red);cursor:pointer;opacity:0.8;}
+    .slot-chip.locked:active{opacity:1;}
     .week-badge{background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--gold);display:inline-block;}
     .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--gold);color:#1A1A1A;padding:12px 20px;border-radius:99px;font-size:13px;font-family:'Sarabun',sans-serif;font-weight:700;white-space:nowrap;z-index:999;animation:fadeUp 0.3s ease both;}
 
@@ -417,6 +419,12 @@
   <div class="tab-content" id="tab-my-cases">
     <div class="section-label">เคสของฉัน</div>
     <div id="my-cases-list"><div class="empty">กำลังโหลด...</div></div>
+    <!-- Admin only: show all cases below -->
+    <div id="all-cases-section" style="display:none;">
+      <div class="divider" style="margin:8px 0;"></div>
+      <div class="section-label">เคสทั้งหมด</div>
+      <div id="all-cases-list"><div class="empty">กำลังโหลด...</div></div>
+    </div>
   </div>
 
   <!-- ADMIN: FEEDBACK -->
@@ -712,13 +720,20 @@ async function loadData(){
 
 // Admin viewing AS PR — sees ALL cases, can complete/cancel any
 async function loadAdminAsPR(){
-  let cases;
+  let allCases;
   try{
     const res=await fetch(API_URL+"?action=getDashboardStats");
     const d=await res.json();
-    cases=(d.cases||[]).filter(c=>c.status==="booked"||c.status==="active");
-  }catch{cases=MOCK.cases.filter(c=>c.status!=="completed");}
-  renderCasesInto("my-cases-list", cases, true); // isAdmin=true so can complete any
+    allCases=(d.cases||[]).filter(c=>c.status==="booked"||c.status==="active");
+  }catch{allCases=MOCK.cases.filter(c=>c.status!=="completed");}
+
+  // My cases — assigned to admin userId
+  const myCases = allCases.filter(c=>c.owner===userId);
+  renderCasesInto("my-cases-list", myCases, true);
+
+  // All cases — show below for admin
+  document.getElementById("all-cases-section").style.display="block";
+  renderCasesInto("all-cases-list", allCases, true);
 }
 
 // ── PENDING FOUNDERS ──────────────────────────────────────
@@ -937,25 +952,26 @@ async function loadAdminData(){
 }
 
 async function loadPRData(){
+  const allSection = document.getElementById("all-cases-section");
+
+  if (userRole === "admin") {
+    // Admin acting as PR — handled by loadAdminAsPR
+    await loadAdminAsPR();
+    return;
+  }
+
+  // Real PR — show only their own cases, hide all-cases section
+  if (allSection) allSection.style.display = "none";
   let myCases;
   try{
-    // Admin acting as PR sees ALL cases, real PR sees only their own
-    const action = (userRole==="admin") ? "getDashboardStats" : "getMyCases";
-    if(userRole==="admin"){
-      const res=await fetch(API_URL+"?action=getDashboardStats");
-      const d=await res.json();
-      myCases=(d.cases||[]).filter(c=>c.status==="booked"||c.status==="active");
-    } else {
-      const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({action:"getMyCases",userId})});
-      const d=await res.json();myCases=d.cases||[];
-    }
+    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"getMyCases",userId})});
+    const d=await res.json();
+    myCases=d.cases||[];
   }catch{
-    myCases=userRole==="admin"
-      ? MOCK.cases.filter(c=>c.status==="booked"||c.status==="active")
-      : MOCK.cases.filter(c=>c.owner==="PR_001");
+    myCases=MOCK.cases.filter(c=>c.owner==="PR_001");
   }
-  renderCasesInto("my-cases-list",myCases,userRole==="admin");
+  renderCasesInto("my-cases-list", myCases, false);
 }
 
 async function loadProgramData(){
@@ -1180,19 +1196,71 @@ function getWeekRange(){
   return mon.toLocaleDateString("th-TH",opts)+" – "+fri.toLocaleDateString("th-TH",opts);
 }
 
-function buildScheduleTab(){
+async function buildScheduleTab(){
   document.getElementById("schedule-week-label").innerText="📅 "+getWeekRange();
-  const container=document.getElementById("schedule-days");container.innerHTML="";
+  const container=document.getElementById("schedule-days");
+  container.innerHTML="<div style='font-size:13px;color:var(--text-mid);'>กำลังโหลด...</div>";
+
+  // Fetch booked slots for this PR
+  let bookedSlots = {};
+  try{
+    const res=await fetch(API_URL+"?action=getMyBookedSlots&userId="+userId);
+    const d=await res.json();
+    if(d.status==="OK") bookedSlots=d.bookedSlots||{};
+  }catch{}
+
+  container.innerHTML="";
   Object.entries(SLOT_TIMES).forEach(([key,times])=>{
     const g=document.createElement("div");g.className="schedule-day";
     const l=document.createElement("div");l.className="schedule-day-name";l.innerText=DAY_LABELS[key];g.appendChild(l);
     const r=document.createElement("div");r.className="schedule-slots";
     times.forEach(time=>{
       const full=DAY_LABELS[key]+" "+time;
-      const chip=document.createElement("button");chip.className="slot-chip";
-      chip.innerText=time;chip.onclick=()=>toggleSlot(chip,full);r.appendChild(chip);
+      const isBooked=bookedSlots[full]; // has student booking
+      const chip=document.createElement("button");
+      chip.className="slot-chip"+(isBooked?" locked":"");
+      chip.innerHTML=isBooked?"🔒 "+time:time;
+
+      if(isBooked){
+        // Locked — show confirm before canceling
+        chip.style.cssText="background:var(--red-soft);border-color:var(--red);color:var(--red);cursor:pointer;";
+        chip.onclick=()=>confirmCancelSlot(full, bookedSlots[full]);
+      } else {
+        chip.onclick=()=>toggleSlot(chip,full);
+      }
+      r.appendChild(chip);
     });
     g.appendChild(r);container.appendChild(g);
+  });
+}
+
+function confirmCancelSlot(slot, bookingInfo){
+  if(!confirm(
+    "⚠️ slot นี้มีนักเรียนจองอยู่แล้ว\n\n" +
+    "ถ้ายกเลิก ระบบจะพยายามหา PR คนอื่นให้นักเรียน\n" +
+    "ถ้าหาไม่ได้ นักเรียนจะต้องเลือกเวลาใหม่\n\n" +
+    "ยืนยันการยกเลิก slot " + slot + " ไหม?"
+  )) return;
+
+  // Cancel the booking
+  fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      action:"cancelBooking",
+      caseId:bookingInfo.caseId,
+      prId:userId,
+      slot,
+      studentUserId:bookingInfo.studentUserId
+    })
+  }).then(r=>r.json()).then(d=>{
+    if(d.reassigned){
+      toast("ยกเลิกแล้ว — จับคู่ PR ใหม่ให้นักเรียนแล้ว 💛");
+    } else {
+      toast("ยกเลิกแล้ว — แจ้งนักเรียนให้เลือกเวลาใหม่แล้ว");
+    }
+    buildScheduleTab();
+  }).catch(()=>{
+    toast("ยกเลิกแล้ว 💛");
+    buildScheduleTab();
   });
 }
 
@@ -1208,16 +1276,18 @@ function toggleSlot(chip,slot){
 async function saveSchedule(){
   const btn=document.getElementById("btn-save-schedule");
   btn.disabled=true;btn.innerText="กำลังบันทึก...";
+  // Use Saturday-based weekId
   const now=new Date(),day=now.getDay();
-  const diff=now.getDate()-day+(day===0?-6:1);
-  const mon=new Date(now);mon.setDate(diff);
-  const weekId=mon.toISOString().split("T")[0];
+  const diff=day===6?0:day===0?-1:-(day+1);
+  const sat=new Date(now);sat.setDate(now.getDate()+diff);
+  const weekId=sat.toISOString().split("T")[0];
   try{
     await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({action:"registerAvailability",userId,weekId,slots:selectedSlots})});
   }catch{}
   toast("บันทึกตารางแล้ว 💛");
   btn.innerText="ยืนยันตารางสัปดาห์นี้";btn.disabled=selectedSlots.length===0;
+  buildScheduleTab(); // reload to show locked slots
 }
 
 // ── ACTIONS ───────────────────────────────────────────────
