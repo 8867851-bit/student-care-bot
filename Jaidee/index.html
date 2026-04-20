@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -174,28 +175,32 @@
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
- const isPreview = new URLSearchParams(window.location.search).get("preview") === "student";
+  const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+  const isPreview = new URLSearchParams(window.location.search).get("preview") === "student";
 
-if (isPreview) {
-  document.getElementById("greeting-name").innerText = "สวัสดี [Developer Preview] 🤍";
-} else {
-  liff.init({ liffId: "2009806939-H06mwKgI" })
-    .then(() => {
-      if (!liff.isLoggedIn()) { liff.login(); return; }
-      liff.getProfile().then(async p => {
-        document.getElementById("greeting-name").innerText = "สวัสดี " + p.displayName + " 🤍";
-        try {
-          const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
-          const res = await fetch(API_URL + "?action=getUserRole&userId=" + p.userId);
-          const d = await res.json();
-          if (d.role && d.role !== "student" && d.role !== "Guest") {
-            window.location.href = "dashboard.html";
+  if (isPreview) {
+    document.getElementById("greeting-name").innerText = "สวัสดี [Developer Preview] 🤍";
+  } else {
+    liff.init({ liffId: "2009806939-H06mwKgI" })
+      .then(() => {
+        if (!liff.isLoggedIn()) { liff.login(); return; }
+        liff.getProfile().then(async p => {
+          document.getElementById("greeting-name").innerText = "สวัสดี " + p.displayName + " 🤍";
+          // Check if team member → redirect to dashboard
+          try {
+            const res = await fetch(API_URL + "?action=getUserRole&userId=" + encodeURIComponent(p.userId));
+            const d = await res.json();
+            if (d.role && d.role !== "student" && d.role !== "Guest") {
+              window.location.href = "dashboard.html";
+            }
+          } catch(e) {
+            // API fail → stay on student view, don't redirect
+            console.warn("role check failed", e);
           }
-        } catch(e) { console.warn("role check failed", e); }
-      });
-    })
-    .catch(err => console.error("LIFF:", err));
-}
+        });
+      })
+      .catch(err => console.error("LIFF:", err));
+  }
 </script>
 </body>
 </html>
