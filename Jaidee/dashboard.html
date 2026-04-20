@@ -1332,7 +1332,7 @@ async function saveSchedule(){
   const weekId=sat.toISOString().split("T")[0];
   try{
     await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"registerAvailability",userId,weekId,slots:selectedSlots})});
+      body:JSON.stringify({action:"registerAvailability",userId,weekId,slots:selectedSlots});
   }catch{}
   toast("บันทึกตารางแล้ว 💛");
   btn.innerText="ยืนยันตารางสัปดาห์นี้";btn.disabled=selectedSlots.length===0;
