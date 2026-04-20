@@ -202,7 +202,8 @@
   <div class="branch-title">ไม่มีเวลาที่<br>สะดวกใช่ไหม?</div>
   <div class="branch-body">
     ไม่เป็นไรเลยนะ ยังมีสองทางให้เลือก —<br><br>
-    (หากหน้านี้เด่งขึ้นมาเอง เเสดงว่ายังไม่มี PR อัพเดตตารางของตัวเอง ขอให้ท่านกดขอเวลาพิเศษ)
+    ให้เราแจ้งเตือนเมื่อมีตารางใหม่<br>
+    หรือขอเวลาพิเศษที่คุณสะดวกจริง ๆ
   </div>
   <div class="branch-actions">
     <button class="btn-gold" onclick="showSpecialRequest()">ขอเวลาพิเศษ →</button>
@@ -296,6 +297,16 @@
 // CONFIG
 // ================================================================
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+
+// GET-based API call to avoid CORS
+async function apiCall(data) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(data)) {
+    params.append(key, typeof value === "object" ? JSON.stringify(value) : value);
+  }
+  const res = await fetch(API_URL + "?" + params.toString());
+  return await res.json();
+}
 const LIFF_ID = "2009806939-AONYlCkT";
 
 // ================================================================
@@ -487,18 +498,12 @@ async function submitAndRoute(){
   if(answers[1]==="มากเลย ยากมากตอนนี้")level="red";
 
   try {
-    const res=await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        action:"createCase",
-        userId,       // LINE userId from LIFF
-        level,        // red / yellow / green
-        q1:answers[0],q2:answers[1],q3:answers[2],q4:answers[3],q5:answers[4]
-      })
+    const d=await apiCall({
+      action:"createCase",
+      userId,level,
+      q1:answers[0],q2:answers[1],q3:answers[2],q4:answers[3],q5:answers[4]
     });
-    const d=await res.json();
-    if(d.status==="OK") caseId=d.caseId; // ← caseId returned from Apps Script
+    if(d.status==="OK") caseId=d.caseId;
     else throw new Error();
   } catch {
     // FALLBACK: generate local caseId — booking will still work
@@ -592,11 +597,7 @@ async function finalConfirm(){
   closeConfirmOverlay();
   let assignedRoom = null;
   try {
-    const res=await fetch(API_URL,{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"bookSlot",userId,caseId,slot:chosenSlot})
-    });
-    const d=await res.json();
+    const d=await apiCall({action:"bookSlot",userId,caseId,slot:chosenSlot});
     if(d.status==="SLOT_TAKEN"){showSorry();return;}
     if(d.status!=="OK") throw new Error(d.message);
     assignedRoom = d.room;
@@ -640,12 +641,8 @@ function showSuccess(room){
 // ================================================================
 async function saveAndNotify(){
   try {
-    await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"saveWaiting",userId,caseId,answers})
-    });
-  } catch { console.warn("saveWaiting failed, will retry on next open"); }
+    await apiCall({action:"saveWaiting",userId,caseId,answers});
+  } catch { console.warn("saveWaiting failed"); }
   show("screen-notify-success");
 }
 
@@ -709,17 +706,13 @@ function toggleSpecialSlot(chip,slot){
 // ================================================================
 async function submitSpecialRequest(){
   try {
-    await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        action:"createSpecialRequest",
-        userId,caseId,
-        slots:specialSlots,
-        q1:answers[0],
-        level: answers[1]==="มากเลย ยากมากตอนนี้"?"red":
-               answers[1]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว"?"yellow":"green"
-      })
+    await apiCall({
+      action:"createSpecialRequest",
+      userId,caseId,
+      slots:specialSlots,
+      q1:answers[0],
+      level: answers[1]==="มากเลย ยากมากตอนนี้"?"red":
+             answers[1]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว"?"yellow":"green"
     });
   } catch { console.warn("createSpecialRequest failed"); }
   show("screen-notify-success");
