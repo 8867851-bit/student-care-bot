@@ -608,6 +608,23 @@
 <script>
 
 const API_URL="https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+
+// ── API HELPER — uses GET to avoid CORS issues ─────────────
+// Apps Script GET requests don't have CORS problems
+// All data sent as URL parameters
+async function apiCall(data) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(data)) {
+    params.append(key, typeof value === "object" ? JSON.stringify(value) : value);
+  }
+  try {
+    const res = await fetch(API_URL + "?" + params.toString());
+    return await res.json();
+  } catch(e) {
+    console.warn("apiCall failed:", e);
+    return {status:"ERROR"};
+  }
+}
 const LIFF_ID="2009806939-AONYlCkT";
 
 const MOCK={
@@ -826,8 +843,7 @@ async function loadPendingFounders(){
 async function approveFounder(id, name){
   if(!confirm(`Approve "${name}" ให้ขึ้นหน้า Founder's Pick?`))return;
   try{
-    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"approveFounder",id})});
+    await apiCall({action:"approveFounder",id});
   }catch{}
   toast(`${name} ขึ้นหน้าเว็บแล้ว 💛`);
   loadPendingFounders();
@@ -954,8 +970,7 @@ async function addPerson(){
   const thumb   = document.getElementById("p-thumb").value.trim();
   if(!name||!youtube){toast("กรุณากรอกชื่อและ YouTube URL");return;}
   try{
-    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"addPerson",name,subject,year_group:year,youtube_url:youtube,thumbnail_url:thumb})});
+    await apiCall({action:"addPerson",name,subject,year_group:year,youtube_url:youtube,thumbnail_url:thumb});
   }catch{}
   ["p-name","p-subject","p-youtube","p-thumb"].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value="";
@@ -972,8 +987,7 @@ async function addContent(){
   const desc=document.getElementById("content-desc").value.trim();
   if(!title||!url){toast("กรุณากรอกชื่อและ URL");return;}
   try{
-    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"addContent",world,title,type,url,desc,addedBy:userId})});
+    await apiCall({action:"addContent",world,title,type,url,desc,addedBy:userId});
   }catch{}
   document.getElementById("content-title").value="";
   document.getElementById("content-url").value="";
@@ -1013,8 +1027,7 @@ async function loadPRData(){
   if (allSection) allSection.style.display = "none";
   let myCases;
   try{
-    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"getMyCases",userId})});
+    const res = await apiCall({action:"getMyCases",userId});
     const d=await res.json();
     myCases=d.cases||[];
   }catch{
@@ -1225,9 +1238,8 @@ async function broadcast(){
   }
 
   if(!confirm("ส่ง broadcast ไปยังทุกคนใช่ไหม?"))return;
-
   try{
-    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    await apiCall(payload);
   }catch{}
   toast("ส่ง Broadcast แล้ว 💛");
 }
@@ -1292,15 +1304,13 @@ function confirmCancelSlot(slot, bookingInfo){
   )) return;
 
   // Cancel the booking
-  fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      action:"cancelBooking",
-      caseId:bookingInfo.caseId,
-      prId:userId,
-      slot,
-      studentUserId:bookingInfo.studentUserId
-    })
-  }).then(r=>r.json()).then(d=>{
+  apiCall({
+    action:"cancelBooking",
+    caseId:bookingInfo.caseId,
+    prId:userId,
+    slot,
+    studentUserId:bookingInfo.studentUserId
+  }).then(d=>{
     if(d.reassigned){
       toast("ยกเลิกแล้ว — จับคู่ PR ใหม่ให้นักเรียนแล้ว 💛");
     } else {
@@ -1331,8 +1341,7 @@ async function saveSchedule(){
   const sat=new Date(now);sat.setDate(now.getDate()+diff);
   const weekId=sat.toISOString().split("T")[0];
   try{
-    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"registerAvailability",userId,weekId,slots:selectedSlots});
+    await apiCall({action:"registerAvailability",userId,weekId,slots:selectedSlots});
   }catch{}
   toast("บันทึกตารางแล้ว 💛");
   btn.innerText="ยืนยันตารางสัปดาห์นี้";btn.disabled=selectedSlots.length===0;
@@ -1343,8 +1352,7 @@ async function saveSchedule(){
 // Complete case — push feedback to student immediately
 async function completeCase(caseId, studentUserId){
   try{
-    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"completeCase",caseId,userId,studentUserId})});
+    await apiCall({action:"completeCase",caseId,userId,studentUserId});
   }catch{}
   toast("ปิดเคสแล้ว — ส่ง feedback ให้น้องแล้ว 💛");
   loadData();
@@ -1354,8 +1362,7 @@ async function completeCase(caseId, studentUserId){
 async function cancelBooking(caseId, prId, slot, studentUserId){
   if(!confirm("ยืนยันการยกเลิก? ระบบจะพยายามหา PR คนอื่นให้น้องทันที"))return;
   try{
-    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"cancelBooking",caseId,prId,slot,studentUserId})});
+    const res = await apiCall({action:"cancelBooking",caseId,prId,slot,studentUserId});
     const d=await res.json();
     if(d.reassigned){
       toast("ยกเลิกแล้ว — จับคู่ PR ใหม่ให้น้องแล้ว 💛");
@@ -1371,7 +1378,7 @@ async function cancelBooking(caseId, prId, slot, studentUserId){
 async function addTempPR(caseId){
   const prId=prompt("กรอก LINE User ID ของ PR ที่จะเพิ่มชั่วคราว:");
   if(!prId)return;
-  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"addTempPR",caseId,prId})});}catch{}
+  try{await apiCall({action:"addTempPR",caseId,prId});}catch{}
   toast("เพิ่ม PR ชั่วคราวแล้ว ระบบกำลัง match 💛");loadData();
 }
 
@@ -1379,14 +1386,14 @@ async function addPR(){
   const id=document.getElementById("new-pr-id").value.trim();
   const name=document.getElementById("new-pr-name").value.trim();
   if(!id||!name){toast("กรุณากรอกให้ครบ");return;}
-  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"addPR",userId:id,name,role:"pr"})});}catch{}
+  try{await apiCall({action:"addPR",userId:id,name,role:"pr"});}catch{}
   document.getElementById("new-pr-id").value="";document.getElementById("new-pr-name").value="";
   toast("เพิ่ม PR แล้ว 💛");loadData();
 }
 
 async function removePR(prId,name){
   if(!confirm(`ลบ ${name} ออกจากทีม PR?`))return;
-  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"removePR",userId:prId})});}catch{}
+  try{await apiCall({action:"removePR",userId:prId});}catch{}
   toast(`ลบ ${name} แล้ว`);loadData();
 }
 
@@ -1395,18 +1402,18 @@ async function setPause(){
   const start=document.getElementById("pause-start").value;
   const end=document.getElementById("pause-end").value;
   if(!start||!end){toast("กรุณาเลือกวันให้ครบ");return;}
-  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"setPause",type,start,end})});}catch{}
+  try{await apiCall({action:"setPause",type,start,end});}catch{}
   toast("บันทึกช่วงหยุดแล้ว 💛");loadData();
 }
 
 async function clearPause(){
   if(!confirm("ยกเลิกช่วงหยุดพักปัจจุบัน?"))return;
-  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"clearPause"})});}catch{}
+  try{await apiCall({action:"clearPause"});}catch{}
   toast("ยกเลิกช่วงหยุดแล้ว");loadData();
 }
 
 async function notifyAll(){
-  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"notifyWaiting"})});}catch{}
+  try{await apiCall({action:"notifyWaiting"});}catch{}
   toast("ส่งแจ้งเตือนแล้ว 💛");
 }
 
@@ -1422,10 +1429,9 @@ async function addProgram(){
   const photo=document.getElementById("prog-photo").value.trim();
   const status=document.getElementById("prog-status").value;
   if(!name||!startDate){toast("กรุณากรอกชื่อและวันที่");return;}
-  try{await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({action:"addProgram",name,short_desc:shortDesc,full_desc:fullDesc,
+  try{await apiCall({action:"addProgram",name,short_desc:shortDesc,full_desc:fullDesc,
       category,start_date:startDate,end_date:endDate,reg_deadline:deadline,
-      form_url:formUrl,photo_url:photo,status})});}catch{}
+      form_url:formUrl,photo_url:photo,status});}catch{}
   ["prog-name","prog-short-desc","prog-full-desc","prog-form-url","prog-photo",
    "prog-start-date","prog-end-date","prog-deadline"].forEach(id=>{
     document.getElementById(id).value="";
@@ -1443,9 +1449,8 @@ async function addFounder(){
   const letter  = document.getElementById("f-letter").value.trim();
   if(!name||!year){toast("กรุณากรอกชื่อและปี");return;}
   try{
-    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"addFounder",full_name:name,year,photo_url:photo,
-        vision,proudest:proud,struggle,letter_to_next:letter,active:"TRUE"})});
+    await apiCall({action:"addFounder",full_name:name,year,photo_url:photo,
+        vision,proudest:proud,struggle,letter_to_next:letter,active:"TRUE"});
   }catch{}
   ["f-name","f-year","f-photo","f-vision","f-proud","f-struggle","f-letter"]
     .forEach(id=>{document.getElementById(id).value="";});
@@ -1489,8 +1494,7 @@ async function loadFoundersPending(){
 
 async function approveFounder(id){
   try{
-    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"approveFounder",id})});
+    await apiCall({action:"approveFounder",id});
   }catch{}
   toast("Approve แล้ว 💛 ขึ้นหน้า Founder's Pick แล้ว");
   loadFoundersPending();
@@ -1499,8 +1503,7 @@ async function approveFounder(id){
 async function rejectFounder(id){
   if(!confirm("ลบ submission นี้ทิ้ง?"))return;
   try{
-    await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"rejectFounder",id})});
+    await apiCall({action:"rejectFounder",id});
   }catch{}
   toast("ลบแล้ว");
   loadFoundersPending();
