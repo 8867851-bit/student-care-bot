@@ -189,7 +189,31 @@
     <div class="dev-sheet-handle"></div>
     <div class="dev-sheet-title">Developer View — ดูในฐานะ...</div>
 
-    <a class="dev-option" href="index.html?preview=student" target="_blank">
+    <a class="dev-option" href="dashboard.html?mockRole=pr" target="_blank">
+      <div class="dev-option-icon">💛</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Mock — PR View</div>
+        <div class="dev-option-desc">ดู dashboard ในฐานะ PR (mock data)</div>
+      </div>
+    </a>
+
+    <a class="dev-option" href="dashboard.html?mockRole=program" target="_blank">
+      <div class="dev-option-icon">🌱</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Mock — Program Team View</div>
+        <div class="dev-option-desc">ดู dashboard ในฐานะ Program team (mock data)</div>
+      </div>
+    </a>
+
+    <a class="dev-option" href="dashboard.html?mockRole=content" target="_blank">
+      <div class="dev-option-icon">✏️</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Mock — Content Team View</div>
+        <div class="dev-option-desc">ดู dashboard ในฐานะ Content team (mock data)</div>
+      </div>
+    </a>
+
+    <div class="divider" style="margin:4px 0;"></div>
       <div class="dev-option-icon">🏠</div>
       <div class="dev-option-info">
         <div class="dev-option-name">Student — Home</div>
@@ -637,13 +661,38 @@ window.onload=async()=>{
 };
 
 async function loadRole(){
+  // Check for mockRole URL parameter (developer tool only)
+  const mockRole = new URLSearchParams(window.location.search).get("mockRole");
+  if(mockRole){
+    userRole=mockRole;
+    userName="Mock — "+{pr:"PR",program:"Program Team",content:"Content Team",admin:"Admin"}[mockRole];
+    bootApp();
+    return;
+  }
+
   try{
-    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"getUserRole",userId})});
-    const d=await res.json();userRole=d.role||"denied";userName=d.name||userName;
-  }catch{userRole=MOCK.role;}
-  if(!userRole||userRole==="student"||userRole==="denied"){
+    // Use GET request — getUserRole is in doGet
+    const res=await fetch(API_URL+"?action=getUserRole&userId="+encodeURIComponent(userId));
+    const d=await res.json();
+    userRole=d.role||"student";
+    userName=d.name||userName;
+  }catch{
+    // API failed — show retry, never fallback to mock role
+    document.getElementById("screen-loading").innerHTML=`
+      <div style="text-align:center;padding:40px;display:flex;flex-direction:column;align-items:center;gap:16px;">
+        <div style="font-size:36px;">⚠️</div>
+        <div style="font-size:16px;color:var(--text);">ระบบมีปัญหาชั่วคราว</div>
+        <div style="font-size:13px;color:var(--text-mid);">กรุณาลองใหม่อีกครั้ง</div>
+        <button onclick="location.reload()" style="background:var(--gold);color:#1A1A1A;border:none;border-radius:12px;padding:12px 24px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;">ลองใหม่</button>
+      </div>
+    `;
+    return;
+  }
+
+  if(!userRole||userRole==="student"||userRole==="Guest"){
     document.getElementById("screen-loading").style.display="none";
-    document.getElementById("screen-denied").style.display="flex";return;
+    document.getElementById("screen-denied").style.display="flex";
+    return;
   }
   bootApp();
 }
