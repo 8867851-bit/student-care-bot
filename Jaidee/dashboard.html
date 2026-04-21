@@ -272,6 +272,9 @@
 </div>
 
 <div id="app">
+  <!-- MODE BANNER -->
+  <div id="mode-banner" style="display:none;padding:8px 20px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-align:center;"></div>
+
   <div class="header">
     <div class="header-eyebrow">ใจดี TU</div>
     <div class="header-title">Dashboard</div>
@@ -664,7 +667,7 @@ const SLOT_TIMES={
 };
 const DAY_LABELS={mon:"จันทร์",tue:"อังคาร",wed:"พุธ",thu:"พฤหัสบดี",fri:"ศุกร์"};
 
-let userRole=null,userId=null,userName=null,selectedSlots=[];
+let userRole=null,userId=null,userName=null,selectedSlots=[],isMockMode=false;
 let broadcastType="text";
 
 // ── INIT ──────────────────────────────────────────────────
@@ -678,23 +681,26 @@ window.onload=async()=>{
 };
 
 async function loadRole(){
-  // Check for mockRole URL parameter (developer tool only)
   const mockRole = new URLSearchParams(window.location.search).get("mockRole");
+
   if(mockRole){
-    userRole=mockRole;
-    userName="Mock — "+{pr:"PR",program:"Program Team",content:"Content Team",admin:"Admin"}[mockRole];
+    // ── MOCK MODE — for pitching/demo only ──
+    userRole = mockRole;
+    userName = {pr:"PR (Mock)",program:"Program Team (Mock)",content:"Content Team (Mock)",admin:"Admin (Mock)"}[mockRole] || mockRole;
+    isMockMode = true;
     bootApp();
     return;
   }
 
+  // ── LIVE MODE — read from real sheet ──
   try{
-    // Use GET request — getUserRole is in doGet
-    const res=await fetch(API_URL+"?action=getUserRole&userId="+encodeURIComponent(userId));
-    const d=await res.json();
-    userRole=d.role||"student";
-    userName=d.name||userName;
+    const res = await fetch(API_URL+"?action=getUserRole&userId="+encodeURIComponent(userId));
+    const d   = await res.json();
+    userRole  = d.role  || "student";
+    userName  = d.name  || userName;
+    isMockMode = false;
   }catch{
-    // API failed — show retry, never fallback to mock role
+    // API failed — show retry, never fallback to mock
     document.getElementById("screen-loading").innerHTML=`
       <div style="text-align:center;padding:40px;display:flex;flex-direction:column;align-items:center;gap:16px;">
         <div style="font-size:36px;">⚠️</div>
@@ -714,6 +720,24 @@ async function loadRole(){
   bootApp();
 }
 
+function showModeBanner(){
+  const banner = document.getElementById("mode-banner");
+  if(!banner) return;
+  if(isMockMode){
+    banner.style.display = "block";
+    banner.style.background = "#FFF5E0";
+    banner.style.color = "#7A5C00";
+    banner.innerText = "🟡 MOCK MODE — ข้อมูลตัวอย่างสำหรับ demo เท่านั้น";
+  } else {
+    banner.style.display = "block";
+    banner.style.background = "#F0FFF4";
+    banner.style.color = "#1A6B3A";
+    banner.innerText = "🟢 LIVE — ข้อมูลจริง";
+    // Hide live banner after 3 seconds
+    setTimeout(()=>{ banner.style.display="none"; }, 3000);
+  }
+}
+
 function bootApp(){
   document.getElementById("screen-loading").style.display="none";
   document.getElementById("app").style.display="flex";
@@ -721,12 +745,13 @@ function bootApp(){
   const badge=document.getElementById("role-badge");
   badge.innerText={admin:"Admin",pr:"PR",program:"Program Team",content:"Content Team"}[userRole]||userRole;
   badge.className="role-badge "+userRole;
-  // Show role switcher for admin only
   if(userRole==="admin"){
     document.getElementById("role-switcher").style.display="inline-block";
     document.getElementById("dev-btn").classList.add("visible");
   }
-  buildTabs();loadData();
+  showModeBanner();
+  buildTabs();
+  loadData();
 }
 
 function buildTabs(viewRole){
@@ -778,10 +803,45 @@ function switchTab(tabId,btn){
 }
 
 async function loadData(){
+  if(isMockMode){
+    if(userRole==="admin") loadAdminDataMock();
+    else if(userRole==="pr"){ loadPRDataMock(); buildScheduleTab(); }
+    else if(userRole==="program") loadProgramData();
+    else if(userRole==="content") buildWorldGrid();
+    return;
+  }
   if(userRole==="admin"){loadAdminData();loadFeedback();loadPendingFounders();}
   else if(userRole==="pr"){loadPRData();buildScheduleTab();}
   else if(userRole==="program")loadProgramData();
   else if(userRole==="content")buildWorldGrid();
+}
+
+function loadAdminDataMock(){
+  renderCasesInto("overview-urgent",MOCK.cases.filter(c=>c.level==="red"&&c.status!=="completed"),true);
+  renderSpecialRequests(MOCK.specialRequests||[]);
+  renderCasesInto("cases-list",MOCK.cases,true);
+  renderPRList(MOCK.prList);
+  renderWaitingList(MOCK.waiting||[]);
+  if(document.getElementById("founders-pending"))
+    document.getElementById("founders-pending").innerHTML=`<div class="empty">ไม่มี Founder รอ Approve 💛</div>`;
+  // Mock feedback
+  document.getElementById("fb-great").innerText="12";
+  document.getElementById("fb-ok").innerText="5";
+  document.getElementById("fb-unsure").innerText="3";
+  document.getElementById("fb-total").innerText="20";
+  const list=document.getElementById("feedback-list");
+  if(list) list.innerHTML=`
+    <div class="kpi-card"><div style="font-size:22px;">💛</div><div style="font-size:13px;font-weight:600;">รู้สึกดีขึ้น</div><div style="font-size:11px;color:var(--text-soft);">พุธ 16:00–17:00 · วันนี้</div></div>
+    <div class="kpi-card"><div style="font-size:22px;">🤍</div><div style="font-size:13px;font-weight:600;">ต้องการความช่วยเหลือเพิ่ม</div><div style="font-size:11px;color:var(--text-soft);">อังคาร 15:30–16:30 · เมื่อวาน</div></div>
+    <div class="kpi-card"><div style="font-size:22px;">🌱</div><div style="font-size:13px;font-weight:600;">ต้องการเวลาคิด</div><div style="font-size:11px;color:var(--text-soft);">ศุกร์ 14:00–15:00 · 3 วันที่แล้ว</div></div>
+  `;
+}
+
+function loadPRDataMock(){
+  const myCases=MOCK.cases.filter(c=>c.owner==="PR_001");
+  renderCasesInto("my-cases-list",myCases,false);
+  if(document.getElementById("all-cases-section"))
+    document.getElementById("all-cases-section").style.display="none";
 }
 
 // Admin viewing AS PR — sees ALL cases, can complete/cancel any
@@ -1262,13 +1322,22 @@ async function buildScheduleTab(){
   const container=document.getElementById("schedule-days");
   container.innerHTML="<div style='font-size:13px;color:var(--text-mid);'>กำลังโหลด...</div>";
 
-  // Fetch booked slots for this PR
+  // Fetch both registered slots and booked slots for this PR
+  let mySlots = [];
   let bookedSlots = {};
   try{
-    const res=await fetch(API_URL+"?action=getMyBookedSlots&userId="+userId);
-    const d=await res.json();
-    if(d.status==="OK") bookedSlots=d.bookedSlots||{};
+    const [slotsRes, bookedRes] = await Promise.all([
+      fetch(API_URL+"?action=getMySlots&userId="+userId),
+      fetch(API_URL+"?action=getMyBookedSlots&userId="+userId)
+    ]);
+    const sd = await slotsRes.json();
+    const bd = await bookedRes.json();
+    mySlots = (sd.slots||[]).map(s=>s.slot);
+    bookedSlots = bd.bookedSlots||{};
   }catch{}
+
+  // Pre-select registered slots
+  selectedSlots = mySlots.filter(s => !bookedSlots[s]);
 
   container.innerHTML="";
   Object.entries(SLOT_TIMES).forEach(([key,times])=>{
@@ -1277,13 +1346,14 @@ async function buildScheduleTab(){
     const r=document.createElement("div");r.className="schedule-slots";
     times.forEach(time=>{
       const full=DAY_LABELS[key]+" "+time;
-      const isBooked=bookedSlots[full]; // has student booking
+      const isBooked=bookedSlots[full];
+      const isSelected=selectedSlots.includes(full);
+
       const chip=document.createElement("button");
-      chip.className="slot-chip"+(isBooked?" locked":"");
+      chip.className="slot-chip"+(isBooked?" locked":isSelected?" chosen":"");
       chip.innerHTML=isBooked?"🔒 "+time:time;
 
       if(isBooked){
-        // Locked — show confirm before canceling
         chip.style.cssText="background:var(--red-soft);border-color:var(--red);color:var(--red);cursor:pointer;";
         chip.onclick=()=>confirmCancelSlot(full, bookedSlots[full]);
       } else {
@@ -1293,6 +1363,12 @@ async function buildScheduleTab(){
     });
     g.appendChild(r);container.appendChild(g);
   });
+
+  // Update summary
+  const btn=document.getElementById("btn-save-schedule");
+  const sum=document.getElementById("schedule-summary");
+  if(selectedSlots.length===0){sum.innerText="ยังไม่ได้เลือกช่วงเวลา";btn.disabled=true;}
+  else{sum.innerText="เลือกแล้ว "+selectedSlots.length+" ช่วงเวลา";btn.disabled=false;}
 }
 
 function confirmCancelSlot(slot, bookingInfo){
