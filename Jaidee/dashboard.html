@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -189,6 +190,20 @@
     <div class="dev-sheet-handle"></div>
     <div class="dev-sheet-title">Developer View — ดูในฐานะ...</div>
 
+    <!-- PITCHING SECTION -->
+    <div style="background:#FFF5E0;border:1px solid #FFE4A0;border-radius:12px;padding:10px 14px;margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#7A5C00;margin-bottom:6px;">🟡 สำหรับ Pitching เท่านั้น</div>
+      <div style="font-size:12px;color:#7A5C00;line-height:1.6;">เปิดใน tab ใหม่ ข้อมูล mock ทั้งหมด ไม่กระทบข้อมูลจริง</div>
+    </div>
+
+    <a class="dev-option" href="dashboard.html?mockRole=admin" target="_blank">
+      <div class="dev-option-icon">👑</div>
+      <div class="dev-option-info">
+        <div class="dev-option-name">Mock — Admin View</div>
+        <div class="dev-option-desc">ดู dashboard ในฐานะ Admin (mock data)</div>
+      </div>
+    </a>
+
     <a class="dev-option" href="dashboard.html?mockRole=pr" target="_blank">
       <div class="dev-option-icon">💛</div>
       <div class="dev-option-info">
@@ -213,7 +228,7 @@
       </div>
     </a>
 
-    <div class="divider" style="margin:4px 0;"></div>
+    <div class="divider" style="margin:8px 0;"></div>
       <div class="dev-option-icon">🏠</div>
       <div class="dev-option-info">
         <div class="dev-option-name">Student — Home</div>
@@ -652,8 +667,15 @@ const MOCK={
     {userId:"U_W2",topic:"ความรู้สึกของตัวเอง",since:"1 วันที่แล้ว"},
   ],
   programs:[
-    {name:"Mindfulness Workshop",date:"2025-05-20",desc:"เวิร์คชอปฝึกสติ 2 ชั่วโมง"},
-    {name:"Career Night",date:"2025-05-28",desc:"พูดคุยกับรุ่นพี่เรื่องอนาคต"},
+    {id:"PROG_001",name:"Mindfulness Workshop",short_desc:"เวิร์คชอปฝึกสติ 2 ชั่วโมง",category:"wellness",start_date:"2025-05-20",reg_deadline:"2025-05-18",form_url:"#",status:"active"},
+    {id:"PROG_002",name:"Career Night",short_desc:"พูดคุยกับรุ่นพี่เรื่องอนาคต",category:"career",start_date:"2025-05-28",reg_deadline:"2025-05-25",form_url:"#",status:"active"},
+    {id:"PROG_003",name:"Self-Compassion Talk",short_desc:"เรียนรู้ที่จะเมตตาตัวเอง",category:"mental",start_date:"2025-06-05",reg_deadline:"2025-06-03",form_url:"#",status:"active"},
+  ],
+  content:[
+    {id:"C001",world:"puzzle",title:"ทำไมเราถึงรู้สึกแบบนี้",type:"pdf",url:"",active:"TRUE"},
+    {id:"C002",world:"puzzle",title:"นอนไม่หลับ ต้องทำยังไง",type:"pdf",url:"",active:"TRUE"},
+    {id:"C003",world:"puzzle",title:"ความเครียดและร่างกาย",type:"pdf",url:"",active:"TRUE"},
+    {id:"C004",world:"people",title:"ครูวิชัย — ฟิสิกส์",type:"video",url:"",active:"TRUE"},
   ],
   pause:null,
 };
@@ -676,7 +698,7 @@ window.onload=async()=>{
     await liff.init({liffId:LIFF_ID});
     if(!liff.isLoggedIn()){liff.login();return;}
     const p=await liff.getProfile();userId=p.userId;userName=p.displayName;
-  }catch{userId="test_admin";userName=MOCK.name;}
+  }catch{userId="";userName="ทีมงาน";}
   loadRole();
 };
 
@@ -694,8 +716,7 @@ async function loadRole(){
 
   // ── LIVE MODE — read from real sheet ──
   try{
-    const res = await fetch(API_URL+"?action=getUserRole&userId="+encodeURIComponent(userId));
-    const d   = await res.json();
+    const d=await apiCall({action:"getUserRole",userId:userId});
     userRole  = d.role  || "student";
     userName  = d.name  || userName;
     isMockMode = false;
@@ -727,14 +748,15 @@ function showModeBanner(){
     banner.style.display = "block";
     banner.style.background = "#FFF5E0";
     banner.style.color = "#7A5C00";
-    banner.innerText = "🟡 MOCK MODE — ข้อมูลตัวอย่างสำหรับ demo เท่านั้น";
+    banner.style.cursor = "default";
+    banner.innerHTML = "🟡 MOCK MODE — ข้อมูลตัวอย่างสำหรับ pitching เท่านั้น";
   } else {
     banner.style.display = "block";
     banner.style.background = "#F0FFF4";
     banner.style.color = "#1A6B3A";
-    banner.innerText = "🟢 LIVE — ข้อมูลจริง";
-    // Hide live banner after 3 seconds
-    setTimeout(()=>{ banner.style.display="none"; }, 3000);
+    banner.style.cursor = "pointer";
+    banner.innerHTML = "🟢 LIVE — ข้อมูลจริง &nbsp;<span style='opacity:0.5;font-size:10px;'>กด × เพื่อปิด</span>";
+    banner.onclick = () => { banner.style.display = "none"; };
   }
 }
 
@@ -806,7 +828,7 @@ async function loadData(){
   if(isMockMode){
     if(userRole==="admin") loadAdminDataMock();
     else if(userRole==="pr"){ loadPRDataMock(); buildScheduleTab(); }
-    else if(userRole==="program") loadProgramData();
+    else if(userRole==="program"){ loadProgramMock(); }
     else if(userRole==="content") buildWorldGrid();
     return;
   }
@@ -844,14 +866,30 @@ function loadPRDataMock(){
     document.getElementById("all-cases-section").style.display="none";
 }
 
+function loadProgramMock(){
+  const list=document.getElementById("programs-list");
+  if(!list)return;
+  list.innerHTML="";
+  MOCK.programs.forEach(p=>{
+    const card=document.createElement("div");
+    card.className="pr-card";
+    card.style.cssText="flex-direction:column;gap:6px;align-items:flex-start;";
+    card.innerHTML=`
+      <div class="pr-name">${p.name}</div>
+      <div class="pr-sub">${p.short_desc||""}</div>
+      <div style="font-size:11px;color:var(--text-soft);">📅 ${p.start_date} · ปิดรับ ${p.reg_deadline}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
 // Admin viewing AS PR — sees ALL cases, can complete/cancel any
 async function loadAdminAsPR(){
   let allCases;
   try{
-    const res=await fetch(API_URL+"?action=getDashboardStats");
-    const d=await res.json();
+    const d=await apiCall({action:"getDashboardStats"});
     allCases=(d.cases||[]).filter(c=>c.status==="booked"||c.status==="active");
-  }catch{allCases=MOCK.cases.filter(c=>c.status!=="completed");}
+  }catch{allCases=[];}
 
   // My cases — assigned to admin userId
   const myCases = allCases.filter(c=>c.owner===userId);
@@ -866,8 +904,7 @@ async function loadAdminAsPR(){
 async function loadPendingFounders(){
   let pending;
   try{
-    const res=await fetch(API_URL+"?action=getPendingFounders");
-    const d=await res.json();
+    const d=await apiCall({action:"getPendingFounders"});
     pending=d.founders||[];
   }catch{pending=[];}
 
@@ -913,8 +950,7 @@ async function approveFounder(id, name){
 async function loadFeedback(){
   let feedbacks;
   try{
-    const res=await fetch(API_URL+"?action=getFeedback");
-    const d=await res.json();
+    const d=await apiCall({action:"getFeedback"});
     feedbacks=d.feedbacks||[];
   }catch{
     feedbacks=[
@@ -1058,11 +1094,10 @@ async function addContent(){
 async function loadAdminData(){
   let cases,special,prList,waiting,pause;
   try{
-    const res=await fetch(API_URL+"?action=getDashboardStats");
-    const d=await res.json();
+    const d=await apiCall({action:"getDashboardStats"});
     cases=d.cases||[];special=d.specialRequests||[];
     prList=d.prList||[];waiting=d.waiting||[];pause=d.pause||null;
-  }catch{cases=MOCK.cases;special=MOCK.specialRequests;prList=MOCK.prList;waiting=MOCK.waiting;pause=MOCK.pause;}
+  }catch{cases=[];special=[];prList=[];waiting=[];pause=null;}
   document.getElementById("kpi-red").innerText=cases.filter(c=>c.level==="red"&&c.status!=="completed").length;
   document.getElementById("kpi-open").innerText=cases.filter(c=>c.status==="open").length;
   document.getElementById("kpi-active").innerText=cases.filter(c=>c.status==="booked"||c.status==="active").length;
@@ -1087,11 +1122,10 @@ async function loadPRData(){
   if (allSection) allSection.style.display = "none";
   let myCases;
   try{
-    const res = await apiCall({action:"getMyCases",userId});
-    const d=await res.json();
+    const d = await apiCall({action:"getMyCases",userId});
     myCases=d.cases||[];
   }catch{
-    myCases=MOCK.cases.filter(c=>c.owner==="PR_001");
+    myCases=[];
   }
   renderCasesInto("my-cases-list", myCases, false);
 }
@@ -1099,9 +1133,8 @@ async function loadPRData(){
 async function loadProgramData(){
   let programs;
   try{
-    const res=await fetch(API_URL+"?action=getPrograms");
-    const d=await res.json();programs=d.programs||[];
-  }catch{programs=MOCK.programs;}
+    const d=await apiCall({action:"getPrograms"});programs=d.programs||[];
+  }catch{programs=[];}
   renderPrograms(programs);
 }
 
@@ -1327,11 +1360,11 @@ async function buildScheduleTab(){
   let bookedSlots = {};
   try{
     const [slotsRes, bookedRes] = await Promise.all([
-      fetch(API_URL+"?action=getMySlots&userId="+userId),
-      fetch(API_URL+"?action=getMyBookedSlots&userId="+userId)
+      apiCall({action:"getMySlots",userId:userId}),
+      apiCall({action:"getMyBookedSlots",userId:userId})
     ]);
-    const sd = await slotsRes.json();
-    const bd = await bookedRes.json();
+    const sd = slotsRes;
+    const bd = bookedRes;
     mySlots = (sd.slots||[]).map(s=>s.slot);
     bookedSlots = bd.bookedSlots||{};
   }catch{}
@@ -1438,8 +1471,7 @@ async function completeCase(caseId, studentUserId){
 async function cancelBooking(caseId, prId, slot, studentUserId){
   if(!confirm("ยืนยันการยกเลิก? ระบบจะพยายามหา PR คนอื่นให้น้องทันที"))return;
   try{
-    const res = await apiCall({action:"cancelBooking",caseId,prId,slot,studentUserId});
-    const d=await res.json();
+    const d=await apiCall({action:"cancelBooking",caseId,prId,slot,studentUserId});
     if(d.reassigned){
       toast("ยกเลิกแล้ว — จับคู่ PR ใหม่ให้น้องแล้ว 💛");
     } else {
@@ -1539,8 +1571,7 @@ async function loadFoundersPending(){
   if(!el)return;
   let pending=[];
   try{
-    const res=await fetch(API_URL+"?action=getFoundersPending");
-    const d=await res.json();
+    const d=await apiCall({action:"getFoundersPending"});
     pending=d.founders||[];
   }catch{pending=[];}
 
