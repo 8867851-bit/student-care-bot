@@ -807,6 +807,63 @@ function loadPRDataMock(){
     document.getElementById("all-cases-section").style.display="none";
 }
 
+// ── MOCK: Schedule Tab for PR ──────────────────────────────
+// Called when ?mockRole=pr — simulates registered slots + 1 locked booking
+function buildScheduleTabMock(){
+  const weekLabel = document.getElementById("schedule-week-label");
+  if(weekLabel) weekLabel.innerText = "📅 " + getWeekRange();
+
+  const container = document.getElementById("schedule-days");
+  if(!container) return;
+
+  // Mock: PR has registered these slots, one is locked (booked by student)
+  const MOCK_MY_SLOTS = ["จันทร์ 16:00–17:00","พุธ 15:30–16:30","ศุกร์ 14:00–15:00","ศุกร์ 15:30–16:30"];
+  const MOCK_BOOKED   = {
+    "พุธ 15:30–16:30": { caseId:"CASE_001", studentUserId:"U_MOCK_01" }
+  };
+
+  // Sync selectedSlots with registered (non-locked) slots
+  selectedSlots = MOCK_MY_SLOTS.filter(s => !MOCK_BOOKED[s]);
+
+  container.innerHTML = "";
+  Object.entries(SLOT_TIMES).forEach(([key, times]) => {
+    const g = document.createElement("div"); g.className = "schedule-day";
+    const l = document.createElement("div"); l.className = "schedule-day-name";
+    l.innerText = DAY_LABELS[key]; g.appendChild(l);
+    const r = document.createElement("div"); r.className = "schedule-slots";
+
+    times.forEach(time => {
+      const full     = DAY_LABELS[key] + " " + time;
+      const isBooked   = !!MOCK_BOOKED[full];
+      const isSelected = selectedSlots.includes(full);
+
+      const chip = document.createElement("button");
+      chip.className = "slot-chip" + (isBooked ? " locked" : isSelected ? " chosen" : "");
+      chip.innerHTML  = isBooked ? "🔒 " + time : time;
+
+      if(isBooked){
+        chip.style.cssText = "background:var(--red-soft);border-color:var(--red);color:var(--red);cursor:pointer;";
+        chip.onclick = () => toast("⚠️ Mock — slot นี้มีน้องจองอยู่ (ไม่บันทึกจริง)");
+      } else {
+        chip.onclick = () => toggleSlot(chip, full);
+      }
+      r.appendChild(chip);
+    });
+    g.appendChild(r); container.appendChild(g);
+  });
+
+  // Update summary + save button
+  const btn = document.getElementById("btn-save-schedule");
+  const sum = document.getElementById("schedule-summary");
+  if(selectedSlots.length === 0){
+    if(sum) sum.innerText = "ยังไม่ได้เลือกช่วงเวลา";
+    if(btn) btn.disabled = true;
+  } else {
+    if(sum) sum.innerText = "เลือกแล้ว " + selectedSlots.length + " ช่วงเวลา";
+    if(btn){ btn.disabled = false; btn.onclick = () => { toast("บันทึกตารางแล้ว 💛 (mock)"); }; }
+  }
+}
+
 function loadProgramMock(){
   const list=document.getElementById("programs-list");
   if(!list)return;
