@@ -36,6 +36,19 @@
     .placeholder-banner{background:var(--gold-soft);border:1px solid #FFE4A0;border-radius:14px;padding:16px 18px;font-size:13px;color:#7A5C00;line-height:1.7;margin-bottom:28px;}
     .btn-action{background:var(--dark);color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
     .btn-ghost{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:10px;text-align:center;width:100%;}
+
+    .app-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;}
+    .app-card{
+      background:white;border-radius:16px;padding:16px 14px;
+      border:1px solid var(--border);text-decoration:none;
+      display:flex;flex-direction:column;gap:8px;
+      transition:transform 0.15s ease;
+      box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    }
+    .app-card:active{transform:scale(0.97);}
+    .app-icon{font-size:28px;}
+    .app-name{font-size:13px;font-weight:700;color:var(--dark);}
+    .app-desc{font-size:11px;color:var(--mid);line-height:1.55;}
   </style>
 </head>
 <body>
@@ -93,27 +106,34 @@
 
   <div class="divider"></div>
 
-  <div class="section-label">เครื่องมือที่อาจช่วยได้</div>
+  <div class="section-label">เครื่องมือและแอปที่ช่วยได้</div>
 
-  <div class="tool-card">
-    <div class="tool-name">🛡️ Stop NCII</div>
-    <div class="tool-desc">
-      สำหรับกรณีที่มีภาพหรือวิดีโอส่วนตัวถูกแชร์โดยไม่ยินยอม (sextortion)
-      ช่วยให้ platform ต่างๆ ลบเนื้อหาออกได้เร็วขึ้น
-    </div>
-    <a class="tool-link" href="https://stopncii.org" target="_blank">ไปที่ Stop NCII →</a>
-  </div>
+  <div class="app-grid">
 
-  <div class="tool-card" style="border-style:dashed;opacity:0.6;">
-    <div class="tool-name">🔒 การถูกละเมิดความเป็นส่วนตัว</div>
-    <div class="tool-desc">Cyberbullying, blackmail, digital privacy — กำลังรวบรวมข้อมูลที่ดีที่สุด</div>
-    <div class="tool-link" style="color:var(--soft);">เร็วๆ นี้ 🌱</div>
-  </div>
+    <a class="app-card" href="https://stopncii.org" target="_blank">
+      <div class="app-icon">🔒</div>
+      <div class="app-name">Stop NCII</div>
+      <div class="app-desc">ภาพส่วนตัวถูกแชร์โดยไม่ยินยอม — ให้ platform ลบออก (18+)</div>
+    </a>
 
-  <div class="tool-card" style="border-style:dashed;opacity:0.6;">
-    <div class="tool-name">💪 การรับมือกับ bullying รุนแรง</div>
-    <div class="tool-desc">ขั้นตอนที่ทำได้ทันที และวิธีขอความช่วยเหลือจากผู้ใหญ่ที่ไว้ใจได้</div>
-    <div class="tool-link" style="color:var(--soft);">เร็วๆ นี้ 🌱</div>
+    <a class="app-card" href="https://www.buddy4thai.com" target="_blank">
+      <div class="app-icon">👥</div>
+      <div class="app-name">BuddyThai</div>
+      <div class="app-desc">โดนบูลลี่หรือรู้สึกโดดเดี่ยว — คุยกับนักจิตวิทยาได้เลย</div>
+    </a>
+
+    <a class="app-card" href="https://dmind.dmh.go.th" target="_blank">
+      <div class="app-icon">🧠</div>
+      <div class="app-name">DMIND</div>
+      <div class="app-desc">ประเมินภาวะซึมเศร้าด้วย AI — รู้ผลทันที ฟรี</div>
+    </a>
+
+    <a class="app-card" href="https://line.me/R/ti/p/@khuikan" target="_blank">
+      <div class="app-icon">💙</div>
+      <div class="app-name">คุยกัน</div>
+      <div class="app-desc">LINE OA @KhuiKan — ปรึกษาสุขภาพจิตกับผู้เชี่ยวชาญ</div>
+    </a>
+
   </div>
 
   <div class="divider"></div>
