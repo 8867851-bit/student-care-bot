@@ -676,7 +676,7 @@ window.onload=async()=>{
     await liff.init({liffId:LIFF_ID});
     if(!liff.isLoggedIn()){liff.login();return;}
     const p=await liff.getProfile();userId=p.userId;userName=p.displayName;
-  }catch{userId="test_admin";userName=MOCK.name;}
+  }catch{userId="";userName="ทีมงาน";}
   loadRole();
 };
 
@@ -851,7 +851,7 @@ async function loadAdminAsPR(){
     const res=await fetch(API_URL+"?action=getDashboardStats");
     const d=await res.json();
     allCases=(d.cases||[]).filter(c=>c.status==="booked"||c.status==="active");
-  }catch{allCases=MOCK.cases.filter(c=>c.status!=="completed");}
+  }catch{allCases=[];}
 
   // My cases — assigned to admin userId
   const myCases = allCases.filter(c=>c.owner===userId);
@@ -1062,7 +1062,7 @@ async function loadAdminData(){
     const d=await res.json();
     cases=d.cases||[];special=d.specialRequests||[];
     prList=d.prList||[];waiting=d.waiting||[];pause=d.pause||null;
-  }catch{cases=MOCK.cases;special=MOCK.specialRequests;prList=MOCK.prList;waiting=MOCK.waiting;pause=MOCK.pause;}
+  }catch{cases=[];special=[];prList=[];waiting=[];pause=null;}
   document.getElementById("kpi-red").innerText=cases.filter(c=>c.level==="red"&&c.status!=="completed").length;
   document.getElementById("kpi-open").innerText=cases.filter(c=>c.status==="open").length;
   document.getElementById("kpi-active").innerText=cases.filter(c=>c.status==="booked"||c.status==="active").length;
@@ -1087,11 +1087,10 @@ async function loadPRData(){
   if (allSection) allSection.style.display = "none";
   let myCases;
   try{
-    const res = await apiCall({action:"getMyCases",userId});
-    const d=await res.json();
+    const d = await apiCall({action:"getMyCases",userId});
     myCases=d.cases||[];
   }catch{
-    myCases=MOCK.cases.filter(c=>c.owner==="PR_001");
+    myCases=[];
   }
   renderCasesInto("my-cases-list", myCases, false);
 }
@@ -1101,7 +1100,7 @@ async function loadProgramData(){
   try{
     const res=await fetch(API_URL+"?action=getPrograms");
     const d=await res.json();programs=d.programs||[];
-  }catch{programs=MOCK.programs;}
+  }catch{programs=[];}
   renderPrograms(programs);
 }
 
