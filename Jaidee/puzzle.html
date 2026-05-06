@@ -4,175 +4,453 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <title>ใจดี TU — Puzzle Piece</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
-      --border:#EEEBE4;--white:#fff;
-      --gold:#F5A623;--gold-soft:#FFF5E0;
+      --cream:#FAF9F6; --ink:#1A1714; --ink-mid:#4A4540; --ink-soft:#928C85;
+      --rule:#DDD9D2; --gold:#B07D10; --gold-bg:#FBF3E2; --gold-border:#F0D080;
+      --dark:#1A1714; --mid:#4A4540; --soft:#928C85; --border:#DDD9D2;
+      --white:#fff; --surface:#F7F4EF;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
+    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;padding-bottom:80px;}
 
-    .header{padding:48px 20px 24px;}
-    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
-    .headline{font-family:'Playfair Display',serif;font-size:30px;line-height:1.25;}
-    .headline em{font-style:italic;color:var(--gold);}
-    .sub{font-size:14px;color:var(--mid);line-height:1.7;margin-top:8px;}
-
-    .grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));gap:12px;padding:0 16px;}
-
-    .card{
-      background:var(--white);border-radius:16px;overflow:hidden;
-      border:1px solid var(--border);cursor:pointer;
-      transition:transform 0.15s ease;
-      box-shadow:0 2px 8px rgba(0,0,0,0.04);
-    }
-    .card:active{transform:scale(0.97);}
-
-    .card-cover{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;}
-    .card-cover-placeholder{
-      width:100%;aspect-ratio:3/4;
-      background:linear-gradient(135deg,#1A1A1A,#2A2A2A);
-      display:flex;align-items:center;justify-content:center;font-size:32px;
-    }
-    .card-name{font-size:12px;font-weight:600;color:var(--dark);line-height:1.4;padding:10px 12px 12px;}
-
-    /* PDF OVERLAY */
-    .overlay{display:none;position:fixed;inset:0;background:rgba(10,10,10,0.97);z-index:100;flex-direction:column;}
-    .overlay.active{display:flex;animation:fadeIn 0.2s ease both;}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
-    .overlay-header{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;
-    }
-    .overlay-title{font-size:14px;font-weight:600;color:white;flex:1;margin-right:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .close-btn{background:rgba(255,255,255,0.1);border:none;border-radius:99px;padding:8px 16px;font-size:13px;font-family:'Sarabun',sans-serif;color:white;cursor:pointer;}
-    .close-btn:active{background:rgba(255,255,255,0.2);}
-
-    .pdf-frame{flex:1;width:100%;border:none;background:#111;}
-
-    .empty-state{padding:60px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;}
-    .empty-icon{font-size:48px;}
-    .empty-title{font-family:'Playfair Display',serif;font-size:22px;}
-    .empty-sub{font-size:14px;color:var(--soft);line-height:1.7;max-width:280px;}
-
-    .loading-row{display:flex;align-items:center;gap:10px;color:var(--soft);font-size:14px;padding:0 20px 24px;}
-    .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;}
+    /* HOME */
+    .home-header{padding:48px 20px 16px;}
+    .eyebrow{font-size:10px;font-weight:500;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+    .headline{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;line-height:1.3;}
+    .sub{font-size:13px;font-weight:300;color:var(--ink-mid);line-height:1.7;margin-top:6px;}
+    .chips{display:flex;gap:8px;padding:0 20px 16px;overflow-x:auto;scrollbar-width:none;}
+    .chips::-webkit-scrollbar{display:none;}
+    .chip{flex-shrink:0;background:var(--white);border:1px solid var(--border);border-radius:99px;padding:6px 14px;font-size:12px;color:var(--ink-soft);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+    .chip.active{background:var(--ink);color:var(--white);border-color:var(--ink);}
+    .card-grid{display:flex;flex-direction:column;gap:12px;padding:0 16px;}
+    .article-card{background:var(--white);border-radius:16px;border:1px solid var(--border);padding:18px;cursor:pointer;opacity:0;transform:translateY(8px);transition:opacity 0.3s,transform 0.3s;}
+    .article-card.visible{opacity:1;transform:translateY(0);}
+    .article-card:active{transform:scale(0.98);}
+    .card-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+    .card-tag{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--gold);background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:99px;padding:3px 10px;}
+    .card-level{font-size:10px;color:var(--ink-soft);}
+    .card-title{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;line-height:1.4;margin-bottom:6px;}
+    .card-desc{font-size:12px;font-weight:300;color:var(--ink-mid);line-height:1.6;}
+    .card-footer{margin-top:14px;display:flex;align-items:center;justify-content:space-between;}
+    .card-rt{font-size:11px;color:var(--ink-soft);}
+    .card-arr{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink-soft);}
+    .loading-row{display:flex;align-items:center;gap:10px;color:var(--ink-soft);font-size:13px;padding:12px 20px;}
+    .spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;}
     @keyframes spin{to{transform:rotate(360deg)}}
+    .empty-state{padding:64px 24px;text-align:center;display:none;flex-direction:column;align-items:center;gap:14px;}
+    .empty-icon{font-size:44px;}
+    .empty-title{font-family:'Noto Serif Thai',serif;font-size:20px;}
+    .empty-sub{font-size:13px;color:var(--ink-soft);line-height:1.7;max-width:260px;}
+    .back-btn{background:none;border:none;color:var(--ink-soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:20px 20px 0;display:block;}
 
-    .back-btn{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:16px 20px;display:block;}
+    /* READER */
+    .reader{display:none;position:fixed;inset:0;background:var(--cream);z-index:100;flex-direction:column;overflow:hidden;}
+    .reader.active{display:flex;animation:slideUp 0.28s cubic-bezier(0.22,1,0.36,1) both;}
+    @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .reader-topbar{position:sticky;top:0;z-index:10;background:rgba(250,249,246,0.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);display:flex;align-items:center;height:44px;padding:0 18px;gap:12px;flex-shrink:0;}
+    .reader-back{font-size:18px;color:var(--ink-soft);background:none;border:none;cursor:pointer;flex-shrink:0;}
+    .reader-prog{flex:1;height:2px;background:var(--rule);border-radius:99px;overflow:hidden;}
+    .reader-prog-fill{height:100%;width:0%;background:var(--ink);transition:width 0.25s;}
+    .reader-pct{font-size:11px;color:var(--ink-soft);min-width:28px;text-align:right;}
+    .reader-body{flex:1;overflow-y:auto;padding-bottom:60px;}
+
+    /* ARTICLE */
+    .art{max-width:620px;margin:0 auto;}
+    .art-hero img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover;}
+    .art-hero-cap{font-size:12px;color:var(--ink-soft);font-style:italic;padding:8px 20px 0;line-height:1.6;}
+    .art-hdr{padding:28px 20px 24px;text-align:center;border-bottom:1px solid var(--rule);}
+    .art-hdr-tag{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+    .art-hdr-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:700;line-height:1.3;margin-bottom:12px;}
+    .art-hdr-deck{font-size:14px;font-weight:300;color:var(--ink-mid);line-height:1.8;max-width:480px;margin:0 auto 16px;}
+    .art-hdr-meta{font-size:11px;color:var(--ink-soft);display:flex;gap:8px;justify-content:center;align-items:center;}
+    .art-hdr-meta .sep{color:var(--rule);}
+    .art-body{padding:24px 20px 0;}
+    p.ap{font-size:15px;font-weight:300;color:var(--ink-mid);line-height:2;margin-bottom:24px;}
+    p.ap strong{font-weight:500;color:var(--ink);}
+    p.ap em{font-style:italic;}
+    p.ap.drop::first-letter{font-family:'Noto Serif Thai',serif;font-size:56px;font-weight:700;line-height:0.78;float:left;margin-right:5px;margin-top:8px;color:var(--ink);}
+    h2.ah{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:700;color:var(--ink);line-height:1.4;margin:36px 0 14px;text-align:center;}
+    hr.ar{border:none;border-top:1px solid var(--rule);margin:28px 0;}
+    .a-callout{background:var(--gold-bg);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:14px 16px;margin:20px 0;}
+    .a-callout p{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:400;color:#5C3A00;line-height:1.75;font-style:italic;}
+    .a-pullquote{margin:28px 0;padding:18px 0 20px;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);}
+    .a-pullquote p{font-family:'Noto Serif Thai',serif;font-size:17px;font-style:italic;color:var(--ink);line-height:1.6;}
+    .a-pullquote .attr{font-size:11px;letter-spacing:1px;color:var(--ink-soft);margin-top:8px;font-style:normal;}
+    .a-bleed{width:100%;margin:24px 0;}
+    .a-bleed img{width:100%;display:block;aspect-ratio:3/2;object-fit:cover;}
+    .a-bleed-cap{font-size:12px;color:var(--ink-soft);font-style:italic;margin-top:7px;line-height:1.5;}
+    .a-video{width:100%;margin:24px 0;}
+    .a-video iframe{width:100%;display:block;aspect-ratio:16/9;border:none;}
+    .a-video-cap{font-size:12px;color:var(--ink-soft);font-style:italic;margin-top:7px;line-height:1.5;}
+    .a-pullquote{margin:28px 0;padding:18px 0 20px;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);}
+    .a-pullquote p{font-family:'Noto Serif Thai',serif;font-size:17px;font-style:italic;color:var(--ink);line-height:1.65;}
+    .a-pullquote-attr{font-size:11px;letter-spacing:1px;color:var(--ink-soft);margin-top:8px;font-style:normal;}
+    .a-table{width:100%;border-collapse:collapse;margin:22px 0;font-size:13px;}
+    .a-table th{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft);text-align:left;padding:8px 10px 6px;border-bottom:2px solid var(--ink);}
+    .a-table td{padding:10px 10px;color:var(--ink-mid);font-weight:300;line-height:1.6;border-bottom:1px solid var(--rule);vertical-align:top;}
+    .a-table tr:last-child td{border-bottom:none;}
+
+    /* QUIZ */
+    .a-quiz{margin:28px 0;padding-top:16px;border-top:2px solid var(--ink);}
+    .a-quiz-eye{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;}
+    .a-quiz-q{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--ink);line-height:1.5;margin-bottom:16px;}
+    .a-quiz-opts{display:flex;flex-direction:column;}
+    .a-quiz-opt{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--rule);cursor:pointer;background:none;border-left:none;border-right:none;border-top:none;font-family:'Sarabun',sans-serif;text-align:left;width:100%;transition:background 0.1s;}
+    .a-quiz-opt:first-child{border-top:1px solid var(--rule);}
+    .a-quiz-opt.selected{background:var(--gold-bg);}
+    .aql{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--rule);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--ink-soft);margin-top:1px;transition:all 0.15s;}
+    .a-quiz-opt.selected .aql{background:var(--ink);color:var(--white);border-color:var(--ink);}
+    .aqt{font-size:14px;font-weight:300;color:var(--ink-mid);line-height:1.65;flex:1;}
+    .a-quiz-opt.selected .aqt{color:var(--ink);font-weight:400;}
+    .a-quiz-fb{margin-top:14px;padding:13px 14px;background:var(--gold-bg);border-left:3px solid var(--gold);font-size:13px;font-weight:300;color:#5C3A00;line-height:1.7;display:none;}
+    .a-quiz-fb.show{display:block;animation:fi 0.22s ease;}
+    @keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+
+    /* REFLECTION */
+    .a-reflect{margin:40px 0 0;padding-top:20px;border-top:3px double var(--ink);}
+    .a-reflect-eye{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;}
+    .a-reflect-q{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:var(--ink);line-height:1.5;margin-bottom:18px;}
+    .a-reflect-opts{display:flex;flex-direction:column;}
+    .a-reflect-opt{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--rule);cursor:pointer;background:none;border-left:none;border-right:none;border-top:none;font-family:'Sarabun',sans-serif;text-align:left;width:100%;transition:background 0.12s;}
+    .a-reflect-opt:first-child{border-top:1px solid var(--rule);}
+    .a-reflect-opt.selected{background:#F0ECE5;}
+    .arl{font-size:18px;flex-shrink:0;width:28px;text-align:center;}
+    .art-rt{font-size:14px;font-weight:300;color:var(--ink-mid);line-height:1.6;}
+    .a-reflect-opt.selected .art-rt{color:var(--ink);font-weight:400;}
+
+    /* COMPLETION */
+    .a-completion{background:var(--ink);padding:32px 20px;margin:36px 0 0;text-align:center;display:none;}
+    .a-comp-eye{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:12px;}
+    .a-comp-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:8px;}
+    .a-comp-sub{font-size:13px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.75;margin-bottom:22px;}
+    .a-comp-tag-eye{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;}
+    .a-comp-tag{display:inline-block;border:1px solid rgba(255,255,255,0.2);padding:7px 18px;font-size:13px;font-weight:500;letter-spacing:1px;color:#fff;border-radius:2px;}
+    .a-comp-btn{display:block;margin-top:24px;width:100%;background:none;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.55);padding:13px;font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;}
   </style>
 </head>
 <body>
 
-<div class="overlay" id="overlay-pdf">
-  <div class="overlay-header">
-    <div class="overlay-title" id="overlay-title"></div>
-    <button class="close-btn" onclick="closePDF()">✕ ปิด</button>
+<!-- HOME -->
+<div id="view-home">
+  <div class="home-header">
+    <div class="eyebrow">ใจดี TU · Puzzle Piece</div>
+    <div class="headline" id="headline">จิตวิทยาที่<em style="font-style:italic;color:var(--gold);">อ่านได้</em></div>
+    <div class="sub" id="sub">อ่าน → คิด → เชื่อมกับตัวเอง</div>
   </div>
-  <iframe class="pdf-frame" id="pdf-frame" src=""></iframe>
+  <div class="chips" id="chip-bar">
+    <div class="chip active" onclick="filterByTag('all',this)">ทั้งหมด</div>
+  </div>
+  <div id="loading-row" class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>
+  <div class="card-grid" id="card-grid"></div>
+  <div class="empty-state" id="empty-state">
+    <div class="empty-icon">🧩</div>
+    <div class="empty-title">กำลังสร้าง</div>
+    <div class="empty-sub">ทีม Content กำลังเตรียมเนื้อหา ติดตามได้ผ่าน LINE 💛</div>
+  </div>
+  <button class="back-btn" onclick="window.history.back()">← กลับ</button>
 </div>
 
-<div class="header">
-  <div class="eyebrow">ใจดี TU · Puzzle Piece</div>
-  <div class="headline" id="headline">จิตวิทยาที่<em>อ่านได้</em></div>
-  <div class="sub" id="sub">กดอ่านได้เลย ไม่ต้อง download</div>
+<!-- READER -->
+<div class="reader" id="reader">
+  <div class="reader-topbar">
+    <button class="reader-back" onclick="closeReader()">←</button>
+    <div class="reader-prog"><div class="reader-prog-fill" id="rpf"></div></div>
+    <div class="reader-pct" id="rpct">0%</div>
+  </div>
+  <div class="reader-body" id="reader-body" onscroll="updateProg()">
+    <div class="art" id="art-content"></div>
+  </div>
 </div>
-
-<div id="loading-row" class="loading-row">
-  <div class="spinner"></div>
-  <span>กำลังโหลด...</span>
-</div>
-
-<div class="grid" id="grid"></div>
-
-<div id="empty-state" class="empty-state" style="display:none;">
-  <div class="empty-icon">🧩</div>
-  <div class="empty-title">กำลังสร้าง</div>
-  <div class="empty-sub">ทีม Content กำลังเตรียมเนื้อหา ติดตามได้ผ่าน LINE 💛</div>
-</div>
-
-<button class="back-btn" onclick="window.history.back()">← กลับ</button>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
 
-// Cloudinary: auto-generate cover from page 1 of PDF
-function getCover(pdfUrl) {
-  if (!pdfUrl || !pdfUrl.includes("cloudinary.com")) return null;
-  return pdfUrl
-    .replace("/upload/", "/upload/pg_1,w_400,q_auto,f_jpg/")
-    .replace(/\.pdf$/, "");
-}
-
-const MOCK = [
-  {id:"P001", title:"ทำไมเราถึงรู้สึกแบบนี้", url:""},
-  {id:"P002", title:"นอนไม่หลับ ต้องทำยังไง", url:""},
-  {id:"P003", title:"ความเครียดและร่างกาย", url:""},
-  {id:"P004", title:"เพื่อนคือใคร", url:""},
+const MOCK_ARTICLES = [
+  {
+    id:"MOCK001", title:"แรงจูงใจของเรามาจากไหนกันแน่?",
+    tag:"แรงจูงใจ", desc:"ทำไมบางวันเราทำได้ไม่หยุด บางวันแค่เปิดหนังสือก็ยังสู้ไม่ไหว",
+    level:"🟡 กลาง", readTime:"10 นาที",
+    heroUrl:"https://images.stockcake.com/public/b/d/3/bd3568b3-0e3f-4484-9671-e574e6e35d91_large/late-night-studying-stockcake.jpg",
+    body:{
+      sections:[
+        {type:"text",heading:"",content:"ลองนึกถึงครั้งสุดท้ายที่คุณทำอะไรบางอย่างจนลืมเวลา นักจิตวิทยาสนใจคำถามนี้มากว่าครึ่งศตวรรษ และคำตอบที่ได้ไม่ใช่แค่ว่าแรงจูงใจมาจากรางวัล แต่ซับซ้อนกว่ามาก"},
+        {type:"callout",content:"แรงจูงใจที่แข็งแกร่งที่สุดไม่ใช่ 'อยากได้รางวัล' แต่คือ 'นี่คือสิ่งที่คนแบบฉันทำ'"},
+        {type:"interaction",id:"i1",question:"ตอนนี้คุณมาอ่านบทความนี้เพราะอะไร?",choices:[
+          {text:"อยากรู้ว่าจิตวิทยาอธิบายเรื่องนี้ยังไง",feedback:"นั่นคือสัญญาณของ IM ที่ยังมีชีวิต 💛"},
+          {text:"รู้สึกว่าต้องอ่าน มีประโยชน์กับการเรียน",feedback:"EM ก็ขับเคลื่อนได้นะ ลองสังเกตว่าถ้าความมีประโยชน์หายไป คุณยังอยากอ่านอยู่ไหม"},
+          {text:"รู้สึกว่าคนที่ใส่ใจจิตวิทยาควรรู้เรื่องนี้",feedback:"IBM กำลังทำงาน เราทำสิ่งที่คน 'แบบเรา' ทำ นั่นคือพลังงานที่ยั่งยืน"}
+        ]},
+        {type:"text",heading:"แรงจูงใจภายนอก (EM)",content:"เราทำบางอย่างเพราะสิ่งที่อยู่นอกกิจกรรมนั้น คะแนน รางวัล การยอมรับ EM ไม่ใช่เรื่องแย่ แต่ถ้าเป็นแรงผลักใจเดียว เมื่อรางวัลหายไป พฤติกรรมก็หายตามไปด้วย"},
+        {type:"text",heading:"แรงจูงใจภายใน (IM)",content:"รางวัลคือกิจกรรมนั้นเอง เราทำเพราะสนุก อยากรู้ หรือรู้สึกว่ากำลังเติบโต Mihaly Csikszentmihalyi เรียกสภาวะนี้ว่า Flow — เมื่อความท้าทายและทักษะอยู่ในสมดุลพอดี"},
+        {type:"interaction",id:"i2",question:"มีกิจกรรมอะไรที่ทำแล้วคุณลืมเวลาได้บ้าง?",choices:[
+          {text:"อ่านเรื่องที่ชอบ เขียน วาด หรือทำดนตรี",feedback:"การสร้างความหมายจากภาษาและภาพคือ flow ที่เกิดได้ง่าย"},
+          {text:"แก้โจทย์ เขียนโปรแกรม หรือสร้างอะไรบางอย่าง",feedback:"ความท้าทายที่มีทางออกคือเชื้อเพลิงของ flow"},
+          {text:"คุยกับคนที่ถูกคอ สอน หรืออธิบายสิ่งที่รู้",feedback:"Relatedness ที่ดีทำให้ flow เกิดในบทสนทนาได้"},
+          {text:"ยังไม่แน่ใจ",feedback:"การหา flow ของตัวเองคือการสำรวจ ไม่ใช่การรอ"}
+        ]},
+        {type:"text",heading:"แรงจูงใจจากตัวตน (IBM)",content:"IBM ขับเคลื่อนจากคำถามว่า 'คนแบบฉันทำแบบนี้ไหม?' Erik Erikson นักจิตวิทยาชาวเยอรมัน-อเมริกัน เสนอว่าภารกิจหลักของวัยรุ่นคือการตอบให้ได้ว่า 'ฉันเป็นใคร' IBM พัฒนาผ่าน Exploration → Meaning-Making → Reinforcement"},
+        {type:"reflection",id:"r1",prompt:"ถ้าให้มองตัวเองตอนนี้ แรงจูงใจหลักในชีวิตคุณมาจากไหน?",mode:"options",
+          options:[
+            {icon:"🏆",text:"ส่วนใหญ่มาจากเป้าหมายภายนอก คะแนน อนาคต การยอมรับ"},
+            {icon:"🔥",text:"มีบางเรื่องที่ทำแล้วรู้สึก alive จริงๆ"},
+            {icon:"🪪",text:"ส่วนใหญ่ทำเพราะ 'คนแบบฉันควรทำ'"},
+            {icon:"🌀",text:"ผสมกัน หรือยังไม่แน่ใจ"}
+          ],
+          insightMap:{0:"Externally-driven",1:"Intrinsically-alive",2:"Identity-led",3:"Still Exploring"}
+        }
+      ],
+      completionTitle:"ได้ชิ้นส่วนใหม่แล้ว",
+      completionSub:"การรู้จักแหล่งที่มาของแรงจูงใจตัวเองคือก้าวแรกที่สำคัญ"
+    }
+  }
 ];
 
-// Load site settings (editable wording from Sheet)
+let allArticles = [], currentArticle = null, reflectionResult = null, activeTag = "all";
+let currentQuizSelections = {};
+
+function filterByTag(tag, el) {
+  activeTag = tag;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+  renderCards(allArticles.filter(a => tag === "all" || a.tag === tag));
+}
+
+function buildChips(articles) {
+  const tags = [...new Set(articles.map(a => a.tag).filter(Boolean))];
+  const bar = document.getElementById("chip-bar");
+  bar.querySelectorAll(".chip:not(:first-child)").forEach(c => c.remove());
+  tags.forEach(tag => {
+    const chip = document.createElement("div");
+    chip.className = "chip"; chip.textContent = tag;
+    chip.onclick = () => filterByTag(tag, chip);
+    bar.appendChild(chip);
+  });
+}
+
+function renderCards(articles) {
+  const grid = document.getElementById("card-grid");
+  grid.innerHTML = "";
+  if(!articles.length){document.getElementById("empty-state").style.display="flex";return;}
+  document.getElementById("empty-state").style.display="none";
+  articles.forEach((a,i) => {
+    const card = document.createElement("div");
+    card.className = "article-card";
+    card.onclick = () => openReader(a);
+    card.innerHTML = `
+      <div class="card-meta"><div class="card-tag">${a.tag||"จิตวิทยา"}</div><div class="card-level">${a.level||""}</div></div>
+      <div class="card-title">${a.title}</div>
+      <div class="card-desc">${a.desc||""}</div>
+      <div class="card-footer"><div class="card-rt">⏱ ${a.readTime||"5 นาที"}</div><div class="card-arr">→</div></div>`;
+    grid.appendChild(card);
+    setTimeout(() => card.classList.add("visible"), i * 60);
+  });
+}
+
 async function loadSettings() {
   try {
-    const res = await fetch(API_URL + "?action=getSiteSettings");
-    const d = await res.json();
-    if (d.status === "OK" && d.settings) {
-      if (d.settings.puzzle_headline)
-        document.getElementById("headline").innerHTML =
-          d.settings.puzzle_headline.replace(/\*(.+?)\*/g, '<em style="font-style:italic;color:#F5A623;">$1</em>');
-      if (d.settings.puzzle_sub)
-        document.getElementById("sub").innerText = d.settings.puzzle_sub;
+    const d = await (await fetch(API_URL + "?action=getSiteSettings")).json();
+    if(d.status==="OK"&&d.settings){
+      if(d.settings.puzzle_headline) document.getElementById("headline").innerHTML =
+        d.settings.puzzle_headline.replace(/\*(.+?)\*/g,'<em style="font-style:italic;color:var(--gold);">$1</em>');
+      if(d.settings.puzzle_sub) document.getElementById("sub").innerText = d.settings.puzzle_sub;
     }
-  } catch {} // silently fail — defaults stay
+  } catch {}
 }
 
 async function load() {
   let items;
   try {
-    const res = await fetch(API_URL + "?action=getContent&world=puzzle");
-    const d = await res.json();
-    if (d.status==="OK" && d.content?.length) {
-      items = d.content.filter(c => c.type==="pdf");
-    } else throw new Error();
-  } catch { items = MOCK; }
-
+    const d = await (await fetch(API_URL + "?action=getContent&world=puzzle")).json();
+    if(d.status==="OK" && d.content?.length) {
+      items = d.content.map(c => {
+        let body = null;
+        try { body = typeof c.body==="string" ? JSON.parse(c.body) : c.body; } catch {}
+        return { id:c.id, title:c.title, tag:c.tag||"จิตวิทยา", desc:c.desc||"", level:c.level||"🟢 เบา", readTime:c.readTime||"5 นาที", heroUrl:c.heroUrl||"", body };
+      }).filter(a => a.body?.sections);
+    }
+  } catch {}
+  if(!items||!items.length) items = MOCK_ARTICLES;
   document.getElementById("loading-row").style.display = "none";
-  const grid = document.getElementById("grid");
+  allArticles = items; buildChips(items); renderCards(items); loadViews(items);
+}
 
-  if (!items.length) {
-    document.getElementById("empty-state").style.display = "flex";
-    return;
+// READER
+function openReader(article) {
+  currentArticle = article; reflectionResult = null; currentQuizSelections = {};
+  trackView(article.id);
+  document.getElementById("rpf").style.width = "0%";
+  document.getElementById("rpct").textContent = "0%";
+  renderArticle(article);
+  document.getElementById("reader").classList.add("active");
+  document.body.style.overflow = "hidden";
+  document.getElementById("reader-body").scrollTop = 0;
+}
+
+function closeReader() {
+  document.getElementById("reader").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+function updateProg() {
+  const b = document.getElementById("reader-body");
+  const max = b.scrollHeight - b.clientHeight;
+  if(!max) return;
+  const pct = Math.min(Math.round((b.scrollTop/max)*100),100);
+  document.getElementById("rpf").style.width = pct + "%";
+  document.getElementById("rpct").textContent = pct + "%";
+}
+
+function renderArticle(a) {
+  const b = a.body;
+  let html = "";
+
+  // Hero image
+  if(a.heroUrl) {
+    html += `<div class="art-hero"><img src="${a.heroUrl}" alt="${a.title}" onerror="this.parentElement.style.display='none'"/></div>`;
   }
 
-  items.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.onclick = () => openPDF(p);
+  // Header
+  html += `
+    <div class="art-hdr">
+      <div class="art-hdr-tag">${a.tag||"จิตวิทยา"}</div>
+      <div class="art-hdr-title">${a.title}</div>
+      <div class="art-hdr-deck">${a.desc||""}</div>
+      <div class="art-hdr-meta">
+        <span>ใจดี TU</span><span class="sep">·</span>
+        <span>${a.level||"🟢 เบา"}</span><span class="sep">·</span>
+        <span>⏱ ${a.readTime||"5 นาที"}</span>
+      </div>
+    </div>
+    <div class="art-body">`;
 
-    const cover = getCover(p.url);
-    card.innerHTML = cover
-      ? `<img class="card-cover" src="${cover}" alt="${p.title}" onerror="this.outerHTML='<div class=\\'card-cover-placeholder\\'>🧩</div>'">`
-      : `<div class="card-cover-placeholder">🧩</div>`;
-    card.innerHTML += `<div class="card-name">${p.title||"ไม่มีชื่อ"}</div>`;
-    grid.appendChild(card);
+  let isFirst = true;
+  (b.sections||[]).forEach((s, idx) => {
+    if(s.type==="text") {
+      if(s.heading) html += `<h2 class="ah">${s.heading}</h2>`;
+      const cls = isFirst ? "ap drop" : "ap";
+      html += `<p class="${cls}">${(s.content||"").replace(/\n/g,"<br/>")}</p>`;
+      isFirst = false;
+      if(idx < b.sections.length-1 && b.sections[idx+1]?.type==="text") html += `<hr class="ar"/>`;
+    }
+    else if(s.type==="callout") {
+      html += `<div class="a-callout"><p>${s.content}</p></div>`;
+    }
+    else if(s.type==="image") {
+      html += `<div class="a-bleed"><img src="${s.url}" alt="${s.caption||""}" onerror="this.parentElement.style.display='none'"/></div>`;
+      if(s.caption) html += `<div class="a-bleed-cap">${s.caption}</div>`;
+    }
+    else if(s.type==="video") {
+      const ytId = (s.url||"").match(/(?:youtu\.be\/|[?&]v=)([a-zA-Z0-9_-]{11})/)?.[1];
+      if(ytId) {
+        html += `<div class="a-video"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>`;
+        if(s.caption) html += `<div class="a-video-cap">${s.caption}</div>`;
+      }
+    }
+    else if(s.type==="interaction") {
+      const bid = "qi-"+s.id+"-"+idx;
+      const choices = (s.choices||[]).map((c,i) => `
+        <button class="a-quiz-opt" id="${bid}-c${i}" onclick="pickQuiz('${bid}',${i},'${s.id||idx}')">
+          <span class="aql">${String.fromCharCode(65+i)}</span>
+          <span class="aqt">${c.text}</span>
+        </button>`).join("");
+      html += `
+        <div class="a-quiz">
+          <div class="a-quiz-eye">ลองคิดก่อนอ่านต่อ</div>
+          <div class="a-quiz-q">${s.question}</div>
+          <div class="a-quiz-opts">${choices}</div>
+          <div class="a-quiz-fb" id="${bid}-fb"></div>
+        </div>`;
+    }
+    else if(s.type==="reflection") {
+      const bid = "ri-"+s.id+"-"+idx;
+      const opts = (s.options||[]).map((o,i) => `
+        <button class="a-reflect-opt" id="${bid}-o${i}" onclick="pickReflect('${bid}',${i},'${s.id||idx}',${idx})">
+          <span class="arl">${o.icon||"💭"}</span>
+          <span class="art-rt">${o.text}</span>
+        </button>`).join("");
+      html += `
+        <div class="a-reflect">
+          <div class="a-reflect-eye">สะท้อนตัวเอง</div>
+          <div class="a-reflect-q">${s.prompt}</div>
+          <div class="a-reflect-opts">${opts}</div>
+        </div>`;
+    }
   });
+
+  html += `
+    </div>
+    <div class="a-completion" id="art-completion">
+      <div class="a-comp-eye">Puzzle Piece · ใจดี TU</div>
+      <div class="a-comp-title">${b.completionTitle||"ได้ชิ้นส่วนใหม่แล้ว"}</div>
+      <div class="a-comp-sub">${b.completionSub||""}</div>
+      <div class="a-comp-tag-eye">ชิ้นส่วนของคุณ</div>
+      <div class="a-comp-tag" id="art-comp-tag">—</div>
+      <a href="care.html" style="display:flex;align-items:center;gap:10px;padding:13px 15px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;text-decoration:none;color:inherit;margin-bottom:10px;text-align:left;">
+        <span style="font-size:18px;flex-shrink:0;">🌿</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.9);margin-bottom:2px;">อยากลงมือทำ?</div>
+          <div style="font-size:11px;font-weight:300;color:rgba(255,255,255,0.45);line-height:1.5;">ดูวิธีดูแลตัวเองที่เชื่อมกับสิ่งที่เพิ่งอ่าน</div>
+        </div>
+        <span style="color:rgba(255,255,255,0.3);font-size:14px;">→</span>
+      </a>
+      <button class="a-comp-btn" onclick="closeReader()">← กลับ</button>
+    </div>`;
+
+  document.getElementById("art-content").innerHTML = html;
 }
 
-function openPDF(p) {
-  document.getElementById("overlay-title").innerText = p.title || "";
-  const viewer = "https://docs.google.com/viewer?embedded=true&url=" + encodeURIComponent(p.url);
-  document.getElementById("pdf-frame").src = viewer;
-  document.getElementById("overlay-pdf").classList.add("active");
-  document.body.style.overflow = "hidden";
+function pickQuiz(bid, choiceIdx, sectionId) {
+  const section = (currentArticle?.body?.sections||[]).find(s => s.id===sectionId);
+  const container = document.getElementById(bid+"-c0")?.closest(".a-quiz-opts");
+  if(!container) return;
+  container.querySelectorAll(".a-quiz-opt").forEach((b,i) => {
+    b.classList.remove("selected");
+    b.querySelector(".aql").textContent = String.fromCharCode(65+i);
+  });
+  const sel = document.getElementById(bid+"-c"+choiceIdx);
+  if(sel){ sel.classList.add("selected"); sel.querySelector(".aql").textContent = "✓"; }
+  const fb = document.getElementById(bid+"-fb");
+  if(fb && section?.choices?.[choiceIdx]){ fb.textContent = section.choices[choiceIdx].feedback; fb.classList.add("show"); }
 }
 
-function closePDF() {
-  document.getElementById("overlay-pdf").classList.remove("active");
-  document.getElementById("pdf-frame").src = "";
-  document.body.style.overflow = "";
+function pickReflect(bid, optIdx, sectionId, sIdx) {
+  const section = (currentArticle?.body?.sections||[]).find(s => s.id===sectionId) ||
+                  currentArticle?.body?.sections?.[sIdx];
+  const opts = document.querySelectorAll(`[id^="${bid}-o"]`);
+  opts.forEach(o => o.classList.remove("selected"));
+  const sel = document.getElementById(bid+"-o"+optIdx); if(sel) sel.classList.add("selected");
+  reflectionResult = section?.insightMap?.[optIdx] || section?.options?.[optIdx]?.text || "";
+  setTimeout(() => {
+    const c = document.getElementById("art-completion");
+    if(!c || c.style.display==="block") return;
+    c.style.display = "block";
+    document.getElementById("art-comp-tag").textContent = reflectionResult;
+    document.getElementById("rpf").style.width = "100%";
+    document.getElementById("rpct").textContent = "100%";
+    setTimeout(() => c.scrollIntoView({behavior:"smooth",block:"start"}), 80);
+  }, 380);
+}
+
+async function loadViews(articles) {
+  try {
+    const d = await (await fetch(API_URL + "?action=getContentViews")).json();
+    if(d.status==="OK" && d.views) {
+      articles.forEach(a => {
+        const el = document.getElementById("views-" + a.id);
+        if(el && d.views[a.id]) {
+          el.textContent = "👁 " + d.views[a.id].toLocaleString();
+        }
+      });
+    }
+  } catch {}
+}
+
+function trackView(articleId) {
+  try {
+    fetch(API_URL + "?action=trackView&contentId=" + encodeURIComponent(articleId));
+  } catch {}
 }
 
 window.onload = () => { loadSettings(); load(); };
