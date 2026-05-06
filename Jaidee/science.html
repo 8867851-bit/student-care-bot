@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ศาสตร์ของใจ — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:      #FDFBF7;
+      --cream-warm: #FFF8EE;
+      --border:     #EDE9E0;
+      --dark:       #1C1917;
+      --mid:        #57534E;
+      --soft:       #A8A099;
+      --gold:       #B45309;
+      --gold-bg:    #FFFBEB;
+      --gold-border:#FDE68A;
+      --green:      #166534;
+      --green-bg:   #F0FDF4;
+      --green-border:#BBF7D0;
+      --blue:       #1D4ED8;
+      --blue-bg:    #EFF6FF;
+      --blue-border:#BFDBFE;
+      --purple:     #6D28D9;
+      --purple-bg:  #F5F3FF;
+      --purple-border:#DDD6FE;
+      --red:        #9F1239;
+      --red-bg:     #FFF1F2;
+      --red-border: #FECDD3;
+      --mono: 'IBM Plex Mono', monospace;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+    body {
+      font-family: 'Mitr', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* ── Back ── */
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 16px 20px 0; font-size: 13px; color: var(--soft);
+      cursor: pointer; background: none; border: none;
+      font-family: 'Mitr', sans-serif;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 14px 24px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px; letter-spacing: 2px; color: var(--soft);
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .hero-title {
+      font-family: 'Noto Serif Thai', serif;
+      font-size: 28px; font-weight: 700; color: var(--dark); line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .hero-sub {
+      font-size: 13px; font-weight: 300; color: var(--mid); line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .meta-chip {
+      font-family: var(--mono); font-size: 10px; color: var(--soft);
+      background: var(--cream-warm); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3px 10px; letter-spacing: 0.5px;
+    }
+
+    /* ── TOC ── */
+    .toc {
+      margin: 0 20px 8px;
+      background: var(--cream-warm); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px;
+    }
+    .toc-label {
+      font-family: var(--mono); font-size: 10px; color: var(--soft);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .toc-list li a {
+      font-size: 13px; color: var(--mid); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.15s;
+    }
+    .toc-list li a:hover { color: var(--dark); }
+    .toc-num {
+      font-family: var(--mono); font-size: 10px; color: var(--soft);
+      width: 20px; flex-shrink: 0;
+    }
+
+    /* ── Article body ── */
+    .article { padding: 0 20px; }
+
+    /* ── Section ── */
+    .sci-section { padding: 28px 0; border-bottom: 1px solid var(--border); }
+    .sci-section:last-child { border-bottom: none; }
+
+    .section-num {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+      color: var(--soft); margin-bottom: 6px; text-transform: uppercase;
+    }
+    .section-title {
+      font-family: 'Noto Serif Thai', serif;
+      font-size: 20px; font-weight: 700; color: var(--dark);
+      line-height: 1.3; margin-bottom: 12px;
+    }
+    .section-body {
+      font-size: 14px; font-weight: 300; color: var(--mid);
+      line-height: 1.85;
+    }
+    .section-body p { margin-bottom: 12px; }
+    .section-body p:last-child { margin-bottom: 0; }
+
+    /* ── Term highlight ── */
+    .term {
+      font-weight: 500; color: var(--dark);
+      border-bottom: 1px dashed var(--border);
+    }
+
+    /* ── Callout box ── */
+    .callout {
+      border-radius: 14px; padding: 14px 16px; margin: 16px 0;
+      border-left: 3px solid;
+    }
+    .callout-gold { background: var(--gold-bg); border-color: var(--gold); }
+    .callout-green { background: var(--green-bg); border-color: #16A34A; }
+    .callout-blue  { background: var(--blue-bg);  border-color: var(--blue); }
+    .callout-purple{ background: var(--purple-bg);border-color: var(--purple); }
+    .callout-red   { background: var(--red-bg);   border-color: #E11D48; }
+
+    .callout-label {
+      font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+      text-transform: uppercase; margin-bottom: 5px; font-weight: 500;
+    }
+    .callout-gold .callout-label  { color: var(--gold); }
+    .callout-green .callout-label { color: var(--green); }
+    .callout-blue .callout-label  { color: var(--blue); }
+    .callout-purple .callout-label{ color: var(--purple); }
+    .callout-red .callout-label   { color: var(--red); }
+
+    .callout-text { font-size: 13px; font-weight: 400; line-height: 1.65; }
+    .callout-gold .callout-text   { color: #78350F; }
+    .callout-green .callout-text  { color: #14532D; }
+    .callout-blue .callout-text   { color: #1E3A8A; }
+    .callout-purple .callout-text { color: #4C1D95; }
+    .callout-red .callout-text    { color: #881337; }
+
+    /* ── Data stat strip ── */
+    .stat-row {
+      display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap;
+    }
+    .stat-box {
+      flex: 1; min-width: 120px; background: #fff;
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; text-align: center;
+    }
+    .stat-num {
+      font-family: 'Noto Serif Thai', serif;
+      font-size: 22px; font-weight: 700; color: var(--dark);
+    }
+    .stat-label { font-size: 11px; color: var(--soft); margin-top: 2px; font-weight: 300; }
+
+    /* ── Citation ── */
+    .cite {
+      font-family: var(--mono); font-size: 10px; color: var(--soft);
+      vertical-align: super; line-height: 1;
+    }
+
+    /* ── References ── */
+    .references {
+      padding: 24px 20px 0;
+    }
+    .ref-label {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+      color: var(--soft); text-transform: uppercase; margin-bottom: 12px;
+    }
+    .ref-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .ref-list li {
+      font-size: 11px; font-weight: 300; color: var(--soft); line-height: 1.6;
+      padding-left: 28px; position: relative;
+    }
+    .ref-num {
+      font-family: var(--mono); font-size: 10px; color: var(--soft);
+      position: absolute; left: 0;
+    }
+    .ref-list a { color: var(--soft); text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="history.back()">← กลับ</button>
+
+<div class="hero">
+  <div class="hero-eyebrow">NEUROSCIENCE · MIND-BODY</div>
+  <div class="hero-title">ร่างกายและจิตใจ<br/>ไม่เคยแยกจากกัน</div>
+  <div class="hero-sub">จากสมองถึงลำไส้ — วิทยาศาสตร์ที่อธิบายว่าทำไมการดูแลร่างกายถึงคือการดูแลจิตใจ และทำไมความรู้สึกของคุณถึงไม่ใช่แค่ "อยู่ในหัว"</div>
+  <div class="hero-meta">
+    <span class="meta-chip">อ้างอิง 8 งานวิจัย</span>
+    <span class="meta-chip">PubMed · Frontiers · Nature</span>
+    <span class="meta-chip">อัปเดต 2024–2025</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc" style="margin-top:20px;">
+  <div class="toc-label">สารบัญ</div>
+  <ul class="toc-list">
+    <li><a href="#s1"><span class="toc-num">01</span> BDNF — ปุ๋ยของสมอง</a></li>
+    <li><a href="#s2"><span class="toc-num">02</span> HPA Axis — ระบบความเครียด</a></li>
+    <li><a href="#s3"><span class="toc-num">03</span> Gut-Brain Axis — ลำไส้คือสมองที่สอง</a></li>
+    <li><a href="#s4"><span class="toc-num">04</span> Neuroplasticity — สมองเปลี่ยนได้</a></li>
+    <li><a href="#s5"><span class="toc-num">05</span> Vagus Nerve — เส้นประสาทแห่งความปลอดภัย</a></li>
+    <li><a href="#s6"><span class="toc-num">06</span> สรุป — ทำอะไรได้ตอนนี้เลย</a></li>
+  </ul>
+</div>
+
+<div class="article">
+
+  <!-- S1: BDNF -->
+  <div class="sci-section" id="s1">
+    <div class="section-num">01 / EXERCISE & NEUROTROPHINS</div>
+    <div class="section-title">BDNF — ปุ๋ยของสมอง<br/>ที่ร่างกายผลิตได้เอง</div>
+    <div class="section-body">
+      <p><span class="term">Brain-Derived Neurotrophic Factor (BDNF)</span> คือโปรตีนในกลุ่ม neurotrophin ที่ทำหน้าที่ควบคุมการเกิดใหม่ของเซลล์ประสาท (neurogenesis) การสร้าง synapse และความอยู่รอดของเซลล์ประสาทที่มีอยู่ โดยเฉพาะใน <span class="term">hippocampus</span> — ส่วนของสมองที่เกี่ยวกับความจำและการควบคุมอารมณ์<span class="cite">[1]</span></p>
+      <p>งานวิจัยจาก Northwestern University (2018) พบว่าการออกกำลังกายกระตุ้นการหลั่ง BDNF ผ่านหลายเส้นทาง ทำให้เกิดกระบวนการ <span class="term">adult hippocampal neurogenesis</span> — การสร้างเซลล์ประสาทใหม่ใน dentate gyrus แม้ในผู้ใหญ่<span class="cite">[2]</span> ซึ่งในอดีตเคยคิดว่าเป็นไปไม่ได้</p>
+
+      <div class="callout callout-green">
+        <div class="callout-label">🧪 กลไกที่เกิดขึ้น</div>
+        <div class="callout-text">เมื่อกล้ามเนื้อหดตัวระหว่างออกกำลังกาย จะมีการหลั่ง <strong>lactate และ VEGF</strong> เข้าสู่กระแสเลือด สารเหล่านี้ผ่านด่าน blood-brain barrier เพื่อกระตุ้น BDNF receptor (TrkB) ใน hippocampus โดยตรง ผลคือ dendritic spine เพิ่มขึ้น, synaptic connection แข็งแรงขึ้น และ long-term potentiation (LTP) ดีขึ้น — ซึ่งคือพื้นฐานทางชีววิทยาของการเรียนรู้และความจำ</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-num">20′</div>
+          <div class="stat-label">เดินเร็วพอให้<br/>BDNF เพิ่มขึ้น</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">↑2–3×</div>
+          <div class="stat-label">BDNF เพิ่มขึ้น<br/>หลังออกกำลังกาย</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">↓</div>
+          <div class="stat-label">BDNF ต่ำสัมพันธ์กับ<br/>ซึมเศร้าและ dementia</div>
+        </div>
+      </div>
+
+      <p>งานวิจัยปี 2024 จาก Frontiers in Neurology ยืนยันว่า BDNF ที่เพิ่มขึ้นจากการออกกำลังกายยังลด BACE1 activity ใน prefrontal cortex ซึ่งเกี่ยวข้องกับการชะลอความเสื่อมของสมอง<span class="cite">[3]</span> — ผลจึงไม่ใช่แค่ "รู้สึกดีขึ้น" แต่เป็นการเปลี่ยนแปลงโครงสร้างจริงๆ</p>
+    </div>
+  </div>
+
+  <!-- S2: HPA -->
+  <div class="sci-section" id="s2">
+    <div class="section-num">02 / STRESS NEUROBIOLOGY</div>
+    <div class="section-title">HPA Axis — ระบบที่ไม่รู้จักหยุด<br/>เมื่อความเครียดเรื้อรัง</div>
+    <div class="section-body">
+      <p><span class="term">Hypothalamic-Pituitary-Adrenal (HPA) Axis</span> คือระบบ neuroendocrine หลักที่จัดการความเครียด เมื่อสมองรับรู้ภัยคุกคาม hypothalamus จะหลั่ง <span class="term">Corticotropin-Releasing Hormone (CRH)</span> → กระตุ้น pituitary → หลั่ง ACTH → กระตุ้ต่อมหมวกไต → หลั่ง <span class="term">cortisol</span></p>
+
+      <div class="callout callout-gold">
+        <div class="callout-label">⚠️ ปัญหาของ cortisol เรื้อรัง</div>
+        <div class="callout-text">ปกติ cortisol จะสูงในตอนเช้าแล้วลดลงตลอดวัน แต่เมื่อความเครียดเรื้อรัง ระดับ cortisol ที่สูงนานทำให้ hippocampus หดตัว (เพราะมีตัวรับ cortisol หนาแน่นมาก), ลด BDNF, เพิ่ม neuroinflammation และรบกวน feedback loop ที่ควรจะปิดระบบความเครียด — ผลคือสมองวนซ้ำในโหมดเฝ้าระวังโดยไม่มีเหตุผล<span class="cite">[4]</span></div>
+      </div>
+
+      <p>งานวิจัยเรื่องวัยรุ่นพบว่าช่วง <span class="term">adolescence</span> คือช่วงที่ HPA axis กำลัง "calibrate" ตัวเอง สภาพแวดล้อมและประสบการณ์ในช่วงนี้จึงส่งผลต่อการตอบสนองต่อความเครียดไปตลอดชีวิต<span class="cite">[5]</span> นี่คือเหตุผลที่การดูแลตัวเองตอนอายุ 15-18 ปีสำคัญกว่าที่คิด</p>
+
+      <div class="callout callout-blue">
+        <div class="callout-label">💡 วิธี reset HPA axis</div>
+        <div class="callout-text">การออกกำลังกายแบบ aerobic ลด cortisol baseline · การนอน 8 ชั่วโมงให้ cortisol ฟื้นตัวตาม circadian rhythm · mindfulness ลด amygdala reactivity · การมีความสัมพันธ์ที่ดีกระตุ้น oxytocin ซึ่ง counteract cortisol โดยตรง</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: Gut-Brain -->
+  <div class="sci-section" id="s3">
+    <div class="section-num">03 / MICROBIOME NEUROSCIENCE</div>
+    <div class="section-title">Gut-Brain Axis<br/>ลำไส้คือสมองที่สอง — จริงๆ</div>
+    <div class="section-body">
+      <p>ลำไส้ของมนุษย์มีเซลล์ประสาทมากกว่า 100 ล้านเซลล์ (มากกว่าไขสันหลัง) และผลิต <span class="term">serotonin</span> ถึง 90% ของร่างกายทั้งหมด ระบบนี้เชื่อมต่อกับสมองโดยตรงผ่าน <span class="term">vagus nerve</span> และผ่านสาร neuroactive หลายชนิดในกระแสเลือด<span class="cite">[6]</span></p>
+
+      <p>งานวิจัยจาก UCSF (2024) พบว่า microbiome dysbiosis — ความไม่สมดุลของแบคทีเรียในลำไส้ — สัมพันธ์กับการเพิ่มขึ้นของ <span class="term">pro-inflammatory cytokines</span> ที่ผ่าน blood-brain barrier ได้ ทำให้เกิด neuroinflammation ซึ่งเป็น substrate ของ depression และ anxiety<span class="cite">[7]</span></p>
+
+      <div class="callout callout-purple">
+        <div class="callout-label">🦠 เชื้อแบคทีเรียผลิตอะไรในสมอง</div>
+        <div class="callout-text">
+          <strong>Lactobacillus และ Bifidobacterium</strong> ผลิต GABA — neurotransmitter หลักที่ลดความวิตกกังวล<br/>
+          <strong>Short-chain fatty acids (SCFAs)</strong> จากการหมักใย fiber ปกป้อง blood-brain barrier<br/>
+          <strong>Tryptophan derivatives</strong> จาก gut bacteria เป็น precursor ของ serotonin ในสมอง<br/>
+          <strong>Vagus nerve signaling</strong> ส่งสัญญาณจากลำไส้สู่สมองแบบ bottom-up เกือบ 80% ของทิศทางทั้งหมด
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-num">90%</div>
+          <div class="stat-label">serotonin ของร่างกาย<br/>ผลิตในลำไส้</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">10¹⁴</div>
+          <div class="stat-label">จำนวนจุลินทรีย์<br/>ในลำไส้ (มากกว่าเซลล์)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4: Neuroplasticity -->
+  <div class="sci-section" id="s4">
+    <div class="section-num">04 / NEUROPLASTICITY</div>
+    <div class="section-title">สมองไม่ได้ถูก fix ไว้<br/>มันเปลี่ยนได้ตลอดชีวิต</div>
+    <div class="section-body">
+      <p><span class="term">Neuroplasticity</span> คือความสามารถของสมองในการปรับโครงสร้างและการเชื่อมต่อเพื่อตอบสนองต่อประสบการณ์ ยิ่งทำซ้ำ ยิ่งแข็งแรง — นี่คือกลไกเดียวกับการเรียนรู้ ความเคยชิน และการฟื้นตัวจากบาดแผลทางจิตใจ</p>
+
+      <div class="callout callout-green">
+        <div class="callout-label">🔁 Hebbian Learning</div>
+        <div class="callout-text">"Neurons that fire together, wire together" — เซลล์ประสาทที่ทำงานพร้อมกันบ่อยๆ จะสร้าง synapse ที่แข็งแรงขึ้นระหว่างกัน ซึ่งหมายความว่า pattern การคิดและการรู้สึกที่ทำซ้ำบ่อยๆ จะกลายเป็น default pathway — ทั้งดีและไม่ดี</div>
+      </div>
+
+      <p>งานวิจัยปี 2024 จาก Cambridge พบว่า <span class="term">environmental enrichment</span> ซึ่งรวมถึงการออกกำลังกาย, cognitive stimulation และ mindfulness ในสภาพแวดล้อมธรรมชาติ มีผล synergistic ในการเพิ่ม hippocampal neurogenesis ผ่าน BDNF-interactive model<span class="cite">[8]</span> — ไม่ต้องทำทุกอย่าง แต่การทำหลายอย่างพร้อมกันให้ผลมากกว่าผลรวม</p>
+
+      <div class="callout callout-blue">
+        <div class="callout-label">📊 Meta-analysis 2024 (170 งานวิจัย)</div>
+        <div class="callout-text">การออกกำลังกายลดอาการ depression ผ่าน 3 เส้นทางพร้อมกัน: (1) เพิ่ม BDNF และ hippocampal neuroplasticity (2) modulate 5-HT และ GABA receptor subtypes (3) ลด HPA axis reactivity ระยะยาว<span class="cite">[9]</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5: Vagus -->
+  <div class="sci-section" id="s5">
+    <div class="section-num">05 / AUTONOMIC NERVOUS SYSTEM</div>
+    <div class="section-title">Vagus Nerve<br/>เส้นประสาทที่บอกสมองว่า "ปลอดภัย"</div>
+    <div class="section-body">
+      <p><span class="term">Vagus nerve</span> (เส้นประสาทสมองคู่ที่ 10) คือทางหลวงสายสำคัญของระบบ <span class="term">parasympathetic nervous system</span> เชื่อมต่อสมองกับหัวใจ, ปอด, กระเพาะ, และลำไส้ เมื่อ vagal tone สูง — ร่างกายอยู่ใน rest-and-digest mode สมองสามารถคิดซับซ้อน, เชื่อมต่อกับผู้อื่น และ regulate อารมณ์ได้ดี</p>
+
+      <div class="callout callout-red">
+        <div class="callout-label">⚡ เมื่อ vagal tone ต่ำ</div>
+        <div class="callout-text">ร่างกายติดใน sympathetic activation (fight-or-flight) แม้ไม่มีภัยจริง — หัวใจเต้นเร็ว, กล้ามเนื้อตึง, ลำไส้แปรปรวน, สมอง prefrontal cortex ทำงานลดลง (ยากที่จะคิดรอบคอบ), amygdala ไวเกินปกติ (trigger ง่าย)</div>
+      </div>
+
+      <p>สิ่งที่เพิ่ม vagal tone ได้: <span class="term">การหายใจช้า</span> (exhale นานกว่า inhale), การร้องเพลงหรือฮัมเพลง, การสัมผัสที่อบอุ่น, การพูดคุยกับคนที่ไว้วางใจ, และการออกกำลังกายแบบสม่ำเสมอ</p>
+
+      <div class="callout callout-purple">
+        <div class="callout-label">💜 Oxytocin — ฮอร์โมนแห่งความเชื่อมโยง</div>
+        <div class="callout-text">การมีความสัมพันธ์ที่ดีกระตุ้น oxytocin ซึ่งทำงานตรงข้ามกับ cortisol โดยตรง — ลด HPA axis reactivity, เพิ่ม vagal tone, และลด neuroinflammation นี่คือเหตุผลทางชีววิทยาว่าทำไมการมีคนรับฟังถึงทำให้รู้สึกดีขึ้นจริงๆ ไม่ใช่แค่ความรู้สึก</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6: Summary -->
+  <div class="sci-section" id="s6">
+    <div class="section-num">06 / PRACTICAL SYNTHESIS</div>
+    <div class="section-title">สิ่งที่ทำได้เลยตอนนี้<br/>ที่มีหลักฐานรองรับ</div>
+    <div class="section-body">
+      <div class="callout callout-green">
+        <div class="callout-label">✅ Tier 1 — ผลชัดเจน ทำได้ทุกวัน</div>
+        <div class="callout-text">
+          <strong>เดินเร็ว 20–30 นาที</strong> — เพิ่ม BDNF, ลด cortisol<br/>
+          <strong>นอน 8 ชั่วโมง</strong> — ให้สมอง consolidate memory และ reset HPA axis<br/>
+          <strong>กินผักหลากสี + อาหารหมัก</strong> — รักษา gut microbiome diversity<br/>
+          <strong>หายใจ 4-6-8</strong> (in 4, hold 6, out 8) — เพิ่ม vagal tone ทันที
+        </div>
+      </div>
+      <div class="callout callout-blue">
+        <div class="callout-label">✅ Tier 2 — ผลสะสมในระยะยาว</div>
+        <div class="callout-text">
+          <strong>มีคนรับฟัง</strong> — oxytocin counteract cortisol<br/>
+          <strong>ออกไปอยู่ในธรรมชาติ</strong> — environmental enrichment เพิ่ม BDNF synergistically<br/>
+          <strong>เรียนรู้สิ่งใหม่</strong> — cognitive stimulation เพิ่ม neuroplasticity<br/>
+          <strong>ลดหน้าจอก่อนนอน 1 ชั่วโมง</strong> — ให้ melatonin และ cortisol รีเซ็ตตาม circadian rhythm
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- References -->
+<div style="margin:32px 20px 0;padding:20px;background:linear-gradient(135deg,#EEF6EF,#F0FAF1);border:1px solid #C2DFC6;border-radius:18px;">
+  <div style="font-size:9px;letter-spacing:2px;color:#3A7D44;text-transform:uppercase;font-weight:500;margin-bottom:8px;">อ่านแล้ว ลองทำดูไหม?</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:#1C1917;margin-bottom:6px;line-height:1.4;">วิทยาศาสตร์ทำงานก็ต่อเมื่อลงมือทำ</div>
+  <div style="font-size:12px;font-weight:300;color:#6B6560;line-height:1.7;margin-bottom:14px;">สวนสาธารณะ การนอน กลุ่มสนับสนุน — ทุกอย่างที่อ่านมาอยู่ในหน้าดูแลตัวเองแล้ว</div>
+  <a href="care.html" style="display:inline-flex;align-items:center;gap:8px;background:#3A7D44;color:#fff;border-radius:20px;padding:10px 20px;font-size:13px;font-family:'Mitr',sans-serif;font-weight:500;text-decoration:none;">🌿 ไปที่ดูแลตัวเอง →</a>
+</div>
+
+<div class="references">
+  <div class="ref-label">References</div>
+  <ul class="ref-list">
+    <li><span class="ref-num">[1]</span> Liu, P.Z. & Nusslock, R. (2018). Exercise-Mediated Neurogenesis in the Hippocampus via BDNF. <em>Frontiers in Neuroscience.</em> DOI: 10.3389/fnins.2018.00052</li>
+    <li><span class="ref-num">[2]</span> Kraemer, R.R. & Kraemer, B.R. (2023). The effects of peripheral hormone responses to exercise on adult hippocampal neurogenesis. <em>Frontiers in Endocrinology.</em> DOI: 10.3389/fendo.2023.1202349</li>
+    <li><span class="ref-num">[3]</span> Frontiers in Neurology. (2024). Impact of physical exercise on BDNF regulation in neurodegenerative diseases. DOI: 10.3389/fneur.2024.1505879</li>
+    <li><span class="ref-num">[4]</span> Filetti, C., Kane-Grade, F., & Gunnar, M. (2023). The Development of Stress Reactivity and Regulation in Children and Adolescents. <em>CNS & Neurological Disorders.</em> DOI: 10.2174/1570159X21666230808120504</li>
+    <li><span class="ref-num">[5]</span> PMC (2022). Childhood Trauma, the HPA Axis and Psychiatric Illnesses. <em>Frontiers in Psychiatry.</em> DOI: 10.3389/fpsyt.2022.748372</li>
+    <li><span class="ref-num">[6]</span> Lucas, G. (2018). Gut thinking: the gut microbiome and mental health beyond the head. <em>Microbial Ecology in Health & Disease.</em> DOI: 10.1080/16512235.2018.1548250</li>
+    <li><span class="ref-num">[7]</span> Verma, A., Inslicht, S.S., & Bhargava, A. (2024). Gut-Brain Axis: Role of Microbiome, Metabolomics, Hormones, and Stress in Mental Health Disorders. <em>Cells.</em> DOI: 10.3390/cells13171436</li>
+    <li><span class="ref-num">[8]</span> Khalil, M.H. (2024). The BDNF-Interactive Model for Sustainable Hippocampal Neurogenesis. <em>International Journal of Molecular Sciences.</em> DOI: 10.3390/ijms252312924</li>
+    <li><span class="ref-num">[9]</span> PMC (2025). Neurobiological mechanisms of the effect of exercise on depressive disorder. DOI: 10.3389/fpsyt via meta-analysis 2006–2024.</li>
+  </ul>
+</div>
+
+</body>
+</html>
