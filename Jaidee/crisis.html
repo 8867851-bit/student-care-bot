@@ -4,149 +4,258 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <title>ใจดี TU — ขอความช่วยเหลือ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root{
       --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
-      --border:#EEEBE4;--red:#E05252;--red-soft:#FFF0F0;
-      --gold:#F5A623;--gold-soft:#FFF5E0;
+      --border:#EEEBE4;--red:#D94F4F;--red-soft:#FFF0F0;
+      --gold:#E8960C;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;
+      --green:#3A7D44;--green-soft:#EEF6EF;--green-border:#C2DFC6;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding:48px 24px 60px;}
-    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
-    .headline{font-family:'Playfair Display',serif;font-size:32px;line-height:1.25;margin-bottom:16px;}
-    .headline em{font-style:italic;color:var(--red);}
-    .body-text{font-size:15px;color:var(--mid);line-height:1.85;margin-bottom:28px;}
-    .divider{height:1px;background:var(--border);margin:28px 0;}
-    .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:16px;}
-    .hotline-card{background:white;border-radius:16px;padding:18px 20px;border:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;text-decoration:none;transition:transform 0.15s ease;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
+    .topnav{display:flex;align-items:center;padding:16px 20px 0;}
+    .back-btn{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Mitr',sans-serif;cursor:pointer;}
+    .header{padding:20px 24px 24px;}
+    .eyebrow{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+    .headline{font-family:'Noto Serif Thai',serif;font-size:30px;font-weight:700;line-height:1.25;margin-bottom:10px;}
+    .headline em{font-style:normal;color:var(--red);}
+    .body-text{font-size:14px;font-weight:300;color:var(--mid);line-height:1.7;}
+    .grounding-card{margin:0 20px 24px;background:var(--dark);border-radius:20px;padding:18px 20px;}
+    .grounding-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:6px;}
+    .grounding-title{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:#F5F3EF;margin-bottom:3px;}
+    .grounding-sub{font-size:12px;font-weight:300;color:rgba(255,255,255,0.45);margin-bottom:14px;line-height:1.5;}
+    .audio-player{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.07);border-radius:14px;padding:14px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);transition:background 0.15s;user-select:none;}
+    .audio-player:active{background:rgba(255,255,255,0.11);}
+    .play-circle{width:40px;height:40px;border-radius:50%;background:var(--gold);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:transform 0.1s;}
+    .play-circle:active{transform:scale(0.92);}
+    .waveform{flex:1;overflow:hidden;height:36px;display:flex;align-items:center;}
+    .wf-bars{display:flex;align-items:center;gap:2.5px;width:100%;height:100%;}
+    .wf-bar{flex-shrink:0;width:3px;border-radius:99px;background:rgba(255,255,255,0.22);transition:background 0.1s;}
+    .wf-bar.played{background:var(--gold);}
+    .track-time{font-size:11px;color:rgba(255,255,255,0.4);flex-shrink:0;font-variant-numeric:tabular-nums;}
+    .audio-note{font-size:11px;color:rgba(255,255,255,0.22);text-align:center;margin-top:10px;line-height:1.5;}
+    .section{padding:0 20px;}
+    .section-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:12px;}
+    .hotline-card{background:white;border-radius:16px;padding:16px 18px;border:1px solid var(--border);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;text-decoration:none;transition:transform 0.15s;}
     .hotline-card:active{transform:scale(0.97);}
     .hotline-card.urgent{border-left:4px solid var(--red);}
     .hotline-card.warm{border-left:4px solid var(--gold);}
-    .hotline-info{display:flex;flex-direction:column;gap:3px;}
-    .hotline-number{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--dark);}
-    .hotline-name{font-size:13px;color:var(--mid);}
-    .hotline-hours{font-size:11px;color:var(--soft);}
-    .call-btn{background:var(--red);color:white;border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;white-space:nowrap;}
+    .hotline-number{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:var(--dark);}
+    .hotline-name{font-size:13px;color:var(--mid);margin-top:2px;}
+    .hotline-hours{font-size:11px;color:var(--soft);margin-top:1px;}
+    .call-btn{background:var(--red);color:white;border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-family:'Mitr',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;}
     .call-btn.gold{background:var(--gold);}
-    .tool-card{background:white;border-radius:16px;padding:18px 20px;border:1px solid var(--border);margin-bottom:12px;display:flex;flex-direction:column;gap:8px;}
-    .tool-name{font-size:15px;font-weight:700;color:var(--dark);}
-    .tool-desc{font-size:13px;color:var(--mid);line-height:1.6;}
-    .tool-link{font-size:13px;color:var(--gold);font-weight:600;text-decoration:none;}
-    .placeholder-banner{background:var(--gold-soft);border:1px solid #FFE4A0;border-radius:14px;padding:16px 18px;font-size:13px;color:#7A5C00;line-height:1.7;margin-bottom:28px;}
-    .btn-action{background:var(--dark);color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
-    .btn-ghost{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:10px;text-align:center;width:100%;}
+    .divider{height:1px;background:var(--border);margin:24px 20px;}
 
-    .app-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;}
-    .app-card{
-      background:white;border-radius:16px;padding:16px 14px;
-      border:1px solid var(--border);text-decoration:none;
-      display:flex;flex-direction:column;gap:8px;
-      transition:transform 0.15s ease;
-      box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    /* ── Tools carousel ── */
+    .tools-wrap{padding:0;}
+    .tools-carousel{display:flex;gap:12px;padding:0 20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+    .tools-carousel::-webkit-scrollbar{display:none;}
+    .tool-card{flex-shrink:0;width:155px;border-radius:16px;overflow:hidden;background:white;border:1px solid var(--border);cursor:pointer;scroll-snap-align:start;text-decoration:none;color:inherit;display:block;transition:transform 0.15s;}
+    .tool-card:active{transform:scale(0.97);}
+    .tool-img{width:100%;height:96px;object-fit:cover;display:block;}
+    .tool-img-fallback{width:100%;height:96px;display:flex;align-items:center;justify-content:center;}
+    .tool-initial{font-family:'Noto Serif Thai',serif;font-size:28px;font-weight:600;color:rgba(0,0,0,0.25);}
+    .tool-body{padding:10px 12px 12px;}
+    .tool-name{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px;}
+    .tool-desc{font-size:11px;font-weight:300;color:var(--mid);line-height:1.5;}
+    .tool-skeleton{flex-shrink:0;width:155px;height:175px;border-radius:16px;background:linear-gradient(90deg,#F0ECE4 25%,#EDE8DF 50%,#F0ECE4 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* ── PR Button ── */
+    .bottom-cta{padding:0 20px;}
+    .pr-eyebrow-line{
+      font-size:11px;font-weight:400;text-align:center;margin-bottom:8px;
+      color:var(--mid);
+      background:linear-gradient(90deg,rgba(232,150,12,0) 0%,rgba(232,150,12,0.08) 30%,rgba(232,150,12,0.12) 50%,rgba(232,150,12,0.08) 70%,rgba(232,150,12,0) 100%);
+      border-radius:20px;padding:5px 12px;position:relative;
     }
-    .app-card:active{transform:scale(0.97);}
-    .app-icon{font-size:28px;}
-    .app-name{font-size:13px;font-weight:700;color:var(--dark);}
-    .app-desc{font-size:11px;color:var(--mid);line-height:1.55;}
+    .pr-eyebrow-line::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:55%;height:1px;background:linear-gradient(90deg,transparent,rgba(232,150,12,0.25),transparent);}
+    .btn-pr-pill{
+      display:flex;align-items:center;justify-content:center;gap:12px;
+      background:var(--dark);border-radius:50px;padding:15px 28px;width:100%;
+      cursor:pointer;text-decoration:none;border:none;font-family:'Mitr',sans-serif;
+      position:relative;overflow:hidden;
+      transition:transform 0.15s,box-shadow 0.15s;
+      box-shadow:0 3px 10px rgba(0,0,0,0.12);
+    }
+    .btn-pr-pill:active{transform:scale(0.97);box-shadow:0 1px 6px rgba(0,0,0,0.10);}
+    .btn-pr-pill::before{content:'';position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:70%;height:50px;background:radial-gradient(ellipse,rgba(232,150,12,0.05) 0%,transparent 70%);pointer-events:none;}
+    .pr-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;box-shadow:0 0 4px rgba(232,150,12,0.5);}
+    .pr-text{font-size:15px;font-weight:600;color:#fff;text-shadow:0 0 6px rgba(255,255,255,0.15);}
+    .pr-arrow{font-size:15px;color:rgba(255,255,255,0.35);}
+
+    .care-offramp{display:flex;align-items:center;gap:12px;padding:13px 16px;background:linear-gradient(135deg,var(--green-soft),#FDFBF7);border:1px solid var(--green-border);border-radius:14px;text-decoration:none;color:inherit;margin-top:10px;}
+    .care-offramp-body{flex:1;}
+    .care-offramp-title{font-size:13px;font-weight:500;color:#1C1917;margin-bottom:2px;}
+    .care-offramp-sub{font-size:12px;font-weight:300;color:#6B6560;line-height:1.5;}
+    .btn-back-bottom{width:100%;background:none;border:none;color:var(--soft);font-size:13px;font-family:'Mitr',sans-serif;cursor:pointer;padding:14px;text-align:center;}
   </style>
 </head>
 <body>
 
-  <div class="eyebrow">ใจดี TU · Crisis Support</div>
+<div class="topnav">
+  <button class="back-btn" onclick="window.history.back()">← กลับ</button>
+</div>
+
+<div class="header">
+  <div class="eyebrow">Crisis Support</div>
   <div class="headline">คุณไม่ได้<br>อยู่คน<em>เดียว</em></div>
-  <div class="body-text">
-    ถ้าตอนนี้รู้สึกหนักมาก หรืออยู่ในสถานการณ์ที่ต้องการความช่วยเหลือด่วน —
-    มีคนพร้อมรับฟังคุณตลอด 24 ชั่วโมง
+  <div class="body-text">มีคนพร้อมรับฟังตลอด 24 ชั่วโมง — ไม่ต้องรู้สึกดีก่อนจะขอความช่วยเหลือ</div>
+</div>
+
+<div class="grounding-card">
+  <div class="grounding-label">ถ้าตอนนี้รู้สึกท่วมทับ</div>
+  <div class="grounding-title">หยุดพักตรงนี้ก่อนได้นะ</div>
+  <div class="grounding-sub">กดแล้วหลับตาได้เลย ไม่ต้องอ่านอะไร</div>
+  <div class="audio-player" id="audio-player" onclick="togglePlay()">
+    <button class="play-circle" id="play-btn" aria-label="เล่นเสียง">
+      <svg id="icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13 8L4 13.5V2.5Z" fill="white"/></svg>
+      <svg id="icon-pause" width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:none;"><rect x="3" y="2" width="4" height="12" rx="1.5" fill="white"/><rect x="9" y="2" width="4" height="12" rx="1.5" fill="white"/></svg>
+    </button>
+    <div class="waveform" id="waveform"><div class="wf-bars" id="wf-bars"></div></div>
+    <div class="track-time" id="track-time">1:30</div>
   </div>
+  <div class="audio-note">หายใจกับฉัน · เสียงจากทีม ใจดี TU 🤍</div>
+  <audio id="main-audio" src="audio/grounding-breathing.mp3" preload="none"></audio>
+</div>
 
-  <div class="placeholder-banner">
-    🌱 หน้านี้กำลังพัฒนาต่อเนื่อง เราอยู่ระหว่างการปรึกษาผู้เชี่ยวชาญ
-    เพื่อให้คำแนะนำที่ดีที่สุดสำหรับทุกสถานการณ์
-    ตอนนี้ด้านล่างมีสายด่วนและเครื่องมือที่ช่วยคุณได้ทันที 💛
-  </div>
+<div class="section">
+  <div class="section-label">สายด่วน — กดโทรได้เลย</div>
+  <a class="hotline-card urgent" href="tel:1323"><div><div class="hotline-number">1323</div><div class="hotline-name">กรมสุขภาพจิต</div><div class="hotline-hours">24 ชั่วโมง ทุกวัน ✓</div></div><div class="call-btn">โทรเลย</div></a>
+  <a class="hotline-card urgent" href="tel:1667"><div><div class="hotline-number">1667</div><div class="hotline-name">สายด่วนสุขภาพจิต</div><div class="hotline-hours">24 ชั่วโมง ทุกวัน ✓</div></div><div class="call-btn">โทรเลย</div></a>
+  <a class="hotline-card warm" href="tel:1300"><div><div class="hotline-number">1300</div><div class="hotline-name">ศูนย์ช่วยเหลือสังคม</div><div class="hotline-hours">24 ชั่วโมง ทุกวัน ✓</div></div><div class="call-btn gold">โทรเลย</div></a>
+  <a class="hotline-card urgent" href="tel:191"><div><div class="hotline-number">191</div><div class="hotline-name">ตำรวจ — เหตุฉุกเฉิน</div><div class="hotline-hours">24 ชั่วโมง ทุกวัน ✓</div></div><div class="call-btn">โทรเลย</div></a>
+</div>
 
-  <div class="section-label">สายด่วน — โทรได้เลยตอนนี้</div>
+<div class="divider"></div>
 
-  <a class="hotline-card urgent" href="tel:1323">
-    <div class="hotline-info">
-      <div class="hotline-number">1323</div>
-      <div class="hotline-name">กรมสุขภาพจิต</div>
-      <div class="hotline-hours">24 ชั่วโมง ทุกวัน</div>
-    </div>
-    <div class="call-btn">โทรเลย</div>
-  </a>
+<div class="section" style="margin-bottom:12px;">
+  <div class="section-label">เครื่องมือที่ช่วยได้</div>
+</div>
+<div class="tools-carousel" id="tools-carousel">
+  <div class="tool-skeleton"></div>
+  <div class="tool-skeleton"></div>
+  <div class="tool-skeleton"></div>
+</div>
 
-  <a class="hotline-card urgent" href="tel:1667">
-    <div class="hotline-info">
-      <div class="hotline-number">1667</div>
-      <div class="hotline-name">สายด่วนสุขภาพจิต</div>
-      <div class="hotline-hours">24 ชั่วโมง ทุกวัน</div>
-    </div>
-    <div class="call-btn">โทรเลย</div>
-  </a>
+<div class="divider"></div>
 
-  <a class="hotline-card warm" href="tel:1300">
-    <div class="hotline-info">
-      <div class="hotline-number">1300</div>
-      <div class="hotline-name">ศูนย์ช่วยเหลือสังคม</div>
-      <div class="hotline-hours">24 ชั่วโมง ทุกวัน</div>
-    </div>
-    <div class="call-btn gold">โทรเลย</div>
-  </a>
-
-  <a class="hotline-card urgent" href="tel:191">
-    <div class="hotline-info">
-      <div class="hotline-number">191</div>
-      <div class="hotline-name">ตำรวจ — เหตุฉุกเฉิน</div>
-      <div class="hotline-hours">24 ชั่วโมง ทุกวัน</div>
-    </div>
-    <div class="call-btn">โทรเลย</div>
-  </a>
-
-  <div class="divider"></div>
-
-  <div class="section-label">เครื่องมือและแอปที่ช่วยได้</div>
-
-  <div class="app-grid">
-
-    <a class="app-card" href="https://stopncii.org" target="_blank">
-      <div class="app-icon">🔒</div>
-      <div class="app-name">Stop NCII</div>
-      <div class="app-desc">ภาพส่วนตัวถูกแชร์โดยไม่ยินยอม — ให้ platform ลบออก (18+)</div>
-    </a>
-
-    <a class="app-card" href="https://www.buddy4thai.com" target="_blank">
-      <div class="app-icon">👥</div>
-      <div class="app-name">BuddyThai</div>
-      <div class="app-desc">โดนบูลลี่หรือรู้สึกโดดเดี่ยว — คุยกับนักจิตวิทยาได้เลย</div>
-    </a>
-
-    <a class="app-card" href="https://dmind.dmh.go.th" target="_blank">
-      <div class="app-icon">🧠</div>
-      <div class="app-name">DMIND</div>
-      <div class="app-desc">ประเมินภาวะซึมเศร้าด้วย AI — รู้ผลทันที ฟรี</div>
-    </a>
-
-    <a class="app-card" href="https://line.me/R/ti/p/@khuikan" target="_blank">
-      <div class="app-icon">💙</div>
-      <div class="app-name">คุยกัน</div>
-      <div class="app-desc">LINE OA @KhuiKan — ปรึกษาสุขภาพจิตกับผู้เชี่ยวชาญ</div>
-    </a>
-
-  </div>
-
-  <div class="divider"></div>
-
-  <div style="font-size:14px;color:var(--mid);line-height:1.85;text-align:center;">
-    ถ้ายังไม่พร้อมโทร แต่อยากคุยกับใครสักคน<br>
-    PR ของเราพร้อมรับฟังคุณ 💛
-  </div>
-
-  <button class="btn-action" onclick="window.location.href='peer.html'" style="margin-top:20px;">
-    💛 คุยกับ PR ได้เลย
+<div class="bottom-cta">
+  <div class="pr-eyebrow-line">บริการพิเศษสำหรับนักเรียนเตรียมอุดมศึกษา</div>
+  <button class="btn-pr-pill" onclick="window.location.href='peer.html'">
+    <span class="pr-dot"></span>
+    <span class="pr-text">นัดคุยกับ PR ได้เลย</span>
+    <span class="pr-arrow">→</span>
   </button>
-  <button class="btn-ghost" onclick="window.history.back()">← กลับ</button>
+  <a href="care.html" class="care-offramp">
+    <span style="font-size:20px;flex-shrink:0;">🌿</span>
+    <div class="care-offramp-body">
+      <div class="care-offramp-title">เริ่มต้นจาก "พื้นที่ใจ" ก่อนก็ได้</div>
+      <div class="care-offramp-sub">ไม่ต้องพร้อม ไม่ต้องรู้ว่าจะเริ่มยังไง</div>
+    </div>
+    <span style="color:#A8A099;font-size:16px;">→</span>
+  </a>
+  <button class="btn-back-bottom" onclick="window.history.back()">← กลับ</button>
+</div>
 
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+
+// ─────────────────────────────────────────────────────
+// TOOLS CAROUSEL
+// Sheet: Care sheet, category = "เครื่องมือ"
+// Columns used: name | desc | url | photo_url | active
+// Team adds/edits/removes rows in dashboard → updates here
+// ─────────────────────────────────────────────────────
+const TOOLS_FALLBACK = [
+  {name:"พื้นที่ใจ",  desc:"6 วิธีดูแลตัวเองที่ไม่ใช่แค่ไปหาหมอ — สร้างโดยนักเรียนเตรียมฯ เพื่อนักเรียนเตรียมฯ", url:"care.html", photo_url:""},
+  {name:"Stop NCII",    desc:"ภาพถูกแชร์โดยไม่ยินยอม — ให้ platform ลบออก", url:"https://stopncii.org",                photo_url:""},
+  {name:"BuddyThai",   desc:"โดนบูลลี่หรือโดดเดี่ยว — คุยกับนักจิตวิทยา",  url:"https://www.buddy4thai.com",          photo_url:""},
+  {name:"DMIND",       desc:"ประเมินภาวะซึมเศร้าด้วย AI ฟรี",               url:"https://dmind.dmh.go.th",             photo_url:""},
+  {name:"คุยกัน",      desc:"LINE @KhuiKan ปรึกษาผู้เชี่ยวชาญ",             url:"https://line.me/R/ti/p/@khuikan",     photo_url:""},
+];
+const TOOL_GRADIENTS = [
+  "linear-gradient(135deg,#E8E3D8,#D4CFC4)",
+  "linear-gradient(135deg,#D8E4D8,#C4D4C8)",
+  "linear-gradient(135deg,#D8DCE8,#C4CCD8)",
+  "linear-gradient(135deg,#E8D8DC,#D4C4C8)",
+  "linear-gradient(135deg,#E4E0D4,#D8D0C0)",
+];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function renderTools(items) {
+  const carousel = document.getElementById("tools-carousel");
+  carousel.innerHTML = "";
+  items.forEach((tool, idx) => {
+    const card = document.createElement("a");
+    card.className = "tool-card";
+    card.href = tool.url || "#";
+    card.target = "_blank"; card.rel = "noopener";
+    const hasPhoto = tool.photo_url && tool.photo_url.trim();
+    const grad = TOOL_GRADIENTS[idx % TOOL_GRADIENTS.length];
+    const initial = (tool.name || "?")[0].toUpperCase();
+    const fallbackDiv = `<div class="tool-img-fallback" style="background:${grad};"><span class="tool-initial">${initial}</span></div>`;
+    card.innerHTML = hasPhoto
+      ? `<img class="tool-img" src="${tool.photo_url}" alt="${tool.name}" loading="lazy"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+         ${fallbackDiv.replace('display:flex', 'display:none')}
+         <div class="tool-body"><div class="tool-name">${tool.name}</div><div class="tool-desc">${tool.desc}</div></div>`
+      : `${fallbackDiv}
+         <div class="tool-body"><div class="tool-name">${tool.name}</div><div class="tool-desc">${tool.desc}</div></div>`;
+    carousel.appendChild(card);
+  });
+}
+
+async function loadTools() {
+  try {
+    const res = await fetch(API_URL + "?action=getCare");
+    const d = await res.json();
+    const tools = (d.status === "OK" && d.items)
+      ? d.items.filter(i => (i.category||"").trim() === "เครื่องมือ")
+      : [];
+    renderTools(tools.length ? tools : TOOLS_FALLBACK);
+  } catch(e) { renderTools(TOOLS_FALLBACK); }
+}
+loadTools();
+
+// ─────────────────────────────────────────────────────
+// WAVEFORM PLAYER
+// ─────────────────────────────────────────────────────
+const BAR_COUNT=48,HEIGHTS=[];
+(function(){const s=[0.4,0.6,0.8,1.0,0.9,0.7,0.5,0.3,0.5,0.7,0.9,1.0,0.8,0.6,0.7,0.9,1.0,0.8,0.5,0.4,0.6,0.8,1.0,0.9,0.7,0.5,0.4,0.6,0.9,1.0,0.8,0.7,0.5,0.3,0.4,0.6,0.8,1.0,0.9,0.7,0.5,0.6,0.8,0.9,0.7,0.5,0.4,0.6];for(let i=0;i<BAR_COUNT;i++)HEIGHTS.push(s[i%s.length]);})();
+function buildWaveform(){const c=document.getElementById("wf-bars");if(!c)return;c.innerHTML="";HEIGHTS.forEach((h,i)=>{const b=document.createElement("div");b.className="wf-bar";b.id="bar-"+i;b.style.height=Math.round(h*32+4)+"px";c.appendChild(b);});}
+const audio=document.getElementById("main-audio"),iconPlay=document.getElementById("icon-play"),iconPause=document.getElementById("icon-pause"),timeEl=document.getElementById("track-time");let _raf=null;
+function togglePlay(){if(audio.paused){audio.play().then(startAnim).catch(()=>{startAnim();setTimeout(stopAnim,90000);});setPlaying(true);}else{audio.pause();setPlaying(false);stopAnim();}}
+function setPlaying(p){iconPlay.style.display=p?"none":"block";iconPause.style.display=p?"block":"none";}
+function startAnim(){_raf=requestAnimationFrame(function tick(){updateWave();updateTime();_raf=requestAnimationFrame(tick);});}
+function stopAnim(){if(_raf){cancelAnimationFrame(_raf);_raf=null;}}
+function updateWave(){const pct=audio.duration?audio.currentTime/audio.duration:0;const pl=Math.floor(pct*BAR_COUNT);for(let i=0;i<BAR_COUNT;i++){const b=document.getElementById("bar-"+i);if(b)b.classList.toggle("played",i<pl);}}
+function updateTime(){if(audio.duration){const r=Math.max(0,audio.duration-audio.currentTime);timeEl.textContent=Math.floor(r/60)+":"+String(Math.floor(r%60)).padStart(2,"0");}}
+audio.addEventListener("ended",()=>{setPlaying(false);stopAnim();document.querySelectorAll(".wf-bar").forEach(b=>b.classList.remove("played"));timeEl.textContent="1:30";});
+document.getElementById("waveform")?.addEventListener("click",function(e){if(!audio.duration)return;audio.currentTime=(e.clientX-this.getBoundingClientRect().left)/this.getBoundingClientRect().width*audio.duration;});
+buildWaveform();
+</script>
 </body>
 </html>
