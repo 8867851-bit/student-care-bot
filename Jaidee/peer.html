@@ -52,9 +52,9 @@
     .day-name{font-size:13px;font-weight:600;color:var(--mid);}
     .slots-row{display:flex;flex-wrap:wrap;gap:8px;}
     .slot-chip{background:white;border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:13px;font-family:'Sarabun',sans-serif;color:var(--mid);cursor:pointer;transition:all 0.15s ease;display:flex;align-items:center;gap:6px;}
-    .pr-count{font-size:10px;background:var(--gold-soft);color:var(--gold);padding:2px 6px;border-radius:99px;font-weight:700;}
+    .pr-count{color:var(--soft);font-size:11px;font-weight:400;margin-left:4px;}
     .slot-chip.chosen{background:var(--dark);border-color:var(--dark);color:white;}
-    .slot-chip.chosen .pr-count{background:rgba(255,255,255,0.15);color:white;}
+    .slot-chip.chosen .pr-count{color:rgba(255,255,255,0.6);}
     .booking-bottom{margin-top:auto;display:flex;flex-direction:column;gap:10px;}
     #screen-sorry{align-items:center;justify-content:center;gap:16px;text-align:center;background:var(--dark);}
     .sorry-title{font-family:'Playfair Display',serif;font-size:24px;color:white;line-height:1.35;}
@@ -132,7 +132,7 @@
       <div class="confirm-slot-time" id="confirm-time"></div>
     </div>
     <div class="sheet-body" style="font-size:13px;">PR จะได้รับสิ่งที่คุณแชร์มา และพร้อมรับฟังคุณตั้งแต่ต้น</div>
-    <button class="btn-gold" onclick="finalConfirm()">ยืนยันเลย →</button>
+    <button class="btn-gold" id="btn-confirm-final" onclick="finalConfirm()">ยืนยันเลย →</button>
     <button class="btn-ghost" onclick="closeConfirmOverlay()">เปลี่ยนใจ ขอเลือกใหม่</button>
   </div>
 </div>
@@ -168,6 +168,7 @@
 
 <!-- SCREEN 3: QUESTIONS -->
 <div class="screen" id="screen-question">
+  <button onclick="goBackFromQuestion()" style="background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:0 0 8px 0;align-self:flex-start;display:flex;align-items:center;gap:4px;">← กลับ</button>
   <div class="q-meta" id="q-meta">ข้อ 1 จาก 5</div>
   <div class="question-text" id="question-text"></div>
   <div class="options" id="options-container"></div>
@@ -176,15 +177,16 @@
 <!-- SCREEN 4: BOOKING -->
 <div class="screen" id="screen-booking">
   <div class="booking-headline">เลือกเวลา<br>ที่สะดวกเลยนะ 🤍</div>
-  <div class="booking-sub">PR ที่พร้อมคุยจะรอรับคุณในเวลาที่เลือก</div>
+  <div class="booking-sub">นัด 1 ชั่วโมง · คุยกับ PR ที่ผ่านการ train มาแล้ว 🤍</div>
   <div id="booking-week-badge"></div>
   <div id="booking-slots-container">
     <div class="loading-row"><div class="spinner"></div><span>กำลังดึงตารางของ PR...</span></div>
   </div>
   <div class="booking-bottom">
-    <button class="btn-ghost" onclick="show('screen-no-slots')">ไม่มีเวลาที่สะดวกสัปดาห์นี้ใช่ไหม?</button>
     <button class="btn-primary" id="btn-book" disabled onclick="openConfirmOverlay()">ยืนยันเวลานัด</button>
-    <button class="btn-ghost" style="font-size:11px;color:#ccc;padding:4px;" onclick="show('screen-external')">ต้องการความช่วยเหลือจากผู้เชี่ยวชาญ?</button>
+    <button class="btn-ghost" onclick="show('screen-no-slots')">เวลาไม่ตรงเลยสักช่วง?</button>
+    <button class="btn-ghost" style="font-size:11px;color:#aaa;padding:4px;" onclick="show('screen-external')">ต้องการความช่วยเหลือจากผู้เชี่ยวชาญ?</button>
+    <button onclick="goBackFromBooking()" style="background:none;border:none;color:var(--soft);font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:4px 0 0 0;">← กลับไปตอบคำถามใหม่</button>
   </div>
 </div>
 
@@ -213,17 +215,26 @@
   </div>
 </div>
 
-<!-- SPECIAL REQUEST -->
+<!-- SPECIAL REQUEST — select exact after-school slots, same format as booking -->
 <div class="screen" id="screen-special">
-  <div class="special-headline">เลือกเวลา<br>ที่คุณสะดวกจริง ๆ 🤍</div>
-  <div class="intro-body" style="margin-top:-8px;">เราจะพยายามหา PR ให้คุณในเวลาที่ขอ เลือกได้หลายช่วงเวลา</div>
-  <div id="special-week-badge"></div>
-  <div id="special-slots-container">
-    <div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+    <button onclick="show('screen-no-slots')" style="background:none;border:none;color:var(--soft);font-size:20px;cursor:pointer;padding:0;line-height:1;">←</button>
+    <div class="eyebrow">Special Request</div>
   </div>
+  <div class="special-headline" style="margin-top:4px;">เลือก slot<br>ที่สะดวกได้เลย 🤍</div>
+  <div class="intro-body" style="margin-top:-8px;font-size:13px;">เลือกได้หลาย slot — ทีมงานจะหา PR ให้ภายใน 1-2 วัน แล้ว LINE มาแจ้ง</div>
+
+  <div style="display:flex;flex-direction:column;gap:12px;width:100%;margin-top:4px;">
+
+    <!-- Slot grid — same after-school times as booking -->
+    <div id="special-slot-grid" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+    <!-- Note -->
+    <textarea id="special-note" placeholder="อยากบอกอะไรเพิ่มไหม? เช่น ติดซ้อม ติดกวดวิชา (optional)" style="background:var(--cream);border:1.5px solid var(--border);border-radius:12px;padding:12px;font-size:13px;font-family:'Sarabun',sans-serif;min-height:60px;resize:none;color:var(--dark);"></textarea>
+  </div>
+
   <div class="booking-bottom">
-    <div style="font-size:13px;color:var(--soft);" id="special-summary">ยังไม่ได้เลือก</div>
-    <button class="btn-gold" id="btn-special-submit" disabled onclick="submitSpecialRequest()">ส่ง Special Request</button>
+    <button class="btn-gold" id="btn-special-submit" onclick="submitSpecialRequest()">ส่งคำขอ →</button>
     <button class="btn-ghost" onclick="show('screen-no-slots')">← กลับ</button>
   </div>
 </div>
@@ -233,7 +244,7 @@
   <div class="branch-icon">💛</div>
   <div class="branch-title">บันทึกแล้วนะ</div>
   <div class="branch-body">
-    เราจะแจ้งเตือนคุณผ่าน LINE ทันทีที่มีตารางใหม่<br>
+    แล้วเจอกันนะ — เราจะแจ้งผ่าน LINE ทันทีที่มีตารางใหม่<br>
     และคุณไม่ต้องตอบคำถามใหม่อีกครั้ง 🤍
   </div>
   <div class="branch-actions">
@@ -276,6 +287,14 @@
     <a class="clinic-link" href="#" target="_blank">ดูข้อมูลเพิ่มเติม →</a>
   </div>
   <div style="font-size:13px;color:var(--soft);text-align:center;">กำลังเพิ่มข้อมูลสถานที่อื่น ๆ เร็ว ๆ นี้ 🌱</div>
+  <a href="care.html" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,#EEF6EF,#FDFBF7);border:1px solid #C2DFC6;border-radius:14px;text-decoration:none;color:inherit;margin-top:4px;">
+    <span style="font-size:22px;flex-shrink:0;">🌿</span>
+    <div style="flex:1;">
+      <div style="font-size:13px;font-weight:600;color:#1C1917;margin-bottom:2px;">ดูแลตัวเองระหว่างรอ</div>
+      <div style="font-size:12px;font-weight:300;color:#6B6560;line-height:1.5;">6 วิธีดูแลใจที่ไม่ใช่แค่ไปหาหมอ — ร่างกาย ความสัมพันธ์ การแสดงออก และอีกมาก</div>
+    </div>
+    <span style="color:#A8A099;font-size:16px;">→</span>
+  </a>
   <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;">
     <button class="btn-ghost" onclick="window.history.back()">← กลับ</button>
     <button class="btn-ghost" onclick="goHome()">กลับหน้าหลัก</button>
@@ -285,10 +304,24 @@
 <!-- SCREEN 5: SUCCESS -->
 <div class="screen" id="screen-success">
   <div class="success-glow">💛</div>
-  <div class="success-title">นัดแล้วนะ<br>รอ PR เลย</div>
-  <div class="success-sub">PR จะอ่านทุกอย่างที่คุณแชร์มา<br>และพร้อมรับฟังคุณอย่างเต็มที่ตั้งแต่ต้น</div>
+  <div class="success-title">นัดแล้ว<br>แล้วเจอกันนะ</div>
   <div class="success-card" id="success-card"></div>
-  <div class="success-sub" style="font-size:12px;color:#bbb;">คุณจะได้รับข้อความยืนยันผ่าน LINE<br>ถ้ามีอะไรเปลี่ยนแปลง ทีมจะติดต่อกลับนะ</div>
+  <!-- Next steps — only true things -->
+  <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+    <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(0,0,0,0.04);border-radius:12px;padding:12px 14px;">
+      <span style="font-size:16px;flex-shrink:0;">📩</span>
+      <div style="font-size:13px;color:var(--mid);line-height:1.6;">เราส่ง LINE ยืนยันนัดให้แล้ว กดดูในแชทได้เลย</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(0,0,0,0.04);border-radius:12px;padding:12px 14px;">
+      <span style="font-size:16px;flex-shrink:0;">📍</span>
+      <div style="font-size:13px;color:var(--mid);line-height:1.6;">ตรงเวลา ไปที่ห้องที่แจ้งในแชทได้เลย PR รอคุณอยู่</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(0,0,0,0.04);border-radius:12px;padding:12px 14px;">
+      <span style="font-size:16px;flex-shrink:0;">🔄</span>
+      <div style="font-size:13px;color:var(--mid);line-height:1.6;">ถ้าต้องการเปลี่ยนเวลา พิมพ์ "เปลี่ยนเวลา" ใน LINE ของเราได้เลย</div>
+    </div>
+  </div>
+  <button onclick="goHome()" style="background:none;border:1.5px solid var(--border);color:var(--mid);border-radius:12px;padding:12px 24px;font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;margin-top:8px;">กลับหน้าหลัก</button>
 </div>
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -383,12 +416,14 @@ function generateTimes(startStr,endStr) {
   return times;
 }
 
+// ── After-school slots only — จันทร์–ศุกร์ 15:30–17:30
+// ศุกร์ออกเร็วกว่า แต่ก็ยังเป็น after school เช่นกัน
 const ALL_SLOT_TIMES={
-  จันทร์:generateTimes("15:30","17:45"),
-  อังคาร:generateTimes("15:30","17:45"),
-  พุธ:generateTimes("15:30","17:45"),
-  พฤหัสบดี:generateTimes("15:30","17:45"),
-  ศุกร์:generateTimes("12:30","17:45"),
+  จันทร์:   generateTimes("15:30","17:30"),
+  อังคาร:   generateTimes("15:30","17:30"),
+  พุธ:      generateTimes("15:30","17:30"),
+  พฤหัสบดี: generateTimes("15:30","17:30"),
+  ศุกร์:    generateTimes("15:30","17:30"),
 };
 
 function show(id) {
@@ -425,16 +460,65 @@ window.onload=async()=>{
 
 async function checkPauseStatus() {
   try {
-    const res=await fetch(API_URL+"?action=getPauseStatus");
-    const d=await res.json();
-    if(d.pause) {
-      const daysLeft=Math.max(0,Math.ceil((new Date(d.pause.end)-new Date())/86400000));
-      document.getElementById("pause-days").innerText=daysLeft;
-      // Will show pause screen after questions if active
-      window._pauseActive=true;
-      window._pauseDays=daysLeft;
+    const res = await fetch(API_URL + "?action=getPauseStatus");
+    const d   = await res.json();
+    if (d.pause) {
+      const end      = new Date(d.pause.end);
+      const daysLeft = Math.max(0, Math.ceil((end - new Date()) / 86400000));
+      const type     = d.pause.type || "midterm";
+      // Set days in pause screen
+      document.getElementById("pause-days").innerText = daysLeft;
+      // Set message based on type
+      const msgs = {
+        midterm:  "ช่วงนี้เป็นช่วงสอบกลางภาค",
+        finals:   "ช่วงนี้เป็นช่วงสอบปลายภาค",
+        summer:   "ช่วงนี้เป็นปิดเทอมใหญ่",
+        holiday:  "ช่วงนี้เป็นวันหยุด"
+      };
+      const subMsgs = {
+        midterm:  "PR กำลังเตรียมสอบอยู่ เลยหยุดพักชั่วคราว จะกลับมาเร็ว ๆ นี้ 🤍",
+        finals:   "PR กำลังเตรียมสอบปลายภาค จะกลับมาเร็ว ๆ นี้ 🤍",
+        summer:   "PR กำลังพักร้อน จะกลับมาในเทอมหน้า 🤍",
+        holiday:  "ระบบหยุดพักชั่วคราว จะกลับมาเร็ว ๆ นี้ 🤍"
+      };
+      const titleEl = document.querySelector("#screen-pause .branch-title");
+      const bodyEl  = document.querySelector("#screen-pause .branch-body");
+      if (titleEl) titleEl.innerHTML = msgs[type] || msgs.midterm;
+      if (bodyEl)  bodyEl.innerHTML  = subMsgs[type] || subMsgs.midterm;
+      window._pauseActive = true;
+      window._pauseDays   = daysLeft;
+      window._pauseType   = type;
+      // ── KEY FIX: disable the start button so user never enters the flow ──
+      const startBtn = document.querySelector("#screen-intro .btn-primary");
+      if (startBtn) {
+        startBtn.disabled = true;
+        startBtn.textContent = "ระบบปิดชั่วคราว";
+        startBtn.style.cssText = "background:#ddd;color:#999;cursor:not-allowed;opacity:1;";
+      }
+      // Replace intro content with pause message directly
+      const introMiddle = document.querySelector("#screen-intro .intro-middle");
+      if (introMiddle) {
+        introMiddle.innerHTML = `
+          <div style="text-align:center;padding:8px 0;">
+            <div style="font-size:40px;margin-bottom:12px;">📚</div>
+            <div style="font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;line-height:1.3;margin-bottom:14px;">
+              ${msgs[type] || "ช่วงนี้หยุดพักชั่วคราว"}
+            </div>
+            <div style="font-size:14px;font-weight:300;color:var(--mid);line-height:1.8;margin-bottom:20px;">
+              ${subMsgs[type] || "จะกลับมาเร็ว ๆ นี้ 🤍"}
+            </div>
+            <div style="background:var(--cream);border-radius:20px;padding:20px;display:inline-block;">
+              <div style="font-family:'Noto Serif Thai',serif;font-size:48px;font-weight:700;color:var(--gold);line-height:1;">${daysLeft}</div>
+              <div style="font-size:12px;color:var(--mid);margin-top:4px;">วันที่จะเปิดรับอีกครั้ง</div>
+            </div>
+          </div>`;
+      }
+    } else {
+      window._pauseActive = false;
     }
-  } catch { window._pauseActive=false; }
+  } catch(e) {
+    window._pauseActive = false;
+  }
 }
 
 // ================================================================
@@ -491,7 +575,7 @@ function selectAnswer(btn,answer){
 // Fallback: generates local mock caseId if API unreachable
 // ================================================================
 async function submitAndRoute(){
-  if(window._pauseActive){show("screen-pause");return;}
+  if(window._pauseActive){ return; } // already blocked at intro screen
   show("screen-booking");
 
   let level="green";
@@ -573,7 +657,7 @@ function renderSlots(slots){
     const r=document.createElement("div");r.className="slots-row";
     grouped[day].forEach(s=>{
       const chip=document.createElement("button");chip.className="slot-chip";
-      chip.innerHTML=`${s.time} <span class="pr-count">${s.count} PR</span>`;
+      chip.innerHTML=`${s.time}<span class="pr-count">(${s.count})</span>`;
       chip.onclick=()=>selectSlot(chip,s.full);r.appendChild(chip);
     });
     g.appendChild(r);container.appendChild(g);
@@ -594,19 +678,39 @@ function selectSlot(chip,slot){
 //         | SLOT_TAKEN (race condition — another user booked same slot)
 // On SLOT_TAKEN: show sorry screen 5s → auto return to booking
 // ================================================================
+let _bookingInProgress = false; // global guard — survives overlay close/reopen
+
 async function finalConfirm(){
+  // Guard 1: global flag
+  if(_bookingInProgress) return;
+  _bookingInProgress = true;
+
+  // Guard 2: disable button immediately
+  const btn = document.getElementById("btn-confirm-final");
+  if(btn){ btn.disabled = true; btn.textContent = "กำลังยืนยัน..."; }
+
   closeConfirmOverlay();
+
   let assignedRoom = null;
   try {
-    const d=await apiCall({action:"bookSlot",userId,caseId,slot:chosenSlot});
-    if(d.status==="SLOT_TAKEN"){showSorry();return;}
-    if(d.status!=="OK") throw new Error(d.message);
+    const d = await apiCall({action:"bookSlot", userId, caseId, slot:chosenSlot});
+    if(d.status === "SLOT_TAKEN" || d.status === "ALREADY_BOOKED"){
+      showSorry(); return;
+    }
+    if(d.status !== "OK") throw new Error(d.message||"unknown");
     assignedRoom = d.room;
-  }catch(e){
-    if(e.message==="SLOT_TAKEN"){showSorry();return;}
-    console.warn("bookSlot error:",e);
+    showSuccess(assignedRoom);
+  } catch(e){
+    if(e.message === "SLOT_TAKEN" || e.message === "ALREADY_BOOKED"){
+      showSorry(); return;
+    }
+    console.warn("bookSlot error:", e);
+    showSuccess(null); // show success if uncertain — better than leaving user stuck
+  } finally {
+    // Always re-enable so user can retry if needed
+    _bookingInProgress = false;
+    if(btn){ btn.disabled = false; btn.textContent = "ยืนยันเลย →"; }
   }
-  showSuccess(assignedRoom);
 }
 
 function showSorry(){
@@ -614,6 +718,9 @@ function showSorry(){
   setTimeout(()=>{
     chosenSlot=null;
     document.getElementById("btn-book").disabled=true;
+    // Re-enable confirm button for next attempt
+    const btn=document.getElementById("btn-confirm-final");
+    if(btn){ btn.disabled=false; btn.textContent="ยืนยันเลย →"; }
     document.querySelectorAll(".slot-chip").forEach(c=>c.classList.remove("chosen"));
     loadSlots();
     show("screen-booking");
@@ -705,23 +812,108 @@ function toggleSpecialSlot(chip,slot){
 // Admin sees this in dashboard → can addTempPR to fulfill
 // If not fulfilled by 20:00 of requested day → push message auto-sent
 // ================================================================
+// Track selected time windows for special request
+let selectedTimeWindows = [];
+
+// ── Special Request slot selection ──────────────────────────
+const SPECIAL_SLOTS = {
+  "จันทร์":    ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  "อังคาร":    ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  "พุธ":       ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  "พฤหัสบดี": ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  "ศุกร์":     ["12:30–13:30","13:00–14:00","13:30–14:30","14:00–15:00","14:30–15:30","15:00–16:00","15:30–16:30","16:00–17:00"]
+};
+let _specialSelectedSlots = new Set();
+
+function buildSpecialSlotGrid(){
+  const grid = document.getElementById("special-slot-grid");
+  if(!grid) return;
+  _specialSelectedSlots.clear();
+  grid.innerHTML = "";
+  Object.entries(SPECIAL_SLOTS).forEach(([day, times]) => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;flex-direction:column;gap:6px;";
+    const lbl = document.createElement("div");
+    lbl.style.cssText = "font-size:11px;font-weight:700;color:var(--mid);letter-spacing:0.5px;";
+    lbl.textContent = day;
+    row.appendChild(lbl);
+    const chips = document.createElement("div");
+    chips.style.cssText = "display:flex;gap:6px;flex-wrap:wrap;";
+    times.forEach(time => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.style.cssText = "padding:8px 14px;font-size:13px;border-radius:10px;";
+      btn.textContent = time;
+      const key = day + " " + time;
+      btn.onclick = () => {
+        const on = _specialSelectedSlots.has(key);
+        if(on){ _specialSelectedSlots.delete(key); btn.classList.remove("selected"); btn.style.background=""; btn.style.borderColor=""; }
+        else  { _specialSelectedSlots.add(key);    btn.classList.add("selected");    btn.style.background="var(--gold-soft)"; btn.style.borderColor="var(--gold)"; }
+      };
+      chips.appendChild(btn);
+    });
+    row.appendChild(chips);
+    grid.appendChild(row);
+  });
+}
+
+function toggleTimeWindow(btn, value){
+  // Legacy — kept for compatibility
+  if(selectedTimeWindows.includes(value)){
+    selectedTimeWindows = selectedTimeWindows.filter(v=>v!==value);
+    btn.classList.remove("pressed");
+  } else {
+    selectedTimeWindows.push(value);
+    btn.classList.add("pressed");
+  }
+}
+
 async function submitSpecialRequest(){
+  const slots = [..._specialSelectedSlots];
+  if(!slots.length){ toast("กรุณาเลือก slot อย่างน้อย 1 ช่วงเวลา"); return; }
+  const note = document.getElementById("special-note")?.value?.trim() || "";
+  const btn  = document.getElementById("btn-special-submit");
+  if(btn){ btn.disabled=true; btn.textContent="กำลังส่ง..."; }
   try {
     await apiCall({
-      action:"createSpecialRequest",
-      userId,caseId,
-      slots:specialSlots,
-      q1:answers[0],
-      level: answers[1]==="มากเลย ยากมากตอนนี้"?"red":
-             answers[1]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว"?"yellow":"green"
+      action:   "createSpecialRequest",
+      userId,   caseId,
+      slots:    JSON.stringify(slots),  // specific after-school slots
+      timeNote: note,
+      q1:       answers[0],
+      level:    answers[1]==="มากเลย ยากมากตอนนี้"  ? "red"    :
+                answers[1]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว" ? "yellow" : "green"
     });
-  } catch { console.warn("createSpecialRequest failed"); }
+  } catch(e) { console.warn("createSpecialRequest failed", e); }
+  finally { if(btn){ btn.disabled=false; btn.textContent="ส่งคำขอ →"; } }
+  _specialSelectedSlots.clear();
+  selectedTimeWindows = [];
   show("screen-notify-success");
 }
 
 function goHome(){window.location.href="index.html";}
 
+function goBackFromQuestion(){
+  // Back from questions → return to intro
+  if(currentQ > 0){
+    // Can go back within questions
+    currentQ--;
+    answers.pop();
+    renderQuestion();
+  } else {
+    // At Q1 → go back to intro
+    show("screen-intro");
+  }
+}
+
+function goBackFromBooking(){
+  // Back from booking → return to last question
+  currentQ = questions.length - 1;
+  answers = answers.slice(0, currentQ);
+  renderQuestion();
+  show("screen-question");
+}
+
 </script>
 </body>
 </html>
-
