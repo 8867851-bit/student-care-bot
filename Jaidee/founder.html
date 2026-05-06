@@ -1,377 +1,821 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <title>ใจดี TU — Founder's Pick</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
-  <style>
-    :root{
-      --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
-      --softer:#CCC;--border:#EEEBE4;--white:#FFFFFF;
-      --gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>ใจดี TU — จดหมายเหตุ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;600;700&family=Mitr:wght@300;400;500&family=Special+Elite&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --paper:      #F7F0E4;
+  --paper-warm: #F0E8D8;
+  --paper-deep: #E8DCC8;
+  --ink:        #1E1810;
+  --ink-mid:    #5A4E3C;
+  --ink-soft:   #9A8E7C;
+  --ink-faint:  #C8BEB0;
+  --gold:       #C8860A;
+  --gold-warm:  #E8A020;
+  --wax:        #8B2020;
+  --wax-lit:    #B03030;
+  --rule:       #DDD4C0;
+  --env-bg:     #EDE5D4;
+  --shadow:     rgba(30,24,16,0.13);
+}
 
-    /* HEADER */
-    .page-header{padding:48px 24px 28px;}
-    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
-    .headline{font-family:'Playfair Display',serif;font-size:30px;line-height:1.25;}
-    .headline em{font-style:italic;color:var(--gold);}
-    .page-sub{font-size:14px;color:var(--mid);line-height:1.75;margin-top:10px;}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; overflow:hidden; background:var(--paper); font-family:'Mitr',sans-serif; color:var(--ink); }
 
-    /* SECTION LABEL */
-    .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);padding:0 24px;margin-bottom:16px;}
+body::before {
+  content:''; position:fixed; inset:0; z-index:9999; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.032'/%3E%3C/svg%3E");
+  background-size:300px; mix-blend-mode:multiply;
+}
 
-    /* ── LEADERS CAROUSEL ── */
-    .leaders-scroll{
-      display:flex;overflow-x:auto;gap:16px;
-      padding:0 24px 20px;scrollbar-width:none;
-      scroll-snap-type:x mandatory;
-    }
-    .leaders-scroll::-webkit-scrollbar{display:none;}
+/* ── PAGER ── */
+.pager { width:100%; height:100%; position:relative; }
+.page {
+  position:absolute; inset:0; overflow-y:auto; overscroll-behavior:contain;
+  background:var(--paper); padding-bottom:80px;
+  transition:transform 0.42s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+  will-change:transform;
+}
+.page.away-left  { transform:translateX(-6%); opacity:0; pointer-events:none; }
+.page.away-right { transform:translateX(100%); opacity:0; pointer-events:none; }
 
-    .leader-card{
-      flex-shrink:0;width:220px;
-      border-radius:20px;overflow:hidden;
-      background:var(--dark);position:relative;
-      cursor:pointer;scroll-snap-align:start;
-      transition:transform 0.15s ease;
-    }
-    .leader-card:active{transform:scale(0.97);}
+/* ── TOP BAR ── */
+.topbar {
+  padding:10px 18px; border-bottom:1px solid var(--rule);
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; background:var(--paper);
+}
+.topbar-brand { font-family:'Special Elite',cursive; font-size:9.5px; color:var(--ink-soft); letter-spacing:.3px; line-height:1.5; flex:1; min-width:0; }
+.topbar-download { font-family:'Special Elite',cursive; font-size:10px; color:var(--wax); border:1px solid rgba(139,32,32,.35); border-radius:99px; padding:4px 12px; cursor:pointer; white-space:nowrap; background:none; flex-shrink:0; transition:background .15s; }
+.topbar-download:active { background:rgba(139,32,32,.06); }
 
-    .leader-photo{
-      width:100%;height:280px;object-fit:cover;
-      display:block;opacity:0.75;
-    }
-    .leader-photo-placeholder{
-      width:100%;height:280px;
-      background:linear-gradient(160deg,#2A2A2A,#1A1A1A);
-      display:flex;align-items:center;justify-content:center;
-      font-size:64px;
-    }
+/* ── MASTHEAD ── */
+.masthead { padding:24px 22px 18px; }
+.masthead-title { font-family:'Noto Serif Thai',serif; font-size:52px; font-weight:700; color:var(--ink); line-height:1; }
+.masthead-title em { font-style:italic; color:var(--gold); }
 
-    .leader-overlay{
-      position:absolute;bottom:0;left:0;right:0;
-      padding:20px 16px 16px;
-      background:linear-gradient(transparent,rgba(0,0,0,0.88));
-      display:flex;flex-direction:column;gap:10px;
-    }
+/* ── YEAR TABS ── */
+.year-tabs-wrap { padding:0 22px; border-bottom:1px solid var(--rule); display:flex; gap:0; overflow-x:auto; scrollbar-width:none; }
+.year-tabs-wrap::-webkit-scrollbar { display:none; }
+.year-tab { flex-shrink:0; padding:11px 18px 10px; font-family:'Special Elite',cursive; font-size:14px; color:var(--ink-soft); border-bottom:2px solid transparent; cursor:pointer; transition:color .15s,border-color .15s; background:none; border-top:none; border-left:none; border-right:none; }
+.year-tab.active { color:var(--ink); border-bottom-color:var(--ink); }
 
-    .leader-year{
-      font-size:10px;font-weight:700;letter-spacing:2px;
-      text-transform:uppercase;color:rgba(255,255,255,0.5);
-    }
-    .leader-name{
-      font-family:'Playfair Display',serif;
-      font-size:17px;line-height:1.3;color:white;
-    }
-    .leader-read-btn{
-      align-self:flex-start;
-      background:rgba(255,255,255,0.12);
-      border:1px solid rgba(255,255,255,0.2);
-      border-radius:99px;padding:5px 14px;
-      font-size:11px;font-weight:600;
-      font-family:'Sarabun',sans-serif;
-      color:white;cursor:pointer;
-      backdrop-filter:blur(4px);
-      transition:background 0.15s;
-    }
-    .leader-read-btn:active{background:rgba(255,255,255,0.25);}
+/* ── YEAR PANEL ── */
+.year-panel { display:none; padding:32px 22px 0; }
+.year-panel.active { display:block; }
 
-    /* ── LETTER OVERLAY ── */
-    .overlay{
-      display:none;position:fixed;inset:0;
-      background:rgba(0,0,0,0.55);z-index:100;
-      align-items:flex-end;
-    }
-    .overlay.active{display:flex;animation:overlayIn 0.25s ease both;}
-    @keyframes overlayIn{from{opacity:0}to{opacity:1}}
+/* ══════════════════════════════════════════════
+   ENVELOPE — redesigned, no year inside
+   Portrait card feel, postmark aesthetic
+══════════════════════════════════════════════ */
+.env-outer {
+  max-width:270px; margin:0 auto 44px;
+  opacity:0; transform:translateY(10px);
+  transition:opacity .4s ease, transform .4s ease;
+  position:relative;
+}
+.env-outer.visible { opacity:1; transform:translateY(0); }
 
-    .letter-sheet{
-      background:var(--white);border-radius:24px 24px 0 0;
-      width:100%;max-height:90vh;overflow-y:auto;
-      animation:sheetUp 0.3s ease both;
-    }
-    @keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+/* pages peeking from top */
+.env-peek { display:flex; justify-content:center; position:absolute; top:-8px; left:50%; transform:translateX(-50%); pointer-events:none; z-index:1; }
+.peek-leaf { width:46px; height:10px; background:white; border-radius:1px 1px 0 0; border:1px solid rgba(200,190,170,.5); border-bottom:none; box-shadow:0 -1px 5px rgba(30,24,16,.08); }
 
-    .letter-photo{width:100%;height:220px;object-fit:cover;}
-    .letter-photo-placeholder{width:100%;height:220px;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:72px;}
+.envelope {
+  background:var(--env-bg);
+  border-radius:3px 3px 6px 6px;
+  box-shadow:0 6px 24px var(--shadow), 0 0 0 1px rgba(200,190,170,.5);
+  cursor:pointer; position:relative; overflow:visible;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.envelope:hover  { transform:translateY(-4px); box-shadow:0 12px 36px rgba(30,24,16,.18), 0 0 0 1px rgba(200,190,170,.5); }
+.envelope:active { transform:scale(0.975); }
 
-    .letter-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:16px auto 0;}
+/* flap — deeper triangle for better proportion */
+.env-flap-svg { width:100%; display:block; }
 
-    .letter-body{padding:20px 24px 48px;display:flex;flex-direction:column;gap:20px;}
+/* postmark circle — top right corner detail */
+.env-postmark {
+  position:absolute; top:14px; right:14px;
+  width:42px; height:42px; border-radius:50%;
+  border:1.5px solid rgba(90,78,60,.2);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:0;
+}
+.env-postmark::before {
+  content:''; position:absolute; inset:4px; border-radius:50%;
+  border:1px solid rgba(90,78,60,.12);
+}
+.env-postmark-year { font-family:'Special Elite',cursive; font-size:8px; color:var(--ink-soft); letter-spacing:1px; }
+.env-postmark-dot  { width:3px; height:3px; border-radius:50%; background:rgba(90,78,60,.25); margin:1px 0; }
+.env-postmark-club { font-family:'Special Elite',cursive; font-size:6px; color:var(--ink-soft); letter-spacing:.5px; text-align:center; line-height:1.3; }
 
-    .letter-meta{display:flex;flex-direction:column;gap:4px;}
-    .letter-year-badge{
-      display:inline-block;background:var(--gold-soft);
-      border:1px solid var(--gold-border);border-radius:99px;
-      padding:3px 12px;font-size:11px;font-weight:700;color:#7A5C00;
-      align-self:flex-start;
-    }
-    .letter-name{font-family:'Playfair Display',serif;font-size:26px;line-height:1.3;}
+/* envelope body content */
+.env-body {
+  padding:16px 18px 28px;
+  background:
+    linear-gradient(135deg, transparent calc(50% - .5px), rgba(180,168,148,.18) calc(50% - .5px), rgba(180,168,148,.18) calc(50% + .5px), transparent calc(50% + .5px)),
+    linear-gradient(225deg, transparent calc(50% - .5px), rgba(180,168,148,.18) calc(50% - .5px), rgba(180,168,148,.18) calc(50% + .5px), transparent calc(50% + .5px)),
+    var(--env-bg);
+}
 
-    .letter-section{display:flex;flex-direction:column;gap:8px;}
-    .letter-q{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--soft);}
-    .letter-a{font-size:14px;color:var(--mid);line-height:1.85;white-space:pre-wrap;}
+/* "to:" address line feel */
+.env-to {
+  font-family:'Special Elite',cursive;
+  font-size:9px; color:var(--ink-faint);
+  letter-spacing:1.5px; text-transform:uppercase;
+  margin-bottom:4px;
+}
+.env-recipient {
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px; font-style:italic; font-weight:400;
+  color:var(--ink-mid); line-height:1.3;
+  margin-bottom:16px;
+}
 
-    .letter-divider{height:1px;background:var(--border);}
+/* thin rule across envelope */
+.env-rule { height:1px; background:rgba(90,78,60,.15); margin:0 0 12px; }
 
-    .letter-close{
-      background:none;border:none;color:var(--soft);
-      font-size:13px;font-family:'Sarabun',sans-serif;
-      cursor:pointer;padding:8px;text-align:center;width:100%;
-    }
+.env-from-label {
+  font-family:'Special Elite',cursive;
+  font-size:9px; color:var(--ink-faint);
+  letter-spacing:1.5px; text-transform:uppercase;
+  margin-bottom:3px;
+}
+.env-from-value {
+  font-family:'Special Elite',cursive;
+  font-size:13px; color:var(--ink-mid);
+}
+.env-hint {
+  margin-top:14px; font-size:10px; color:var(--ink-faint);
+  font-family:'Special Elite',cursive; letter-spacing:.5px;
+}
 
-    /* ── FOUNDER SIGNATURE ── */
-    .founder-section{padding:32px 24px 0;}
+/* wax seal — centered bottom */
+.wax-seal {
+  position:absolute; bottom:-24px; left:50%; transform:translateX(-50%);
+  width:48px; height:48px; border-radius:50%;
+  background:white;
+  box-shadow:0 3px 12px rgba(30,24,16,.15), 0 0 0 1px rgba(200,190,170,.5);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden; z-index:10; transition:transform .18s;
+}
+.wax-seal img { width:44px; height:44px; object-fit:contain; border-radius:50%; display:block; }
+.envelope:hover .wax-seal { transform:translateX(-50%) rotate(10deg) scale(1.07); }
+.env-seal-spacer { height:36px; }
 
-    .founder-divider{
-      height:1px;background:var(--border);margin-bottom:32px;
-    }
+/* ══════════════════════════════════════════════
+   FOLDER CAROUSEL
+   ‹ › navigates BETWEEN folders
+   Tap folder to open book reader
+══════════════════════════════════════════════ */
+.folders-section { margin-top:8px; }
 
-    .founder-card{
-      background:var(--dark);border-radius:20px;
-      padding:28px 24px;color:white;
-      display:flex;flex-direction:column;gap:16px;
-      position:relative;overflow:hidden;
-    }
+.section-lbl {
+  font-family:'Special Elite',cursive; font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--ink-soft);
+  display:flex; align-items:center; gap:10px; margin-bottom:20px;
+}
+.section-lbl::after { content:''; flex:1; height:1px; background:var(--rule); }
 
-    .founder-card::before{
-      content:"✨";font-size:120px;
-      position:absolute;right:-20px;top:-20px;
-      opacity:0.06;line-height:1;
-    }
+/* carousel wrapper */
+.folder-carousel {
+  position:relative;
+  opacity:0; transform:translateY(10px);
+  transition:opacity .4s ease .12s, transform .4s ease .12s;
+}
+.folder-carousel.visible { opacity:1; transform:translateY(0); }
 
-    .founder-eyebrow{
-      font-size:10px;font-weight:700;letter-spacing:2px;
-      text-transform:uppercase;color:var(--gold);
-    }
+/* single folder shown at a time */
+.folder-stage {
+  position:relative;
+  /* side arrows need room */
+  padding:0 44px;
+}
 
-    .founder-title{
-      font-family:'Playfair Display',serif;
-      font-size:22px;line-height:1.35;
-    }
+/* the folder card */
+.folder-card {
+  position:relative; cursor:pointer;
+  transition:transform .18s ease;
+}
+.folder-card:active { transform:scale(0.97); }
 
-    .founder-body{
-      font-size:13px;color:rgba(255,255,255,0.6);
-      line-height:1.85;
-    }
+/* folder tab */
+.folder-tab-shape {
+  position:absolute; top:-13px; left:0;
+  width:88px; height:15px; border-radius:6px 6px 0 0;
+}
 
-    .founder-status{
-      background:rgba(245,166,35,0.15);
-      border:1px solid rgba(245,166,35,0.25);
-      border-radius:12px;padding:14px 16px;
-      font-size:13px;color:rgba(255,255,255,0.7);
-      line-height:1.7;
-    }
+/* folder top strip + transparent body */
+.folder-top {
+  height:48px; border-radius:3px 12px 0 0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 16px;
+}
+.folder-card-name { font-family:'Special Elite',cursive; font-size:13px; color:white; letter-spacing:.5px; text-shadow:0 1px 2px rgba(0,0,0,.2); }
+.folder-card-meta { font-family:'Special Elite',cursive; font-size:10px; color:rgba(255,255,255,.55); }
 
-    .founder-quote{
-      font-family:'Playfair Display',serif;
-      font-size:18px;font-style:italic;
-      color:rgba(255,255,255,0.85);
-      line-height:1.5;
-      border-left:2px solid var(--gold);
-      padding-left:16px;
-    }
+/* A4 paper — visible inside folder */
+.folder-a4 {
+  width:100%; aspect-ratio:1/1.414;
+  background:white;
+  border-radius:0 0 3px 3px;
+  overflow:hidden; position:relative;
+  box-shadow:0 6px 24px rgba(30,24,16,.16), 0 0 0 1px rgba(200,190,170,.25);
+  /* subtle folder sides */
+  border-left:2px solid rgba(0,0,0,.08);
+  border-right:2px solid rgba(0,0,0,.08);
+  border-bottom:2px solid rgba(0,0,0,.1);
+}
+.folder-a4 img { width:100%; height:100%; object-fit:cover; display:block; }
+.folder-a4-placeholder {
+  width:100%; height:100%;
+  background:repeating-linear-gradient(transparent,transparent 31px,rgba(180,160,120,.11) 31px,rgba(180,160,120,.11) 32px), white;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; padding:32px; position:relative;
+}
+.folder-a4-placeholder::before { content:''; position:absolute; top:0; bottom:0; left:44px; width:1px; background:rgba(200,100,100,.14); }
+.fap-emoji { font-size:28px; opacity:.3; position:relative; }
+.fap-text  { font-family:'Special Elite',cursive; font-size:11px; color:var(--ink-soft); text-align:center; line-height:1.85; position:relative; }
 
-    .founder-date{
-      font-size:11px;color:rgba(255,255,255,0.3);
-      margin-top:4px;
-    }
+/* "tap to read" strip at bottom of paper */
+.folder-read-strip {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:10px 14px;
+  background:linear-gradient(transparent, rgba(255,255,255,.95) 40%);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.frs-title { font-size:11px; font-weight:400; color:var(--ink-mid); }
+.frs-cta   { font-family:'Special Elite',cursive; font-size:10px; color:var(--gold); letter-spacing:.5px; }
 
-    /* BACK */
-    .back-btn{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:16px 24px;display:block;}
+/* side nav buttons */
+.folder-prev, .folder-next {
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(247,240,228,.9); backdrop-filter:blur(6px);
+  border:1px solid var(--rule);
+  color:var(--ink-mid); font-size:18px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(30,24,16,.12);
+  transition:background .15s, transform .15s;
+  z-index:5;
+}
+.folder-prev { left:0; }
+.folder-next { right:0; }
+.folder-prev:active { transform:translateY(-50%) scale(0.9); }
+.folder-next:active { transform:translateY(-50%) scale(0.9); }
+.folder-prev:disabled, .folder-next:disabled { opacity:.22; cursor:default; pointer-events:none; }
 
-    /* LOADING */
-    .loading-row{display:flex;align-items:center;gap:10px;color:var(--soft);font-size:14px;padding:0 24px;}
-    .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-  </style>
+/* dots */
+.folder-dots { display:flex; gap:5px; justify-content:center; margin-top:12px; }
+.folder-dot  { width:5px; height:5px; border-radius:50%; background:var(--ink-faint); transition:background .2s,transform .2s; }
+.folder-dot.active { background:var(--ink-mid); transform:scale(1.25); }
+
+/* ══════════════════════════════════════════════
+   BOOK READER — full page, all papers scrollable
+══════════════════════════════════════════════ */
+.book-nav {
+  position:sticky; top:0; z-index:20; padding:12px 20px;
+  background:rgba(247,240,228,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid transparent;
+  display:flex; align-items:center; gap:10px;
+  transition:border-color .2s;
+}
+.book-nav.scrolled { border-bottom-color:var(--rule); }
+.book-nav-back { background:none; border:none; font-family:'Special Elite',cursive; font-size:13px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.book-nav-back::before { content:'←'; }
+.book-nav-title { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:600; color:var(--ink); opacity:0; transition:opacity .25s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.book-nav-title.show { opacity:1; }
+
+.book-header { padding:28px 20px 20px; }
+.book-folder-chip {
+  display:inline-flex; align-items:center; gap:6px;
+  border-radius:99px; padding:5px 14px;
+  font-family:'Special Elite',cursive; font-size:11px; color:white;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.book-folder-chip-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.6); }
+.book-title { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:var(--ink); line-height:1.15; }
+.book-count { font-family:'Special Elite',cursive; font-size:10px; color:var(--ink-soft); letter-spacing:1px; margin-top:4px; }
+
+/* pages */
+.book-pages { padding:4px 16px 0; display:flex; flex-direction:column; gap:14px; }
+.book-page {
+  background:white; border-radius:2px;
+  box-shadow:0 4px 18px var(--shadow), 0 0 0 1px rgba(200,190,170,.25);
+  overflow:hidden; position:relative;
+}
+.book-page img { width:100%; display:block; }
+.book-page-num { position:absolute; bottom:8px; left:12px; font-family:'Special Elite',cursive; font-size:9px; color:var(--ink-faint); letter-spacing:1px; }
+.book-page-placeholder {
+  width:100%; aspect-ratio:1/1.414;
+  background:repeating-linear-gradient(transparent,transparent 31px,rgba(180,160,120,.12) 31px,rgba(180,160,120,.12) 32px), white;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; padding:40px; position:relative;
+}
+.book-page-placeholder::before { content:''; position:absolute; top:0; bottom:0; left:48px; width:1px; background:rgba(200,100,100,.16); }
+
+/* pdf strip */
+.pdf-strip { margin:24px 16px 0; background:var(--ink); border-radius:12px; padding:16px 18px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 20px rgba(30,24,16,.18); }
+.pdf-strip-body { flex:1; }
+.pdf-strip-title { font-size:13px; font-weight:500; color:white; margin-bottom:1px; }
+.pdf-strip-sub   { font-size:11px; font-weight:300; color:rgba(255,255,255,.45); }
+.pdf-btn { background:linear-gradient(135deg,var(--gold-warm),var(--gold)); color:white; border:none; border-radius:8px; padding:10px 16px; font-size:12px; font-family:'Mitr',sans-serif; font-weight:500; cursor:pointer; flex-shrink:0; box-shadow:0 3px 10px rgba(200,134,10,.3); transition:opacity .15s; }
+.pdf-btn:active { opacity:.8; }
+
+/* ── PROFILE (envelope reader) ── */
+.prof-nav { position:sticky; top:0; z-index:20; padding:12px 22px; background:rgba(247,240,228,.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid transparent; display:flex; align-items:center; gap:10px; transition:border-color .2s; }
+.prof-nav.scrolled { border-bottom-color:var(--rule); }
+.prof-nav-back { background:none; border:none; font-family:'Special Elite',cursive; font-size:13px; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.prof-nav-back::before { content:'←'; }
+.prof-nav-name { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:600; color:var(--ink); opacity:0; transition:opacity .25s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.prof-nav-name.show { opacity:1; }
+.prof-header { padding:28px 22px 20px; display:flex; align-items:flex-start; gap:14px; }
+.prof-mini-env { width:54px; flex-shrink:0; position:relative; }
+.prof-mini-env svg { width:100%; display:block; }
+.prof-mini-body { padding:5px 5px 7px; background:var(--env-bg); text-align:center; }
+.prof-mini-year { font-family:'Special Elite',cursive; font-size:8px; color:var(--ink-mid); }
+.prof-mini-seal { position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); width:24px; height:24px; border-radius:50%; background:white; display:flex; align-items:center; justify-content:center; overflow:hidden; box-shadow:0 2px 6px rgba(100,20,20,.15); }
+.prof-mini-seal img { width:16px; height:16px; object-fit:contain; border-radius:50%; }
+.prof-header-text { flex:1; }
+.prof-eyebrow { font-family:'Special Elite',cursive; font-size:10px; color:var(--ink-soft); letter-spacing:1px; margin-bottom:6px; }
+.prof-name { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--ink); line-height:1.15; }
+.page-reader { padding:0 18px; display:flex; flex-direction:column; gap:14px; }
+.scan-page { background:white; border-radius:2px; box-shadow:0 3px 16px var(--shadow), 0 0 0 1px rgba(200,190,170,.3); overflow:hidden; position:relative; }
+.scan-page img { width:100%; display:block; min-height:200px; object-fit:cover; }
+.scan-placeholder { width:100%; aspect-ratio:3/4; background:repeating-linear-gradient(transparent,transparent 31px,rgba(180,160,120,.12) 31px,rgba(180,160,120,.12) 32px),white; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:40px 28px; position:relative; }
+.scan-placeholder::before { content:''; position:absolute; top:0; bottom:0; left:48px; width:1px; background:rgba(200,100,100,.18); }
+.scan-page-num { position:absolute; bottom:8px; left:12px; font-family:'Special Elite',cursive; font-size:9px; color:var(--ink-faint); letter-spacing:1px; }
+
+/* toast */
+.toast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(14px); background:var(--ink); color:white; font-size:12px; font-family:'Special Elite',cursive; padding:10px 22px; border-radius:99px; opacity:0; transition:opacity .2s,transform .2s; pointer-events:none; z-index:9998; white-space:nowrap; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* skeleton */
+.skel-wrap { padding:0 22px; display:flex; flex-direction:column; gap:24px; margin-top:8px; }
+.skel { border-radius:4px; background:linear-gradient(90deg,var(--paper-warm) 25%,var(--paper-deep) 50%,var(--paper-warm) 75%); background-size:200% 100%; animation:shimmer 1.6s infinite; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+.admin-strip { margin:32px 22px 0; border:1px dashed var(--rule); border-radius:12px; padding:14px 16px; display:flex; gap:10px; align-items:flex-start; }
+.admin-text { font-size:11px; font-weight:300; color:var(--ink-soft); line-height:1.75; }
+.admin-text strong { font-weight:500; color:var(--ink-mid); }
+
+@keyframes envLift { 0%{transform:scale(1) translateY(0);opacity:1} 45%{transform:scale(1.03) translateY(-8px);opacity:1} 100%{transform:scale(.94) translateY(-30px);opacity:0} }
+.env-outer.opening .envelope { animation:envLift .34s ease forwards; }
+
+/* folder slide transition */
+.folder-stage { overflow:hidden; }
+.folder-card { transition:opacity .18s ease, transform .18s ease; }
+.folder-card.slide-out-left  { opacity:0; transform:translateX(-12px); }
+.folder-card.slide-out-right { opacity:0; transform:translateX(12px); }
+</style>
 </head>
 <body>
+<div class="pager">
 
-<!-- LETTER OVERLAY -->
-<div class="overlay" id="overlay-letter" onclick="closeOverlay(event)">
-  <div class="letter-sheet" id="letter-sheet"></div>
-</div>
-
-<!-- HEADER -->
-<div class="page-header">
-  <div class="eyebrow">ใจดี TU · Founder's Pick</div>
-  <div class="headline">จาก<em>รุ่นสู่รุ่น</em></div>
-  <div class="page-sub">
-    ทุกคนที่เคยนำพาชมรมนี้มาข้างหน้า
-    ทิ้งบางอย่างไว้ให้คนที่จะมาทีหลัง
+  <!-- ════════ INDEX ════════ -->
+  <div class="page" id="pg-index">
+    <div class="topbar">
+      <div class="topbar-brand">ใจดี TU · ชมรมจิตวิทยา x ชมรมเพื่อนที่ปรึกษา</div>
+      <button class="topbar-download" id="dl-btn">↓ ฉบับเต็ม</button>
+    </div>
+    <div class="masthead">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <img src="school-logo.png" alt="ใจดี TU logo" style="width:44px;height:44px;object-fit:contain;border-radius:50%;flex-shrink:0;"/>
+        <div class="masthead-title" style="margin-bottom:0;"><em>จดหมาย</em>เหตุ</div>
+      </div>
+    </div>
+    <div class="year-tabs-wrap" id="year-tabs"></div>
+    <div class="skel-wrap" id="skel-wrap">
+      <div class="skel" style="height:220px;"></div>
+      <div class="skel" style="height:180px;opacity:.6;"></div>
+    </div>
+    <div id="year-panels"></div>
+    <div class="admin-strip" id="admin-strip" style="display:none;">
+      <span style="font-size:15px;flex-shrink:0;">✉️</span>
+      <div class="admin-text"><strong>เพิ่มรุ่นใหม่ —</strong> Sheet "Founders": เพิ่ม row ใหม่ ใส่ URL รูปสแกนในคอลัมน์ pages (comma-separated) และ URL PDF ในคอลัมน์ pdf_url</div>
+    </div>
   </div>
+
+  <!-- ════════ PROFILE (envelope reader) ════════ -->
+  <div class="page away-right" id="pg-profile"></div>
+
+  <!-- ════════ BOOK READER (folder reader) ════════ -->
+  <div class="page away-right" id="pg-book"></div>
+
 </div>
-
-<!-- LEADERS SECTION -->
-<div class="section-label">ผู้นำชมรมจิตวิทยา</div>
-
-<div id="loading-row" class="loading-row">
-  <div class="spinner"></div>
-  <span>กำลังโหลด...</span>
-</div>
-
-<div class="leaders-scroll" id="leaders-scroll"></div>
-
-<button class="back-btn" onclick="window.history.back()">← กลับ</button>
+<div class="toast" id="toast"></div>
 
 <script>
-
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
 
-// ================================================================
-// MOCK DATA
-// Admin: add leaders via Google Form → approve → add to "Founders" sheet
-// Columns: id | full_name | year | photo_url | vision | proudest |
-//          struggle | letter_to_next | active
-//
-// GOOGLE FORM QUESTIONS:
-// 1. ชื่อ-นามสกุล และปีที่ดำรงตำแหน่ง
-// 2. เมื่อคุณก้าวเข้ามารับตำแหน่งนี้ คุณอยากทำให้เกิดอะไรขึ้น?
-// 3. สิ่งที่คุณภูมิใจที่สุดในปีนี้คืออะไร และทำไม?
-// 4. บทเรียนที่ยากที่สุดที่คุณเผชิญคืออะไร และมันสอนอะไรคุณ?
-// 5. ถ้าคุณมีโอกาสนั่งคุยกับผู้นำรุ่นต่อไป คุณอยากบอกอะไรเขา?
-// 6. รูปภาพ (Cloudinary URL)
-// ================================================================
-
-const MOCK_LEADERS = [
+const MOCK_DATA = [
   {
-    id: "L001",
-    full_name: "ชื่อ นามสกุล",
-    year: "2567–2568",
-    photo_url: "",
-    vision: "อยากให้ชมรมนี้เป็นพื้นที่ที่ทุกคนรู้สึกว่าตัวเองมีคุณค่า และรู้ว่ามีคนเห็นพวกเขาอยู่เสมอ",
-    proudest: "วันที่นักเรียนคนแรกส่ง feedback มาว่า session ทำให้เขารู้สึกดีขึ้น นั่นคือวันที่รู้ว่าทำถูกแล้ว",
-    struggle: "การ balance ระหว่างการดูแลทีมและดูแลตัวเอง เรียนรู้ว่า leader ที่ดีต้องรู้จัก rest ด้วย",
-    letter_to_next: "เชื่อในทีมของคุณ ความคิดที่ดีที่สุดไม่ได้มาจากคนคนเดียว มันมาจากห้องที่ทุกคนรู้สึกปลอดภัยพอที่จะพูดความจริง",
-    active: true
+    year:"2568", pdf_url:"",
+    founder:{ id:"F001", full_name:"ชื่อ-นามสกุล", pages:[], pdf_url:"" },
+    folders:[
+      { id:"fd-2568-1", name:"Workshop Design", color:"#C8860A",
+        papers:[
+          { title:"Mental Health Day Workshop", date:"ม.ค. 2568", pages:[], pdf_url:"" },
+          { title:"Buddy System Planning",      date:"ก.พ. 2568", pages:[], pdf_url:"" },
+          { title:"Psychoeducation Session",    date:"มี.ค. 2568", pages:[], pdf_url:"" }
+        ]
+      },
+      { id:"fd-2568-2", name:"เสียงทีม", color:"#5A7A5C",
+        papers:[
+          { title:"Team Voice · Term 1", date:"ต.ค. 2567", pages:[], pdf_url:"" },
+          { title:"Team Voice · Term 2", date:"ม.ค. 2568", pages:[], pdf_url:"" }
+        ]
+      },
+      { id:"fd-2568-3", name:"กิจกรรมพิเศษ", color:"#6A5A8C",
+        papers:[
+          { title:"Mental Health Week", date:"ก.พ. 2568", pages:[], pdf_url:"" }
+        ]
+      }
+    ]
+  },
+  {
+    year:"2567", pdf_url:"",
+    founder:{ id:"F002", full_name:"ชื่อ-นามสกุล (รุ่นก่อน)", pages:[], pdf_url:"" },
+    folders:[
+      { id:"fd-2567-1", name:"Events", color:"#8B5E3C",
+        papers:[
+          { title:"Club Launch Event", date:"มิ.ย. 2566", pages:[], pdf_url:"" }
+        ]
+      }
+    ]
   }
 ];
 
-// ================================================================
-// LOAD
-// ================================================================
-async function loadLeaders() {
-  let leaders;
+let yearData = [];
+let activeYear = null;
+
+/* folderIdx[yearKey] = current folder index shown in carousel */
+const folderIdx = {};
+
+/* ── PAGES ── */
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => {
+    const isTarget = p.id === id;
+    p.classList.toggle("away-right", !isTarget && !p.classList.contains("away-left"));
+    if (isTarget) { p.classList.remove("away-right"); p.classList.remove("away-left"); }
+  });
+}
+
+function goIndex() {
+  document.getElementById("pg-index").classList.remove("away-left");
+  document.getElementById("pg-profile").classList.add("away-right");
+  document.getElementById("pg-book").classList.add("away-right");
+  document.querySelectorAll(".env-outer.opening").forEach(el => el.classList.remove("opening"));
+}
+
+window.addEventListener("popstate", e => {
+  if (!e.state) goIndex();
+});
+
+/* ── OPEN ENVELOPE (profile) ── */
+function openProfile(id, wrapEl) {
+  const l = yearData.flatMap(y => [y.founder]).find(f => f.id === id);
+  if (!l) return;
+  renderProfile(l);
+  if (wrapEl) {
+    wrapEl.classList.add("opening");
+    setTimeout(() => {
+      document.getElementById("pg-index").classList.add("away-left");
+      const pg = document.getElementById("pg-profile");
+      pg.classList.remove("away-right"); pg.scrollTop = 0;
+    }, 300);
+  } else {
+    document.getElementById("pg-index").classList.add("away-left");
+    const pg = document.getElementById("pg-profile");
+    pg.classList.remove("away-right"); pg.scrollTop = 0;
+  }
+  history.pushState({ view:"profile", id }, "");
+}
+
+/* ── OPEN BOOK (folder reader) ── */
+function openBook(folderId) {
+  const yd = yearData.find(y => y.folders.some(f => f.id === folderId));
+  if (!yd) return;
+  const folder = yd.folders.find(f => f.id === folderId);
+  if (!folder) return;
+  renderBook(folder);
+  document.getElementById("pg-index").classList.add("away-left");
+  const pg = document.getElementById("pg-book");
+  pg.classList.remove("away-right"); pg.scrollTop = 0;
+  history.pushState({ view:"book", id:folderId }, "");
+}
+
+function goBackFromBook() {
+  document.getElementById("pg-book").classList.add("away-right");
+  document.getElementById("pg-index").classList.remove("away-left");
+  history.back();
+}
+function goBackFromProfile() {
+  document.getElementById("pg-profile").classList.add("away-right");
+  document.getElementById("pg-index").classList.remove("away-left");
+  history.back();
+}
+
+/* ── YEAR TABS ── */
+function setYear(year) {
+  activeYear = year;
+  document.querySelectorAll(".year-tab").forEach(t => t.classList.toggle("active", t.dataset.year === year));
+  document.querySelectorAll(".year-panel").forEach(p => p.classList.toggle("active", p.dataset.year === year));
+  setTimeout(() => {
+    document.querySelectorAll(`.year-panel[data-year="${year}"] .env-outer, .year-panel[data-year="${year}"] .folder-carousel`)
+      .forEach((el, i) => setTimeout(() => el.classList.add("visible"), i * 100 + 50));
+  }, 30);
+}
+
+/* ── RENDER INDEX ── */
+function renderIndex(data) {
+  document.getElementById("skel-wrap").style.display = "none";
+  document.getElementById("admin-strip").style.display = "flex";
+
+  const tabsEl   = document.getElementById("year-tabs");
+  const panelsEl = document.getElementById("year-panels");
+  tabsEl.innerHTML = ""; panelsEl.innerHTML = "";
+
+  data.forEach(yd => {
+    folderIdx[yd.year] = 0;
+
+    // tab
+    const tab = document.createElement("button");
+    tab.className = "year-tab"; tab.textContent = yd.year;
+    tab.dataset.year = yd.year; tab.onclick = () => setYear(yd.year);
+    tabsEl.appendChild(tab);
+
+    // panel
+    const panel = document.createElement("div");
+    panel.className = "year-panel"; panel.dataset.year = yd.year;
+
+    const totalFolders = yd.folders.length;
+
+    panel.innerHTML = `
+      <!-- ENVELOPE -->
+      <div class="env-outer" id="env-${yd.founder.id}">
+        <div class="env-peek">
+          <div class="peek-leaf"></div>
+        </div>
+        <div class="envelope" onclick="openProfile('${yd.founder.id}', document.getElementById('env-${yd.founder.id}'))">
+          <svg class="env-flap-svg" viewBox="0 0 100 40" preserveAspectRatio="none">
+            <polygon points="0,0 100,0 50,40" fill="#E0D6C4" stroke="rgba(180,168,148,.35)" stroke-width="0.5"/>
+          </svg>
+          <!-- postmark -->
+          <div class="env-postmark">
+            <div class="env-postmark-year">${yd.year}</div>
+            <div class="env-postmark-dot"></div>
+            <div class="env-postmark-club">ใจดี<br/>TU</div>
+          </div>
+          <div class="env-body">
+            <div class="env-to">ถึง</div>
+            <div class="env-recipient">ผู้นำรุ่นต่อไป<br/>และผู้ที่จะมาทีหลัง</div>
+            
+            <div class="env-from-label">จาก…ประธานชมรม</div>
+            <div class="env-from-value">${yd.founder.full_name || "ชื่อ-นามสกุล"}</div>
+            <div class="env-hint">แตะเพื่อเปิดซอง →</div>
+          </div>
+          <div class="wax-seal"><img src="school-logo.png" alt="ใจดี TU"/></div>
+        </div>
+        <div class="env-seal-spacer"></div>
+      </div>
+
+      <!-- FOLDER CAROUSEL -->
+      <div class="folders-section">
+        <div class="section-lbl">สรุปประจำเดือน</div>
+        <div class="folder-carousel" id="fc-${yd.year}">
+          <div class="folder-stage" id="fs-${yd.year}">
+            ${buildFolderCard(yd.folders[0], yd.year)}
+          </div>
+          <button class="folder-prev" id="fprev-${yd.year}" onclick="shiftFolder('${yd.year}',-1)" disabled>‹</button>
+          <button class="folder-next" id="fnext-${yd.year}" onclick="shiftFolder('${yd.year}',1)"  ${totalFolders <= 1 ? 'disabled' : ''}>›</button>
+          <div class="folder-dots" id="fdots-${yd.year}">
+            ${yd.folders.map((_,i) => `<div class="folder-dot${i===0?' active':''}"></div>`).join("")}
+          </div>
+        </div>
+      </div>
+    `;
+    panelsEl.appendChild(panel);
+  });
+
+  if (data.length > 0) setYear(data[0].year);
+
+  document.getElementById("dl-btn").onclick = () => {
+    const yd = data.find(y => y.year === activeYear);
+    if (yd?.pdf_url) window.open(yd.pdf_url, "_blank");
+    else showToast("ยังไม่มี PDF สำหรับปีนี้");
+  };
+}
+
+/* ── BUILD FOLDER CARD ── */
+function buildFolderCard(f, year) {
+  if (!f) return "";
+  const firstPage = f.papers[0];
+  const coverImg  = firstPage?.pages?.[0];
+  const total     = f.papers.length;
+
+  const paperInner = coverImg
+    ? `<img src="${coverImg}" alt="${f.name}" loading="lazy"/>`
+    : `<div class="folder-a4-placeholder">
+         <div class="fap-emoji">📄</div>
+         <div class="fap-text">${f.name}<br/><span style="color:var(--ink-faint);font-size:10px;">${total} รายการ</span></div>
+       </div>`;
+
+  return `
+    <div class="folder-card" onclick="openBook('${f.id}')">
+      <div class="folder-tab-shape" style="background:${f.color};"></div>
+      <div class="folder-top" style="background:${f.color};">
+        <div class="folder-card-name">${f.name}</div>
+        <div class="folder-card-meta">${total} รายการ</div>
+      </div>
+      <div class="folder-a4">
+        ${paperInner}
+        <div class="folder-read-strip">
+          <div class="frs-title">${firstPage?.title || "—"}</div>
+          <div class="frs-cta">อ่านทั้งหมด →</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── SHIFT FOLDER (carousel between folders) ── */
+function shiftFolder(year, dir) {
+  const yd = yearData.find(y => y.year === year);
+  if (!yd) return;
+  const newIdx = folderIdx[year] + dir;
+  if (newIdx < 0 || newIdx >= yd.folders.length) return;
+
+  const stage   = document.getElementById(`fs-${year}`);
+  const card    = stage.querySelector(".folder-card");
+  const outClass = dir > 0 ? "slide-out-left" : "slide-out-right";
+
+  if (card) card.classList.add(outClass);
+
+  setTimeout(() => {
+    folderIdx[year] = newIdx;
+    stage.innerHTML = buildFolderCard(yd.folders[newIdx], year);
+
+    // update dots
+    const dotsEl = document.getElementById(`fdots-${year}`);
+    if (dotsEl) dotsEl.innerHTML = yd.folders.map((_,i) =>
+      `<div class="folder-dot${i===newIdx?' active':''}"></div>`).join("");
+
+    // update buttons
+    document.getElementById(`fprev-${year}`).disabled = newIdx === 0;
+    document.getElementById(`fnext-${year}`).disabled = newIdx === yd.folders.length - 1;
+  }, 160);
+}
+
+/* ── RENDER BOOK ── */
+function renderBook(folder) {
+  // flatten all papers' pages into a single reading sequence
+  let pagesHTML = "";
+  let pageNum = 1;
+  let hasAnyPage = false;
+
+  folder.papers.forEach(paper => {
+    if (paper.pages && paper.pages.length > 0) {
+      hasAnyPage = true;
+      paper.pages.forEach(url => {
+        const tilt = ["-0.6deg","0.5deg","-0.4deg","0.7deg","-0.5deg"][pageNum % 5];
+        pagesHTML += `
+          <div class="book-page" style="transform:rotate(${tilt});">
+            <img src="${url}" alt="หน้า ${pageNum}" loading="lazy"/>
+            <div class="book-page-num">— ${pageNum} —</div>
+          </div>`;
+        pageNum++;
+      });
+    } else {
+      pagesHTML += `
+        <div class="book-page">
+          <div class="book-page-placeholder">
+            <span style="font-size:28px;opacity:.3;position:relative;">📄</span>
+            <span style="font-family:'Special Elite',cursive;font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.8;position:relative;">${paper.title}<br/><span style="color:var(--ink-faint)">${paper.date}</span></span>
+          </div>
+          <div class="book-page-num">— ${pageNum} —</div>
+        </div>`;
+      pageNum++;
+    }
+  });
+
+  const totalPages = pageNum - 1;
+
+  document.getElementById("pg-book").innerHTML = `
+    <div class="book-nav" id="book-nav">
+      <button class="book-nav-back" onclick="goBackFromBook()">กลับ</button>
+      <div class="book-nav-title" id="book-nav-title">${folder.name}</div>
+    </div>
+
+    <div class="book-header">
+      <div class="book-folder-chip" style="background:${folder.color};">
+        <div class="book-folder-chip-dot"></div>
+        ${folder.name}
+      </div>
+      <div class="book-title">${folder.papers.map(p => p.title).join(" · ")}</div>
+      <div class="book-count">${totalPages} หน้า · ${folder.papers.length} รายการ</div>
+    </div>
+
+    <div class="book-pages">${pagesHTML}</div>
+
+    <div class="pdf-strip">
+      <div style="font-size:22px;">📄</div>
+      <div class="pdf-strip-body">
+        <div class="pdf-strip-title">ดาวน์โหลด PDF</div>
+        <div class="pdf-strip-sub">${folder.name} — ทุกหน้าใน 1 ไฟล์</div>
+      </div>
+      ${folder.papers[0]?.pdf_url
+        ? `<a href="${folder.papers[0].pdf_url}" download target="_blank"><button class="pdf-btn">ดาวน์โหลด ↓</button></a>`
+        : `<button class="pdf-btn" style="opacity:.4;cursor:default;" disabled>เร็วๆ นี้</button>`}
+    </div>
+  `;
+
+  const pg = document.getElementById("pg-book");
+  pg.addEventListener("scroll", () => {
+    const s = pg.scrollTop > 80;
+    document.getElementById("book-nav")?.classList.toggle("scrolled", s);
+    document.getElementById("book-nav-title")?.classList.toggle("show", s);
+  }, { passive:true });
+}
+
+/* ── RENDER PROFILE ── */
+function renderProfile(l) {
+  let pagesHTML = "";
+  if (l.pages?.length > 0) {
+    l.pages.forEach((url, i) => {
+      const tilt = ["-1.2deg","0.8deg","-0.5deg","1deg","-0.9deg"][i%5];
+      pagesHTML += `<div class="scan-page" style="transform:rotate(${tilt});"><img src="${url}" alt="หน้า ${i+1}" loading="lazy"/><div class="scan-page-num">— ${i+1} —</div></div>`;
+    });
+  } else {
+    for (let i=0;i<2;i++) {
+      const tilt = i===0?"-1deg":"0.7deg";
+      pagesHTML += `<div class="scan-page" style="transform:rotate(${tilt});"><div class="scan-placeholder"><span style="font-size:32px;opacity:.3;">✍️</span><span style="font-family:'Special Elite',cursive;font-size:11px;color:var(--ink-faint);text-align:center;line-height:1.8;position:relative;">รอกระดาษจากประธานชมรม</span></div><div class="scan-page-num">— ${i+1} —</div></div>`;
+    }
+  }
+
+  document.getElementById("pg-profile").innerHTML = `
+    <div class="prof-nav" id="prof-nav">
+      <button class="prof-nav-back" onclick="goBackFromProfile()">กลับ</button>
+      <div class="prof-nav-name" id="prof-nav-name">${l.full_name}</div>
+    </div>
+    <div class="prof-header">
+      <div class="prof-mini-env">
+        <svg viewBox="0 0 100 30" preserveAspectRatio="none"><polygon points="0,0 100,0 50,30" fill="#E0D6C4"/></svg>
+        <div class="prof-mini-body"><div class="prof-mini-year">${l.year||""}</div></div>
+        <div class="prof-mini-seal"><img src="school-logo.png" alt="logo"/></div>
+      </div>
+      <div class="prof-header-text">
+        <div class="prof-eyebrow">จาก…ประธานชมรม · ${l.year||""}</div>
+        <div class="prof-name">${l.full_name}</div>
+      </div>
+    </div>
+    <div class="page-reader">${pagesHTML}</div>
+    <div class="pdf-strip">
+      <div style="font-size:22px;">📄</div>
+      <div class="pdf-strip-body"><div class="pdf-strip-title">ดาวน์โหลด PDF</div><div class="pdf-strip-sub">กระดาษทุกหน้าใน 1 ไฟล์</div></div>
+      ${l.pdf_url?`<a href="${l.pdf_url}" download target="_blank"><button class="pdf-btn">ดาวน์โหลด ↓</button></a>`:`<button class="pdf-btn" style="opacity:.4;cursor:default;" disabled>เร็วๆ นี้</button>`}
+    </div>`;
+
+  const pg = document.getElementById("pg-profile");
+  pg.addEventListener("scroll", () => {
+    const s = pg.scrollTop > 80;
+    document.getElementById("prof-nav")?.classList.toggle("scrolled",s);
+    document.getElementById("prof-nav-name")?.classList.toggle("show",s);
+  }, {passive:true});
+}
+
+/* ── UTILS ── */
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+/* ── INIT ── */
+window.onload = async () => {
   try {
-    const res = await fetch(API_URL + "?action=getFounders");
+    const res = await fetch(API_URL + "?action=getFounders", { cache:"no-store" });
     const d   = await res.json();
     if (d.status === "OK" && d.founders?.length) {
-      leaders = d.founders;
-    } else throw new Error();
-  } catch {
-    leaders = MOCK_LEADERS;
-  }
-
-  document.getElementById("loading-row").style.display = "none";
-
-  const scroll = document.getElementById("leaders-scroll");
-  scroll.innerHTML = "";
-
-  if (!leaders.length) {
-    scroll.innerHTML = `<div style="padding:0 0 20px;color:var(--soft);font-size:14px;">ยังไม่มีข้อมูล — กำลังรวบรวมอยู่ 🌱</div>`;
-    return;
-  }
-
-  leaders.forEach(l => scroll.appendChild(buildLeaderCard(l)));
-}
-
-// ================================================================
-// LEADER CARD
-// ================================================================
-function buildLeaderCard(l) {
-  const card = document.createElement("div");
-  card.className = "leader-card";
-
-  const photoHTML = l.photo_url
-    ? `<img class="leader-photo" src="${l.photo_url}" alt="${l.full_name}"/>`
-    : `<div class="leader-photo-placeholder">🧠</div>`;
-
-  card.innerHTML = `
-    ${photoHTML}
-    <div class="leader-overlay">
-      <div class="leader-year">${l.year}</div>
-      <div class="leader-name">${l.full_name}</div>
-      <button class="leader-read-btn" onclick="openLetter(event, '${l.id}')">อ่าน →</button>
-    </div>
-  `;
-
-  card._data = l;
-  return card;
-}
-
-// ================================================================
-// LETTER OVERLAY
-// ================================================================
-function openLetter(e, leaderId) {
-  e.stopPropagation();
-
-  const allLeaders = window._leaders || MOCK_LEADERS;
-  const l = allLeaders.find(x => x.id === leaderId);
-  if (!l) return;
-
-  const photoHTML = l.photo_url
-    ? `<img class="letter-photo" src="${l.photo_url}" alt="${l.full_name}"/>`
-    : `<div class="letter-photo-placeholder">🧠</div>`;
-
-  document.getElementById("letter-sheet").innerHTML = `
-    ${photoHTML}
-    <div class="letter-handle"></div>
-    <div class="letter-body">
-      <div class="letter-meta">
-        <span class="letter-year-badge">${l.year}</span>
-        <div class="letter-name">${l.full_name}</div>
-      </div>
-
-      <div class="letter-divider"></div>
-
-      <div class="letter-section">
-        <div class="letter-q">Vision — อยากทำให้เกิดอะไรขึ้น</div>
-        <div class="letter-a">${l.vision || "—"}</div>
-      </div>
-
-      <div class="letter-section">
-        <div class="letter-q">สิ่งที่ภูมิใจที่สุด</div>
-        <div class="letter-a">${l.proudest || "—"}</div>
-      </div>
-
-      <div class="letter-section">
-        <div class="letter-q">บทเรียนที่ยากที่สุด</div>
-        <div class="letter-a">${l.struggle || "—"}</div>
-      </div>
-
-      <div class="letter-section">
-        <div class="letter-q">จดหมายถึงผู้นำรุ่นต่อไป</div>
-        <div class="letter-a">${l.letter_to_next || "—"}</div>
-      </div>
-
-      <div class="letter-divider"></div>
-      <button class="letter-close" onclick="closeOverlay()">ปิด</button>
-    </div>
-  `;
-
-  document.getElementById("overlay-letter").classList.add("active");
-}
-
-function closeOverlay(e) {
-  if (e && e.target !== document.getElementById("overlay-letter")) return;
-  document.getElementById("overlay-letter").classList.remove("active");
-}
-
-// ================================================================
-// INIT
-// ================================================================
-window.onload = () => {
-  loadLeaders().then(() => {
-    window._leaders = MOCK_LEADERS;
-  });
+      const byYear = {};
+      d.founders.forEach(f => {
+        const y = f.year || "unknown";
+        if (!byYear[y]) byYear[y] = { year:y, pdf_url:"", founder:null, folders:[] };
+        byYear[y].founder = f;
+        if (f.folders) byYear[y].folders = f.folders;
+      });
+      yearData = Object.values(byYear).sort((a,b) => b.year.localeCompare(a.year));
+    } else { yearData = MOCK_DATA; }
+  } catch { yearData = MOCK_DATA; }
+  yearData.forEach(yd => { if (yd.founder) yd.founder.year = yd.year; });
+  renderIndex(yearData);
 };
-
 </script>
 </body>
 </html>
+
 
