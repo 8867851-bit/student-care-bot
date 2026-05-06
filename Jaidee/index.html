@@ -1,193 +1,364 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ใจดี TU</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --cream: #FDFCF9;
-      --gold: #F5A623;
-      --gold-soft: #FFF5E0;
-      --gold-border: #FFE4A0;
-      --dark: #1A1A1A;
-      --mid: #555;
-      --soft: #999;
-      --border: #EEEBE4;
+      --cream:#FDFBF7; --cream-warm:#FFF8EE; --cream-border:#EDE9E0;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099;
+      --card-bg:#FFFFFF; --card-border:#EDE9E0;
+      --radius-card:20px; --radius-btn:14px;
     }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;}
 
-    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    /* Hero */
+    .hero{padding:52px 24px 24px;position:relative;overflow:hidden;text-align:center;}
+    .hero::before{content:'';position:absolute;top:30px;left:50%;transform:translateX(-50%);width:220px;height:220px;background:radial-gradient(circle,rgba(255,255,255,0.85) 0%,rgba(255,255,255,0.3) 40%,transparent 70%);border-radius:50%;pointer-events:none;z-index:0;}
+    .hero::after{content:'';position:absolute;top:20px;left:50%;transform:translateX(-50%);width:300px;height:280px;background:radial-gradient(circle,rgba(232,150,12,0.06) 0%,rgba(253,251,247,0) 68%);border-radius:50%;pointer-events:none;z-index:0;}
+    .hero-name,.hero-eyebrow,.hero-sub{position:relative;z-index:1;}
+    .hero-eyebrow{font-size:11px;font-weight:400;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-top:6px;}
+    .hero-name{font-family:'Noto Serif Thai',serif;font-size:30px;font-weight:600;color:var(--dark);line-height:1.2;}
+    .hero-sub{font-size:14px;font-weight:300;color:var(--soft);margin-top:6px;}
 
-    body {
-      font-family: 'Sarabun', sans-serif;
-      background: var(--cream);
-      color: var(--dark);
-      min-height: 100vh;
-      padding-bottom: 120px;
-    }
+    /* PR Banner */
+    .pr-banner{margin:8px 20px 28px;background:linear-gradient(135deg,var(--cream-warm),#FFF5DD);border-radius:var(--radius-card);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--gold-border);box-shadow:0 2px 16px rgba(232,150,12,0.08);}
+    .pr-banner-left{display:flex;flex-direction:column;gap:2px;}
+    .pr-banner-label{font-size:11px;font-weight:400;color:var(--gold);letter-spacing:1px;text-transform:uppercase;}
+    .pr-banner-text{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:#5C3D00;}
+    .pr-btn{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-btn);padding:10px 20px;font-size:13px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px rgba(232,150,12,0.3);transition:transform 0.15s;}
+    .pr-btn:active{transform:scale(0.96);}
 
-    .greeting {
-      padding: 48px 20px 20px;
-    }
+    /* Section label */
+    .section-label{display:flex;align-items:center;gap:10px;padding:0 20px;margin-bottom:14px;}
+    .section-label-text{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap;}
+    .section-label-line{flex:1;height:1px;background:var(--cream-border);}
 
-    .greeting-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 26px; font-weight: 400;
-    }
+    /* Worlds */
+    .worlds-wrap{display:flex;flex-direction:column;gap:10px;padding:0 16px;}
+    .world-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-    .greeting-sub {
-      font-size: 14px; color: var(--soft); margin-top: 4px;
-    }
+    /* Card */
+    .world-card{background:var(--card-bg);border-radius:var(--radius-card);padding:18px 16px 16px;cursor:pointer;border:1px solid var(--card-border);box-shadow:0 1px 4px rgba(0,0,0,0.04);position:relative;overflow:hidden;opacity:0;transform:translateY(10px);}
+    .world-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s ease;}
+    .world-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(232,150,12,0.18),transparent);opacity:0;transition:opacity 0.2s;}
+    .world-card:hover::before{opacity:1;}
+    .world-card:active{transform:scale(0.97)!important;}
+    .world-card.full{display:flex;align-items:center;gap:16px;padding:16px 18px;}
+    .world-card.full .world-icon{margin-bottom:0;flex-shrink:0;}
+    .world-card.full .world-body{flex:1;}
+    .world-card.full .world-name{font-size:15px;}
+    .world-card.full::after{content:'›';font-size:20px;color:var(--soft);flex-shrink:0;}
+    .world-card.locked{opacity:0.38!important;cursor:default;pointer-events:none;filter:grayscale(0.4);}
+    .world-icon{width:40px;height:40px;border-radius:12px;background:var(--cream);border:1px solid var(--cream-border);display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:20px;overflow:hidden;}
+    .world-icon img{width:100%;height:100%;object-fit:cover;border-radius:11px;}
+    .world-name{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.3;}
+    .world-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
 
-    .peer-banner {
-      margin: 4px 16px 28px;
-      background: var(--gold-soft);
-      border-radius: 16px;
-      padding: 14px 18px;
-      display: flex; align-items: center;
-      justify-content: space-between;
-      border: 1px solid var(--gold-border);
-    }
+    /* Locked divider */
+    .divider-locked{margin:4px 0;padding:0 4px;display:flex;align-items:center;gap:8px;}
+    .divider-locked-line{flex:1;height:1px;background:var(--cream-border);}
+    .divider-locked-tag{display:inline-flex;align-items:center;gap:5px;background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:500;color:var(--soft);white-space:nowrap;}
+    #countdown-display{font-size:11px;font-weight:600;color:var(--gold);}
 
-    .peer-banner-text {
-      font-size: 14px; color: #7A5C00; font-weight: 500;
-    }
+    /* Coming Soon */
+    .divider-soon{margin:12px 0 14px;padding:0 4px;display:flex;align-items:center;gap:10px;}
+    .divider-soon-line{flex:1;height:1px;background:var(--cream-border);}
+    .divider-soon-text{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
 
-    .peer-banner-btn {
-      background: var(--gold); color: white; border: none;
-      border-radius: 10px; padding: 8px 16px;
-      font-size: 13px; font-family: 'Sarabun', sans-serif;
-      font-weight: 700; cursor: pointer; white-space: nowrap;
-      margin-left: 12px;
-    }
+    /* Spoiler card */
+    .spoiler-card{background:transparent;border-radius:0;padding:8px 4px 16px;border:none;box-shadow:none;opacity:0;transform:translateY(8px);}
+    .spoiler-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.4s ease,transform 0.4s ease;}
+    .spoiler-label{font-size:9px;letter-spacing:2px;color:var(--soft);text-transform:uppercase;margin-bottom:8px;font-weight:500;}
+    .spoiler-title{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--mid);margin-bottom:6px;}
+    .spoiler-sub{font-size:12px;font-weight:300;color:var(--soft);line-height:1.65;margin-bottom:12px;}
+    .spoiler-chips{display:flex;flex-wrap:wrap;gap:6px;}
+    .spoiler-chip{display:inline-flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--cream-border);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--soft);font-weight:400;}
 
-    .section-title {
-      font-size: 11px; font-weight: 700;
-      color: #BBBBBB; letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 0 20px; margin-bottom: 12px;
-    }
+    /* Skeleton */
+    .skeleton{background:linear-gradient(90deg,#F0ECE4 25%,#EDE8DF 50%,#F0ECE4 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-card);height:120px;}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-    .grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 12px; padding: 0 16px;
-    }
+    /* Footer */
+    .footer{padding:28px 20px 12px;text-align:center;}
+    .footer a{font-size:12px;font-weight:300;color:var(--soft);text-decoration:none;}
 
-    .world-card {
-      background: white; border-radius: 16px;
-      padding: 16px; cursor: pointer;
-      border: 1px solid var(--border);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-      transition: transform 0.15s ease;
-    }
+    /* ── Signature Tools ── */
+    .sig-wrap{padding:0 16px;margin-bottom:8px;}
+    .sig-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-    .world-card:active { transform: scale(0.97); }
+    .sig-card{border-radius:20px;padding:20px 16px 18px;cursor:pointer;position:relative;overflow:hidden;border:1px solid transparent;transition:transform 0.15s,box-shadow 0.15s;}
+    .sig-card:active{transform:scale(0.97);}
 
-    .world-icon { font-size: 24px; margin-bottom: 8px; }
-    .world-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .world-desc { font-size: 12px; color: var(--soft); line-height: 1.4; }
+    .sig-card.reflection{background:linear-gradient(145deg,#1C1917 0%,#2C2520 100%);border-color:#3A332D;}
+    .sig-card.care{background:linear-gradient(145deg,#EEF6EF 0%,#E0F0E2 100%);border-color:#C2DFC6;}
 
-    .floating {
-      position: fixed; bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      background: var(--dark); color: white; border: none;
-      border-radius: 50px; padding: 14px 28px;
-      font-size: 14px; font-family: 'Sarabun', sans-serif;
-      font-weight: 600; cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      white-space: nowrap; z-index: 10;
-    }
+    .sig-card::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(145deg,rgba(255,255,255,0.04),transparent);pointer-events:none;}
 
-    .quiet-footer {
-      text-align: center; padding: 32px 20px 16px;
-    }
+    .sig-icon{font-size:22px;margin-bottom:12px;display:block;}
+    .sig-label{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+    .sig-card.reflection .sig-label{color:rgba(232,150,12,0.8);}
+    .sig-card.care .sig-label{color:#4A8A52;}
+    .sig-name{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;line-height:1.3;margin-bottom:6px;}
+    .sig-card.reflection .sig-name{color:#FDFBF7;}
+    .sig-card.care .sig-name{color:#1C3A1F;}
+    .sig-hint{font-size:11px;font-weight:300;line-height:1.6;}
+    .sig-card.reflection .sig-hint{color:rgba(253,251,247,0.5);}
+    .sig-card.care .sig-hint{color:#5A7A5C;}
+    .sig-arrow{position:absolute;bottom:16px;right:16px;font-size:14px;opacity:0.35;}
+    .sig-card.reflection .sig-arrow{color:#FDFBF7;}
+    .sig-card.care .sig-arrow{color:#1C3A1F;}
 
-    .quiet-footer a {
-      font-size: 12px; color: #CCC;
-      text-decoration: none; font-family: 'Sarabun', sans-serif;
-    }
+    /* Peer availability chip */
+    .pr-avail{font-size:10px;font-weight:400;color:var(--soft);margin-top:3px;letter-spacing:0.3px;}
+
+    /* Crisis strip */
+    .crisis-strip{margin:24px 16px 0;background:#1C1917;border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #2E2925;}
+    .crisis-strip-left{display:flex;flex-direction:column;gap:2px;}
+    .crisis-strip-label{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(232,150,12,0.7);}
+    .crisis-strip-text{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:500;color:#FDFBF7;line-height:1.4;}
+    .crisis-strip-btn{background:rgba(232,150,12,0.15);border:1px solid rgba(232,150,12,0.3);color:var(--gold);border-radius:12px;padding:9px 16px;font-size:12px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s;}
+    .crisis-strip-btn:active{background:rgba(232,150,12,0.25);}
   </style>
 </head>
 <body>
 
-  <div class="greeting">
-    <div class="greeting-name" id="greeting-name">สวัสดี 🤍</div>
-    <div class="greeting-sub">มีอะไรให้ช่วยวันนี้ไหม?</div>
+  <div class="hero">
+    <div class="hero-name" id="greeting-name">สวัสดี 🤍</div>
+    <div class="hero-eyebrow">ใจดี TU</div>
+    <div class="hero-sub">สร้างโดยนักเรียนเตรียมฯ เพื่อนักเรียนเตรียมฯ</div>
   </div>
 
-  <div class="peer-banner">
-    <div class="peer-banner-text">💛 พร้อมคุยกับ PR แล้วไหม?</div>
-    <button class="peer-banner-btn" onclick="window.location.href='peer.html'">นัดเลย</button>
+  <div class="pr-banner">
+    <div class="pr-banner-left">
+      <div class="pr-banner-label">Peer Support</div>
+      <div class="pr-banner-text">บางทีแค่มีคนรับฟัง ก็เบาขึ้นได้เยอะ</div>
+      <div class="pr-avail">จ–ศ หลังเลิกเรียน · นัดล่วงหน้า</div>
+    </div>
+    <button class="pr-btn" onclick="window.location.href='peer.html'">นัดคุย →</button>
   </div>
 
-  <div class="section-title">สำรวจ</div>
-
-  <div class="grid">
-    <div class="world-card" onclick="window.location.href='puzzle.html'">
-      <div class="world-icon">🧩</div>
-      <div class="world-name">Puzzle Piece</div>
-      <div class="world-desc">จิตวิทยาที่เข้าใจง่าย ไม่ต้องรู้มาก่อน</div>
+  <!-- Signature Tools -->
+  <div class="sig-wrap">
+    <div class="section-label" style="margin-bottom:12px;">
+      <div class="section-label-text">เครื่องมือหลัก</div>
+      <div class="section-label-line"></div>
     </div>
-    <div class="world-card" onclick="window.location.href='reflection.html'">
-      <div class="world-icon">🪞</div>
-      <div class="world-name">Reflection Space</div>
-      <div class="world-desc">เริ่มจากตรงนี้ ถ้ายังไม่รู้จะไปไหน</div>
-    </div>
-    <div class="world-card" onclick="window.location.href='academic.html'">
-      <div class="world-icon">📚</div>
-      <div class="world-name">Academic Support</div>
-      <div class="world-desc">เรียนให้ดีขึ้น ในแบบที่ใช่สำหรับคุณ</div>
-    </div>
-    <div class="world-card" onclick="window.location.href='career.html'">
-      <div class="world-icon">🎯</div>
-      <div class="world-name">Career Support</div>
-      <div class="world-desc">วางแผนอนาคต เริ่มจากตรงนี้</div>
-    </div>
-    <div class="world-card" onclick="window.location.href='people.html'">
-      <div class="world-icon">👥</div>
-      <div class="world-name">People</div>
-      <div class="world-desc">ฟังคนที่ผ่านมาแล้ว เขาพูดอะไรไว้บ้าง</div>
-    </div>
-    <div class="world-card" onclick="window.location.href='school.html'">
-      <div class="world-icon">🏫</div>
-      <div class="world-name">School Support</div>
-      <div class="world-desc">สิ่งที่โรงเรียนลืมบอกคุณ</div>
-    </div>
-    <div class="world-card" onclick="window.location.href='programs.html'">
-      <div class="world-icon">🌱</div>
-      <div class="world-name">Growth Programs</div>
-      <div class="world-desc">Workshop และกิจกรรมเดือนนี้</div>
-    </div>
-    <div class="world-card" onclick="window.location.href='founder.html'">
-      <div class="world-icon">✨</div>
-      <div class="world-name">Founder's Pick</div>
-      <div class="world-desc">สิ่งที่ผู้สร้างอยากให้คุณรู้</div>
+    <div class="sig-row">
+      <div class="sig-card reflection" onclick="window.location.href='reflection.html'">
+        <span class="sig-icon">🪞</span>
+        <div class="sig-label">Reflection</div>
+        <div class="sig-name">ยังไม่รู้ว่ารู้สึกยังไง</div>
+        <div class="sig-hint">เริ่มจากตรงนี้ก่อนได้เลย</div>
+        <span class="sig-arrow">→</span>
+      </div>
+      <div class="sig-card care" onclick="window.location.href='care.html'">
+        <span class="sig-icon">🌿</span>
+        <div class="sig-label">พื้นที่ใจ</div>
+        <div class="sig-name">รู้แล้วว่าต้องการอะไร</div>
+        <div class="sig-hint">6 ชั้นดูแลตัวเอง ที่ไม่ใช่แค่ไปหาหมอ</div>
+        <span class="sig-arrow">→</span>
+      </div>
     </div>
   </div>
 
-  <div class="quiet-footer">
+  <div class="worlds-wrap" id="worlds-wrap">
+
+  </div>
+
+  <!-- Crisis strip — always visible -->
+  <div class="crisis-strip" onclick="window.location.href='crisis.html'" style="cursor:pointer;">
+    <div class="crisis-strip-left">
+      <div class="crisis-strip-label">ฉุกเฉิน · 24/7</div>
+      <div class="crisis-strip-text">ถ้าตอนนี้ไม่ปลอดภัย<br>กดตรงนี้ได้เลย</div>
+    </div>
+    <button class="crisis-strip-btn">ขอความช่วยเหลือ</button>
+  </div>
+
+  <div class="footer">
     <a href="peer.html#external">ต้องการความช่วยเหลือจากผู้เชี่ยวชาญ? →</a>
   </div>
 
-  <button class="floating" onclick="window.location.href='peer.html'">💛 คุยกับ PR ได้เลย</button>
-
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-  const isPreview = new URLSearchParams(window.location.search).get("preview") === "student";
+const API_URL  = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const LIFF_ID  = "2009806939-H06mwKgI";
+const isPreview = new URLSearchParams(window.location.search).get("preview") === "student";
 
-  if (isPreview) {
-    document.getElementById("greeting-name").innerText = "สวัสดี [Developer Preview] 🤍";
+// ═══════════════════════════════════════════════════════
+// LAYOUT CONFIG — แก้ที่นี่ที่เดียว ไม่ต้องแตะส่วนอื่น
+// ═══════════════════════════════════════════════════════
+
+// Worlds 1–4: grid 2×2
+const WORLDS_TOP = [
+  { name:"Puzzle Piece",    desc:"จิตวิทยาที่เข้าใจง่าย",       url:"puzzle.html",     emoji:"🧩" },
+  { name:"People",          desc:"ฟังคนที่ผ่านมาแล้ว",          url:"people.html",     emoji:"👥" },
+  { name:"Programs",        desc:"Workshop และกิจกรรมเดือนนี้",  url:"programs.html",   emoji:"🌱" },
+  { name:"จดหมายเหตุ",      desc:"จดหมายผู้นำ · โครงสร้างระบบ", url:"founder.html",    emoji:"📜" },
+];
+
+// World 5: full-width
+const WORLD_5 = {
+  name:"จดหมายเหตุ", desc:"จดหมายผู้นำ · โครงสร้างระบบ",
+  url:"founder.html", emoji:"📜"
+};
+
+// ── วันที่เปิด Worlds 6-8 (ISO "YYYY-MM-DD") ──
+// เปลี่ยน date นี้เพื่อ set countdown
+const UNLOCK_DATE = "2026-09-01";
+
+// Worlds 6–7: grid 2 cols (locked จนถึง UNLOCK_DATE)
+const WORLDS_LOCKED_GRID = [
+  { name:"School Support",   desc:"สิ่งที่โรงเรียนลืมบอก",     url:"school.html",   emoji:"🏫" },
+  { name:"Academic Support", desc:"เรียนให้ดีขึ้นในแบบที่ใช่", url:"academic.html", emoji:"📚" },
+];
+
+// World 8: full-width (locked)
+const WORLD_8 = {
+  name:"Career Support", desc:"วางแผนอนาคต เริ่มได้เลย", url:"career.html", emoji:"🎯"
+};
+
+// Coming Soon — เพิ่ม/ลบได้เลย
+const COMING_SOON = [
+  { name:"Drama & Arts",   emoji:"🎭", desc:"ชมรมละคร time management + passion" },
+  { name:"POSN Corner",    emoji:"🔬", desc:"พื้นที่สายโอลิมปิก" },
+  { name:"Gym & Movement", emoji:"🏋️", desc:"Peer สายออกกำลังกาย" },
+  { name:"Music & Sound",  emoji:"🎵", desc:"ดนตรีกับสุขภาพจิต" },
+  { name:"Community Work", emoji:"🤝", desc:"จิตอาสา ค่าย กิจกรรม" },
+];
+
+// ═══════════════════════════════════════════════════════
+// COUNTDOWN
+// ═══════════════════════════════════════════════════════
+let _timer = null;
+function startCountdown() {
+  const el = document.getElementById("countdown-display");
+  if (!el) return;
+  function tick() {
+    const diff = new Date(UNLOCK_DATE) - new Date();
+    if (diff <= 0) { el.textContent = "เปิดแล้ว!"; clearInterval(_timer); return; }
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    el.textContent = d>0 ? `เปิดใน ${d} วัน ${h} ชม.` : h>0 ? `เปิดใน ${h} ชม. ${m} นาที` : `เปิดใน ${m} นาที`;
+  }
+  tick();
+  _timer = setInterval(tick, 60000);
+}
+
+// ═══════════════════════════════════════════════════════
+// BUILD CARD
+// ═══════════════════════════════════════════════════════
+function makeCard(w, full, locked, delay) {
+  const el = document.createElement("div");
+  el.className = "world-card" + (full?" full":"") + (locked?" locked":"");
+  if (!locked) el.onclick = () => window.location.href = w.url;
+
+  const icon = w.icon_url
+    ? `<img src="${w.icon_url}" alt="${w.name}" onerror="this.parentElement.innerText='${w.emoji||"🌐"}'"/>`
+    : (w.emoji || "🌐");
+
+  if (full) {
+    el.innerHTML = `<div class="world-icon">${icon}</div><div class="world-body"><div class="world-name">${w.name}</div><div class="world-desc">${w.desc}</div></div>`;
   } else {
-    liff.init({ liffId: "2009806939-H06mwKgI" })
+    el.innerHTML = `<div class="world-icon">${icon}</div><div class="world-name">${w.name}</div><div class="world-desc">${w.desc}</div>`;
+  }
+
+  setTimeout(() => el.classList.add("visible"), delay);
+  return el;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function renderAll() {
+  const wrap = document.getElementById("worlds-wrap");
+  wrap.innerHTML = ""; // clear static HTML, replace with dynamic
+  let d = 0; const S = 55;
+  const isOpen = new Date(UNLOCK_DATE) <= new Date();
+
+  // Section label
+  const lbl = document.createElement("div");
+  lbl.className = "section-label";
+  lbl.style.marginBottom = "12px";
+  lbl.innerHTML = `<div class="section-label-text">สำรวจ</div><div class="section-label-line"></div>`;
+  wrap.appendChild(lbl);
+
+  // Worlds 1–4: grid (2x2)
+  for (let i=0; i<WORLDS_TOP.length; i+=2) {
+    const row = document.createElement("div");
+    row.className = "world-row";
+    row.appendChild(makeCard(WORLDS_TOP[i],   false, false, d)); d+=S;
+    if (WORLDS_TOP[i+1]) { row.appendChild(makeCard(WORLDS_TOP[i+1], false, false, d)); d+=S; }
+    wrap.appendChild(row);
+  }
+
+  // Divider: ปิดใช้งาน + countdown (only if still locked)
+  if (!isOpen) {
+    const div = document.createElement("div");
+    div.className = "divider-locked";
+    div.innerHTML = `
+      <div class="divider-locked-line"></div>
+      <div class="divider-locked-tag">🔒 ปิดใช้งาน &nbsp;·&nbsp; <span id="countdown-display"></span></div>
+      <div class="divider-locked-line"></div>`;
+    wrap.appendChild(div);
+    setTimeout(startCountdown, 0);
+  }
+
+  // Worlds 6–7: locked grid
+  const lockedRow = document.createElement("div");
+  lockedRow.className = "world-row";
+  WORLDS_LOCKED_GRID.forEach(w => {
+    lockedRow.appendChild(makeCard(w, false, !isOpen, d)); d+=S;
+  });
+  wrap.appendChild(lockedRow);
+
+  // World 8: half-width left locked
+  const row8 = document.createElement("div");
+  row8.className = "world-row";
+  row8.appendChild(makeCard(WORLD_8, false, !isOpen, d)); d+=S;
+  wrap.appendChild(row8);
+
+  // Coming Soon divider
+  const ds = document.createElement("div");
+  ds.className = "divider-soon";
+  ds.innerHTML = `<div class="divider-soon-line"></div><div class="divider-soon-text">Coming Soon</div><div class="divider-soon-line"></div>`;
+  wrap.appendChild(ds);
+
+  // Spoiler card
+  const sp = document.createElement("div");
+  sp.className = "spoiler-card";
+  sp.innerHTML = `
+    <div class="spoiler-title">ใจดี TU คือพื้นที่ของทุก identity</div>
+    <div class="spoiler-sub">ไม่ว่าคุณจะเป็นคนชมรมละคร นักกีฬา สายโอลิมปิก หรือคนที่แค่อยากหาเพื่อนที่เข้าใจ — เรากำลังสร้าง World ให้ทุกคนในโรงเรียนนี้</div>
+    <div class="spoiler-chips">${COMING_SOON.map(w=>`<span class="spoiler-chip">${w.emoji} ${w.name}</span>`).join("")}</div>`;
+  wrap.appendChild(sp);
+  setTimeout(() => sp.classList.add("visible"), d+100);
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+if (isPreview) {
+  document.getElementById("greeting-name").innerText = "สวัสดี 🤍";
+  renderAll();
+} else {
+  try {
+    liff.init({ liffId: LIFF_ID })
       .then(() => {
         if (!liff.isLoggedIn()) { liff.login(); return; }
         liff.getProfile().then(p => {
-          document.getElementById("greeting-name").innerText = "สวัสดี " + p.displayName + " 🤍";
+          document.getElementById("greeting-name").innerText = "สวัสดี " + p.displayName.split(" ")[0] + " 🤍";
         });
+        renderAll();
       })
-      .catch(err => console.error("LIFF:", err));
-  }
+      .catch(() => renderAll());
+  } catch(e) { renderAll(); }
+}
 </script>
 </body>
+</html>
