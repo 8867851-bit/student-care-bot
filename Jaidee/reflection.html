@@ -3,26 +3,505 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ใจดี TU — Reflection Space</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <title>Reflection — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    :root{--cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;--border:#EEEBE4;--gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;}
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;gap:20px;}
-    .icon{font-size:56px;}
-    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
-    .title{font-family:'Playfair Display',serif;font-size:28px;line-height:1.3;}
-    .body{font-size:14px;color:var(--mid);line-height:1.85;max-width:320px;}
-    .badge{background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:6px 16px;font-size:12px;font-weight:600;color:#7A5C00;}
-    .back{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;margin-top:8px;}
+    :root {
+      --cream:#FDFBF7; --cream-border:#EDE9E0;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --green:#3A7D44; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card:#FFFFFF;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;}
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:16px 20px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+    .screen{display:none;min-height:100vh;flex-direction:column;}
+    .screen.active{display:flex;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .screen-enter{animation:fadeUp 0.32s ease forwards;}
+
+    /* PROGRESS */
+    .progress{display:flex;gap:5px;padding:0 24px;margin-top:16px;}
+    .dot{width:5px;height:5px;border-radius:50%;background:var(--cream-border);transition:all 0.3s;}
+    .dot.active{background:var(--dark);width:16px;border-radius:3px;}
+    .dot.done{background:var(--green);width:5px;}
+
+    /* WELCOME */
+    #s-welcome{align-items:center;justify-content:center;text-align:center;padding:48px 32px;gap:0;}
+    .w-icon{font-size:48px;margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.2s ease forwards;}
+    .w-eye{font-size:10px;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;font-weight:400;margin-bottom:12px;opacity:0;animation:fadeUp 0.7s 0.4s ease forwards;}
+    .w-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;line-height:1.35;margin-bottom:10px;opacity:0;animation:fadeUp 0.7s 0.55s ease forwards;}
+    .w-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.8;margin-bottom:40px;opacity:0;animation:fadeUp 0.7s 0.7s ease forwards;}
+    .w-btn{background:var(--dark);color:var(--cream);border:none;border-radius:28px;padding:14px 32px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;opacity:0;animation:fadeUp 0.7s 0.9s ease forwards;transition:transform 0.15s;}
+    .w-btn:active{transform:scale(0.96);}
+    .w-exit{margin-top:16px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;opacity:0;animation:fadeUp 0.7s 1.05s ease forwards;}
+
+    /* REGULATE */
+    #s-regulate{justify-content:space-between;}
+    .reg-body{padding:52px 28px 0;flex:1;display:flex;flex-direction:column;justify-content:center;}
+    .reg-label{font-size:10px;letter-spacing:2px;color:var(--soft);text-transform:uppercase;margin-bottom:24px;}
+    .reg-line{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:400;line-height:1.6;opacity:0;transform:translateY(8px);transition:opacity 0.6s ease,transform 0.6s ease;margin-bottom:0;}
+    .reg-line+.reg-line{margin-top:22px;}
+    .reg-line.show{opacity:1;transform:translateY(0);}
+    .reg-line.dim{opacity:0.22;}
+    .reg-foot{padding:32px 28px 44px;}
+    .reg-btn{width:100%;background:var(--dark);color:var(--cream);border:none;border-radius:28px;padding:16px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;opacity:0;transition:opacity 0.5s ease,transform 0.15s;}
+    .reg-btn.show{opacity:1;}
+    .reg-btn:active{transform:scale(0.96);}
+
+    /* SHARED Q STYLES */
+    .q-wrap{padding:0 24px;flex:1;}
+    .q-eye{font-size:10px;letter-spacing:2px;color:var(--green);text-transform:uppercase;font-weight:400;margin-bottom:12px;margin-top:24px;}
+    .q-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.4;margin-bottom:6px;}
+    .q-sub{font-size:12px;font-weight:300;color:var(--soft);margin-bottom:24px;line-height:1.6;}
+    .q-foot{padding:0 24px 44px;}
+    .next-btn{width:100%;background:var(--dark);color:var(--cream);border:none;border-radius:28px;padding:16px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;opacity:0.32;transition:opacity 0.25s,transform 0.15s;pointer-events:none;}
+    .next-btn.on{opacity:1;pointer-events:all;}
+    .next-btn:active{transform:scale(0.97);}
+
+    /* BODY GRID */
+    .body-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .b-card{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:16px 14px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;gap:5px;}
+    .b-card.sel{border-color:var(--dark);background:var(--dark);}
+    .b-card.sel .b-label{color:var(--cream);}
+    .b-card.sel .b-desc{color:rgba(253,251,247,0.55);}
+    .b-icon{font-size:22px;}
+    .b-label{font-size:13px;font-weight:500;}
+    .b-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
+
+    /* VAL / AROUSAL OPTS */
+    .v-opts{display:flex;flex-direction:column;gap:10px;}
+    .v-opt{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:18px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.18s;}
+    .v-opt.sel{border-color:var(--dark);background:var(--dark);}
+    .v-opt.sel .v-label{color:var(--cream);}
+    .v-opt.sel .v-desc{color:rgba(253,251,247,0.5);}
+    .v-icon{font-size:24px;flex-shrink:0;}
+    .v-label{font-size:15px;font-weight:500;}
+    .v-desc{font-size:12px;font-weight:300;color:var(--soft);margin-top:2px;}
+
+    /* NAMING */
+    .n-intro{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:20px;margin-top:6px;}
+    .n-cards{display:flex;flex-direction:column;gap:10px;}
+    .n-card{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:18px 16px;cursor:pointer;transition:all 0.18s;}
+    .n-card.sel{border-color:var(--green);background:var(--green-soft);}
+    .n-card.sel .n-word{color:var(--green);}
+    .n-word{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;margin-bottom:6px;}
+    .n-desc{font-size:12px;font-weight:300;color:var(--mid);line-height:1.65;}
+    .n-none{width:100%;background:none;border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:300;color:var(--soft);cursor:pointer;margin-top:4px;transition:all 0.18s;}
+    .n-none.sel{border-color:var(--soft);color:var(--mid);}
+
+    /* ONE Q */
+    .oq-opts{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+    .oq-opt{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:16px;cursor:pointer;font-family:'Mitr',sans-serif;font-size:14px;font-weight:400;color:var(--dark);text-align:left;transition:all 0.18s;}
+    .oq-opt.sel{border-color:var(--dark);background:var(--dark);color:var(--cream);}
+
+    /* BRIDGE */
+    #s-bridge{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:0;}
+    .br-thanks{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.5;margin-bottom:10px;}
+    .br-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;margin-bottom:8px;max-width:300px;white-space:pre-line;}
+    .br-tag{display:inline-block;background:var(--green-soft);border:1px solid var(--green-border);border-radius:99px;padding:6px 16px;font-size:12px;font-weight:500;color:var(--green);margin:10px 0 28px;}
+    .br-main{width:100%;max-width:320px;background:var(--green);color:#fff;border:none;border-radius:28px;padding:16px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:10px;transition:transform 0.15s;}
+    .br-main:active{transform:scale(0.97);}
+    .br-peer{width:100%;max-width:320px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:28px;padding:15px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--mid);cursor:pointer;margin-bottom:10px;transition:all 0.18s;}
+    .br-peer:active{border-color:var(--dark);color:var(--dark);}
+    .br-exit{background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;margin-top:6px;}
+
+    /* NO MATCH */
+    #s-nomatch{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:0;}
+    .nm-icon{font-size:44px;margin-bottom:24px;}
+    .nm-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.5;margin-bottom:10px;}
+    .nm-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.8;margin-bottom:32px;max-width:300px;}
+    .nm-peer{width:100%;max-width:320px;background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:28px;padding:16px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:#7A5C00;cursor:pointer;margin-bottom:10px;transition:transform 0.15s;}
+    .nm-peer:active{transform:scale(0.97);}
+    .nm-care{width:100%;max-width:320px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:28px;padding:15px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--mid);cursor:pointer;transition:all 0.18s;}
+    .nm-care:active{border-color:var(--dark);color:var(--dark);}
+    .nm-exit{background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;margin-top:16px;}
   </style>
 </head>
 <body>
-  <div class="icon">🪞</div>
-  <div class="eyebrow">ใจดี TU · Reflection Space</div>
-  <div class="title">Reflection Space</div>
-  <div class="badge">🌱 กำลังสร้าง — เร็วๆ นี้</div>
-  <div class="body">self-help journey ที่สร้างร่วมกับนักจิตวิทยาจริง<br><br>กำลังรอ co-create กับนักจิตวิทยา 💛</div>
-  <button class="back" onclick="window.history.back()">← กลับ</button>
+
+<!-- WELCOME -->
+<div class="screen active" id="s-welcome">
+  <div class="w-icon">🪞</div>
+  <div class="w-eye">ใจดี TU · Reflection</div>
+  <div class="w-title">ยินดีที่มา</div>
+  <div class="w-sub">ไม่ต้องรู้ว่ามาทำไม<br>แค่มาก็พอแล้ว</div>
+  <button class="w-btn" onclick="goTo('s-regulate')">เริ่มต้น →</button>
+  <button class="w-exit" onclick="window.history.back()">← กลับหน้าหลัก</button>
+</div>
+
+<!-- REGULATE -->
+<div class="screen" id="s-regulate">
+  <button class="back-btn" onclick="goTo('s-welcome')">← กลับ</button>
+  <div class="progress">
+    <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+  <div class="reg-body">
+    <div class="reg-label">ก่อนอื่น · หยุดสักครู่</div>
+    <div class="reg-line" id="rl0">สังเกตลมหายใจตอนนี้</div>
+    <div class="reg-line" id="rl1">ไม่ต้องเปลี่ยนอะไร<br>แค่รู้ว่ามันอยู่ตรงไหน</div>
+    <div class="reg-line" id="rl2">สังเกตจุดที่ร่างกาย<br>สัมผัสกับพื้นหรือเก้าอี้</div>
+    <div class="reg-line" id="rl3">หายใจออกช้าๆ<br>ครั้งเดียวก็พอ</div>
+  </div>
+  <div class="reg-foot">
+    <button class="reg-btn" id="reg-ready" onclick="goTo('s-body')">พร้อมแล้ว →</button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="screen" id="s-body">
+  <button class="back-btn" onclick="goTo('s-regulate')">← กลับ</button>
+  <div class="progress">
+    <div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+  <div class="q-wrap">
+    <div class="q-eye">ร่างกาย</div>
+    <div class="q-title">ตอนนี้ร่างกายรู้สึกยังไง?</div>
+    <div class="q-sub">แค่สังเกต ไม่มีผิดถูก</div>
+    <div class="body-grid">
+      <div class="b-card" data-v="heavy" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">🪨</div><div class="b-label">หนักอึ้ง</div>
+        <div class="b-desc">รู้สึกเหมือนแบกอะไรบางอย่างอยู่</div>
+      </div>
+      <div class="b-card" data-v="tight" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">🌀</div><div class="b-label">ตึง · ล็อค</div>
+        <div class="b-desc">ไหล่ขยับ หน้าอกแน่น หรือหัวแกร่ง</div>
+      </div>
+      <div class="b-card" data-v="fast" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">⚡</div><div class="b-label">เร็ว · ตึงเครียด</div>
+        <div class="b-desc">หัวใจเต้นเร็ว หายใจตื้น มีพลังงานสูง</div>
+      </div>
+      <div class="b-card" data-v="empty" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">🌫</div><div class="b-label">ว่างเปล่า</div>
+        <div class="b-desc">รู้สึกชา ฝ้า หรือไม่ค่อยรู้สึกอะไร</div>
+      </div>
+      <div class="b-card" data-v="ok" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">🌿</div><div class="b-label">ปกติ</div>
+        <div class="b-desc">ไม่มีอะไรผิดปกติชัดเจน</div>
+      </div>
+      <div class="b-card" data-v="unsure" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">🌊</div><div class="b-label">ไม่แน่ใจ</div>
+        <div class="b-desc">ยังอ่านร่างกายตัวเองไม่ออก</div>
+      </div>
+    </div>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="body-next" onclick="goTo('s-valence')">ถัดไป →</button></div>
+</div>
+
+<!-- VALENCE -->
+<div class="screen" id="s-valence">
+  <button class="back-btn" onclick="goTo('s-body')">← กลับ</button>
+  <div class="progress">
+    <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+  <div class="q-wrap">
+    <div class="q-eye">ความรู้สึก</div>
+    <div class="q-title">โดยรวมแล้ว...</div>
+    <div class="q-sub">ความรู้สึกตอนนี้รู้สึกดีหรือไม่ดี?</div>
+    <div class="v-opts">
+      <div class="v-opt" data-v="good" onclick="pick(this,'valence','v-opt','val-next')">
+        <div class="v-icon">☀️</div>
+        <div><div class="v-label">รู้สึกดี</div><div class="v-desc">มีบางอย่างที่น่าพอใจหรือสบายใจ</div></div>
+      </div>
+      <div class="v-opt" data-v="neutral" onclick="pick(this,'valence','v-opt','val-next')">
+        <div class="v-icon">🌤</div>
+        <div><div class="v-label">เฉยๆ</div><div class="v-desc">ไม่ดีไม่แย่ หรือยังบอกไม่ถูก</div></div>
+      </div>
+      <div class="v-opt" data-v="bad" onclick="pick(this,'valence','v-opt','val-next')">
+        <div class="v-icon">🌧</div>
+        <div><div class="v-label">ไม่ดี</div><div class="v-desc">มีบางอย่างที่รู้สึกหนักหรือไม่โอเค</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="val-next" onclick="goTo('s-arousal')">ถัดไป →</button></div>
+</div>
+
+<!-- AROUSAL -->
+<div class="screen" id="s-arousal">
+  <button class="back-btn" onclick="goTo('s-valence')">← กลับ</button>
+  <div class="progress">
+    <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
+  </div>
+  <div class="q-wrap">
+    <div class="q-eye">พลังงาน</div>
+    <div class="q-title">มีพลังงานแค่ไหน<br>ตอนนี้?</div>
+    <div class="q-sub">ไม่เกี่ยวกับความง่วง แต่เป็นพลังงานภายใน</div>
+    <div class="v-opts">
+      <div class="v-opt" data-v="high" onclick="pick(this,'arousal','v-opt','arousal-next')">
+        <div class="v-icon">🔥</div>
+        <div><div class="v-label">ตื่นตัวสูง</div><div class="v-desc">คิดเยอะ วนเวียน หรือมีพลังงานมาก</div></div>
+      </div>
+      <div class="v-opt" data-v="mid" onclick="pick(this,'arousal','v-opt','arousal-next')">
+        <div class="v-icon">🌿</div>
+        <div><div class="v-label">กลางๆ</div><div class="v-desc">ไม่สูงไม่ต่ำ พอรับมือได้</div></div>
+      </div>
+      <div class="v-opt" data-v="low" onclick="pick(this,'arousal','v-opt','arousal-next')">
+        <div class="v-icon">🌑</div>
+        <div><div class="v-label">หนักเหนื่อย</div><div class="v-desc">รู้สึกล้า ช้า หรืออยากถอยห่าง</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="arousal-next" onclick="buildNaming()">ถัดไป →</button></div>
+</div>
+
+<!-- NAMING -->
+<div class="screen" id="s-name">
+  <button class="back-btn" onclick="goTo('s-arousal')">← กลับ</button>
+  <div class="progress">
+    <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div>
+  </div>
+  <div class="q-wrap">
+    <div class="q-eye">ชื่อของมัน</div>
+    <div class="q-title">บางทีความรู้สึกมีชื่อ</div>
+    <div class="n-intro">ลองดูว่ามีอันไหนที่ใกล้เคียงบ้างไหม<br>ไม่ต้องตรงทั้งหมดก็ได้</div>
+    <div class="n-cards" id="name-cards"></div>
+    <button class="n-none" id="n-none" onclick="pickNone()">ไม่มีเลยที่ตรง</button>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="name-next" onclick="afterNaming()">ถัดไป →</button></div>
+</div>
+
+<!-- ONE QUESTION -->
+<div class="screen" id="s-question">
+  <button class="back-btn" onclick="goTo('s-name')">← กลับ</button>
+  <div style="padding:28px 24px;flex:1;">
+    <div class="q-eye" style="margin-top:16px;">คำถามสุดท้าย</div>
+    <div class="q-title" id="oq-title"></div>
+    <div class="oq-opts" id="oq-opts"></div>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="oq-next" onclick="buildBridge()">เสร็จแล้ว →</button></div>
+</div>
+
+<!-- BRIDGE -->
+<div class="screen" id="s-bridge">
+  <div class="br-thanks">ขอบคุณที่อยู่กับ<br>ตัวเองสักครู่นะ</div>
+  <div class="br-sub" id="br-sub"></div>
+  <div class="br-tag" id="br-tag"></div>
+  <button class="br-main" id="br-main">ไปพื้นที่ใจ →</button>
+  <button class="br-peer" onclick="window.location.href='peer.html'">หรือคุยกับ PR แทน 💛</button>
+  <button class="br-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
+</div>
+
+<!-- NO MATCH -->
+<div class="screen" id="s-nomatch">
+  <div class="nm-icon">🌫</div>
+  <div class="nm-title">บางทีความรู้สึก<br>ก็ยังไม่มีชื่อ</div>
+  <div class="nm-sub">และนั่นก็โอเคเหมือนกัน<br>ไม่จำเป็นต้องรู้ก่อนที่จะได้รับการดูแล</div>
+  <button class="nm-peer" onclick="window.location.href='peer.html'">คุยกับ PR — บางทีการพูดออกมาดังๆ ช่วยได้ 💛</button>
+  <button class="nm-care" onclick="window.location.href='care.html'">ไปพื้นที่ใจ — ไม่ต้องรู้ว่ารู้สึกอะไรก็เริ่มได้</button>
+  <button class="nm-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
+</div>
+
+<script>
+const S = { body:null, valence:null, arousal:null, name:null, noname:false, _data:null };
+
+const DB = {
+  bad_high:{
+    opts:[
+      {w:"วิตกกังวล",d:"รู้สึกเหมือนมีอะไรบางอย่างที่ยังไม่โอเค รอคอยสิ่งที่ยังไม่มาถึง"},
+      {w:"กดดัน",d:"ความคาดหวังรู้สึกหนักกว่าที่รับได้ ทั้งจากตัวเองและคนรอบข้าง"},
+      {w:"หงุดหงิด",d:"มีอะไรบางอย่างที่รู้สึกไม่ยุติธรรม หรือไม่เป็นอย่างที่อยากให้เป็น"}
+    ],
+    q:{t:"ความกดดันนี้มาจากไหนมากกว่า?",o:["จากคนอื่นหรือสิ่งรอบข้าง","จากตัวเอง","ทั้งสองอย่าง","ไม่แน่ใจ"]},
+    layer:"environment",lt:"สภาพแวดล้อม",
+    bs:"ความรู้สึกแบบนี้มักเชื่อมกับแรงกดดันรอบตัว\nพื้นที่ใจมีชั้นที่พูดถึงเรื่องนี้โดยตรง"
+  },
+  bad_mid:{
+    opts:[
+      {w:"เหนื่อยใจ",d:"รู้สึกล้าจากการพยายามมานาน ไม่ใช่แค่ร่างกาย แต่ข้างใน"},
+      {w:"สับสน",d:"ไม่รู้จะไปทางไหน หรือไม่รู้ว่าตัวเองรู้สึกอะไรกันแน่"},
+      {w:"โดดเดี่ยว",d:"อยู่กับคนเยอะ แต่รู้สึกว่าไม่มีใครเข้าใจจริงๆ"}
+    ],
+    q:{t:"ตอนนี้รู้สึกอยากทำอะไรมากกว่า?",o:["อยู่คนเดียวสักพัก","คุยกับใครบางคน","ไม่รู้เหมือนกัน","แค่อยากให้มันผ่านไป"]},
+    layer:"connection",lt:"ความสัมพันธ์",
+    bs:"ความรู้สึกแบบนี้มักเกี่ยวกับการเชื่อมต่อกับคนอื่น\nพื้นที่ใจมีชั้นที่พูดถึงเรื่องนี้"
+  },
+  bad_low:{
+    opts:[
+      {w:"เศร้า",d:"มีบางอย่างที่รู้สึกสูญเสีย หรือรู้สึกหนักในอก"},
+      {w:"ถอยห่าง",d:"อยากหายไปจากทุกอย่างสักพัก ไม่อยากมีส่วนร่วมกับอะไร"},
+      {w:"หมดแรง",d:"ทำทุกอย่างต้องใช้แรงมากกว่าปกติมาก"}
+    ],
+    q:{t:"ความรู้สึกนี้อยู่มาแล้วนานแค่ไหน?",o:["วันสองวันนี้","สัปดาห์นี้","นานกว่านั้น","ไม่รู้เหมือนกัน"]},
+    layer:"body",lt:"ร่างกาย",
+    bs:"ความรู้สึกแบบนี้มักมีรากในร่างกายด้วย\nพื้นที่ใจเริ่มที่ชั้นร่างกายก่อนเสมอ"
+  },
+  neutral_high:{
+    opts:[
+      {w:"ลุ้น · ตื่นเต้น",d:"มีอะไรบางอย่างที่กำลังจะเกิดขึ้น รู้สึกทั้งดีและไม่แน่ใจ"},
+      {w:"กระสับกระส่าย",d:"อยู่เฉยไม่ค่อยได้ มีพลังงานล้น แต่ยังไม่รู้จะทำอะไรกับมัน"},
+      {w:"ค้างคา",d:"มีเรื่องในหัวหลายอย่าง ยังไม่ได้ตัดสินใจหรือลงเอยซักที"}
+    ],
+    q:{t:"สิ่งที่ครองความคิดมากที่สุดตอนนี้คือ?",o:["เรื่องการเรียน","เรื่องคนอื่น","เรื่องอนาคต","ยังไม่รู้แน่"]},
+    layer:"expression",lt:"การแสดงออก",
+    bs:"พลังงานนี้ต้องการพื้นที่ระบาย\nพื้นที่ใจมีชั้นเกี่ยวกับการแสดงออกและสร้างสรรค์"
+  },
+  neutral_mid:{
+    opts:[
+      {w:"เรียบๆ",d:"ไม่ได้มีอะไรผิดปกติ แต่ก็ไม่ได้รู้สึกว่าดีพิเศษ"},
+      {w:"รอดู",d:"กำลังดูว่าอะไรจะเกิดขึ้น ยังไม่ได้ลงหลักปักฐาน"},
+      {w:"เหนื่อยแบบเบาๆ",d:"มีความเหนื่อยเล็กๆ ที่ยังอธิบายไม่ถูกชัดเจน"}
+    ],
+    q:{t:"มีเรื่องที่อยู่ในหัวแต่ยังไม่ได้พูดถึงไหม?",o:["มี แต่ยังไม่พร้อมพูด","มี และอยากพูด","ไม่มีเท่าไหร่","ไม่รู้เหมือนกัน"]},
+    layer:"belief",lt:"ความเชื่อเกี่ยวกับตัวเอง",
+    bs:"บางทีความรู้สึกเรียบๆ ซ่อนอะไรบางอย่างไว้\nพื้นที่ใจมีชั้นที่ช่วยสำรวจเรื่องนี้"
+  },
+  neutral_low:{
+    opts:[
+      {w:"เฉื่อย",d:"ไม่ได้อยากทำอะไรเป็นพิเศษ ไม่มีแรงขับ"},
+      {w:"ชา",d:"รู้สึกน้อยลง ทั้งดีและไม่ดี ทุกอย่างดูเหมือนกันหมด"},
+      {w:"ต้องการพัก",d:"ร่างกายและหัวใจต้องการพัก ซึ่งนั่นก็โอเคเหมือนกัน"}
+    ],
+    q:{t:"ความรู้สึกนี้ต้องการอะไรมากกว่า?",o:["ต้องการพัก","ต้องการแรงบันดาลใจ","ต้องการใครซักคน","ยังไม่รู้"]},
+    layer:"body",lt:"ร่างกาย",
+    bs:"ร่างกายและระบบประสาทอาจต้องการการดูแลก่อน\nพื้นที่ใจเริ่มที่ชั้นร่างกาย"
+  },
+  good_high:{
+    opts:[
+      {w:"มีพลัง",d:"รู้สึกพร้อม อยากทำอะไรบางอย่าง มีไฟ"},
+      {w:"มีความหวัง",d:"เห็นอนาคตในแบบที่ดี อยากก้าวไปข้างหน้า"},
+      {w:"ตื่นเต้น",d:"มีอะไรที่น่าสนใจกำลังมา รู้สึกเปิดรับ"}
+    ],
+    q:{t:"พลังงานนี้อยากใส่ไว้ที่ไหน?",o:["งานหรือการเรียน","ความสัมพันธ์","ตัวเองและความฝัน","ยังไม่รู้"]},
+    layer:"expression",lt:"การแสดงออก",
+    bs:"ดีใจที่คุณมาในวันแบบนี้\nพื้นที่ใจมีชั้นที่ช่วยต่อยอดความรู้สึกดีๆ ให้คงอยู่"
+  },
+  good_mid:{
+    opts:[
+      {w:"สงบ",d:"รู้สึกเบาและโอเคกับสิ่งที่เป็นอยู่"},
+      {w:"พอใจ",d:"มีบางอย่างที่เดินหน้าได้ดี รู้สึกขอบคุณ"},
+      {w:"เชื่อมต่อ",d:"รู้สึกเป็นส่วนหนึ่งของบางอย่างหรือใครบางคน"}
+    ],
+    q:{t:"อยากให้ความรู้สึกนี้อยู่นานขึ้นไหม?",o:["อยากมากเลย","พอแล้ว แค่นี้ก็ดี","ไม่ได้คิดถึง","ยังไม่รู้"]},
+    layer:"connection",lt:"ความสัมพันธ์",
+    bs:"ดีใจที่คุณมาในวันแบบนี้\nพื้นที่ใจมีเครื่องมือช่วยรักษาความรู้สึกดีนี้ไว้"
+  },
+  good_low:{
+    opts:[
+      {w:"ผ่อนคลาย",d:"รู้สึกเบา วางลงได้ ไม่ต้องทำอะไรเพิ่ม"},
+      {w:"ขอบคุณ",d:"รู้สึกดีกับบางอย่างในชีวิตตอนนี้ แม้จะเล็กน้อย"},
+      {w:"เบาใจ",d:"อะไรบางอย่างที่เคยหนักรู้สึกเบาลงแล้ว"}
+    ],
+    q:{t:"ช่วงนี้มีอะไรที่ทำให้รู้สึกดีขึ้นบ้างไหม?",o:["มี อยากจำมันไว้","มี แต่ยังไม่ชัด","ยังนึกไม่ออก","ไม่มีอะไรชัดเจน"]},
+    layer:"expression",lt:"การแสดงออก",
+    bs:"การมาอยู่กับความรู้สึกดีก็เป็นการดูแลตัวเองเหมือนกัน\nพื้นที่ใจมีชั้นการแสดงออกเพื่อต่อยอด"
+  }
+};
+
+const LAYER_TAB = {body:0,connection:1,expression:2,environment:3,belief:4,professional:5};
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const t=document.getElementById(id);
+  t.classList.add('active','screen-enter');
+  setTimeout(()=>t.classList.remove('screen-enter'),400);
+  window.scrollTo(0,0);
+  if(id==='s-regulate') startRegulation();
+}
+
+// Regulation stagger
+let regTimers=[];
+function startRegulation(){
+  regTimers.forEach(clearTimeout);
+  regTimers=[];
+  ['rl0','rl1','rl2','rl3'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.classList.remove('show','dim');}
+  });
+  const btn=document.getElementById('reg-ready');
+  if(btn) btn.classList.remove('show');
+  const delays=[400,1600,2900,4200];
+  ['rl0','rl1','rl2','rl3'].forEach((id,i)=>{
+    regTimers.push(setTimeout(()=>{
+      const el=document.getElementById(id);
+      if(!el) return;
+      if(i>0) document.getElementById(['rl0','rl1','rl2','rl3'][i-1]).classList.add('dim');
+      el.classList.add('show');
+    }, delays[i]));
+  });
+  regTimers.push(setTimeout(()=>{
+    const btn=document.getElementById('reg-ready');
+    if(btn) btn.classList.add('show');
+  }, 5800));
+}
+startRegulation();
+
+// Generic pick
+function pick(el,key,cls,btnId){
+  el.closest('.screen').querySelectorAll('.'+cls).forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  S[key]=el.dataset.v;
+  const btn=document.getElementById(btnId);
+  if(btn){btn.classList.add('on');}
+}
+
+// Naming
+function buildNaming(){
+  const key=(S.valence||'neutral')+'_'+(S.arousal||'mid');
+  const data=DB[key]||DB['neutral_mid'];
+  S._data=data;
+  const container=document.getElementById('name-cards');
+  container.innerHTML='';
+  data.opts.forEach((opt,i)=>{
+    const d=document.createElement('div');
+    d.className='n-card';
+    d.innerHTML=`<div class="n-word">${opt.w}</div><div class="n-desc">${opt.d}</div>`;
+    d.onclick=function(){pickName(this);};
+    container.appendChild(d);
+  });
+  document.getElementById('n-none').classList.remove('sel');
+  document.getElementById('name-next').classList.remove('on');
+  S.name=null; S.noname=false;
+  goTo('s-name');
+}
+
+function pickName(el){
+  document.querySelectorAll('.n-card').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('n-none').classList.remove('sel');
+  el.classList.add('sel');
+  S.name=el.querySelector('.n-word').textContent;
+  S.noname=false;
+  document.getElementById('name-next').classList.add('on');
+}
+
+function pickNone(){
+  document.querySelectorAll('.n-card').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('n-none').classList.add('sel');
+  S.noname=true; S.name=null;
+  document.getElementById('name-next').classList.add('on');
+}
+
+function afterNaming(){
+  if(S.noname){ goTo('s-nomatch'); return; }
+  const q=S._data.q;
+  document.getElementById('oq-title').textContent=q.t;
+  const container=document.getElementById('oq-opts');
+  container.innerHTML='';
+  q.o.forEach(opt=>{
+    const b=document.createElement('button');
+    b.className='oq-opt';
+    b.textContent=opt;
+    b.onclick=function(){
+      document.querySelectorAll('.oq-opt').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+      S.question=opt;
+      document.getElementById('oq-next').classList.add('on');
+    };
+    container.appendChild(b);
+  });
+  document.getElementById('oq-next').classList.remove('on');
+  goTo('s-question');
+}
+
+function buildBridge(){
+  const data=S._data;
+  document.getElementById('br-sub').textContent=data.bs;
+  document.getElementById('br-tag').textContent='→ ชั้น'+data.lt;
+  const tab=LAYER_TAB[data.layer]||0;
+  document.getElementById('br-main').onclick=function(){
+    window.location.href='care.html?tab='+tab;
+  };
+  goTo('s-bridge');
+}
+</script>
 </body>
 </html>
