@@ -3,420 +3,667 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <title>ใจดี TU — Growth Programs</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <title>ใจดี TU — Programs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
   <style>
-    :root{
-      --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
-      --softer:#CCC;--border:#EEEBE4;--white:#FFFFFF;
-      --gold:#F5A623;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;
-      --green:#4CAF7D;--green-soft:#F0FFF4;--green-border:#B2DFCC;
-      --red:#E05252;--red-soft:#FFF0F0;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
-
-    /* HEADER */
-    .page-header{padding:48px 24px 24px;}
-    .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:12px;}
-    .headline{font-family:'Playfair Display',serif;font-size:30px;line-height:1.25;}
-    .headline em{font-style:italic;color:var(--gold);}
-    .page-sub{font-size:14px;color:var(--mid);line-height:1.7;margin-top:10px;}
-
-    /* SECTION LABEL */
-    .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);padding:0 16px;margin-bottom:12px;}
-
-    /* TU BUDDY — pinned special card */
-    .buddy-card{
-      margin:0 16px 32px;
-      background:var(--dark);
-      border-radius:20px;overflow:hidden;
-      position:relative;cursor:pointer;
-      transition:transform 0.15s ease;
-    }
-    .buddy-card:active{transform:scale(0.98);}
-    .buddy-photo{width:100%;height:180px;object-fit:cover;opacity:0.7;}
-    .buddy-photo-placeholder{width:100%;height:180px;background:linear-gradient(135deg,#1A1A1A,#333);display:flex;align-items:center;justify-content:center;font-size:48px;}
-    .buddy-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(transparent,rgba(0,0,0,0.85));}
-    .buddy-pin{display:inline-block;background:var(--gold);color:#1A1A1A;border-radius:99px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
-    .buddy-name{font-family:'Playfair Display',serif;font-size:22px;color:white;line-height:1.3;}
-    .buddy-desc{font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px;line-height:1.5;}
-
-    /* PROGRAM CARDS */
-    .programs-list{padding:0 16px;display:flex;flex-direction:column;gap:14px;}
-
-    .program-card{
-      background:var(--white);border-radius:16px;
-      border:1px solid var(--border);overflow:hidden;
-      cursor:pointer;transition:transform 0.15s ease;
-      box-shadow:0 2px 12px rgba(0,0,0,0.04);
-    }
-    .program-card:active{transform:scale(0.98);}
-    .program-card.past{opacity:0.55;}
-    .program-card.closing{border-color:var(--gold-border);box-shadow:0 0 0 2px var(--gold-soft);}
-
-    .program-photo{width:100%;height:140px;object-fit:cover;}
-    .program-photo-placeholder{width:100%;height:140px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:36px;}
-
-    .program-body{padding:14px 16px;}
-    .program-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
-    .program-tag{background:var(--green-soft);color:var(--green);border-radius:99px;padding:2px 10px;font-size:10px;font-weight:700;}
-    .program-tag.closing{background:var(--gold-soft);color:#7A5C00;}
-    .program-tag.past{background:#F5F5F3;color:var(--softer);}
-    .program-name{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px;}
-    .program-desc{font-size:13px;color:var(--mid);line-height:1.5;}
-    .program-dates{font-size:12px;color:var(--soft);margin-top:8px;display:flex;align-items:center;gap:4px;}
-
-    /* OVERLAY — full description */
-    .overlay{
-      display:none;position:fixed;inset:0;
-      background:rgba(0,0,0,0.5);z-index:100;
-      align-items:flex-end;
-    }
-    .overlay.active{display:flex;animation:overlayIn 0.25s ease both;}
-    @keyframes overlayIn{from{opacity:0}to{opacity:1}}
-
-    .sheet{
-      background:var(--white);border-radius:24px 24px 0 0;
-      width:100%;max-height:90vh;overflow-y:auto;
-      animation:sheetUp 0.3s ease both;
-    }
-    @keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
-
-    .sheet-photo{width:100%;height:200px;object-fit:cover;}
-    .sheet-photo-placeholder{width:100%;height:200px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:56px;}
-    .sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:16px auto 0;}
-
-    .sheet-body{padding:20px 24px 40px;display:flex;flex-direction:column;gap:14px;}
-    .sheet-tags{display:flex;gap:6px;flex-wrap:wrap;}
-    .sheet-title{font-family:'Playfair Display',serif;font-size:24px;line-height:1.3;}
-    .sheet-dates{font-size:13px;color:var(--soft);}
-    .sheet-desc{font-size:14px;color:var(--mid);line-height:1.85;white-space:pre-wrap;}
-
-    .btn-register{
-      background:var(--green);color:white;border:none;
-      border-radius:14px;padding:16px;font-size:15px;
-      font-family:'Sarabun',sans-serif;font-weight:700;
-      cursor:pointer;width:100%;text-align:center;text-decoration:none;
-      display:block;
-    }
-    .btn-past{
-      background:var(--cream);color:var(--soft);border:1px solid var(--border);
-      border-radius:14px;padding:14px;font-size:14px;
-      font-family:'Sarabun',sans-serif;font-weight:600;
-      cursor:default;width:100%;text-align:center;
-    }
-    .btn-close{
-      background:none;border:none;color:var(--soft);
-      font-size:13px;font-family:'Sarabun',sans-serif;
-      cursor:pointer;padding:8px;text-align:center;width:100%;
+    :root {
+      --forest:        #0E1A10;
+      --forest-mid:    #152018;
+      --forest-border: #1E3025;
+      --forest-lift:   #1C2B1E;
+      --cream:         #F4EFE3;
+      --cream-warm:    #FAF6EE;
+      --cream-border:  #E4DCCC;
+      --cream-mid:     #BEB5A0;
+      --cream-soft:    #857D6C;
+      --green:         #7DC67A;
+      --green-dim:     #4A7A47;
+      --red-muted:     #B04840;
+      --red-bg:        rgba(176,72,64,0.09);
+      --red-border:    rgba(176,72,64,0.18);
+      --radius:        18px;
+      --radius-sm:     11px;
     }
 
-    /* LOADING */
-    .loading-row{display:flex;align-items:center;gap:10px;color:var(--soft);font-size:14px;padding:20px 16px;}
-    .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-    .back-btn{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:16px 24px;display:block;}
+    body {
+      font-family: 'Mitr', sans-serif;
+      background: var(--forest);
+      color: var(--cream);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
 
-    .empty{text-align:center;padding:32px 20px;color:var(--soft);font-size:14px;line-height:1.7;}
+    /* Grain */
+    body::before {
+      content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+      opacity:0.04;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size:180px 180px;
+    }
+    body > * { position:relative; z-index:1; }
+
+    /* ── HERO: centred, gold glow behind title ── */
+    .hero {
+      padding: 52px 24px 32px;
+      position: relative; overflow: hidden;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    /* gold radial glow centred behind the title */
+    .hero::after {
+      content:'';
+      position:absolute; top:50px; left:50%; transform:translateX(-50%);
+      width:300px; height:200px;
+      background:radial-gradient(ellipse, rgba(200,150,10,0.15) 0%, transparent 68%);
+      pointer-events:none; z-index:0;
+    }
+
+    .hero-back {
+      align-self:flex-start;
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:12px; font-weight:300; color:var(--green-dim);
+      margin-bottom:24px; cursor:pointer;
+      background:none; border:none; font-family:'Mitr',sans-serif;
+      transition:color 0.15s; position:relative; z-index:1;
+    }
+    .hero-back:hover { color:var(--green); }
+
+    .hero-title {
+      font-family:'Instrument Serif',serif;
+      font-size:42px; font-weight:400;
+      /* pure white — fully readable on dark green */
+      color:#1A1A1A; line-height:1.05;
+      margin-bottom:10px;
+      position:relative; z-index:1;
+    }
+    /* italic "Workshop" also white — not green, no readability issue */
+    .hero-title em { font-style:italic; color:#1A1A1A; }
+
+    .hero-sub {
+      font-size:13px; font-weight:300;
+      color:#7A9A76; line-height:1.85;
+      max-width:280px; position:relative; z-index:1;
+    }
+
+    /* ── STATS: cream/light background, dark text ── */
+    .stats-strip {
+      display:flex; gap:8px; padding:20px 24px 0;
+    }
+    .stat-card {
+      flex:1;
+      background:#F4EFE3;       /* light cream */
+      border:1px solid #E0D8C8;
+      border-radius:14px; padding:12px 8px; text-align:center;
+    }
+    .stat-num {
+      font-family:'Instrument Serif',serif;
+      font-size:26px; color:#1A2B1E; /* dark green number */
+      display:block; line-height:1;
+    }
+    .stat-label {
+      font-size:9px; font-weight:400;
+      color:#6A6050; letter-spacing:0.5px;
+      margin-top:4px; display:block;
+    }
+
+    /* ── FILTER CHIPS ── */
+    .filter-row {
+      display:flex; gap:7px; padding:20px 24px 24px;
+      overflow-x:auto; scrollbar-width:none;
+    }
+    .filter-row::-webkit-scrollbar { display:none; }
+    .chip {
+      flex-shrink:0; padding:6px 16px; border-radius:99px;
+      font-size:11px; border:1px solid var(--forest-border);
+      color:#6A8A66; background:transparent;
+      cursor:pointer; font-family:'Mitr',sans-serif;
+      transition:all 0.18s ease; white-space:nowrap;
+    }
+    .chip:hover { border-color:var(--green-dim); color:var(--green); }
+    .chip.active {
+      background:var(--green); border-color:var(--green);
+      color:#091208; font-weight:600;
+      box-shadow:0 0 16px rgba(212,168,50,0.35);
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider {
+      display:flex; align-items:center; gap:12px; padding:4px 24px 16px;
+    }
+    .sd-text {
+      font-size:9px; font-weight:500; letter-spacing:2.5px;
+      text-transform:uppercase; color:var(--green-dim); white-space:nowrap;
+    }
+    .sd-line { flex:1; height:1px; background:var(--forest-border); }
+
+    /* ── CARDS ── */
+    .cards { display:flex; flex-direction:column; gap:14px; padding:0 16px; }
+
+    .prog-card {
+      background:var(--cream-warm);
+      border-radius:var(--radius); overflow:hidden; cursor:pointer;
+      /* uplifting glow: top-edge highlight, faint upper halo */
+      box-shadow:
+        0 0 0 1px rgba(125,198,122,0.28),
+        0 0 14px rgba(125,198,122,0.18),
+        inset 0 1px 0 rgba(125,198,122,0.20),
+        0 2px 6px rgba(0,0,0,0.22);
+      opacity:0; transform:translateY(14px);
+      transition:opacity 0.38s ease, transform 0.38s ease, box-shadow 0.22s ease;
+    }
+    .prog-card.visible { opacity:1; transform:translateY(0); }
+    .prog-card:hover {
+      box-shadow:
+        0 0 0 1px rgba(125,198,122,0.50),
+        0 0 22px rgba(125,198,122,0.28),
+        inset 0 1px 0 rgba(125,198,122,0.32),
+        0 2px 8px rgba(0,0,0,0.22);
+      transform:translateY(-2px);
+    }
+    .prog-card:active { transform:scale(0.985); }
+
+    .card-photo {
+      width:100%; aspect-ratio:16/7;
+      background:linear-gradient(140deg,#243A28 0%,#172A1A 100%);
+      display:flex; align-items:center; justify-content:center;
+      font-size:44px; position:relative; overflow:hidden;
+    }
+    .card-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+    .card-photo-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to bottom,transparent 25%,rgba(8,16,9,0.5) 100%);
+    }
+    .card-photo-cat {
+      position:absolute; bottom:12px; left:14px;
+      font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+      background:rgba(8,16,9,0.72); backdrop-filter:blur(8px);
+      padding:4px 10px; border-radius:99px;
+    }
+    .card-photo-type {
+      position:absolute; bottom:12px; right:14px;
+      font-size:9px; color:rgba(200,190,168,0.8);
+      background:rgba(8,16,9,0.6); backdrop-filter:blur(8px);
+      padding:4px 10px; border-radius:99px;
+    }
+
+    .card-body { padding:16px 18px 18px; background:var(--cream-warm); }
+    .card-name {
+      font-family:'Noto Serif Thai',serif;
+      font-size:17px; font-weight:600;
+      color:#1C1710; line-height:1.35; margin-bottom:6px;
+    }
+    .card-desc {
+      font-size:12px; font-weight:300;
+      color:#6A6050; line-height:1.75; margin-bottom:14px;
+    }
+    .card-meta-row {
+      display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;
+    }
+    .card-meta-item {
+      display:flex; align-items:center; gap:5px;
+      font-size:11px; font-weight:300; color:#7A7060;
+    }
+    .card-deadline {
+      background:var(--red-bg); border:1px solid var(--red-border);
+      border-radius:10px; padding:8px 12px;
+      font-size:11px; color:var(--red-muted); margin-bottom:14px;
+    }
+
+    /* Two CTAs: detail + สมัคร */
+    .card-cta-row { display:flex; gap:8px; }
+    .card-cta {
+      flex:1; background:#1A2B1C; color:#FFFFFF;
+      border:1.5px solid rgba(255,255,255,0.15);
+      border-radius:var(--radius-sm); padding:11px 10px;
+      font-size:12px; font-weight:500;
+      font-family:'Mitr',sans-serif; cursor:pointer;
+      transition:all 0.2s ease; text-align:center;
+      /* white glow behind the text */
+      text-shadow: 0 0 12px rgba(255,255,255,0.55), 0 0 4px rgba(255,255,255,0.3);
+    }
+    .card-cta:hover {
+      background:rgba(255,255,255,0.12); color:#FFFFFF;
+      border-color:rgba(255,255,255,0.35);
+      text-shadow: 0 0 18px rgba(255,255,255,0.8), 0 0 6px rgba(255,255,255,0.5);
+    }
+    .card-cta:active { transform:scale(0.97); }
+    .card-cta.primary {
+      flex:1.3; background:var(--green); color:#091208;
+      border-color:var(--green); font-weight:600;
+    }
+    .card-cta.primary:hover {
+      box-shadow:0 0 20px rgba(125,198,122,0.35);
+    }
+    .card-cta.closed {
+      background:#EDE7DC; color:#9A9080;
+      border-color:transparent; cursor:default;
+    }
+    .card-cta.closed:hover { background:#EDE7DC; box-shadow:none; }
+
+    /* ── PAST PROGRAMS ── */
+    .past-scroll {
+      display:flex; gap:10px; padding:0 16px; overflow-x:auto; scrollbar-width:none;
+    }
+    .past-scroll::-webkit-scrollbar { display:none; }
+    .past-card {
+      flex:0 0 190px; background:var(--forest-lift);
+      border:1px solid var(--forest-border);
+      border-radius:14px; padding:14px; opacity:0.65;
+    }
+    .past-cat { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--green-dim); margin-bottom:5px; }
+    .past-name { font-family:'Noto Serif Thai',serif; font-size:13px; font-weight:600; color:var(--cream-mid); line-height:1.4; margin-bottom:4px; }
+    .past-date { font-size:10px; color:#6A8A66; }
+
+    /* ── LOADING ── */
+    .skeletons { display:flex; flex-direction:column; gap:14px; padding:0 16px; }
+    .skel {
+      border-radius:var(--radius);
+      background:linear-gradient(90deg,var(--forest-mid) 25%,var(--forest-lift) 50%,var(--forest-mid) 75%);
+      background-size:200% 100%; animation:shimmer 1.5s infinite;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ── EMPTY ── */
+    .empty-state { display:none; flex-direction:column; align-items:center; gap:12px; padding:64px 24px; text-align:center; }
+    .empty-state.show { display:flex; }
+    .empty-icon { font-size:40px; opacity:0.3; }
+    .empty-title { font-family:'Instrument Serif',serif; font-size:20px; color:var(--cream-mid); }
+    .empty-sub { font-size:13px; font-weight:300; color:#6A8A66; line-height:1.7; max-width:240px; }
+
+    /* ── FOOTER ── */
+    .footer { padding:40px 24px 16px; text-align:center; }
+    .footer p { font-size:12px; font-weight:300; color:var(--green-dim); line-height:1.9; }
+    .footer a { color:var(--green); text-decoration:none; }
+
+    /* ── DETAIL SHEET ── */
+    .sheet-overlay { position:fixed; inset:0; z-index:100; display:none; }
+    .sheet-overlay.open { display:block; }
+    .sheet-backdrop {
+      position:absolute; inset:0;
+      background:rgba(6,12,7,0.82); backdrop-filter:blur(6px); cursor:pointer;
+    }
+    .sheet-panel {
+      position:absolute; bottom:0; left:0; right:0;
+      background:var(--cream-warm);
+      border-radius:24px 24px 0 0; max-height:90vh; overflow-y:auto;
+      animation:sheetUp 0.3s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes sheetUp { from{transform:translateY(50px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .sheet-handle { width:36px; height:4px; border-radius:99px; background:#D8D0C2; margin:14px auto 0; }
+    .sheet-photo {
+      width:100%; aspect-ratio:16/8;
+      background:linear-gradient(140deg,#243A28,#172A1A);
+      display:flex; align-items:center; justify-content:center;
+      font-size:52px; margin-top:16px; overflow:hidden;
+    }
+    .sheet-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+    .sheet-body { padding:20px 20px 40px; }
+    .sheet-cat { font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+    .sheet-name { font-family:'Noto Serif Thai',serif; font-size:22px; font-weight:700; color:#1C1710; line-height:1.3; margin-bottom:14px; }
+    .sheet-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+    .sheet-cell { background:#EDE7DC; border-radius:10px; padding:10px 12px; }
+    .sheet-cell-label { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:#9A9080; margin-bottom:3px; }
+    .sheet-cell-val { font-size:13px; font-weight:500; color:#2A241A; }
+    .sheet-rule { height:1px; background:#E4DCD0; margin:14px 0; }
+    .sheet-desc-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#9A9080; margin-bottom:8px; }
+    .sheet-desc { font-size:14px; font-weight:300; color:#4A4038; line-height:1.9; white-space:pre-wrap; }
+    /* images inside description */
+    .sheet-desc img { width:100%; border-radius:12px; margin-top:12px; display:block; }
+    .sheet-deadline { margin-top:14px; background:var(--red-bg); border:1px solid var(--red-border); border-radius:12px; padding:11px 14px; font-size:12px; color:var(--red-muted); }
+    .sheet-cta-row { display:flex; gap:10px; margin-top:20px; }
+    .sheet-cta {
+      flex:1; background:#1A2B1C; color:var(--green);
+      border:1.5px solid rgba(125,198,122,0.22);
+      border-radius:14px; padding:14px;
+      font-size:14px; font-weight:500;
+      font-family:'Mitr',sans-serif; cursor:pointer; transition:all 0.2s;
+    }
+    .sheet-cta:hover { background:var(--green); color:#091208; }
+    .sheet-cta.primary {
+      flex:1.4; background:var(--green); color:#091208;
+      border-color:var(--green); font-weight:600;
+    }
+    .sheet-cta.primary:hover { box-shadow:0 0 24px rgba(125,198,122,0.28); }
+    .sheet-cta.closed { background:#EDE7DC; color:#9A9080; border-color:transparent; cursor:default; flex:1; }
+    .sheet-cta.closed:hover { background:#EDE7DC; box-shadow:none; }
   </style>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
 
-<!-- PROGRAM DETAIL OVERLAY -->
-<div class="overlay" id="overlay-program" onclick="closeOverlay(event)">
-  <div class="sheet" id="sheet-program">
-    <div class="sheet-handle"></div>
-    <div class="sheet-body" id="sheet-body"></div>
+  <div class="hero">
+    <button class="hero-back" onclick="history.back()">← กลับ</button>
+    <h1 class="hero-title">Programs &amp;<br/><em>Workshop</em></h1>
+    <p class="hero-sub">กิจกรรมที่ออกแบบมาเพื่อนักเรียนเตรียมอุดมโดยเฉพาะ</p>
   </div>
-</div>
 
-<!-- HEADER -->
-<div class="page-header">
-  <div class="eyebrow">ใจดี TU · Growth Programs</div>
-  <div class="headline">กิจกรรม<br>และ<em>โปรแกรม</em></div>
-  <div class="page-sub">Workshop, seminar และกิจกรรมที่ออกแบบมาเพื่อนักเรียนเตรียมอุดม</div>
-</div>
-
-<!-- TU BUDDY — always pinned -->
-<div class="section-label">📌 โปรแกรมประจำ</div>
-<div class="buddy-card" onclick="openBuddy()">
-  <div class="buddy-photo-placeholder">🗺️</div>
-  <div class="buddy-overlay">
-    <div class="buddy-pin">Always Open</div>
-    <div class="buddy-name">TU Buddy</div>
-    <div class="buddy-desc">นำทางชีวิตใหม่ในกรุงเทพ — ร้านอาหาร BTS และทุกอย่างที่ตัวเองอยากรู้ตอนเข้าใหม่</div>
+  <!-- Stats: light cards, dark readable text -->
+  <div class="stats-strip" id="stats-strip" style="display:none">
+    <div class="stat-card">
+      <span class="stat-num" id="stat-open">—</span>
+      <span class="stat-label">เปิดรับสมัคร</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" id="stat-total">—</span>
+      <span class="stat-label">กิจกรรมทั้งหมด</span>
+    </div>
+    <div class="stat-card">
+      <!-- counts clicks on สมัคร button (localStorage, resets per session is fine) -->
+      <span class="stat-num" id="stat-reg">—</span>
+      <span class="stat-label">ผู้สมัครรวม</span>
+    </div>
   </div>
-</div>
 
-<!-- ACTIVE PROGRAMS -->
-<div class="section-label" id="label-active" style="display:none;">🟢 เปิดรับสมัครอยู่</div>
-<div class="programs-list" id="list-active"></div>
+  <div class="filter-row" id="filter-row">
+    <button class="chip active" data-cat="all" onclick="filterBy(this)">ทั้งหมด</button>
+  </div>
 
-<!-- CLOSING SOON -->
-<div class="section-label" id="label-closing" style="display:none;margin-top:20px;">⏳ ใกล้ปิดรับสมัคร</div>
-<div class="programs-list" id="list-closing"></div>
+  <div class="section-divider">
+    <span class="sd-text">กิจกรรมที่เปิดรับสมัคร</span>
+    <div class="sd-line"></div>
+  </div>
 
-<!-- PAST PROGRAMS -->
-<div class="section-label" id="label-past" style="display:none;margin-top:20px;">📁 โปรแกรมที่ผ่านมา</div>
-<div class="programs-list" id="list-past"></div>
+  <div class="skeletons" id="skeletons">
+    <div class="skel" style="height:220px"></div>
+    <div class="skel" style="height:190px"></div>
+    <div class="skel" style="height:210px"></div>
+  </div>
 
-<div id="loading-row" class="loading-row">
-  <div class="spinner"></div>
-  <span>กำลังโหลดโปรแกรม...</span>
-</div>
+  <div class="cards" id="cards"></div>
 
-<div id="empty-state" style="display:none;padding:60px 24px;text-align:center;flex-direction:column;align-items:center;gap:14px;">
-  <div style="font-size:48px;">🌱</div>
-  <div style="font-family:'Playfair Display',serif;font-size:22px;">กำลังเตรียมโปรแกรม</div>
-  <div style="font-size:14px;color:var(--soft);line-height:1.7;max-width:280px;">ทีม Program กำลังเตรียมกิจกรรมใหม่ ติดตามได้ผ่าน LINE 💛</div>
-</div>
+  <div class="empty-state" id="empty-state">
+    <div class="empty-icon">🌱</div>
+    <div class="empty-title">ยังไม่มีกิจกรรมตอนนี้</div>
+    <div class="empty-sub">ติดตาม ใจดี TU ทาง LINE เพื่อรับแจ้งเตือนก่อนใคร</div>
+  </div>
 
-<button class="back-btn" onclick="window.history.back()">← กลับ</button>
+  <div id="past-section" style="display:none; padding-top:32px">
+    <div class="section-divider" style="padding-bottom:14px">
+      <span class="sd-text">กิจกรรมที่ผ่านมา</span>
+      <div class="sd-line"></div>
+    </div>
+    <div class="past-scroll" id="past-cards"></div>
+  </div>
+
+  <div class="footer">
+    <p>ต้องการความช่วยเหลือเพิ่มเติม?<br/>
+    <a href="peer.html">คุยกับ PR →</a></p>
+    <p style="margin-top:16px;padding-top:16px;border-top:1px solid #1E3025">
+      <a href="add-program.html" style="font-size:11px;color:#4A7A47;letter-spacing:0.5px">
+        ทีมงาน: เพิ่ม Program ใหม่ →
+      </a>
+    </p>
+  </div>
+
+  <!-- Detail sheet -->
+  <div class="sheet-overlay" id="sheet">
+    <div class="sheet-backdrop" onclick="closeSheet()"></div>
+    <div class="sheet-panel">
+      <div class="sheet-handle"></div>
+      <div class="sheet-photo" id="s-photo">🌿</div>
+      <div class="sheet-body">
+        <div class="sheet-cat" id="s-cat"></div>
+        <div class="sheet-name" id="s-name"></div>
+        <div class="sheet-grid" id="s-grid"></div>
+        <div class="sheet-rule"></div>
+        <div class="sheet-desc-label">รายละเอียด</div>
+        <div class="sheet-desc" id="s-desc">—</div>
+        <div class="sheet-deadline" id="s-deadline" style="display:none"></div>
+        <div class="sheet-cta-row" id="s-cta-row"></div>
+      </div>
+    </div>
+  </div>
 
 <script>
-
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const LIFF_ID  = "2009806939-H06mwKgI";
+let userId = null; // set by LIFF silent init
 
-async function apiCall(data) {
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(data)) {
-    params.append(key, typeof value === "object" ? JSON.stringify(value) : value);
-  }
-  const res = await fetch(API_URL + "?" + params.toString());
-  return await res.json();
-}
-
-// ================================================================
-// MOCK DATA
-// Admin: add programs via dashboard → Programs tab
-// Each program needs: name, short_desc, full_desc, start_date,
-// end_date, category, form_url, photo_url, status(active/past)
-// ================================================================
-const MOCK_PROGRAMS = [
-  {
-    id:"P001",
-    name:"Mindfulness for Students",
-    short_desc:"ฝึกสติในแบบที่เหมาะกับนักเรียนมัธยม 2 ชั่วโมงที่คุ้มค่า",
-    full_desc:"Workshop นี้ออกแบบมาเพื่อนักเรียนที่รู้สึกเครียดและต้องการเครื่องมือในการจัดการกับความคิดและอารมณ์\n\nคุณจะได้เรียนรู้:\n• เทคนิค breathing ที่ใช้ได้จริงในชีวิตประจำวัน\n• วิธีสังเกตความคิดโดยไม่ตัดสิน\n• การ ground ตัวเองเมื่อรู้สึกoverwhelmed\n\nไม่ต้องมีประสบการณ์มาก่อน มาได้เลย",
-    start_date:"2026-04-25",
-    end_date:"2026-04-25",
-    reg_deadline:"2026-04-23",
-    category:"จิตวิทยา",
-    form_url:"https://forms.google.com",
-    photo_url:"",
-    status:"active"
-  },
-  {
-    id:"P002",
-    name:"Career Exploration Night",
-    short_desc:"คุยกับรุ่นพี่ที่เรียนในสายต่างๆ ถามได้ทุกอย่างที่อยากรู้",
-    full_desc:"งานนี้รวมรุ่นพี่จากหลากหลายคณะมาพูดคุยตรงๆ กับน้องๆ ที่กำลังวางแผนอนาคต\n\nจะมีรุ่นพี่จาก:\n• แพทยศาสตร์\n• วิศวกรรมศาสตร์\n• นิติศาสตร์\n• จิตวิทยา\n• บริหารธุรกิจ\n\nถามได้ไม่อั้น บรรยากาศสบายๆ ไม่เป็นทางการ",
-    start_date:"2026-05-02",
-    end_date:"2026-05-02",
-    reg_deadline:"2026-04-30",
-    category:"อาชีพ",
-    form_url:"https://forms.google.com",
-    photo_url:"",
-    status:"active"
-  },
-  {
-    id:"P003",
-    name:"Study Skills Workshop",
-    short_desc:"เรียนให้ได้ผลจริง ไม่ใช่แค่นั่งนาน",
-    full_desc:"สำหรับน้องที่รู้สึกว่าเรียนหนักแต่ผลไม่ดีขึ้น\n\nจะสอนเทคนิคที่มีงานวิจัยรองรับ:\n• Spaced repetition\n• Active recall\n• Pomodoro technique\n• Mind mapping\n\nพร้อม worksheet ให้กลับไปใช้ได้เลย",
-    start_date:"2026-04-19",
-    end_date:"2026-04-19",
-    reg_deadline:"2026-04-18",
-    category:"การเรียน",
-    form_url:"https://forms.google.com",
-    photo_url:"",
-    status:"closing"
-  },
-  {
-    id:"P004",
-    name:"Anxiety & You",
-    short_desc:"ทำความรู้จักกับความวิตกกังวลและวิธีอยู่กับมัน",
-    full_desc:"Workshop ที่ผ่านมาแล้ว แต่เก็บไว้เป็นประวัติและแรงบันดาลใจสำหรับโปรแกรมต่อไป",
-    start_date:"2026-03-15",
-    end_date:"2026-03-15",
-    reg_deadline:"2026-03-13",
-    category:"จิตวิทยา",
-    form_url:"",
-    photo_url:"",
-    status:"past"
-  },
+const FALLBACK_ACTIVE = [
+  { id:"p1", name:"Intentional Listening Lab",
+    short_desc:"ฝึกฟังอย่างมีความตั้งใจ สำหรับนักเรียนที่อยากช่วยเพื่อนได้ดีขึ้น",
+    full_desc:"Workshop ที่ออกแบบมาเพื่อพัฒนาทักษะการฟังอย่างลึกซึ้ง โดยอิงจาก Intentional Peer Support framework ที่ใจดี TU ใช้กับ PR ทุกคน เปิดสำหรับทุกคนที่อยากเป็นพื้นที่ปลอดภัยให้เพื่อน",
+    category:"Wellbeing", type:"Workshop", emoji:"🌿",
+    start_date:"14 มิ.ย. 68", reg_deadline:"10 มิ.ย. 68",
+    form_url:"https://forms.google.com/", photo_url:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80", status:"active" },
+  { id:"p2", name:"Study Smarter: Neuroscience Edition",
+    short_desc:"เรียนรู้ว่าสมองทำงานยังไงเวลาเรียน แล้วออกแบบวิธีเรียนให้เหมาะกับตัวเอง",
+    full_desc:"Seminar โดยนักจิตวิทยาการศึกษา พาเจาะลึกเรื่อง spaced repetition, active recall และ cognitive load theory แบบที่เอาไปใช้ได้จริง ไม่ใช่แค่ทฤษฎี",
+    category:"Academic", type:"Seminar", emoji:"🧠",
+    start_date:"20 มิ.ย. 68", reg_deadline:"18 มิ.ย. 68",
+    form_url:"https://forms.google.com/", photo_url:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80", status:"active" },
+  { id:"p3", name:"จากเตรียมอุดมถึง Oxford",
+    short_desc:"รุ่นพี่เล่าให้ฟัง เส้นทาง แรงจูงใจ และสิ่งที่อยากย้อนกลับไปบอกตัวเอง",
+    full_desc:"Talk โดยรุ่นพี่ที่ผ่านช่วงเตรียมอุดมมาแล้ว เล่าตั้งแต่วันที่ยังไม่รู้จะเรียนอะไร จนถึงวันที่ได้รับจดหมายตอบรับ",
+    category:"Career", type:"Talk", emoji:"🎯",
+    start_date:"26 มิ.ย. 68", reg_deadline:"24 มิ.ย. 68",
+    form_url:"https://forms.google.com/", photo_url:"", status:"active" }
+];
+const FALLBACK_PAST = [
+  { name:"Journaling Workshop", category:"Wellbeing", start_date:"15 พ.ค. 68" },
+  { name:"Growth Mindset Seminar", category:"Academic", start_date:"2 พ.ค. 68" },
+  { name:"Career Compass", category:"Career", start_date:"18 เม.ย. 68" },
 ];
 
-// ================================================================
-// UTILS
-// ================================================================
-function getDaysUntil(dateStr) {
-  const d = new Date(dateStr);
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  return Math.ceil((d - now) / 86400000);
+let active = [], past = [], filter = "all";
+// Track registration clicks in sessionStorage per program id
+function getRegCount(id) {
+  try { return parseInt(sessionStorage.getItem("reg_" + id) || "0"); } catch { return 0; }
+}
+function incRegCount(id) {
+  try { sessionStorage.setItem("reg_" + id, (getRegCount(id) + 1).toString()); } catch {}
+}
+function totalRegCount() {
+  return active.reduce((sum, p) => sum + getRegCount(p.id), 0);
 }
 
-function formatDateThai(dateStr) {
-  const d = new Date(dateStr);
-  const months = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
-  return d.getDate() + " " + months[d.getMonth()] + " " + (d.getFullYear()+543);
+const CAT_COLORS = {
+  "Wellbeing":"#7DC67A","Academic":"#7AAED4","Career":"#C8A032",
+  "Leadership":"#B07AD4","จิตวิทยา":"#7DC67A","การเรียน":"#7AAED4",
+  "อาชีพ":"#C8A032","ทักษะชีวิต":"#7DC67A",
+};
+function cc(cat) { return CAT_COLORS[cat] || "#7DC67A"; }
+
+function filterBy(btn) {
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  btn.classList.add("active");
+  filter = btn.dataset.cat;
+  renderCards();
 }
 
-// ================================================================
-// LOAD & RENDER
-// ================================================================
-async function loadPrograms() {
-  let programs = [];
-  try {
-    const d = await apiCall({action:"getPrograms"});
-    if (d.status === "OK" && Array.isArray(d.programs)) {
-      programs = d.programs.filter(p => p.name && p.name.trim());
+function buildChips() {
+  const cats = [...new Set(active.map(p => p.category).filter(Boolean))];
+  const row = document.getElementById("filter-row");
+  cats.forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.dataset.cat = cat; b.textContent = cat;
+    b.onclick = () => filterBy(b);
+    row.appendChild(b);
+  });
+}
+
+function renderCards() {
+  const container = document.getElementById("cards");
+  const empty = document.getElementById("empty-state");
+  container.innerHTML = "";
+  const list = filter === "all" ? active : active.filter(p => p.category === filter);
+  if (!list.length) { empty.classList.add("show"); return; }
+  empty.classList.remove("show");
+
+  list.forEach((p, i) => {
+    const isClosed = p.status === "closed" || p.status === "past";
+    const color = cc(p.category);
+    const emoji = p.emoji || "🌱";
+    const hasForm = p.form_url && p.form_url !== "#" && p.form_url !== "";
+
+    let photoInner = p.photo_url
+      ? `<img src="${p.photo_url}" alt="" onerror="this.style.display='none'"/>`
+      : `<span style="opacity:0.3">${emoji}</span>`;
+
+    // Build dual CTA row
+    let ctaHtml = "";
+    if (isClosed) {
+      ctaHtml = `<div class="card-cta-row">
+        <button class="card-cta closed">ปิดรับสมัครแล้ว</button>
+      </div>`;
+    } else if (hasForm) {
+      ctaHtml = `<div class="card-cta-row">
+        <button class="card-cta" onclick="openSheet('${p.id}');event.stopPropagation()">ดูรายละเอียด</button>
+        <button class="card-cta primary" onclick="handleReg('${p.id}','${p.form_url}');event.stopPropagation()">สมัครเลย →</button>
+      </div>`;
+    } else {
+      ctaHtml = `<div class="card-cta-row">
+        <button class="card-cta" style="flex:1" onclick="openSheet('${p.id}');event.stopPropagation()">ดูรายละเอียด →</button>
+      </div>`;
     }
-  } catch(err) {
-    console.error("loadPrograms error:", err);
-  }
 
-  document.getElementById("loading-row").style.display = "none";
+    const card = document.createElement("div");
+    card.className = "prog-card";
+    card.onclick = () => openSheet(p.id);
+    card.innerHTML = `
+      <div class="card-photo">
+        ${photoInner}
+        <div class="card-photo-overlay"></div>
+        ${p.category ? `<div class="card-photo-cat" style="color:${color}">${p.category}</div>` : ""}
+        ${p.type     ? `<div class="card-photo-type">${p.type}</div>` : ""}
+      </div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        ${p.short_desc ? `<div class="card-desc">${p.short_desc}</div>` : ""}
+        <div class="card-meta-row">
+          ${p.start_date ? `<div class="card-meta-item">📅 ${p.start_date}</div>` : ""}
+          ${p.type       ? `<div class="card-meta-item">✦ ${p.type}</div>` : ""}
+        </div>
+        ${p.reg_deadline && !isClosed ? `<div class="card-deadline">⏰ ปิดรับสมัคร ${p.reg_deadline}</div>` : ""}
+        ${ctaHtml}
+      </div>`;
 
-  if (!programs.length) {
-    document.getElementById("empty-state").style.display = "flex";
-    return;
-  }
-
-  // Auto-detect past status from end_date
-  const today = new Date(); today.setHours(0,0,0,0);
-  programs.forEach(p => {
-    if (p.end_date && new Date(p.end_date) < today) p.status = "past";
+    container.appendChild(card);
+    setTimeout(() => card.classList.add("visible"), i * 75);
   });
 
-  const active  = programs.filter(p => p.status === "active");
-  const closing = programs.filter(p => p.status === "closing");
-  const past    = programs.filter(p => p.status === "past");
+  // update reg count stat
+  document.getElementById("stat-reg").textContent = totalRegCount() || "—";
+}
 
-  if (active.length) {
-    document.getElementById("label-active").style.display = "block";
-    renderPrograms(active, "list-active");
+function handleReg(id, url) {
+  incRegCount(id);
+  document.getElementById("stat-reg").textContent = totalRegCount();
+  window.open(url, "_blank");
+}
+
+function renderPast() {
+  if (!past.length) return;
+  document.getElementById("past-section").style.display = "block";
+  const el = document.getElementById("past-cards");
+  past.forEach(p => {
+    const c = document.createElement("div"); c.className = "past-card";
+    c.innerHTML = `<div class="past-cat">${p.category||""}</div><div class="past-name">${p.name}</div><div class="past-date">${p.start_date||""}</div>`;
+    el.appendChild(c);
+  });
+}
+
+function renderStats() {
+  if (!active.length) return;
+  document.getElementById("stats-strip").style.display = "flex";
+  document.getElementById("stat-open").textContent  = active.filter(p => p.status === "active").length;
+  document.getElementById("stat-total").textContent = active.length;
+  document.getElementById("stat-reg").textContent   = totalRegCount() || "—";
+}
+
+// ── DETAIL SHEET ──────────────────────────────────────────
+function openSheet(id) {
+  const p = active.find(x => x.id === id);
+  if (!p) return;
+  const isClosed = p.status === "closed" || p.status === "past";
+  const color = cc(p.category);
+  const emoji = p.emoji || "🌱";
+  const hasForm = p.form_url && p.form_url !== "#" && p.form_url !== "";
+
+  const photoEl = document.getElementById("s-photo");
+  if (p.photo_url) {
+    photoEl.innerHTML = `<img src="${p.photo_url}" alt="" onerror="this.innerHTML='<span style=\\"font-size:52px;opacity:.3\\">${emoji}</span>'"/>`;
+  } else {
+    photoEl.innerHTML = `<span style="font-size:52px;opacity:0.3">${emoji}</span>`;
   }
 
-  if (closing.length) {
-    document.getElementById("label-closing").style.display = "block";
-    renderPrograms(closing, "list-closing");
+  document.getElementById("s-cat").textContent = p.category || "";
+  document.getElementById("s-cat").style.color = color;
+  document.getElementById("s-name").textContent = p.name;
+
+  // Description — supports image URLs embedded in text as [img:URL]
+  const rawDesc = p.full_desc || p.short_desc || "—";
+  const descEl = document.getElementById("s-desc");
+  descEl.innerHTML = rawDesc.replace(/\[img:(https?:\/\/[^\]]+)\]/g,
+    (_, url) => `<img src="${url}" alt=""/>`);
+
+  // Meta grid — last cell = ผู้สมัคร count
+  document.getElementById("s-grid").innerHTML = [
+    p.start_date   && `<div class="sheet-cell"><div class="sheet-cell-label">วันที่จัดงาน</div><div class="sheet-cell-val">${p.start_date}</div></div>`,
+    p.type         && `<div class="sheet-cell"><div class="sheet-cell-label">รูปแบบ</div><div class="sheet-cell-val">${p.type}</div></div>`,
+    p.reg_deadline && `<div class="sheet-cell"><div class="sheet-cell-label">ปิดรับสมัคร</div><div class="sheet-cell-val">${p.reg_deadline}</div></div>`,
+    `<div class="sheet-cell"><div class="sheet-cell-label">ผู้สมัคร</div><div class="sheet-cell-val">${getRegCount(p.id) || "—"} คน</div></div>`,
+  ].filter(Boolean).join("");
+
+  // Deadline
+  const dlEl = document.getElementById("s-deadline");
+  if (p.reg_deadline && !isClosed) {
+    dlEl.style.display = "block";
+    dlEl.textContent = `⏰ ปิดรับสมัคร ${p.reg_deadline} — อย่าลืมนะ`;
+  } else { dlEl.style.display = "none"; }
+
+  // CTA row
+  const ctaRow = document.getElementById("s-cta-row");
+  if (isClosed) {
+    ctaRow.innerHTML = `<button class="sheet-cta closed">ปิดรับสมัครแล้ว</button>`;
+  } else if (hasForm) {
+    ctaRow.innerHTML = `
+      <button class="sheet-cta" onclick="closeSheet()">ปิด</button>
+      <button class="sheet-cta primary" onclick="handleReg('${p.id}','${p.form_url}')">สมัครเลย →</button>`;
+  } else {
+    ctaRow.innerHTML = `<button class="sheet-cta" onclick="closeSheet()">ปิด</button>`;
   }
 
-  if (past.length) {
-    document.getElementById("label-past").style.display = "block";
-    renderPrograms(past, "list-past");
-  }
-
-  if (!active.length && !closing.length && !past.length) {
-    document.getElementById("list-active").innerHTML =
-      `<div class="empty">ยังไม่มีโปรแกรมในขณะนี้<br>ติดตามได้ผ่าน LINE นะ 💛</div>`;
-    document.getElementById("label-active").style.display = "block";
-  }
+  document.getElementById("sheet").classList.add("open");
+  document.body.style.overflow = "hidden";
 }
 
-function renderPrograms(list, containerId) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-  list.forEach(p => container.appendChild(buildCard(p)));
+function closeSheet() {
+  document.getElementById("sheet").classList.remove("open");
+  document.body.style.overflow = "";
+}
+window.addEventListener("popstate", closeSheet);
+
+// ── INIT ──────────────────────────────────────────────────
+async function init() {
+  try {
+    const res  = await fetch(`${API_URL}?action=getPrograms`);
+    const data = await res.json();
+    if (data.status === "OK" && data.programs?.length) {
+      active = data.programs.filter(p => p.status !== "past" && p.status !== "completed");
+      past   = data.programs.filter(p => p.status === "past"  || p.status === "completed");
+    } else { active = FALLBACK_ACTIVE; past = FALLBACK_PAST; }
+  } catch { active = FALLBACK_ACTIVE; past = FALLBACK_PAST; }
+
+  document.getElementById("skeletons").style.display = "none";
+  buildChips();
+  renderStats();
+  renderCards();
+  renderPast();
 }
 
-function buildCard(p) {
-  const card = document.createElement("div");
-  const isPast = p.status === "past";
-  const isClosing = p.status === "closing";
-
-  card.className = "program-card" + (isPast?" past":"") + (isClosing?" closing":"");
-  card.onclick = () => openProgram(p);
-
-  const photoHTML = p.photo_url
-    ? `<img class="program-photo" src="${p.photo_url}" alt="${p.name}" onerror="this.style.display='none'"/>`
-    : `<div class="program-photo-placeholder">🌱</div>`;
-
-  const daysLeft = getDaysUntil(p.reg_deadline || p.end_date);
-  let tagHTML = `<span class="program-tag${isPast?' past':isClosing?' closing':''}">${p.category||"โปรแกรม"}</span>`;
-  if (isClosing) tagHTML += `<span class="program-tag closing">ปิดใน ${daysLeft} วัน</span>`;
-  if (isPast) tagHTML += `<span class="program-tag past">จบแล้ว</span>`;
-
-  card.innerHTML = `
-    ${photoHTML}
-    <div class="program-body">
-      <div class="program-tags">${tagHTML}</div>
-      <div class="program-name">${p.name}</div>
-      <div class="program-desc">${p.short_desc}</div>
-      <div class="program-dates">📅 ${formatDateThai(p.start_date)}${p.end_date !== p.start_date ? " – " + formatDateThai(p.end_date) : ""}</div>
-    </div>
-  `;
-  return card;
-}
-
-// ================================================================
-// PROGRAM DETAIL OVERLAY
-// ================================================================
-let currentProgram = null;
-
-function openProgram(p) {
-  currentProgram = p;
-  const isPast = p.status === "past";
-  const isClosing = p.status === "closing";
-
-  const photoHTML = p.photo_url
-    ? `<img class="sheet-photo" src="${p.photo_url}" alt="${p.name}"/>`
-    : `<div class="sheet-photo-placeholder">🌱</div>`;
-
-  const daysLeft = getDaysUntil(p.reg_deadline || p.end_date);
-  let tagHTML = `<span class="program-tag${isPast?' past':isClosing?' closing':''}">${p.category||"โปรแกรม"}</span>`;
-  if (isClosing) tagHTML += `<span class="program-tag closing">⏳ ปิดรับใน ${daysLeft} วัน</span>`;
-  if (isPast) tagHTML += `<span class="program-tag past">จบแล้ว</span>`;
-
-  const actionBtn = isPast
-    ? `<div class="btn-past">โปรแกรมนี้จบแล้ว</div>`
-    : `<a class="btn-register" href="${p.form_url}" target="_blank">สมัครได้เลย →</a>`;
-
-  const sheet = document.getElementById("sheet-program");
-  sheet.innerHTML = `
-    ${photoHTML}
-    <div class="sheet-handle"></div>
-    <div class="sheet-body">
-      <div class="sheet-tags">${tagHTML}</div>
-      <div class="sheet-title">${p.name}</div>
-      <div class="sheet-dates">📅 ${formatDateThai(p.start_date)}${p.end_date !== p.start_date ? " – " + formatDateThai(p.end_date) : ""}
-      ${p.reg_deadline && !isPast ? `<br>🔔 ปิดรับสมัคร ${formatDateThai(p.reg_deadline)}` : ""}
-      </div>
-      <div class="sheet-desc">${p.full_desc||p.short_desc}</div>
-      ${actionBtn}
-      <button class="btn-close" onclick="closeOverlay()">ปิด</button>
-    </div>
-  `;
-
-  document.getElementById("overlay-program").classList.add("active");
-}
-
-function openBuddy() {
-  const sheet = document.getElementById("sheet-program");
-  sheet.innerHTML = `
-    <div class="sheet-photo-placeholder">🗺️</div>
-    <div class="sheet-handle"></div>
-    <div class="sheet-body">
-      <div class="sheet-tags"><span class="program-tag" style="background:var(--gold-soft);color:#7A5C00;">Always Open</span></div>
-      <div class="sheet-title">TU Buddy</div>
-      <div class="sheet-desc">โปรแกรมที่ช่วยให้นักเรียนใหม่ navigate ชีวิตในกรุงเทพได้จริง\n\nคุณจะได้รู้:\n• ร้านอาหารที่ถูกที่สุดรอบโรงเรียน\n• วิธีใช้ BTS และระบบขนส่งในกรุงเทพ\n• ทุกอย่างที่ตัวเองอยากรู้ตอนเป็นนักเรียนใหม่\n\nออกแบบโดยคนที่เคยเป็นนักเรียนใหม่และรู้ว่ามันหนักแค่ไหน 💛</div>
-      <button class="btn-close" onclick="closeOverlay()">ปิด</button>
-    </div>
-  `;
-  document.getElementById("overlay-program").classList.add("active");
-}
-
-function closeOverlay(e) {
-  if (e && e.target !== document.getElementById("overlay-program")) return;
-  document.getElementById("overlay-program").classList.remove("active");
-}
-
-window.onload = () => loadPrograms();
-
+// LIFF silent init — get userId if already logged in, then load programs
+// If LIFF fails or not in LINE, just load programs anyway
+liff.init({ liffId: LIFF_ID })
+  .then(() => {
+    if (liff.isLoggedIn()) {
+      liff.getProfile().then(p => { userId = p.userId; }).catch(()=>{});
+    }
+    init();
+  })
+  .catch(() => init()); // non-LINE browser fallback
 </script>
 </body>
 </html>
