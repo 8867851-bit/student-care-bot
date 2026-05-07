@@ -3824,7 +3824,7 @@ async function snLookupCase(){
   const caseId = document.getElementById("sn-case-id-in").value.trim().toUpperCase();
   if(!caseId){ toast("กรุณากรอก Case ID"); return; }
 
-  const btn = document.querySelector("[onclick="snLookupCase()"]");
+  const btn = document.querySelector("[onclick='snLookupCase()']");
   if(btn){ btn.disabled=true; btn.textContent="กำลังดึง..."; }
 
   try{
