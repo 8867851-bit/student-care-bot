@@ -128,6 +128,43 @@
     .a-comp-tag-eye{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;}
     .a-comp-tag{display:inline-block;border:1px solid rgba(255,255,255,0.2);padding:7px 18px;font-size:13px;font-weight:500;letter-spacing:1px;color:#fff;border-radius:2px;}
     .a-comp-btn{display:block;margin-top:24px;width:100%;background:none;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.55);padding:13px;font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;}
+
+    /* ── COLLAB BANNER ── */
+    .collab-banner{margin:4px 16px 0;border-radius:16px;overflow:hidden;cursor:pointer;background:var(--ink);border:1px solid var(--ink);}
+    .collab-banner-inner{padding:20px;display:flex;align-items:center;gap:14px;}
+    .collab-avatar{width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);flex-shrink:0;object-fit:cover;background:rgba(255,255,255,0.08);}
+    .collab-x{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:3px;}
+    .collab-name{font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.2;margin-bottom:3px;}
+    .collab-role{font-size:11px;font-weight:300;color:rgba(255,255,255,0.45);margin-bottom:10px;}
+    .collab-pills{display:flex;gap:7px;flex-wrap:wrap;}
+    .collab-pill{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:99px;padding:3px 10px;font-size:10px;color:rgba(255,255,255,0.55);}
+    .collab-arr{color:rgba(255,255,255,0.25);font-size:16px;flex-shrink:0;margin-left:auto;}
+
+    /* ── COLLAB SERIES PAGE ── */
+    .series-page{display:none;position:fixed;inset:0;background:var(--cream);z-index:200;flex-direction:column;overflow:hidden;}
+    .series-page.active{display:flex;animation:slideUp 0.28s cubic-bezier(0.22,1,0.36,1) both;}
+    .series-topbar{background:rgba(250,249,246,0.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);display:flex;align-items:center;height:44px;padding:0 18px;gap:12px;flex-shrink:0;}
+    .series-back{font-size:18px;color:var(--ink-soft);background:none;border:none;cursor:pointer;flex-shrink:0;}
+    .series-topbar-title{font-size:13px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .series-body{flex:1;overflow-y:auto;padding-bottom:60px;}
+    .series-hero{background:var(--ink);padding:28px 20px 24px;}
+    .series-hero-x{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:16px;}
+    .series-hero-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+    .series-avatar{width:68px;height:68px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);object-fit:cover;flex-shrink:0;}
+    .series-name{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:#fff;line-height:1.25;margin-bottom:4px;}
+    .series-role{font-size:12px;font-weight:300;color:rgba(255,255,255,0.45);}
+    .series-bio{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.8;margin-bottom:16px;}
+    .series-socials{display:flex;gap:7px;flex-wrap:wrap;}
+    .series-social{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:99px;padding:6px 13px;font-size:11px;color:rgba(255,255,255,0.6);text-decoration:none;cursor:pointer;}
+    .series-content{padding:20px 16px 0;}
+    .series-section-eye{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px;}
+    .series-item{background:var(--white);border-radius:14px;border:1px solid var(--rule);display:flex;align-items:center;gap:12px;padding:13px 14px;margin-bottom:10px;cursor:pointer;}
+    .si-icon{width:38px;height:38px;border-radius:9px;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+    .si-icon.video{background:var(--purple-soft,#F5F3FF);border-color:#DDD6FE;}
+    .si-body{flex:1;min-width:0;}
+    .si-title{font-size:13px;font-weight:600;line-height:1.4;margin-bottom:3px;}
+    .si-meta{font-size:11px;color:var(--ink-soft);}
+    .si-arr{font-size:13px;color:var(--ink-soft);flex-shrink:0;}
   </style>
 </head>
 <body>
@@ -162,6 +199,15 @@
   <div class="reader-body" id="reader-body" onscroll="updateProg()">
     <div class="art" id="art-content"></div>
   </div>
+</div>
+
+<!-- COLLAB SERIES PAGE -->
+<div class="series-page" id="series-page">
+  <div class="series-topbar">
+    <button class="series-back" onclick="closeSeries()">←</button>
+    <div class="series-topbar-title" id="series-topbar-title"></div>
+  </div>
+  <div class="series-body" id="series-body"></div>
 </div>
 
 <script>
@@ -214,7 +260,9 @@ function filterByTag(tag, el) {
   activeTag = tag;
   document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
   el.classList.add("active");
-  renderCards(allArticles.filter(a => tag === "all" || a.tag === tag));
+  const filtered = allArticles.filter(a => tag === "all" || a.tag === tag);
+  if(tag === "all") renderFeedWithCollabs(filtered);
+  else renderCards(filtered);
 }
 
 function buildChips(articles) {
@@ -273,7 +321,11 @@ async function load() {
   } catch {}
   if(!items||!items.length) items = MOCK_ARTICLES;
   document.getElementById("loading-row").style.display = "none";
-  allArticles = items; buildChips(items); renderCards(items); loadViews(items);
+  allArticles = items;
+  await loadCollabs();
+  buildChips(items);
+  renderFeedWithCollabs(items);
+  loadViews(items);
 }
 
 // READER
@@ -451,6 +503,159 @@ function trackView(articleId) {
   try {
     fetch(API_URL + "?action=trackView&contentId=" + encodeURIComponent(articleId));
   } catch {}
+}
+
+
+// ── COLLABORATORS ───────────────────────────────────────
+let allCollabs = [];
+let currentCollab = null;
+
+async function loadCollabs() {
+  try {
+    const d = await (await fetch(API_URL + "?action=getCollaborators")).json();
+    if(d.status==="OK" && d.collaborators?.length) {
+      allCollabs = d.collaborators.filter(c => c.active !== "FALSE" && c.active !== false);
+    }
+  } catch(e) {}
+}
+
+function renderFeedWithCollabs(articles) {
+  const grid = document.getElementById("card-grid");
+  grid.innerHTML = "";
+  if(!articles.length && !allCollabs.length){
+    document.getElementById("empty-state").style.display="flex"; return;
+  }
+  document.getElementById("empty-state").style.display="none";
+
+  // Build ordered feed: articles + collab banners interleaved by position
+  // Each collab has a "position" field (integer) indicating index in feed
+  let feedItems = articles.map((a,i) => ({type:"article", data:a, pos:i}));
+
+  // Insert collab banners at their specified positions
+  allCollabs.forEach(c => {
+    const pos = parseInt(c.position) || 999;
+    feedItems.push({type:"collab", data:c, pos:pos - 0.5}); // .5 so they slot between articles
+  });
+
+  // Sort by position
+  feedItems.sort((a,b) => a.pos - b.pos);
+
+  feedItems.forEach((item, i) => {
+    if(item.type === "article") {
+      const a = item.data;
+      const card = document.createElement("div");
+      card.className = "article-card";
+      card.onclick = () => openReader(a);
+      card.innerHTML = \`
+        <div class="card-meta"><div class="card-tag">\${a.tag||"จิตวิทยา"}</div><div class="card-level">\${a.level||""}</div></div>
+        <div class="card-title">\${a.title}</div>
+        <div class="card-desc">\${a.desc||""}</div>
+        <div class="card-footer"><div class="card-rt">⏱ \${a.readTime||"5 นาที"}</div><div class="card-arr">→</div></div>\`;
+      grid.appendChild(card);
+      setTimeout(() => card.classList.add("visible"), i * 50);
+    } else {
+      const c = item.data;
+      const articleCount = (c.content||[]).filter(x=>x.type==="article"||!x.type).length;
+      const videoCount   = (c.content||[]).filter(x=>x.type==="video").length;
+      const pills = [];
+      if(articleCount) pills.push(\`📝 \${articleCount} บทความ\`);
+      if(videoCount)   pills.push(\`▶ \${videoCount} วิดีโอ\`);
+      if(!pills.length) pills.push("เนื้อหาใหม่");
+
+      const banner = document.createElement("div");
+      banner.className = "collab-banner";
+      banner.onclick = () => openSeries(c);
+      banner.innerHTML = \`
+        <div class="collab-banner-inner">
+          <img class="collab-avatar" src="\${c.photo_url||""}" onerror="this.style.background='rgba(255,255,255,0.08)'"/>
+          <div style="flex:1;min-width:0;">
+            <div class="collab-x">ใจดี TU ×</div>
+            <div class="collab-name">\${c.name||""}</div>
+            <div class="collab-role">\${c.role||""}</div>
+            <div class="collab-pills">\${pills.map(p=>\`<span class="collab-pill">\${p}</span>\`).join("")}</div>
+          </div>
+          <div class="collab-arr">→</div>
+        </div>\`;
+      grid.appendChild(banner);
+    }
+  });
+}
+
+function openSeries(collab) {
+  currentCollab = collab;
+  document.getElementById("series-topbar-title").textContent = "ใจดี TU × " + (collab.name||"");
+
+  const socials = [];
+  if(collab.instagram) socials.push({icon:"📷", label:"Instagram", url:collab.instagram});
+  if(collab.youtube)   socials.push({icon:"▶", label:"YouTube",   url:collab.youtube});
+  if(collab.facebook)  socials.push({icon:"📘", label:"Facebook",  url:collab.facebook});
+  if(collab.website)   socials.push({icon:"🔗", label:"Website",   url:collab.website});
+
+  const socialsHtml = socials.map(s =>
+    \`<a class="series-social" href="\${s.url}" target="_blank">\${s.icon} \${s.label}</a>\`
+  ).join("");
+
+  const content = collab.content || [];
+  const itemsHtml = content.map(item => {
+    const isVideo = item.type === "video";
+    const icon = isVideo ? "▶" : "📝";
+    const iconClass = isVideo ? "si-icon video" : "si-icon";
+    const meta = isVideo
+      ? \`▶ วิดีโอ · \${item.source||"YouTube"}\`
+      : \`📖 \${item.readTime||"5 นาที"} · \${item.tag||"จิตวิทยา"}\`;
+    return \`
+      <div class="series-item" onclick="openSeriesItem(\${JSON.stringify(item).replace(/"/g,'&quot;')})">
+        <div class="\${iconClass}">\${icon}</div>
+        <div class="si-body">
+          <div class="si-title">\${item.title||""}</div>
+          <div class="si-meta">\${meta}</div>
+        </div>
+        <div class="si-arr">→</div>
+      </div>\`;
+  }).join("");
+
+  document.getElementById("series-body").innerHTML = \`
+    <div class="series-hero">
+      <div class="series-hero-x">ใจดี TU ×</div>
+      <div class="series-hero-row">
+        <img class="series-avatar" src="\${collab.photo_url||""}" onerror="this.style.background='rgba(255,255,255,0.1)'"/>
+        <div>
+          <div class="series-name">\${collab.name||""}</div>
+          <div class="series-role">\${collab.role||""}</div>
+        </div>
+      </div>
+      \${collab.bio ? \`<div class="series-bio">\${collab.bio}</div>\` : ""}
+      \${socialsHtml ? \`<div class="series-socials">\${socialsHtml}</div>\` : ""}
+    </div>
+    <div class="series-content">
+      <div class="series-section-eye">เนื้อหาทั้งหมด · \${content.length} รายการ</div>
+      \${itemsHtml || '<div style="color:var(--ink-soft);font-size:13px;padding:20px 0;">ยังไม่มีเนื้อหา — ทีมกำลังเตรียม 💛</div>'}
+    </div>\`;
+
+  document.getElementById("series-page").classList.add("active");
+  document.body.style.overflow = "hidden";
+  document.getElementById("series-body").scrollTop = 0;
+}
+
+function openSeriesItem(item) {
+  if(item.type === "video") {
+    window.open(item.url, "_blank");
+    return;
+  }
+  // article — build article object and open in reader
+  let body = null;
+  try { body = typeof item.body === "string" ? JSON.parse(item.body) : item.body; } catch {}
+  if(body?.sections) {
+    openReader({...item, body});
+  } else {
+    // No rich body — open URL if available
+    if(item.url) window.open(item.url, "_blank");
+  }
+}
+
+function closeSeries() {
+  document.getElementById("series-page").classList.remove("active");
+  document.body.style.overflow = "";
 }
 
 window.onload = () => { loadSettings(); load(); };
