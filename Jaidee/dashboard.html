@@ -804,18 +804,35 @@ window.onload=async()=>{
 };
 
 async function loadRole(){
-  // Check Team sheet via API
+  // DEBUG — show what userId we have and what API returns
+  const debugEl = document.getElementById("screen-loading");
+
+  if(!userId){
+    debugEl.innerHTML = "<div style='padding:32px;font-family:monospace;font-size:13px;line-height:2;'>❌ userId is empty — LIFF did not authenticate<br>This usually means the page was opened in a regular browser, not LINE.<br>Open this URL inside LINE app.</div>";
+    return;
+  }
+
+  debugEl.innerHTML = "<div style='padding:32px;font-family:monospace;font-size:13px;line-height:2;'>⏳ Checking role...<br>userId: " + userId + "</div>";
+
   try {
-    const d = await apiCall({action:"checkRole", userId});
-    if(d.status==="OK" && d.role){
+    const d = await apiCall({action:"getUserRole", userId});
+    debugEl.innerHTML = "<div style='padding:32px;font-family:monospace;font-size:13px;line-height:2;'>API response:<br>" + JSON.stringify(d) + "<br><br>userId sent: " + userId + "</div>";
+
+    if(d.status==="OK" && d.role && d.role !== "student"){
       userRole = d.role;
       bootApp();
       return;
     }
-  } catch(e){}
-  // Not in team — show access denied
-  document.getElementById("screen-loading").style.display="none";
-  document.getElementById("screen-denied").style.display="flex";
+
+    // Show debug before denied screen
+    setTimeout(() => {
+      document.getElementById("screen-loading").style.display="none";
+      document.getElementById("screen-denied").style.display="flex";
+    }, 4000);
+
+  } catch(e){
+    debugEl.innerHTML = "<div style='padding:32px;font-family:monospace;font-size:13px;line-height:2;'>❌ API call failed<br>Error: " + e.toString() + "<br><br>userId: " + userId + "<br>API_URL: " + API_URL + "</div>";
+  }
 }
 
 function showModeBanner(){
