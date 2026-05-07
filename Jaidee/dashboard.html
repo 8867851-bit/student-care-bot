@@ -50,6 +50,7 @@
     .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:49;}
     .sidebar-overlay.open{display:block;}
 
+    @media(max-width:900px){.main-scroll{padding:16px 14px;}.section-label{font-size:10px;}}
     @media(max-width:600px){
       #app{flex-direction:column !important;}
       .sidebar{position:fixed;left:-220px;top:0;height:100vh;z-index:50;transition:left 0.25s ease;width:210px;}
@@ -64,6 +65,7 @@
     .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:49;}
     .sidebar-overlay.open{display:block;}
 
+    @media(max-width:900px){.main-scroll{padding:16px 14px;}.section-label{font-size:10px;}}
     @media(max-width:600px){
       #app{flex-direction:column !important;}
       .sidebar{position:fixed;left:-220px;top:0;height:100vh;z-index:50;transition:left 0.25s ease;width:210px;}
@@ -295,14 +297,10 @@
     <div style="display:flex;align-items:center;gap:10px;">
       <span id="user-name" style="font-size:13px;color:var(--text-mid);"></span>
       <span class="role-badge" id="role-badge"></span>
-      <select id="role-switcher" style="display:none;background:var(--surface2);border:1px solid var(--border);color:var(--text-mid);border-radius:8px;padding:3px 8px;font-size:11px;font-family:'Sarabun',sans-serif;cursor:pointer;" onchange="switchViewRole(this.value)">
-        <option value="admin">👁 Admin view</option>
-        <option value="member">👁 Member view</option>
-      </select>
+
     </div>
   </div>
 
-  <div id="mode-banner" style="display:none;padding:8px 20px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-align:center;"></div>
 
   <!-- BODY: sidebar + main -->
   <div style="display:flex;flex:1;min-height:0;">
@@ -804,63 +802,40 @@ window.onload=async()=>{
 };
 
 async function loadRole(){
-  // DEBUG — show what userId we have and what API returns
-  const debugEl = document.getElementById("screen-loading");
-
   if(!userId){
-    debugEl.innerHTML = "<div style='padding:32px;font-family:monospace;font-size:13px;line-height:2;'>❌ userId is empty — LIFF did not authenticate<br>This usually means the page was opened in a regular browser, not LINE.<br>Open this URL inside LINE app.</div>";
+    document.getElementById("screen-loading").style.display="none";
+    document.getElementById("screen-denied").style.display="flex";
     return;
   }
-
-  debugEl.innerHTML = "<div style='padding:32px;font-family:monospace;font-size:13px;line-height:2;'>⏳ Checking role...<br>userId: " + userId + "</div>";
-
   try {
     const d = await apiCall({action:"getUserRole", userId});
-    debugEl.innerHTML = "<div style='padding:32px;font-family:monospace;font-size:13px;line-height:2;'>API response:<br>" + JSON.stringify(d) + "<br><br>userId sent: " + userId + "</div>";
-
     if(d.status==="OK" && d.role && d.role !== "student"){
       userRole = d.role;
       bootApp();
       return;
     }
-
-    // Show debug before denied screen
-    setTimeout(() => {
-      document.getElementById("screen-loading").style.display="none";
-      document.getElementById("screen-denied").style.display="flex";
-    }, 4000);
-
+    document.getElementById("screen-loading").style.display="none";
+    document.getElementById("screen-denied").style.display="flex";
   } catch(e){
-    debugEl.innerHTML = "<div style='padding:32px;font-family:monospace;font-size:13px;line-height:2;'>❌ API call failed<br>Error: " + e.toString() + "<br><br>userId: " + userId + "<br>API_URL: " + API_URL + "</div>";
+    document.getElementById("screen-loading").style.display="none";
+    document.getElementById("screen-denied").style.display="flex";
   }
 }
 
-function showModeBanner(){
-  const banner = document.getElementById("mode-banner");
-  if(!banner) return;
-  banner.style.display = "block";
-  banner.style.background = "#F0FFF4";
-  banner.style.color = "#1A6B3A";
-  banner.style.cursor = "pointer";
-  banner.innerHTML = "🟢 LIVE — ข้อมูลจริง &nbsp;<span style='opacity:0.5;font-size:10px;'>กด × เพื่อปิด</span>";
-  banner.onclick = () => { banner.style.display = "none"; };
-}
 
 function bootApp(){
   // ── NORMALISE TO 2-ROLE SYSTEM ──────────────────────────────
-  // Any old role that isn't admin collapses to "member"
   if (userRole !== "admin") userRole = "member";
 
   document.getElementById("screen-loading").style.display="none";
   document.getElementById("app").style.display="flex";
   document.getElementById("user-name").innerText=userName;
+  // Load dynamic logo if set
+  loadDynamicAssets();
   const badge=document.getElementById("role-badge");
   badge.innerText={admin:"Admin",member:"ทีมงาน"}[userRole]||userRole;
   badge.className="role-badge "+(userRole==="admin"?"admin":"pr"); // reuse admin/pr badge colours
-  if(userRole==="admin"){
-    document.getElementById("role-switcher").style.display="none";
-  }
-  showModeBanner();
+
   buildTabs();
   loadData();
 }
@@ -873,7 +848,8 @@ function buildTabs(viewRole){
       {id:"tab-overview",  label:"Overview",     icon:"📊", section:null},
       {id:"tab-cases",     label:"Cases",        icon:"🤍", section:"Cases"},
       {id:"tab-feedback",  label:"Feedback",     icon:"💬", section:"Cases"},
-      {id:"tab-content",   label:"Content",      icon:"🧩", section:"Content"},
+      {id:"tab-content",      label:"Content",      icon:"🧩", section:"Content"},
+      {id:"tab-collaborators", label:"Collaborators",icon:"🤝", section:"Content"},
       {id:"tab-people",    label:"People",       icon:"👥", section:"Content"},
       {id:"tab-therapist", label:"Therapist",    icon:"🧠", section:"Content"},
       {id:"tab-guidance",  label:"Guidance",     icon:"👩‍🏫", section:"Content"},
@@ -950,6 +926,7 @@ function switchTab(tabId,item){
   if(tabId==="tab-therapist") loadStaffTab("therapist");
   if(tabId==="tab-guidance")  loadStaffTab("guidance");
   if(tabId==="tab-founders")  loadFoundersTab();
+  if(tabId==="tab-collaborators") loadCollaboratorsTab();
   if(tabId==="tab-people")    loadPeopleTab();
   if(tabId==="tab-session-note") initSessionNoteTab();
   if(tabId==="tab-programs")  loadProgramData();
@@ -1915,6 +1892,245 @@ function openDevView(){
 function closeDevView(e){
   if(e&&e.target!==document.getElementById("dev-overlay"))return;
   document.getElementById("dev-overlay").classList.remove("active");
+}
+
+// ════════════════════════════════════════════════════════
+// COLLABORATORS TAB
+// ════════════════════════════════════════════════════════
+let _collabs = [];
+let _currentCollabId = null;
+let _collabContentType = 'article';
+
+async function loadCollaboratorsTab(){
+  const list = document.getElementById("collab-list");
+  if(!list) return;
+  list.innerHTML = '<div class="empty">กำลังโหลด...</div>';
+  try {
+    const d = await apiCall({action:"getCollaborators"});
+    if(d.status==="OK") _collabs = d.collaborators || [];
+  } catch(e){ _collabs = []; }
+  renderCollabList();
+}
+
+function renderCollabList(){
+  const list = document.getElementById("collab-list");
+  if(!list) return;
+  if(!_collabs.length){
+    list.innerHTML = '<div class="empty">ยังไม่มี Collaborator — เพิ่มด้านล่างได้เลย</div>';
+    return;
+  }
+  list.innerHTML = "";
+  _collabs.forEach(c => {
+    const contentCount = (c.content||[]).length;
+    const card = document.createElement("div");
+    card.className = "case-card";
+    card.style.cssText = "padding:14px;";
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        ${c.photo_url
+          ? `<img src="${c.photo_url}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'"/>`
+          : `<div style="width:44px;height:44px;border-radius:50%;background:var(--gold-soft);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🤝</div>`
+        }
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:700;">ใจดี TU × ${c.name||"—"}</div>
+          <div style="font-size:11px;color:var(--text-soft);">${c.role||""}</div>
+          <div style="font-size:11px;color:var(--text-soft);margin-top:2px;">${contentCount} เนื้อหา · ตำแหน่ง ${c.position||"—"} ในฟีด</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+          <button class="btn-sm gold" onclick="openCollabModal('${c.id}')" style="font-size:11px;">✏️ จัดการ</button>
+          <button class="btn-sm ghost" onclick="toggleCollabActive('${c.id}',${c.active!=='FALSE'&&c.active!==false?'false':'true'})" style="font-size:11px;">${c.active!=='FALSE'&&c.active!==false?'👁 แสดง':'👁‍🗨 ซ่อน'}</button>
+          <button class="btn-sm ghost" onclick="deleteCollab('${c.id}')" style="font-size:11px;color:var(--red);">🗑️</button>
+        </div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+async function addCollaborator(){
+  const name     = document.getElementById("cl-name")?.value.trim();
+  const role     = document.getElementById("cl-role")?.value.trim();
+  const bio      = document.getElementById("cl-bio")?.value.trim();
+  const photo    = document.getElementById("cl-photo")?.value.trim();
+  const position = document.getElementById("cl-position")?.value||"3";
+  const instagram= document.getElementById("cl-instagram")?.value.trim();
+  const youtube  = document.getElementById("cl-youtube")?.value.trim();
+  const facebook = document.getElementById("cl-facebook")?.value.trim();
+  const website  = document.getElementById("cl-website")?.value.trim();
+  if(!name||!role){ toast("กรุณาใส่ชื่อและตำแหน่ง"); return; }
+  const btn = event.target;
+  btn.disabled=true; btn.textContent="กำลังเพิ่ม...";
+  try {
+    const d = await apiCall({
+      action:"addCollaborator",
+      name, role, bio, photo_url:photo, position,
+      instagram, youtube, facebook, website,
+      active:"TRUE", content:"[]"
+    });
+    if(d.status==="OK"){
+      toast("เพิ่ม Collaborator แล้ว 🤝");
+      ["cl-name","cl-role","cl-bio","cl-photo","cl-instagram","cl-youtube","cl-facebook","cl-website"]
+        .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
+      document.getElementById("cl-position").value="3";
+      loadCollaboratorsTab();
+    } else { toast("เกิดข้อผิดพลาด"); }
+  } catch(e){ toast("เกิดข้อผิดพลาด"); }
+  finally{ btn.disabled=false; btn.textContent="เพิ่ม Collaborator →"; }
+}
+
+async function toggleCollabActive(id, active){
+  try{ await apiCall({action:"updateCollaborator", id, active:active?"TRUE":"FALSE"}); } catch(e){}
+  const c = _collabs.find(c=>c.id===id);
+  if(c) c.active = active?"TRUE":"FALSE";
+  renderCollabList();
+  toast(active?"เปิดแสดงแล้ว":"ซ่อนแล้ว");
+}
+
+async function deleteCollab(id){
+  if(!confirm("ลบ Collaborator นี้? เนื้อหาทั้งหมดจะหายไปด้วย")) return;
+  try{ await apiCall({action:"deleteCollaborator", id}); } catch(e){}
+  _collabs = _collabs.filter(c=>c.id!==id);
+  renderCollabList();
+  toast("ลบแล้ว");
+}
+
+// ── COLLAB CONTENT MODAL ──────────────────────────────────
+function openCollabModal(id){
+  const c = _collabs.find(c=>c.id===id);
+  if(!c) return;
+  _currentCollabId = id;
+  document.getElementById("modal-collab-name").textContent = c.name||"";
+  renderModalContentList(c.content||[]);
+  // Reset add form
+  setCollabContentType("article");
+  ["mc-title","mc-desc","mc-tag","mc-readtime","mc-url","mv-url","mv-title","mv-desc"]
+    .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
+  document.getElementById("mv-preview").style.display="none";
+  const modal = document.getElementById("collab-modal");
+  modal.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function closeCollabModal(){
+  document.getElementById("collab-modal").style.display = "none";
+  document.body.style.overflow = "";
+}
+
+function renderModalContentList(content){
+  const list = document.getElementById("modal-content-list");
+  if(!list) return;
+  if(!content.length){
+    list.innerHTML = '<div class="empty" style="font-size:12px;">ยังไม่มีเนื้อหา</div>';
+    return;
+  }
+  list.innerHTML = "";
+  content.forEach((item, idx) => {
+    const isVideo = item.type==="video";
+    const el = document.createElement("div");
+    el.style.cssText = "display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface2);border-radius:10px;";
+    el.innerHTML = `
+      <div style="font-size:16px;flex-shrink:0;">${isVideo?"▶":"📝"}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.title||"ไม่มีชื่อ"}</div>
+        <div style="font-size:11px;color:var(--text-soft);">${isVideo?"วิดีโอ · "+(item.source||"YouTube"):"บทความ · "+(item.readTime||"5 นาที")}</div>
+      </div>
+      <div style="display:flex;gap:4px;flex-shrink:0;">
+        ${idx>0?`<button onclick="moveCollabContent(${idx},-1)" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:11px;">↑</button>`:''}
+        ${idx<content.length-1?`<button onclick="moveCollabContent(${idx},1)" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:11px;">↓</button>`:''}
+        <button onclick="removeCollabContent(${idx})" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:11px;color:var(--red);">✕</button>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+function setCollabContentType(type){
+  _collabContentType = type;
+  const artBtn = document.getElementById("ctype-article");
+  const vidBtn = document.getElementById("ctype-video");
+  const artF   = document.getElementById("modal-article-fields");
+  const vidF   = document.getElementById("modal-video-fields");
+  if(artBtn) artBtn.style.background = type==="article" ? "var(--surface)" : "transparent";
+  if(vidBtn) vidBtn.style.background = type==="video"   ? "var(--surface)" : "transparent";
+  if(artF) artF.style.display = type==="article" ? "block" : "none";
+  if(vidF) vidF.style.display = type==="video"   ? "block" : "none";
+}
+
+function previewCollabVideo(url){
+  const preview = document.getElementById("mv-preview");
+  const thumb   = document.getElementById("mv-thumb");
+  if(!url){ preview.style.display="none"; return; }
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if(ytMatch){
+    thumb.src = `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`;
+    thumb.style.display = "block";
+    preview.style.display = "block";
+  } else if(url.includes("facebook.com")||url.includes("fb.watch")){
+    thumb.style.display = "none";
+    preview.style.display = "block";
+  }
+}
+
+async function addCollabContent(){
+  const c = _collabs.find(c=>c.id===_currentCollabId);
+  if(!c) return;
+  let newItem;
+  if(_collabContentType === "video"){
+    const url   = document.getElementById("mv-url")?.value.trim();
+    const title = document.getElementById("mv-title")?.value.trim();
+    if(!url||!title){ toast("กรุณาใส่ URL และชื่อวิดีโอ"); return; }
+    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    const source = url.includes("facebook")||url.includes("fb.watch") ? "Facebook" : "YouTube";
+    newItem = { type:"video", title, desc:document.getElementById("mv-desc")?.value.trim()||"", url, source,
+                thumb: ytMatch?`https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`:null };
+  } else {
+    const title = document.getElementById("mc-title")?.value.trim();
+    if(!title){ toast("กรุณาใส่หัวข้อบทความ"); return; }
+    newItem = { type:"article", title,
+                desc:    document.getElementById("mc-desc")?.value.trim()||"",
+                tag:     document.getElementById("mc-tag")?.value.trim()||"จิตวิทยา",
+                readTime:document.getElementById("mc-readtime")?.value.trim()||"5 นาที",
+                url:     document.getElementById("mc-url")?.value.trim()||"" };
+  }
+  const content = [...(c.content||[]), newItem];
+  const btn = event.target;
+  btn.disabled=true; btn.textContent="กำลังบันทึก...";
+  try {
+    const d = await apiCall({action:"updateCollaborator", id:_currentCollabId, content:JSON.stringify(content)});
+    if(d.status==="OK"){
+      c.content = content;
+      renderModalContentList(content);
+      toast("เพิ่มเนื้อหาแล้ว ✅");
+      ["mc-title","mc-desc","mc-tag","mc-readtime","mc-url","mv-url","mv-title","mv-desc"]
+        .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
+      document.getElementById("mv-preview").style.display="none";
+    } else { toast("เกิดข้อผิดพลาด"); }
+  } catch(e){ toast("เกิดข้อผิดพลาด"); }
+  finally{ btn.disabled=false; btn.textContent="เพิ่มเนื้อหา →"; }
+}
+
+async function moveCollabContent(idx, dir){
+  const c = _collabs.find(c=>c.id===_currentCollabId);
+  if(!c) return;
+  const content = [...(c.content||[])];
+  const newIdx = idx+dir;
+  if(newIdx<0||newIdx>=content.length) return;
+  [content[idx],content[newIdx]] = [content[newIdx],content[idx]];
+  try {
+    await apiCall({action:"updateCollaborator", id:_currentCollabId, content:JSON.stringify(content)});
+    c.content = content;
+    renderModalContentList(content);
+  } catch(e){ toast("เกิดข้อผิดพลาด"); }
+}
+
+async function removeCollabContent(idx){
+  const c = _collabs.find(c=>c.id===_currentCollabId);
+  if(!c) return;
+  const content = (c.content||[]).filter((_,i)=>i!==idx);
+  try {
+    await apiCall({action:"updateCollaborator", id:_currentCollabId, content:JSON.stringify(content)});
+    c.content = content;
+    renderModalContentList(content);
+    toast("ลบเนื้อหาแล้ว");
+  } catch(e){ toast("เกิดข้อผิดพลาด"); }
 }
 
 function toast(msg){
@@ -3249,6 +3465,144 @@ async function deleteFounderLetter(id){
   toast("ลบแล้ว");
 }
 </script>
+
+
+  <!-- ══ TAB: COLLABORATORS ══════════════════════════════════════ -->
+  <div class="tab-content" id="tab-collaborators">
+    <div class="section-label" style="margin-bottom:14px;">Collaborators — ใจดี TU ×</div>
+
+    <!-- LIST -->
+    <div id="collab-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+      <div class="empty">กำลังโหลด...</div>
+    </div>
+
+    <!-- ADD COLLABORATOR -->
+    <div class="section-label" style="margin-bottom:10px;">เพิ่ม Collaborator ใหม่</div>
+    <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="input-group">
+        <div class="input-label">ชื่อ *</div>
+        <input class="input-field" id="cl-name" placeholder="ดร. สมใจ ใจดี"/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">ตำแหน่ง / Role *</div>
+        <input class="input-field" id="cl-role" placeholder="นักจิตวิทยาคลินิก · จุฬาลงกรณ์มหาวิทยาลัย"/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Bio (แสดงในหน้า series)</div>
+        <textarea class="input-field" id="cl-bio" style="min-height:70px;resize:vertical;line-height:1.6;" placeholder="เกี่ยวกับผู้เชี่ยวชาญคนนี้..."></textarea>
+      </div>
+      <div class="input-group">
+        <div class="input-label">รูปโปรไฟล์</div>
+        <div style="display:flex;gap:8px;">
+          <input class="input-field" id="cl-photo" placeholder="https://..." style="flex:1;"/>
+          <button class="btn-sm ghost" onclick="triggerUpload('cl-photo-file','cl-photo')" style="white-space:nowrap;flex-shrink:0;">📷 อัปโหลด</button>
+        </div>
+        <input type="file" id="cl-photo-file" accept="image/*" style="display:none;" onchange="uploadToCloudinary(this,'cl-photo')"/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">ตำแหน่งในฟีด (1 = บนสุด)</div>
+        <input class="input-field" id="cl-position" type="number" placeholder="เช่น 2 = อยู่หลังบทความที่ 2" value="3"/>
+      </div>
+      <div class="section-label" style="font-size:10px;margin:4px 0;">Social Links (ไม่บังคับ)</div>
+      <div class="input-group">
+        <div class="input-label">Instagram URL</div>
+        <input class="input-field" id="cl-instagram" placeholder="https://instagram.com/..."/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">YouTube URL</div>
+        <input class="input-field" id="cl-youtube" placeholder="https://youtube.com/@..."/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Facebook URL</div>
+        <input class="input-field" id="cl-facebook" placeholder="https://facebook.com/..."/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Website URL</div>
+        <input class="input-field" id="cl-website" placeholder="https://..."/>
+      </div>
+      <button class="btn-full gold" onclick="addCollaborator()">เพิ่ม Collaborator →</button>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: COLLAB CONTENT MANAGER ═══════════════════════════ -->
+  <div id="collab-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:flex-end;justify-content:center;">
+    <div style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;">
+        <div style="flex:1;">
+          <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-soft);margin-bottom:2px;">ใจดี TU ×</div>
+          <div style="font-size:15px;font-weight:700;" id="modal-collab-name">—</div>
+        </div>
+        <button onclick="closeCollabModal()" style="background:var(--surface2);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;">✕</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:16px 20px;">
+        <!-- Content list -->
+        <div class="section-label" style="margin-bottom:10px;">เนื้อหาในซีรีส์</div>
+        <div id="modal-content-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+
+        <!-- Add content -->
+        <div class="section-label" style="margin-bottom:10px;">เพิ่มเนื้อหา</div>
+        <div style="display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px;margin-bottom:12px;">
+          <button class="btn-sm" id="ctype-article" onclick="setCollabContentType('article')" style="flex:1;background:var(--surface);border-radius:8px;border:none;font-family:'Sarabun',sans-serif;font-size:12px;padding:8px;">📝 บทความ</button>
+          <button class="btn-sm ghost" id="ctype-video" onclick="setCollabContentType('video')" style="flex:1;border:none;font-family:'Sarabun',sans-serif;font-size:12px;padding:8px;border-radius:8px;">▶ วิดีโอ</button>
+        </div>
+
+        <!-- Article fields -->
+        <div id="modal-article-fields">
+          <div class="input-group" style="margin-bottom:10px;">
+            <div class="input-label">หัวข้อบทความ *</div>
+            <input class="input-field" id="mc-title" placeholder="ชื่อบทความ"/>
+          </div>
+          <div class="input-group" style="margin-bottom:10px;">
+            <div class="input-label">คำอธิบาย</div>
+            <input class="input-field" id="mc-desc" placeholder="สรุปสั้นๆ"/>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:10px;">
+            <div class="input-group" style="flex:1;margin:0;">
+              <div class="input-label">Tag</div>
+              <input class="input-field" id="mc-tag" placeholder="ความวิตกกังวล"/>
+            </div>
+            <div class="input-group" style="flex:1;margin:0;">
+              <div class="input-label">เวลาอ่าน</div>
+              <input class="input-field" id="mc-readtime" placeholder="5 นาที"/>
+            </div>
+          </div>
+          <div class="input-group" style="margin-bottom:12px;">
+            <div class="input-label">URL บทความ (ถ้าไม่ได้เขียนใน builder)</div>
+            <input class="input-field" id="mc-url" placeholder="https://... (ไม่บังคับ)"/>
+          </div>
+          <div style="font-size:11px;color:var(--text-soft);margin-bottom:12px;line-height:1.6;">
+            หมายเหตุ: ถ้าต้องการเขียนบทความแบบ 1-2-3 blocks ให้เพิ่มผ่าน Content tab ก่อน แล้วค่อยลิงก์มาที่นี่ในเวอร์ชันถัดไป
+          </div>
+        </div>
+
+        <!-- Video fields -->
+        <div id="modal-video-fields" style="display:none;">
+          <div class="input-group" style="margin-bottom:10px;">
+            <div class="input-label">URL วิดีโอ * (YouTube หรือ Facebook)</div>
+            <input class="input-field" id="mv-url" placeholder="https://youtube.com/watch?v=..." oninput="previewCollabVideo(this.value)"/>
+          </div>
+          <div id="mv-preview" style="display:none;background:var(--surface2);border-radius:10px;overflow:hidden;margin-bottom:10px;">
+            <div style="aspect-ratio:16/9;background:#111;position:relative;overflow:hidden;">
+              <img id="mv-thumb" style="width:100%;height:100%;object-fit:cover;"/>
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+                <div style="width:36px;height:36px;background:rgba(0,0,0,0.65);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;padding-left:2px;">▶</div>
+              </div>
+            </div>
+          </div>
+          <div class="input-group" style="margin-bottom:10px;">
+            <div class="input-label">ชื่อวิดีโอ *</div>
+            <input class="input-field" id="mv-title" placeholder="ชื่อวิดีโอ"/>
+          </div>
+          <div class="input-group" style="margin-bottom:10px;">
+            <div class="input-label">คำอธิบาย</div>
+            <input class="input-field" id="mv-desc" placeholder="สรุปสั้นๆ"/>
+          </div>
+        </div>
+
+        <button class="btn-full gold" onclick="addCollabContent()">เพิ่มเนื้อหา →</button>
+      </div>
+    </div>
+  </div>
 
 
   <!-- ══ TAB: SESSION NOTE (member/PR only) ════════════════════ -->
