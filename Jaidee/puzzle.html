@@ -174,7 +174,7 @@
   <div class="home-header">
     <div class="eyebrow">ใจดี TU · Puzzle Piece</div>
     <div class="headline" id="headline">จิตวิทยาที่<em style="font-style:italic;color:var(--gold);">อ่านได้</em></div>
-    <div class="sub" id="sub">อ่าน → คิด → เชื่อมกับตัวเอง 1</div>
+    <div class="sub" id="sub">อ่าน → คิด → เชื่อมกับตัวเอง</div>
   </div>
   <div class="chips" id="chip-bar">
     <div class="chip active" onclick="filterByTag('all',this)">ทั้งหมด</div>
@@ -535,59 +535,55 @@ function renderFeedWithCollabs(articles) {
   }
   document.getElementById("empty-state").style.display="none";
 
-  // Build ordered feed: articles + collab banners interleaved by position
-  // Each collab has a "position" field (integer) indicating index in feed
-  let feedItems = articles.map((a,i) => ({type:"article", data:a, pos:i}));
-
-  // Insert collab banners at their specified positions
-  allCollabs.forEach(c => {
+  let feedItems = articles.map(function(a,i){ return {type:"article", data:a, pos:i}; });
+  allCollabs.forEach(function(c){
     const pos = parseInt(c.position) || 999;
-    feedItems.push({type:"collab", data:c, pos:pos - 0.5}); // .5 so they slot between articles
+    feedItems.push({type:"collab", data:c, pos:pos - 0.5});
   });
+  feedItems.sort(function(a,b){ return a.pos - b.pos; });
 
-  // Sort by position
-  feedItems.sort((a,b) => a.pos - b.pos);
-
-  feedItems.forEach((item, i) => {
+  feedItems.forEach(function(item, i) {
     if(item.type === "article") {
       const a = item.data;
       const card = document.createElement("div");
       card.className = "article-card";
-      card.onclick = () => openReader(a);
-      card.innerHTML = \`
-        <div class="card-meta"><div class="card-tag">\${a.tag||"จิตวิทยา"}</div><div class="card-level">\${a.level||""}</div></div>
-        <div class="card-title">\${a.title}</div>
-        <div class="card-desc">\${a.desc||""}</div>
-        <div class="card-footer"><div class="card-rt">⏱ \${a.readTime||"5 นาที"}</div><div class="card-arr">→</div></div>\`;
+      card.onclick = function(){ openReader(a); };
+      card.innerHTML =
+        '<div class="card-meta"><div class="card-tag">' + (a.tag||"จิตวิทยา") + '</div><div class="card-level">' + (a.level||"") + '</div></div>' +
+        '<div class="card-title">' + (a.title||"") + '</div>' +
+        '<div class="card-desc">' + (a.desc||"") + '</div>' +
+        '<div class="card-footer"><div class="card-rt">⏱ ' + (a.readTime||"5 นาที") + '</div><div class="card-arr">→</div></div>';
       grid.appendChild(card);
-      setTimeout(() => card.classList.add("visible"), i * 50);
+      setTimeout(function(){ card.classList.add("visible"); }, i * 50);
     } else {
       const c = item.data;
-      const articleCount = (c.content||[]).filter(x=>x.type==="article"||!x.type).length;
-      const videoCount   = (c.content||[]).filter(x=>x.type==="video").length;
+      const articleCount = (c.content||[]).filter(function(x){ return x.type==="article"||!x.type; }).length;
+      const videoCount   = (c.content||[]).filter(function(x){ return x.type==="video"; }).length;
       const pills = [];
-      if(articleCount) pills.push(\`📝 \${articleCount} บทความ\`);
-      if(videoCount)   pills.push(\`▶ \${videoCount} วิดีโอ\`);
+      if(articleCount) pills.push("📝 " + articleCount + " บทความ");
+      if(videoCount)   pills.push("▶ " + videoCount + " วิดีโอ");
       if(!pills.length) pills.push("เนื้อหาใหม่");
+      const pillsHtml = pills.map(function(p){ return '<span class="collab-pill">' + p + '</span>'; }).join("");
 
       const banner = document.createElement("div");
       banner.className = "collab-banner";
-      banner.onclick = () => openSeries(c);
-      banner.innerHTML = \`
-        <div class="collab-banner-inner">
-          <img class="collab-avatar" src="\${c.photo_url||""}" onerror="this.style.background='rgba(255,255,255,0.08)'"/>
-          <div style="flex:1;min-width:0;">
-            <div class="collab-x">ใจดี TU ×</div>
-            <div class="collab-name">\${c.name||""}</div>
-            <div class="collab-role">\${c.role||""}</div>
-            <div class="collab-pills">\${pills.map(p=>\`<span class="collab-pill">\${p}</span>\`).join("")}</div>
-          </div>
-          <div class="collab-arr">→</div>
-        </div>\`;
+      banner.onclick = function(){ openSeries(c); };
+      banner.innerHTML =
+        '<div class="collab-banner-inner">' +
+          '<img class="collab-avatar" src="' + (c.photo_url||"") + '" onerror="this.style.background='rgba(255,255,255,0.08)'" />' +
+          '<div style="flex:1;min-width:0;">' +
+            '<div class="collab-x">ใจดี TU ×</div>' +
+            '<div class="collab-name">' + (c.name||"") + '</div>' +
+            '<div class="collab-role">' + (c.role||"") + '</div>' +
+            '<div class="collab-pills">' + pillsHtml + '</div>' +
+          '</div>' +
+          '<div class="collab-arr">→</div>' +
+        '</div>';
       grid.appendChild(banner);
     }
   });
 }
+
 
 function openSeries(collab) {
   currentCollab = collab;
@@ -595,55 +591,63 @@ function openSeries(collab) {
 
   const socials = [];
   if(collab.instagram) socials.push({icon:"📷", label:"Instagram", url:collab.instagram});
-  if(collab.youtube)   socials.push({icon:"▶", label:"YouTube",   url:collab.youtube});
+  if(collab.youtube)   socials.push({icon:"▶",  label:"YouTube",   url:collab.youtube});
   if(collab.facebook)  socials.push({icon:"📘", label:"Facebook",  url:collab.facebook});
   if(collab.website)   socials.push({icon:"🔗", label:"Website",   url:collab.website});
 
-  const socialsHtml = socials.map(s =>
-    \`<a class="series-social" href="\${s.url}" target="_blank">\${s.icon} \${s.label}</a>\`
-  ).join("");
+  const socialsHtml = socials.map(function(s){
+    return '<a class="series-social" href="' + s.url + '" target="_blank">' + s.icon + ' ' + s.label + '</a>';
+  }).join("");
 
-  const content = collab.content || [];
-  const itemsHtml = content.map(item => {
+  const content_items = collab.content || [];
+  const itemsHtml = content_items.map(function(item) {
     const isVideo = item.type === "video";
     const icon = isVideo ? "▶" : "📝";
     const iconClass = isVideo ? "si-icon video" : "si-icon";
     const meta = isVideo
-      ? \`▶ วิดีโอ · \${item.source||"YouTube"}\`
-      : \`📖 \${item.readTime||"5 นาที"} · \${item.tag||"จิตวิทยา"}\`;
-    return \`
-      <div class="series-item" onclick="openSeriesItem(\${JSON.stringify(item).replace(/"/g,'&quot;')})">
-        <div class="\${iconClass}">\${icon}</div>
-        <div class="si-body">
-          <div class="si-title">\${item.title||""}</div>
-          <div class="si-meta">\${meta}</div>
-        </div>
-        <div class="si-arr">→</div>
-      </div>\`;
+      ? "▶ วิดีโอ · " + (item.source||"YouTube")
+      : "📖 " + (item.readTime||"5 นาที") + " · " + (item.tag||"จิตวิทยา");
+    const itemData = encodeURIComponent(JSON.stringify(item));
+    return '<div class="series-item" onclick="openSeriesItem(decodeAndOpen('' + itemData + ''))">' +
+      '<div class="' + iconClass + '">' + icon + '</div>' +
+      '<div class="si-body">' +
+        '<div class="si-title">' + (item.title||"") + '</div>' +
+        '<div class="si-meta">' + meta + '</div>' +
+      '</div>' +
+      '<div class="si-arr">→</div>' +
+    '</div>';
   }).join("");
 
-  document.getElementById("series-body").innerHTML = \`
-    <div class="series-hero">
-      <div class="series-hero-x">ใจดี TU ×</div>
-      <div class="series-hero-row">
-        <img class="series-avatar" src="\${collab.photo_url||""}" onerror="this.style.background='rgba(255,255,255,0.1)'"/>
-        <div>
-          <div class="series-name">\${collab.name||""}</div>
-          <div class="series-role">\${collab.role||""}</div>
-        </div>
-      </div>
-      \${collab.bio ? \`<div class="series-bio">\${collab.bio}</div>\` : ""}
-      \${socialsHtml ? \`<div class="series-socials">\${socialsHtml}</div>\` : ""}
-    </div>
-    <div class="series-content">
-      <div class="series-section-eye">เนื้อหาทั้งหมด · \${content.length} รายการ</div>
-      \${itemsHtml || '<div style="color:var(--ink-soft);font-size:13px;padding:20px 0;">ยังไม่มีเนื้อหา — ทีมกำลังเตรียม 💛</div>'}
-    </div>\`;
+  const bioHtml = collab.bio ? '<div class="series-bio">' + collab.bio + '</div>' : "";
+  const socialsWrap = socialsHtml ? '<div class="series-socials">' + socialsHtml + '</div>' : "";
+  const emptyMsg = '<div style="color:var(--ink-soft);font-size:13px;padding:20px 0;">ยังไม่มีเนื้อหา — ทีมกำลังเตรียม 💛</div>';
+
+  document.getElementById("series-body").innerHTML =
+    '<div class="series-hero">' +
+      '<div class="series-hero-x">ใจดี TU ×</div>' +
+      '<div class="series-hero-row">' +
+        '<img class="series-avatar" src="' + (collab.photo_url||"") + '" onerror="this.style.background='rgba(255,255,255,0.1)'"/>' +
+        '<div>' +
+          '<div class="series-name">' + (collab.name||"") + '</div>' +
+          '<div class="series-role">' + (collab.role||"") + '</div>' +
+        '</div>' +
+      '</div>' +
+      bioHtml + socialsWrap +
+    '</div>' +
+    '<div class="series-content">' +
+      '<div class="series-section-eye">เนื้อหาทั้งหมด · ' + content_items.length + ' รายการ</div>' +
+      (itemsHtml || emptyMsg) +
+    '</div>';
 
   document.getElementById("series-page").classList.add("active");
   document.body.style.overflow = "hidden";
   document.getElementById("series-body").scrollTop = 0;
 }
+
+function decodeAndOpen(encoded) {
+  try { return JSON.parse(decodeURIComponent(encoded)); } catch(e) { return {}; }
+}
+
 
 function openSeriesItem(item) {
   if(item.type === "video") {
