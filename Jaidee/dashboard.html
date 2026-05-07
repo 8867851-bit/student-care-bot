@@ -282,7 +282,7 @@
 
 <div id="screen-denied">
   <div style="font-size:48px;">🔒</div>
-  <div style="font-family:'Playfair Display',serif;font-size:22px;">ไม่มีสิทธิ์เข้าถึง 1</div>
+  <div style="font-family:'Playfair Display',serif;font-size:22px;">ไม่มีสิทธิ์เข้าถึง</div>
   <div style="font-size:14px;color:var(--text-mid);line-height:1.7;">หน้านี้สำหรับทีมงานเท่านั้น<br>ถ้าคิดว่าเป็นข้อผิดพลาด ติดต่อ admin ได้เลยนะ</div>
 </div>
 
@@ -793,33 +793,75 @@ let broadcastType="text";
 
 // ── INIT ──────────────────────────────────────────────────
 window.onload=async()=>{
+  // Try LIFF first (LINE app)
   try{
     await liff.init({liffId:LIFF_ID});
     if(!liff.isLoggedIn()){liff.login();return;}
     const p=await liff.getProfile();userId=p.userId;userName=p.displayName;
-  }catch{userId="";userName="ทีมงาน";}
+  }catch{
+    // LIFF failed — running in browser
+    // Check for stored userId from previous LINE session
+    userId = localStorage.getItem("jaidee_uid")||"";
+    userName = localStorage.getItem("jaidee_name")||"ทีมงาน";
+  }
   loadRole();
 };
 
 async function loadRole(){
+  // Show debug info in loading screen
+  const loadEl = document.getElementById("screen-loading");
+  if(loadEl) loadEl.innerHTML = '<div style="padding:32px;font-size:12px;font-family:monospace;line-height:2;color:#666;">'
+    + '⏳ กำลังตรวจสอบ...<br>'
+    + 'userId: ' + (userId||'(empty)') + '</div>';
+
   if(!userId){
-    document.getElementById("screen-loading").style.display="none";
-    document.getElementById("screen-denied").style.display="flex";
-    return;
+    const cachedUid = localStorage.getItem("jaidee_uid");
+    const cachedName = localStorage.getItem("jaidee_name");
+    if(cachedUid){
+      userId = cachedUid;
+      userName = cachedName || "ทีมงาน";
+    } else {
+      if(loadEl) loadEl.innerHTML =
+        '<div style="padding:40px 32px;max-width:380px;margin:0 auto;">' +
+        '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:16px;">ใจดี TU · Dashboard</div>' +
+        '<div style="font-size:18px;font-weight:700;margin-bottom:8px;">เข้าสู่ระบบ</div>' +
+        '<div style="font-size:13px;color:#888;margin-bottom:20px;line-height:1.7;">เปิดในเบราว์เซอร์ — กรุณาใส่ LINE userId ของคุณ</div>' +
+        '<input id="manual-uid" placeholder="U55cdee720abd1eecf85751f2467a7de1" style="width:100%;padding:12px;border:1.5px solid #E2DDD7;border-radius:10px;font-size:12px;font-family:monospace;margin-bottom:10px;box-sizing:border-box;"/>' +
+        '<button onclick="manualLogin()" style="width:100%;padding:14px;background:#1C1917;color:#fff;border:none;border-radius:10px;font-size:14px;cursor:pointer;">เข้าสู่ระบบ →</button>' +
+        '</div>';
+      return;
+    }
   }
+
   try {
     const d = await apiCall({action:"getUserRole", userId});
+    if(loadEl) loadEl.innerHTML = '<div style="padding:32px;font-size:12px;font-family:monospace;line-height:2;color:#666;">'
+      + 'userId: ' + userId + '<br>'
+      + 'response: ' + JSON.stringify(d) + '</div>';
+
     if(d.status==="OK" && d.role && d.role !== "student"){
+      // Save for next browser session
+      localStorage.setItem("jaidee_uid", userId);
+      localStorage.setItem("jaidee_name", userName);
       userRole = d.role;
       bootApp();
       return;
     }
-    document.getElementById("screen-loading").style.display="none";
-    document.getElementById("screen-denied").style.display="flex";
+    setTimeout(()=>{
+      document.getElementById("screen-loading").style.display="none";
+      document.getElementById("screen-denied").style.display="flex";
+    }, 3000);
   } catch(e){
-    document.getElementById("screen-loading").style.display="none";
-    document.getElementById("screen-denied").style.display="flex";
+    if(loadEl) loadEl.innerHTML = '<div style="padding:32px;font-size:12px;font-family:monospace;color:red;">API Error: '+e+'</div>';
   }
+}
+
+function manualLogin(){
+  const uid = document.getElementById("manual-uid").value.trim();
+  if(!uid){ alert("กรุณาใส่ userId"); return; }
+  userId = uid;
+  localStorage.setItem("jaidee_uid", uid);
+  loadRole();
 }
 
 
