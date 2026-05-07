@@ -255,6 +255,7 @@ const MOCK_ARTICLES = [
 
 let allArticles = [], currentArticle = null, reflectionResult = null, activeTag = "all";
 let currentQuizSelections = {};
+let allCollabs = [], currentCollab = null;
 
 function filterByTag(tag, el) {
   activeTag = tag;
@@ -522,16 +523,8 @@ function trackView(articleId) {
 
 
 // ── COLLABORATORS ───────────────────────────────────────
-let allCollabs = [];
-let currentCollab = null;
-
 async function loadCollabs() {
-  try {
-    const d = await (await fetch(API_URL + "?action=getCollaborators")).json();
-    if(d.status==="OK" && d.collaborators?.length) {
-      allCollabs = d.collaborators.filter(c => c.active !== "FALSE" && c.active !== false);
-    }
-  } catch(e) {}
+  // Handled by load() in parallel — kept for compatibility
 }
 
 function renderFeedWithCollabs(articles) {
