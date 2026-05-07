@@ -1061,7 +1061,7 @@ function filterCases(){
 }
 
 // Show Cloudinary warning if not configured
-if(typeof CLOUDINARY_CLOUD !== "undefined" && CLOUDINARY_CLOUD === "YOUR_CLOUD_NAME"){
+if(typeof CLOUDINARY_CLOUD !== "undefined" && CLOUDINARY_CLOUD === "jaidee-tu"){
   document.querySelectorAll("#cloudinary-warning").forEach(el=>el.style.display="block");
 } else {
   document.querySelectorAll("#cloudinary-warning").forEach(el=>el.style.display="none");
@@ -5802,8 +5802,8 @@ async function loadArchiveTab() {
 // CLOUDINARY UPLOAD
 // ══════════════════════════════════════════════════════════════
 // ← ใส่ค่าเหล่านี้หลังสมัคร Cloudinary
-const CLOUDINARY_CLOUD = "YOUR_CLOUD_NAME";
-const CLOUDINARY_PRESET = "YOUR_UPLOAD_PRESET";
+const CLOUDINARY_CLOUD = "jaidee-tu";
+const CLOUDINARY_PRESET = "jaidee-tu";
 
 function triggerUpload(fileInputId, targetInputId){
   document.getElementById(fileInputId).click();
