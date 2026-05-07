@@ -2054,18 +2054,28 @@ function setCollabContentType(type){
   if(vidF) vidF.style.display = type==="video"   ? "block" : "none";
 }
 
+function getYouTubeId(url){
+  if(!url) return null;
+  var m = url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+  if(m) return m[1];
+  m = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+  if(m) return m[1];
+  return null;
+}
+
 function previewCollabVideo(url){
   const preview = document.getElementById("mv-preview");
   const thumb   = document.getElementById("mv-thumb");
   if(!url){ preview.style.display="none"; return; }
-  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  if(ytMatch){
-    thumb.src = `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`;
-    thumb.style.display = "block";
-    preview.style.display = "block";
-  } else if(url.includes("facebook.com")||url.includes("fb.watch")){
-    thumb.style.display = "none";
-    preview.style.display = "block";
+  const ytId = getYouTubeId(url);
+  if(ytId){
+    if(thumb){ thumb.src="https://img.youtube.com/vi/"+ytId+"/hqdefault.jpg"; thumb.style.display="block"; }
+    preview.style.display="block";
+  } else if(url.indexOf("facebook.com")>-1||url.indexOf("fb.watch")>-1){
+    if(thumb) thumb.style.display="none";
+    preview.style.display="block";
+  } else {
+    preview.style.display="none";
   }
 }
 
@@ -2077,10 +2087,10 @@ async function addCollabContent(){
     const url   = document.getElementById("mv-url")?.value.trim();
     const title = document.getElementById("mv-title")?.value.trim();
     if(!url||!title){ toast("กรุณาใส่ URL และชื่อวิดีโอ"); return; }
-    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    const source = url.includes("facebook")||url.includes("fb.watch") ? "Facebook" : "YouTube";
+    const ytId2 = getYouTubeId(url);
+    const source = (url.indexOf("facebook")>-1||url.indexOf("fb.watch")>-1) ? "Facebook" : "YouTube";
     newItem = { type:"video", title, desc:document.getElementById("mv-desc")?.value.trim()||"", url, source,
-                thumb: ytMatch?`https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`:null };
+                thumb: ytId2 ? "https://img.youtube.com/vi/"+ytId2+"/hqdefault.jpg" : null };
   } else {
     const title = document.getElementById("mc-title")?.value.trim();
     if(!title){ toast("กรุณาใส่หัวข้อบทความ"); return; }
