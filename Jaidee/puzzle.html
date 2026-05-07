@@ -309,11 +309,31 @@ async function loadSettings() {
 }
 
 async function load() {
-  // Show mock immediately so page is never blank
-  allArticles = MOCK_ARTICLES;
-  document.getElementById("loading-row").style.display = "none";
-  buildChips(MOCK_ARTICLES);
-  renderFeedWithCollabs(MOCK_ARTICLES);
+  // ALWAYS hide spinner and show mock first — no matter what
+  try {
+    allArticles = MOCK_ARTICLES;
+    document.getElementById("loading-row").style.display = "none";
+    buildChips(MOCK_ARTICLES);
+    renderFeedWithCollabs(MOCK_ARTICLES);
+  } catch(e) {
+    document.getElementById("loading-row").style.display = "none";
+    // Fallback: render cards manually
+    const grid = document.getElementById("card-grid");
+    if(grid) {
+      grid.innerHTML = "";
+      MOCK_ARTICLES.forEach(function(a, i) {
+        const card = document.createElement("div");
+        card.className = "article-card";
+        card.onclick = function(){ openReader(a); };
+        card.innerHTML = '<div class="card-meta"><div class="card-tag">' + (a.tag||"จิตวิทยา") + '</div></div>' +
+          '<div class="card-title">' + (a.title||"") + '</div>' +
+          '<div class="card-desc">' + (a.desc||"") + '</div>' +
+          '<div class="card-footer"><div class="card-rt">⏱ ' + (a.readTime||"5 นาที") + '</div><div class="card-arr">→</div></div>';
+        grid.appendChild(card);
+        setTimeout(function(){ card.classList.add("visible"); }, i * 60);
+      });
+    }
+  }
 
   // Fetch real content + collabs in parallel
   try {
