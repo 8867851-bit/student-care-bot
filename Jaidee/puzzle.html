@@ -308,24 +308,39 @@ async function loadSettings() {
 }
 
 async function load() {
-  let items;
+  // Show mock immediately so page is never blank
+  allArticles = MOCK_ARTICLES;
+  document.getElementById("loading-row").style.display = "none";
+  buildChips(MOCK_ARTICLES);
+  renderFeedWithCollabs(MOCK_ARTICLES);
+
+  // Fetch real content + collabs in parallel
   try {
-    const d = await (await fetch(API_URL + "?action=getContent&world=puzzle")).json();
-    if(d.status==="OK" && d.content?.length) {
-      items = d.content.map(c => {
+    const [contentRes, collabRes] = await Promise.all([
+      fetch(API_URL + "?action=getContent&world=puzzle").then(r=>r.json()).catch(()=>null),
+      fetch(API_URL + "?action=getCollaborators").then(r=>r.json()).catch(()=>null),
+    ]);
+
+    let items = MOCK_ARTICLES;
+    if(contentRes?.status==="OK" && contentRes.content?.length) {
+      const parsed = contentRes.content.map(c => {
         let body = null;
         try { body = typeof c.body==="string" ? JSON.parse(c.body) : c.body; } catch {}
         return { id:c.id, title:c.title, tag:c.tag||"จิตวิทยา", desc:c.desc||"", level:c.level||"🟢 เบา", readTime:c.readTime||"5 นาที", heroUrl:c.heroUrl||"", body };
       }).filter(a => a.body?.sections);
+      if(parsed.length) items = parsed;
     }
-  } catch {}
-  if(!items||!items.length) items = MOCK_ARTICLES;
-  document.getElementById("loading-row").style.display = "none";
-  allArticles = items;
-  await loadCollabs();
-  buildChips(items);
-  renderFeedWithCollabs(items);
-  loadViews(items);
+
+    if(collabRes?.status==="OK" && collabRes.collaborators?.length) {
+      allCollabs = collabRes.collaborators.filter(c => c.active !== "FALSE" && c.active !== false);
+    }
+
+    // Re-render with real data if anything changed
+    allArticles = items;
+    buildChips(items);
+    renderFeedWithCollabs(items);
+    loadViews(items);
+  } catch(e) {}
 }
 
 // READER
