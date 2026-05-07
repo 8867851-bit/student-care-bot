@@ -607,28 +607,27 @@ function renderFeedWithCollabs(articles) {
 
 function openSeries(collab) {
   currentCollab = collab;
-  document.getElementById("series-topbar-title").textContent = "ใจดี TU × " + (collab.name||"");
+  document.getElementById("series-topbar-title").textContent = "ใจดี TU x " + (collab.name||"");
 
-  const socials = [];
+  var socials = [];
   if(collab.instagram) socials.push({icon:"📷", label:"Instagram", url:collab.instagram});
   if(collab.youtube)   socials.push({icon:"▶",  label:"YouTube",   url:collab.youtube});
   if(collab.facebook)  socials.push({icon:"📘", label:"Facebook",  url:collab.facebook});
   if(collab.website)   socials.push({icon:"🔗", label:"Website",   url:collab.website});
 
-  const socialsHtml = socials.map(function(s){
+  var socialsHtml = socials.map(function(s){
     return '<a class="series-social" href="' + s.url + '" target="_blank">' + s.icon + ' ' + s.label + '</a>';
   }).join("");
 
-  const content_items = collab.content || [];
-  const itemsHtml = content_items.map(function(item) {
-    const isVideo = item.type === "video";
-    const icon = isVideo ? "▶" : "📝";
-    const iconClass = isVideo ? "si-icon video" : "si-icon";
-    const meta = isVideo
+  var items = collab.content || [];
+  var itemsHtml = items.map(function(item, idx) {
+    var isVideo = item.type === "video";
+    var icon = isVideo ? "▶" : "📝";
+    var iconClass = isVideo ? "si-icon video" : "si-icon";
+    var meta = isVideo
       ? "▶ วิดีโอ · " + (item.source||"YouTube")
       : "📖 " + (item.readTime||"5 นาที") + " · " + (item.tag||"จิตวิทยา");
-    const itemData = encodeURIComponent(JSON.stringify(item));
-    return '<div class="series-item" onclick="openSeriesItem(decodeAndOpen('' + itemData + ''))">' +
+    return '<div class="series-item" onclick="openSeriesItem(' + idx + ')">' +
       '<div class="' + iconClass + '">' + icon + '</div>' +
       '<div class="si-body">' +
         '<div class="si-title">' + (item.title||"") + '</div>' +
@@ -638,15 +637,15 @@ function openSeries(collab) {
     '</div>';
   }).join("");
 
-  const bioHtml = collab.bio ? '<div class="series-bio">' + collab.bio + '</div>' : "";
-  const socialsWrap = socialsHtml ? '<div class="series-socials">' + socialsHtml + '</div>' : "";
-  const emptyMsg = '<div style="color:var(--ink-soft);font-size:13px;padding:20px 0;">ยังไม่มีเนื้อหา — ทีมกำลังเตรียม 💛</div>';
+  var bioHtml = collab.bio ? '<div class="series-bio">' + collab.bio + '</div>' : "";
+  var socialsWrap = socialsHtml ? '<div class="series-socials">' + socialsHtml + '</div>' : "";
+  var emptyMsg = '<div style="color:var(--ink-soft);font-size:13px;padding:20px 0;">ยังไม่มีเนื้อหา — ทีมกำลังเตรียม 💛</div>';
 
   document.getElementById("series-body").innerHTML =
     '<div class="series-hero">' +
       '<div class="series-hero-x">ใจดี TU ×</div>' +
       '<div class="series-hero-row">' +
-        '<img class="series-avatar" src="' + (collab.photo_url||'') + '" />' +
+        '<img class="series-avatar" src="' + (collab.photo_url||"") + '" />' +
         '<div>' +
           '<div class="series-name">' + (collab.name||"") + '</div>' +
           '<div class="series-role">' + (collab.role||"") + '</div>' +
@@ -655,7 +654,7 @@ function openSeries(collab) {
       bioHtml + socialsWrap +
     '</div>' +
     '<div class="series-content">' +
-      '<div class="series-section-eye">เนื้อหาทั้งหมด · ' + content_items.length + ' รายการ</div>' +
+      '<div class="series-section-eye">เนื้อหาทั้งหมด · ' + items.length + ' รายการ</div>' +
       (itemsHtml || emptyMsg) +
     '</div>';
 
@@ -669,9 +668,14 @@ function decodeAndOpen(encoded) {
 }
 
 
-function openSeriesItem(item) {
-  if(item.type === "video") {
-    window.open(item.url, "_blank");
+function decodeAndOpen(encoded) {
+  try { return JSON.parse(decodeURIComponent(encoded)); } catch(e) { return {}; }
+}
+
+
+function openSeriesItem(idx) {
+  var item = (currentCollab && currentCollab.content) ? currentCollab.content[idx] : null;
+  if(!item) return;
     return;
   }
   // article — build article object and open in reader
