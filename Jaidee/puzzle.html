@@ -229,14 +229,14 @@ const MOCK_ARTICLES = [
           {text:"รู้สึกว่าคนที่ใส่ใจจิตวิทยาควรรู้เรื่องนี้",feedback:"IBM กำลังทำงาน เราทำสิ่งที่คน 'แบบเรา' ทำ นั่นคือพลังงานที่ยั่งยืน"}
         ]},
         {type:"text",heading:"แรงจูงใจภายนอก (EM)",content:"เราทำบางอย่างเพราะสิ่งที่อยู่นอกกิจกรรมนั้น คะแนน รางวัล การยอมรับ EM ไม่ใช่เรื่องแย่ แต่ถ้าเป็นแรงผลักใจเดียว เมื่อรางวัลหายไป พฤติกรรมก็หายตามไปด้วย"},
-        {type:"text",heading:"แรงจูงใจภายใน (IM)",content:"รางวัลคือกิจกรรมนั้นเอง เราทำเพราะสนุก อยากรู้ หรือรู้สึกว่ากำลังเติบโต Mihaly Csikszentmihalyi เรียกสภาวะนี้ว่า Flow — เมื่อความท้าทายและทักษะอยู่ในสมดุลพอดี"},
+        {type:"text",heading:"แรงจูงใจภายใน (IM)",content:"รางวัลคือกิจกรรมนั้นเอง เราทำเพราะสนุก อยากรู้ หรือรู้สึกว่ากำลังเติบโต Mihaly Csikszentmihalyi เรียกสภาวะนี้ว่า Flow"},
         {type:"interaction",id:"i2",question:"มีกิจกรรมอะไรที่ทำแล้วคุณลืมเวลาได้บ้าง?",choices:[
           {text:"อ่านเรื่องที่ชอบ เขียน วาด หรือทำดนตรี",feedback:"การสร้างความหมายจากภาษาและภาพคือ flow ที่เกิดได้ง่าย"},
           {text:"แก้โจทย์ เขียนโปรแกรม หรือสร้างอะไรบางอย่าง",feedback:"ความท้าทายที่มีทางออกคือเชื้อเพลิงของ flow"},
           {text:"คุยกับคนที่ถูกคอ สอน หรืออธิบายสิ่งที่รู้",feedback:"Relatedness ที่ดีทำให้ flow เกิดในบทสนทนาได้"},
           {text:"ยังไม่แน่ใจ",feedback:"การหา flow ของตัวเองคือการสำรวจ ไม่ใช่การรอ"}
         ]},
-        {type:"text",heading:"แรงจูงใจจากตัวตน (IBM)",content:"IBM ขับเคลื่อนจากคำถามว่า 'คนแบบฉันทำแบบนี้ไหม?' Erik Erikson นักจิตวิทยาชาวเยอรมัน-อเมริกัน เสนอว่าภารกิจหลักของวัยรุ่นคือการตอบให้ได้ว่า 'ฉันเป็นใคร' IBM พัฒนาผ่าน Exploration → Meaning-Making → Reinforcement"},
+        {type:"text",heading:"แรงจูงใจจากตัวตน (IBM)",content:"IBM ขับเคลื่อนจากคำถามว่า 'คนแบบฉันทำแบบนี้ไหม?' Erik Erikson เสนอว่าภารกิจหลักของวัยรุ่นคือการตอบให้ได้ว่า 'ฉันเป็นใคร'"},
         {type:"reflection",id:"r1",prompt:"ถ้าให้มองตัวเองตอนนี้ แรงจูงใจหลักในชีวิตคุณมาจากไหน?",mode:"options",
           options:[
             {icon:"🏆",text:"ส่วนใหญ่มาจากเป้าหมายภายนอก คะแนน อนาคต การยอมรับ"},
@@ -253,63 +253,69 @@ const MOCK_ARTICLES = [
   }
 ];
 
-let allArticles = [], currentArticle = null, reflectionResult = null, activeTag = "all";
+let allArticles = [], allCollabs = [], currentCollab = null;
+let currentArticle = null, reflectionResult = null, activeTag = "all";
 let currentQuizSelections = {};
-let allCollabs = [], currentCollab = null;
 
+// ── TAG FILTER ──────────────────────────────────────────
 function filterByTag(tag, el) {
   activeTag = tag;
-  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  document.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("active"); });
   el.classList.add("active");
-  const filtered = allArticles.filter(a => tag === "all" || a.tag === tag);
+  var filtered = allArticles.filter(function(a){ return tag === "all" || a.tag === tag; });
   if(tag === "all") renderFeedWithCollabs(filtered);
   else renderCards(filtered);
 }
 
 function buildChips(articles) {
-  const tags = [...new Set(articles.map(a => a.tag).filter(Boolean))];
-  const bar = document.getElementById("chip-bar");
-  bar.querySelectorAll(".chip:not(:first-child)").forEach(c => c.remove());
-  tags.forEach(tag => {
-    const chip = document.createElement("div");
-    chip.className = "chip"; chip.textContent = tag;
-    chip.onclick = () => filterByTag(tag, chip);
+  var tags = [];
+  articles.forEach(function(a){ if(a.tag && tags.indexOf(a.tag) === -1) tags.push(a.tag); });
+  var bar = document.getElementById("chip-bar");
+  var existing = bar.querySelectorAll(".chip:not(:first-child)");
+  existing.forEach(function(c){ c.remove(); });
+  tags.forEach(function(tag) {
+    var chip = document.createElement("div");
+    chip.className = "chip";
+    chip.textContent = tag;
+    chip.onclick = function(){ filterByTag(tag, chip); };
     bar.appendChild(chip);
   });
 }
 
 function renderCards(articles) {
-  const grid = document.getElementById("card-grid");
+  var grid = document.getElementById("card-grid");
   grid.innerHTML = "";
-  if(!articles.length){document.getElementById("empty-state").style.display="flex";return;}
+  if(!articles.length){ document.getElementById("empty-state").style.display="flex"; return; }
   document.getElementById("empty-state").style.display="none";
-  articles.forEach((a,i) => {
-    const card = document.createElement("div");
+  articles.forEach(function(a, i) {
+    var card = document.createElement("div");
     card.className = "article-card";
-    card.onclick = () => openReader(a);
-    card.innerHTML = `
-      <div class="card-meta"><div class="card-tag">${a.tag||"จิตวิทยา"}</div><div class="card-level">${a.level||""}</div></div>
-      <div class="card-title">${a.title}</div>
-      <div class="card-desc">${a.desc||""}</div>
-      <div class="card-footer"><div class="card-rt">⏱ ${a.readTime||"5 นาที"}</div><div class="card-arr">→</div></div>`;
+    card.onclick = function(){ openReader(a); };
+    card.innerHTML =
+      '<div class="card-meta"><div class="card-tag">' + (a.tag||"จิตวิทยา") + '</div><div class="card-level">' + (a.level||"") + '</div></div>' +
+      '<div class="card-title">' + (a.title||"") + '</div>' +
+      '<div class="card-desc">' + (a.desc||"") + '</div>' +
+      '<div class="card-footer"><div class="card-rt">⏱ ' + (a.readTime||"5 นาที") + '</div><div class="card-arr">→</div></div>';
     grid.appendChild(card);
-    setTimeout(() => card.classList.add("visible"), i * 60);
+    setTimeout(function(){ card.classList.add("visible"); }, i * 60);
   });
 }
 
+// ── SETTINGS ───────────────────────────────────────────
 async function loadSettings() {
   try {
-    const d = await (await fetch(API_URL + "?action=getSiteSettings")).json();
-    if(d.status==="OK"&&d.settings){
+    var d = await (await fetch(API_URL + "?action=getSiteSettings")).json();
+    if(d.status==="OK" && d.settings){
       if(d.settings.puzzle_headline) document.getElementById("headline").innerHTML =
-        d.settings.puzzle_headline.replace(/\*(.+?)\*/g,'<em style="font-style:italic;color:var(--gold);">$1</em>');
+        d.settings.puzzle_headline.replace(/\*(.+?)\*/g, '<em style="font-style:italic;color:var(--gold);">$1</em>');
       if(d.settings.puzzle_sub) document.getElementById("sub").innerText = d.settings.puzzle_sub;
     }
-  } catch {}
+  } catch(e) {}
 }
 
+// ── LOAD ───────────────────────────────────────────────
 async function load() {
-  // ALWAYS hide spinner and show mock first — no matter what
+  // Show mock immediately — never blank
   try {
     allArticles = MOCK_ARTICLES;
     document.getElementById("loading-row").style.display = "none";
@@ -317,46 +323,39 @@ async function load() {
     renderFeedWithCollabs(MOCK_ARTICLES);
   } catch(e) {
     document.getElementById("loading-row").style.display = "none";
-    // Fallback: render cards manually
-    const grid = document.getElementById("card-grid");
-    if(grid) {
-      grid.innerHTML = "";
-      MOCK_ARTICLES.forEach(function(a, i) {
-        const card = document.createElement("div");
-        card.className = "article-card";
-        card.onclick = function(){ openReader(a); };
-        card.innerHTML = '<div class="card-meta"><div class="card-tag">' + (a.tag||"จิตวิทยา") + '</div></div>' +
-          '<div class="card-title">' + (a.title||"") + '</div>' +
-          '<div class="card-desc">' + (a.desc||"") + '</div>' +
-          '<div class="card-footer"><div class="card-rt">⏱ ' + (a.readTime||"5 นาที") + '</div><div class="card-arr">→</div></div>';
-        grid.appendChild(card);
-        setTimeout(function(){ card.classList.add("visible"); }, i * 60);
-      });
-    }
+    renderCards(MOCK_ARTICLES);
   }
 
-  // Fetch real content + collabs in parallel
+  // Fetch real data in parallel
   try {
-    const [contentRes, collabRes] = await Promise.all([
-      fetch(API_URL + "?action=getContent&world=puzzle").then(r=>r.json()).catch(()=>null),
-      fetch(API_URL + "?action=getCollaborators").then(r=>r.json()).catch(()=>null),
+    var results = await Promise.all([
+      fetch(API_URL + "?action=getContent&world=puzzle").then(function(r){ return r.json(); }).catch(function(){ return null; }),
+      fetch(API_URL + "?action=getCollaborators").then(function(r){ return r.json(); }).catch(function(){ return null; })
     ]);
+    var contentRes = results[0];
+    var collabRes  = results[1];
 
-    let items = MOCK_ARTICLES;
-    if(contentRes?.status==="OK" && contentRes.content?.length) {
-      const parsed = contentRes.content.map(c => {
-        let body = null;
-        try { body = typeof c.body==="string" ? JSON.parse(c.body) : c.body; } catch {}
-        return { id:c.id, title:c.title, tag:c.tag||"จิตวิทยา", desc:c.desc||"", level:c.level||"🟢 เบา", readTime:c.readTime||"5 นาที", heroUrl:c.heroUrl||"", body };
-      }).filter(a => a.body?.sections);
+    var items = MOCK_ARTICLES;
+    if(contentRes && contentRes.status==="OK" && contentRes.content && contentRes.content.length) {
+      var parsed = [];
+      contentRes.content.forEach(function(c) {
+        var body = null;
+        try { body = typeof c.body==="string" ? JSON.parse(c.body) : c.body; } catch(e) {}
+        if(body && body.sections) {
+          parsed.push({ id:c.id, title:c.title, tag:c.tag||"จิตวิทยา", desc:c.desc||"",
+                        level:c.level||"🟢 เบา", readTime:c.readTime||"5 นาที",
+                        heroUrl:c.heroUrl||"", body:body });
+        }
+      });
       if(parsed.length) items = parsed;
     }
 
-    if(collabRes?.status==="OK" && collabRes.collaborators?.length) {
-      allCollabs = collabRes.collaborators.filter(c => c.active !== "FALSE" && c.active !== false);
+    if(collabRes && collabRes.status==="OK" && collabRes.collaborators && collabRes.collaborators.length) {
+      allCollabs = collabRes.collaborators.filter(function(c){
+        return c.active !== "FALSE" && c.active !== false;
+      });
     }
 
-    // Re-render with real data if anything changed
     allArticles = items;
     buildChips(items);
     renderFeedWithCollabs(items);
@@ -364,7 +363,65 @@ async function load() {
   } catch(e) {}
 }
 
-// READER
+// ── FEED WITH COLLABS ──────────────────────────────────
+function renderFeedWithCollabs(articles) {
+  var grid = document.getElementById("card-grid");
+  grid.innerHTML = "";
+  if(!articles.length && !allCollabs.length){
+    document.getElementById("empty-state").style.display="flex"; return;
+  }
+  document.getElementById("empty-state").style.display="none";
+
+  var feedItems = [];
+  articles.forEach(function(a, i){ feedItems.push({type:"article", data:a, pos:i}); });
+  allCollabs.forEach(function(c){
+    feedItems.push({type:"collab", data:c, pos:(parseInt(c.position)||999) - 0.5});
+  });
+  feedItems.sort(function(a,b){ return a.pos - b.pos; });
+
+  feedItems.forEach(function(item, i) {
+    if(item.type === "article") {
+      var a = item.data;
+      var card = document.createElement("div");
+      card.className = "article-card";
+      card.onclick = function(){ openReader(a); };
+      card.innerHTML =
+        '<div class="card-meta"><div class="card-tag">' + (a.tag||"จิตวิทยา") + '</div><div class="card-level">' + (a.level||"") + '</div></div>' +
+        '<div class="card-title">' + (a.title||"") + '</div>' +
+        '<div class="card-desc">' + (a.desc||"") + '</div>' +
+        '<div class="card-footer"><div class="card-rt">⏱ ' + (a.readTime||"5 นาที") + '</div><div class="card-arr">→</div></div>';
+      grid.appendChild(card);
+      setTimeout(function(){ card.classList.add("visible"); }, i * 50);
+    } else {
+      var c = item.data;
+      var articleCount = (c.content||[]).filter(function(x){ return x.type==="article"||!x.type; }).length;
+      var videoCount   = (c.content||[]).filter(function(x){ return x.type==="video"; }).length;
+      var pills = [];
+      if(articleCount) pills.push("📝 " + articleCount + " บทความ");
+      if(videoCount)   pills.push("▶ " + videoCount + " วิดีโอ");
+      if(!pills.length) pills.push("เนื้อหาใหม่");
+      var pillsHtml = pills.map(function(p){ return '<span class="collab-pill">' + p + '</span>'; }).join("");
+
+      var banner = document.createElement("div");
+      banner.className = "collab-banner";
+      banner.onclick = function(){ openSeries(c); };
+      banner.innerHTML =
+        '<div class="collab-banner-inner">' +
+        '<img class="collab-avatar" src="' + (c.photo_url||"") + '" />' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div class="collab-x">ใจดี TU ×</div>' +
+          '<div class="collab-name">' + (c.name||"") + '</div>' +
+          '<div class="collab-role">' + (c.role||"") + '</div>' +
+          '<div class="collab-pills">' + pillsHtml + '</div>' +
+        '</div>' +
+        '<div class="collab-arr">→</div>' +
+        '</div>';
+      grid.appendChild(banner);
+    }
+  });
+}
+
+// ── READER ─────────────────────────────────────────────
 function openReader(article) {
   currentArticle = article; reflectionResult = null; currentQuizSelections = {};
   trackView(article.id);
@@ -382,232 +439,154 @@ function closeReader() {
 }
 
 function updateProg() {
-  const b = document.getElementById("reader-body");
-  const max = b.scrollHeight - b.clientHeight;
+  var b = document.getElementById("reader-body");
+  var max = b.scrollHeight - b.clientHeight;
   if(!max) return;
-  const pct = Math.min(Math.round((b.scrollTop/max)*100),100);
+  var pct = Math.min(Math.round((b.scrollTop/max)*100),100);
   document.getElementById("rpf").style.width = pct + "%";
   document.getElementById("rpct").textContent = pct + "%";
 }
 
 function renderArticle(a) {
-  const b = a.body;
-  let html = "";
-
-  // Hero image
+  var b = a.body;
+  var html = "";
   if(a.heroUrl) {
-    html += `<div class="art-hero"><img src="${a.heroUrl}" alt="${a.title}" onerror="this.parentElement.style.display='none'"/></div>`;
+    html += '<div class="art-hero"><img src="' + a.heroUrl + '" alt="" onerror="this.parentElement.style.display='none'"/></div>';
   }
+  html += '<div class="art-hdr">' +
+    '<div class="art-hdr-tag">' + (a.tag||"จิตวิทยา") + '</div>' +
+    '<div class="art-hdr-title">' + (a.title||"") + '</div>' +
+    '<div class="art-hdr-deck">' + (a.desc||"") + '</div>' +
+    '<div class="art-hdr-meta"><span>ใจดี TU</span><span class="sep">·</span><span>' + (a.level||"🟢 เบา") + '</span><span class="sep">·</span><span>⏱ ' + (a.readTime||"5 นาที") + '</span></div>' +
+    '</div><div class="art-body">';
 
-  // Header
-  html += `
-    <div class="art-hdr">
-      <div class="art-hdr-tag">${a.tag||"จิตวิทยา"}</div>
-      <div class="art-hdr-title">${a.title}</div>
-      <div class="art-hdr-deck">${a.desc||""}</div>
-      <div class="art-hdr-meta">
-        <span>ใจดี TU</span><span class="sep">·</span>
-        <span>${a.level||"🟢 เบา"}</span><span class="sep">·</span>
-        <span>⏱ ${a.readTime||"5 นาที"}</span>
-      </div>
-    </div>
-    <div class="art-body">`;
-
-  let isFirst = true;
-  (b.sections||[]).forEach((s, idx) => {
+  var isFirst = true;
+  (b.sections||[]).forEach(function(s, idx) {
     if(s.type==="text") {
-      if(s.heading) html += `<h2 class="ah">${s.heading}</h2>`;
-      const cls = isFirst ? "ap drop" : "ap";
-      html += `<p class="${cls}">${(s.content||"").replace(/\n/g,"<br/>")}</p>`;
+      if(s.heading) html += '<h2 class="ah">' + s.heading + '</h2>';
+      var cls = isFirst ? "ap drop" : "ap";
+      html += '<p class="' + cls + '">' + (s.content||"").replace(/
+/g,"<br/>") + '</p>';
       isFirst = false;
-      if(idx < b.sections.length-1 && b.sections[idx+1]?.type==="text") html += `<hr class="ar"/>`;
-    }
-    else if(s.type==="callout") {
-      html += `<div class="a-callout"><p>${s.content}</p></div>`;
-    }
-    else if(s.type==="image") {
-      html += `<div class="a-bleed"><img src="${s.url}" alt="${s.caption||""}" onerror="this.parentElement.style.display='none'"/></div>`;
-      if(s.caption) html += `<div class="a-bleed-cap">${s.caption}</div>`;
-    }
-    else if(s.type==="video") {
-      const ytId = (s.url||"").match(/(?:youtu\.be\/|[?&]v=)([a-zA-Z0-9_-]{11})/)?.[1];
+      if(idx < b.sections.length-1 && b.sections[idx+1] && b.sections[idx+1].type==="text") html += '<hr class="ar"/>';
+    } else if(s.type==="callout") {
+      html += '<div class="a-callout"><p>' + s.content + '</p></div>';
+    } else if(s.type==="image") {
+      html += '<div class="a-bleed"><img src="' + s.url + '" onerror="this.parentElement.style.display='none'"/></div>';
+      if(s.caption) html += '<div class="a-bleed-cap">' + s.caption + '</div>';
+    } else if(s.type==="video") {
+      var ytId = (s.url||"").match(/(?:youtu\.be\/|[?&]v=)([a-zA-Z0-9_-]{11})/);
       if(ytId) {
-        html += `<div class="a-video"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>`;
-        if(s.caption) html += `<div class="a-video-cap">${s.caption}</div>`;
+        html += '<div class="a-video"><iframe src="https://www.youtube.com/embed/' + ytId[1] + '" allowfullscreen></iframe></div>';
+        if(s.caption) html += '<div class="a-video-cap">' + s.caption + '</div>';
       }
-    }
-    else if(s.type==="interaction") {
-      const bid = "qi-"+s.id+"-"+idx;
-      const choices = (s.choices||[]).map((c,i) => `
-        <button class="a-quiz-opt" id="${bid}-c${i}" onclick="pickQuiz('${bid}',${i},'${s.id||idx}')">
-          <span class="aql">${String.fromCharCode(65+i)}</span>
-          <span class="aqt">${c.text}</span>
-        </button>`).join("");
-      html += `
-        <div class="a-quiz">
-          <div class="a-quiz-eye">ลองคิดก่อนอ่านต่อ</div>
-          <div class="a-quiz-q">${s.question}</div>
-          <div class="a-quiz-opts">${choices}</div>
-          <div class="a-quiz-fb" id="${bid}-fb"></div>
-        </div>`;
-    }
-    else if(s.type==="reflection") {
-      const bid = "ri-"+s.id+"-"+idx;
-      const opts = (s.options||[]).map((o,i) => `
-        <button class="a-reflect-opt" id="${bid}-o${i}" onclick="pickReflect('${bid}',${i},'${s.id||idx}',${idx})">
-          <span class="arl">${o.icon||"💭"}</span>
-          <span class="art-rt">${o.text}</span>
-        </button>`).join("");
-      html += `
-        <div class="a-reflect">
-          <div class="a-reflect-eye">สะท้อนตัวเอง</div>
-          <div class="a-reflect-q">${s.prompt}</div>
-          <div class="a-reflect-opts">${opts}</div>
-        </div>`;
+    } else if(s.type==="interaction") {
+      var bid = "qi-" + s.id + "-" + idx;
+      var choices = (s.choices||[]).map(function(c,i){
+        return '<button class="a-quiz-opt" id="' + bid + '-c' + i + '" onclick="pickQuiz('' + bid + '',' + i + ','' + (s.id||idx) + '')">' +
+          '<span class="aql">' + String.fromCharCode(65+i) + '</span>' +
+          '<span class="aqt">' + c.text + '</span>' +
+        '</button>';
+      }).join("");
+      html += '<div class="a-quiz">' +
+        '<div class="a-quiz-eye">ลองคิดก่อนอ่านต่อ</div>' +
+        '<div class="a-quiz-q">' + s.question + '</div>' +
+        '<div class="a-quiz-opts">' + choices + '</div>' +
+        '<div class="a-quiz-fb" id="' + bid + '-fb"></div>' +
+        '</div>';
+    } else if(s.type==="reflection") {
+      var bid2 = "ri-" + s.id + "-" + idx;
+      var opts = (s.options||[]).map(function(o,i){
+        return '<button class="a-reflect-opt" id="' + bid2 + '-o' + i + '" onclick="pickReflect('' + bid2 + '',' + i + ','' + (s.id||idx) + '',' + idx + ')">' +
+          '<span class="arl">' + (o.icon||"💭") + '</span>' +
+          '<span class="art-rt">' + o.text + '</span>' +
+        '</button>';
+      }).join("");
+      html += '<div class="a-reflect">' +
+        '<div class="a-reflect-eye">สะท้อนตัวเอง</div>' +
+        '<div class="a-reflect-q">' + s.prompt + '</div>' +
+        '<div class="a-reflect-opts">' + opts + '</div>' +
+        '</div>';
     }
   });
 
-  html += `
-    </div>
-    <div class="a-completion" id="art-completion">
-      <div class="a-comp-eye">Puzzle Piece · ใจดี TU</div>
-      <div class="a-comp-title">${b.completionTitle||"ได้ชิ้นส่วนใหม่แล้ว"}</div>
-      <div class="a-comp-sub">${b.completionSub||""}</div>
-      <div class="a-comp-tag-eye">ชิ้นส่วนของคุณ</div>
-      <div class="a-comp-tag" id="art-comp-tag">—</div>
-      <a href="care.html" style="display:flex;align-items:center;gap:10px;padding:13px 15px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;text-decoration:none;color:inherit;margin-bottom:10px;text-align:left;">
-        <span style="font-size:18px;flex-shrink:0;">🌿</span>
-        <div style="flex:1;">
-          <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.9);margin-bottom:2px;">อยากลงมือทำ?</div>
-          <div style="font-size:11px;font-weight:300;color:rgba(255,255,255,0.45);line-height:1.5;">ดูวิธีดูแลตัวเองที่เชื่อมกับสิ่งที่เพิ่งอ่าน</div>
-        </div>
-        <span style="color:rgba(255,255,255,0.3);font-size:14px;">→</span>
-      </a>
-      <button class="a-comp-btn" onclick="closeReader()">← กลับ</button>
-    </div>`;
+  html += '</div>' +
+    '<div class="a-completion" id="art-completion">' +
+      '<div class="a-comp-eye">Puzzle Piece · ใจดี TU</div>' +
+      '<div class="a-comp-title">' + (b.completionTitle||"ได้ชิ้นส่วนใหม่แล้ว") + '</div>' +
+      '<div class="a-comp-sub">' + (b.completionSub||"") + '</div>' +
+      '<div class="a-comp-tag-eye">ชิ้นส่วนของคุณ</div>' +
+      '<div class="a-comp-tag" id="art-comp-tag">—</div>' +
+      '<a href="care.html" style="display:flex;align-items:center;gap:10px;padding:13px 15px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;text-decoration:none;color:inherit;margin-bottom:10px;text-align:left;">' +
+        '<span style="font-size:18px;flex-shrink:0;">🌿</span>' +
+        '<div style="flex:1;"><div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.9);margin-bottom:2px;">อยากลงมือทำ?</div><div style="font-size:11px;font-weight:300;color:rgba(255,255,255,0.45);line-height:1.5;">ดูวิธีดูแลตัวเองที่เชื่อมกับสิ่งที่เพิ่งอ่าน</div></div>' +
+        '<span style="color:rgba(255,255,255,0.3);font-size:14px;">→</span>' +
+      '</a>' +
+      '<button class="a-comp-btn" onclick="closeReader()">← กลับ</button>' +
+    '</div>';
 
   document.getElementById("art-content").innerHTML = html;
 }
 
 function pickQuiz(bid, choiceIdx, sectionId) {
-  const section = (currentArticle?.body?.sections||[]).find(s => s.id===sectionId);
-  const container = document.getElementById(bid+"-c0")?.closest(".a-quiz-opts");
+  var section = (currentArticle && currentArticle.body && currentArticle.body.sections||[]).find(function(s){ return s.id===sectionId; });
+  var container = document.getElementById(bid+"-c0");
+  container = container ? container.closest(".a-quiz-opts") : null;
   if(!container) return;
-  container.querySelectorAll(".a-quiz-opt").forEach((b,i) => {
+  container.querySelectorAll(".a-quiz-opt").forEach(function(b,i){
     b.classList.remove("selected");
     b.querySelector(".aql").textContent = String.fromCharCode(65+i);
   });
-  const sel = document.getElementById(bid+"-c"+choiceIdx);
+  var sel = document.getElementById(bid+"-c"+choiceIdx);
   if(sel){ sel.classList.add("selected"); sel.querySelector(".aql").textContent = "✓"; }
-  const fb = document.getElementById(bid+"-fb");
-  if(fb && section?.choices?.[choiceIdx]){ fb.textContent = section.choices[choiceIdx].feedback; fb.classList.add("show"); }
+  var fb = document.getElementById(bid+"-fb");
+  if(fb && section && section.choices && section.choices[choiceIdx]){
+    fb.textContent = section.choices[choiceIdx].feedback; fb.classList.add("show");
+  }
 }
 
 function pickReflect(bid, optIdx, sectionId, sIdx) {
-  const section = (currentArticle?.body?.sections||[]).find(s => s.id===sectionId) ||
-                  currentArticle?.body?.sections?.[sIdx];
-  const opts = document.querySelectorAll(`[id^="${bid}-o"]`);
-  opts.forEach(o => o.classList.remove("selected"));
-  const sel = document.getElementById(bid+"-o"+optIdx); if(sel) sel.classList.add("selected");
-  reflectionResult = section?.insightMap?.[optIdx] || section?.options?.[optIdx]?.text || "";
-  setTimeout(() => {
-    const c = document.getElementById("art-completion");
+  var section = (currentArticle && currentArticle.body && currentArticle.body.sections||[]).find(function(s){ return s.id===sectionId; });
+  if(!section && currentArticle && currentArticle.body && currentArticle.body.sections) {
+    section = currentArticle.body.sections[sIdx];
+  }
+  var opts = document.querySelectorAll("[id^='" + bid + "-o']");
+  opts.forEach(function(o){ o.classList.remove("selected"); });
+  var sel = document.getElementById(bid+"-o"+optIdx);
+  if(sel) sel.classList.add("selected");
+  reflectionResult = (section && section.insightMap && section.insightMap[optIdx]) ||
+                     (section && section.options && section.options[optIdx] && section.options[optIdx].text) || "";
+  setTimeout(function() {
+    var c = document.getElementById("art-completion");
     if(!c || c.style.display==="block") return;
     c.style.display = "block";
     document.getElementById("art-comp-tag").textContent = reflectionResult;
     document.getElementById("rpf").style.width = "100%";
     document.getElementById("rpct").textContent = "100%";
-    setTimeout(() => c.scrollIntoView({behavior:"smooth",block:"start"}), 80);
+    setTimeout(function(){ c.scrollIntoView({behavior:"smooth",block:"start"}); }, 80);
   }, 380);
 }
 
 async function loadViews(articles) {
   try {
-    const d = await (await fetch(API_URL + "?action=getContentViews")).json();
+    var d = await (await fetch(API_URL + "?action=getContentViews")).json();
     if(d.status==="OK" && d.views) {
-      articles.forEach(a => {
-        const el = document.getElementById("views-" + a.id);
-        if(el && d.views[a.id]) {
-          el.textContent = "👁 " + d.views[a.id].toLocaleString();
-        }
+      articles.forEach(function(a) {
+        var el = document.getElementById("views-" + a.id);
+        if(el && d.views[a.id]) el.textContent = "👁 " + d.views[a.id].toLocaleString();
       });
     }
-  } catch {}
+  } catch(e) {}
 }
 
 function trackView(articleId) {
-  try {
-    fetch(API_URL + "?action=trackView&contentId=" + encodeURIComponent(articleId));
-  } catch {}
+  try { fetch(API_URL + "?action=trackView&contentId=" + encodeURIComponent(articleId)); } catch(e) {}
 }
 
-
-// ── COLLABORATORS ───────────────────────────────────────
-async function loadCollabs() {
-  // Handled by load() in parallel — kept for compatibility
-}
-
-function renderFeedWithCollabs(articles) {
-  const grid = document.getElementById("card-grid");
-  grid.innerHTML = "";
-  if(!articles.length && !allCollabs.length){
-    document.getElementById("empty-state").style.display="flex"; return;
-  }
-  document.getElementById("empty-state").style.display="none";
-
-  let feedItems = articles.map(function(a,i){ return {type:"article", data:a, pos:i}; });
-  allCollabs.forEach(function(c){
-    const pos = parseInt(c.position) || 999;
-    feedItems.push({type:"collab", data:c, pos:pos - 0.5});
-  });
-  feedItems.sort(function(a,b){ return a.pos - b.pos; });
-
-  feedItems.forEach(function(item, i) {
-    if(item.type === "article") {
-      const a = item.data;
-      const card = document.createElement("div");
-      card.className = "article-card";
-      card.onclick = function(){ openReader(a); };
-      card.innerHTML =
-        '<div class="card-meta"><div class="card-tag">' + (a.tag||"จิตวิทยา") + '</div><div class="card-level">' + (a.level||"") + '</div></div>' +
-        '<div class="card-title">' + (a.title||"") + '</div>' +
-        '<div class="card-desc">' + (a.desc||"") + '</div>' +
-        '<div class="card-footer"><div class="card-rt">⏱ ' + (a.readTime||"5 นาที") + '</div><div class="card-arr">→</div></div>';
-      grid.appendChild(card);
-      setTimeout(function(){ card.classList.add("visible"); }, i * 50);
-    } else {
-      const c = item.data;
-      const articleCount = (c.content||[]).filter(function(x){ return x.type==="article"||!x.type; }).length;
-      const videoCount   = (c.content||[]).filter(function(x){ return x.type==="video"; }).length;
-      const pills = [];
-      if(articleCount) pills.push("📝 " + articleCount + " บทความ");
-      if(videoCount)   pills.push("▶ " + videoCount + " วิดีโอ");
-      if(!pills.length) pills.push("เนื้อหาใหม่");
-      const pillsHtml = pills.map(function(p){ return '<span class="collab-pill">' + p + '</span>'; }).join("");
-
-      const banner = document.createElement("div");
-      banner.className = "collab-banner";
-      banner.onclick = function(){ openSeries(c); };
-      banner.innerHTML =
-        '<div class="collab-banner-inner">' +
-          "<img class='collab-avatar' src='" + (c.photo_url||"") + "' />" +
-          '<div style="flex:1;min-width:0;">' +
-            '<div class="collab-x">ใจดี TU ×</div>' +
-            '<div class="collab-name">' + (c.name||"") + '</div>' +
-            '<div class="collab-role">' + (c.role||"") + '</div>' +
-            '<div class="collab-pills">' + pillsHtml + '</div>' +
-          '</div>' +
-          '<div class="collab-arr">→</div>' +
-        '</div>';
-      grid.appendChild(banner);
-    }
-  });
-}
-
-
+// ── COLLABORATORS ──────────────────────────────────────
 function openSeries(collab) {
   currentCollab = collab;
-  document.getElementById("series-topbar-title").textContent = "ใจดี TU x " + (collab.name||"");
+  document.getElementById("series-topbar-title").textContent = "ใจดี TU × " + (collab.name||"");
 
   var socials = [];
   if(collab.instagram) socials.push({icon:"📷", label:"Instagram", url:collab.instagram});
@@ -622,8 +601,8 @@ function openSeries(collab) {
   var items = collab.content || [];
   var itemsHtml = items.map(function(item, idx) {
     var isVideo = item.type === "video";
-    var icon = isVideo ? "▶" : "📝";
     var iconClass = isVideo ? "si-icon video" : "si-icon";
+    var icon = isVideo ? "▶" : "📝";
     var meta = isVideo
       ? "▶ วิดีโอ · " + (item.source||"YouTube")
       : "📖 " + (item.readTime||"5 นาที") + " · " + (item.tag||"จิตวิทยา");
@@ -634,12 +613,12 @@ function openSeries(collab) {
         '<div class="si-meta">' + meta + '</div>' +
       '</div>' +
       '<div class="si-arr">→</div>' +
-    '</div>';
+      '</div>';
   }).join("");
 
-  var bioHtml = collab.bio ? '<div class="series-bio">' + collab.bio + '</div>' : "";
-  var socialsWrap = socialsHtml ? '<div class="series-socials">' + socialsHtml + '</div>' : "";
-  var emptyMsg = '<div style="color:var(--ink-soft);font-size:13px;padding:20px 0;">ยังไม่มีเนื้อหา — ทีมกำลังเตรียม 💛</div>';
+  var bioHtml   = collab.bio ? '<div class="series-bio">' + collab.bio + '</div>' : "";
+  var socialDiv = socialsHtml ? '<div class="series-socials">' + socialsHtml + '</div>' : "";
+  var emptyMsg  = '<div style="color:var(--ink-soft);font-size:13px;padding:20px 0;">ยังไม่มีเนื้อหา — ทีมกำลังเตรียม 💛</div>';
 
   document.getElementById("series-body").innerHTML =
     '<div class="series-hero">' +
@@ -651,7 +630,7 @@ function openSeries(collab) {
           '<div class="series-role">' + (collab.role||"") + '</div>' +
         '</div>' +
       '</div>' +
-      bioHtml + socialsWrap +
+      bioHtml + socialDiv +
     '</div>' +
     '<div class="series-content">' +
       '<div class="series-section-eye">เนื้อหาทั้งหมด · ' + items.length + ' รายการ</div>' +
@@ -663,29 +642,20 @@ function openSeries(collab) {
   document.getElementById("series-body").scrollTop = 0;
 }
 
-function decodeAndOpen(encoded) {
-  try { return JSON.parse(decodeURIComponent(encoded)); } catch(e) { return {}; }
-}
-
-
-function decodeAndOpen(encoded) {
-  try { return JSON.parse(decodeURIComponent(encoded)); } catch(e) { return {}; }
-}
-
-
 function openSeriesItem(idx) {
-  var item = (currentCollab && currentCollab.content) ? currentCollab.content[idx] : null;
+  if(!currentCollab || !currentCollab.content) return;
+  var item = currentCollab.content[idx];
   if(!item) return;
+  if(item.type === "video") {
+    window.open(item.url, "_blank");
     return;
   }
-  // article — build article object and open in reader
-  let body = null;
-  try { body = typeof item.body === "string" ? JSON.parse(item.body) : item.body; } catch {}
-  if(body?.sections) {
-    openReader({...item, body});
-  } else {
-    // No rich body — open URL if available
-    if(item.url) window.open(item.url, "_blank");
+  var body = null;
+  try { body = typeof item.body === "string" ? JSON.parse(item.body) : item.body; } catch(e) {}
+  if(body && body.sections) {
+    openReader(Object.assign({}, item, {body:body}));
+  } else if(item.url) {
+    window.open(item.url, "_blank");
   }
 }
 
@@ -694,7 +664,7 @@ function closeSeries() {
   document.body.style.overflow = "";
 }
 
-window.onload = () => { loadSettings(); load(); };
-</script>
+window.onload = function() { loadSettings(); load(); };
+</script></script>
 </body>
 </html>
