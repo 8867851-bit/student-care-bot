@@ -452,7 +452,7 @@ function renderArticle(a) {
   var b = a.body;
   var html = "";
   if(a.heroUrl) {
-    html += '<div class="art-hero"><img src="' + a.heroUrl + '" alt="" onerror="this.parentElement.style.display='none'"/></div>';
+    html += '<div class="art-hero"><img src="' + a.heroUrl + '" alt="" onerror="this.parentElement.style.display=\'none\'"/></div>';
   }
   html += '<div class="art-hdr">' +
     '<div class="art-hdr-tag">' + (a.tag||"จิตวิทยา") + '</div>' +
