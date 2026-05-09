@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -329,7 +330,6 @@
     .sheet-cta.closed { background:#EDE7DC; color:#9A9080; border-color:transparent; cursor:default; flex:1; }
     .sheet-cta.closed:hover { background:#EDE7DC; box-shadow:none; }
   </style>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
 
@@ -418,8 +418,6 @@
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
-const LIFF_ID  = "2009806939-H06mwKgI";
-let userId = null; // set by LIFF silent init
 
 const FALLBACK_ACTIVE = [
   { id:"p1", name:"Intentional Listening Lab",
@@ -653,17 +651,8 @@ async function init() {
   renderCards();
   renderPast();
 }
-
-// LIFF silent init — get userId if already logged in, then load programs
-// If LIFF fails or not in LINE, just load programs anyway
-liff.init({ liffId: LIFF_ID })
-  .then(() => {
-    if (liff.isLoggedIn()) {
-      liff.getProfile().then(p => { userId = p.userId; }).catch(()=>{});
-    }
-    init();
-  })
-  .catch(() => init()); // non-LINE browser fallback
+init();
 </script>
 </body>
 </html>
+
