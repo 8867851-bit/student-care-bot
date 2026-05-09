@@ -970,6 +970,16 @@ function manualLogin() {
 }
 
 
+async function loadDynamicAssets(){
+  try {
+    const d = await apiCall({action:"getSiteSettings"});
+    if(d.status==="OK" && d.settings && d.settings.logo_url){
+      const logo = document.getElementById("school-logo-img");
+      if(logo){ logo.style.backgroundImage="url("+d.settings.logo_url+")"; logo.textContent=""; }
+    }
+  } catch(e){}
+}
+
 function bootApp(){
   // ── NORMALISE TO 2-ROLE SYSTEM ──────────────────────────────
   if (userRole !== "admin") userRole = "member";
