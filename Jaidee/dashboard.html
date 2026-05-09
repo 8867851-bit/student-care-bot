@@ -881,25 +881,27 @@ window.onload = async () => {
     return;
   }
 
-  // ── Step 4: Try to get role from API (3s timeout) ──────────
-  // If it fails for ANY reason → boot as member so UI always opens
+  // ── Step 4: Get role from API (10s timeout) ─────────────────
+  const loadEl2 = document.getElementById("screen-loading");
+  if(loadEl2) loadEl2.innerHTML = '<div class="loading-heart">💛</div><div class="loading-text">กำลังตรวจสอบสิทธิ์...</div>';
+
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 3000);
+    const timer = setTimeout(() => controller.abort(), 10000);
     const res = await fetch(API_URL + "?action=getUserRole&userId=" + encodeURIComponent(userId), { signal: controller.signal });
     clearTimeout(timer);
     const d = await res.json();
-    if (d.status === "OK" && d.role && d.role !== "student") {
-      userRole = d.role;
+    console.log("[JD] role response:", d);
+    if (d.status === "OK" && d.role) {
+      const r = (d.role||"").toLowerCase().trim();
+      userRole = (r === "admin") ? "admin" : (r === "student" ? "member" : r);
       try { localStorage.setItem("jaidee_uid", userId); localStorage.setItem("jaidee_name", userName); } catch(e){}
     } else {
-      // Unknown role — default to member so dashboard still opens
       userRole = "member";
     }
   } catch(e) {
-    // API unreachable or timed out — open as member anyway
+    console.warn("[JD] role fetch failed, defaulting to member:", e.message);
     userRole = "member";
-    userName = userName || "ทีมงาน";
   }
 
   bootApp();
@@ -941,7 +943,7 @@ async function loadRole() {
     console.log("[JD] getUserRole response:", JSON.stringify(d));
     if (d.status === "OK" && d.role && d.role !== "student") {
       try { localStorage.setItem("jaidee_uid", userId); localStorage.setItem("jaidee_name", userName); } catch(e){}
-      userRole = d.role;
+      userRole = (d.role||"").toLowerCase().trim() === "admin" ? "admin" : d.role;
       bootApp();
       return;
     }
@@ -981,7 +983,7 @@ async function loadDynamicAssets(){
 }
 
 function bootApp(){
-  // ── NORMALISE TO 2-ROLE SYSTEM ──────────────────────────────
+  // Normalise role — keep admin, everything else is member
   if (userRole !== "admin") userRole = "member";
   console.log("[JD] bootApp role:", userRole, "user:", userName);
 
@@ -4503,4 +4505,3 @@ function openEditRoom(id){
 </script>
 </body>
 </html>
-
