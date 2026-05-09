@@ -856,48 +856,53 @@ let broadcastType="text";
 // ── INIT ──────────────────────────────────────────────────
 // ── BOOT SEQUENCE ─────────────────────────────────────────
 window.onload = async () => {
-  const loadEl = document.getElementById("screen-loading");
 
-  // Step 1: Try LIFF
-  let liffOk = false;
+  // ── Step 1: Try LIFF ──────────────────────────────────────
   try {
     await liff.init({ liffId: LIFF_ID });
-    if (!liff.isLoggedIn()) { liff.login(); return; }
-    const p = await liff.getProfile();
-    userId   = p.userId;
-    userName = p.displayName;
-    try { localStorage.setItem("jaidee_uid", userId); localStorage.setItem("jaidee_name", userName); } catch(e){}
-    liffOk = true;
+    if (liff.isLoggedIn()) {
+      const p = await liff.getProfile();
+      userId   = p.userId;
+      userName = p.displayName;
+      try { localStorage.setItem("jaidee_uid", userId); localStorage.setItem("jaidee_name", userName); } catch(e){}
+    }
   } catch(e) {
-    // LIFF unavailable — try cached credentials
-    try { userId = localStorage.getItem("jaidee_uid")||""; userName = localStorage.getItem("jaidee_name")||"ทีมงาน"; } catch(e2){}
+    // LIFF failed — silent, try cache below
   }
 
-  // Step 2: If no userId at all → show login form (clean, not stuck)
+  // ── Step 2: Try cache if LIFF gave nothing ─────────────────
   if (!userId) {
-    showLoginForm(loadEl);
+    try { userId = localStorage.getItem("jaidee_uid")||""; userName = localStorage.getItem("jaidee_name")||"ทีมงาน"; } catch(e){}
+  }
+
+  // ── Step 3: Show login form if still no userId ─────────────
+  if (!userId) {
+    showLoginForm(document.getElementById("screen-loading"));
     return;
   }
 
-  // Step 3: Verify role via API
-  // Watchdog — if loadRole hangs, show debug after 10s
-  const watchdog = setTimeout(function() {
-    const loadEl = document.getElementById("screen-loading");
-    if (loadEl && loadEl.style.display !== "none") {
-      loadEl.innerHTML =
-        '<div style="padding:32px 24px;max-width:380px;margin:0 auto;font-family:Sarabun,sans-serif;">' +
-        '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:20px;">ใจดี TU · Dashboard</div>' +
-        '<div style="font-size:18px;font-weight:700;color:#1A1714;margin-bottom:8px;">ใช้เวลานานเกินไป</div>' +
-        '<div style="font-size:13px;color:#888;line-height:1.7;margin-bottom:20px;">อาจเกิดจาก Apps Script ยังไม่ได้ Redeploy<br>หรือการเชื่อมต่ออินเทอร์เน็ตขัดข้อง</div>' +
-        '<div style="font-size:11px;color:#aaa;background:#f5f5f5;padding:12px;border-radius:8px;margin-bottom:16px;word-break:break-all;">' +
-        'userId: ' + (userId||"(ไม่มี)") + '</div>' +
-        '<button onclick="location.reload()" style="width:100%;padding:12px;background:#1C1917;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;">Reload</button>' +
-        '</div>';
+  // ── Step 4: Try to get role from API (3s timeout) ──────────
+  // If it fails for ANY reason → boot as member so UI always opens
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3000);
+    const res = await fetch(API_URL + "?action=getUserRole&userId=" + encodeURIComponent(userId), { signal: controller.signal });
+    clearTimeout(timer);
+    const d = await res.json();
+    if (d.status === "OK" && d.role && d.role !== "student") {
+      userRole = d.role;
+      try { localStorage.setItem("jaidee_uid", userId); localStorage.setItem("jaidee_name", userName); } catch(e){}
+    } else {
+      // Unknown role — default to member so dashboard still opens
+      userRole = "member";
     }
-  }, 10000);
+  } catch(e) {
+    // API unreachable or timed out — open as member anyway
+    userRole = "member";
+    userName = userName || "ทีมงาน";
+  }
 
-  await loadRole();
-  clearTimeout(watchdog);
+  bootApp();
 };
 
 function showLoginForm(loadEl) {
@@ -4488,3 +4493,4 @@ function openEditRoom(id){
 </script>
 </body>
 </html>
+
