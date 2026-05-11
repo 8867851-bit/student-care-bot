@@ -3431,7 +3431,486 @@ function openEditRoom(id){
 }
 
 
+
+
+// จดหมายเหตุ ADMIN — Google Drive upload + Sheet write
+// ═══════════════════════════════════════════════════════
+
+// In-memory state: list of year objects
+// { year: "2568", founderName: "", founderFiles: [File|{url,name}], founderPdfFile: File|null,
+//   folders: [{name:"", files:[File|{url,name}], pdfFile:File|null}] }
+let archState = [];
+
+function archGetOrInit() {
+  return archState;
+}
+
+// ── Render entire archive editor ──────────────────────
+function archRender() {
+  const container = document.getElementById("arch-years-container");
+  if (!container) return;
+  container.innerHTML = "";
+  archState.forEach((yr, yi) => {
+    const block = document.createElement("div");
+    block.className = "arch-year-block";
+    block.innerHTML = `
+      <div class="arch-year-header" onclick="archToggleYear(${yi})">
+        <span class="arch-year-label">📅 ปีการศึกษา ${yr.year}</span>
+        <span id="arch-toggle-${yi}">▼</span>
+      </div>
+      <div class="arch-year-body" id="arch-body-${yi}">
+        <!-- Founder name -->
+        <div class="arch-card">
+          <div class="arch-card-title">ประธานชมรม</div>
+          <div class="input-group">
+            <div class="input-label">ชื่อ-นามสกุล ประธานชมรม</div>
+            <input class="input-field" placeholder="เช่น นาย ใจดี ใจงาม" value="${yr.founderName||""}"
+              oninput="archState[${yi}].founderName=this.value"/>
+          </div>
+          <div class="input-label" style="margin-top:4px;">หน้าจดหมาย (รูปภาพ — อัปโหลดได้หลายหน้า)</div>
+          ${archUploadZoneHTML(`arch-founder-pages-${yi}`, true)}
+          <div class="arch-thumbs" id="arch-founder-thumbs-${yi}"></div>
+          <div class="input-label" style="margin-top:4px;">PDF จดหมายฉบับเต็ม (ไม่บังคับ)</div>
+          ${archUploadZoneHTML(`arch-founder-pdf-${yi}`, false, true)}
+          <div id="arch-founder-pdf-name-${yi}" class="arch-status"></div>
+        </div>
+
+        <!-- Folders -->
+        <div class="arch-card">
+          <div class="arch-card-title">สรุปประจำเดือน (แฟ้ม)</div>
+          <div class="arch-folder-list" id="arch-folders-${yi}"></div>
+          <button class="arch-add-btn" onclick="archAddFolder(${yi})">＋ เพิ่มแฟ้ม</button>
+        </div>
+
+        <!-- Save -->
+        <div id="arch-save-status-${yi}" class="arch-status"></div>
+        <button class="arch-save-btn" onclick="archSaveYear(${yi})">💾 บันทึกปีนี้</button>
+        <button class="arch-add-btn" style="color:var(--red);border-color:var(--red);" onclick="archRemoveYear(${yi})">🗑 ลบปีนี้</button>
+      </div>`;
+    container.appendChild(block);
+    archRenderFounderThumbs(yi);
+    archRenderFolders(yi);
+    // Bind file inputs after render
+    archBindFounderInputs(yi);
+  });
+}
+
+function archUploadZoneHTML(id, multi, isPdf) {
+  const accept = isPdf ? "application/pdf" : "image/*";
+  const multiAttr = multi ? "multiple" : "";
+  return `<div class="arch-upload-zone" id="zone-${id}">
+    <input type="file" id="${id}" accept="${accept}" ${multiAttr}/>
+    <div class="arch-upload-icon">${isPdf ? "📄" : "🖼️"}</div>
+    <div class="arch-upload-label">${isPdf ? "เลือก PDF" : "เลือกรูปภาพ"}</div>
+    <div class="arch-upload-sub">กดเพื่อเลือก หรือลากมาวาง</div>
+  </div>`;
+}
+
+function archToggleYear(yi) {
+  const body = document.getElementById(`arch-body-${yi}`);
+  const tog  = document.getElementById(`arch-toggle-${yi}`);
+  if (!body) return;
+  const hidden = body.style.display === "none";
+  body.style.display = hidden ? "flex" : "none";
+  if (tog) tog.textContent = hidden ? "▼" : "▶";
+}
+
+function archBindFounderInputs(yi) {
+  // Pages
+  const pagesInput = document.getElementById(`arch-founder-pages-${yi}`);
+  if (pagesInput) pagesInput.onchange = (e) => {
+    const files = Array.from(e.target.files);
+    archState[yi].founderFiles = [...(archState[yi].founderFiles||[]), ...files];
+    archRenderFounderThumbs(yi);
+  };
+  // PDF
+  const pdfInput = document.getElementById(`arch-founder-pdf-${yi}`);
+  if (pdfInput) pdfInput.onchange = (e) => {
+    const f = e.target.files[0];
+    if (f) { archState[yi].founderPdfFile = f; archRenderFounderPdfName(yi); }
+  };
+}
+
+function archRenderFounderThumbs(yi) {
+  const container = document.getElementById(`arch-founder-thumbs-${yi}`);
+  if (!container) return;
+  const files = archState[yi].founderFiles || [];
+  container.innerHTML = "";
+  files.forEach((f, fi) => {
+    const wrap = document.createElement("div");
+    wrap.className = "arch-thumb-wrap";
+    const img = document.createElement("img");
+    img.className = "arch-thumb";
+    if (f instanceof File) {
+      img.src = URL.createObjectURL(f);
+    } else {
+      img.src = f.url;
+    }
+    const del = document.createElement("button");
+    del.className = "arch-thumb-del";
+    del.textContent = "×";
+    del.onclick = () => { archState[yi].founderFiles.splice(fi,1); archRenderFounderThumbs(yi); };
+    wrap.appendChild(img);
+    wrap.appendChild(del);
+    container.appendChild(wrap);
+  });
+}
+
+function archRenderFounderPdfName(yi) {
+  const el = document.getElementById(`arch-founder-pdf-name-${yi}`);
+  if (!el) return;
+  const f = archState[yi].founderPdfFile;
+  el.textContent = f ? (f instanceof File ? f.name : f.name) : "";
+}
+
+function archRenderFolders(yi) {
+  const container = document.getElementById(`arch-folders-${yi}`);
+  if (!container) return;
+  const folders = archState[yi].folders || [];
+  container.innerHTML = "";
+  folders.forEach((folder, fi) => {
+    const item = document.createElement("div");
+    item.className = "arch-folder-item";
+    item.innerHTML = `
+      <div class="arch-folder-head">
+        <input class="arch-folder-name-input" placeholder="ชื่อแฟ้ม เช่น สรุปเดือนพฤษภาคม"
+          value="${folder.name||""}" oninput="archState[${yi}].folders[${fi}].name=this.value"/>
+        <button class="pz-del" onclick="archRemoveFolder(${yi},${fi})">🗑</button>
+      </div>
+      <div class="input-label">รูปภาพในแฟ้ม (หลายหน้าได้)</div>
+      ${archUploadZoneHTML(`arch-folder-pages-${yi}-${fi}`, true)}
+      <div class="arch-thumbs" id="arch-folder-thumbs-${yi}-${fi}"></div>
+      <div class="input-label" style="margin-top:4px;">PDF แฟ้มนี้ (ไม่บังคับ)</div>
+      ${archUploadZoneHTML(`arch-folder-pdf-${yi}-${fi}`, false, true)}
+      <div id="arch-folder-pdf-name-${yi}-${fi}" class="arch-status"></div>`;
+    container.appendChild(item);
+    // Render existing thumbs
+    archRenderFolderThumbs(yi, fi);
+    archRenderFolderPdfName(yi, fi);
+    // Bind
+    const pagesInput = document.getElementById(`arch-folder-pages-${yi}-${fi}`);
+    if (pagesInput) pagesInput.onchange = (e) => {
+      const files = Array.from(e.target.files);
+      archState[yi].folders[fi].files = [...(archState[yi].folders[fi].files||[]), ...files];
+      archRenderFolderThumbs(yi, fi);
+    };
+    const pdfInput = document.getElementById(`arch-folder-pdf-${yi}-${fi}`);
+    if (pdfInput) pdfInput.onchange = (e) => {
+      const f = e.target.files[0];
+      if (f) { archState[yi].folders[fi].pdfFile = f; archRenderFolderPdfName(yi, fi); }
+    };
+  });
+}
+
+function archRenderFolderThumbs(yi, fi) {
+  const container = document.getElementById(`arch-folder-thumbs-${yi}-${fi}`);
+  if (!container) return;
+  const files = archState[yi].folders[fi].files || [];
+  container.innerHTML = "";
+  files.forEach((f, idx) => {
+    const wrap = document.createElement("div");
+    wrap.className = "arch-thumb-wrap";
+    const img = document.createElement("img");
+    img.className = "arch-thumb";
+    img.src = f instanceof File ? URL.createObjectURL(f) : f.url;
+    const del = document.createElement("button");
+    del.className = "arch-thumb-del";
+    del.textContent = "×";
+    del.onclick = () => { archState[yi].folders[fi].files.splice(idx,1); archRenderFolderThumbs(yi,fi); };
+    wrap.appendChild(img); wrap.appendChild(del);
+    container.appendChild(wrap);
+  });
+}
+
+function archRenderFolderPdfName(yi, fi) {
+  const el = document.getElementById(`arch-folder-pdf-name-${yi}-${fi}`);
+  if (!el) return;
+  const f = archState[yi].folders[fi].pdfFile;
+  el.textContent = f ? (f instanceof File ? f.name : f.name) : "";
+}
+
+function archAddYear() {
+  const year = prompt("ปีการศึกษา (เช่น 2568):", "2568");
+  if (!year) return;
+  archState.unshift({ year, founderName:"", founderFiles:[], founderPdfFile:null, folders:[] });
+  archRender();
+}
+
+function archRemoveYear(yi) {
+  if (!confirm(`ลบปี ${archState[yi].year} ออก?`)) return;
+  archState.splice(yi, 1);
+  archRender();
+}
+
+function archAddFolder(yi) {
+  archState[yi].folders.push({ name:"", files:[], pdfFile:null });
+  archRenderFolders(yi);
+}
+
+function archRemoveFolder(yi, fi) {
+  archState[yi].folders.splice(fi, 1);
+  archRenderFolders(yi);
+}
+
+// ── Upload single file to Google Drive via Apps Script ──
+async function archUploadFile(file, folder) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const b64 = e.target.result.split(",")[1];
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({
+            action: "uploadFileToDrive",
+            fileName: file.name,
+            mimeType: file.type,
+            base64Data: b64,
+            folderName: folder
+          })
+        });
+        const data = await res.json();
+        if (data.url) resolve(data.url);
+        else reject(new Error(data.error || "upload failed"));
+      } catch(err) { reject(err); }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── Save year: upload all files then write to Sheet ────
+async function archSaveYear(yi) {
+  const yr = archState[yi];
+  const statusEl = document.getElementById(`arch-save-status-${yi}`);
+  const btn = document.querySelector(`#arch-body-${yi} .arch-save-btn`);
+
+  if (!yr.founderName.trim()) { alert("กรุณาใส่ชื่อประธานชมรม"); return; }
+  if (btn) { btn.disabled = true; btn.textContent = "กำลังอัปโหลด..."; }
+  if (statusEl) statusEl.textContent = "กำลังอัปโหลดไฟล์...";
+
+  try {
+    const driveFolder = `ใจดีTU_${yr.year}`;
+
+    // Upload founder pages
+    const founderUrls = [];
+    for (const f of (yr.founderFiles || [])) {
+      if (f instanceof File) {
+        if (statusEl) statusEl.textContent = `อัปโหลด: ${f.name}`;
+        const url = await archUploadFile(f, driveFolder);
+        founderUrls.push(url);
+      } else {
+        founderUrls.push(f.url);
+      }
+    }
+
+    // Upload founder PDF
+    let founderPdfUrl = "";
+    if (yr.founderPdfFile instanceof File) {
+      if (statusEl) statusEl.textContent = "อัปโหลด PDF จดหมาย...";
+      founderPdfUrl = await archUploadFile(yr.founderPdfFile, driveFolder);
+    } else if (yr.founderPdfFile && yr.founderPdfFile.url) {
+      founderPdfUrl = yr.founderPdfFile.url;
+    }
+
+    // Upload folders
+    const foldersData = [];
+    for (const folder of (yr.folders || [])) {
+      const pageUrls = [];
+      for (const f of (folder.files || [])) {
+        if (f instanceof File) {
+          if (statusEl) statusEl.textContent = `อัปโหลด: ${f.name}`;
+          const url = await archUploadFile(f, driveFolder);
+          pageUrls.push(url);
+        } else {
+          pageUrls.push(f.url);
+        }
+      }
+      let pdfUrl = "";
+      if (folder.pdfFile instanceof File) {
+        if (statusEl) statusEl.textContent = "อัปโหลด PDF แฟ้ม...";
+        pdfUrl = await archUploadFile(folder.pdfFile, driveFolder);
+      } else if (folder.pdfFile && folder.pdfFile.url) {
+        pdfUrl = folder.pdfFile.url;
+      }
+      foldersData.push({ name: folder.name, pages: pageUrls, pdf_url: pdfUrl });
+    }
+
+    // Write to Sheet
+    if (statusEl) statusEl.textContent = "บันทึกข้อมูลลง Sheet...";
+    const payload = {
+      action: "saveArchiveYear",
+      year: yr.year,
+      founderName: yr.founderName,
+      founderPages: founderUrls.join(","),
+      founderPdfUrl: founderPdfUrl,
+      folders: JSON.stringify(foldersData)
+    };
+    const result = await apiCall(payload);
+    if (result.status === "OK") {
+      if (statusEl) statusEl.textContent = "✅ บันทึกสำเร็จ!";
+      showToast("บันทึกจดหมายเหตุสำเร็จ");
+      setTimeout(() => { if (statusEl) statusEl.textContent = ""; }, 3000);
+    } else {
+      throw new Error(result.error || "save failed");
+    }
+  } catch(err) {
+    if (statusEl) statusEl.textContent = "❌ เกิดข้อผิดพลาด: " + err.message;
+    console.error("archSaveYear error:", err);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = "💾 บันทึกปีนี้"; }
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// TOOLS TAB — เครื่องมือ (crisis carousel)
+// Sheet: Care sheet, category = "เครื่องมือ"
+// Columns: name | desc | price_range | location | bts_mrt | contact | url | online | active | photo_url
+// ══════════════════════════════════════════════════════
+let toolsData = []; // [{row, name, desc, url, photo_url, active}, ...]
+
+async function loadToolsTab() {
+  const list = document.getElementById("tools-list");
+  list.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
+  try {
+    const res = await fetch(API_URL + "?action=getCare");
+    const d = await res.json();
+    toolsData = (d.status === "OK" && d.items)
+      ? d.items.filter(i => (i.category||"").trim() === "เครื่องมือ")
+      : [];
+    renderToolsList();
+  } catch(e) {
+    list.innerHTML = "<div class='empty'>โหลดไม่ได้ — ตรวจสอบ API</div>";
+  }
+}
+
+function renderToolsList() {
+  const list = document.getElementById("tools-list");
+  if (!toolsData.length) {
+    list.innerHTML = "<div class='empty'>ยังไม่มีเครื่องมือ — กด + เพิ่มเครื่องมือใหม่</div>";
+    return;
+  }
+  list.innerHTML = "";
+  toolsData.forEach((tool, idx) => {
+    const card = document.createElement("div");
+    card.style.cssText = "background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:flex-start;";
+    const hasPhoto = tool.photo_url && tool.photo_url.trim();
+    card.innerHTML = `
+      <div style="width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;">
+        ${hasPhoto
+          ? `<img src="${tool.photo_url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'"/>`
+          : `<span style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--text-soft);">${(tool.name||"?")[0]}</span>`}
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;">${tool.name||"—"}</div>
+        <div style="font-size:11px;font-weight:300;color:var(--text-mid);line-height:1.5;margin-bottom:6px;">${tool.desc||""}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:99px;background:${tool.active==="TRUE"||tool.active===true?"#E6F4EA":"var(--surface2)"};color:${tool.active==="TRUE"||tool.active===true?"#2E7D32":"var(--text-soft)"};">
+            ${tool.active==="TRUE"||tool.active===true?"✅ แสดงอยู่":"🚫 ซ่อน"}
+          </span>
+          ${tool.url?`<span style="font-size:10px;color:var(--text-soft);padding:2px 8px;border-radius:99px;background:var(--surface2);">🔗 ${tool.url.replace(/^https?:\/\//,"").slice(0,24)}…</span>`:""}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+        <button onclick="toolsEdit(${idx})" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;color:var(--text-mid);">แก้ไข</button>
+        <button onclick="toolsDelete(${idx})" style="background:#FFF0F0;border:1px solid #FECACA;border-radius:8px;padding:6px 12px;font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;color:#DC2626;">ลบ</button>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function toolsShowForm(prefill) {
+  document.getElementById("tools-add-form").style.display = "flex";
+  document.getElementById("tools-add-btn").style.display = "none";
+  document.getElementById("tools-list").style.display = "none";
+  if (prefill) {
+    document.getElementById("tool-name").value = prefill.name||"";
+    document.getElementById("tool-desc").value = prefill.desc||"";
+    document.getElementById("tool-url").value = prefill.url||"";
+    document.getElementById("tool-photo").value = prefill.photo_url||"";
+    document.getElementById("tool-active").value = (prefill.active==="TRUE"||prefill.active===true)?"TRUE":"FALSE";
+    document.getElementById("tool-edit-row").value = prefill._rowIndex||"";
+  } else {
+    ["tool-name","tool-desc","tool-url","tool-photo"].forEach(id => document.getElementById(id).value="");
+    document.getElementById("tool-active").value = "TRUE";
+    document.getElementById("tool-edit-row").value = "";
+  }
+}
+
+function toolsCancelForm() {
+  document.getElementById("tools-add-form").style.display = "none";
+  document.getElementById("tools-add-btn").style.display = "block";
+  document.getElementById("tools-list").style.display = "flex";
+}
+
+function toolsEdit(idx) {
+  toolsShowForm(toolsData[idx]);
+}
+
+async function toolsDelete(idx) {
+  const tool = toolsData[idx];
+  if (!confirm(`ลบ "${tool.name}" ออกจาก Crisis carousel?`)) return;
+  try {
+    await fetch(API_URL, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({action:"deleteCareItem", rowIndex: tool._rowIndex, category:"เครื่องมือ"})
+    });
+    showToast("ลบแล้ว ✓");
+    loadToolsTab();
+  } catch(e) { showToast("เกิดข้อผิดพลาด"); }
+}
+
+async function toolsSave() {
+  const name  = document.getElementById("tool-name").value.trim();
+  const desc  = document.getElementById("tool-desc").value.trim();
+  const url   = document.getElementById("tool-url").value.trim();
+  const photo = document.getElementById("tool-photo").value.trim();
+  const active = document.getElementById("tool-active").value;
+  const editRow = document.getElementById("tool-edit-row").value;
+  if (!name || !desc) { showToast("กรุณาใส่ชื่อและคำอธิบาย"); return; }
+  const payload = { action: editRow ? "updateCareItem" : "addCareItem",
+    item: { category:"เครื่องมือ", name, desc, url, photo_url:photo, active },
+    rowIndex: editRow || undefined };
+  try {
+    await fetch(API_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
+    showToast(editRow ? "อัปเดตแล้ว ✓" : "เพิ่มแล้ว ✓");
+    toolsCancelForm();
+    loadToolsTab();
+  } catch(e) { showToast("เกิดข้อผิดพลาด"); }
+}
+
+// ── Load existing archive data from Sheet on tab open ──
+async function loadArchiveTab() {
+  const container = document.getElementById("arch-years-container");
+  if (!container) return;
+  if (archState.length > 0) { archRender(); return; } // already loaded
+  container.innerHTML = `<div class="empty">กำลังโหลดข้อมูล...</div>`;
+  try {
+    const d = await apiCall({ action: "getArchiveData" });
+    const years = d.years || [];
+    archState = years.map(yr => ({
+      year: yr.year,
+      founderName: yr.founder?.full_name || "",
+      founderFiles: (yr.founder?.pages||[]).map(url => ({ url, name: url.split("/").pop() })),
+      founderPdfFile: yr.founder?.pdf_url ? { url: yr.founder.pdf_url, name: "จดหมาย.pdf" } : null,
+      folders: (yr.folders||[]).map(f => ({
+        name: f.name,
+        files: (f.papers||[]).flatMap(p => (p.pages||[]).map(url => ({ url, name: url.split("/").pop() }))),
+        pdfFile: f.papers?.[0]?.pdf_url ? { url: f.papers[0].pdf_url, name: f.name+".pdf" } : null
+      }))
+    }));
+    archRender();
+  } catch(e) {
+    container.innerHTML = `<div class="empty">โหลดข้อมูลไม่ได้ — เริ่มเพิ่มได้เลย</div>`;
+    archRender();
+  }
+}
+
+</script>
+
+
 </script>
 </body>
+
 </html>
 
