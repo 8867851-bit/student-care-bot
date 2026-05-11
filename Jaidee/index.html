@@ -173,8 +173,8 @@
   <!-- Crisis strip — always visible -->
   <div class="crisis-strip" onclick="window.location.href='crisis.html'" style="cursor:pointer;">
     <div class="crisis-strip-left">
-      <div class="crisis-strip-label">ฉุกเฉิน · 24/7</div>
-      <div class="crisis-strip-text">ถ้าตอนนี้ไม่ปลอดภัย<br>กดตรงนี้ได้เลย</div>
+      <div class="crisis-strip-label"> ฉุกเฉิน · 24/7</div>
+      <div class="crisis-strip-text">ถ้าตอนนี้รู้สึกไม่ไหวเเล้ว/ตกอยู๋ในอันตราย <br>กดปุ่มนี้</div>
     </div>
     <button class="crisis-strip-btn">ขอความช่วยเหลือ</button>
   </div>
@@ -195,10 +195,10 @@ const isPreview = new URLSearchParams(window.location.search).get("preview") ===
 
 // Worlds 1–4: grid 2×2
 const WORLDS_TOP = [
-  { name:"Puzzle Piece",    desc:"จิตวิทยาที่เข้าใจง่าย",       url:"puzzle.html",     emoji:"🧩" },
-  { name:"People",          desc:"ฟังคนที่ผ่านมาแล้ว",          url:"people.html",     emoji:"👥" },
-  { name:"Programs",        desc:"Workshop และกิจกรรมเดือนนี้",  url:"programs.html",   emoji:"🌱" },
-  { name:"จดหมายเหตุ",      desc:"จดหมายผู้นำ · โครงสร้างระบบ", url:"founder.html",    emoji:"📜" },
+  { name:"Puzzle Piece",    desc:"จิตวิทยาที่เข้าใจง่าย ",       url:"puzzle.html",     emoji:"🧩" },
+  { name:"People",          desc:"มุมมองของผู้คนที่หลากหลาย",          url:"people.html",     emoji:"👥" },
+  { name:"Programs",        desc:"Workshop และ กิจกรรมเดือนนี้",  url:"programs.html",   emoji:"🌱" },
+  { name:"จดหมายเหตุ",      desc:"จากประธานชมรม · รายงานการทํางาน", url:"founder.html",    emoji:"📜" },
 ];
 
 // World 5: full-width
@@ -209,7 +209,7 @@ const WORLD_5 = {
 
 // ── วันที่เปิด Worlds 6-8 (ISO "YYYY-MM-DD") ──
 // เปลี่ยน date นี้เพื่อ set countdown
-const UNLOCK_DATE = "2026-09-01";
+const UNLOCK_DATE = "2028-07-12";
 
 // Worlds 6–7: grid 2 cols (locked จนถึง UNLOCK_DATE)
 const WORLDS_LOCKED_GRID = [
@@ -333,7 +333,7 @@ function renderAll() {
   const sp = document.createElement("div");
   sp.className = "spoiler-card";
   sp.innerHTML = `
-    <div class="spoiler-title">ใจดี TU คือพื้นที่ของทุก identity</div>
+    <div class="spoiler-title">ใจดี TU คือพื้นที่ของทุก identity (extended space for clubs and unnamed identities...yet )</div>
     <div class="spoiler-sub">ไม่ว่าคุณจะเป็นคนชมรมละคร นักกีฬา สายโอลิมปิก หรือคนที่แค่อยากหาเพื่อนที่เข้าใจ — เรากำลังสร้าง World ให้ทุกคนในโรงเรียนนี้</div>
     <div class="spoiler-chips">${COMING_SOON.map(w=>`<span class="spoiler-chip">${w.emoji} ${w.name}</span>`).join("")}</div>`;
   wrap.appendChild(sp);
