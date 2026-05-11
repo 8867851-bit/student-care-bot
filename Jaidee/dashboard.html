@@ -976,6 +976,8 @@
 <script>
 
 const API_URL="https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const CLOUDINARY_CLOUD  = "YOUR_CLOUD_NAME";    // ← ใส่ Cloud Name จาก Cloudinary
+const CLOUDINARY_PRESET = "YOUR_UPLOAD_PRESET"; // ← ใส่ Upload Preset จาก Cloudinary
 
 // ── API HELPER — uses GET to avoid CORS issues ─────────────
 // Apps Script GET requests don't have CORS problems
@@ -1061,7 +1063,7 @@ function filterCases(){
 }
 
 // Show Cloudinary warning if not configured
-if(typeof CLOUDINARY_CLOUD !== "undefined" && CLOUDINARY_CLOUD === "YOUR_CLOUD_NAME"){
+if(CLOUDINARY_CLOUD === "YOUR_CLOUD_NAME"){
   document.querySelectorAll("#cloudinary-warning").forEach(el=>el.style.display="block");
 } else {
   document.querySelectorAll("#cloudinary-warning").forEach(el=>el.style.display="none");
@@ -2767,8 +2769,7 @@ async function addContentOther() {
 // CLOUDINARY UPLOAD
 // ══════════════════════════════════════════════════════════════
 // ← ใส่ค่าเหล่านี้หลังสมัคร Cloudinary
-const CLOUDINARY_CLOUD = "YOUR_CLOUD_NAME";
-const CLOUDINARY_PRESET = "YOUR_UPLOAD_PRESET";
+// CLOUDINARY constants moved to top of script
 
 function triggerUpload(fileInputId, targetInputId){
   document.getElementById(fileInputId).click();
@@ -3911,6 +3912,5 @@ async function loadArchiveTab() {
 
 </script>
 </body>
-
 </html>
 
