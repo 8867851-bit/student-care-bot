@@ -515,6 +515,7 @@ async function checkPauseStatus() {
       }
     } else {
       window._pauseActive = false;
+      checkBookingStatus();
     }
   } catch(e) {
     window._pauseActive = false;
@@ -914,6 +915,52 @@ function goBackFromBooking(){
   show("screen-question");
 }
 
+
+// ── BOOKING STATUS GATE ──────────────────────────────────────
+// Called after pause check passes.
+// If Sat/Sun and peers have not registered yet, morph the intro
+// screen into a warm "PR is setting up" message instead of
+// letting the student enter the flow and see zero slots.
+async function checkBookingStatus() {
+  try {
+    const res = await fetch(API_URL + '?action=getBookingStatus');
+    const d   = await res.json();
+    if (d.booking !== 'pending') return; // open — normal intro stays
+    const openEst = d.openEstimate || 'อาทิตย์ 20:00 น.';
+    const introMiddle = document.querySelector('#screen-intro .intro-middle');
+    const startBtn    = document.querySelector('#screen-intro .btn-primary');
+    if (introMiddle) {
+      introMiddle.innerHTML =
+        "<div style='text-align:center;padding:8px 0;'>"
+        + "<div style='font-size:42px;margin-bottom:14px;'>💛</div>"
+        + "<div style='font-size:26px;font-weight:700;line-height:1.35;margin-bottom:14px;'>"
+        + "PR กำลัง<br>ลงตารางอยู่นะ</div>"
+        + "<div style='font-size:14px;color:var(--mid);line-height:1.8;margin-bottom:20px;'>"
+        + "PR กำลังเลือกเวลาที่สะดวก<br>"
+        + "ระบบจะเปิดรับนัดเมื่อพร้อมแล้ว</div>"
+        + "<div style='background:var(--cream);border-radius:18px;padding:18px 24px;display:inline-block;'>"
+        + "<div style='font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:6px;'>"
+        + "คาดว่าจะเปิดช่วง</div>"
+        + "<div style='font-size:28px;font-weight:700;color:var(--gold);'>" + openEst + "</div>"
+        + "</div></div>";
+    }
+    if (startBtn) {
+      startBtn.textContent = 'แจ้งเตือนฉันเมื่อเปิดรับนัด 💛';
+      startBtn.style.background = 'var(--gold)';
+      startBtn.disabled = false;
+      startBtn.onclick = function() { saveAndNotify(); };
+    }
+    const introBottom = document.querySelector('#screen-intro .intro-bottom');
+    if (introBottom && !document.getElementById('pending-other-btn')) {
+      var btn = document.createElement('button');
+      btn.id = 'pending-other-btn';
+      btn.className = 'btn-ghost';
+      btn.textContent = 'ดูตัวเลือกอื่น →';
+      btn.onclick = function() { show('screen-external'); };
+      introBottom.appendChild(btn);
+    }
+  } catch(e) {}
+}
 </script>
 </body>
 </html>
