@@ -295,32 +295,8 @@
 <button class="dev-btn" id="dev-btn" onclick="openDevView()">👁</button>
 
 <!-- DEVELOPER VIEW OVERLAY -->
-<div class="dev-overlay" id="dev-overlay" onclick="closeDevView(event)">
-  <div class="dev-sheet">
-    <div class="dev-sheet-handle"></div>
-    <div class="dev-sheet-title">🟡 Pitching — Mock Views</div>
-    <a class="dev-option" href="dashboard.html?mockRole=admin" target="_blank">
-      <div class="dev-option-icon">👑</div>
-      <div class="dev-option-info"><div class="dev-option-name">Mock — Admin</div></div>
-    </a>
-    <a class="dev-option" href="dashboard.html?mockRole=member" target="_blank">
-      <div class="dev-option-icon">🤍</div>
-      <div class="dev-option-info"><div class="dev-option-name">Mock — Member</div><div class="dev-option-desc">Peer + Content</div></div>
-    </a>
-    <a class="dev-option" href="index.html?preview=student" target="_blank">
-      <div class="dev-option-icon">🏠</div>
-      <div class="dev-option-info"><div class="dev-option-name">Student — Home</div><div class="dev-option-desc">ข้าม role check</div></div>
-    </a>
-    <a class="dev-option" href="peer.html" target="_blank">
-      <div class="dev-option-icon">💬</div>
-      <div class="dev-option-info"><div class="dev-option-name">Student — Peer Flow</div><div class="dev-option-desc">ข้าม role check</div></div>
-    </a>
-    <button class="dev-close" onclick="closeDevView()">ปิด</button>
-  </div>
-</div>
 
-<div id="screen-denied">
-  <div style="font-size:48px;">🔒</div>
+</d
   <div style="font-family:'Playfair Display',serif;font-size:22px;">ไม่มีสิทธิ์เข้าถึง</div>
   <div style="font-size:14px;color:var(--text-mid);line-height:1.7;">หน้านี้สำหรับทีมงานเท่านั้น<br>ถ้าคิดว่าเป็นข้อผิดพลาด ติดต่อ admin ได้เลยนะ</div>
 </div>
@@ -404,12 +380,7 @@
       <input class="input-field" id="case-search" placeholder="ค้นหา Case ID..." oninput="filterCases()" style="padding-left:32px;font-size:13px;"/>
     </div>
     <div id="cases-list"><div class="empty">กำลังโหลด...</div></div>
-  </div>
-
-  <!-- ADMIN: PR -->
-  <div class="tab-content" id="tab-pr">
-    <div class="section-label">PR สัปดาห์นี้</div>
-    <div id="pr-list"><div class="empty">กำลังโหลด...</div></div>
+  </div>    <div id="pr-list"><div class="empty">กำลังโหลด...</div></div>
     <div class="divider"></div>
     <div class="section-label">เพิ่ม PR ใหม่</div>
     <div class="add-form">
@@ -501,51 +472,68 @@
     </div>
 
     <!-- STEP 1: META -->
-    <div id="pz-step1" style="padding-top:4px;">
-      <div class="section-label">ข้อมูลบทความ</div>
+    <div id="pz-step1" style="display:flex;flex-direction:column;gap:14px;">
 
-      <div class="input-group"><div class="input-label">ชื่อบทความ *</div>
+      <div class="input-group">
+        <div class="input-label">ชื่อบทความ *</div>
         <input class="input-field" id="pz-title" placeholder="เช่น ทำไมเราถึงรู้สึกแบบนี้" oninput="pzUpdatePreview()"/>
       </div>
-      <div class="input-group"><div class="input-label">คำอธิบายสั้น (แสดงในการ์ด) *</div>
+
+      <div class="input-group">
+        <div class="input-label">คำอธิบายสั้น (แสดงในการ์ด) *</div>
         <input class="input-field" id="pz-desc" placeholder="1–2 ประโยค บอกว่าบทความนี้เกี่ยวกับอะไร" oninput="pzUpdatePreview()"/>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="input-group"><div class="input-label">Tag</div>
-          <select class="input-field" id="pz-tag" onchange="pzUpdatePreview()">
-            <option value="อารมณ์">😮‍💨 อารมณ์</option>
-            <option value="การเรียนรู้">📚 การเรียนรู้</option>
-            <option value="ความสัมพันธ์">🤝 ความสัมพันธ์</option>
-            <option value="ตัวตน">🪞 ตัวตน</option>
-            <option value="ความเครียด">🧘 ความเครียด</option>
-            <option value="แรงจูงใจ">🔥 แรงจูงใจ</option>
-            <option value="จิตวิทยา">🧠 จิตวิทยา</option>
-          </select>
-        </div>
-        <div class="input-group"><div class="input-label">ระดับ</div>
-          <select class="input-field" id="pz-level" onchange="pzUpdatePreview()">
-            <option value="🟢 เบา">🟢 เบา</option>
-            <option value="🟡 กลาง" selected>🟡 กลาง</option>
-            <option value="🔴 ลึก">🔴 ลึก</option>
-          </select>
-        </div>
+
+      <div class="input-group">
+        <div class="input-label">Tag / หมวดหมู่</div>
+        <select class="input-field" id="pz-tag" onchange="pzUpdatePreview()">
+          <option value="อารมณ์">😮‍💨 อารมณ์</option>
+          <option value="การเรียนรู้">📚 การเรียนรู้</option>
+          <option value="ความสัมพันธ์">🤝 ความสัมพันธ์</option>
+          <option value="ตัวตน">🪞 ตัวตน</option>
+          <option value="ความเครียด">🧘 ความเครียด</option>
+          <option value="แรงจูงใจ">🔥 แรงจูงใจ</option>
+          <option value="จิตวิทยา">🧠 จิตวิทยา</option>
+        </select>
       </div>
-      <div class="input-group"><div class="input-label">เวลาอ่าน</div>
+
+      <div class="input-group">
+        <div class="input-label">ความลึก</div>
+        <select class="input-field" id="pz-level" onchange="pzUpdatePreview()">
+          <option value="🟢 เบา">🟢 เบา — อ่านง่าย เข้าใจเร็ว</option>
+          <option value="🟡 กลาง" selected>🟡 กลาง — ต้องใช้ความคิดนิดหน่อย</option>
+          <option value="🔴 ลึก">🔴 ลึก — อ่านแล้วต้องนั่งคิด</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">ระดับภาษา</div>
+        <select class="input-field" id="pz-lang">
+          <option value="ทำให้เข้าใจง่าย">ทำให้เข้าใจง่าย — เหมือนคุยกับเพื่อน</option>
+          <option value="ภาษาทั่วไป" selected>ภาษาทั่วไป — อ่านได้สบาย</option>
+          <option value="กึ่งวิชาการ">กึ่งวิชาการ — มีศัพท์เฉพาะบ้าง</option>
+          <option value="วิชาการ">วิชาการ — งานวิจัย บทความเชิงวิชาการ</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">เวลาอ่าน</div>
         <select class="input-field" id="pz-readtime">
           <option value="3 นาที">3 นาที</option>
           <option value="5 นาที" selected>5 นาที</option>
           <option value="8 นาที">8 นาที</option>
           <option value="10 นาที">10 นาที</option>
+          <option value="15 นาที">15 นาที</option>
         </select>
       </div>
 
       <!-- live preview card -->
-      <div style="background:var(--surface2);border-radius:14px;padding:14px;border:1px solid var(--border);margin-bottom:4px;">
-        <div class="section-label" style="margin-bottom:10px;">Preview การ์ด</div>
+      <div style="background:var(--surface2);border-radius:14px;padding:14px;border:1px solid var(--border);">
+        <div class="input-label" style="margin-bottom:10px;">📋 Preview การ์ด</div>
         <div style="background:var(--surface);border-radius:10px;padding:13px;border:1px solid var(--border);">
           <div id="pzprev-tag" style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gold);background:var(--gold-soft);border:1px solid #F0D080;border-radius:99px;padding:2px 10px;display:inline-block;margin-bottom:8px;">แรงจูงใจ</div>
           <div id="pzprev-title" style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">ชื่อบทความ</div>
-          <div id="pzprev-desc" style="font-size:12px;font-weight:300;color:var(--text-mid);line-height:1.6;">คำอธิบาย</div>
+          <div id="pzprev-desc" style="font-size:12px;color:var(--text-mid);line-height:1.6;">คำอธิบาย</div>
           <div id="pzprev-meta" style="font-size:11px;color:var(--text-soft);margin-top:8px;">🟡 กลาง · ⏱ 5 นาที</div>
         </div>
       </div>
@@ -554,41 +542,55 @@
     </div>
 
     <!-- STEP 2: BLOCKS -->
-    <div id="pz-step2" style="display:none;">
-      <div class="section-label">รูปหน้าปก</div>
-      <div class="input-group">
-        <input class="input-field" id="pz-hero" placeholder="URL รูปภาพ (Cloudinary / Unsplash)"/>
-      </div>
+    <div id="pz-step2" style="display:none;flex-direction:column;gap:14px;">
 
-      <div class="section-label" style="margin-top:4px;">บล็อกเนื้อหา</div>
-      <div id="pz-blocks">
-        <div id="pz-blocks-empty" style="border:2px dashed var(--border);border-radius:14px;padding:24px;text-align:center;margin-bottom:12px;">
-          <div style="font-size:24px;margin-bottom:6px;">📝</div>
-          <div style="font-size:13px;color:var(--text-soft);">ยังไม่มีเนื้อหา — กดปุ่มด้านล่างเพื่อเพิ่มบล็อกแรก</div>
+      <div class="input-group">
+        <div class="input-label">รูปหน้าปก (URL)</div>
+        <div style="display:flex;gap:8px;">
+          <input class="input-field" id="pz-hero" placeholder="https://res.cloudinary.com/... หรือ Unsplash URL" style="flex:1;" oninput="pzUpdateHeroPreview()"/>
+          <button class="btn-sm ghost" onclick="triggerUpload('pz-hero-file','pz-hero')" style="flex-shrink:0;white-space:nowrap;">📷 อัปโหลด</button>
+        </div>
+        <input type="file" id="pz-hero-file" accept="image/*" style="display:none;" onchange="uploadToCloudinary(this,'pz-hero')"/>
+        <div id="pz-hero-preview" style="display:none;margin-top:8px;border-radius:10px;overflow:hidden;max-height:120px;">
+          <img id="pz-hero-img" style="width:100%;height:120px;object-fit:cover;" src="" alt="preview"/>
         </div>
       </div>
 
-      <!-- add block buttons -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
-        <button class="pz-add-btn" onclick="pzAddBlock('text')"><span style="font-size:18px;">📝</span><span>ข้อความ</span></button>
-        <button class="pz-add-btn" onclick="pzAddBlock('heading')"><span style="font-size:18px;">🔤</span><span>หัวข้อ</span></button>
-        <button class="pz-add-btn" onclick="pzAddBlock('callout')"><span style="font-size:18px;">💡</span><span>Callout</span></button>
-        <button class="pz-add-btn" onclick="pzAddBlock('pullquote')"><span style="font-size:18px;">❝</span><span>Pullquote</span></button>
-        <button class="pz-add-btn" onclick="pzAddBlock('table')"><span style="font-size:18px;">📊</span><span>ตาราง</span></button>
-        <button class="pz-add-btn" onclick="pzAddBlock('image')"><span style="font-size:18px;">🖼️</span><span>รูปภาพ</span></button>
-        <button class="pz-add-btn" onclick="pzAddBlock('bleedimage')"><span style="font-size:18px;">🌅</span><span>Full-bleed</span></button>
-        <button class="pz-add-btn" onclick="pzAddBlock('video')"><span style="font-size:18px;">▶️</span><span>วิดีโอ</span></button>
-        <button class="pz-add-btn" onclick="pzAddBlock('quiz')"><span style="font-size:18px;">💭</span><span>คำถาม</span></button>
-        <button class="pz-add-btn" onclick="pzAddBlock('reflect')"><span style="font-size:18px;">🪞</span><span>สะท้อนตัวเอง</span></button>
+      <div>
+        <div class="input-label" style="margin-bottom:8px;">บล็อกเนื้อหา</div>
+        <div id="pz-sections"></div>
+      <div id="pz-blocks" style="display:flex;flex-direction:column;gap:8px;min-height:60px;">
+          <div id="pz-blocks-empty" style="border:2px dashed var(--border);border-radius:14px;padding:24px;text-align:center;">
+            <div style="font-size:24px;margin-bottom:6px;">📝</div>
+            <div style="font-size:13px;color:var(--text-soft);">ยังไม่มีเนื้อหา<br>กดปุ่มด้านล่างเพื่อเพิ่มบล็อกแรก</div>
+          </div>
+        </div>
       </div>
 
-      <!-- completion text -->
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;">
-        <div class="section-label" style="margin-bottom:10px;">หน้าจบบทความ</div>
-        <div class="input-group"><div class="input-label">ข้อความหลัก</div>
+      <div>
+        <div class="input-label" style="margin-bottom:8px;">เพิ่มบล็อก</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <button class="pz-add-btn" onclick="pzAddBlock('text')"><span style="font-size:20px;">📝</span><span>ข้อความ</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('heading')"><span style="font-size:20px;">🔤</span><span>หัวข้อ</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('callout')"><span style="font-size:20px;">💡</span><span>Callout</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('pullquote')"><span style="font-size:20px;">❝</span><span>Pullquote</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('table')"><span style="font-size:20px;">📊</span><span>ตาราง</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('image')"><span style="font-size:20px;">🖼️</span><span>รูปภาพ</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('bleedimage')"><span style="font-size:20px;">🌅</span><span>Full-bleed</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('video')"><span style="font-size:20px;">▶️</span><span>วิดีโอ</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('quiz')"><span style="font-size:20px;">💭</span><span>คำถาม</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('reflect')"><span style="font-size:20px;">🪞</span><span>สะท้อนตัวเอง</span></button>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;">
+        <div class="input-label">หน้าจบบทความ</div>
+        <div class="input-group">
+          <div class="input-label" style="font-weight:400;">ข้อความหลัก</div>
           <input class="input-field" id="pz-done-title" placeholder="เช่น ได้ชิ้นส่วนใหม่แล้ว 🧩"/>
         </div>
-        <div class="input-group" style="margin-bottom:0;"><div class="input-label">ประโยคสรุป</div>
+        <div class="input-group" style="margin-bottom:0;">
+          <div class="input-label" style="font-weight:400;">ประโยคสรุป</div>
           <input class="input-field" id="pz-done-sub" placeholder="เช่น การเข้าใจตัวเองคือก้าวแรกที่สำคัญ"/>
         </div>
       </div>
@@ -600,26 +602,55 @@
     </div>
 
     <!-- STEP 3: REVIEW & PUBLISH -->
-    <div id="pz-step3" style="display:none;">
-      <div class="section-label">ตรวจสอบก่อนเผยแพร่</div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;display:flex;flex-direction:column;gap:8px;">
-        <div style="display:flex;gap:8px;font-size:13px;"><span style="color:var(--text-soft);min-width:70px;">ชื่อ</span><span id="pzrev-title" style="font-weight:500;color:var(--text);">—</span></div>
-        <div style="display:flex;gap:8px;font-size:13px;"><span style="color:var(--text-soft);min-width:70px;">Tag</span><span id="pzrev-tag" style="color:var(--text-mid);">—</span></div>
-        <div style="display:flex;gap:8px;font-size:13px;"><span style="color:var(--text-soft);min-width:70px;">ระดับ</span><span id="pzrev-level" style="color:var(--text-mid);">—</span></div>
-        <div style="display:flex;gap:8px;font-size:13px;"><span style="color:var(--text-soft);min-width:70px;">บล็อก</span><span id="pzrev-blocks" style="color:var(--text-mid);">—</span></div>
+    <div id="pz-step3" style="display:none;flex-direction:column;gap:14px;">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <div class="input-label" style="margin-bottom:4px;">📋 สรุปก่อนเผยแพร่</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+          <span style="color:var(--text-soft);">ชื่อบทความ</span>
+          <span id="pzrev-title" style="font-weight:600;color:var(--text);text-align:right;max-width:60%;">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+          <span style="color:var(--text-soft);">Tag</span>
+          <span id="pzrev-tag" style="color:var(--text-mid);">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+          <span style="color:var(--text-soft);">ความลึก</span>
+          <span id="pzrev-level" style="color:var(--text-mid);">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+          <span style="color:var(--text-soft);">ระดับภาษา</span>
+          <span id="pzrev-lang" style="color:var(--text-mid);">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+          <span style="color:var(--text-soft);">เวลาอ่าน</span>
+          <span id="pzrev-time" style="color:var(--text-mid);">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;">
+          <span style="color:var(--text-soft);">จำนวนบล็อก</span>
+          <span id="pzrev-blocks" style="color:var(--text-mid);">—</span>
+        </div>
       </div>
-      <div style="background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:14px;padding:16px;margin-bottom:14px;">
-        <div style="font-size:14px;font-weight:600;color:#5C3A00;margin-bottom:6px;">🧩 พร้อมเผยแพร่?</div>
-        <div style="font-size:12px;font-weight:300;color:#7A5200;line-height:1.65;margin-bottom:12px;">เมื่อกด "เผยแพร่" บทความจะปรากฏใน Puzzle Piece ทันที สามารถกลับมาแก้ไขได้ตลอดเวลา</div>
+
+      <div style="background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:15px;font-weight:700;color:#5C3A00;">🧩 พร้อมเผยแพร่?</div>
+        <div style="font-size:13px;color:#7A5200;line-height:1.7;">เมื่อกด "เผยแพร่" บทความจะปรากฏใน Puzzle Piece ทันที สามารถกลับมาแก้ไขได้ตลอดเวลา</div>
         <button class="btn-full gold" onclick="pzPublishNew()">เผยแพร่บทความ →</button>
+        <button class="btn-full ghost" onclick="pzGoStep(2)" style="background:rgba(0,0,0,0.06);border:none;">← กลับแก้ไข</button>
       </div>
-      <button class="btn-full ghost" onclick="pzGoStep(2)">← กลับแก้ไข</button>
+
     </div>
 
     <!-- OTHER WORLDS FORM (non-puzzle) -->
-    <div class="divider"></div>
+    <div id="pz-world-section"><div class="divider"></div>
     <div class="section-label">เพิ่มเนื้อหาโลกอื่นๆ</div>
-    <div id="world-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;"></div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:14px;">
+      🚧 แต่ละโลกมีรูปแบบการเพิ่มเนื้อหาที่แตกต่างกัน<br>
+      ขณะนี้เปิดให้ใช้งานเฉพาะ <strong>Puzzle Piece</strong> ก่อน<br>
+      โลกอื่นๆ จะเปิดเพิ่มเติมในอนาคต
+    </div>
+    <div id="world-grid" style="display:none;"></div>
+    </div><!-- end pz-world-section -->
     <div id="form-people" style="display:none;flex-direction:column;gap:12px;">
       <div class="section-label">เพิ่มครูใหม่ — People</div>
       <div style="background:var(--surface2);border-radius:14px;padding:14px;border:1px solid var(--border);">
@@ -717,7 +748,8 @@
         <div class="input-group"><div class="input-label">YouTube URL *</div>
           <input class="input-field" id="pdash-youtube-in" placeholder="https://youtube.com/watch?v=..." oninput="updatePeopleDashPreview()"/></div>
         <div id="pdash-yt-wrap" style="display:none;border-radius:10px;overflow:hidden;aspect-ratio:16/9;background:#000;">
-          <iframe id="pdash-yt-frame" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+          <input class="input-field" id="pdash-yt-url" placeholder="https://youtube.com/watch?v=..." style="margin-bottom:6px;" oninput="updatePeopleDashPreview()"/>
+        <iframe id="pdash-yt-frame" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
         </div>
         <div class="input-group"><div class="input-label">Thumbnail URL (ว่างได้ — ดึงจาก YouTube อัตโนมัติ)</div>
           <input class="input-field" id="pdash-thumb-in" placeholder="https://..." oninput="updatePeopleDashPreview()"/></div>
@@ -963,21 +995,196 @@
   </div>
 </div>
 
+
+  <!-- ═══════════ THERAPIST ═══════════ -->
+  <div class="tab-content" id="tab-therapist">
+    <div class="section-label" style="margin-bottom:14px;">นักจิตวิทยาโรงเรียน</div>
+    <div id="therapist-list-wrap" style="display:flex;flex-direction:column;gap:12px;"></div>
+    <div style="margin-top:16px;">
+      <div class="section-label" style="margin-bottom:10px;">เพิ่มนักจิตวิทยา</div>
+      <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="input-group"><div class="input-label">ชื่อ *</div><input class="input-field" id="th-name" placeholder="ชื่อ นามสกุล"/></div>
+        <div class="input-group"><div class="input-label">ตำแหน่ง</div><input class="input-field" id="th-nickname" placeholder="นักจิตวิทยาโรงเรียน"/></div>
+        <div class="input-group"><div class="input-label">LINE ID</div><input class="input-field" id="th-line" placeholder="@therapist_xxx"/></div>
+        <div class="input-group"><div class="input-label">เบอร์โทร</div><input class="input-field" id="th-phone" placeholder="02-xxx-xxxx"/></div>
+        <div class="input-group"><div class="input-label">ความเชี่ยวชาญ (คั่นด้วยจุลภาค)</div><input class="input-field" id="th-spec" placeholder="Anxiety, Depression, TCAS Stress"/></div>
+        <div class="input-group"><div class="input-label">รูปโปรไฟล์ URL</div><input class="input-field" id="th-photo" placeholder="https://..."/></div>
+        <button class="btn-full gold" onclick="addStaff('therapist')">เพิ่มนักจิตวิทยา →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ GUIDANCE ═══════════ -->
+  <div class="tab-content" id="tab-guidance">
+    <div class="section-label" style="margin-bottom:14px;">ครูแนะแนว</div>
+    <div id="guidance-list-wrap" style="display:flex;flex-direction:column;gap:12px;"></div>
+    <div style="margin-top:16px;">
+      <div class="section-label" style="margin-bottom:10px;">เพิ่มครูแนะแนว</div>
+      <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="input-group"><div class="input-label">ชื่อ *</div><input class="input-field" id="gu-name" placeholder="ชื่อ นามสกุล"/></div>
+        <div class="input-group"><div class="input-label">ตำแหน่ง</div><input class="input-field" id="gu-nickname" placeholder="ครูแนะแนว ม.5"/></div>
+        <div class="input-group"><div class="input-label">LINE ID</div><input class="input-field" id="gu-line" placeholder="@guidance_xxx"/></div>
+        <div class="input-group"><div class="input-label">เบอร์โทร</div><input class="input-field" id="gu-phone" placeholder="02-xxx-xxxx"/></div>
+        <div class="input-group"><div class="input-label">รูปโปรไฟล์ URL</div><input class="input-field" id="gu-photo" placeholder="https://..."/></div>
+        <button class="btn-full gold" onclick="addStaff('guidance')">เพิ่มครูแนะแนว →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TEAM ═══════════ -->
+  <div class="tab-content" id="tab-team">
+    <div class="section-label" style="margin-bottom:14px;">จัดการทีม</div>
+    <div id="team-list-wrap" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <div style="margin-top:16px;">
+      <div class="section-label" style="margin-bottom:10px;">เพิ่มสมาชิกใหม่</div>
+      <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="input-group"><div class="input-label">LINE User ID</div><input class="input-field" id="team-userid" placeholder="Uxxxxxxxxxxxxxxxx"/></div>
+        <div class="input-group"><div class="input-label">ชื่อ</div><input class="input-field" id="team-name" placeholder="ชื่อสมาชิก"/></div>
+        <div class="input-group"><div class="input-label">บทบาท</div>
+          <select class="input-field" id="team-role">
+            <option value="member">Member</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="input-group"><div class="input-label">ความเชี่ยวชาญ / บทบาทพิเศษ</div><input class="input-field" id="team-spec" placeholder="เช่น ดูแลนักเรียน ม.6"/></div>
+        <div class="input-group"><div class="input-label">หมายเหตุ</div><input class="input-field" id="team-notes" placeholder="ข้อมูลเพิ่มเติม (ไม่บังคับ)"/></div>
+        <button class="btn-full gold" id="team-add-btn" onclick="addTeamMemberDash()">เพิ่มสมาชิก →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ ROOMS ═══════════ -->
+  <div class="tab-content" id="tab-rooms">
+    <div class="section-label" style="margin-bottom:14px;">จัดการห้อง</div>
+    <div id="rooms-list-wrap" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <div style="margin-top:16px;">
+      <div class="section-label" style="margin-bottom:10px;">เพิ่มห้องใหม่</div>
+      <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="input-group"><div class="input-label">ชื่อห้อง *</div><input class="input-field" id="room-name" placeholder="เช่น ห้อง 101, ห้องเรียนรู้ A"/></div>
+        <div class="input-group"><div class="input-label">อาคาร / ชั้น</div><input class="input-field" id="room-location" placeholder="เช่น อาคาร 3 ชั้น 2"/></div>
+        <div class="input-group"><div class="input-label">ความจุ (คน)</div><input class="input-field" id="room-capacity" type="number" placeholder="2" value="2"/></div>
+        <button class="btn-full gold" onclick="addRoomDash()">เพิ่มห้อง →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ REQUESTS ═══════════ -->
+  <div class="tab-content" id="tab-requests">
+    <div class="section-label" style="margin-bottom:14px;">คำขอพิเศษ</div>
+    <div style="font-size:13px;color:var(--text-mid);margin-bottom:12px;line-height:1.7;">นักเรียนที่ไม่พบ slot ที่ตรงกับตารางเรียน สามารถส่งคำขอช่วงเวลาพิเศษมาได้</div>
+    <div id="special-requests-list"><div class="empty">กำลังโหลด...</div></div>
+  </div>
+
+  <!-- ═══════════ SESSION NOTE ═══════════ -->
+  <div class="tab-content" id="tab-session-note">
+    <div class="section-label" style="margin-bottom:14px;">บันทึกการพูดคุย</div>
+    <div class="input-group" style="margin-bottom:12px;">
+      <div class="input-label">Case ID</div>
+      <div style="display:flex;gap:8px;">
+        <input class="input-field" id="sn-case-id" placeholder="CASE_XXXX" style="flex:1;"/>
+        <button class="btn-sm gold" onclick="snLookupCase()">ค้นหา</button>
+      </div>
+    </div>
+    <div id="sn-case-info" style="display:none;"></div>
+    <div id="sn-form" style="display:none;flex-direction:column;gap:12px;margin-top:8px;">
+      <div class="input-group">
+        <div class="input-label">มาตามนัดไหม?</div>
+        <div style="display:flex;gap:10px;margin-top:4px;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+            <input type="radio" name="sn-attend" value="yes" onclick="snToggleAttendance(this)"/> มา
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
+            <input type="radio" name="sn-attend" value="no" onclick="snToggleAttendance(this)"/> ไม่มา
+          </label>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-label">โทนการพูดคุย</div>
+        <div id="sn-tone-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">
+          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😢 ร้องไห้</button>
+          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😤 โกรธ</button>
+          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😔 เงียบ</button>
+          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😊 เปิดใจ</button>
+          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😰 กังวล</button>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-label">ประเด็นหลัก</div>
+        <div id="sn-topic-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">
+          <button class="slot-chip" onclick="snToggleChip(this,'topic')">ความเครียด</button>
+          <button class="slot-chip" onclick="snToggleChip(this,'topic')">ความสัมพันธ์</button>
+          <button class="slot-chip" onclick="snToggleChip(this,'topic')">ตัวตน</button>
+          <button class="slot-chip" onclick="snToggleChip(this,'topic')">การเรียน</button>
+          <button class="slot-chip" onclick="snToggleChip(this,'topic')">ครอบครัว</button>
+          <button class="slot-chip" onclick="snToggleChip(this,'topic')">อนาคต</button>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-label">บันทึกส่วนตัว (ไม่แสดงต่อนักเรียน)</div>
+        <textarea class="input-field" id="sn-note" placeholder="สิ่งที่สังเกตเห็น ความรู้สึกของน้อง หรือข้อควรระวัง..." style="min-height:100px;"></textarea>
+      </div>
+      <button class="btn-full gold" onclick="submitSessionNote()">บันทึก →</button>
+    </div>
+  </div>
+
   <!-- ═══════════ จดหมายเหตุ ═══════════ -->
   <div class="tab-content" id="tab-archive">
-    <div class="section-label">จดหมายเหตุ — จัดการข้อมูล</div>
-    <div id="arch-years-container"></div>
-    <button class="arch-add-btn" style="margin-top:4px;" onclick="archAddYear()">
-      <span>＋</span><span>เพิ่มปี (ปีการศึกษา)</span>
-    </button>
+    <div id="arch-admin-view" style="display:none;flex-direction:column;gap:14px;">
+      <div class="section-label">จดหมายเหตุ — จัดการข้อมูล</div>
+      <div id="arch-years-container"></div>
+      <button class="arch-add-btn" style="margin-top:4px;" onclick="archAddYear()">
+        <span>＋</span><span>เพิ่มปี (ปีการศึกษา)</span>
+      </button>
+    </div>
+    <div id="arch-member-view" style="display:none;flex-direction:column;gap:18px;">
+      <div class="section-label">จดหมายเหตุ 📜</div>
+      <div style="background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:16px;padding:18px 18px 14px;">
+        <div style="font-size:16px;font-weight:700;color:#5C3A00;margin-bottom:6px;">หน้าที่ของรุ่นนี้</div>
+        <div style="font-size:13px;color:#7A5200;line-height:1.85;">
+          จดหมายเหตุคือบันทึกสิ่งที่รุ่นเราทำ — เพื่อส่งต่อให้รุ่นถัดไปได้รู้ว่าเราผ่านอะไรมา เรียนรู้อะไร และทิ้งอะไรไว้ให้
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:13px;font-weight:700;color:var(--text-mid);letter-spacing:0.5px;">จดหมายเหตุปีนี้ควรมีอะไรบ้าง</div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:20px;flex-shrink:0;">✉️</span>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">จดหมายจากประธานชมรม</div>
+            <div style="font-size:12px;color:var(--text-mid);line-height:1.7;">ถ้าคุณเป็นประธาน — เขียนจดหมายถึงรุ่นถัดไป บอกสิ่งที่อยากให้รู้ สิ่งที่ยาก และสิ่งที่ภูมิใจที่สุด</div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:20px;flex-shrink:0;">📋</span>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">สรุปรายเดือน</div>
+            <div style="font-size:12px;color:var(--text-mid);line-height:1.7;">แต่ละเดือนทำอะไรบ้าง — กี่ session, กิจกรรมอะไร, มีอะไรพิเศษเกิดขึ้น ไม่ต้องยาว แค่ให้รุ่นถัดไปอ่านแล้วนึกภาพออก</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);">วิธีส่ง</div>
+        <div style="font-size:13px;color:var(--text-mid);line-height:1.85;">
+          ทำเป็น PDF ก็ได้ — ไม่ว่าจะเขียนใน GoodNotes, Canva, Google Docs, Word หรือทำเป็น Infographic<br><br>
+          <strong>แค่ให้ได้เป็นไฟล์ PDF ตอนจบ</strong> แล้วส่งมาในแชท LINE ของทีม พร้อม tag admin ให้รู้ด้วยนะ 🙏
+        </div>
+        <div style="background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text-soft);line-height:1.7;">
+          💡 ไม่มีรูปแบบตายตัว ขอแค่ให้คนที่ไม่เคยอยู่รุ่นนี้อ่านแล้วเข้าใจว่าเราเป็นใครและทำอะไรไปบ้าง
+        </div>
+      </div>
+
+    </div>
   </div>
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
 
 const API_URL="https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
-const CLOUDINARY_CLOUD  = "YOUR_CLOUD_NAME";    // ← ใส่ Cloud Name จาก Cloudinary
-const CLOUDINARY_PRESET = "YOUR_UPLOAD_PRESET"; // ← ใส่ Upload Preset จาก Cloudinary
+const CLOUDINARY_CLOUD  = "dlixucdqx";
+const CLOUDINARY_PRESET = "jaidee-tu";
 
 // ── API HELPER — uses GET to avoid CORS issues ─────────────
 // Apps Script GET requests don't have CORS problems
@@ -997,40 +1204,6 @@ async function apiCall(data) {
 }
 const LIFF_ID="2009806939-AONYlCkT";
 
-const MOCK={
-  role:"admin",name:"Admin Test",
-  cases:[
-    {caseId:"CASE_001",level:"red",status:"booked",slot:"พุธ 16:00–17:00",q1:"ความรู้สึกของตัวเอง",q2:"มากเลย ยากมากตอนนี้",q3:"นานมากแล้ว นานกว่าที่อยากยอมรับ",q4:"ยังเลย นี่เป็นครั้งแรก",q5:"แค่อยากให้มีคนรับฟัง",owner:"PR_001"},
-    {caseId:"CASE_002",level:"yellow",status:"booked",slot:"อังคาร 15:30–16:30",q1:"ความเครียด / แรงกดดัน",q2:"ค่อนข้างมาก เริ่มยากขึ้นแล้ว",q3:"สักพักแล้ว ประมาณไม่กี่อาทิตย์",q4:"เคยลอง แต่ไม่ค่อยได้ผล",q5:"อยากได้คำแนะนำว่าจะทำยังไงต่อ",owner:"PR_002"},
-    {caseId:"CASE_003",level:"green",status:"completed",slot:"ศุกร์ 14:00–15:00",q1:"เรื่องเรียน",q2:"นิดหน่อย แต่ก็คิดอยู่",q3:"เพิ่งเกิดขึ้น",q4:"เคย แต่ยังต้องการความช่วยเหลืออยู่",q5:"ยังไม่แน่ใจ แค่รู้สึกว่าต้องเริ่มสักที",owner:"PR_001"},
-  ],
-  specialRequests:[
-    {caseId:"CASE_SR1",userId:"U_SR1",requestedSlots:["พุธ 14:00–15:00","พุธ 14:15–15:15"],q1:"ความสัมพันธ์",level:"yellow"},
-    {caseId:"CASE_SR2",userId:"U_SR2",requestedSlots:["ศุกร์ 12:30–13:30"],q1:"ความรู้สึกของตัวเอง",level:"red"},
-  ],
-  prList:[
-    {userId:"PR_001",name:"ปลาย",hasSlots:true},
-    {userId:"PR_002",name:"มิ้นท์",hasSlots:true},
-    {userId:"PR_003",name:"เฟิร์น",hasSlots:false},
-    {userId:"PR_004",name:"บอส",hasSlots:false},
-  ],
-  waiting:[
-    {userId:"U_W1",topic:"ความเครียด",since:"3 วันที่แล้ว"},
-    {userId:"U_W2",topic:"ความรู้สึกของตัวเอง",since:"1 วันที่แล้ว"},
-  ],
-  programs:[
-    {id:"PROG_001",name:"Mindfulness Workshop",short_desc:"เวิร์คชอปฝึกสติ 2 ชั่วโมง",category:"wellness",start_date:"2025-05-20",reg_deadline:"2025-05-18",form_url:"#",status:"active"},
-    {id:"PROG_002",name:"Career Night",short_desc:"พูดคุยกับรุ่นพี่เรื่องอนาคต",category:"career",start_date:"2025-05-28",reg_deadline:"2025-05-25",form_url:"#",status:"active"},
-    {id:"PROG_003",name:"Self-Compassion Talk",short_desc:"เรียนรู้ที่จะเมตตาตัวเอง",category:"mental",start_date:"2025-06-05",reg_deadline:"2025-06-03",form_url:"#",status:"active"},
-  ],
-  content:[
-    {id:"C001",world:"puzzle",title:"ทำไมเราถึงรู้สึกแบบนี้",type:"pdf",url:"",active:"TRUE"},
-    {id:"C002",world:"puzzle",title:"นอนไม่หลับ ต้องทำยังไง",type:"pdf",url:"",active:"TRUE"},
-    {id:"C003",world:"puzzle",title:"ความเครียดและร่างกาย",type:"pdf",url:"",active:"TRUE"},
-    {id:"C004",world:"people",title:"ครูวิชัย — ฟิสิกส์",type:"video",url:"",active:"TRUE"},
-  ],
-  pause:null,
-};
 
 // ── After-school slots only — must match peer.html ALL_SLOT_TIMES exactly ──
 const SLOT_TIMES={
@@ -1042,7 +1215,7 @@ const SLOT_TIMES={
 };
 const DAY_LABELS={mon:"จันทร์",tue:"อังคาร",wed:"พุธ",thu:"พฤหัสบดี",fri:"ศุกร์"};
 
-let userRole=null,userId=null,userName=null,selectedSlots=[],isMockMode=false;
+let userRole=null,userId=null,userName=null,selectedSlots=[];
 let userCapacity=3,userActiveCount=0,userSpecialization="";
 let broadcastType="text";
 
@@ -1063,7 +1236,7 @@ function filterCases(){
 }
 
 // Show Cloudinary warning if not configured
-if(CLOUDINARY_CLOUD === "YOUR_CLOUD_NAME"){
+if(false){ // Cloudinary configured — dlixucdqx
   document.querySelectorAll("#cloudinary-warning").forEach(el=>el.style.display="block");
 } else {
   document.querySelectorAll("#cloudinary-warning").forEach(el=>el.style.display="none");
@@ -1078,17 +1251,7 @@ window.onload=async()=>{
 };
 
 async function loadRole(){
-  // ── MOCK MODE ──────────────────────────────────────────────
-  const mockRole = new URLSearchParams(window.location.search).get("mockRole");
-  if(mockRole){
-    userRole  = mockRole === "admin" ? "admin" : "member";
-    userName  = {member:"ทีมงาน (Mock)", admin:"Admin (Mock)"}[userRole] || mockRole;
-    userCapacity   = 3;
-    userActiveCount = 0;
-    isMockMode = true;
-    bootApp();
-    return;
-  }
+
 
   // ── PRODUCTION AUTH ────────────────────────────────────────
   // 1. Check sessionStorage cache (valid for 60 minutes)
@@ -1104,7 +1267,6 @@ async function loadRole(){
         userCapacity    = parsed.capacity    || 3;
         userActiveCount = parsed.activeCount || 0;
         userSpecialization = parsed.specialization || "";
-        isMockMode = false;
         bootApp();
         return;
       }
@@ -1143,7 +1305,6 @@ async function loadRole(){
     return;
   }
 
-  isMockMode = false;
   bootApp();
 }
 
@@ -1154,13 +1315,7 @@ function clearAuthCache(){
 function showModeBanner(){
   const banner = document.getElementById("mode-banner");
   if(!banner) return;
-  if(isMockMode){
-    banner.style.display = "block";
-    banner.style.background = "#FFF5E0";
-    banner.style.color = "#7A5C00";
-    banner.style.cursor = "default";
-    banner.innerHTML = "🟡 MOCK MODE — ข้อมูลตัวอย่างสำหรับ pitching เท่านั้น";
-  } else {
+else {
     banner.style.display = "block";
     banner.style.background = "#F0FFF4";
     banner.style.color = "#1A6B3A";
@@ -1180,7 +1335,7 @@ function bootApp(){
   document.getElementById("user-name").innerText=userName;
   // Show load indicator for members
   if(userRole==="member"){
-    const loadEl=document.getElementById("pr-load-indicator");
+    const loadEl=null; // optional spinner
     if(loadEl) loadEl.textContent=`${userActiveCount}/${userCapacity} เคส`;
   }
   const badge=document.getElementById("role-badge");
@@ -1190,7 +1345,6 @@ function bootApp(){
     document.getElementById("role-switcher").style.display="inline-block";
     document.getElementById("dev-btn").classList.add("visible");
   }
-  showModeBanner();
   buildTabs();
   loadData();
 }
@@ -1208,7 +1362,6 @@ function buildTabs(viewRole){
       {id:"tab-therapist", label:"Therapist",   icon:"🧠", section:"Content"},
       {id:"tab-team",      label:"จัดการทีม",   icon:"👤", section:"Team"},
       {id:"tab-rooms",     label:"ห้อง",          icon:"🚪", section:"Team"},
-      {id:"tab-rooms",     label:"ห้อง",         icon:"🚪", section:"Team"},
       {id:"tab-guidance",  label:"Guidance",    icon:"👩‍🏫", section:"Content"},
       {id:"tab-requests", label:"คำขอครู",     icon:"📩", section:"Content"},
       {id:"tab-tools",    label:"เครื่องมือ",  icon:"🛠", section:"Content"},
@@ -1217,15 +1370,14 @@ function buildTabs(viewRole){
       {id:"tab-archive",  label:"จดหมายเหตุ", icon:"📜", section:"System"},
     ],
     member:[
-      {id:"tab-my-cases",     label:"เคสของฉัน",   icon:"🤍", section:"Peer Support"},
-      {id:"tab-session-note", label:"Session Note",  icon:"📝", section:"Peer Support"},
-      {id:"tab-schedule",     label:"ตารางของฉัน",  icon:"📅", section:"Peer Support"},
-      {id:"tab-content",      label:"เพิ่มเนื้อหา", icon:"🧩", section:"Content"},
-      {id:"tab-people",       label:"People",        icon:"👥", section:"Content"},
-      {id:"tab-requests",     label:"คำขอครู",       icon:"📩", section:"Content"},
-      {id:"tab-therapist",    label:"Therapist",     icon:"🧠", section:"Content"},
-      {id:"tab-guidance",     label:"Guidance",      icon:"👩‍🏫", section:"Content"},
-      {id:"tab-archive",      label:"จดหมายเหตุ",   icon:"📜", section:null},
+      {id:"tab-my-cases",     label:"เคสของฉัน",    icon:"🤍", section:"Peer Support"},
+      {id:"tab-session-note", label:"Session Note",   icon:"📝", section:"Peer Support"},
+      {id:"tab-schedule",     label:"ตารางของฉัน",   icon:"📅", section:"Peer Support"},
+      {id:"tab-content",      label:"เพิ่มเนื้อหา",  icon:"🧩", section:"Content"},
+      {id:"tab-people",       label:"People",         icon:"👥", section:"Content"},
+      {id:"tab-therapist",    label:"Therapist",      icon:"🧠", section:"Content"},
+      {id:"tab-guidance",     label:"Guidance",       icon:"👩‍🏫", section:"Content"},
+      {id:"tab-archive",      label:"จดหมายเหตุ",    icon:"📜", section:"System"},
     ],
   };
 
@@ -1294,160 +1446,13 @@ function switchTab(tabId,item){
 }
 
 async function loadData(){
-  if(isMockMode){
-    if(userRole==="admin"){
-      loadAdminDataMock();
-      buildWorldGrid();
-    } else {
-      // member mock — load cases + schedule + world grid
-      loadMemberDataMock();
-      buildScheduleTabMock();
-      buildWorldGrid();
-    }
-    return;
-  }
   if(userRole==="admin"){loadAdminData();loadFeedback();loadPendingFounders();buildWorldGrid();}
   else { loadPRData();buildScheduleTab();buildWorldGrid(); }
 }
 
-function loadAdminDataMock(){
-  renderCasesInto("overview-urgent",MOCK.cases.filter(c=>c.level==="red"&&c.status!=="completed"),true);
-  renderSpecialRequests(MOCK.specialRequests||[]);
-  renderCasesInto("cases-list",MOCK.cases,true);
-  renderPRList(MOCK.prList);
-  renderWaitingList(MOCK.waiting||[]);
-  if(document.getElementById("founders-pending"))
-    document.getElementById("founders-pending").innerHTML=`<div class="empty">ไม่มี Founder รอ Approve 💛</div>`;
-  // Mock feedback
-  document.getElementById("fb-great").innerText="12";
-  document.getElementById("fb-ok").innerText="5";
-  document.getElementById("fb-unsure").innerText="3";
-  document.getElementById("fb-total").innerText="20";
-  const list=document.getElementById("feedback-list");
-  if(list) list.innerHTML=`
-    <div class="kpi-card"><div style="font-size:22px;">💛</div><div style="font-size:13px;font-weight:600;">รู้สึกดีขึ้น</div><div style="font-size:11px;color:var(--text-soft);">พุธ 16:00–17:00 · วันนี้</div></div>
-    <div class="kpi-card"><div style="font-size:22px;">🤍</div><div style="font-size:13px;font-weight:600;">ต้องการความช่วยเหลือเพิ่ม</div><div style="font-size:11px;color:var(--text-soft);">อังคาร 15:30–16:30 · เมื่อวาน</div></div>
-    <div class="kpi-card"><div style="font-size:22px;">🌱</div><div style="font-size:13px;font-weight:600;">ต้องการเวลาคิด</div><div style="font-size:11px;color:var(--text-soft);">ศุกร์ 14:00–15:00 · 3 วันที่แล้ว</div></div>
-  `;
-}
 
-function loadMemberDataMock(){
-  const myCases = MOCK.cases.filter(c=>c.owner==="PR_001");
-  renderCasesInto("my-cases-list", myCases, false);
-  if(document.getElementById("all-cases-section"))
-    document.getElementById("all-cases-section").style.display="none";
-  // Load mock content views for Puzzle Builder tab
-  const pzList = document.getElementById("puzzle-list");
-  if(pzList) pzList.innerHTML = `
-    <div class="case-card">
-      <div class="case-meta"><span class="badge badge-green">article</span> <span style="font-size:11px;color:var(--text-soft);">แรงจูงใจ · 🟡 กลาง · 10 นาที</span></div>
-      <div class="case-title">ทำไมบางวันเราทำได้ไม่หยุด</div>
-      <div class="case-sub" style="font-size:11px;color:var(--text-soft);">👁 24 views · 3 วันที่แล้ว</div>
-    </div>
-    <div class="case-card">
-      <div class="case-meta"><span class="badge badge-blue">article</span> <span style="font-size:11px;color:var(--text-soft);">ความสัมพันธ์ · 🟢 เบา · 7 นาที</span></div>
-      <div class="case-title">เพื่อนที่ดีฟังแบบไหน</div>
-      <div class="case-sub" style="font-size:11px;color:var(--text-soft);">👁 18 views · 5 วันที่แล้ว</div>
-    </div>
-  `;
-}
-const loadPRDataMock = loadMemberDataMock; // backward compat
 
-// ── MOCK: Schedule Tab for PR ──────────────────────────────
-// Called when ?mockRole=pr — simulates registered slots + 1 locked booking
-function buildScheduleTabMock(){
-  const weekLabel = document.getElementById("schedule-week-label");
-  if(weekLabel) weekLabel.innerText = "📅 " + getWeekRange() + " (MOCK)";
 
-  const container = document.getElementById("schedule-days");
-  if(!container) return;
-
-  // Mock status summary
-  const summaryCard = document.createElement("div");
-  summaryCard.style.cssText = "background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:16px;";
-  summaryCard.innerHTML = `
-    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-soft);margin-bottom:10px;">ระบบมองเห็นคุณสัปดาห์นี้ว่า...</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
-      <div style="background:var(--surface);border-radius:10px;padding:10px 6px;">
-        <div style="font-size:20px;font-weight:700;color:var(--gold);font-family:'IBM Plex Mono',monospace;">4</div>
-        <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">slot ที่ลงไว้</div>
-      </div>
-      <div style="background:var(--surface);border-radius:10px;padding:10px 6px;">
-        <div style="font-size:20px;font-weight:700;color:var(--red);font-family:'IBM Plex Mono',monospace;">2</div>
-        <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">มีนัดแล้ว</div>
-      </div>
-      <div style="background:var(--surface);border-radius:10px;padding:10px 6px;">
-        <div style="font-size:20px;font-weight:700;color:var(--green);font-family:'IBM Plex Mono',monospace;">2</div>
-        <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">ว่างรับใหม่</div>
-      </div>
-    </div>`;
-  container.innerHTML = "";
-  container.appendChild(summaryCard);
-
-  // Mock: PR has registered these slots, one is locked (booked by student)
-  const MOCK_MY_SLOTS = ["จันทร์ 16:00–17:00","พุธ 15:30–16:30","ศุกร์ 14:00–15:00","ศุกร์ 15:30–16:30"];
-  const MOCK_BOOKED   = {
-    "พุธ 15:30–16:30": { caseId:"CASE_001", studentUserId:"U_MOCK_01" }
-  };
-
-  // Sync selectedSlots with registered (non-locked) slots
-  selectedSlots = MOCK_MY_SLOTS.filter(s => !MOCK_BOOKED[s]);
-
-  container.innerHTML = "";
-  Object.entries(SLOT_TIMES).forEach(([key, times]) => {
-    const g = document.createElement("div"); g.className = "schedule-day";
-    const l = document.createElement("div"); l.className = "schedule-day-name";
-    l.innerText = DAY_LABELS[key]; g.appendChild(l);
-    const r = document.createElement("div"); r.className = "schedule-slots";
-
-    times.forEach(time => {
-      const full     = DAY_LABELS[key] + " " + time;
-      const isBooked   = !!MOCK_BOOKED[full];
-      const isSelected = selectedSlots.includes(full);
-
-      const chip = document.createElement("button");
-      chip.className = "slot-chip" + (isBooked ? " locked" : isSelected ? " chosen" : "");
-      chip.innerHTML  = isBooked ? "🔒 " + time : time;
-
-      if(isBooked){
-        chip.style.cssText = "background:var(--red-soft);border-color:var(--red);color:var(--red);cursor:pointer;";
-        chip.onclick = () => toast("⚠️ Mock — slot นี้มีน้องจองอยู่ (ไม่บันทึกจริง)");
-      } else {
-        chip.onclick = () => toggleSlot(chip, full);
-      }
-      r.appendChild(chip);
-    });
-    g.appendChild(r); container.appendChild(g);
-  });
-
-  // Update summary + save button
-  const btn = document.getElementById("btn-save-schedule");
-  const sum = document.getElementById("schedule-summary");
-  if(selectedSlots.length === 0){
-    if(sum) sum.innerText = "ยังไม่ได้เลือกช่วงเวลา";
-    if(btn) btn.disabled = true;
-  } else {
-    if(sum) sum.innerText = "เลือกแล้ว " + selectedSlots.length + " ช่วงเวลา";
-    if(btn){ btn.disabled = false; btn.onclick = () => { toast("บันทึกตารางแล้ว 💛 (mock)"); }; }
-  }
-}
-
-function loadProgramMock(){
-  const list=document.getElementById("programs-list");
-  if(!list)return;
-  list.innerHTML="";
-  MOCK.programs.forEach(p=>{
-    const card=document.createElement("div");
-    card.className="pr-card";
-    card.style.cssText="flex-direction:column;gap:6px;align-items:flex-start;";
-    card.innerHTML=`
-      <div class="pr-name">${p.name}</div>
-      <div class="pr-sub">${p.short_desc||""}</div>
-      <div style="font-size:11px;color:var(--text-soft);">📅 ${p.start_date} · ปิดรับ ${p.reg_deadline}</div>
-    `;
-    list.appendChild(card);
-  });
-}
 
 // Admin viewing AS PR — sees ALL cases, can complete/cancel any
 async function loadAdminAsPR(){
@@ -1546,6 +1551,7 @@ async function loadFeedback(){
 
 // ── CONTENT TEAM ──────────────────────────────────────────
 function buildWorldGrid(){
+  return; // each world needs its own unique builder — grid hidden
   const worlds=[
     {icon:"🧩",name:"Puzzle Piece",id:"puzzle"},
     {icon:"🪞",name:"Reflection Space",id:"reflection"},
@@ -1580,22 +1586,17 @@ function buildWorldGrid(){
 
 function showGeneralForm(){
   document.getElementById("form-people").style.display="none";
-  document.getElementById("form-puzzle").style.display="none";
-  document.getElementById("form-general").style.display="block";
+  const _fp=document.getElementById("tab-content"); if(_fp)_fp.style.display="none";
+  document.getElementById("form-general-other").style.display="flex";
   // reset world selector to first non-puzzle
-  const sel = document.getElementById("content-world");
+  const sel = document.getElementById("content-world-hidden");
   if (sel && sel.value === "puzzle") onWorldChange("puzzle");
 }
 
-function showPuzzleBuilder(){
-  document.getElementById("form-general").style.display="none";
-  document.getElementById("form-puzzle").style.display="flex";
-  if (!document.getElementById("pz-sections").children.length) pzAddSection("text");
-}
 
 function onWorldChange(val){
-  const note  = document.getElementById("puzzle-redirect-note");
-  const fields= document.getElementById("general-url-fields");
+  const note  = document.getElementById("puzzle-redirect-note"); // optional — may not exist
+  const fields= null; // optional
   if (val === "puzzle") {
     note.style.display  = "block";
     fields.style.display= "none";
@@ -1690,41 +1691,6 @@ function pzBuildBody(){
 
 function v(id){ const el=document.getElementById(id); return el?(el.value||"").trim():""; }
 
-async function pzPublish(){
-  const title = v("pz-title");
-  if (!title){ toast("กรุณาใส่ชื่อบทความ"); return; }
-  const sections = document.querySelectorAll("#pz-sections > div[data-type]");
-  if (!sections.length){ toast("กรุณาเพิ่มเนื้อหาอย่างน้อย 1 ส่วน"); return; }
-
-  const body = pzBuildBody();
-  const payload = {
-    action:"addContent", world:"puzzle",
-    title,
-    type:"article",
-    tag: v("pz-tag"),
-    level: v("pz-level"),
-    readTime: v("pz-readtime")||"5 นาที",
-    desc: v("pz-desc"),
-    url:"",
-    body: JSON.stringify(body),
-    addedBy: userId
-  };
-
-  try {
-    await apiCall(payload);
-    toast("เผยแพร่บทความแล้ว 🧩");
-    // Reset form
-    document.getElementById("pz-title").value="";
-    document.getElementById("pz-desc").value="";
-    document.getElementById("pz-done-title").value="";
-    document.getElementById("pz-done-sub").value="";
-    document.getElementById("pz-sections").innerHTML="";
-    pzSectionCount=0;
-    showGeneralForm();
-  } catch(e) {
-    toast("เกิดข้อผิดพลาด ลองใหม่นะ");
-  }
-}
 
 // YouTube thumbnail from URL
 function ytThumb(url){
@@ -1771,21 +1737,6 @@ async function addPerson(){
   toast("เพิ่มอาจารย์แล้ว 💛");
 }
 
-async function addContent(){
-  const world=document.getElementById("content-world").value;
-  const title=document.getElementById("content-title").value.trim();
-  const type=document.getElementById("content-type").value;
-  const url=document.getElementById("content-url").value.trim();
-  const desc=document.getElementById("content-desc").value.trim();
-  if(!title||!url){toast("กรุณากรอกชื่อและ URL");return;}
-  try{
-    await apiCall({action:"addContent",world,title,type,url,desc,addedBy:userId});
-  }catch{}
-  document.getElementById("content-title").value="";
-  document.getElementById("content-url").value="";
-  document.getElementById("content-desc").value="";
-  toast("เพิ่มเนื้อหาแล้ว 💛");
-}
 
 async function loadAdminData(){
   loadContentViews();
@@ -1946,16 +1897,16 @@ function renderPauseBanner(pause){
 }
 
 function renderWaitingList(list){
-  const el=document.getElementById("waiting-list");
-  const btn=document.getElementById("btn-notify-all");
-  if(!list||list.length===0){el.innerHTML=`<div class="empty">ไม่มีคนรออยู่ตอนนี้ 💛</div>`;btn.style.display="none";return;}
+  const el=document.getElementById("waiting-list-overview"); if(!el) return;
+  const btn=document.getElementById("btn-notify-all-ov");
+  if(!list||list.length===0){el.innerHTML=`<div class="empty">ไม่มีคนรออยู่ตอนนี้ 💛</div>`;if(btn)btn.style.display="none";return;}
   el.innerHTML="";
   list.forEach(w=>{
     const card=document.createElement("div");card.className="waiting-card";
     card.innerHTML=`<div><div class="waiting-topic">${w.topic}</div><div class="waiting-since">รออยู่ ${w.since}</div></div>`;
     el.appendChild(card);
   });
-  btn.style.display="block";btn.innerText=`แจ้งเตือนทุกคน (${list.length} คน)`;
+  if(btn){btn.style.display="block";btn.innerText=`แจ้งเตือนทุกคน (${list.length} คน)`;}
 }
 
 function renderPrograms(list){
@@ -2521,6 +2472,9 @@ function pzGoStep(n) {
     if(i===n) t.classList.add('active');
     else if(i<n) t.classList.add('done');
   });
+  // Hide the "other worlds" section while builder is in use (step 2 and 3)
+  const worldSection = document.getElementById('pz-world-section');
+  if (worldSection) worldSection.style.display = n === 1 ? '' : 'none';
   if(n===3) pzFillReview();
 }
 
@@ -2630,10 +2584,17 @@ function pzDelBlock(id) {
 
 function pzFillReview() {
   const g = (id) => document.getElementById(id)?.value?.trim() || '—';
+  const blocks = document.querySelectorAll('#pz-blocks .pz-block-wrap');
   document.getElementById('pzrev-title').textContent  = g('pz-title');
   document.getElementById('pzrev-tag').textContent    = g('pz-tag');
   document.getElementById('pzrev-level').textContent  = g('pz-level');
-  document.getElementById('pzrev-blocks').textContent = document.querySelectorAll('.pz-block').length + ' บล็อก';
+  const langEl = document.getElementById('pzrev-lang');
+  if (langEl) langEl.textContent = g('pz-lang');
+  const timeEl = document.getElementById('pzrev-time');
+  if (timeEl) timeEl.textContent = g('pz-readtime');
+  document.getElementById('pzrev-blocks').textContent = blocks.length + ' บล็อก';
+  // Show hero preview warning if missing
+  const hero = g('pz-hero');
 }
 
 function pzBuildBodyNew() {
@@ -2676,11 +2637,7 @@ async function pzPublishNew() {
   const title = (document.getElementById('pz-title')?.value||'').trim();
   if(!title){ toast('กรุณาใส่ชื่อบทความ'); pzGoStep(1); return; }
   if(!document.querySelectorAll('.pz-block').length){ toast('กรุณาเพิ่มเนื้อหาอย่างน้อย 1 บล็อก'); pzGoStep(2); return; }
-
-  // Mock mode guard — don't actually save
-  if(isMockMode){ toast('🟡 Mock mode — ไม่บันทึกจริง'); return; }
-
-  // Prevent double-submit
+// Prevent double-submit
   const btn = document.querySelector('[onclick="pzPublishNew()"]');
   if(btn){
     if(btn.disabled) return;
@@ -2712,8 +2669,7 @@ async function pzPublishNew() {
       const el=document.getElementById(id); if(el) el.value='';
     });
     document.getElementById('pz-blocks').innerHTML = `
-      <div id="pz-blocks-empty" style="border:2px dashed var(--border);border-radius:14px;padding:24px;text-align:center;margin-bottom:12px;">
-        <div style="font-size:24px;margin-bottom:6px;">📝</div>
+ 
         <div style="font-size:13px;color:var(--text-soft);">ยังไม่มีเนื้อหา — กดปุ่มด้านล่างเพื่อเพิ่มบล็อกแรก</div>
       </div>`;
     pzGoStep(1);
@@ -2746,8 +2702,7 @@ async function addContentOther() {
   const url   = document.getElementById('content-url').value.trim();
   const desc  = document.getElementById('content-desc').value.trim();
   if(!title||!url){toast('กรุณากรอกชื่อและ URL');return;}
-  if(isMockMode){ toast('🟡 Mock mode — ไม่บันทึกจริง'); return; }
-  const btn = document.querySelector('[onclick="addContentOther()"]');
+const btn = document.querySelector('[onclick="addContentOther()"]');
   if(btn){ btn.disabled=true; btn.textContent='กำลังเพิ่ม...'; }
   try {
     const result = await apiCall({action:'addContent',world,title,type,url,desc,addedBy:userId});
@@ -2874,8 +2829,7 @@ async function addStaff(type){
     photo_url:      document.getElementById(prefix+"-photo").value.trim(),
     photos:         document.getElementById(prefix+"-photos").value.trim(),
   };
-  if(isMockMode){ toast("🟡 Mock mode"); return; }
-  const btn = event.target;
+const btn = event.target;
   btn.disabled=true; btn.textContent="กำลังเพิ่ม...";
   try {
     const d = await apiCall(data);
@@ -3131,19 +3085,19 @@ async function loadTeamTab(){
 }
 
 function renderTeamList(){
-  const container = document.getElementById("team-list");
+  const container = document.getElementById("team-list-wrap");
   if(!container) return;
 
   const total     = _teamMembers.length;
   const active    = _teamMembers.filter(m=>m.active).length;
   const totalCap  = _teamMembers.filter(m=>m.active).reduce((s,m)=>s+(m.capacity-m.activeCount),0);
 
-  document.getElementById("team-stat-total")?.innerText !== undefined &&
-    (document.getElementById("team-stat-total").innerText    = total);
-  document.getElementById("team-stat-active")?.innerText !== undefined &&
-    (document.getElementById("team-stat-active").innerText   = active);
-  document.getElementById("team-stat-capacity")?.innerText !== undefined &&
-    (document.getElementById("team-stat-capacity").innerText = Math.max(0,totalCap));
+  document.document.querySelector("#tab-team .stat-total")?.innerText !== undefined &&
+    (document.document.querySelector("#tab-team .stat-total").innerText    = total);
+  document.document.querySelector("#tab-team .stat-active")?.innerText !== undefined &&
+    (document.document.querySelector("#tab-team .stat-active").innerText   = active);
+  document.document.querySelector("#tab-team .stat-capacity")?.innerText !== undefined &&
+    (document.document.querySelector("#tab-team .stat-capacity").innerText = Math.max(0,totalCap));
 
   if(!_teamMembers.length){
     container.innerHTML = '<div class="empty">ยังไม่มีสมาชิก — เพิ่มด้านล่างได้เลย</div>';
@@ -3191,24 +3145,22 @@ function renderTeamList(){
 }
 
 async function addTeamMemberDash(){
-  const userId  = document.getElementById("tm-userid").value.trim();
-  const name    = document.getElementById("tm-name").value.trim();
-  const role    = document.getElementById("tm-role").value;
-  const capacity= parseInt(document.getElementById("tm-capacity").value) || 3;
-  const spec    = document.getElementById("tm-spec").value.trim();
-  const notes   = document.getElementById("tm-notes").value.trim();
+  const userId  = document.getElementById("team-userid").value.trim();
+  const name    = document.getElementById("team-name").value.trim();
+  const role    = document.getElementById("team-role").value;
+  const capacity= parseInt(document.getElementById("team-capacity").value) || 3;
+  const spec    = document.getElementById("team-spec").value.trim();
+  const notes   = document.getElementById("team-notes").value.trim();
 
   if(!userId || !name){ toast("กรุณากรอก User ID และชื่อ"); return; }
-  if(isMockMode){ toast("🟡 Mock mode"); return; }
-
-  const btn = document.getElementById("tm-add-btn");
+const btn = document.getElementById("team-add-btn");
   btn.disabled = true; btn.textContent = "กำลังเพิ่ม...";
   try {
     const d = await apiCall({action:"addTeamMemberNew", userId, displayName:name, role, capacity, specialization:spec, notes});
     if(d.status==="OK"){
       toast("เพิ่ม "+name+" แล้ว 💛");
       ["tm-userid","tm-name","tm-spec","tm-notes"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
-      document.getElementById("tm-capacity").value = "3";
+      document.getElementById("team-capacity").value = "3";
       loadTeamTab();
     } else {
       toast("เกิดข้อผิดพลาด: "+(d.message||""));
@@ -3246,24 +3198,24 @@ let _rooms = [];
 function editRoom(id){
   const r = _rooms.find(r=>r.id===id);
   if(!r)return;
-  document.getElementById("rm-id").value    = r.id;
-  document.getElementById("rm-name").value  = r.name;
-  document.getElementById("rm-loc").value   = r.location_hint||"";
-  document.getElementById("rm-desc").value  = r.description||"";
-  document.getElementById("rm-photo").value = r.photo_url||"";
+  document.getElementById("room-id").value    = r.id;
+  document.getElementById("room-name").value  = r.name;
+  document.getElementById("room-location").value   = r.location_hint||"";
+  document.getElementById("room-location").value  = r.description||"";
+  document.getElementById("room-photo").value = r.photo_url||"";
   if(r.photo_url){
-    document.getElementById("rm-photo-img").src = r.photo_url;
-    document.getElementById("rm-photo-preview").style.display = "block";
+    document.getElementById("room-photo-img").src = r.photo_url;
+    document.getElementById("room-photo-preview").style.display = "block";
   }
-  document.getElementById("rm-id").scrollIntoView({behavior:"smooth"});
+  document.getElementById("room-id").scrollIntoView({behavior:"smooth"});
 }
 
 // Show photo preview when URL is typed
 document.addEventListener("DOMContentLoaded", () => {
-  const photoInput = document.getElementById("rm-photo");
+  const photoInput = document.getElementById("room-photo");
   if(photoInput) photoInput.addEventListener("input", function(){
-    const preview = document.getElementById("rm-photo-preview");
-    const img     = document.getElementById("rm-photo-img");
+    const preview = document.getElementById("room-photo-preview");
+    const img     = document.getElementById("room-photo-img");
     if(this.value){
       img.src = this.value;
       preview.style.display = "block";
@@ -3275,22 +3227,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function saveRoom(){
-  const id    = document.getElementById("rm-id").value.trim();
-  const name  = document.getElementById("rm-name").value.trim();
+  const id    = document.getElementById("room-id").value.trim();
+  const name  = document.getElementById("room-name").value.trim();
   if(!id||!name){ toast("กรุณาใส่ Room ID และชื่อห้อง"); return; }
-  if(isMockMode){ toast("🟡 Mock mode"); return; }
-  const data = {
+const data = {
     action:"updateRoom", id, name,
-    description:   document.getElementById("rm-desc").value.trim(),
-    photo_url:     document.getElementById("rm-photo").value.trim(),
-    location_hint: document.getElementById("rm-loc").value.trim()
+    description:   document.getElementById("room-location").value.trim(),
+    photo_url:     document.getElementById("room-photo").value.trim(),
+    location_hint: document.getElementById("room-location").value.trim()
   };
   try {
     const d = await apiCall(data);
     if(d.status==="OK"){
       toast("บันทึกห้อง " + id + " แล้ว 🚪");
       ["rm-id","rm-name","rm-loc","rm-desc","rm-photo"].forEach(eid=>{ const el=document.getElementById(eid); if(el) el.value=""; });
-      document.getElementById("rm-photo-preview").style.display = "none";
+      document.getElementById("room-photo-preview").style.display = "none";
       loadRoomsTab();
     }
   } catch(e){ toast("เกิดข้อผิดพลาด"); }
@@ -3311,7 +3262,7 @@ async function loadRoomsTab(){
 }
 
 function renderRoomsList(){
-  const container = document.getElementById("rooms-list");
+  const container = document.getElementById("rooms-list-wrap");
   if(!container) return;
   if(!_rooms.length){
     container.innerHTML = '<div class="empty">ยังไม่มีห้อง — เพิ่มด้านล่างได้เลย</div>';
@@ -3346,25 +3297,24 @@ function renderRoomsList(){
 }
 
 async function addRoomDash(){
-  const id   = document.getElementById("rm-id").value.trim().toUpperCase();
-  const name = document.getElementById("rm-name").value.trim();
+  const id   = document.getElementById("room-id").value.trim().toUpperCase();
+  const name = document.getElementById("room-name").value.trim();
   if(!id || !name){ toast("กรุณากรอกรหัสและชื่อห้อง"); return; }
-  if(isMockMode){ toast("🟡 Mock mode"); return; }
-  const btn = document.getElementById("rm-add-btn");
+const btn = document.getElementById("room-add-btn");
   btn.disabled=true; btn.textContent="กำลังเพิ่ม...";
   try {
     const d = await apiCall({
       action:"addRoom", id, name,
-      description: document.getElementById("rm-desc").value.trim(),
-      photo_url:   document.getElementById("rm-photo").value.trim(),
-      floor:       document.getElementById("rm-floor").value.trim()
+      description: document.getElementById("room-location").value.trim(),
+      photo_url:   document.getElementById("room-photo").value.trim(),
+      floor:       document.getElementById("room-location").value.trim()
     });
     if(d.status==="OK"){
       toast("เพิ่มห้อง "+name+" แล้ว 🚪");
       ["rm-id","rm-name","rm-desc","rm-photo","rm-floor"].forEach(id=>{
         const el=document.getElementById(id); if(el) el.value="";
       });
-      document.getElementById("rm-photo-preview").style.display="none";
+      document.getElementById("room-photo-preview").style.display="none";
       loadRoomsTab();
     } else { toast("เกิดข้อผิดพลาด: "+(d.message||"")); }
   } catch(e){ toast("เกิดข้อผิดพลาด"); }
@@ -3380,9 +3330,9 @@ async function deleteRoomDash(id){
 }
 
 // Show preview when URL typed
-document.getElementById("rm-photo")?.addEventListener("input", function(){
-  const prev = document.getElementById("rm-photo-preview");
-  const img  = document.getElementById("rm-photo-img");
+document.getElementById("room-photo")?.addEventListener("input", function(){
+  const prev = document.getElementById("room-photo-preview");
+  const img  = document.getElementById("room-photo-img");
   if(this.value){ prev.style.display="block"; img.src=this.value; }
   else { prev.style.display="none"; }
 });
@@ -3879,6 +3829,17 @@ async function toolsSave() {
 
 // ── Load existing archive data from Sheet on tab open ──
 async function loadArchiveTab() {
+  // Show correct view based on role
+  const adminView  = document.getElementById("arch-admin-view");
+  const memberView = document.getElementById("arch-member-view");
+  if (userRole === "admin") {
+    if (adminView)  adminView.style.display  = "flex";
+    if (memberView) memberView.style.display = "none";
+  } else {
+    if (adminView)  adminView.style.display  = "none";
+    if (memberView) memberView.style.display = "flex";
+    return; // member view is static, nothing to load
+  }
   const container = document.getElementById("arch-years-container");
   if (!container) return;
   if (archState.length > 0) { archRender(); return; } // already loaded
@@ -3904,11 +3865,150 @@ async function loadArchiveTab() {
   }
 }
 
-</script>
 
 
+
+
+// ── People tab loader ─────────────────────────────────────────
+async function loadPeopleTab() {
+  const listEl = document.getElementById("ptab-list-content");
+  if (listEl) {
+    listEl.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
+    try {
+      const d = await apiCall({action:"getTeamMembers"});
+      const members = d.members || [];
+      if (!members.length) { listEl.innerHTML = "<div class='empty'>ยังไม่มีสมาชิก</div>"; return; }
+      listEl.innerHTML = "";
+      members.forEach(m => {
+        const row = document.createElement("div");
+        row.style.cssText = "display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);";
+        row.innerHTML = `<div style="width:36px;height:36px;border-radius:50%;background:var(--gold-soft);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">👤</div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:600;">${m.name||m.displayName||"ไม่ระบุ"}</div>
+          <div style="font-size:11px;color:var(--text-soft);">${m.role||"member"}</div></div>
+          <span class="pr-status ${m.hasSlots?'done':'pending'}">${m.hasSlots?"ลงตารางแล้ว":"ยังไม่ลง"}</span>`;
+        listEl.appendChild(row);
+      });
+    } catch(e) { listEl.innerHTML = "<div class='empty'>โหลดไม่ได้</div>"; }
+  }
+}
+
+// ── Requests tab loader ───────────────────────────────────────
+async function loadRequestsTab() {
+  const el = document.getElementById("ptab-req-content");
+  const badge = document.getElementById("people-req-badge");
+  if (!el) return;
+  el.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
+  try {
+    const d = await apiCall({action:"getPendingRequests"});
+    const reqs = d.requests || [];
+    if (badge) badge.textContent = reqs.length;
+    if (!reqs.length) { el.innerHTML = "<div class='empty'>ไม่มีคำขอรอดำเนินการ 💛</div>"; return; }
+    el.innerHTML = "";
+    reqs.forEach(r => {
+      const card = document.createElement("div");
+      card.style.cssText = "background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;";
+      card.innerHTML = `
+        <div style="font-size:14px;font-weight:600;">${r.displayName||"ไม่ระบุ"}</div>
+        <div style="font-size:12px;color:var(--text-mid);">${r.reason||""}</div>
+        <div style="font-size:11px;color:var(--text-soft);">${r.createdAt||""}</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-sm gold" onclick="approveRequest('${r.id}',this)">✓ อนุมัติ</button>
+          <button class="btn-sm ghost" onclick="rejectRequest('${r.id}',this)">✕ ปฏิเสธ</button>
+        </div>`;
+      el.appendChild(card);
+    });
+  } catch(e) { el.innerHTML = "<div class='empty'>โหลดไม่ได้</div>"; }
+}
+
+async function approveRequest(id, btn) {
+  if(btn){ btn.disabled=true; btn.textContent="..."; }
+  await apiCall({action:"approveRequest", id}).catch(()=>{});
+  toast("อนุมัติแล้ว 💛");
+  loadRequestsTab();
+}
+
+async function rejectRequest(id, btn) {
+  if(btn){ btn.disabled=true; btn.textContent="..."; }
+  await apiCall({action:"rejectRequest", id}).catch(()=>{});
+  toast("ปฏิเสธแล้ว");
+  loadRequestsTab();
+}
+
+
+function pzUpdateHeroPreview() {
+  const url = (document.getElementById('pz-hero')?.value || '').trim();
+  const preview = document.getElementById('pz-hero-preview');
+  const img = document.getElementById('pz-hero-img');
+  if (url && preview && img) {
+    img.src = url;
+    preview.style.display = 'block';
+    img.onerror = () => { preview.style.display = 'none'; };
+  } else if (preview) {
+    preview.style.display = 'none';
+  }
+}
+
+// ── switchPeopleTab ───────────────────────────────────────────
+function switchPeopleTab(tab, btn) {
+  ["add","list","req"].forEach(t => {
+    const pane = document.getElementById("ptab-"+t);
+    const b    = document.getElementById("ptab-"+t+"-btn");
+    if (pane) pane.style.display = t===tab ? "flex" : "none";
+    if (b)    b.classList.toggle("active", t===tab);
+  });
+  if (tab==="list") loadPeopleTab();
+  if (tab==="req")  loadRequestsTab();
+}
+
+// ── addPersonDash ─────────────────────────────────────────────
+// Add a person (teacher) from the People tab add-form
+async function addPersonDash() {
+  const name    = (document.getElementById("pdash-name-in")?.value    || "").trim();
+  const subject = (document.getElementById("pdash-subject-in")?.value || "").trim();
+  const year    = document.getElementById("pdash-year-in")?.value || "m4";
+  const youtube = (document.getElementById("pdash-yt-url") || {value:""}?.value  || "").trim();
+  const thumb   = (document.getElementById("pdash-thumb-in")?.value    || "").trim();
+  if (!name || !subject) { toast("กรุณากรอกชื่อและวิชา"); return; }
+  const btn = document.getElementById("pdash-add-btn");
+  if (btn) { btn.disabled=true; btn.textContent="กำลังเพิ่ม..."; }
+  try {
+    await apiCall({ action:"addPerson", name, subject, year_group:year, youtube_url:youtube, thumbnail_url:thumb, addedBy:userId });
+    toast("เพิ่มครูแล้ว 💛");
+    ["pdash-name-in","pdash-subject-in","pdash-yt-url","pdash-thumb-in"].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value="";
+    });
+    loadPeopleTab();
+    switchPeopleTab("list", document.getElementById("ptab-list-btn"));
+  } catch(e) { toast("เกิดข้อผิดพลาด"); }
+  finally { if(btn){ btn.disabled=false; btn.textContent="เพิ่มครูในระบบ →"; } }
+}
+
+// ── Edit person modal ─────────────────────────────────────────
+function closeEditPersonModal(e) {
+  if (e && e.target !== document.getElementById("edit-person-modal")) return;
+  document.getElementById("edit-person-modal").style.display = "none";
+}
+
+async function saveEditPerson() {
+  const id      = document.getElementById("ep-id")?.value || "";
+  const name    = (document.getElementById("ep-name")?.value    || "").trim();
+  const subject = (document.getElementById("ep-subject")?.value || "").trim();
+  const year    = document.getElementById("ep-year")?.value || "m4";
+  const youtube = (document.getElementById("ep-youtube")?.value  || "").trim();
+  const thumb   = (document.getElementById("ep-thumb")?.value    || "").trim();
+  if (!name) { toast("กรุณากรอกชื่อ"); return; }
+  try {
+    await apiCall({ action:"updatePerson", id, name, subject, year_group:year, youtube_url:youtube, thumbnail_url:thumb });
+    toast("บันทึกแล้ว 💛");
+    document.getElementById("edit-person-modal").style.display = "none";
+    loadPeopleTab();
+  } catch(e) { toast("เกิดข้อผิดพลาด"); }
+}
+
+// ── goHome ────────────────────────────────────────────────────
+function goHome() {
+  window.location.href = "index.html";
+}
 </script>
 </body>
 </html>
-
-
