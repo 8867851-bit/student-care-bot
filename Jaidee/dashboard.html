@@ -976,8 +976,8 @@
 <script>
 
 const API_URL="https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
-const CLOUDINARY_CLOUD  = "dlixucdqx";
-const CLOUDINARY_PRESET = "jaidee-tu";
+const CLOUDINARY_CLOUD  = "YOUR_CLOUD_NAME";    // ← ใส่ Cloud Name จาก Cloudinary
+const CLOUDINARY_PRESET = "YOUR_UPLOAD_PRESET"; // ← ใส่ Upload Preset จาก Cloudinary
 
 // ── API HELPER — uses GET to avoid CORS issues ─────────────
 // Apps Script GET requests don't have CORS problems
@@ -1259,18 +1259,12 @@ function buildTabs(viewRole){
   });
 
   document.querySelectorAll(".tab-content").forEach(t=>{t.classList.remove("active");t.style.display="none";});
-  if(id==="tab-people")loadPeopleTab();
-  if(id==="tab-session-note")initSessionNoteTab();
-  if(id==="tab-therapist")loadStaffTab("therapist");
-  if(id==="tab-team")loadTeamTab();
-  if(id==="tab-rooms")loadRoomsTab();
-  if(id==="tab-rooms")loadRoomsTab();
-  if(id==="tab-guidance")loadStaffTab("guidance");
-  if(id==="tab-requests")loadRequestsTab();
   const first = list[0];
   if(first){
     const el=document.getElementById(first.id);
     if(el){el.style.display="flex";el.classList.add("active");}
+    // trigger load for first tab
+    switchTab(first.id, document.getElementById("nav-"+first.id));
   }
 }
 
@@ -1282,10 +1276,13 @@ function switchViewRole(role){
 
 function switchTab(tabId,item){
   document.querySelectorAll(".tab-content").forEach(t=>{t.classList.remove("active");t.style.display="none";});
-  if(id==="tab-people")loadPeopleTab();
-  if(id==="tab-therapist")loadStaffTab("therapist");
-  if(id==="tab-guidance")loadStaffTab("guidance");
-  if(id==="tab-requests")loadRequestsTab();
+  if(tabId==="tab-people")loadPeopleTab();
+  if(tabId==="tab-therapist")loadStaffTab("therapist");
+  if(tabId==="tab-guidance")loadStaffTab("guidance");
+  if(tabId==="tab-requests")loadRequestsTab();
+  if(tabId==="tab-team")loadTeamTab();
+  if(tabId==="tab-rooms")loadRoomsTab();
+  if(tabId==="tab-session-note")initSessionNoteTab();
   document.querySelectorAll(".sidebar-item").forEach(s=>s.classList.remove("active"));
   const el=document.getElementById(tabId);
   if(el){el.style.display="flex";el.classList.add("active");}
@@ -3913,4 +3910,5 @@ async function loadArchiveTab() {
 </script>
 </body>
 </html>
+
 
