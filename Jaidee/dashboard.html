@@ -58,19 +58,6 @@
       .hamburger{display:flex;flex-direction:column;justify-content:center;}
     }
 
-    /* ── Mobile responsive sidebar ─────────────────── */
-    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;}
-    .hamburger span{display:block;width:20px;height:2px;background:var(--text);margin:4px 0;border-radius:2px;}
-    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:49;}
-    .sidebar-overlay.open{display:block;}
-
-    @media(max-width:600px){
-      #app{flex-direction:column !important;}
-      .sidebar{position:fixed;left:-220px;top:0;height:100vh;z-index:50;transition:left 0.25s ease;width:210px;}
-      .sidebar.open{left:0;box-shadow:4px 0 24px rgba(0,0,0,0.12);}
-      .main-scroll{max-width:100%;width:100%;}
-      .hamburger{display:flex;flex-direction:column;justify-content:center;}
-    }
     /* hide old tab nav */
     .tab-nav{display:none !important;}
     .tab-btn{display:none;}
@@ -1088,55 +1075,9 @@
   </div>
 
   <!-- ═══════════ SESSION NOTE ═══════════ -->
+  <!-- ═══════════ SESSION NOTE — HTML rebuilt in next pass ═══════════ -->
   <div class="tab-content" id="tab-session-note">
-    <div class="section-label" style="margin-bottom:14px;">บันทึกการพูดคุย</div>
-    <div class="input-group" style="margin-bottom:12px;">
-      <div class="input-label">Case ID</div>
-      <div style="display:flex;gap:8px;">
-        <input class="input-field" id="sn-case-id" placeholder="CASE_XXXX" style="flex:1;"/>
-        <button class="btn-sm gold" onclick="snLookupCase()">ค้นหา</button>
-      </div>
-    </div>
-    <div id="sn-case-info" style="display:none;"></div>
-    <div id="sn-form" style="display:none;flex-direction:column;gap:12px;margin-top:8px;">
-      <div class="input-group">
-        <div class="input-label">มาตามนัดไหม?</div>
-        <div style="display:flex;gap:10px;margin-top:4px;">
-          <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
-            <input type="radio" name="sn-attend" value="yes" onclick="snToggleAttendance(this)"/> มา
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">
-            <input type="radio" name="sn-attend" value="no" onclick="snToggleAttendance(this)"/> ไม่มา
-          </label>
-        </div>
-      </div>
-      <div class="input-group">
-        <div class="input-label">โทนการพูดคุย</div>
-        <div id="sn-tone-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">
-          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😢 ร้องไห้</button>
-          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😤 โกรธ</button>
-          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😔 เงียบ</button>
-          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😊 เปิดใจ</button>
-          <button class="slot-chip" onclick="snToggleChip(this,'tone')">😰 กังวล</button>
-        </div>
-      </div>
-      <div class="input-group">
-        <div class="input-label">ประเด็นหลัก</div>
-        <div id="sn-topic-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">
-          <button class="slot-chip" onclick="snToggleChip(this,'topic')">ความเครียด</button>
-          <button class="slot-chip" onclick="snToggleChip(this,'topic')">ความสัมพันธ์</button>
-          <button class="slot-chip" onclick="snToggleChip(this,'topic')">ตัวตน</button>
-          <button class="slot-chip" onclick="snToggleChip(this,'topic')">การเรียน</button>
-          <button class="slot-chip" onclick="snToggleChip(this,'topic')">ครอบครัว</button>
-          <button class="slot-chip" onclick="snToggleChip(this,'topic')">อนาคต</button>
-        </div>
-      </div>
-      <div class="input-group">
-        <div class="input-label">บันทึกส่วนตัว (ไม่แสดงต่อนักเรียน)</div>
-        <textarea class="input-field" id="sn-note" placeholder="สิ่งที่สังเกตเห็น ความรู้สึกของน้อง หรือข้อควรระวัง..." style="min-height:100px;"></textarea>
-      </div>
-      <button class="btn-full gold" onclick="submitSessionNote()">บันทึก →</button>
-    </div>
+    <div class="empty">⚙️ กำลังอัปเดต Session Note...</div>
   </div>
 
   <!-- ═══════════ จดหมายเหตุ ═══════════ -->
@@ -1366,30 +1307,29 @@ function buildTabs(viewRole){
 
   const tabs={
     admin:[
-      {id:"tab-overview", label:"Overview",    icon:"📊", section:null},
-      {id:"tab-cases",    label:"Cases",       icon:"🤍", section:"Cases"},
-      {id:"tab-feedback", label:"Feedback",    icon:"💬", section:null},
-      {id:"tab-content",  label:"Content",     icon:"🧩", section:"Content"},
-      {id:"tab-people",   label:"People",      icon:"👥", section:"Content"},
-      {id:"tab-therapist", label:"Therapist",   icon:"🧠", section:"Content"},
-      {id:"tab-team",      label:"จัดการทีม",   icon:"👤", section:"Team"},
-      {id:"tab-rooms",     label:"ห้อง",          icon:"🚪", section:"Team"},
-      {id:"tab-guidance",  label:"Guidance",    icon:"👩‍🏫", section:"Content"},
-      {id:"tab-requests", label:"คำขอครู",     icon:"📩", section:"Content"},
-      {id:"tab-tools",    label:"เครื่องมือ",  icon:"🛠", section:"Content"},
-      {id:"tab-programs", label:"Programs",    icon:"🌱", section:null},
-      {id:"tab-settings", label:"Settings",    icon:"⚙️", section:null},
-      {id:"tab-archive",  label:"จดหมายเหตุ", icon:"📜", section:"System"},
+      {id:"tab-overview",  label:"Overview",      icon:"📊", section:null},
+      {id:"tab-cases",     label:"Cases",         icon:"🤍", section:"Cases"},
+      {id:"tab-feedback",  label:"Feedback",      icon:"💬", section:"Cases"},
+      {id:"tab-content",   label:"Puzzle Piece",  icon:"🧩", section:"Content"},
+      {id:"tab-people",    label:"People",        icon:"👥", section:"Content"},
+      {id:"tab-therapist", label:"Therapist",     icon:"🧠", section:"Content"},
+      {id:"tab-guidance",  label:"Guidance",      icon:"👩‍🏫", section:"Content"},
+      {id:"tab-tools",     label:"เครื่องมือ",    icon:"🛠", section:"Content"},
+      {id:"tab-requests",  label:"คำขอครู",       icon:"📩", section:"Content"},
+      {id:"tab-programs",  label:"Programs",      icon:"🌱", section:"Programs"},
+      {id:"tab-team",      label:"จัดการทีม",     icon:"👤", section:"System"},
+      {id:"tab-rooms",     label:"ห้อง",           icon:"🚪", section:"System"},
+      {id:"tab-settings",  label:"Settings",      icon:"⚙️", section:"System"},
+      {id:"tab-archive",   label:"จดหมายเหตุ",   icon:"📜", section:"System"},
     ],
     member:[
       {id:"tab-my-cases",     label:"เคสของฉัน",    icon:"🤍", section:"Peer Support"},
-      {id:"tab-session-note", label:"Session Note",   icon:"📝", section:"Peer Support"},
-      {id:"tab-schedule",     label:"ตารางของฉัน",   icon:"📅", section:"Peer Support"},
-      {id:"tab-content",      label:"เพิ่มเนื้อหา",  icon:"🧩", section:"Content"},
-      {id:"tab-people",       label:"People",         icon:"👥", section:"Content"},
-      {id:"tab-therapist",    label:"Therapist",      icon:"🧠", section:"Content"},
-      {id:"tab-guidance",     label:"Guidance",       icon:"👩‍🏫", section:"Content"},
-      {id:"tab-archive",      label:"จดหมายเหตุ",    icon:"📜", section:"System"},
+      {id:"tab-session-note", label:"Session Note",  icon:"📝", section:"Peer Support"},
+      {id:"tab-schedule",     label:"ตารางของฉัน",  icon:"📅", section:"Peer Support"},
+      {id:"tab-content",      label:"เพิ่มเนื้อหา", icon:"🧩", section:"Content"},
+      {id:"tab-people",       label:"People",        icon:"👥", section:"Content"},
+      {id:"tab-guidance",     label:"Guidance",      icon:"👩‍🏫", section:"Content"},
+      {id:"tab-archive",      label:"จดหมายเหตุ",   icon:"📜", section:"System"},
     ],
   };
 
@@ -1451,9 +1391,13 @@ function switchTab(tabId,item){
   const el=document.getElementById(tabId);
   if(el){el.style.display="flex";el.classList.add("active");}
   if(item) item.classList.add("active");
-  if(tabId==="tab-archive") loadArchiveTab();
-  if(tabId==="tab-settings") loadPauseStatus();
-  if(tabId==="tab-tools") loadToolsTab();
+  if(tabId==="tab-archive")       loadArchiveTab();
+  if(tabId==="tab-settings")      loadPauseStatus();
+  if(tabId==="tab-tools")         loadToolsTab();
+  if(tabId==="tab-my-cases")      loadPRData();
+  if(tabId==="tab-schedule")      buildScheduleTab();
+  if(tabId==="tab-feedback")      loadFeedback();
+  if(tabId==="tab-overview")      loadAdminData();
   // Close sidebar on mobile after nav
   if(window.innerWidth<=600) closeSidebar();
 }
@@ -1813,14 +1757,14 @@ function buildCaseCard(c,isAdmin){
     const completeBtn=document.createElement("button");
     completeBtn.className="btn-sm green";
     completeBtn.innerText="✓ จบเคส";
-    completeBtn.onclick=()=>completeCase(c.caseId,c.userId);
+    completeBtn.onclick=()=>completeCase(c.caseId,c.studentId);
     btnRow.appendChild(completeBtn);
 
     // Cancel button — PR only action
     const cancelBtn=document.createElement("button");
     cancelBtn.className="btn-sm danger";
     cancelBtn.innerText="✕ ยกเลิก";
-    cancelBtn.onclick=()=>cancelBooking(c.caseId,c.owner,c.slot,c.userId);
+    cancelBtn.onclick=()=>cancelBooking(c.caseId,c.owner,c.slot,c.studentId);
     btnRow.appendChild(cancelBtn);
   }
   return card;
