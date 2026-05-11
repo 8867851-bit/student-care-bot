@@ -42,7 +42,7 @@
     .sidebar-icon{font-size:16px;flex-shrink:0;width:20px;text-align:center;}
     .sidebar-divider{height:1px;background:var(--border);margin:10px 16px;}
     .sidebar-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:99px;padding:1px 7px;min-width:18px;text-align:center;}
-    .main-scroll{flex:1;overflow-y:auto;max-width:700px;}
+    .main-scroll{flex:1;overflow-y:auto;max-width:700px;padding-bottom:env(safe-area-inset-bottom,20px);}
 
     /* ── Mobile responsive sidebar ─────────────────── */
     .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;}
@@ -50,7 +50,6 @@
     .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:49;}
     .sidebar-overlay.open{display:block;}
 
-    @media(max-width:900px){.main-scroll{padding:16px 14px;}.section-label{font-size:10px;}}
     @media(max-width:600px){
       #app{flex-direction:column !important;}
       .sidebar{position:fixed;left:-220px;top:0;height:100vh;z-index:50;transition:left 0.25s ease;width:210px;}
@@ -65,7 +64,6 @@
     .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:49;}
     .sidebar-overlay.open{display:block;}
 
-    @media(max-width:900px){.main-scroll{padding:16px 14px;}.section-label{font-size:10px;}}
     @media(max-width:600px){
       #app{flex-direction:column !important;}
       .sidebar{position:fixed;left:-220px;top:0;height:100vh;z-index:50;transition:left 0.25s ease;width:210px;}
@@ -76,7 +74,10 @@
     /* hide old tab nav */
     .tab-nav{display:none !important;}
     .tab-btn{display:none;}
-    .tab-content{display:none;padding:20px;flex-direction:column;gap:16px;}
+    .tab-content{display:none;padding:20px 20px 60px;flex-direction:column;gap:16px;
+  overflow-y:auto;
+  padding-bottom:60px;
+}
     /* Puzzle Builder */
     .pz-steps{display:flex;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
     .pz-step{flex:1;padding:10px 6px;text-align:center;font-size:11px;font-weight:500;color:var(--text-soft);background:var(--surface);border-right:1px solid var(--border);cursor:pointer;transition:all 0.15s;line-height:1.4;}
@@ -243,13 +244,50 @@
     .dev-option-desc{font-size:12px;color:var(--text-mid);}
 
     .dev-close{background:none;border:none;color:var(--text-soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:8px;text-align:center;width:100%;margin-top:4px;}
+
+    /* ══ จดหมายเหตุ Admin ══════════════════════════════ */
+    .arch-year-block{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:12px;}
+    .arch-year-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--gold-soft);border-bottom:1px solid var(--gold-border);cursor:pointer;user-select:none;}
+    .arch-year-label{font-weight:700;font-size:15px;color:var(--gold);}
+    .arch-year-body{padding:16px;display:flex;flex-direction:column;gap:16px;}
+    .arch-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;}
+    .arch-card-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-soft);}
+    .arch-upload-zone{border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .15s;position:relative;background:var(--surface);}
+    .arch-upload-zone:hover,.arch-upload-zone.drag-over{border-color:var(--gold);background:var(--gold-soft);}
+    .arch-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+    .arch-upload-icon{font-size:24px;margin-bottom:6px;}
+    .arch-upload-label{font-size:13px;font-weight:600;color:var(--text-mid);}
+    .arch-upload-sub{font-size:11px;color:var(--text-soft);margin-top:2px;}
+    .arch-thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+    .arch-thumb-wrap{position:relative;display:inline-flex;}
+    .arch-thumb{width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid var(--border);}
+    .arch-thumb-del{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;font-size:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
+    .arch-folder-list{display:flex;flex-direction:column;gap:8px;}
+    .arch-folder-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
+    .arch-folder-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .arch-folder-name-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;font-family:'Sarabun',sans-serif;color:var(--text);}
+    .arch-folder-name-input:focus{outline:none;border-color:var(--gold);}
+    .arch-add-btn{display:flex;align-items:center;gap:6px;background:none;border:1.5px dashed var(--border);border-radius:10px;padding:9px 14px;font-size:12px;font-weight:600;color:var(--text-soft);cursor:pointer;font-family:'Sarabun',sans-serif;transition:all .15s;width:100%;}
+    .arch-add-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-soft);}
+    .arch-save-btn{background:var(--gold);color:#1A1A1A;border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;width:100%;transition:opacity .2s;}
+    .arch-save-btn:active{opacity:.8;}
+    .arch-save-btn:disabled{opacity:.5;cursor:not-allowed;}
+    .arch-progress{height:4px;border-radius:99px;background:var(--border);margin-top:6px;overflow:hidden;display:none;}
+    .arch-progress-bar{height:100%;background:var(--gold);border-radius:99px;transition:width .3s;}
+    .arch-status{font-size:12px;color:var(--text-mid);text-align:center;padding:6px 0;}
   </style>
-  <link rel="icon" href="data:,">
 </head>
 <body>
 
 <div id="screen-loading">
   <div class="loading-heart">💛</div>
+  <!-- Access Denied -->
+  <div id="screen-denied" style="display:none;position:fixed;inset:0;background:var(--bg);align-items:center;justify-content:center;flex-direction:column;gap:12px;z-index:100;">
+    <div style="font-size:40px;">🔒</div>
+    <div style="font-size:18px;font-weight:700;color:var(--text);">ไม่มีสิทธิ์เข้าถึง</div>
+    <div style="font-size:13px;color:var(--text-mid);text-align:center;max-width:260px;line-height:1.6;">account นี้ไม่ได้เป็นส่วนหนึ่งของทีม ใจดี TU<br/>ถ้าคิดว่าเป็นข้อผิดพลาด ติดต่อ admin ได้เลยนะ</div>
+    <button onclick="liff.login()" style="margin-top:8px;background:var(--gold);color:#fff;border:none;border-radius:12px;padding:12px 24px;font-size:13px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;">ลองล็อกอินใหม่</button>
+  </div>
   <div class="loading-text">กำลังโหลด...</div>
 </div>
 
@@ -261,14 +299,14 @@
   <div class="dev-sheet">
     <div class="dev-sheet-handle"></div>
     <div class="dev-sheet-title">🟡 Pitching — Mock Views</div>
-    <!-- removed mock link --><span style="display:none">
+    <a class="dev-option" href="dashboard.html?mockRole=admin" target="_blank">
       <div class="dev-option-icon">👑</div>
       <div class="dev-option-info"><div class="dev-option-name">Mock — Admin</div></div>
-    </span>
-    <span style="display:none">
+    </a>
+    <a class="dev-option" href="dashboard.html?mockRole=member" target="_blank">
       <div class="dev-option-icon">🤍</div>
       <div class="dev-option-info"><div class="dev-option-name">Mock — Member</div><div class="dev-option-desc">Peer + Content</div></div>
-    </span>
+    </a>
     <a class="dev-option" href="index.html?preview=student" target="_blank">
       <div class="dev-option-icon">🏠</div>
       <div class="dev-option-info"><div class="dev-option-name">Student — Home</div><div class="dev-option-desc">ข้าม role check</div></div>
@@ -292,25 +330,24 @@
   <!-- TOPBAR -->
   <div class="header">
     <div style="display:flex;align-items:center;gap:10px;">
-      <button class="hamburger" id="hamburger-btn" onclick="openSidebar()" aria-label="เมนู">
-        <span></span><span></span><span></span>
-      </button>
-      <div style="width:32px;height:32px;border-radius:8px;background:#1C1917;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;" id="school-logo-img">TU</div>
+      <img src="school-logo.png" alt="TU" style="width:26px;height:auto;object-fit:contain;mix-blend-mode:multiply;flex-shrink:0;"/>
       <div class="header-eyebrow">ใจดี TU</div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
       <span id="user-name" style="font-size:13px;color:var(--text-mid);"></span>
       <span class="role-badge" id="role-badge"></span>
-
+      <select id="role-switcher" style="display:none;background:var(--surface2);border:1px solid var(--border);color:var(--text-mid);border-radius:8px;padding:3px 8px;font-size:11px;font-family:'Sarabun',sans-serif;cursor:pointer;" onchange="switchViewRole(this.value)">
+        <option value="admin">👁 Admin view</option>
+        <option value="member">👁 Member view</option>
+      </select>
     </div>
   </div>
 
+  <div id="mode-banner" style="display:none;padding:8px 20px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-align:center;"></div>
 
   <!-- BODY: sidebar + main -->
   <div style="display:flex;flex:1;min-height:0;">
 
-    <!-- SIDEBAR OVERLAY -->
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar-nav"></div>
 
@@ -337,11 +374,35 @@
     <div id="content-views-list"><div class="empty">กำลังโหลด...</div></div>
     <div class="section-label">📋 Special Requests</div>
     <div id="overview-special"><div class="empty">กำลังโหลด...</div></div>
+
+    <div class="section-label" style="margin-top:8px;">⏳ Waiting List</div>
+    <div id="waiting-list-overview"><div class="empty">กำลังโหลด...</div></div>
+    <button class="btn-full gold" id="btn-notify-all-ov" onclick="notifyAll()" style="display:none;margin-top:4px;">แจ้งเตือน Waiting List →</button>
   </div>
 
   <!-- ADMIN: CASES -->
   <div class="tab-content" id="tab-cases">
-    <div class="section-label">เคสทั้งหมด</div>
+    <div class="section-label" style="margin-bottom:8px;">เคสทั้งหมด</div>
+
+    <!-- Filter bar -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+      <select class="input-field" id="case-filter-level" onchange="filterCases()" style="flex:1;min-width:100px;font-size:12px;padding:8px 10px;">
+        <option value="">ทุก Level</option>
+        <option value="red">🔴 Red</option>
+        <option value="yellow">🟡 Yellow</option>
+        <option value="green">🟢 Green</option>
+      </select>
+      <select class="input-field" id="case-filter-status" onchange="filterCases()" style="flex:1;min-width:100px;font-size:12px;padding:8px 10px;">
+        <option value="">ทุก Status</option>
+        <option value="open">รอ assign</option>
+        <option value="booked">กำลังดูแล</option>
+        <option value="completed">เสร็จแล้ว</option>
+      </select>
+    </div>
+    <div style="position:relative;margin-bottom:12px;">
+      <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-soft);pointer-events:none;">🔍</span>
+      <input class="input-field" id="case-search" placeholder="ค้นหา Case ID..." oninput="filterCases()" style="padding-left:32px;font-size:13px;"/>
+    </div>
     <div id="cases-list"><div class="empty">กำลังโหลด...</div></div>
   </div>
 
@@ -363,46 +424,69 @@
     <div class="section-label">สถานะปัจจุบัน</div>
     <div id="pause-status-banner"></div>
     <div class="section-label">ตั้งช่วงหยุดพัก</div>
+    <!-- Live status indicator -->
+    <div id="pause-active-card" style="display:none;background:var(--red-soft);border:1.5px solid var(--red);border-radius:14px;padding:14px 16px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="font-size:13px;font-weight:700;color:var(--red);">🔴 ระบบปิดอยู่ตอนนี้</div>
+        <button onclick="clearPause()" style="background:var(--red);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:11px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;">เปิดระบบทันที ✕</button>
+      </div>
+      <div id="pause-active-detail" style="font-size:12px;color:var(--red);line-height:1.6;"></div>
+    </div>
+
+    <div id="pause-inactive-card" style="background:var(--green-soft);border:1px solid rgba(30,132,73,0.2);border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:16px;">🟢</span>
+      <div style="font-size:13px;font-weight:600;color:var(--green);">ระบบเปิดปกติ — นักเรียนเข้า peer flow ได้</div>
+    </div>
+
     <div class="settings-card">
-      <div class="settings-title">Pause Management</div>
-      <div class="settings-sub">เมื่อตั้งค่าแล้ว นักเรียนจะเห็น countdown และข้อความว่า PR กำลังเตรียมสอบ</div>
+      <div class="settings-title">⏸️ ตั้งช่วงหยุดพัก</div>
+      <div class="settings-sub">เมื่อบันทึกแล้ว peer.html จะแสดงข้อความและ countdown ทันที นักเรียนจะไม่เข้า flow ได้เลย</div>
+
+      <!-- Quick presets -->
+      <div style="margin-bottom:10px;">
+        <div class="input-label" style="margin-bottom:6px;">Quick preset</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="btn-sm ghost" onclick="setPreset('midterm')" style="font-size:11px;">📝 Midterm</button>
+          <button class="btn-sm ghost" onclick="setPreset('finals')" style="font-size:11px;">📝 Finals</button>
+          <button class="btn-sm ghost" onclick="setPreset('summer')" style="font-size:11px;">☀️ Summer</button>
+          <button class="btn-sm ghost" onclick="setPreset('holiday')" style="font-size:11px;">🏖️ Holiday</button>
+        </div>
+      </div>
+
       <div class="input-group"><div class="input-label">ประเภท</div>
         <select class="input-field" id="pause-type">
-          <option value="midterm">Midterm</option>
-          <option value="finals">Finals</option>
-          <option value="holiday">Holiday</option>
-          <option value="summer">Summer Break</option>
+          <option value="midterm">📝 Midterm — สอบกลางภาค</option>
+          <option value="finals">📝 Finals — สอบปลายภาค</option>
+          <option value="summer">☀️ Summer Break — ปิดเทอมใหญ่</option>
+          <option value="holiday">🏖️ Holiday — วันหยุด</option>
         </select>
       </div>
-      <div class="input-group"><div class="input-label">วันเริ่ม</div><input class="input-field" id="pause-start" type="date"/></div>
-      <div class="input-group"><div class="input-label">วันสิ้นสุด</div><input class="input-field" id="pause-end" type="date"/></div>
-      <button class="btn-full gold" onclick="setPause()">บันทึกช่วงหยุด</button>
-      <button class="btn-full ghost" onclick="clearPause()">ยกเลิกช่วงหยุดปัจจุบัน</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="input-group"><div class="input-label">วันเริ่ม</div><input class="input-field" id="pause-start" type="date" onchange="updatePausePreview()"/></div>
+        <div class="input-group"><div class="input-label">วันสิ้นสุด</div><input class="input-field" id="pause-end" type="date" onchange="updatePausePreview()"/></div>
+      </div>
+      <div id="pause-preview" style="display:none;background:var(--yellow-soft);border:1px solid var(--gold-border);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--yellow);margin-bottom:4px;">
+        Preview: นักเรียนจะเห็น countdown <span id="pause-preview-days">—</span> วัน
+      </div>
+      <button class="btn-full gold" onclick="setPause()">🔴 ปิดระบบและบันทึก</button>
     </div>
-    <div class="section-label">Waiting List</div>
-    <div id="waiting-list"><div class="empty">กำลังโหลด...</div></div>
-    <button class="btn-full gold" id="btn-notify-all" onclick="notifyAll()" style="display:none;">แจ้งเตือน Waiting List (push เมื่อ PR ลงตารางใหม่)</button>
+    <div class="divider"></div>
+    <div class="section-label">✨ Founders รอ Approve</div>
+    <div id="founders-pending"><div class="empty">กำลังโหลด...</div></div>
 
     <div class="divider"></div>
-    <div class="section-label">🖼 จัดการโลโก้โรงเรียน (Admin only)</div>
-    <div class="settings-card">
-      <div class="settings-sub">รูปที่ใช้แสดงในหัวแอป (school-logo.png) — อัปโหลดแทนที่รูปเก่าได้เลย</div>
-      <div style="display:flex;gap:8px;margin-top:10px;">
-        <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/webp" style="display:none;" onchange="uploadLogoFile(this)"/>
-        <button class="btn-full gold" onclick="document.getElementById('logo-file-input').click()">📷 เปลี่ยนโลโก้</button>
-      </div>
-      <div id="logo-upload-status" style="font-size:12px;color:var(--text-soft);margin-top:8px;"></div>
-    </div>
-
-    <div class="divider"></div>
-    <div class="section-label">🔊 จัดการ Grounding Audio (Admin only)</div>
-    <div class="settings-card">
-      <div class="settings-sub">ไฟล์เสียง grounding ที่ใช้ใน crisis.html (grounding-breathing.mp3)</div>
-      <div style="display:flex;gap:8px;margin-top:10px;">
-        <input type="file" id="audio-file-input" accept="audio/mp3,audio/mpeg,audio/ogg" style="display:none;" onchange="uploadAudioFile(this)"/>
-        <button class="btn-full ghost" onclick="document.getElementById('audio-file-input').click()">🎙 เปลี่ยนไฟล์เสียง</button>
-      </div>
-      <div id="audio-upload-status" style="font-size:12px;color:var(--text-soft);margin-top:8px;"></div>
+    <div class="section-label">Founder's Pick — รออนุมัติ</div>
+    <div id="pending-founders"><div class="empty">กำลังโหลด...</div></div>
+    <div class="add-form">
+      <div class="settings-sub">เพิ่มผู้นำชมรมจิตวิทยาแต่ละรุ่น หลังจากได้รับ Google Form แล้ว</div>
+      <div class="input-group"><div class="input-label">ชื่อ-นามสกุล</div><input class="input-field" id="f-name" placeholder="ชื่อ นามสกุล"/></div>
+      <div class="input-group"><div class="input-label">ปีที่ดำรงตำแหน่ง</div><input class="input-field" id="f-year" placeholder="2567–2568"/></div>
+      <div class="input-group"><div class="input-label">รูป (Cloudinary URL)</div><input class="input-field" id="f-photo" placeholder="https://res.cloudinary.com/..."/></div>
+      <div class="input-group"><div class="input-label">Vision — อยากทำให้เกิดอะไรขึ้น</div><textarea class="input-field" id="f-vision" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
+      <div class="input-group"><div class="input-label">สิ่งที่ภูมิใจที่สุด</div><textarea class="input-field" id="f-proud" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
+      <div class="input-group"><div class="input-label">บทเรียนที่ยากที่สุด</div><textarea class="input-field" id="f-struggle" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
+      <div class="input-group"><div class="input-label">จดหมายถึงผู้นำรุ่นต่อไป</div><textarea class="input-field" id="f-letter" style="min-height:100px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
+      <button class="btn-full gold" onclick="addFounder()">เพิ่มและเผยแพร่</button>
     </div>
   </div>
 
@@ -417,7 +501,7 @@
     </div>
 
     <!-- STEP 1: META -->
-    <div id="pz-step1">
+    <div id="pz-step1" style="padding-top:4px;">
       <div class="section-label">ข้อมูลบทความ</div>
 
       <div class="input-group"><div class="input-label">ชื่อบทความ *</div>
@@ -438,90 +522,20 @@
             <option value="จิตวิทยา">🧠 จิตวิทยา</option>
           </select>
         </div>
-        <div class="input-group"><div class="input-label">ระดับความต้องการทางปัญญา</div>
+        <div class="input-group"><div class="input-label">ระดับ</div>
           <select class="input-field" id="pz-level" onchange="pzUpdatePreview()">
-            <option value="🟢 เบา">🟢 เบา — อ่านสบาย ไม่ต้องคิดเยอะ</option>
-            <option value="🟡 กลาง" selected>🟡 กลาง — ต้องคิดตาม มีแนวคิดหลัก</option>
-            <option value="🔴 ลึก">🔴 ลึก — ต้องการสมาธิ มีเนื้อหาวิชาการ</option>
+            <option value="🟢 เบา">🟢 เบา</option>
+            <option value="🟡 กลาง" selected>🟡 กลาง</option>
+            <option value="🔴 ลึก">🔴 ลึก</option>
           </select>
         </div>
       </div>
-
-      <!-- ภาษาที่ใช้ -->
-      <div class="input-group">
-        <div class="input-label">รูปแบบภาษา</div>
-        <div style="display:flex;flex-direction:column;gap:8px;" id="pz-lang-group">
-          <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;" id="pz-lang-opt-academic">
-            <input type="radio" name="pz-lang" value="วิชาการ" style="accent-color:var(--gold);flex-shrink:0;"/>
-            <div>
-              <div style="font-size:13px;font-weight:600;color:var(--text);">วิชาการ</div>
-              <div style="font-size:11px;color:var(--text-soft);margin-top:1px;">ใช้ศัพท์เทคนิค มีการอ้างอิง เหมาะกับผู้สนใจเชิงลึก</div>
-            </div>
-          </label>
-          <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;" id="pz-lang-opt-semiacademic">
-            <input type="radio" name="pz-lang" value="กึ่งวิชาการ" style="accent-color:var(--gold);flex-shrink:0;"/>
-            <div>
-              <div style="font-size:13px;font-weight:600;color:var(--text);">กึ่งวิชาการ</div>
-              <div style="font-size:11px;color:var(--text-soft);margin-top:1px;">มีศัพท์วิชาการแต่อธิบายชัดเจน สมดุลระหว่างความลึกและความเข้าใจง่าย</div>
-            </div>
-          </label>
-          <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:10px;cursor:pointer;" id="pz-lang-opt-general">
-            <input type="radio" name="pz-lang" value="ภาษาทั่วไป" checked style="accent-color:var(--gold);flex-shrink:0;"/>
-            <div>
-              <div style="font-size:13px;font-weight:600;color:var(--text);">ภาษาทั่วไป ✓</div>
-              <div style="font-size:11px;color:var(--text-soft);margin-top:1px;">คุยได้เลย ไม่มีศัพท์เทคนิค เหมาะกับทุกคน</div>
-            </div>
-          </label>
-          <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;" id="pz-lang-opt-simplified">
-            <input type="radio" name="pz-lang" value="ทำให้เข้าใจง่าย" style="accent-color:var(--gold);flex-shrink:0;"/>
-            <div>
-              <div style="font-size:13px;font-weight:600;color:var(--text);">ทำให้เข้าใจง่าย</div>
-              <div style="font-size:11px;color:var(--text-soft);margin-top:1px;">ลดความซับซ้อน ใช้ตัวอย่างและอุปมา เหมาะกับผู้ที่ไม่คุ้นเคยกับจิตวิทยา</div>
-            </div>
-          </label>
-        </div>
-        <!-- Visual scale bar -->
-        <div style="margin-top:12px;padding:10px 14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
-          <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-soft);margin-bottom:8px;">สเกลภาษา</div>
-          <div style="position:relative;height:6px;background:var(--border);border-radius:99px;margin-bottom:6px;">
-            <div id="pz-lang-bar" style="height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),#E8A020);width:50%;transition:width 0.3s;"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-soft);">
-            <span>เข้าใจง่าย</span><span>กึ่งวิชาการ</span><span>วิชาการ</span>
-          </div>
-          <div id="pz-lang-label" style="font-size:11px;font-weight:600;color:var(--gold);margin-top:6px;text-align:center;">ภาษาทั่วไป</div>
-        </div>
-      </div>
-
-      <!-- เวลาอ่าน — slider 1–20 -->
-      <div class="input-group">
-        <div class="input-label">เวลาอ่าน</div>
-        <div style="display:flex;align-items:center;gap:12px;">
-          <input type="range" id="pz-readtime-slider" min="1" max="20" value="5"
-            style="flex:1;accent-color:var(--gold);height:4px;"
-            oninput="pzUpdateReadtime(this.value)"/>
-          <div style="min-width:64px;text-align:right;">
-            <span id="pz-readtime-display" style="font-size:16px;font-weight:700;color:var(--text);">5</span>
-            <span style="font-size:12px;color:var(--text-soft);"> นาที</span>
-          </div>
-        </div>
-        <input type="hidden" id="pz-readtime" value="5 นาที"/>
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-soft);margin-top:4px;">
-          <span>1 นาที</span><span>10 นาที</span><span>20 นาที</span>
-        </div>
-      </div>
-
-      <div class="input-group">
-        <div class="input-label">แนะนำใน พื้นที่ใจ ชั้นไหน? (ไม่บังคับ)</div>
-        <div style="font-size:11px;font-weight:300;color:var(--text-soft);margin-bottom:8px;line-height:1.5;">ถ้าเลือก บทความนี้จะปรากฏเป็น recommendation ในชั้นนั้นของ care.html</div>
-        <select class="input-field" id="pz-care-layer">
-          <option value="">— ไม่ระบุ —</option>
-          <option value="body">ชั้นที่หนึ่ง — ร่างกาย</option>
-          <option value="connection">ชั้นที่สอง — ความสัมพันธ์</option>
-          <option value="expression">ชั้นที่สาม — การแสดงออก</option>
-          <option value="environment">ชั้นที่สี่ — สภาพแวดล้อม</option>
-          <option value="belief">ชั้นที่ห้า — ความเชื่อ</option>
-          <option value="professional">ชั้นที่หก — ผู้เชี่ยวชาญ</option>
+      <div class="input-group"><div class="input-label">เวลาอ่าน</div>
+        <select class="input-field" id="pz-readtime">
+          <option value="3 นาที">3 นาที</option>
+          <option value="5 นาที" selected>5 นาที</option>
+          <option value="8 นาที">8 นาที</option>
+          <option value="10 นาที">10 นาที</option>
         </select>
       </div>
 
@@ -654,6 +668,118 @@
     </div>
   </div>
 
+  <!-- ══ TAB: PEOPLE (admin only) ══════════════════════════════ -->
+  <div class="tab-content" id="tab-people">
+
+    <!-- Sub-tabs -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin:-20px -20px 16px;padding:0 20px;background:var(--surface);">
+      <button class="stab active" id="ptab-add-btn" onclick="switchPeopleTab('add',this)" style="font-size:12px;padding:10px 14px 12px;">➕ เพิ่มครู</button>
+      <button class="stab" id="ptab-list-btn" onclick="switchPeopleTab('list',this)" style="font-size:12px;padding:10px 14px 12px;">👥 รายชื่อ</button>
+      <button class="stab" id="ptab-req-btn" onclick="switchPeopleTab('req',this)" style="font-size:12px;padding:10px 14px 12px;">📩 คำขอ <span id="people-req-badge" style="display:inline-block;background:var(--red);color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:1px 5px;margin-left:4px;">0</span></button>
+    </div>
+
+    <!-- ── SUB: ADD ── -->
+    <div id="ptab-add" style="display:flex;flex-direction:column;gap:12px;">
+
+      <!-- Preview -->
+      <div class="section-label">Preview การ์ด</div>
+      <div class="pr-card" style="display:flex;align-items:center;gap:12px;padding:12px;">
+        <div id="pdash-thumb" style="width:52px;height:52px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;">👩‍🏫</div>
+        <div>
+          <div style="font-family:'Lora',serif;font-size:15px;font-weight:600;color:var(--text);" id="pdash-name">ชื่ออาจารย์</div>
+          <div style="font-size:12px;color:var(--text-mid);margin-top:2px;" id="pdash-subject">วิชา</div>
+          <span style="display:inline-block;margin-top:4px;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:1px 8px;font-size:9px;color:var(--gold);font-weight:700;" id="pdash-year">ม.4</span>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="section-label">ข้อมูลครู</div>
+      <div class="add-form">
+        <div class="input-group"><div class="input-label">ชื่ออาจารย์ *</div>
+          <input class="input-field" id="pdash-name-in" placeholder="ครูชื่อ นามสกุล" oninput="updatePeopleDashPreview()"/></div>
+        <div class="input-group"><div class="input-label">วิชา *</div>
+          <input class="input-field" id="pdash-subject-in" placeholder="เช่น ฟิสิกส์, ภาษาไทย" oninput="updatePeopleDashPreview()"/></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="input-group"><div class="input-label">ชั้นปี</div>
+            <select class="input-field" id="pdash-year-in" onchange="updatePeopleDashPreview()">
+              <option value="m4">ม.4</option><option value="m5">ม.5</option>
+              <option value="m6">ม.6</option><option value="others">อื่นๆ</option>
+            </select></div>
+          <div class="input-group"><div class="input-label">Tag (คั่นด้วยจุลภาค)</div>
+            <input class="input-field" id="pdash-tag-in" placeholder="TCAS, สายวิทย์"/></div>
+        </div>
+        <div class="input-group"><div class="input-label">Bio สั้นๆ (แสดงใต้ชื่อ)</div>
+          <input class="input-field" id="pdash-bio-in" placeholder="ครูผู้เชี่ยวชาญด้าน... เหมาะสำหรับ..."/></div>
+      </div>
+
+      <div class="section-label">วิดีโอ</div>
+      <div class="add-form">
+        <div class="input-group"><div class="input-label">YouTube URL *</div>
+          <input class="input-field" id="pdash-youtube-in" placeholder="https://youtube.com/watch?v=..." oninput="updatePeopleDashPreview()"/></div>
+        <div id="pdash-yt-wrap" style="display:none;border-radius:10px;overflow:hidden;aspect-ratio:16/9;background:#000;">
+          <iframe id="pdash-yt-frame" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="input-group"><div class="input-label">Thumbnail URL (ว่างได้ — ดึงจาก YouTube อัตโนมัติ)</div>
+          <input class="input-field" id="pdash-thumb-in" placeholder="https://..." oninput="updatePeopleDashPreview()"/></div>
+      </div>
+
+      <button class="btn-full gold" id="pdash-add-btn" onclick="addPersonDash()">เพิ่มครูในระบบ →</button>
+    </div>
+
+    <!-- ── SUB: LIST ── -->
+    <div id="ptab-list" style="display:none;flex-direction:column;gap:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="kpi-card"><div class="kpi-num" id="pdash-total">—</div><div class="kpi-label">ครูทั้งหมด</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="pdash-active-count">—</div><div class="kpi-label">เปิดแสดง</div></div>
+      </div>
+      <div style="position:relative;">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-soft);pointer-events:none;">🔍</span>
+        <input class="input-field" id="pdash-search" placeholder="ค้นหาชื่อ หรือวิชา..." oninput="renderPeopleDashList()" style="padding-left:34px;"/>
+      </div>
+      <div class="section-label">รายชื่อครู</div>
+      <div id="pdash-list"><div class="empty">กำลังโหลด...</div></div>
+    </div>
+
+    <!-- ── SUB: REQUESTS ── -->
+    <div id="ptab-req" style="display:none;flex-direction:column;gap:10px;">
+      <div class="section-label">คำขอจากนักเรียน</div>
+      <div id="pdash-req-list"><div class="empty">กำลังโหลด...</div></div>
+    </div>
+
+  </div>
+
+  <!-- ── Edit Person Modal ── -->
+  <div id="edit-person-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);align-items:flex-end;justify-content:center;" onclick="closeEditPersonModal(event)">
+    <div style="width:100%;max-width:520px;background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px 32px;max-height:90vh;overflow-y:auto;" onclick="event.stopPropagation()">
+      <div style="width:36px;height:3px;background:var(--border);border-radius:99px;margin:0 auto 16px;"></div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:14px;">แก้ไขข้อมูลครู</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <input type="hidden" id="ep-id"/>
+        <div class="input-group"><div class="input-label">ชื่ออาจารย์</div>
+          <input class="input-field" id="ep-name" placeholder="ชื่อ นามสกุล"/></div>
+        <div class="input-group"><div class="input-label">วิชา</div>
+          <input class="input-field" id="ep-subject" placeholder="เช่น คณิตศาสตร์"/></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="input-group"><div class="input-label">ชั้นปี</div>
+            <select class="input-field" id="ep-year">
+              <option value="m4">ม.4</option><option value="m5">ม.5</option>
+              <option value="m6">ม.6</option><option value="others">อื่นๆ</option>
+            </select></div>
+          <div class="input-group"><div class="input-label">Tag</div>
+            <input class="input-field" id="ep-tag" placeholder="TCAS, สายวิทย์"/></div>
+        </div>
+        <div class="input-group"><div class="input-label">Bio สั้นๆ</div>
+          <input class="input-field" id="ep-bio" placeholder="ครูผู้เชี่ยวชาญด้าน..."/></div>
+        <div class="input-group"><div class="input-label">YouTube URL</div>
+          <input class="input-field" id="ep-youtube" placeholder="https://youtube.com/watch?v=..."/></div>
+        <div class="input-group"><div class="input-label">Thumbnail URL</div>
+          <input class="input-field" id="ep-thumb" placeholder="https://..."/></div>
+        <button class="btn-full gold" onclick="saveEditPerson()">บันทึก</button>
+        <button class="btn-full ghost" onclick="document.getElementById('edit-person-modal').style.display='none'">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+
   <div class="tab-content" id="tab-my-cases">
     <div class="section-label">เคสของฉัน</div>
     <div id="my-cases-list"><div class="empty">กำลังโหลด...</div></div>
@@ -692,6 +818,25 @@
   </div>
 
   <!-- PROGRAM TEAM -->
+
+  <!-- ══ TAB: TOOLS ══════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-tools">
+    <div class="section-label">เครื่องมือในหน้า Crisis</div>
+    <div style="font-size:12px;font-weight:300;color:var(--text-soft);margin-bottom:14px;line-height:1.6;">การ์ดเหล่านี้แสดงเป็น carousel ในหน้า Crisis · เพิ่ม แก้ไข หรือลบได้จากตรงนี้</div>
+    <div class="add-form" id="tools-add-form" style="display:none;flex-direction:column;gap:12px;">
+      <div class="section-label">เพิ่ม / แก้ไขเครื่องมือ</div>
+      <div class="input-group"><div class="input-label">ชื่อ *</div><input class="input-field" id="tool-name" placeholder="เช่น Stop NCII"/></div>
+      <div class="input-group"><div class="input-label">คำอธิบาย *</div><input class="input-field" id="tool-desc" placeholder="อธิบายสั้นๆ ว่าใช้ทำอะไร"/></div>
+      <div class="input-group"><div class="input-label">URL ลิงก์ปลายทาง</div><input class="input-field" id="tool-url" placeholder="https://..."/></div>
+      <div class="input-group"><div class="input-label">Photo URL ภาพปกการ์ด</div><input class="input-field" id="tool-photo" placeholder="https://res.cloudinary.com/..."/>  <div style="font-size:11px;color:var(--text-soft);margin-top:4px;">ถ้าไม่ใส่จะใช้พื้นหลังสีแทนภาพ</div></div>
+      <div class="input-group"><div class="input-label">สถานะ</div><select class="input-field" id="tool-active"><option value="TRUE">✅ แสดงในหน้า Crisis</option><option value="FALSE">🚫 ซ่อน</option></select></div>
+      <input type="hidden" id="tool-edit-row"/>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><button class="btn-full ghost" onclick="toolsCancelForm()">ยกเลิก</button><button class="btn-full gold" onclick="toolsSave()">บันทึก →</button></div>
+    </div>
+    <div id="tools-list" style="display:flex;flex-direction:column;gap:10px;"><div class="empty">กำลังโหลด...</div></div>
+    <button class="btn-full gold" id="tools-add-btn" onclick="toolsShowForm()" style="margin-top:4px;">+ เพิ่มเครื่องมือใหม่</button>
+  </div>
+
   <div class="tab-content" id="tab-programs">
     <div class="section-label">Programs เดือนนี้</div>
     <div id="programs-list"><div class="empty">กำลังโหลด...</div></div>
@@ -818,6 +963,15 @@
   </div>
 </div>
 
+  <!-- ═══════════ จดหมายเหตุ ═══════════ -->
+  <div class="tab-content" id="tab-archive">
+    <div class="section-label">จดหมายเหตุ — จัดการข้อมูล</div>
+    <div id="arch-years-container"></div>
+    <button class="arch-add-btn" style="margin-top:4px;" onclick="archAddYear()">
+      <span>＋</span><span>เพิ่มปี (ปีการศึกษา)</span>
+    </button>
+  </div>
+
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
 
@@ -840,164 +994,203 @@ async function apiCall(data) {
   }
 }
 const LIFF_ID="2009806939-AONYlCkT";
+
+const MOCK={
+  role:"admin",name:"Admin Test",
+  cases:[
+    {caseId:"CASE_001",level:"red",status:"booked",slot:"พุธ 16:00–17:00",q1:"ความรู้สึกของตัวเอง",q2:"มากเลย ยากมากตอนนี้",q3:"นานมากแล้ว นานกว่าที่อยากยอมรับ",q4:"ยังเลย นี่เป็นครั้งแรก",q5:"แค่อยากให้มีคนรับฟัง",owner:"PR_001"},
+    {caseId:"CASE_002",level:"yellow",status:"booked",slot:"อังคาร 15:30–16:30",q1:"ความเครียด / แรงกดดัน",q2:"ค่อนข้างมาก เริ่มยากขึ้นแล้ว",q3:"สักพักแล้ว ประมาณไม่กี่อาทิตย์",q4:"เคยลอง แต่ไม่ค่อยได้ผล",q5:"อยากได้คำแนะนำว่าจะทำยังไงต่อ",owner:"PR_002"},
+    {caseId:"CASE_003",level:"green",status:"completed",slot:"ศุกร์ 14:00–15:00",q1:"เรื่องเรียน",q2:"นิดหน่อย แต่ก็คิดอยู่",q3:"เพิ่งเกิดขึ้น",q4:"เคย แต่ยังต้องการความช่วยเหลืออยู่",q5:"ยังไม่แน่ใจ แค่รู้สึกว่าต้องเริ่มสักที",owner:"PR_001"},
+  ],
+  specialRequests:[
+    {caseId:"CASE_SR1",userId:"U_SR1",requestedSlots:["พุธ 14:00–15:00","พุธ 14:15–15:15"],q1:"ความสัมพันธ์",level:"yellow"},
+    {caseId:"CASE_SR2",userId:"U_SR2",requestedSlots:["ศุกร์ 12:30–13:30"],q1:"ความรู้สึกของตัวเอง",level:"red"},
+  ],
+  prList:[
+    {userId:"PR_001",name:"ปลาย",hasSlots:true},
+    {userId:"PR_002",name:"มิ้นท์",hasSlots:true},
+    {userId:"PR_003",name:"เฟิร์น",hasSlots:false},
+    {userId:"PR_004",name:"บอส",hasSlots:false},
+  ],
+  waiting:[
+    {userId:"U_W1",topic:"ความเครียด",since:"3 วันที่แล้ว"},
+    {userId:"U_W2",topic:"ความรู้สึกของตัวเอง",since:"1 วันที่แล้ว"},
+  ],
+  programs:[
+    {id:"PROG_001",name:"Mindfulness Workshop",short_desc:"เวิร์คชอปฝึกสติ 2 ชั่วโมง",category:"wellness",start_date:"2025-05-20",reg_deadline:"2025-05-18",form_url:"#",status:"active"},
+    {id:"PROG_002",name:"Career Night",short_desc:"พูดคุยกับรุ่นพี่เรื่องอนาคต",category:"career",start_date:"2025-05-28",reg_deadline:"2025-05-25",form_url:"#",status:"active"},
+    {id:"PROG_003",name:"Self-Compassion Talk",short_desc:"เรียนรู้ที่จะเมตตาตัวเอง",category:"mental",start_date:"2025-06-05",reg_deadline:"2025-06-03",form_url:"#",status:"active"},
+  ],
+  content:[
+    {id:"C001",world:"puzzle",title:"ทำไมเราถึงรู้สึกแบบนี้",type:"pdf",url:"",active:"TRUE"},
+    {id:"C002",world:"puzzle",title:"นอนไม่หลับ ต้องทำยังไง",type:"pdf",url:"",active:"TRUE"},
+    {id:"C003",world:"puzzle",title:"ความเครียดและร่างกาย",type:"pdf",url:"",active:"TRUE"},
+    {id:"C004",world:"people",title:"ครูวิชัย — ฟิสิกส์",type:"video",url:"",active:"TRUE"},
+  ],
+  pause:null,
+};
+
 // ── After-school slots only — must match peer.html ALL_SLOT_TIMES exactly ──
 const SLOT_TIMES={
   mon:["15:30–16:30","16:00–17:00","16:30–17:30"],
   tue:["15:30–16:30","16:00–17:00","16:30–17:30"],
   wed:["15:30–16:30","16:00–17:00","16:30–17:30"],
   thu:["15:30–16:30","16:00–17:00","16:30–17:30"],
-  fri:["12:30–13:30","13:00–14:00","15:30–16:30","16:00–17:00","16:30–17:30"]
+  fri:["12:30–13:30","13:00–14:00","13:30–14:30","14:00–15:00","14:30–15:30","15:00–16:00","15:30–16:30","16:00–17:00"]
 };
 const DAY_LABELS={mon:"จันทร์",tue:"อังคาร",wed:"พุธ",thu:"พฤหัสบดี",fri:"ศุกร์"};
 
-let userRole=null,userId=null,userName=null,selectedSlots=[];
+let userRole=null,userId=null,userName=null,selectedSlots=[],isMockMode=false;
+let userCapacity=3,userActiveCount=0,userSpecialization="";
 let broadcastType="text";
 
 // ── INIT ──────────────────────────────────────────────────
-// ── BOOT SEQUENCE ─────────────────────────────────────────
-window.onload = async () => {
+// ── Case filtering ──────────────────────────────────────────────
+let _allCases = [];
+function filterCases(){
+  const level  = document.getElementById("case-filter-level")?.value  || "";
+  const status = document.getElementById("case-filter-status")?.value || "";
+  const search = (document.getElementById("case-search")?.value || "").toLowerCase();
+  const filtered = _allCases.filter(c => {
+    if(level  && c.level  !== level)  return false;
+    if(status && c.status !== status) return false;
+    if(search && !(c.caseId||"").toLowerCase().includes(search)) return false;
+    return true;
+  });
+  renderCasesInto("cases-list", filtered, true);
+}
 
-  // ── Step 1: Try LIFF ──────────────────────────────────────
-  try {
-    await liff.init({ liffId: LIFF_ID });
-    if (liff.isLoggedIn()) {
-      const p = await liff.getProfile();
-      userId   = p.userId;
-      userName = p.displayName;
-      try { localStorage.setItem("jaidee_uid", userId); localStorage.setItem("jaidee_name", userName); } catch(e){}
-    }
-  } catch(e) {
-    // LIFF failed — silent, try cache below
-  }
+// Show Cloudinary warning if not configured
+if(typeof CLOUDINARY_CLOUD !== "undefined" && CLOUDINARY_CLOUD === "YOUR_CLOUD_NAME"){
+  document.querySelectorAll("#cloudinary-warning").forEach(el=>el.style.display="block");
+} else {
+  document.querySelectorAll("#cloudinary-warning").forEach(el=>el.style.display="none");
+}
+window.onload=async()=>{
+  try{
+    await liff.init({liffId:LIFF_ID});
+    if(!liff.isLoggedIn()){liff.login();return;}
+    const p=await liff.getProfile();userId=p.userId;userName=p.displayName;
+  }catch{userId="";userName="ทีมงาน";}
+  loadRole();
+};
 
-  // ── Step 2: Try cache if LIFF gave nothing ─────────────────
-  if (!userId) {
-    try { userId = localStorage.getItem("jaidee_uid")||""; userName = localStorage.getItem("jaidee_name")||"ทีมงาน"; } catch(e){}
-  }
-
-  // ── Step 3: Show login form if still no userId ─────────────
-  if (!userId) {
-    showLoginForm(document.getElementById("screen-loading"));
+async function loadRole(){
+  // ── MOCK MODE ──────────────────────────────────────────────
+  const mockRole = new URLSearchParams(window.location.search).get("mockRole");
+  if(mockRole){
+    userRole  = mockRole === "admin" ? "admin" : "member";
+    userName  = {member:"ทีมงาน (Mock)", admin:"Admin (Mock)"}[userRole] || mockRole;
+    userCapacity   = 3;
+    userActiveCount = 0;
+    isMockMode = true;
+    bootApp();
     return;
   }
 
-  // ── Step 4: Get role from API (10s timeout) ─────────────────
-  const loadEl2 = document.getElementById("screen-loading");
-  if(loadEl2) loadEl2.innerHTML = '<div class="loading-heart">💛</div><div class="loading-text">กำลังตรวจสอบสิทธิ์...</div>';
-
+  // ── PRODUCTION AUTH ────────────────────────────────────────
+  // 1. Check sessionStorage cache (valid for 60 minutes)
+  const CACHE_KEY = "jaidee_auth_v2";
+  const CACHE_TTL = 60 * 60 * 1000; // 1 hour
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 10000);
-    const res = await fetch(API_URL + "?action=getUserRole&userId=" + encodeURIComponent(userId), { signal: controller.signal });
-    clearTimeout(timer);
-    const d = await res.json();
-    console.log("[JD] role response:", d);
-    if (d.status === "OK" && d.role) {
-      const r = (d.role||"").toLowerCase().trim();
-      userRole = (r === "admin") ? "admin" : (r === "student" ? "member" : r);
-      try { localStorage.setItem("jaidee_uid", userId); localStorage.setItem("jaidee_name", userName); } catch(e){}
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (parsed.userId === userId && Date.now() - parsed.cachedAt < CACHE_TTL) {
+        userRole        = parsed.role;
+        userName        = parsed.name || userName;
+        userCapacity    = parsed.capacity    || 3;
+        userActiveCount = parsed.activeCount || 0;
+        userSpecialization = parsed.specialization || "";
+        isMockMode = false;
+        bootApp();
+        return;
+      }
+    }
+  } catch(e) {}
+
+  // 2. Cache miss or expired — call API
+  try {
+    const d = await apiCall({action:"getUserRole", userId});
+    if (d && d.status === "OK") {
+      userRole           = d.role || "student";
+      userName           = d.name || userName;
+      userCapacity       = d.capacity    || 3;
+      userActiveCount    = d.activeCount || 0;
+      userSpecialization = d.specialization || "";
+      // Cache it
+      sessionStorage.setItem(CACHE_KEY, JSON.stringify({
+        userId, role:userRole, name:userName,
+        capacity:userCapacity, activeCount:userActiveCount,
+        specialization:userSpecialization,
+        cachedAt: Date.now()
+      }));
     } else {
-      userRole = "member";
+      userRole = "student";
     }
   } catch(e) {
-    console.warn("[JD] role fetch failed, defaulting to member:", e.message);
-    userRole = "member";
+    // Network error — fail gracefully, don't block app
+    userRole = "student";
+    console.warn("Auth failed, defaulting to student:", e);
   }
 
-  bootApp();
-};
-
-function showLoginForm(loadEl) {
-  if (!loadEl) return;
-  loadEl.innerHTML = `
-    <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;font-family:'Sarabun',sans-serif;">
-      <div style="width:100%;max-width:360px;">
-        <div style="text-align:center;margin-bottom:32px;">
-          <div style="width:48px;height:48px;border-radius:12px;background:#1C1917;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;margin:0 auto 16px;">TU</div>
-          <div style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#999;margin-bottom:6px;">ใจดี TU</div>
-          <div style="font-size:22px;font-weight:700;color:#1A1714;margin-bottom:6px;">Dashboard</div>
-          <div style="font-size:13px;color:#8C8479;line-height:1.7;">เปิดผ่าน LINE หรือใส่ User ID เพื่อเข้าใช้งาน</div>
-        </div>
-        <div style="background:#fff;border:1px solid #E2DDD7;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;">
-          <div style="font-size:11px;font-weight:700;color:#9A9590;letter-spacing:1px;text-transform:uppercase;">LINE User ID</div>
-          <input id="manual-uid" placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-            style="width:100%;padding:12px 14px;border:1.5px solid #E2DDD7;border-radius:10px;font-size:12px;font-family:monospace;color:#1A1714;background:#FAFAF8;box-sizing:border-box;outline:none;"
-            onkeydown="if(event.key==='Enter') manualLogin()"
-          />
-          <button onclick="manualLogin()"
-            style="width:100%;padding:14px;background:#1C1917;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif;">
-            เข้าสู่ระบบ →
-          </button>
-        </div>
-        <div style="text-align:center;margin-top:20px;font-size:11px;color:#C0B8B0;">เฉพาะทีมงาน ใจดี TU เท่านั้น</div>
-      </div>
-    </div>`;
-}
-
-async function loadRole() {
-  const loadEl = document.getElementById("screen-loading");
-  if (loadEl) loadEl.innerHTML = `<div class="loading-heart">💛</div><div class="loading-text">กำลังตรวจสอบ...</div>`;
-
-  try {
-    const d = await apiCall({ action: "getUserRole", userId });
-    console.log("[JD] getUserRole response:", JSON.stringify(d));
-    if (d.status === "OK" && d.role && d.role !== "student") {
-      try { localStorage.setItem("jaidee_uid", userId); localStorage.setItem("jaidee_name", userName); } catch(e){}
-      userRole = (d.role||"").toLowerCase().trim() === "admin" ? "admin" : d.role;
-      bootApp();
-      return;
-    }
-    // Access denied or unexpected response
-    console.warn("[JD] Access denied or bad response:", d);
+  if (userRole === "student") {
+    // Not a team member — show access denied
     document.getElementById("screen-loading").style.display = "none";
-    document.getElementById("screen-denied").style.display = "flex";
-  } catch(e) {
-    if (loadEl) loadEl.innerHTML = `
-      <div style="padding:32px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:12px;">⚠️</div>
-        <div style="font-size:14px;font-weight:600;margin-bottom:8px;">เชื่อมต่อไม่ได้</div>
-        <div style="font-size:12px;color:#888;margin-bottom:20px;">ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต</div>
-        <button onclick="loadRole()" style="padding:10px 24px;background:#1C1917;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;">ลองอีกครั้ง</button>
-      </div>`;
+    document.getElementById("screen-denied").style.display  = "flex";
+    return;
   }
+
+  isMockMode = false;
+  bootApp();
 }
 
-function manualLogin() {
-  const uid = document.getElementById("manual-uid").value.trim();
-  if (!uid) { document.getElementById("manual-uid").style.borderColor="#C0392B"; return; }
-  userId = uid;
-  userName = "ทีมงาน";
-  try { localStorage.setItem("jaidee_uid", uid); } catch(e) {}
-  loadRole();
+function clearAuthCache(){
+  sessionStorage.removeItem("jaidee_auth_v2");
 }
 
-
-async function loadDynamicAssets(){
-  try {
-    const d = await apiCall({action:"getSiteSettings"});
-    if(d.status==="OK" && d.settings && d.settings.logo_url){
-      const logo = document.getElementById("school-logo-img");
-      if(logo){ logo.style.backgroundImage="url("+d.settings.logo_url+")"; logo.textContent=""; }
-    }
-  } catch(e){}
+function showModeBanner(){
+  const banner = document.getElementById("mode-banner");
+  if(!banner) return;
+  if(isMockMode){
+    banner.style.display = "block";
+    banner.style.background = "#FFF5E0";
+    banner.style.color = "#7A5C00";
+    banner.style.cursor = "default";
+    banner.innerHTML = "🟡 MOCK MODE — ข้อมูลตัวอย่างสำหรับ pitching เท่านั้น";
+  } else {
+    banner.style.display = "block";
+    banner.style.background = "#F0FFF4";
+    banner.style.color = "#1A6B3A";
+    banner.style.cursor = "pointer";
+    banner.innerHTML = "🟢 LIVE — ข้อมูลจริง &nbsp;<span style='opacity:0.5;font-size:10px;'>กด × เพื่อปิด</span>";
+    banner.onclick = () => { banner.style.display = "none"; };
+  }
 }
 
 function bootApp(){
-  // Normalise role — keep admin, everything else is member
+  // ── NORMALISE TO 2-ROLE SYSTEM ──────────────────────────────
+  // Any old role that isn't admin collapses to "member"
   if (userRole !== "admin") userRole = "member";
-  console.log("[JD] bootApp role:", userRole, "user:", userName);
 
   document.getElementById("screen-loading").style.display="none";
   document.getElementById("app").style.display="flex";
   document.getElementById("user-name").innerText=userName;
-  // Load dynamic logo if set
-  loadDynamicAssets();
+  // Show load indicator for members
+  if(userRole==="member"){
+    const loadEl=document.getElementById("pr-load-indicator");
+    if(loadEl) loadEl.textContent=`${userActiveCount}/${userCapacity} เคส`;
+  }
   const badge=document.getElementById("role-badge");
   badge.innerText={admin:"Admin",member:"ทีมงาน"}[userRole]||userRole;
   badge.className="role-badge "+(userRole==="admin"?"admin":"pr"); // reuse admin/pr badge colours
-
-  try { buildTabs(); } catch(e){ console.error("buildTabs failed",e); }
-  try { loadData(); } catch(e){ console.error("loadData failed",e); }
+  if(userRole==="admin"){
+    document.getElementById("role-switcher").style.display="inline-block";
+    document.getElementById("dev-btn").classList.add("visible");
+  }
+  showModeBanner();
+  buildTabs();
+  loadData();
 }
 
 function buildTabs(viewRole){
@@ -1005,29 +1198,32 @@ function buildTabs(viewRole){
 
   const tabs={
     admin:[
-      {id:"tab-overview",  label:"Overview",     icon:"📊", section:null},
-      {id:"tab-cases",     label:"Cases",        icon:"🤍", section:"Cases"},
-      {id:"tab-feedback",  label:"Feedback",     icon:"💬", section:"Cases"},
-      {id:"tab-content",      label:"Content",      icon:"🧩", section:"Content"},
-      {id:"tab-collaborators", label:"Collaborators",icon:"🤝", section:"Content"},
-      {id:"tab-people",    label:"People",       icon:"👥", section:"Content"},
-      {id:"tab-therapist", label:"Therapist",    icon:"🧠", section:"Content"},
-      {id:"tab-guidance",  label:"Guidance",     icon:"👩‍🏫", section:"Content"},
-      {id:"tab-founders",  label:"จดหมายเหตุ",   icon:"📜", section:"Content"},
-      {id:"tab-programs",  label:"Programs",     icon:"🌱", section:"Content"},
-      {id:"tab-team",      label:"จัดการทีม",    icon:"👤", section:"Team"},
+      {id:"tab-overview", label:"Overview",    icon:"📊", section:null},
+      {id:"tab-cases",    label:"Cases",       icon:"🤍", section:"Cases"},
+      {id:"tab-feedback", label:"Feedback",    icon:"💬", section:null},
+      {id:"tab-content",  label:"Content",     icon:"🧩", section:"Content"},
+      {id:"tab-people",   label:"People",      icon:"👥", section:"Content"},
+      {id:"tab-therapist", label:"Therapist",   icon:"🧠", section:"Content"},
+      {id:"tab-team",      label:"จัดการทีม",   icon:"👤", section:"Team"},
       {id:"tab-rooms",     label:"ห้อง",          icon:"🚪", section:"Team"},
-      {id:"tab-settings",  label:"Settings",     icon:"⚙️", section:null},
+      {id:"tab-rooms",     label:"ห้อง",         icon:"🚪", section:"Team"},
+      {id:"tab-guidance",  label:"Guidance",    icon:"👩‍🏫", section:"Content"},
+      {id:"tab-requests", label:"คำขอครู",     icon:"📩", section:"Content"},
+      {id:"tab-tools",    label:"เครื่องมือ",  icon:"🛠", section:"Content"},
+      {id:"tab-programs", label:"Programs",    icon:"🌱", section:null},
+      {id:"tab-settings", label:"Settings",    icon:"⚙️", section:null},
+      {id:"tab-archive",  label:"จดหมายเหตุ", icon:"📜", section:"System"},
     ],
     member:[
-      {id:"tab-my-cases",     label:"เคสของฉัน",    icon:"🤍", section:"Peer Support"},
-      {id:"tab-session-note", label:"Session Note",   icon:"📝", section:"Peer Support"},
-      {id:"tab-schedule",     label:"ตารางของฉัน",   icon:"📅", section:"Peer Support"},
-      {id:"tab-content",      label:"เพิ่มเนื้อหา",  icon:"🧩", section:"Content"},
-      {id:"tab-people",       label:"People",         icon:"👥", section:"Content"},
-      {id:"tab-therapist",    label:"Therapist",      icon:"🧠", section:"Content"},
-      {id:"tab-guidance",     label:"Guidance",       icon:"👩‍🏫", section:"Content"},
-      {id:"tab-programs",     label:"Programs",       icon:"🌱", section:"Content"},
+      {id:"tab-my-cases",     label:"เคสของฉัน",   icon:"🤍", section:"Peer Support"},
+      {id:"tab-session-note", label:"Session Note",  icon:"📝", section:"Peer Support"},
+      {id:"tab-schedule",     label:"ตารางของฉัน",  icon:"📅", section:"Peer Support"},
+      {id:"tab-content",      label:"เพิ่มเนื้อหา", icon:"🧩", section:"Content"},
+      {id:"tab-people",       label:"People",        icon:"👥", section:"Content"},
+      {id:"tab-requests",     label:"คำขอครู",       icon:"📩", section:"Content"},
+      {id:"tab-therapist",    label:"Therapist",     icon:"🧠", section:"Content"},
+      {id:"tab-guidance",     label:"Guidance",      icon:"👩‍🏫", section:"Content"},
+      {id:"tab-archive",      label:"จดหมายเหตุ",   icon:"📜", section:null},
     ],
   };
 
@@ -1053,7 +1249,7 @@ function buildTabs(viewRole){
     item.onclick = () => switchTab(t.id, item);
     sidebar.appendChild(item);
     // Add divider after last peer section item (before content)
-    if(t.id==="tab-schedule"||t.id==="tab-pr"||t.id==="tab-feedback"){
+    if(t.id==="tab-schedule"||t.id==="tab-feedback"){
       const div = document.createElement("div");
       div.className = "sidebar-divider";
       sidebar.appendChild(div);
@@ -1061,6 +1257,14 @@ function buildTabs(viewRole){
   });
 
   document.querySelectorAll(".tab-content").forEach(t=>{t.classList.remove("active");t.style.display="none";});
+  if(id==="tab-people")loadPeopleTab();
+  if(id==="tab-session-note")initSessionNoteTab();
+  if(id==="tab-therapist")loadStaffTab("therapist");
+  if(id==="tab-team")loadTeamTab();
+  if(id==="tab-rooms")loadRoomsTab();
+  if(id==="tab-rooms")loadRoomsTab();
+  if(id==="tab-guidance")loadStaffTab("guidance");
+  if(id==="tab-requests")loadRequestsTab();
   const first = list[0];
   if(first){
     const el=document.getElementById(first.id);
@@ -1076,54 +1280,177 @@ function switchViewRole(role){
 
 function switchTab(tabId,item){
   document.querySelectorAll(".tab-content").forEach(t=>{t.classList.remove("active");t.style.display="none";});
+  if(id==="tab-people")loadPeopleTab();
+  if(id==="tab-therapist")loadStaffTab("therapist");
+  if(id==="tab-guidance")loadStaffTab("guidance");
+  if(id==="tab-requests")loadRequestsTab();
   document.querySelectorAll(".sidebar-item").forEach(s=>s.classList.remove("active"));
   const el=document.getElementById(tabId);
   if(el){el.style.display="flex";el.classList.add("active");}
   if(item) item.classList.add("active");
-  // Lazy-load tab data on first visit
-  if(tabId==="tab-team")      loadTeamTab();
-  if(tabId==="tab-rooms")     loadRoomsTab();
-  if(tabId==="tab-therapist") loadStaffTab("therapist");
-  if(tabId==="tab-guidance")  loadStaffTab("guidance");
-  if(tabId==="tab-founders")  loadFoundersTab();
-  if(tabId==="tab-collaborators") loadCollaboratorsTab();
-  if(tabId==="tab-people")    loadPeopleTab();
-  if(tabId==="tab-session-note") initSessionNoteTab();
-  if(tabId==="tab-programs")  loadProgramData();
-  if(tabId==="tab-feedback")  loadFeedback();
+  if(tabId==="tab-archive") loadArchiveTab();
+  if(tabId==="tab-tools") loadToolsTab();
   // Close sidebar on mobile after nav
   if(window.innerWidth<=600) closeSidebar();
 }
 
-
-// ── SIDEBAR MOBILE TOGGLE ────────────────────────────────────
-function openSidebar() {
-  document.getElementById("sidebar-nav").classList.add("open");
-  const ov = document.getElementById("sidebar-overlay");
-  if (ov) ov.classList.add("open");
-  document.body.style.overflow = "hidden";
-}
-function closeSidebar() {
-  document.getElementById("sidebar-nav").classList.remove("open");
-  const ov = document.getElementById("sidebar-overlay");
-  if (ov) ov.classList.remove("open");
-  document.body.style.overflow = "";
-}
-
 async function loadData(){
-  try {
+  if(isMockMode){
     if(userRole==="admin"){
-      try { loadAdminData(); } catch(e){ console.warn("loadAdminData failed",e); }
-      try { loadFeedback(); } catch(e){ console.warn("loadFeedback failed",e); }
-      try { buildWorldGrid(); } catch(e){ console.warn("buildWorldGrid failed",e); }
+      loadAdminDataMock();
+      buildWorldGrid();
     } else {
-      try { loadPRData(); } catch(e){ console.warn("loadPRData failed",e); }
-      try { buildScheduleTab(); } catch(e){ console.warn("buildScheduleTab failed",e); }
-      try { buildWorldGrid(); } catch(e){ console.warn("buildWorldGrid failed",e); }
+      // member mock — load cases + schedule + world grid
+      loadMemberDataMock();
+      buildScheduleTabMock();
+      buildWorldGrid();
     }
-  } catch(e){ console.warn("loadData failed",e); }
+    return;
+  }
+  if(userRole==="admin"){loadAdminData();loadFeedback();loadPendingFounders();buildWorldGrid();}
+  else { loadPRData();buildScheduleTab();buildWorldGrid(); }
 }
 
+function loadAdminDataMock(){
+  renderCasesInto("overview-urgent",MOCK.cases.filter(c=>c.level==="red"&&c.status!=="completed"),true);
+  renderSpecialRequests(MOCK.specialRequests||[]);
+  renderCasesInto("cases-list",MOCK.cases,true);
+  renderPRList(MOCK.prList);
+  renderWaitingList(MOCK.waiting||[]);
+  if(document.getElementById("founders-pending"))
+    document.getElementById("founders-pending").innerHTML=`<div class="empty">ไม่มี Founder รอ Approve 💛</div>`;
+  // Mock feedback
+  document.getElementById("fb-great").innerText="12";
+  document.getElementById("fb-ok").innerText="5";
+  document.getElementById("fb-unsure").innerText="3";
+  document.getElementById("fb-total").innerText="20";
+  const list=document.getElementById("feedback-list");
+  if(list) list.innerHTML=`
+    <div class="kpi-card"><div style="font-size:22px;">💛</div><div style="font-size:13px;font-weight:600;">รู้สึกดีขึ้น</div><div style="font-size:11px;color:var(--text-soft);">พุธ 16:00–17:00 · วันนี้</div></div>
+    <div class="kpi-card"><div style="font-size:22px;">🤍</div><div style="font-size:13px;font-weight:600;">ต้องการความช่วยเหลือเพิ่ม</div><div style="font-size:11px;color:var(--text-soft);">อังคาร 15:30–16:30 · เมื่อวาน</div></div>
+    <div class="kpi-card"><div style="font-size:22px;">🌱</div><div style="font-size:13px;font-weight:600;">ต้องการเวลาคิด</div><div style="font-size:11px;color:var(--text-soft);">ศุกร์ 14:00–15:00 · 3 วันที่แล้ว</div></div>
+  `;
+}
+
+function loadMemberDataMock(){
+  const myCases = MOCK.cases.filter(c=>c.owner==="PR_001");
+  renderCasesInto("my-cases-list", myCases, false);
+  if(document.getElementById("all-cases-section"))
+    document.getElementById("all-cases-section").style.display="none";
+  // Load mock content views for Puzzle Builder tab
+  const pzList = document.getElementById("puzzle-list");
+  if(pzList) pzList.innerHTML = `
+    <div class="case-card">
+      <div class="case-meta"><span class="badge badge-green">article</span> <span style="font-size:11px;color:var(--text-soft);">แรงจูงใจ · 🟡 กลาง · 10 นาที</span></div>
+      <div class="case-title">ทำไมบางวันเราทำได้ไม่หยุด</div>
+      <div class="case-sub" style="font-size:11px;color:var(--text-soft);">👁 24 views · 3 วันที่แล้ว</div>
+    </div>
+    <div class="case-card">
+      <div class="case-meta"><span class="badge badge-blue">article</span> <span style="font-size:11px;color:var(--text-soft);">ความสัมพันธ์ · 🟢 เบา · 7 นาที</span></div>
+      <div class="case-title">เพื่อนที่ดีฟังแบบไหน</div>
+      <div class="case-sub" style="font-size:11px;color:var(--text-soft);">👁 18 views · 5 วันที่แล้ว</div>
+    </div>
+  `;
+}
+const loadPRDataMock = loadMemberDataMock; // backward compat
+
+// ── MOCK: Schedule Tab for PR ──────────────────────────────
+// Called when ?mockRole=pr — simulates registered slots + 1 locked booking
+function buildScheduleTabMock(){
+  const weekLabel = document.getElementById("schedule-week-label");
+  if(weekLabel) weekLabel.innerText = "📅 " + getWeekRange() + " (MOCK)";
+
+  const container = document.getElementById("schedule-days");
+  if(!container) return;
+
+  // Mock status summary
+  const summaryCard = document.createElement("div");
+  summaryCard.style.cssText = "background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:16px;";
+  summaryCard.innerHTML = `
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-soft);margin-bottom:10px;">ระบบมองเห็นคุณสัปดาห์นี้ว่า...</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+      <div style="background:var(--surface);border-radius:10px;padding:10px 6px;">
+        <div style="font-size:20px;font-weight:700;color:var(--gold);font-family:'IBM Plex Mono',monospace;">4</div>
+        <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">slot ที่ลงไว้</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:10px 6px;">
+        <div style="font-size:20px;font-weight:700;color:var(--red);font-family:'IBM Plex Mono',monospace;">2</div>
+        <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">มีนัดแล้ว</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:10px 6px;">
+        <div style="font-size:20px;font-weight:700;color:var(--green);font-family:'IBM Plex Mono',monospace;">2</div>
+        <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">ว่างรับใหม่</div>
+      </div>
+    </div>`;
+  container.innerHTML = "";
+  container.appendChild(summaryCard);
+
+  // Mock: PR has registered these slots, one is locked (booked by student)
+  const MOCK_MY_SLOTS = ["จันทร์ 16:00–17:00","พุธ 15:30–16:30","ศุกร์ 14:00–15:00","ศุกร์ 15:30–16:30"];
+  const MOCK_BOOKED   = {
+    "พุธ 15:30–16:30": { caseId:"CASE_001", studentUserId:"U_MOCK_01" }
+  };
+
+  // Sync selectedSlots with registered (non-locked) slots
+  selectedSlots = MOCK_MY_SLOTS.filter(s => !MOCK_BOOKED[s]);
+
+  container.innerHTML = "";
+  Object.entries(SLOT_TIMES).forEach(([key, times]) => {
+    const g = document.createElement("div"); g.className = "schedule-day";
+    const l = document.createElement("div"); l.className = "schedule-day-name";
+    l.innerText = DAY_LABELS[key]; g.appendChild(l);
+    const r = document.createElement("div"); r.className = "schedule-slots";
+
+    times.forEach(time => {
+      const full     = DAY_LABELS[key] + " " + time;
+      const isBooked   = !!MOCK_BOOKED[full];
+      const isSelected = selectedSlots.includes(full);
+
+      const chip = document.createElement("button");
+      chip.className = "slot-chip" + (isBooked ? " locked" : isSelected ? " chosen" : "");
+      chip.innerHTML  = isBooked ? "🔒 " + time : time;
+
+      if(isBooked){
+        chip.style.cssText = "background:var(--red-soft);border-color:var(--red);color:var(--red);cursor:pointer;";
+        chip.onclick = () => toast("⚠️ Mock — slot นี้มีน้องจองอยู่ (ไม่บันทึกจริง)");
+      } else {
+        chip.onclick = () => toggleSlot(chip, full);
+      }
+      r.appendChild(chip);
+    });
+    g.appendChild(r); container.appendChild(g);
+  });
+
+  // Update summary + save button
+  const btn = document.getElementById("btn-save-schedule");
+  const sum = document.getElementById("schedule-summary");
+  if(selectedSlots.length === 0){
+    if(sum) sum.innerText = "ยังไม่ได้เลือกช่วงเวลา";
+    if(btn) btn.disabled = true;
+  } else {
+    if(sum) sum.innerText = "เลือกแล้ว " + selectedSlots.length + " ช่วงเวลา";
+    if(btn){ btn.disabled = false; btn.onclick = () => { toast("บันทึกตารางแล้ว 💛 (mock)"); }; }
+  }
+}
+
+function loadProgramMock(){
+  const list=document.getElementById("programs-list");
+  if(!list)return;
+  list.innerHTML="";
+  MOCK.programs.forEach(p=>{
+    const card=document.createElement("div");
+    card.className="pr-card";
+    card.style.cssText="flex-direction:column;gap:6px;align-items:flex-start;";
+    card.innerHTML=`
+      <div class="pr-name">${p.name}</div>
+      <div class="pr-sub">${p.short_desc||""}</div>
+      <div style="font-size:11px;color:var(--text-soft);">📅 ${p.start_date} · ปิดรับ ${p.reg_deadline}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// Admin viewing AS PR — sees ALL cases, can complete/cancel any
 async function loadAdminAsPR(){
   let allCases;
   try{
@@ -1141,7 +1468,7 @@ async function loadAdminAsPR(){
 }
 
 // ── PENDING FOUNDERS ──────────────────────────────────────
-async function loadPendingFounders_DISABLED(){
+async function loadPendingFounders(){
   let pending;
   try{
     const d=await apiCall({action:"getPendingFounders"});
@@ -1176,8 +1503,6 @@ async function loadPendingFounders_DISABLED(){
     el.appendChild(card);
   });
 }
-
-
 
 // ── FEEDBACK ──────────────────────────────────────────────
 async function loadFeedback(){
@@ -1222,12 +1547,15 @@ async function loadFeedback(){
 
 // ── CONTENT TEAM ──────────────────────────────────────────
 function buildWorldGrid(){
-  // Only worlds that have content managed here
-  // Reflection, Academic, School, Career = no content tab (locked or separate)
   const worlds=[
     {icon:"🧩",name:"Puzzle Piece",id:"puzzle"},
+    {icon:"🪞",name:"Reflection Space",id:"reflection"},
+    {icon:"📚",name:"Academic Support",id:"academic"},
+    {icon:"🎯",name:"Career Support",id:"career"},
     {icon:"👥",name:"People",id:"people"},
-    {icon:"🌱",name:"Programs",id:"programs"},
+    {icon:"🏫",name:"School Support",id:"school"},
+    {icon:"🌱",name:"Growth Programs",id:"growth"},
+    {icon:"✨",name:"Founder's Pick",id:"founder"},
   ];
   const grid=document.getElementById("world-grid");
   if(!grid)return;
@@ -1742,57 +2070,166 @@ function getWeekRange(){
 }
 
 async function buildScheduleTab(){
-  document.getElementById("schedule-week-label").innerText="📅 "+getWeekRange();
-  const container=document.getElementById("schedule-days");
-  container.innerHTML="<div style='font-size:13px;color:var(--text-mid);'>กำลังโหลด...</div>";
+  const weekLabel = document.getElementById("schedule-week-label");
+  if(weekLabel) weekLabel.innerText = "📅 " + getWeekRange();
+  const container = document.getElementById("schedule-days");
+  if(!container) return;
+  container.innerHTML = "<div style='font-size:13px;color:var(--text-mid);padding:12px 0;'>กำลังโหลด...</div>";
 
-  // Fetch both registered slots and booked slots for this PR
-  let mySlots = [];
-  let bookedSlots = {};
-  try{
+  let mySlots    = [];   // all slots PR registered this week
+  let bookedSlots = {};  // slot → booking info (has student)
+  let lockedSlots = {};  // slot → true (PR manually deactivated, no student)
+
+  try {
     const [slotsRes, bookedRes] = await Promise.all([
-      apiCall({action:"getMySlots",userId:userId}),
-      apiCall({action:"getMyBookedSlots",userId:userId})
+      apiCall({action:"getMySlots",       userId}),
+      apiCall({action:"getMyBookedSlots", userId})
     ]);
-    const sd = slotsRes;
-    const bd = bookedRes;
-    mySlots = (sd.slots||[]).map(s=>s.slot);
-    bookedSlots = bd.bookedSlots||{};
-  }catch{}
+    mySlots     = (slotsRes.slots  || []).map(s => s.slot || s);
+    bookedSlots = bookedRes.bookedSlots || {};
+    lockedSlots = bookedRes.lockedSlots || {}; // manually deactivated
+  } catch(e) {}
 
-  // Pre-select registered slots
-  selectedSlots = mySlots.filter(s => !bookedSlots[s]);
+  // selectedSlots = slots PR wants active (not booked, not manually locked)
+  selectedSlots = mySlots.filter(s => !bookedSlots[s] && !lockedSlots[s]);
 
-  container.innerHTML="";
-  Object.entries(SLOT_TIMES).forEach(([key,times])=>{
-    const g=document.createElement("div");g.className="schedule-day";
-    const l=document.createElement("div");l.className="schedule-day-name";l.innerText=DAY_LABELS[key];g.appendChild(l);
-    const r=document.createElement("div");r.className="schedule-slots";
-    times.forEach(time=>{
-      const full=DAY_LABELS[key]+" "+time;
-      const isBooked=bookedSlots[full];
-      const isSelected=selectedSlots.includes(full);
+  // ── Status summary card ──────────────────────────────────────
+  const totalSlots   = mySlots.length;
+  const bookedCount  = Object.keys(bookedSlots).length;
+  const lockedCount  = Object.keys(lockedSlots).length;
+  const freeCount    = Math.max(0, totalSlots - bookedCount - lockedCount);
 
-      const chip=document.createElement("button");
-      chip.className="slot-chip"+(isBooked?" locked":isSelected?" chosen":"");
-      chip.innerHTML=isBooked?"🔒 "+time:time;
+  container.innerHTML = "";
 
-      if(isBooked){
-        chip.style.cssText="background:var(--red-soft);border-color:var(--red);color:var(--red);cursor:pointer;";
-        chip.onclick=()=>confirmCancelSlot(full, bookedSlots[full]);
+  // What the system sees about YOU this week
+  const summaryCard = document.createElement("div");
+  summaryCard.style.cssText = "background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:16px;";
+  summaryCard.innerHTML = `
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-soft);margin-bottom:10px;">ระบบมองเห็นคุณสัปดาห์นี้ว่า...</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+      <div style="background:var(--surface);border-radius:10px;padding:10px 6px;">
+        <div style="font-size:20px;font-weight:700;color:var(--gold);font-family:'IBM Plex Mono',monospace;">${totalSlots}</div>
+        <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">slot ที่ลงไว้</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:10px 6px;">
+        <div style="font-size:20px;font-weight:700;color:var(--red);font-family:'IBM Plex Mono',monospace;">${bookedCount}</div>
+        <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">มีนัดแล้ว</div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;padding:10px 6px;">
+        <div style="font-size:20px;font-weight:700;color:var(--green);font-family:'IBM Plex Mono',monospace;">${freeCount}</div>
+        <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">ว่างรับใหม่</div>
+      </div>
+    </div>
+    ${freeCount === 0 && totalSlots > 0 ?
+      `<div style="margin-top:10px;padding:8px 10px;background:var(--yellow-soft);border-radius:8px;font-size:12px;color:var(--yellow);font-weight:600;">⚠️ ทุก slot เต็มหมดแล้ว — นักเรียนใหม่จะไม่ได้รับ slot ของคุณสัปดาห์นี้</div>`
+      : ""}
+    ${totalSlots === 0 ?
+      `<div style="margin-top:10px;padding:8px 10px;background:var(--red-soft);border-radius:8px;font-size:12px;color:var(--red);font-weight:600;">❌ ยังไม่ได้ลงตารางสัปดาห์นี้ — นักเรียนจะไม่เห็นคุณในระบบ</div>`
+      : ""}`;
+  container.appendChild(summaryCard);
+
+  // ── Slot grid ──────────────────────────────────────────────
+  const legend = document.createElement("div");
+  legend.style.cssText = "display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;font-weight:600;";
+  legend.innerHTML = `
+    <span style="display:flex;align-items:center;gap:4px;color:var(--green);">🟢 ว่าง รับได้</span>
+    <span style="display:flex;align-items:center;gap:4px;color:var(--red);">🔴 มีนัดแล้ว</span>
+    <span style="display:flex;align-items:center;gap:4px;color:var(--text-soft);">⚫ ปิดแล้ว (ไม่มีนัด)</span>
+    <span style="display:flex;align-items:center;gap:4px;color:var(--text-soft);">◻️ ไม่ได้ลง</span>`;
+  container.appendChild(legend);
+
+  Object.entries(SLOT_TIMES).forEach(([key, times]) => {
+    const g = document.createElement("div");
+    g.className = "schedule-day";
+    const l = document.createElement("div");
+    l.className = "schedule-day-name";
+    l.innerText = DAY_LABELS[key];
+    g.appendChild(l);
+
+    const r = document.createElement("div");
+    r.className = "schedule-slots";
+
+    times.forEach(time => {
+      const full      = DAY_LABELS[key] + " " + time;
+      const isBooked  = !!bookedSlots[full];
+      const isLocked  = !!lockedSlots[full];
+      const isMySlot  = mySlots.includes(full);
+      const isActive  = isMySlot && !isBooked && !isLocked;
+
+      const chip = document.createElement("button");
+
+      if (isBooked) {
+        // Has student — show case info, can cancel
+        const booking = bookedSlots[full];
+        chip.className = "slot-chip locked";
+        chip.style.cssText = "background:var(--red-soft);border-color:var(--red);color:var(--red);cursor:pointer;";
+        chip.innerHTML = `🔴 ${time}<br/><span style="font-size:9px;opacity:0.8;">${booking.caseId||"มีนัด"}</span>`;
+        chip.title = "กดเพื่อยกเลิก slot นี้";
+        chip.onclick = () => confirmCancelSlot(full, booking);
+      } else if (isLocked) {
+        // Manually deactivated — no student, PR closed it
+        chip.className = "slot-chip";
+        chip.style.cssText = "background:var(--surface2);border-color:var(--border);color:var(--text-soft);cursor:pointer;";
+        chip.innerHTML = `⚫ ${time}<br/><span style="font-size:9px;">ปิดอยู่ — กดเพื่อเปิด</span>`;
+        chip.onclick = () => reactivateSlot(chip, full);
+      } else if (isActive) {
+        // Open and available
+        chip.className = "slot-chip chosen";
+        chip.innerHTML = `🟢 ${time}`;
+        chip.onclick = () => deactivateSlot(chip, full);
       } else {
-        chip.onclick=()=>toggleSlot(chip,full);
+        // Not registered — tappable to ADD this slot
+        chip.className = "slot-chip";
+        chip.style.cssText = "opacity:0.6;cursor:pointer;border-style:dashed;";
+        chip.innerHTML = `＋ ${time}`;
+        chip.title = "กดเพื่อเพิ่ม slot นี้";
+        chip.onclick = () => addNewSlot(chip, full);
       }
       r.appendChild(chip);
     });
-    g.appendChild(r);container.appendChild(g);
+
+    g.appendChild(r);
+    container.appendChild(g);
   });
 
-  // Update summary
-  const btn=document.getElementById("btn-save-schedule");
-  const sum=document.getElementById("schedule-summary");
-  if(selectedSlots.length===0){sum.innerText="ยังไม่ได้เลือกช่วงเวลา";btn.disabled=true;}
-  else{sum.innerText="เลือกแล้ว "+selectedSlots.length+" ช่วงเวลา";btn.disabled=false;}
+  updateScheduleSummary();
+}
+
+function addNewSlot(chip, slot) {
+  // PR taps an unregistered slot to add it this week
+  selectedSlots.push(slot);
+  chip.className = "slot-chip chosen";
+  chip.style.cssText = "";
+  chip.innerHTML = `🟢 ${slot.split(" ").slice(1).join(" ")}`;
+  chip.title = "กดเพื่อปิด slot นี้";
+  chip.onclick = () => deactivateSlot(chip, slot);
+  updateScheduleSummary();
+  toast("เพิ่ม slot แล้ว — กด 'ยืนยันตารางสัปดาห์นี้' เพื่อบันทึก");
+}
+
+function deactivateSlot(chip, slot){
+  // PR deactivates a slot that has no booking yet — removes from available pool
+  if(!confirm(`ปิด slot "${slot}" ไหม?\n\nนักเรียนจะไม่เห็น slot นี้อีก\nแต่ถ้ายังไม่มีนัด ยังเปิดคืนได้นะ`)) return;
+  selectedSlots = selectedSlots.filter(s => s !== slot);
+  chip.className = "slot-chip";
+  chip.style.cssText = "background:var(--surface2);border-color:var(--border);color:var(--text-soft);cursor:pointer;";
+  chip.innerHTML = `⚫ ${slot.split(" ").slice(1).join(" ")}<br/><span style="font-size:9px;">ปิดอยู่ — กดเพื่อเปิด</span>`;
+  chip.onclick = () => reactivateSlot(chip, slot);
+  // Save deactivation via API
+  apiCall({action:"deactivateSlot", userId, slot}).catch(()=>{});
+  updateScheduleSummary();
+  toast("ปิด slot แล้ว");
+}
+
+function reactivateSlot(chip, slot){
+  selectedSlots.push(slot);
+  chip.className = "slot-chip chosen";
+  chip.style.cssText = "";
+  chip.innerHTML = `🟢 ${slot.split(" ").slice(1).join(" ")}`;
+  chip.onclick = () => deactivateSlot(chip, slot);
+  apiCall({action:"reactivateSlot", userId, slot}).catch(()=>{});
+  updateScheduleSummary();
+  toast("เปิด slot แล้ว");
 }
 
 function confirmCancelSlot(slot, bookingInfo){
@@ -1824,12 +2261,23 @@ function confirmCancelSlot(slot, bookingInfo){
 }
 
 function toggleSlot(chip,slot){
-  if(selectedSlots.includes(slot)){selectedSlots=selectedSlots.filter(s=>s!==slot);chip.classList.remove("chosen");}
-  else{selectedSlots.push(slot);chip.classList.add("chosen");}
+  if(selectedSlots.includes(slot)){
+    selectedSlots=selectedSlots.filter(s=>s!==slot);
+    chip.classList.remove("chosen");
+  } else {
+    selectedSlots.push(slot);
+    chip.classList.add("chosen");
+  }
+  updateScheduleSummary();
+}
+
+function updateScheduleSummary(){
   const btn=document.getElementById("btn-save-schedule");
   const sum=document.getElementById("schedule-summary");
-  if(selectedSlots.length===0){sum.innerText="ยังไม่ได้เลือกช่วงเวลา";btn.disabled=true;}
-  else{sum.innerText="เลือกแล้ว "+selectedSlots.length+" ช่วงเวลา";btn.disabled=false;}
+  if(sum) sum.innerText = selectedSlots.length > 0
+    ? `เปิดรับ ${selectedSlots.length} slot สัปดาห์นี้`
+    : "ยังไม่มี slot ที่เปิดรับ";
+  if(btn) btn.disabled = false;
 }
 
 async function saveSchedule(){
@@ -1907,12 +2355,6 @@ async function setPause(){
   toast("🔴 ปิดระบบแล้ว");loadData();
 }
 
-async function clearPause(){
-  if(!confirm("ยกเลิกช่วงหยุดและเปิดระบบทันทีไหม?"))return;
-  try{await apiCall({action:"clearPause"});}catch{}
-  toast("🟢 เปิดระบบแล้ว");loadData();
-}
-
 function setPreset(type){
   const today=new Date(),y=today.getFullYear();
   const p={
@@ -1952,7 +2394,11 @@ function updatePauseStatusCard(pause){
   } else { ac.style.display="none";ic.style.display="flex"; }
 }
 
-
+async function clearPause(){
+  if(!confirm("ยกเลิกช่วงหยุดพักปัจจุบัน?"))return;
+  try{await apiCall({action:"clearPause"});}catch{}
+  toast("ยกเลิกช่วงหยุดแล้ว");loadData();
+}
 
 async function notifyAll(){
   try{await apiCall({action:"notifyWaiting"});}catch{}
@@ -2060,323 +2506,10 @@ function closeDevView(e){
   document.getElementById("dev-overlay").classList.remove("active");
 }
 
-// ════════════════════════════════════════════════════════
-// COLLABORATORS TAB
-// ════════════════════════════════════════════════════════
-let _collabs = [];
-let _currentCollabId = null;
-let _collabContentType = 'article';
-
-async function loadCollaboratorsTab(){
-  const list = document.getElementById("collab-list");
-  if(!list) return;
-  list.innerHTML = '<div class="empty">กำลังโหลด...</div>';
-  try {
-    const d = await apiCall({action:"getCollaborators"});
-    if(d.status==="OK") _collabs = d.collaborators || [];
-  } catch(e){ _collabs = []; }
-  renderCollabList();
-}
-
-function renderCollabList(){
-  const list = document.getElementById("collab-list");
-  if(!list) return;
-  if(!_collabs.length){
-    list.innerHTML = '<div class="empty">ยังไม่มี Collaborator — เพิ่มด้านล่างได้เลย</div>';
-    return;
-  }
-  list.innerHTML = "";
-  _collabs.forEach(c => {
-    const contentCount = (c.content||[]).length;
-    const card = document.createElement("div");
-    card.className = "case-card";
-    card.style.cssText = "padding:14px;";
-    card.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-        ${c.photo_url
-          ? `<img src="${c.photo_url}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'"/>`
-          : `<div style="width:44px;height:44px;border-radius:50%;background:var(--gold-soft);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🤝</div>`
-        }
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:14px;font-weight:700;">ใจดี TU × ${c.name||"—"}</div>
-          <div style="font-size:11px;color:var(--text-soft);">${c.role||""}</div>
-          <div style="font-size:11px;color:var(--text-soft);margin-top:2px;">${contentCount} เนื้อหา · ตำแหน่ง ${c.position||"—"} ในฟีด</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
-          <button class="btn-sm gold" onclick="openCollabModal('${c.id}')" style="font-size:11px;">✏️ จัดการ</button>
-          <button class="btn-sm ghost" onclick="toggleCollabActive('${c.id}',${c.active!=='FALSE'&&c.active!==false?'false':'true'})" style="font-size:11px;">${c.active!=='FALSE'&&c.active!==false?'👁 แสดง':'👁‍🗨 ซ่อน'}</button>
-          <button class="btn-sm ghost" onclick="deleteCollab('${c.id}')" style="font-size:11px;color:var(--red);">🗑️</button>
-        </div>
-      </div>`;
-    list.appendChild(card);
-  });
-}
-
-async function addCollaborator(){
-  const name     = document.getElementById("cl-name")?.value.trim();
-  const role     = document.getElementById("cl-role")?.value.trim();
-  const bio      = document.getElementById("cl-bio")?.value.trim();
-  const photo    = document.getElementById("cl-photo")?.value.trim();
-  const position = document.getElementById("cl-position")?.value||"3";
-  const instagram= document.getElementById("cl-instagram")?.value.trim();
-  const youtube  = document.getElementById("cl-youtube")?.value.trim();
-  const facebook = document.getElementById("cl-facebook")?.value.trim();
-  const website  = document.getElementById("cl-website")?.value.trim();
-  if(!name||!role){ toast("กรุณาใส่ชื่อและตำแหน่ง"); return; }
-  const btn = event.target;
-  btn.disabled=true; btn.textContent="กำลังเพิ่ม...";
-  try {
-    const d = await apiCall({
-      action:"addCollaborator",
-      name, role, bio, photo_url:photo, position,
-      instagram, youtube, facebook, website,
-      active:"TRUE", content:"[]"
-    });
-    if(d.status==="OK"){
-      toast("เพิ่ม Collaborator แล้ว 🤝");
-      ["cl-name","cl-role","cl-bio","cl-photo","cl-instagram","cl-youtube","cl-facebook","cl-website"]
-        .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
-      document.getElementById("cl-position").value="3";
-      loadCollaboratorsTab();
-    } else { toast("เกิดข้อผิดพลาด"); }
-  } catch(e){ toast("เกิดข้อผิดพลาด"); }
-  finally{ btn.disabled=false; btn.textContent="เพิ่ม Collaborator →"; }
-}
-
-async function toggleCollabActive(id, active){
-  try{ await apiCall({action:"updateCollaborator", id, active:active?"TRUE":"FALSE"}); } catch(e){}
-  const c = _collabs.find(c=>c.id===id);
-  if(c) c.active = active?"TRUE":"FALSE";
-  renderCollabList();
-  toast(active?"เปิดแสดงแล้ว":"ซ่อนแล้ว");
-}
-
-async function deleteCollab(id){
-  if(!confirm("ลบ Collaborator นี้? เนื้อหาทั้งหมดจะหายไปด้วย")) return;
-  try{ await apiCall({action:"deleteCollaborator", id}); } catch(e){}
-  _collabs = _collabs.filter(c=>c.id!==id);
-  renderCollabList();
-  toast("ลบแล้ว");
-}
-
-// ── COLLAB CONTENT MODAL ──────────────────────────────────
-function openCollabModal(id){
-  const c = _collabs.find(c=>c.id===id);
-  if(!c) return;
-  _currentCollabId = id;
-  document.getElementById("modal-collab-name").textContent = c.name||"";
-  renderModalContentList(c.content||[]);
-  // Reset add form
-  setCollabContentType("article");
-  ["mc-title","mc-desc","mc-tag","mc-readtime","mc-url","mv-url","mv-title","mv-desc"]
-    .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
-  document.getElementById("mv-preview").style.display="none";
-  const modal = document.getElementById("collab-modal");
-  modal.style.display = "flex";
-  document.body.style.overflow = "hidden";
-}
-
-function closeCollabModal(){
-  document.getElementById("collab-modal").style.display = "none";
-  document.body.style.overflow = "";
-}
-
-function renderModalContentList(content){
-  const list = document.getElementById("modal-content-list");
-  if(!list) return;
-  if(!content.length){
-    list.innerHTML = '<div class="empty" style="font-size:12px;">ยังไม่มีเนื้อหา</div>';
-    return;
-  }
-  list.innerHTML = "";
-  content.forEach((item, idx) => {
-    const isVideo = item.type==="video";
-    const el = document.createElement("div");
-    el.style.cssText = "display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface2);border-radius:10px;";
-    el.innerHTML = `
-      <div style="font-size:16px;flex-shrink:0;">${isVideo?"▶":"📝"}</div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.title||"ไม่มีชื่อ"}</div>
-        <div style="font-size:11px;color:var(--text-soft);">${isVideo?"วิดีโอ · "+(item.source||"YouTube"):"บทความ · "+(item.readTime||"5 นาที")}</div>
-      </div>
-      <div style="display:flex;gap:4px;flex-shrink:0;">
-        ${idx>0?`<button onclick="moveCollabContent(${idx},-1)" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:11px;">↑</button>`:''}
-        ${idx<content.length-1?`<button onclick="moveCollabContent(${idx},1)" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:11px;">↓</button>`:''}
-        <button onclick="removeCollabContent(${idx})" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:11px;color:var(--red);">✕</button>
-      </div>`;
-    list.appendChild(el);
-  });
-}
-
-function setCollabContentType(type){
-  _collabContentType = type;
-  const artBtn = document.getElementById("ctype-article");
-  const vidBtn = document.getElementById("ctype-video");
-  const artF   = document.getElementById("modal-article-fields");
-  const vidF   = document.getElementById("modal-video-fields");
-  if(artBtn) artBtn.style.background = type==="article" ? "var(--surface)" : "transparent";
-  if(vidBtn) vidBtn.style.background = type==="video"   ? "var(--surface)" : "transparent";
-  if(artF) artF.style.display = type==="article" ? "block" : "none";
-  if(vidF) vidF.style.display = type==="video"   ? "block" : "none";
-}
-
-function getYouTubeId(url){
-  if(!url) return null;
-  var m = url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
-  if(m) return m[1];
-  m = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
-  if(m) return m[1];
-  return null;
-}
-
-function previewCollabVideo(url){
-  const preview = document.getElementById("mv-preview");
-  const thumb   = document.getElementById("mv-thumb");
-  if(!url){ preview.style.display="none"; return; }
-  const ytId = getYouTubeId(url);
-  if(ytId){
-    if(thumb){ thumb.src="https://img.youtube.com/vi/"+ytId+"/hqdefault.jpg"; thumb.style.display="block"; }
-    preview.style.display="block";
-  } else if(url.indexOf("facebook.com")>-1||url.indexOf("fb.watch")>-1){
-    if(thumb) thumb.style.display="none";
-    preview.style.display="block";
-  } else {
-    preview.style.display="none";
-  }
-}
-
-async function addCollabContent(){
-  const c = _collabs.find(c=>c.id===_currentCollabId);
-  if(!c) return;
-  let newItem;
-  if(_collabContentType === "video"){
-    const url   = document.getElementById("mv-url")?.value.trim();
-    const title = document.getElementById("mv-title")?.value.trim();
-    if(!url||!title){ toast("กรุณาใส่ URL และชื่อวิดีโอ"); return; }
-    const ytId2 = getYouTubeId(url);
-    const source = (url.indexOf("facebook")>-1||url.indexOf("fb.watch")>-1) ? "Facebook" : "YouTube";
-    newItem = { type:"video", title, desc:document.getElementById("mv-desc")?.value.trim()||"", url, source,
-                thumb: ytId2 ? "https://img.youtube.com/vi/"+ytId2+"/hqdefault.jpg" : null };
-  } else {
-    const title = document.getElementById("mc-title")?.value.trim();
-    if(!title){ toast("กรุณาใส่หัวข้อบทความ"); return; }
-    newItem = { type:"article", title,
-                desc:    document.getElementById("mc-desc")?.value.trim()||"",
-                tag:     document.getElementById("mc-tag")?.value.trim()||"จิตวิทยา",
-                readTime:document.getElementById("mc-readtime")?.value.trim()||"5 นาที",
-                url:     document.getElementById("mc-url")?.value.trim()||"" };
-  }
-  const content = [...(c.content||[]), newItem];
-  const btn = event.target;
-  btn.disabled=true; btn.textContent="กำลังบันทึก...";
-  try {
-    const d = await apiCall({action:"updateCollaborator", id:_currentCollabId, content:JSON.stringify(content)});
-    if(d.status==="OK"){
-      c.content = content;
-      renderModalContentList(content);
-      toast("เพิ่มเนื้อหาแล้ว ✅");
-      ["mc-title","mc-desc","mc-tag","mc-readtime","mc-url","mv-url","mv-title","mv-desc"]
-        .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
-      document.getElementById("mv-preview").style.display="none";
-    } else { toast("เกิดข้อผิดพลาด"); }
-  } catch(e){ toast("เกิดข้อผิดพลาด"); }
-  finally{ btn.disabled=false; btn.textContent="เพิ่มเนื้อหา →"; }
-}
-
-async function moveCollabContent(idx, dir){
-  const c = _collabs.find(c=>c.id===_currentCollabId);
-  if(!c) return;
-  const content = [...(c.content||[])];
-  const newIdx = idx+dir;
-  if(newIdx<0||newIdx>=content.length) return;
-  [content[idx],content[newIdx]] = [content[newIdx],content[idx]];
-  try {
-    await apiCall({action:"updateCollaborator", id:_currentCollabId, content:JSON.stringify(content)});
-    c.content = content;
-    renderModalContentList(content);
-  } catch(e){ toast("เกิดข้อผิดพลาด"); }
-}
-
-async function removeCollabContent(idx){
-  const c = _collabs.find(c=>c.id===_currentCollabId);
-  if(!c) return;
-  const content = (c.content||[]).filter((_,i)=>i!==idx);
-  try {
-    await apiCall({action:"updateCollaborator", id:_currentCollabId, content:JSON.stringify(content)});
-    c.content = content;
-    renderModalContentList(content);
-    toast("ลบเนื้อหาแล้ว");
-  } catch(e){ toast("เกิดข้อผิดพลาด"); }
-}
-
 function toast(msg){
   const t=document.createElement("div");t.className="toast";t.innerText=msg;
   document.body.appendChild(t);setTimeout(()=>t.remove(),3000);
 }
-// ══════════════════════════════════════════════════════════════
-// LOGO & AUDIO MANAGEMENT (admin only)
-// ══════════════════════════════════════════════════════════════
-async function uploadLogoFile(input){
-  const file = input.files[0];
-  if(!file) return;
-  const status = document.getElementById("logo-upload-status");
-  status.textContent = "⏳ กำลังอัปโหลด...";
-  try {
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("upload_preset", CLOUDINARY_PRESET);
-    fd.append("public_id", "school-logo");
-    fd.append("overwrite", "true");
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {method:"POST", body:fd});
-    const data = await res.json();
-    if(data.secure_url){
-      // Update all logo imgs on page
-      document.querySelectorAll('img[alt="TU"]').forEach(img => { img.src = data.secure_url + "?t=" + Date.now(); });
-      // Save URL to Settings sheet
-      await apiCall({action:"saveSiteSetting", key:"logo_url", value:data.secure_url});
-      status.textContent = "✅ อัปโหลดโลโก้สำเร็จ — รีเฟรชหน้าเพื่อดูผล";
-      status.style.color = "var(--green)";
-    } else {
-      status.textContent = "❌ อัปโหลดไม่สำเร็จ";
-      status.style.color = "var(--red)";
-    }
-  } catch(e){
-    status.textContent = "❌ เกิดข้อผิดพลาด — ตรวจสอบ Cloudinary settings";
-    status.style.color = "var(--red)";
-  }
-  input.value = "";
-}
-
-async function uploadAudioFile(input){
-  const file = input.files[0];
-  if(!file) return;
-  const status = document.getElementById("audio-upload-status");
-  status.textContent = "⏳ กำลังอัปโหลดไฟล์เสียง...";
-  try {
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("upload_preset", CLOUDINARY_PRESET);
-    fd.append("resource_type", "video"); // Cloudinary uses "video" for audio
-    fd.append("public_id", "grounding-breathing");
-    fd.append("overwrite", "true");
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/video/upload`, {method:"POST", body:fd});
-    const data = await res.json();
-    if(data.secure_url){
-      await apiCall({action:"saveSiteSetting", key:"audio_url", value:data.secure_url});
-      status.textContent = "✅ อัปโหลดไฟล์เสียงสำเร็จ URL: " + data.secure_url;
-      status.style.color = "var(--green)";
-    } else {
-      status.textContent = "❌ อัปโหลดไม่สำเร็จ";
-      status.style.color = "var(--red)";
-    }
-  } catch(e){
-    status.textContent = "❌ เกิดข้อผิดพลาด";
-    status.style.color = "var(--red)";
-  }
-  input.value = "";
-}
-
-
 
 // ── PUZZLE BUILDER (new 3-step, no-code) ─────────────────────────
 let pzBlockCount = 0;
@@ -2392,36 +2525,6 @@ function pzGoStep(n) {
   if(n===3) pzFillReview();
 }
 
-function pzUpdateReadtime(val) {
-  document.getElementById('pz-readtime-display').textContent = val;
-  document.getElementById('pz-readtime').value = val + ' นาที';
-  pzUpdatePreview();
-}
-
-// Language register radio — update bar + label + highlight selected
-(function(){
-  var langScales = { 'วิชาการ':100, 'กึ่งวิชาการ':66, 'ภาษาทั่วไป':33, 'ทำให้เข้าใจง่าย':8 };
-  var langLabels = { 'วิชาการ':'วิชาการ', 'กึ่งวิชาการ':'กึ่งวิชาการ', 'ภาษาทั่วไป':'ภาษาทั่วไป', 'ทำให้เข้าใจง่าย':'ทำให้เข้าใจง่าย — เน้นเข้าถึงง่าย' };
-  document.addEventListener('change', function(e) {
-    if (e.target && e.target.name === 'pz-lang') {
-      var val = e.target.value;
-      var bar = document.getElementById('pz-lang-bar');
-      var lbl = document.getElementById('pz-lang-label');
-      if (bar) bar.style.width = (langScales[val]||50) + '%';
-      if (lbl) lbl.textContent = langLabels[val] || val;
-      // Highlight selected
-      ['academic','semiacademic','general','simplified'].forEach(function(k){
-        var el = document.getElementById('pz-lang-opt-' + k);
-        if (el) { el.style.background = 'var(--surface2)'; el.style.borderColor = 'var(--border)'; }
-      });
-      var keyMap = {'วิชาการ':'academic','กึ่งวิชาการ':'semiacademic','ภาษาทั่วไป':'general','ทำให้เข้าใจง่าย':'simplified'};
-      var sel = document.getElementById('pz-lang-opt-' + (keyMap[val]||''));
-      if (sel) { sel.style.background = 'var(--gold-soft)'; sel.style.borderColor = 'var(--gold-border)'; }
-      pzUpdatePreview();
-    }
-  });
-})();
-
 function pzUpdatePreview() {
   const title = document.getElementById('pz-title')?.value || 'ชื่อบทความ';
   const desc  = document.getElementById('pz-desc')?.value  || 'คำอธิบาย';
@@ -2432,9 +2535,7 @@ function pzUpdatePreview() {
   if(el('pzprev-title')) el('pzprev-title').textContent = title;
   if(el('pzprev-desc'))  el('pzprev-desc').textContent  = desc;
   if(el('pzprev-tag'))   el('pzprev-tag').textContent   = tag;
-  const langEl = document.querySelector('input[name="pz-lang"]:checked');
-  const lang = langEl ? langEl.value : '';
-  if(el('pzprev-meta'))  el('pzprev-meta').textContent  = level + ' · ⏱ ' + time + (lang ? ' · ' + lang : '');
+  if(el('pzprev-meta'))  el('pzprev-meta').textContent  = level + ' · ⏱ ' + time;
 }
 
 function pzAddBlock(type) {
@@ -2577,6 +2678,9 @@ async function pzPublishNew() {
   if(!title){ toast('กรุณาใส่ชื่อบทความ'); pzGoStep(1); return; }
   if(!document.querySelectorAll('.pz-block').length){ toast('กรุณาเพิ่มเนื้อหาอย่างน้อย 1 บล็อก'); pzGoStep(2); return; }
 
+  // Mock mode guard — don't actually save
+  if(isMockMode){ toast('🟡 Mock mode — ไม่บันทึกจริง'); return; }
+
   // Prevent double-submit
   const btn = document.querySelector('[onclick="pzPublishNew()"]');
   if(btn){
@@ -2585,7 +2689,6 @@ async function pzPublishNew() {
     btn.textContent = 'กำลังเผยแพร่...';
   }
 
-  const careLayer = document.getElementById('pz-care-layer')?.value||'';
   const payload = {
     action:'addContent', world:'puzzle',
     title,
@@ -2593,11 +2696,9 @@ async function pzPublishNew() {
     tag:  document.getElementById('pz-tag')?.value||'',
     level:document.getElementById('pz-level')?.value||'',
     readTime:document.getElementById('pz-readtime')?.value||'5 นาที',
-    language:(document.querySelector('input[name="pz-lang"]:checked')?.value)||'ภาษาทั่วไป',
     desc: document.getElementById('pz-desc')?.value?.trim()||'',
     heroUrl: document.getElementById('pz-hero')?.value?.trim()||'',
     url:'',
-    careLayer,
     body: JSON.stringify(pzBuildBodyNew()),
     addedBy: userId
   };
@@ -2646,6 +2747,7 @@ async function addContentOther() {
   const url   = document.getElementById('content-url').value.trim();
   const desc  = document.getElementById('content-desc').value.trim();
   if(!title||!url){toast('กรุณากรอกชื่อและ URL');return;}
+  if(isMockMode){ toast('🟡 Mock mode — ไม่บันทึกจริง'); return; }
   const btn = document.querySelector('[onclick="addContentOther()"]');
   if(btn){ btn.disabled=true; btn.textContent='กำลังเพิ่ม...'; }
   try {
@@ -2659,721 +2761,7 @@ async function addContentOther() {
 }
 
 
-// ================================================================
-// PEOPLE DASHBOARD
-// ================================================================
-let _dashTeachers = [];
-const _GROUP_LABELS = {m4:"ม.4",m5:"ม.5",m6:"ม.6",others:"อื่นๆ"};
-
-
-
-function switchPeopleTab(tab, btn){
-  ["add","list","req"].forEach(t=>{
-    const el=document.getElementById("ptab-"+t);
-    if(el) el.style.display="none";
-  });
-  document.querySelectorAll("#tab-people .stab").forEach(b=>b.classList.remove("active"));
-  const el=document.getElementById("ptab-"+tab);
-  if(el){ el.style.display="flex"; el.style.flexDirection="column"; el.style.gap="12px"; }
-  if(btn) btn.classList.add("active");
-  if(tab==="list") renderPeopleDashList();
-  if(tab==="req")  loadRequestsTab();
-}
-
-const _GROUP_LABELS_P={m4:"ม.4",m5:"ม.5",m6:"ม.6",others:"อื่นๆ"};
-function ytThumbDash(url){const m=url?.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);return m?`https://img.youtube.com/vi/${m[1]}/mqdefault.jpg`:null;}
-function ytEmbedDash(url){const m=url?.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);return m?`https://www.youtube.com/embed/${m[1]}`:null;}
-
-function updatePeopleDashPreview(){
-  const name=document.getElementById("pdash-name-in")?.value||"ชื่ออาจารย์";
-  const subject=document.getElementById("pdash-subject-in")?.value||"วิชา";
-  const year=document.getElementById("pdash-year-in")?.value||"m4";
-  const youtube=document.getElementById("pdash-youtube-in")?.value||"";
-  const thumb=document.getElementById("pdash-thumb-in")?.value||"";
-  document.getElementById("pdash-name").textContent=name;
-  document.getElementById("pdash-subject").textContent=subject;
-  document.getElementById("pdash-year").textContent=_GROUP_LABELS_P[year]||"";
-  const imgSrc=thumb||ytThumbDash(youtube);
-  const el=document.getElementById("pdash-thumb");
-  if(imgSrc){el.innerHTML=`<img src="${imgSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.parentElement.textContent='👩\u200d🏫'"/>`;}  else{el.textContent="👩‍🏫";}
-  const embed=ytEmbedDash(youtube);
-  const wrap=document.getElementById("pdash-yt-wrap");
-  if(wrap){
-    if(embed&&youtube.length>20){document.getElementById("pdash-yt-frame").src=embed;wrap.style.display="block";}
-    else{wrap.style.display="none";}
-  }
-}
-
-async function addPersonDash(){
-  const name=document.getElementById("pdash-name-in").value.trim();
-  const subject=document.getElementById("pdash-subject-in").value.trim();
-  const year=document.getElementById("pdash-year-in").value;
-  const youtube=document.getElementById("pdash-youtube-in").value.trim();
-  const thumb=document.getElementById("pdash-thumb-in").value.trim();
-  const bio=document.getElementById("pdash-bio-in").value.trim();
-  const tag=document.getElementById("pdash-tag-in").value.trim();
-  if(!name||!youtube){toast("กรุณากรอกชื่อและ YouTube URL");return;}
-  const btn=document.getElementById("pdash-add-btn");
-  if(btn){btn.disabled=true;btn.textContent="กำลังเพิ่ม...";}
-  try{
-    const d=await apiCall({action:"addPerson",name,subject,year_group:year,youtube_url:youtube,thumbnail_url:thumb,short_bio:bio,tag});
-    if(d.status==="OK"){
-      _dashTeachers.push({id:d.id||("T"+Date.now()),name,subject,year_group:year,thumbnail_url:thumb,youtube_url:youtube,short_bio:bio,tag,active:true});
-      ["pdash-name-in","pdash-subject-in","pdash-youtube-in","pdash-thumb-in","pdash-bio-in","pdash-tag-in"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
-      const wrap=document.getElementById("pdash-yt-wrap");if(wrap)wrap.style.display="none";
-      updatePeopleDashPreview();
-      toast("เพิ่ม "+name+" แล้ว 💛");
-      updatePeopleDashStats();
-    }else{toast("เกิดข้อผิดพลาด");}
-  }catch(e){toast("เกิดข้อผิดพลาด");}
-  finally{if(btn){btn.disabled=false;btn.textContent="เพิ่มครูในระบบ →";}}
-}
-
-function updatePeopleDashStats(){
-  const total=document.getElementById("pdash-total");
-  const active=document.getElementById("pdash-active-count");
-  if(total) total.textContent=_dashTeachers.length;
-  if(active) active.textContent=_dashTeachers.filter(t=>t.active).length;
-}
-
-function renderPeopleDashList(){
-  const q=(document.getElementById("pdash-search")?.value||"").toLowerCase();
-  const filtered=_dashTeachers.filter(t=>!q||(t.name.toLowerCase().includes(q)||t.subject.toLowerCase().includes(q)));
-  const container=document.getElementById("pdash-list");
-  if(!container)return;
-  updatePeopleDashStats();
-  if(!filtered.length){container.innerHTML='<div class="empty">ไม่พบข้อมูล</div>';return;}
-  container.innerHTML="";
-  filtered.forEach(t=>{
-    const thumb=t.thumbnail_url||ytThumbDash(t.youtube_url);
-    const el=document.createElement("div");
-    el.className="case-card";
-    el.style.cssText="display:flex;align-items:center;gap:10px;padding:12px;";
-    el.innerHTML=`
-      <div style="width:7px;height:7px;border-radius:50%;flex-shrink:0;background:${t.active?"#27AE60":"#CCC"};"></div>
-      <div style="width:44px;height:44px;border-radius:9px;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;">
-        ${thumb?`<img src="${thumb}" style="width:100%;height:100%;object-fit:cover;border-radius:9px;" onerror="this.parentElement.textContent='👩\u200d🏫';"/>` : "👩‍🏫"}
-      </div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${t.name}</div>
-        <div style="font-size:11px;color:var(--text-mid);margin-top:1px;">${t.subject} · ${_GROUP_LABELS_P[t.year_group]||""}</div>
-        ${t.tag?`<div style="font-size:10px;color:var(--gold);margin-top:2px;">🏷 ${t.tag}</div>`:""}
-      </div>
-      <div style="display:flex;gap:5px;flex-shrink:0;">
-        <button class="btn-sm ghost" onclick="openEditPersonModal('${t.id}')" style="padding:6px 9px;font-size:11px;">✏️</button>
-        <button class="btn-sm ghost" onclick="togglePersonDash('${t.id}')" style="padding:6px 9px;font-size:11px;" title="${t.active?"ซ่อน":"แสดง"}">${t.active?"👁":"👁‍🗨"}</button>
-        <button class="btn-sm ghost" onclick="deletePersonDash('${t.id}')" style="padding:6px 9px;font-size:11px;color:var(--red);">🗑️</button>
-      </div>`;
-    container.appendChild(el);
-  });
-}
-
-async function togglePersonDash(id){
-  const t=_dashTeachers.find(t=>t.id===id);if(!t)return;
-  t.active=!t.active;
-  try{await apiCall({action:"togglePerson",id,active:t.active});}catch(e){}
-  toast(t.active?`เปิดแสดง ${t.name}`:`ซ่อน ${t.name}`);
-  renderPeopleDashList();
-}
-
-async function deletePersonDash(id){
-  if(!confirm("ยืนยันลบครูท่านนี้?"))return;
-  _dashTeachers=_dashTeachers.filter(t=>t.id!==id);
-  try{await apiCall({action:"deletePerson",id});}catch(e){}
-  toast("ลบแล้ว");
-  renderPeopleDashList();
-}
-
-function openEditPersonModal(id){
-  const t=_dashTeachers.find(t=>t.id===id);if(!t)return;
-  document.getElementById("ep-id").value=id;
-  document.getElementById("ep-name").value=t.name||"";
-  document.getElementById("ep-subject").value=t.subject||"";
-  document.getElementById("ep-year").value=t.year_group||"m4";
-  document.getElementById("ep-tag").value=t.tag||"";
-  document.getElementById("ep-bio").value=t.short_bio||"";
-  document.getElementById("ep-youtube").value=t.youtube_url||"";
-  document.getElementById("ep-thumb").value=t.thumbnail_url||"";
-  const modal=document.getElementById("edit-person-modal");
-  if(modal){modal.style.display="flex";}
-}
-
-function closeEditPersonModal(e){
-  if(!e||e.target===document.getElementById("edit-person-modal"))
-    document.getElementById("edit-person-modal").style.display="none";
-}
-
-async function saveEditPerson(){
-  const id=document.getElementById("ep-id").value;
-  const t=_dashTeachers.find(t=>t.id===id);if(!t)return;
-  t.name=document.getElementById("ep-name").value.trim();
-  t.subject=document.getElementById("ep-subject").value.trim();
-  t.year_group=document.getElementById("ep-year").value;
-  t.tag=document.getElementById("ep-tag").value.trim();
-  t.short_bio=document.getElementById("ep-bio").value.trim();
-  t.youtube_url=document.getElementById("ep-youtube").value.trim();
-  t.thumbnail_url=document.getElementById("ep-thumb").value.trim();
-  try{await apiCall({action:"updatePerson",id,...t});}catch(e){}
-  document.getElementById("edit-person-modal").style.display="none";
-  toast("อัปเดต "+t.name+" แล้ว 💛");
-  renderPeopleDashList();
-}
-
-async function loadPeopleTab(){
-  try{
-    const d=await apiCall({action:"getPeople",admin:"true"});
-    if(d.status==="OK"&&d.people?.length) _dashTeachers=d.people;
-  }catch(e){}
-  renderPeopleDashList();
-}
-
-
-
-// ═══════════════════════════════════════════════════════
-// จดหมายเหตุ ADMIN — Google Drive upload + Sheet write
-// ═══════════════════════════════════════════════════════
-
-// In-memory state: list of year objects
-// { year: "2568", founderName: "", founderFiles: [File|{url,name}], founderPdfFile: File|null,
-//   folders: [{name:"", files:[File|{url,name}], pdfFile:File|null}] }
-let archState = [];
-
-function archGetOrInit() {
-  return archState;
-}
-
-// ── Render entire archive editor ──────────────────────
-function archRender() {
-  const container = document.getElementById("arch-years-container");
-  if (!container) return;
-  container.innerHTML = "";
-  archState.forEach((yr, yi) => {
-    const block = document.createElement("div");
-    block.className = "arch-year-block";
-    block.innerHTML = `
-      <div class="arch-year-header" onclick="archToggleYear(${yi})">
-        <span class="arch-year-label">📅 ปีการศึกษา ${yr.year}</span>
-        <span id="arch-toggle-${yi}">▼</span>
-      </div>
-      <div class="arch-year-body" id="arch-body-${yi}">
-        <!-- Founder name -->
-        <div class="arch-card">
-          <div class="arch-card-title">ประธานชมรม</div>
-          <div class="input-group">
-            <div class="input-label">ชื่อ-นามสกุล ประธานชมรม</div>
-            <input class="input-field" placeholder="เช่น นาย ใจดี ใจงาม" value="${yr.founderName||""}"
-              oninput="archState[${yi}].founderName=this.value"/>
-          </div>
-          <div class="input-label" style="margin-top:4px;">หน้าจดหมาย (รูปภาพ — อัปโหลดได้หลายหน้า)</div>
-          ${archUploadZoneHTML(`arch-founder-pages-${yi}`, true)}
-          <div class="arch-thumbs" id="arch-founder-thumbs-${yi}"></div>
-          <div class="input-label" style="margin-top:4px;">PDF จดหมายฉบับเต็ม (ไม่บังคับ)</div>
-          ${archUploadZoneHTML(`arch-founder-pdf-${yi}`, false, true)}
-          <div id="arch-founder-pdf-name-${yi}" class="arch-status"></div>
-        </div>
-
-        <!-- Folders -->
-        <div class="arch-card">
-          <div class="arch-card-title">สรุปประจำเดือน (แฟ้ม)</div>
-          <div class="arch-folder-list" id="arch-folders-${yi}"></div>
-          <button class="arch-add-btn" onclick="archAddFolder(${yi})">＋ เพิ่มแฟ้ม</button>
-        </div>
-
-        <!-- Save -->
-        <div id="arch-save-status-${yi}" class="arch-status"></div>
-        <button class="arch-save-btn" onclick="archSaveYear(${yi})">💾 บันทึกปีนี้</button>
-        <button class="arch-add-btn" style="color:var(--red);border-color:var(--red);" onclick="archRemoveYear(${yi})">🗑 ลบปีนี้</button>
-      </div>`;
-    container.appendChild(block);
-    archRenderFounderThumbs(yi);
-    archRenderFolders(yi);
-    // Bind file inputs after render
-    archBindFounderInputs(yi);
-  });
-}
-
-function archUploadZoneHTML(id, multi, isPdf) {
-  const accept = isPdf ? "application/pdf" : "image/*";
-  const multiAttr = multi ? "multiple" : "";
-  return `<div class="arch-upload-zone" id="zone-${id}">
-    <input type="file" id="${id}" accept="${accept}" ${multiAttr}/>
-    <div class="arch-upload-icon">${isPdf ? "📄" : "🖼️"}</div>
-    <div class="arch-upload-label">${isPdf ? "เลือก PDF" : "เลือกรูปภาพ"}</div>
-    <div class="arch-upload-sub">กดเพื่อเลือก หรือลากมาวาง</div>
-  </div>`;
-}
-
-function archToggleYear(yi) {
-  const body = document.getElementById(`arch-body-${yi}`);
-  const tog  = document.getElementById(`arch-toggle-${yi}`);
-  if (!body) return;
-  const hidden = body.style.display === "none";
-  body.style.display = hidden ? "flex" : "none";
-  if (tog) tog.textContent = hidden ? "▼" : "▶";
-}
-
-function archBindFounderInputs(yi) {
-  // Pages
-  const pagesInput = document.getElementById(`arch-founder-pages-${yi}`);
-  if (pagesInput) pagesInput.onchange = (e) => {
-    const files = Array.from(e.target.files);
-    archState[yi].founderFiles = [...(archState[yi].founderFiles||[]), ...files];
-    archRenderFounderThumbs(yi);
-  };
-  // PDF
-  const pdfInput = document.getElementById(`arch-founder-pdf-${yi}`);
-  if (pdfInput) pdfInput.onchange = (e) => {
-    const f = e.target.files[0];
-    if (f) { archState[yi].founderPdfFile = f; archRenderFounderPdfName(yi); }
-  };
-}
-
-function archRenderFounderThumbs(yi) {
-  const container = document.getElementById(`arch-founder-thumbs-${yi}`);
-  if (!container) return;
-  const files = archState[yi].founderFiles || [];
-  container.innerHTML = "";
-  files.forEach((f, fi) => {
-    const wrap = document.createElement("div");
-    wrap.className = "arch-thumb-wrap";
-    const img = document.createElement("img");
-    img.className = "arch-thumb";
-    if (f instanceof File) {
-      img.src = URL.createObjectURL(f);
-    } else {
-      img.src = f.url;
-    }
-    const del = document.createElement("button");
-    del.className = "arch-thumb-del";
-    del.textContent = "×";
-    del.onclick = () => { archState[yi].founderFiles.splice(fi,1); archRenderFounderThumbs(yi); };
-    wrap.appendChild(img);
-    wrap.appendChild(del);
-    container.appendChild(wrap);
-  });
-}
-
-function archRenderFounderPdfName(yi) {
-  const el = document.getElementById(`arch-founder-pdf-name-${yi}`);
-  if (!el) return;
-  const f = archState[yi].founderPdfFile;
-  el.textContent = f ? (f instanceof File ? f.name : f.name) : "";
-}
-
-function archRenderFolders(yi) {
-  const container = document.getElementById(`arch-folders-${yi}`);
-  if (!container) return;
-  const folders = archState[yi].folders || [];
-  container.innerHTML = "";
-  folders.forEach((folder, fi) => {
-    const item = document.createElement("div");
-    item.className = "arch-folder-item";
-    item.innerHTML = `
-      <div class="arch-folder-head">
-        <input class="arch-folder-name-input" placeholder="ชื่อแฟ้ม เช่น สรุปเดือนพฤษภาคม"
-          value="${folder.name||""}" oninput="archState[${yi}].folders[${fi}].name=this.value"/>
-        <button class="pz-del" onclick="archRemoveFolder(${yi},${fi})">🗑</button>
-      </div>
-      <div class="input-label">รูปภาพในแฟ้ม (หลายหน้าได้)</div>
-      ${archUploadZoneHTML(`arch-folder-pages-${yi}-${fi}`, true)}
-      <div class="arch-thumbs" id="arch-folder-thumbs-${yi}-${fi}"></div>
-      <div class="input-label" style="margin-top:4px;">PDF แฟ้มนี้ (ไม่บังคับ)</div>
-      ${archUploadZoneHTML(`arch-folder-pdf-${yi}-${fi}`, false, true)}
-      <div id="arch-folder-pdf-name-${yi}-${fi}" class="arch-status"></div>`;
-    container.appendChild(item);
-    // Render existing thumbs
-    archRenderFolderThumbs(yi, fi);
-    archRenderFolderPdfName(yi, fi);
-    // Bind
-    const pagesInput = document.getElementById(`arch-folder-pages-${yi}-${fi}`);
-    if (pagesInput) pagesInput.onchange = (e) => {
-      const files = Array.from(e.target.files);
-      archState[yi].folders[fi].files = [...(archState[yi].folders[fi].files||[]), ...files];
-      archRenderFolderThumbs(yi, fi);
-    };
-    const pdfInput = document.getElementById(`arch-folder-pdf-${yi}-${fi}`);
-    if (pdfInput) pdfInput.onchange = (e) => {
-      const f = e.target.files[0];
-      if (f) { archState[yi].folders[fi].pdfFile = f; archRenderFolderPdfName(yi, fi); }
-    };
-  });
-}
-
-function archRenderFolderThumbs(yi, fi) {
-  const container = document.getElementById(`arch-folder-thumbs-${yi}-${fi}`);
-  if (!container) return;
-  const files = archState[yi].folders[fi].files || [];
-  container.innerHTML = "";
-  files.forEach((f, idx) => {
-    const wrap = document.createElement("div");
-    wrap.className = "arch-thumb-wrap";
-    const img = document.createElement("img");
-    img.className = "arch-thumb";
-    img.src = f instanceof File ? URL.createObjectURL(f) : f.url;
-    const del = document.createElement("button");
-    del.className = "arch-thumb-del";
-    del.textContent = "×";
-    del.onclick = () => { archState[yi].folders[fi].files.splice(idx,1); archRenderFolderThumbs(yi,fi); };
-    wrap.appendChild(img); wrap.appendChild(del);
-    container.appendChild(wrap);
-  });
-}
-
-function archRenderFolderPdfName(yi, fi) {
-  const el = document.getElementById(`arch-folder-pdf-name-${yi}-${fi}`);
-  if (!el) return;
-  const f = archState[yi].folders[fi].pdfFile;
-  el.textContent = f ? (f instanceof File ? f.name : f.name) : "";
-}
-
-function archAddYear() {
-  const year = prompt("ปีการศึกษา (เช่น 2568):", "2568");
-  if (!year) return;
-  archState.unshift({ year, founderName:"", founderFiles:[], founderPdfFile:null, folders:[] });
-  archRender();
-}
-
-function archRemoveYear(yi) {
-  if (!confirm(`ลบปี ${archState[yi].year} ออก?`)) return;
-  archState.splice(yi, 1);
-  archRender();
-}
-
-function archAddFolder(yi) {
-  archState[yi].folders.push({ name:"", files:[], pdfFile:null });
-  archRenderFolders(yi);
-}
-
-function archRemoveFolder(yi, fi) {
-  archState[yi].folders.splice(fi, 1);
-  archRenderFolders(yi);
-}
-
-// ── Upload single file to Google Drive via Apps Script ──
-async function archUploadFile(file, folder) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const b64 = e.target.result.split(",")[1];
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({
-            action: "uploadFileToDrive",
-            fileName: file.name,
-            mimeType: file.type,
-            base64Data: b64,
-            folderName: folder
-          })
-        });
-        const data = await res.json();
-        if (data.url) resolve(data.url);
-        else reject(new Error(data.error || "upload failed"));
-      } catch(err) { reject(err); }
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-// ── Save year: upload all files then write to Sheet ────
-async function archSaveYear(yi) {
-  const yr = archState[yi];
-  const statusEl = document.getElementById(`arch-save-status-${yi}`);
-  const btn = document.querySelector(`#arch-body-${yi} .arch-save-btn`);
-
-  if (!yr.founderName.trim()) { alert("กรุณาใส่ชื่อประธานชมรม"); return; }
-  if (btn) { btn.disabled = true; btn.textContent = "กำลังอัปโหลด..."; }
-  if (statusEl) statusEl.textContent = "กำลังอัปโหลดไฟล์...";
-
-  try {
-    const driveFolder = `ใจดีTU_${yr.year}`;
-
-    // Upload founder pages
-    const founderUrls = [];
-    for (const f of (yr.founderFiles || [])) {
-      if (f instanceof File) {
-        if (statusEl) statusEl.textContent = `อัปโหลด: ${f.name}`;
-        const url = await archUploadFile(f, driveFolder);
-        founderUrls.push(url);
-      } else {
-        founderUrls.push(f.url);
-      }
-    }
-
-    // Upload founder PDF
-    let founderPdfUrl = "";
-    if (yr.founderPdfFile instanceof File) {
-      if (statusEl) statusEl.textContent = "อัปโหลด PDF จดหมาย...";
-      founderPdfUrl = await archUploadFile(yr.founderPdfFile, driveFolder);
-    } else if (yr.founderPdfFile && yr.founderPdfFile.url) {
-      founderPdfUrl = yr.founderPdfFile.url;
-    }
-
-    // Upload folders
-    const foldersData = [];
-    for (const folder of (yr.folders || [])) {
-      const pageUrls = [];
-      for (const f of (folder.files || [])) {
-        if (f instanceof File) {
-          if (statusEl) statusEl.textContent = `อัปโหลด: ${f.name}`;
-          const url = await archUploadFile(f, driveFolder);
-          pageUrls.push(url);
-        } else {
-          pageUrls.push(f.url);
-        }
-      }
-      let pdfUrl = "";
-      if (folder.pdfFile instanceof File) {
-        if (statusEl) statusEl.textContent = "อัปโหลด PDF แฟ้ม...";
-        pdfUrl = await archUploadFile(folder.pdfFile, driveFolder);
-      } else if (folder.pdfFile && folder.pdfFile.url) {
-        pdfUrl = folder.pdfFile.url;
-      }
-      foldersData.push({ name: folder.name, pages: pageUrls, pdf_url: pdfUrl });
-    }
-
-    // Write to Sheet
-    if (statusEl) statusEl.textContent = "บันทึกข้อมูลลง Sheet...";
-    const payload = {
-      action: "saveArchiveYear",
-      year: yr.year,
-      founderName: yr.founderName,
-      founderPages: founderUrls.join(","),
-      founderPdfUrl: founderPdfUrl,
-      folders: JSON.stringify(foldersData)
-    };
-    const result = await apiCall(payload);
-    if (result.status === "OK") {
-      if (statusEl) statusEl.textContent = "✅ บันทึกสำเร็จ!";
-      toast("บันทึกจดหมายเหตุสำเร็จ");
-      setTimeout(() => { if (statusEl) statusEl.textContent = ""; }, 3000);
-    } else {
-      throw new Error(result.error || "save failed");
-    }
-  } catch(err) {
-    if (statusEl) statusEl.textContent = "❌ เกิดข้อผิดพลาด: " + err.message;
-    console.error("archSaveYear error:", err);
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = "💾 บันทึกปีนี้"; }
-  }
-}
-
-// ══════════════════════════════════════════════════════
-// TOOLS TAB — เครื่องมือ (crisis carousel)
-// Sheet: Care sheet, category = "เครื่องมือ"
-// Columns: name | desc | price_range | location | bts_mrt | contact | url | online | active | photo_url
-// ══════════════════════════════════════════════════════
-let toolsData = []; // [{row, name, desc, url, photo_url, active}, ...]
-
-async function loadToolsTab() {
-  const list = document.getElementById("tools-list");
-  list.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
-  try {
-    const res = await fetch(API_URL + "?action=getCare");
-    const d = await res.json();
-    toolsData = (d.status === "OK" && d.items)
-      ? d.items.filter(i => (i.category||"").trim() === "เครื่องมือ")
-      : [];
-    renderToolsList();
-  } catch(e) {
-    list.innerHTML = "<div class='empty'>โหลดไม่ได้ — ตรวจสอบ API</div>";
-  }
-}
-
-function renderToolsList() {
-  const list = document.getElementById("tools-list");
-  if (!toolsData.length) {
-    list.innerHTML = "<div class='empty'>ยังไม่มีเครื่องมือ — กด + เพิ่มเครื่องมือใหม่</div>";
-    return;
-  }
-  list.innerHTML = "";
-  toolsData.forEach((tool, idx) => {
-    const card = document.createElement("div");
-    card.style.cssText = "background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:flex-start;";
-    const hasPhoto = tool.photo_url && tool.photo_url.trim();
-    card.innerHTML = `
-      <div style="width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;">
-        ${hasPhoto
-          ? `<img src="${tool.photo_url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'"/>`
-          : `<span style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--text-soft);">${(tool.name||"?")[0]}</span>`}
-      </div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;">${tool.name||"—"}</div>
-        <div style="font-size:11px;font-weight:300;color:var(--text-mid);line-height:1.5;margin-bottom:6px;">${tool.desc||""}</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <span style="font-size:10px;padding:2px 8px;border-radius:99px;background:${tool.active==="TRUE"||tool.active===true?"#E6F4EA":"var(--surface2)"};color:${tool.active==="TRUE"||tool.active===true?"#2E7D32":"var(--text-soft)"};">
-            ${tool.active==="TRUE"||tool.active===true?"✅ แสดงอยู่":"🚫 ซ่อน"}
-          </span>
-          ${tool.url?`<span style="font-size:10px;color:var(--text-soft);padding:2px 8px;border-radius:99px;background:var(--surface2);">🔗 ${tool.url.replace(/^https?:\/\//,"").slice(0,24)}…</span>`:""}
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
-        <button onclick="toolsEdit(${idx})" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;color:var(--text-mid);">แก้ไข</button>
-        <button onclick="toolsDelete(${idx})" style="background:#FFF0F0;border:1px solid #FECACA;border-radius:8px;padding:6px 12px;font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;color:#DC2626;">ลบ</button>
-      </div>`;
-    list.appendChild(card);
-  });
-}
-
-function toolsShowForm(prefill) {
-  document.getElementById("tools-add-form").style.display = "flex";
-  document.getElementById("tools-add-btn").style.display = "none";
-  document.getElementById("tools-list").style.display = "none";
-  if (prefill) {
-    document.getElementById("tool-name").value = prefill.name||"";
-    document.getElementById("tool-desc").value = prefill.desc||"";
-    document.getElementById("tool-url").value = prefill.url||"";
-    document.getElementById("tool-photo").value = prefill.photo_url||"";
-    document.getElementById("tool-active").value = (prefill.active==="TRUE"||prefill.active===true)?"TRUE":"FALSE";
-    document.getElementById("tool-edit-row").value = prefill._rowIndex||"";
-  } else {
-    ["tool-name","tool-desc","tool-url","tool-photo"].forEach(id => document.getElementById(id).value="");
-    document.getElementById("tool-active").value = "TRUE";
-    document.getElementById("tool-edit-row").value = "";
-  }
-}
-
-function toolsCancelForm() {
-  document.getElementById("tools-add-form").style.display = "none";
-  document.getElementById("tools-add-btn").style.display = "block";
-  document.getElementById("tools-list").style.display = "flex";
-}
-
-function toolsEdit(idx) {
-  toolsShowForm(toolsData[idx]);
-}
-
-async function toolsDelete(idx) {
-  const tool = toolsData[idx];
-  if (!confirm(`ลบ "${tool.name}" ออกจาก Crisis carousel?`)) return;
-  try {
-    await fetch(API_URL, {
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({action:"deleteCareItem", rowIndex: tool._rowIndex, category:"เครื่องมือ"})
-    });
-    toast("ลบแล้ว ✓");
-    loadToolsTab();
-  } catch(e) { toast("เกิดข้อผิดพลาด"); }
-}
-
-async function toolsSave() {
-  const name  = document.getElementById("tool-name").value.trim();
-  const desc  = document.getElementById("tool-desc").value.trim();
-  const url   = document.getElementById("tool-url").value.trim();
-  const photo = document.getElementById("tool-photo").value.trim();
-  const active = document.getElementById("tool-active").value;
-  const editRow = document.getElementById("tool-edit-row").value;
-  if (!name || !desc) { toast("กรุณาใส่ชื่อและคำอธิบาย"); return; }
-  const payload = { action: editRow ? "updateCareItem" : "addCareItem",
-    item: { category:"เครื่องมือ", name, desc, url, photo_url:photo, active },
-    rowIndex: editRow || undefined };
-  try {
-    await fetch(API_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
-    toast(editRow ? "อัปเดตแล้ว ✓" : "เพิ่มแล้ว ✓");
-    toolsCancelForm();
-    loadToolsTab();
-  } catch(e) { toast("เกิดข้อผิดพลาด"); }
-}
-
-// ── Load existing archive data from Sheet on tab open ──
-async function loadArchiveTab() {
-  const container = document.getElementById("arch-years-container");
-  if (!container) return;
-  if (archState.length > 0) { archRender(); return; } // already loaded
-  container.innerHTML = `<div class="empty">กำลังโหลดข้อมูล...</div>`;
-  try {
-    const d = await apiCall({ action: "getArchiveData" });
-    const years = d.years || [];
-    archState = years.map(yr => ({
-      year: yr.year,
-      founderName: yr.founder?.full_name || "",
-      founderFiles: (yr.founder?.pages||[]).map(url => ({ url, name: url.split("/").pop() })),
-      founderPdfFile: yr.founder?.pdf_url ? { url: yr.founder.pdf_url, name: "จดหมาย.pdf" } : null,
-      folders: (yr.folders||[]).map(f => ({
-        name: f.name,
-        files: (f.papers||[]).flatMap(p => (p.pages||[]).map(url => ({ url, name: url.split("/").pop() }))),
-        pdfFile: f.papers?.[0]?.pdf_url ? { url: f.papers[0].pdf_url, name: f.name+".pdf" } : null
-      }))
-    }));
-    archRender();
-  } catch(e) {
-    container.innerHTML = `<div class="empty">โหลดข้อมูลไม่ได้ — เริ่มเพิ่มได้เลย</div>`;
-    archRender();
-  }
-}
-
-</script>
-
-  <!-- ══ TAB: THERAPIST ════════════════════════════════════════ -->
-  <div class="tab-content" id="tab-therapist">
-    <div class="section-label" style="margin-bottom:14px;">นักจิตวิทยาโรงเรียน</div>
-    <div id="therapist-list-wrap" style="display:flex;flex-direction:column;gap:12px;"></div>
-    <div style="margin-top:16px;" id="therapist-add-section">
-      <div class="section-label" style="margin-bottom:10px;">เพิ่มนักจิตวิทยา</div>
-      <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
-        <div class="input-group"><div class="input-label">ชื่อ *</div><input class="input-field" id="th-name" placeholder="ชื่อ นามสกุล"/></div>
-        <div class="input-group"><div class="input-label">ชื่อเล่น / ตำแหน่ง</div><input class="input-field" id="th-nickname" placeholder="อ.นภา / นักจิตวิทยาโรงเรียน"/></div>
-        <div class="input-group"><div class="input-label">LINE ID</div><input class="input-field" id="th-line" placeholder="@therapist_xxx"/></div>
-        <div class="input-group"><div class="input-label">เบอร์โทร</div><input class="input-field" id="th-phone" placeholder="02-xxx-xxxx"/></div>
-        <div class="input-group"><div class="input-label">ความเชี่ยวชาญ (คั่นด้วยจุลภาค)</div><input class="input-field" id="th-spec" placeholder="Anxiety, Depression, TCAS Stress"/></div>
-        <div class="input-group"><div class="input-label">ข้อความส่วนตัว</div><input class="input-field" id="th-msg" placeholder="ห้องนี้ปลอดภัยสำหรับคุณ..."/></div>
-        <div class="input-group"><div class="input-label">รูปโปรไฟล์ URL</div>
-          <div style="display:flex;gap:8px;">
-            <input class="input-field" id="th-photo" placeholder="https://..." style="flex:1;"/>
-            <button class="btn-sm ghost" onclick="triggerUpload('th-photo-file','th-photo')" style="white-space:nowrap;flex-shrink:0;">📷 อัปโหลด</button>
-          </div>
-          <input type="file" id="th-photo-file" accept="image/*" style="display:none;" onchange="uploadToCloudinary(this,'th-photo')"/>
-        </div>
-        <div class="input-group"><div class="input-label">รูปห้อง / บรรยากาศ (URL คั่นด้วยจุลภาค)</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <input class="input-field" id="th-photos" placeholder="https://... , https://..." style="flex:1;"/>
-            <button class="btn-sm ghost" onclick="triggerMultiUpload('th-photos-file','th-photos')" style="white-space:nowrap;flex-shrink:0;">📷 อัปโหลดรูปห้อง</button>
-          </div>
-          <input type="file" id="th-photos-file" accept="image/*" multiple style="display:none;" onchange="uploadMultipleToCloudinary(this,'th-photos')"/>
-        </div>
-        <div id="cloudinary-warning" style="background:var(--yellow-soft);border:1px solid var(--gold-border);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--yellow);font-weight:600;margin-bottom:4px;">
-          ⚠️ Cloudinary ยังไม่ได้ตั้งค่า — อัปโหลดรูปจะไม่ทำงาน<br/>
-          <span style="font-weight:400;">แก้ใน dashboard.html: CLOUDINARY_CLOUD และ CLOUDINARY_PRESET</span>
-        </div>
-        <button class="btn-full gold" onclick="addStaff('therapist')">เพิ่มนักจิตวิทยา →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ TAB: GUIDANCE ═════════════════════════════════════════ -->
-  <div class="tab-content" id="tab-guidance">
-    <div class="section-label" style="margin-bottom:14px;">ครูแนะแนว</div>
-    <div id="guidance-list-wrap" style="display:flex;flex-direction:column;gap:12px;"></div>
-    <div style="margin-top:16px;" id="guidance-add-section">
-      <div class="section-label" style="margin-bottom:10px;">เพิ่มครูแนะแนว</div>
-      <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
-        <div class="input-group"><div class="input-label">ชื่อ *</div><input class="input-field" id="gd-name" placeholder="ชื่อ นามสกุล"/></div>
-        <div class="input-group"><div class="input-label">ชื่อเล่น / ตำแหน่ง</div><input class="input-field" id="gd-nickname" placeholder="ครูใจดี / ครูแนะแนว"/></div>
-        <div class="input-group"><div class="input-label">LINE ID</div><input class="input-field" id="gd-line" placeholder="@guidance_xxx"/></div>
-        <div class="input-group"><div class="input-label">เบอร์โทร</div><input class="input-field" id="gd-phone" placeholder="02-xxx-xxxx"/></div>
-        <div class="input-group"><div class="input-label">ความเชี่ยวชาญ (คั่นด้วยจุลภาค)</div><input class="input-field" id="gd-spec" placeholder="TCAS, Portfolio, การจัดการเวลา"/></div>
-        <div class="input-group"><div class="input-label">ข้อความส่วนตัว</div><input class="input-field" id="gd-msg" placeholder="มาคุยได้เลยนะ ไม่ว่าจะเรื่องอะไร..."/></div>
-        <div class="input-group"><div class="input-label">รูปโปรไฟล์ URL</div>
-          <div style="display:flex;gap:8px;">
-            <input class="input-field" id="gd-photo" placeholder="https://..." style="flex:1;"/>
-            <button class="btn-sm ghost" onclick="triggerUpload('gd-photo-file','gd-photo')" style="white-space:nowrap;flex-shrink:0;">📷 อัปโหลด</button>
-          </div>
-          <input type="file" id="gd-photo-file" accept="image/*" style="display:none;" onchange="uploadToCloudinary(this,'gd-photo')"/>
-        </div>
-        <div class="input-group"><div class="input-label">รูปห้อง / บรรยากาศ (URL คั่นด้วยจุลภาค)</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <input class="input-field" id="gd-photos" placeholder="https://... , https://..." style="flex:1;"/>
-            <button class="btn-sm ghost" onclick="triggerMultiUpload('gd-photos-file','gd-photos')" style="white-space:nowrap;flex-shrink:0;">📷 อัปโหลดรูปห้อง</button>
-          </div>
-          <input type="file" id="gd-photos-file" accept="image/*" multiple style="display:none;" onchange="uploadMultipleToCloudinary(this,'gd-photos')"/>
-        </div>
-        <button class="btn-full gold" onclick="addStaff('guidance')">เพิ่มครูแนะแนว →</button>
-      </div>
-    </div>
-  </div>
-
-<script>
+// ── EXTENDED FUNCTIONS ──────────────────────────────────────
 
 // ══════════════════════════════════════════════════════════════
 // CLOUDINARY UPLOAD
@@ -3488,6 +2876,7 @@ async function addStaff(type){
     photo_url:      document.getElementById(prefix+"-photo").value.trim(),
     photos:         document.getElementById(prefix+"-photos").value.trim(),
   };
+  if(isMockMode){ toast("🟡 Mock mode"); return; }
   const btn = event.target;
   btn.disabled=true; btn.textContent="กำลังเพิ่ม...";
   try {
@@ -3522,433 +2911,6 @@ async function deleteStaff(type, id){
   toast("ลบแล้ว");
 }
 
-</script>
-
-  <!-- ══ TAB: FOUNDERS (จดหมายเหตุ) ═════════════════════════════ -->
-  <div class="tab-content" id="tab-founders">
-    <div class="section-label" style="margin-bottom:14px;">จดหมายจากผู้นำชมรม</div>
-    <div id="founders-list" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
-      <div class="empty">กำลังโหลด...</div>
-    </div>
-    <div style="margin-top:4px;">
-      <div class="section-label" style="margin-bottom:10px;">เพิ่มจดหมายใหม่</div>
-      <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
-        <div class="input-group">
-          <div class="input-label">ชื่อผู้นำ *</div>
-          <input class="input-field" id="fd-name" placeholder="ชื่อ-นามสกุล"/>
-        </div>
-        <div class="input-group">
-          <div class="input-label">ปีที่ดำรงตำแหน่ง *</div>
-          <input class="input-field" id="fd-year" placeholder="เช่น 2567–2568"/>
-        </div>
-        <div class="input-group">
-          <div class="input-label">อัปโหลด PDF จดหมาย *</div>
-          <div style="font-size:11px;font-weight:300;color:var(--text-soft);margin-bottom:8px;line-height:1.5;">
-            เตรียม PDF ให้สมบูรณ์ก่อน (ขนาด A4, ทุกหน้าพร้อม) แล้วอัปโหลดได้เลย
-          </div>
-          <div style="display:flex;gap:8px;">
-            <input class="input-field" id="fd-pdf-url" placeholder="URL ของ PDF (หลังอัปโหลด)" style="flex:1;"/>
-            <button class="btn-sm ghost" onclick="triggerFounderPdf()" style="white-space:nowrap;flex-shrink:0;">📄 อัปโหลด PDF</button>
-          </div>
-          <input type="file" id="fd-pdf-file" accept="application/pdf" style="display:none;" onchange="uploadFounderPdf(this)"/>
-          <div id="fd-pdf-status" style="font-size:12px;color:var(--text-soft);margin-top:6px;"></div>
-        </div>
-        <div class="input-group">
-          <div class="input-label">รูปปก (ไม่บังคับ)</div>
-          <div style="display:flex;gap:8px;">
-            <input class="input-field" id="fd-photo" placeholder="https://..." style="flex:1;"/>
-            <button class="btn-sm ghost" onclick="triggerUpload('fd-photo-file','fd-photo')" style="white-space:nowrap;flex-shrink:0;">📷 อัปโหลด</button>
-          </div>
-          <input type="file" id="fd-photo-file" accept="image/*" style="display:none;" onchange="uploadToCloudinary(this,'fd-photo')"/>
-        </div>
-        <button class="btn-full gold" onclick="addFounderLetter()">เพิ่มจดหมาย →</button>
-      </div>
-    </div>
-  </div>
-<script>
-// ══════════════════════════════════════════════════════════════
-// FOUNDERS TAB
-// ══════════════════════════════════════════════════════════════
-let _founders = [];
-
-async function loadFoundersTab(){
-  try {
-    const d = await apiCall({action:"getFounders"});
-    if(d.status==="OK") _founders = d.founders || [];
-  } catch(e){}
-  renderFoundersList();
-}
-
-function renderFoundersList(){
-  const container = document.getElementById("founders-list");
-  if(!container) return;
-  if(!_founders.length){ container.innerHTML='<div class="empty">ยังไม่มีจดหมาย — เพิ่มด้านล่างได้เลย</div>'; return; }
-  container.innerHTML = "";
-  _founders.forEach(f => {
-    const el = document.createElement("div");
-    el.className = "case-card";
-    el.style.cssText = "padding:14px;";
-    el.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-        ${f.photo_url ? `<img src="${f.photo_url}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'"/>` : `<div style="width:44px;height:44px;border-radius:50%;background:var(--gold-soft);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">📜</div>`}
-        <div style="flex:1;">
-          <div style="font-size:14px;font-weight:700;">${f.full_name||f.name||"—"}</div>
-          <div style="font-size:11px;color:var(--text-soft);">${f.year||""}</div>
-        </div>
-        <button class="btn-sm ghost" onclick="toggleFounderActive('${f.id}',${!f.active})" style="font-size:11px;">${f.active?"👁 แสดง":"👁‍🗨 ซ่อน"}</button>
-        <button class="btn-sm ghost" onclick="deleteFounderLetter('${f.id}')" style="font-size:11px;color:var(--red);">🗑️</button>
-      </div>
-      ${f.pdf_url ? `<a href="${f.pdf_url}" target="_blank" style="font-size:12px;color:var(--gold);text-decoration:none;">📄 เปิด PDF →</a>` : '<span style="font-size:12px;color:var(--text-soft);">ยังไม่มี PDF</span>'}
-    `;
-    container.appendChild(el);
-  });
-}
-
-function triggerFounderPdf(){
-  document.getElementById("fd-pdf-file").click();
-}
-
-async function uploadFounderPdf(input){
-  const file = input.files[0];
-  if(!file) return;
-  const status = document.getElementById("fd-pdf-status");
-  status.textContent = "⏳ กำลังอัปโหลด PDF...";
-  try {
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("upload_preset", CLOUDINARY_PRESET);
-    fd.append("resource_type", "raw");
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/raw/upload`, {method:"POST", body:fd});
-    const data = await res.json();
-    if(data.secure_url){
-      document.getElementById("fd-pdf-url").value = data.secure_url;
-      status.textContent = "✅ อัปโหลด PDF สำเร็จ";
-      status.style.color = "var(--green)";
-    } else {
-      status.textContent = "❌ อัปโหลดไม่สำเร็จ — ใช้ Google Drive แล้วแปะ URL แทน";
-      status.style.color = "var(--red)";
-    }
-  } catch(e){
-    status.textContent = "❌ เกิดข้อผิดพลาด";
-    status.style.color = "var(--red)";
-  }
-  input.value = "";
-}
-
-async function addFounderLetter(){
-  const name = document.getElementById("fd-name").value.trim();
-  const year = document.getElementById("fd-year").value.trim();
-  const pdfUrl = document.getElementById("fd-pdf-url").value.trim();
-  const photo = document.getElementById("fd-photo").value.trim();
-  if(!name||!year){ toast("กรุณาใส่ชื่อและปี"); return; }
-  const btn = event.target;
-  btn.disabled=true; btn.textContent="กำลังเพิ่ม...";
-  try {
-    const d = await apiCall({action:"addFounder", full_name:name, year, pdf_url:pdfUrl, photo_url:photo, active:"TRUE"});
-    if(d.status==="OK"){
-      toast("เพิ่มจดหมายแล้ว 📜");
-      ["fd-name","fd-year","fd-pdf-url","fd-photo"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
-      document.getElementById("fd-pdf-status").textContent = "";
-      loadFoundersTab();
-    } else { toast("เกิดข้อผิดพลาด"); }
-  } catch(e){ toast("เกิดข้อผิดพลาด"); }
-  finally{ btn.disabled=false; btn.textContent="เพิ่มจดหมาย →"; }
-}
-
-async function toggleFounderActive(id, active){
-  try{ await apiCall({action:"updateFounder", id, active:active?"TRUE":"FALSE"}); } catch(e){}
-  const f = _founders.find(f=>f.id===id);
-  if(f) f.active = active;
-  renderFoundersList();
-  toast(active ? "เปิดแสดงแล้ว" : "ซ่อนแล้ว");
-}
-
-async function deleteFounderLetter(id){
-  if(!confirm("ลบจดหมายนี้?")) return;
-  try{ await apiCall({action:"deleteFounder", id}); } catch(e){}
-  _founders = _founders.filter(f=>f.id!==id);
-  renderFoundersList();
-  toast("ลบแล้ว");
-}
-</script>
-
-
-  <!-- ══ TAB: COLLABORATORS ══════════════════════════════════════ -->
-  <div class="tab-content" id="tab-collaborators">
-    <div class="section-label" style="margin-bottom:14px;">Collaborators — ใจดี TU ×</div>
-
-    <!-- LIST -->
-    <div id="collab-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-      <div class="empty">กำลังโหลด...</div>
-    </div>
-
-    <!-- ADD COLLABORATOR -->
-    <div class="section-label" style="margin-bottom:10px;">เพิ่ม Collaborator ใหม่</div>
-    <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
-      <div class="input-group">
-        <div class="input-label">ชื่อ *</div>
-        <input class="input-field" id="cl-name" placeholder="ดร. สมใจ ใจดี"/>
-      </div>
-      <div class="input-group">
-        <div class="input-label">ตำแหน่ง / Role *</div>
-        <input class="input-field" id="cl-role" placeholder="นักจิตวิทยาคลินิก · จุฬาลงกรณ์มหาวิทยาลัย"/>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Bio (แสดงในหน้า series)</div>
-        <textarea class="input-field" id="cl-bio" style="min-height:70px;resize:vertical;line-height:1.6;" placeholder="เกี่ยวกับผู้เชี่ยวชาญคนนี้..."></textarea>
-      </div>
-      <div class="input-group">
-        <div class="input-label">รูปโปรไฟล์</div>
-        <div style="display:flex;gap:8px;">
-          <input class="input-field" id="cl-photo" placeholder="https://..." style="flex:1;"/>
-          <button class="btn-sm ghost" onclick="triggerUpload('cl-photo-file','cl-photo')" style="white-space:nowrap;flex-shrink:0;">📷 อัปโหลด</button>
-        </div>
-        <input type="file" id="cl-photo-file" accept="image/*" style="display:none;" onchange="uploadToCloudinary(this,'cl-photo')"/>
-      </div>
-      <div class="input-group">
-        <div class="input-label">ตำแหน่งในฟีด (1 = บนสุด)</div>
-        <input class="input-field" id="cl-position" type="number" placeholder="เช่น 2 = อยู่หลังบทความที่ 2" value="3"/>
-      </div>
-      <div class="section-label" style="font-size:10px;margin:4px 0;">Social Links (ไม่บังคับ)</div>
-      <div class="input-group">
-        <div class="input-label">Instagram URL</div>
-        <input class="input-field" id="cl-instagram" placeholder="https://instagram.com/..."/>
-      </div>
-      <div class="input-group">
-        <div class="input-label">YouTube URL</div>
-        <input class="input-field" id="cl-youtube" placeholder="https://youtube.com/@..."/>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Facebook URL</div>
-        <input class="input-field" id="cl-facebook" placeholder="https://facebook.com/..."/>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Website URL</div>
-        <input class="input-field" id="cl-website" placeholder="https://..."/>
-      </div>
-      <button class="btn-full gold" onclick="addCollaborator()">เพิ่ม Collaborator →</button>
-    </div>
-  </div>
-
-  <!-- ══ MODAL: COLLAB CONTENT MANAGER ═══════════════════════════ -->
-  <div id="collab-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:flex-end;justify-content:center;">
-    <div style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;">
-        <div style="flex:1;">
-          <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-soft);margin-bottom:2px;">ใจดี TU ×</div>
-          <div style="font-size:15px;font-weight:700;" id="modal-collab-name">—</div>
-        </div>
-        <button onclick="closeCollabModal()" style="background:var(--surface2);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;">✕</button>
-      </div>
-      <div style="flex:1;overflow-y:auto;padding:16px 20px;">
-        <!-- Content list -->
-        <div class="section-label" style="margin-bottom:10px;">เนื้อหาในซีรีส์</div>
-        <div id="modal-content-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
-
-        <!-- Add content -->
-        <div class="section-label" style="margin-bottom:10px;">เพิ่มเนื้อหา</div>
-        <div style="display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px;margin-bottom:12px;">
-          <button class="btn-sm" id="ctype-article" onclick="setCollabContentType('article')" style="flex:1;background:var(--surface);border-radius:8px;border:none;font-family:'Sarabun',sans-serif;font-size:12px;padding:8px;">📝 บทความ</button>
-          <button class="btn-sm ghost" id="ctype-video" onclick="setCollabContentType('video')" style="flex:1;border:none;font-family:'Sarabun',sans-serif;font-size:12px;padding:8px;border-radius:8px;">▶ วิดีโอ</button>
-        </div>
-
-        <!-- Article fields -->
-        <div id="modal-article-fields">
-          <div class="input-group" style="margin-bottom:10px;">
-            <div class="input-label">หัวข้อบทความ *</div>
-            <input class="input-field" id="mc-title" placeholder="ชื่อบทความ"/>
-          </div>
-          <div class="input-group" style="margin-bottom:10px;">
-            <div class="input-label">คำอธิบาย</div>
-            <input class="input-field" id="mc-desc" placeholder="สรุปสั้นๆ"/>
-          </div>
-          <div style="display:flex;gap:8px;margin-bottom:10px;">
-            <div class="input-group" style="flex:1;margin:0;">
-              <div class="input-label">Tag</div>
-              <input class="input-field" id="mc-tag" placeholder="ความวิตกกังวล"/>
-            </div>
-            <div class="input-group" style="flex:1;margin:0;">
-              <div class="input-label">เวลาอ่าน</div>
-              <input class="input-field" id="mc-readtime" placeholder="5 นาที"/>
-            </div>
-          </div>
-          <div class="input-group" style="margin-bottom:12px;">
-            <div class="input-label">URL บทความ (ถ้าไม่ได้เขียนใน builder)</div>
-            <input class="input-field" id="mc-url" placeholder="https://... (ไม่บังคับ)"/>
-          </div>
-          <div style="font-size:11px;color:var(--text-soft);margin-bottom:12px;line-height:1.6;">
-            หมายเหตุ: ถ้าต้องการเขียนบทความแบบ 1-2-3 blocks ให้เพิ่มผ่าน Content tab ก่อน แล้วค่อยลิงก์มาที่นี่ในเวอร์ชันถัดไป
-          </div>
-        </div>
-
-        <!-- Video fields -->
-        <div id="modal-video-fields" style="display:none;">
-          <div class="input-group" style="margin-bottom:10px;">
-            <div class="input-label">URL วิดีโอ * (YouTube หรือ Facebook)</div>
-            <input class="input-field" id="mv-url" placeholder="https://youtube.com/watch?v=..." oninput="previewCollabVideo(this.value)"/>
-          </div>
-          <div id="mv-preview" style="display:none;background:var(--surface2);border-radius:10px;overflow:hidden;margin-bottom:10px;">
-            <div style="aspect-ratio:16/9;background:#111;position:relative;overflow:hidden;">
-              <img id="mv-thumb" style="width:100%;height:100%;object-fit:cover;"/>
-              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
-                <div style="width:36px;height:36px;background:rgba(0,0,0,0.65);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;padding-left:2px;">▶</div>
-              </div>
-            </div>
-          </div>
-          <div class="input-group" style="margin-bottom:10px;">
-            <div class="input-label">ชื่อวิดีโอ *</div>
-            <input class="input-field" id="mv-title" placeholder="ชื่อวิดีโอ"/>
-          </div>
-          <div class="input-group" style="margin-bottom:10px;">
-            <div class="input-label">คำอธิบาย</div>
-            <input class="input-field" id="mv-desc" placeholder="สรุปสั้นๆ"/>
-          </div>
-        </div>
-
-        <button class="btn-full gold" onclick="addCollabContent()">เพิ่มเนื้อหา →</button>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ══ TAB: SESSION NOTE (member/PR only) ════════════════════ -->
-  <div class="tab-content" id="tab-session-note">
-
-    <!-- ── Case lookup ── -->
-    <div style="display:flex;gap:8px;margin-bottom:16px;">
-      <input class="input-field" id="sn-case-id-in" placeholder="กรอก Case ID เช่น CS-001" style="flex:1;font-size:13px;"/>
-      <button class="btn-full gold" onclick="snLookupCase()" style="width:auto;padding:10px 16px;font-size:13px;white-space:nowrap;">ดึงข้อมูล →</button>
-    </div>
-
-    <!-- ── Auto-filled Basic Info (read-only) ── -->
-    <div id="sn-basic-info" style="display:none;">
-      <div class="section-label">📋 Basic Info (auto-filled)</div>
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:8px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div><div style="font-size:10px;font-weight:700;color:var(--text-mid);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">Case ID</div><div class="sn-info-val" id="sn-display-caseid" style="font-size:13px;font-weight:600;color:var(--text);"></div></div>
-          <div><div style="font-size:10px;font-weight:700;color:var(--text-mid);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">Level</div><div id="sn-display-level" style="font-size:13px;font-weight:600;"></div></div>
-          <div><div style="font-size:10px;font-weight:700;color:var(--text-mid);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">วันที่นัด</div><div id="sn-display-slot" style="font-size:13px;color:var(--text);"></div></div>
-          <div><div style="font-size:10px;font-weight:700;color:var(--text-mid);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">สถานะ</div><div id="sn-display-status" style="font-size:13px;color:var(--text);"></div></div>
-        </div>
-        <!-- Q1-Q4 summary (circled = what user answered) -->
-        <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:4px;">
-          <div style="font-size:10px;font-weight:700;color:var(--text-mid);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">สรุป Q1–Q4</div>
-          <div id="sn-q-summary" style="display:flex;flex-direction:column;gap:6px;"></div>
-        </div>
-        <!-- Booking flags -->
-        <div id="sn-flags-row" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
-      </div>
-
-      <!-- ── User addition (optional) ── -->
-      <div class="section-label">✏️ สิ่งที่ user เล่าเพิ่ม (optional)</div>
-      <div style="margin-bottom:16px;">
-        <textarea class="input-field" id="sn-user-addition" placeholder="สิ่งที่ user เพิ่มเติมก่อนเริ่ม session..." style="width:100%;min-height:72px;resize:vertical;font-size:13px;line-height:1.6;"></textarea>
-      </div>
-
-      <!-- ── Pre-Session Plan ── -->
-      <div class="section-label" style="color:var(--blue);">🎯 Pre-Session Plan</div>
-      <div style="background:var(--blue-soft);border:1px solid rgba(26,82,118,0.15);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;">
-        <div class="input-group"><div class="input-label">Goal ของ session นี้</div>
-          <input class="input-field" id="sn-goal" placeholder="เช่น ให้เขารู้สึกถูกรับฟัง และ identify ได้ว่าต้องการอะไร"/></div>
-        <div class="input-group"><div class="input-label">สิ่งที่ควรถาม</div>
-          <textarea class="input-field" id="sn-questions" placeholder="- &#10;- " style="min-height:72px;resize:vertical;font-size:13px;line-height:1.7;"></textarea></div>
-        <div class="input-group"><div class="input-label">สิ่งที่ต้องระวัง</div>
-          <textarea class="input-field" id="sn-warnings" placeholder="- &#10;- " style="min-height:64px;resize:vertical;font-size:13px;line-height:1.7;"></textarea></div>
-      </div>
-
-      <!-- ── Attendance check ── -->
-      <div class="section-label">✅ การมาตามนัด</div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;"><input type="radio" name="sn-attended" value="yes" onchange="snToggleAttendance(this)"/> มาตามนัด ✅</label>
-          <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;"><input type="radio" name="sn-attended" value="no" onchange="snToggleAttendance(this)"/> ไม่มา / ยกเลิก ❌</label>
-          <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;"><input type="radio" name="sn-attended" value="reroute" onchange="snToggleAttendance(this)"/> Reroute / เปลี่ยน slot ↩️</label>
-        </div>
-        <div id="sn-no-reason-wrap" style="display:none;">
-          <input class="input-field" id="sn-no-reason" placeholder="เหตุผล / บันทึก..." style="font-size:13px;"/>
-        </div>
-      </div>
-
-      <!-- ── Session Note (hidden if not attended) ── -->
-      <div id="sn-note-section">
-        <div class="section-label" style="color:var(--green);">📓 Session Note</div>
-        <div style="background:var(--green-soft);border:1px solid rgba(30,132,73,0.15);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;">
-          <div class="input-group"><div class="input-label">สิ่งที่ user เล่า</div>
-            <textarea class="input-field" id="sn-user-story" placeholder="เนื้อหาที่ user share ใน session..." style="min-height:100px;resize:vertical;font-size:13px;line-height:1.7;"></textarea></div>
-          <div class="input-group"><div class="input-label">ประเด็นหลัก</div>
-            <input class="input-field" id="sn-main-issue" placeholder="core issue ที่เห็น..."/></div>
-          <div class="input-group"><div class="input-label">อารมณ์โดยรวม</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;" id="sn-mood-chips">
-              <button class="sn-chip" onclick="snToggleChip(this,'mood')">😰 เครียด</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'mood')">😢 เศร้า</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'mood')">😄 สดใส</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'mood')">😐 สับสน</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'mood')">😤 โกรธ</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'mood')">🥺 กังวล</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── Action Taken ── -->
-        <div class="section-label" style="color:var(--gold);">⚡ Action Taken</div>
-        <div style="background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sn-action-chips">
-            <button class="sn-chip" onclick="snToggleChip(this,'action')">👂 รับฟัง</button>
-            <button class="sn-chip" onclick="snToggleChip(this,'action')">🧠 ช่วยคิดทางเลือก</button>
-            <button class="sn-chip" onclick="snToggleChip(this,'action')">📚 ให้ข้อมูล</button>
-            <button class="sn-chip" onclick="snToggleChip(this,'action')">💬 สะท้อนความรู้สึก</button>
-            <button class="sn-chip" onclick="snToggleChip(this,'action')">🎯 ตั้ง goal ร่วมกัน</button>
-          </div>
-          <div class="input-group"><div class="input-label">รายละเอียดเพิ่มเติม</div>
-            <textarea class="input-field" id="sn-action-detail" placeholder="สิ่งที่ทำใน session..." style="min-height:72px;resize:vertical;font-size:13px;line-height:1.6;"></textarea></div>
-        </div>
-
-        <!-- ── Case Closer ── -->
-        <div class="section-label" style="color:var(--red);">🔒 Case Closer</div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:12px;">
-          <div>
-            <div class="input-label" style="margin-bottom:8px;">ต้อง follow-up ใหม่?</div>
-            <div style="display:flex;gap:10px;">
-              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="radio" name="sn-followup" value="no"/> ไม่ต้อง</label>
-              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="radio" name="sn-followup" value="yes"/> ต้อง → <input class="input-field" id="sn-followup-when" placeholder="เมื่อไหร่?" style="display:inline;width:120px;padding:4px 8px;font-size:12px;margin-left:6px;"/></label>
-            </div>
-          </div>
-          <div>
-            <div class="input-label" style="margin-bottom:8px;">ต้องส่งต่อไหม?</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sn-refer-chips">
-              <button class="sn-chip" onclick="snToggleChip(this,'refer')">✅ ไม่ต้อง</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'refer')">👩‍🏫 ส่งต่อครู</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'refer')">🧠 ส่งต่อผู้เชี่ยวชาญ</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'refer')">🌱 ส่งต่อ Program</button>
-            </div>
-            <input class="input-field" id="sn-refer-note" placeholder="ความคิดเห็นเพิ่มเติม..." style="margin-top:8px;font-size:13px;"/>
-          </div>
-          <div>
-            <div class="input-label" style="margin-bottom:8px;">สถานะสุดท้าย</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;" id="sn-status-chips">
-              <button class="sn-chip" onclick="snToggleChip(this,'final-status')">🟢 เคสดีขึ้น</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'final-status')">🟡 ยังต้องดูต่อ</button>
-              <button class="sn-chip" onclick="snToggleChip(this,'final-status')">🔵 ส่งต่อแล้ว</button>
-            </div>
-          </div>
-          <div class="input-group"><div class="input-label">Reflection (optional)</div>
-            <textarea class="input-field" id="sn-reflection" placeholder="เช่น ต่อมกร Support ยากตรงไหน? , Triggers ที่เห็น..." style="min-height:72px;resize:vertical;font-size:13px;line-height:1.6;"></textarea></div>
-        </div>
-
-        <button class="btn-full gold" id="sn-submit-btn" onclick="submitSessionNote()">บันทึก Session Note →</button>
-      </div>
-    </div>
-
-    <!-- ── Recent Notes (horizontal scroll) ── -->
-    <div id="sn-recent-wrap" style="margin-top:24px;">
-      <div class="section-label">📂 Note ล่าสุดของฉัน</div>
-      <div id="sn-recent-list" style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;-webkit-overflow-scrolling:touch;">
-        <div class="empty" style="width:100%;">กำลังโหลด...</div>
-      </div>
-    </div>
-
-  </div>
-<script>
 
 // ══════════════════════════════════════════════════════════════
 // SESSION NOTE TAB
@@ -3978,7 +2940,7 @@ async function snLookupCase(){
   const caseId = document.getElementById("sn-case-id-in").value.trim().toUpperCase();
   if(!caseId){ toast("กรุณากรอก Case ID"); return; }
 
-  const btn = document.querySelector("[onclick='snLookupCase()']");
+  const btn = document.querySelector('[onclick="snLookupCase()"]');
   if(btn){ btn.disabled=true; btn.textContent="กำลังดึง..."; }
 
   try{
@@ -4156,61 +3118,6 @@ async function loadMyRecentNotes(){
   }
 }
 
-</script>
-
-  <!-- ══ TAB: TEAM MANAGEMENT (admin only) ════════════════════ -->
-  <div class="tab-content" id="tab-team">
-
-    <!-- Stats -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;" id="team-stats-row">
-      <div class="kpi-card"><div class="kpi-num" id="team-stat-total">—</div><div class="kpi-label">PR ทั้งหมด</div></div>
-      <div class="kpi-card"><div class="kpi-num" id="team-stat-active">—</div><div class="kpi-label">Active</div></div>
-      <div class="kpi-card"><div class="kpi-num" id="team-stat-capacity">—</div><div class="kpi-label">Slot ว่างรวม</div></div>
-    </div>
-
-    <!-- PR List -->
-    <div class="section-label" style="margin-bottom:10px;">ทีมงานปัจจุบัน</div>
-    <div id="team-list"><div class="empty">กำลังโหลด...</div></div>
-
-    <!-- Add member form -->
-    <div style="margin-top:20px;">
-      <div class="section-label" style="margin-bottom:10px;">เพิ่มสมาชิกใหม่</div>
-      <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
-        <div class="input-group">
-          <div class="input-label">LINE User ID *</div>
-          <input class="input-field" id="tm-userid" placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
-        </div>
-        <div class="input-group">
-          <div class="input-label">ชื่อ *</div>
-          <input class="input-field" id="tm-name" placeholder="ชื่อ-นามสกุล หรือชื่อเล่น"/>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div class="input-group">
-            <div class="input-label">Role</div>
-            <select class="input-field" id="tm-role">
-              <option value="member">Member / PR</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <div class="input-label">Capacity (เคส/สัปดาห์)</div>
-            <input class="input-field" id="tm-capacity" type="number" value="3" min="1" max="10"/>
-          </div>
-        </div>
-        <div class="input-group">
-          <div class="input-label">ความเชี่ยวชาญ (optional)</div>
-          <input class="input-field" id="tm-spec" placeholder="เช่น ความสัมพันธ์, ความเครียด"/>
-        </div>
-        <div class="input-group">
-          <div class="input-label">หมายเหตุ (optional)</div>
-          <input class="input-field" id="tm-notes" placeholder="เช่น ม.5/4, รุ่น 2025"/>
-        </div>
-        <button class="btn-full gold" id="tm-add-btn" onclick="addTeamMemberDash()">เพิ่มสมาชิก →</button>
-      </div>
-    </div>
-
-  </div>
-<script>
 
 // ══════════════════════════════════════════════════════════════
 // TEAM MANAGEMENT TAB
@@ -4294,6 +3201,7 @@ async function addTeamMemberDash(){
   const notes   = document.getElementById("tm-notes").value.trim();
 
   if(!userId || !name){ toast("กรุณากรอก User ID และชื่อ"); return; }
+  if(isMockMode){ toast("🟡 Mock mode"); return; }
 
   const btn = document.getElementById("tm-add-btn");
   btn.disabled = true; btn.textContent = "กำลังเพิ่ม...";
@@ -4331,51 +3239,70 @@ function openEditCapacity(userId, currentCap){
     }).catch(()=>toast("เกิดข้อผิดพลาด"));
 }
 
-</script>
-
-  <!-- ══ TAB: ROOMS ════════════════════════════════════════════ -->
-  
-
-  <!-- ══ TAB: ROOMS (admin only) ═══════════════════════════════ -->
-  <div class="tab-content" id="tab-rooms">
-
-    <div class="section-label" style="margin-bottom:12px;">ห้องที่ใช้ในระบบ</div>
-    <div id="rooms-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-      <div class="empty">กำลังโหลด...</div>
-    </div>
-
-    <div class="section-label" style="margin-bottom:10px;">เพิ่มห้องใหม่</div>
-    <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="input-group"><div class="input-label">รหัสห้อง (A-Z) *</div>
-          <input class="input-field" id="rm-id" placeholder="A" maxlength="5"/></div>
-        <div class="input-group"><div class="input-label">ชั้น</div>
-          <input class="input-field" id="rm-floor" placeholder="2"/></div>
-      </div>
-      <div class="input-group"><div class="input-label">ชื่อห้อง *</div>
-        <input class="input-field" id="rm-name" placeholder="ห้องแนะแนว 1"/></div>
-      <div class="input-group"><div class="input-label">คำอธิบาย</div>
-        <input class="input-field" id="rm-desc" placeholder="ตึกหลัก ฝั่งซ้าย ใกล้บันได"/></div>
-      <div class="input-group">
-        <div class="input-label">รูปห้อง URL</div>
-        <div style="display:flex;gap:8px;">
-          <input class="input-field" id="rm-photo" placeholder="https://..." style="flex:1;"/>
-          <button class="btn-sm ghost" onclick="triggerUpload('rm-photo-file','rm-photo')" style="white-space:nowrap;flex-shrink:0;">📷 อัปโหลด</button>
-        </div>
-        <input type="file" id="rm-photo-file" accept="image/*" style="display:none;" onchange="uploadToCloudinary(this,'rm-photo')"/>
-        <div id="rm-photo-preview" style="display:none;margin-top:8px;border-radius:10px;overflow:hidden;height:140px;background:#000;">
-          <img id="rm-photo-img" style="width:100%;height:100%;object-fit:cover;" src=""/>
-        </div>
-      </div>
-      <button class="btn-full gold" id="rm-add-btn" onclick="addRoomDash()">เพิ่มห้อง →</button>
-    </div>
-  </div>
-<script>
 
 // ══════════════════════════════════════════════════════════════
 // ROOMS TAB
 // ══════════════════════════════════════════════════════════════
 let _rooms = [];
+
+function editRoom(id){
+  const r = _rooms.find(r=>r.id===id);
+  if(!r)return;
+  document.getElementById("rm-id").value    = r.id;
+  document.getElementById("rm-name").value  = r.name;
+  document.getElementById("rm-loc").value   = r.location_hint||"";
+  document.getElementById("rm-desc").value  = r.description||"";
+  document.getElementById("rm-photo").value = r.photo_url||"";
+  if(r.photo_url){
+    document.getElementById("rm-photo-img").src = r.photo_url;
+    document.getElementById("rm-photo-preview").style.display = "block";
+  }
+  document.getElementById("rm-id").scrollIntoView({behavior:"smooth"});
+}
+
+// Show photo preview when URL is typed
+document.addEventListener("DOMContentLoaded", () => {
+  const photoInput = document.getElementById("rm-photo");
+  if(photoInput) photoInput.addEventListener("input", function(){
+    const preview = document.getElementById("rm-photo-preview");
+    const img     = document.getElementById("rm-photo-img");
+    if(this.value){
+      img.src = this.value;
+      preview.style.display = "block";
+      img.onerror = () => { preview.style.display = "none"; };
+    } else {
+      preview.style.display = "none";
+    }
+  });
+});
+
+async function saveRoom(){
+  const id    = document.getElementById("rm-id").value.trim();
+  const name  = document.getElementById("rm-name").value.trim();
+  if(!id||!name){ toast("กรุณาใส่ Room ID และชื่อห้อง"); return; }
+  if(isMockMode){ toast("🟡 Mock mode"); return; }
+  const data = {
+    action:"updateRoom", id, name,
+    description:   document.getElementById("rm-desc").value.trim(),
+    photo_url:     document.getElementById("rm-photo").value.trim(),
+    location_hint: document.getElementById("rm-loc").value.trim()
+  };
+  try {
+    const d = await apiCall(data);
+    if(d.status==="OK"){
+      toast("บันทึกห้อง " + id + " แล้ว 🚪");
+      ["rm-id","rm-name","rm-loc","rm-desc","rm-photo"].forEach(eid=>{ const el=document.getElementById(eid); if(el) el.value=""; });
+      document.getElementById("rm-photo-preview").style.display = "none";
+      loadRoomsTab();
+    }
+  } catch(e){ toast("เกิดข้อผิดพลาด"); }
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// ROOMS TAB
+// ══════════════════════════════════════════════════════════════
+
 
 async function loadRoomsTab(){
   try {
@@ -4424,6 +3351,7 @@ async function addRoomDash(){
   const id   = document.getElementById("rm-id").value.trim().toUpperCase();
   const name = document.getElementById("rm-name").value.trim();
   if(!id || !name){ toast("กรุณากรอกรหัสและชื่อห้อง"); return; }
+  if(isMockMode){ toast("🟡 Mock mode"); return; }
   const btn = document.getElementById("rm-add-btn");
   btn.disabled=true; btn.textContent="กำลังเพิ่ม...";
   try {
@@ -4502,6 +3430,8 @@ function openEditRoom(id){
     });
 }
 
+
 </script>
 </body>
 </html>
+
