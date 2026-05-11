@@ -384,7 +384,7 @@
     <div class="divider"></div>
     <div class="section-label">เพิ่ม PR ใหม่</div>
     <div class="add-form">
-      <div class="input-group"><div class="input-label">LINE User ID</div><input class="input-field" id="new-pr-id" placeholder="Uxxxxxxxxxxxxxxxx"/></div>
+      <div class="input-group">
       <div class="input-group"><div class="input-label">ชื่อ</div><input class="input-field" id="new-pr-name" placeholder="ชื่อ PR"/></div>
       <button class="btn-full gold" onclick="addPR()">เพิ่ม PR</button>
     </div>
@@ -442,24 +442,7 @@
       <button class="btn-full gold" onclick="setPause()">🔴 ปิดระบบและบันทึก</button>
     </div>
     <div class="divider"></div>
-    <div class="section-label">✨ Founders รอ Approve</div>
-    <div id="founders-pending"><div class="empty">กำลังโหลด...</div></div>
-
-    <div class="divider"></div>
-    <div class="section-label">Founder's Pick — รออนุมัติ</div>
-    <div id="pending-founders"><div class="empty">กำลังโหลด...</div></div>
-    <div class="add-form">
-      <div class="settings-sub">เพิ่มผู้นำชมรมจิตวิทยาแต่ละรุ่น หลังจากได้รับ Google Form แล้ว</div>
-      <div class="input-group"><div class="input-label">ชื่อ-นามสกุล</div><input class="input-field" id="f-name" placeholder="ชื่อ นามสกุล"/></div>
-      <div class="input-group"><div class="input-label">ปีที่ดำรงตำแหน่ง</div><input class="input-field" id="f-year" placeholder="2567–2568"/></div>
-      <div class="input-group"><div class="input-label">รูป (Cloudinary URL)</div><input class="input-field" id="f-photo" placeholder="https://res.cloudinary.com/..."/></div>
-      <div class="input-group"><div class="input-label">Vision — อยากทำให้เกิดอะไรขึ้น</div><textarea class="input-field" id="f-vision" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
-      <div class="input-group"><div class="input-label">สิ่งที่ภูมิใจที่สุด</div><textarea class="input-field" id="f-proud" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
-      <div class="input-group"><div class="input-label">บทเรียนที่ยากที่สุด</div><textarea class="input-field" id="f-struggle" style="min-height:80px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
-      <div class="input-group"><div class="input-label">จดหมายถึงผู้นำรุ่นต่อไป</div><textarea class="input-field" id="f-letter" style="min-height:100px;resize:vertical;line-height:1.6;" placeholder="คำตอบจาก form..."></textarea></div>
-      <button class="btn-full gold" onclick="addFounder()">เพิ่มและเผยแพร่</button>
-    </div>
-  </div>
+    
 
   <!-- CONTENT TEAM — Puzzle Builder (3-step, no-code) -->
   <div class="tab-content" id="tab-content">
@@ -1021,11 +1004,11 @@
     <div style="margin-top:16px;">
       <div class="section-label" style="margin-bottom:10px;">เพิ่มครูแนะแนว</div>
       <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
-        <div class="input-group"><div class="input-label">ชื่อ *</div><input class="input-field" id="gu-name" placeholder="ชื่อ นามสกุล"/></div>
-        <div class="input-group"><div class="input-label">ตำแหน่ง</div><input class="input-field" id="gu-nickname" placeholder="ครูแนะแนว ม.5"/></div>
-        <div class="input-group"><div class="input-label">LINE ID</div><input class="input-field" id="gu-line" placeholder="@guidance_xxx"/></div>
-        <div class="input-group"><div class="input-label">เบอร์โทร</div><input class="input-field" id="gu-phone" placeholder="02-xxx-xxxx"/></div>
-        <div class="input-group"><div class="input-label">รูปโปรไฟล์ URL</div><input class="input-field" id="gu-photo" placeholder="https://..."/></div>
+        <div class="input-group"><div class="input-label">ชื่อ *</div><input class="input-field" id="gd-name" placeholder="ชื่อ นามสกุล"/></div>
+        <div class="input-group"><div class="input-label">ตำแหน่ง</div><input class="input-field" id="gd-nickname" placeholder="ครูแนะแนว ม.5"/></div>
+        <div class="input-group"><div class="input-label">LINE ID</div><input class="input-field" id="gd-line" placeholder="@guidance_xxx"/></div>
+        <div class="input-group"><div class="input-label">เบอร์โทร</div><input class="input-field" id="gd-phone" placeholder="02-xxx-xxxx"/></div>
+        <div class="input-group"><div class="input-label">รูปโปรไฟล์ URL</div><input class="input-field" id="gd-photo" placeholder="https://..."/></div>
         <button class="btn-full gold" onclick="addStaff('guidance')">เพิ่มครูแนะแนว →</button>
       </div>
     </div>
@@ -1034,6 +1017,11 @@
   <!-- ═══════════ TEAM ═══════════ -->
   <div class="tab-content" id="tab-team">
     <div class="section-label" style="margin-bottom:14px;">จัดการทีม</div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;">
+      <div class="stat-box"><div class="stat-num stat-total">—</div><div class="stat-label">สมาชิกทั้งหมด</div></div>
+      <div class="stat-box"><div class="stat-num stat-active">—</div><div class="stat-label">Active</div></div>
+      <div class="stat-box"><div class="stat-num stat-capacity">—</div><div class="stat-label">slot ว่าง</div></div>
+    </div>
     <div id="team-list-wrap" style="display:flex;flex-direction:column;gap:10px;"></div>
     <div style="margin-top:16px;">
       <div class="section-label" style="margin-bottom:10px;">เพิ่มสมาชิกใหม่</div>
@@ -1046,7 +1034,8 @@
             <option value="admin">Admin</option>
           </select>
         </div>
-        <div class="input-group"><div class="input-label">ความเชี่ยวชาญ / บทบาทพิเศษ</div><input class="input-field" id="team-spec" placeholder="เช่น ดูแลนักเรียน ม.6"/></div>
+        <div class="input-group"><div class="input-label">รับเคสได้สูงสุด (คน)</div><input class="input-field" id="team-capacity" type="number" value="3" min="1" max="10" placeholder="3"/></div>
+        <div class="input-group"><div class="input-label">ความเชี่ยวชาญ</div><input class="input-field" id="team-spec" placeholder="เช่น ดูแลนักเรียน ม.6"/></div>
         <div class="input-group"><div class="input-label">หมายเหตุ</div><input class="input-field" id="team-notes" placeholder="ข้อมูลเพิ่มเติม (ไม่บังคับ)"/></div>
         <button class="btn-full gold" id="team-add-btn" onclick="addTeamMemberDash()">เพิ่มสมาชิก →</button>
       </div>
@@ -1060,19 +1049,42 @@
     <div style="margin-top:16px;">
       <div class="section-label" style="margin-bottom:10px;">เพิ่มห้องใหม่</div>
       <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="input-group"><div class="input-label">รหัสห้อง</div><input class="input-field" id="room-id" placeholder="เช่น R101 (ไม่ใส่ก็ได้ ระบบสร้างให้)"/></div>
         <div class="input-group"><div class="input-label">ชื่อห้อง *</div><input class="input-field" id="room-name" placeholder="เช่น ห้อง 101, ห้องเรียนรู้ A"/></div>
         <div class="input-group"><div class="input-label">อาคาร / ชั้น</div><input class="input-field" id="room-location" placeholder="เช่น อาคาร 3 ชั้น 2"/></div>
         <div class="input-group"><div class="input-label">ความจุ (คน)</div><input class="input-field" id="room-capacity" type="number" placeholder="2" value="2"/></div>
-        <button class="btn-full gold" onclick="addRoomDash()">เพิ่มห้อง →</button>
+        <button class="btn-full gold" id="room-add-btn" onclick="addRoomDash()">เพิ่มห้อง →</button>
       </div>
     </div>
   </div>
 
   <!-- ═══════════ REQUESTS ═══════════ -->
   <div class="tab-content" id="tab-requests">
-    <div class="section-label" style="margin-bottom:14px;">คำขอพิเศษ</div>
-    <div style="font-size:13px;color:var(--text-mid);margin-bottom:12px;line-height:1.7;">นักเรียนที่ไม่พบ slot ที่ตรงกับตารางเรียน สามารถส่งคำขอช่วงเวลาพิเศษมาได้</div>
+    <div class="section-label" style="margin-bottom:4px;">คำขอเวลาพิเศษ</div>
+    <div style="font-size:12px;color:var(--text-mid);margin-bottom:14px;line-height:1.6;">นักเรียนที่ไม่พบ slot ที่สะดวก — กดจัดเวลาและยืนยันเพื่อส่ง LINE แจ้งนักเรียนอัตโนมัติ</div>
     <div id="special-requests-list"><div class="empty">กำลังโหลด...</div></div>
+    <!-- Assign slot overlay -->
+    <div id="assign-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:flex-end;justify-content:center;">
+      <div style="background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:540px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">จัดเวลาให้นักเรียน</div>
+        <div id="assign-student-name" style="font-size:18px;font-weight:700;margin-bottom:16px;"></div>
+        <div style="font-size:13px;color:var(--text-mid);margin-bottom:8px;">นักเรียนขอช่วงเวลา:</div>
+        <div id="assign-requested-slots" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;"></div>
+        <div class="input-group" style="margin-bottom:12px;">
+          <div class="input-label">เลือก slot ที่จัดให้</div>
+          <select class="input-field" id="assign-slot-select"></select>
+        </div>
+        <div class="input-group" style="margin-bottom:16px;">
+          <div class="input-label">เลือก PR ที่จะดูแล</div>
+          <select class="input-field" id="assign-pr-select"></select>
+        </div>
+        <input type="hidden" id="assign-case-id"/>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button class="btn-full ghost" onclick="closeAssignOverlay()">ยกเลิก</button>
+          <button class="btn-full gold" id="assign-confirm-btn" onclick="confirmAssignSlot()">ยืนยันและแจ้งนักเรียน →</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ═══════════ SESSION NOTE ═══════════ -->
@@ -1440,13 +1452,14 @@ function switchTab(tabId,item){
   if(el){el.style.display="flex";el.classList.add("active");}
   if(item) item.classList.add("active");
   if(tabId==="tab-archive") loadArchiveTab();
+  if(tabId==="tab-settings") loadPauseStatus();
   if(tabId==="tab-tools") loadToolsTab();
   // Close sidebar on mobile after nav
   if(window.innerWidth<=600) closeSidebar();
 }
 
 async function loadData(){
-  if(userRole==="admin"){loadAdminData();loadFeedback();loadPendingFounders();buildWorldGrid();}
+  if(userRole==="admin"){loadAdminData();loadFeedback();buildWorldGrid();}
   else { loadPRData();buildScheduleTab();buildWorldGrid(); }
 }
 
@@ -1471,42 +1484,6 @@ async function loadAdminAsPR(){
   renderCasesInto("all-cases-list", allCases, true);
 }
 
-// ── PENDING FOUNDERS ──────────────────────────────────────
-async function loadPendingFounders(){
-  let pending;
-  try{
-    const d=await apiCall({action:"getPendingFounders"});
-    pending=d.founders||[];
-  }catch{pending=[];}
-
-  const el=document.getElementById("pending-founders");
-  if(!pending.length){
-    el.innerHTML=`<div class="empty">ไม่มี Founder รออนุมัติ 💛</div>`;
-    return;
-  }
-  el.innerHTML="";
-  pending.forEach(f=>{
-    const card=document.createElement("div");
-    card.className="case-card";
-    card.innerHTML=`
-      <div class="case-header">
-        <div>
-          <div class="case-id">${f.full_name}</div>
-          <div class="case-status">${f.year}</div>
-        </div>
-        <div class="level-badge yellow">รออนุมัติ</div>
-      </div>
-      <div class="answer-row">
-        <div class="answer-q">Vision</div>
-        <div class="answer-a">${(f.vision||"").slice(0,120)}${f.vision?.length>120?"...":""}</div>
-      </div>
-      <div class="btn-row">
-        <button class="btn-sm gold" onclick="approveFounder('${f.id}','${f.full_name}')">✓ Approve</button>
-      </div>
-    `;
-    el.appendChild(card);
-  });
-}
 
 // ── FEEDBACK ──────────────────────────────────────────────
 async function loadFeedback(){
@@ -1754,7 +1731,6 @@ async function loadAdminData(){
   renderSpecialRequests(special);
   renderCasesInto("cases-list",[...cases].sort((a,b)=>({red:0,yellow:1,green:2}[a.level]||2)-({red:0,yellow:1,green:2}[b.level]||2)),true);
   renderPRList(prList);renderPauseBanner(pause);renderWaitingList(waiting);
-  loadFoundersPending();
 }
 
 async function loadContentViews(){
@@ -2377,74 +2353,9 @@ async function addProgram(){
   toast("เพิ่ม Program แล้ว 💛");loadData();
 }
 
-async function addFounder(){
-  const name    = document.getElementById("f-name").value.trim();
-  const year    = document.getElementById("f-year").value.trim();
-  const photo   = document.getElementById("f-photo").value.trim();
-  const vision  = document.getElementById("f-vision").value.trim();
-  const proud   = document.getElementById("f-proud").value.trim();
-  const struggle= document.getElementById("f-struggle").value.trim();
-  const letter  = document.getElementById("f-letter").value.trim();
-  if(!name||!year){toast("กรุณากรอกชื่อและปี");return;}
-  try{
-    await apiCall({action:"addFounder",full_name:name,year,photo_url:photo,
-        vision,proudest:proud,struggle,letter_to_next:letter,active:"TRUE"});
-  }catch{}
-  ["f-name","f-year","f-photo","f-vision","f-proud","f-struggle","f-letter"]
-    .forEach(id=>{document.getElementById(id).value="";});
-  toast("เพิ่ม Founder แล้ว 💛");
-}
 
-// ── FOUNDERS PENDING ──────────────────────────────────────
-async function loadFoundersPending(){
-  const el=document.getElementById("founders-pending");
-  if(!el)return;
-  let pending=[];
-  try{
-    const d=await apiCall({action:"getFoundersPending"});
-    pending=d.founders||[];
-  }catch{pending=[];}
 
-  if(!pending.length){
-    el.innerHTML=`<div class="empty">ไม่มี Founder รอ Approve 💛</div>`;
-    return;
-  }
-  el.innerHTML="";
-  pending.forEach(f=>{
-    const card=document.createElement("div");
-    card.className="pr-card";
-    card.style.flexDirection="column";card.style.alignItems="flex-start";card.style.gap="10px";
-    card.innerHTML=`
-      <div>
-        <div class="pr-name">${f.full_name}</div>
-        <div class="pr-sub">${f.year}</div>
-        <div style="font-size:12px;color:var(--text-mid);margin-top:4px;line-height:1.6;">${(f.vision||"").substring(0,80)}${f.vision?.length>80?"...":""}</div>
-      </div>
-      <div class="btn-row">
-        <button class="btn-sm gold" onclick="approveFounder('${f.id}')">✓ Approve</button>
-        <button class="btn-sm danger" onclick="rejectFounder('${f.id}')">✕ Reject</button>
-      </div>
-    `;
-    el.appendChild(card);
-  });
-}
 
-async function approveFounder(id){
-  try{
-    await apiCall({action:"approveFounder",id});
-  }catch{}
-  toast("Approve แล้ว 💛 ขึ้นหน้า Founder's Pick แล้ว");
-  loadFoundersPending();
-}
-
-async function rejectFounder(id){
-  if(!confirm("ลบ submission นี้ทิ้ง?"))return;
-  try{
-    await apiCall({action:"rejectFounder",id});
-  }catch{}
-  toast("ลบแล้ว");
-  loadFoundersPending();
-}
 
 // ── DEVELOPER VIEW ────────────────────────────────────────
 function openDevView(){
@@ -3092,12 +3003,14 @@ function renderTeamList(){
   const active    = _teamMembers.filter(m=>m.active).length;
   const totalCap  = _teamMembers.filter(m=>m.active).reduce((s,m)=>s+(m.capacity-m.activeCount),0);
 
-  document.document.querySelector("#tab-team .stat-total")?.innerText !== undefined &&
-    (document.document.querySelector("#tab-team .stat-total").innerText    = total);
-  document.document.querySelector("#tab-team .stat-active")?.innerText !== undefined &&
-    (document.document.querySelector("#tab-team .stat-active").innerText   = active);
-  document.document.querySelector("#tab-team .stat-capacity")?.innerText !== undefined &&
-    (document.document.querySelector("#tab-team .stat-capacity").innerText = Math.max(0,totalCap));
+  const stTotal = document.querySelector("#tab-team .stat-total");
+  const stActive = document.querySelector("#tab-team .stat-active");
+  const stCap = document.querySelector("#tab-team .stat-capacity");
+  if(stTotal) stTotal.textContent = total;
+  if(stActive) stActive.textContent = active;
+  if(stCap) stCap.textContent = totalCap;
+  // stats updated below
+  // stats updated below
 
   if(!_teamMembers.length){
     container.innerHTML = '<div class="empty">ยังไม่มีสมาชิก — เพิ่มด้านล่างได้เลย</div>';
@@ -3297,9 +3210,10 @@ function renderRoomsList(){
 }
 
 async function addRoomDash(){
-  const id   = document.getElementById("room-id").value.trim().toUpperCase();
-  const name = document.getElementById("room-name").value.trim();
-  if(!id || !name){ toast("กรุณากรอกรหัสและชื่อห้อง"); return; }
+  const rawId = (document.getElementById("room-id")?.value || "").trim().toUpperCase();
+  const name  = (document.getElementById("room-name")?.value || "").trim();
+  if(!name){ toast("กรุณากรอกชื่อห้อง"); return; }
+  const id = rawId || ("R" + Date.now().toString(36).toUpperCase().slice(-4));
 const btn = document.getElementById("room-add-btn");
   btn.disabled=true; btn.textContent="กำลังเพิ่ม...";
   try {
@@ -3871,53 +3785,150 @@ async function loadArchiveTab() {
 
 // ── People tab loader ─────────────────────────────────────────
 async function loadPeopleTab() {
-  const listEl = document.getElementById("ptab-list-content");
-  if (listEl) {
-    listEl.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
-    try {
-      const d = await apiCall({action:"getTeamMembers"});
-      const members = d.members || [];
-      if (!members.length) { listEl.innerHTML = "<div class='empty'>ยังไม่มีสมาชิก</div>"; return; }
-      listEl.innerHTML = "";
-      members.forEach(m => {
-        const row = document.createElement("div");
-        row.style.cssText = "display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);";
-        row.innerHTML = `<div style="width:36px;height:36px;border-radius:50%;background:var(--gold-soft);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">👤</div>
-          <div style="flex:1;"><div style="font-size:14px;font-weight:600;">${m.name||m.displayName||"ไม่ระบุ"}</div>
-          <div style="font-size:11px;color:var(--text-soft);">${m.role||"member"}</div></div>
-          <span class="pr-status ${m.hasSlots?'done':'pending'}">${m.hasSlots?"ลงตารางแล้ว":"ยังไม่ลง"}</span>`;
-        listEl.appendChild(row);
-      });
-    } catch(e) { listEl.innerHTML = "<div class='empty'>โหลดไม่ได้</div>"; }
-  }
+  const listEl = document.getElementById("pdash-list");
+  if (!listEl) return;
+  listEl.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
+  try {
+    const d = await apiCall({action:"getPeople"});
+    const people = d.people || [];
+    // Update count
+    const totalEl = document.getElementById("pdash-total");
+    const activeEl = document.getElementById("pdash-active-count");
+    if (totalEl) totalEl.textContent = people.length;
+    if (activeEl) activeEl.textContent = people.filter(p=>p.active!==false).length;
+    if (!people.length) {
+      listEl.innerHTML = "<div class='empty'>ยังไม่มีข้อมูล — เพิ่มด้านบนได้เลย</div>";
+      return;
+    }
+    listEl.innerHTML = "";
+    people.forEach(p => {
+      const el = document.createElement("div");
+      el.className = "case-card";
+      el.style.cssText = "display:flex;align-items:center;gap:12px;padding:12px 14px;";
+      const thumb = p.thumbnail_url || (p.youtube_url ? "https://img.youtube.com/vi/"+(p.youtube_url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)||[])[1]+"/mqdefault.jpg" : "");
+      el.innerHTML =
+        (thumb ? `<img src="${thumb}" style="width:48px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'"/>` : `<div style="width:48px;height:36px;border-radius:6px;background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;">👩‍🏫</div>`) +
+        `<div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:600;color:var(--text);">${p.name||"ไม่ระบุ"}</div>
+          <div style="font-size:12px;color:var(--text-mid);">${p.subject||""} · <span style="color:var(--gold);">${p.year_group||""}</span></div>
+        </div>
+        <button class="btn-sm ghost" onclick="openEditPerson(${JSON.stringify(p).replace(/"/g,"&quot;")})">แก้ไข</button>`;
+      listEl.appendChild(el);
+    });
+  } catch(e) { listEl.innerHTML = "<div class='empty'>โหลดไม่ได้</div>"; }
 }
 
 // ── Requests tab loader ───────────────────────────────────────
 async function loadRequestsTab() {
-  const el = document.getElementById("ptab-req-content");
-  const badge = document.getElementById("people-req-badge");
+  const el = document.getElementById("special-requests-list");
   if (!el) return;
   el.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
   try {
-    const d = await apiCall({action:"getPendingRequests"});
+    const d = await apiCall({action:"getSpecialRequests"});
     const reqs = d.requests || [];
-    if (badge) badge.textContent = reqs.length;
-    if (!reqs.length) { el.innerHTML = "<div class='empty'>ไม่มีคำขอรอดำเนินการ 💛</div>"; return; }
+    if (!reqs.length) {
+      el.innerHTML = "<div class='empty'>ไม่มีคำขอพิเศษตอนนี้ 💛</div>";
+      return;
+    }
     el.innerHTML = "";
     reqs.forEach(r => {
+      const slots = Array.isArray(r.slots) ? r.slots : (r.slots||"").split(",").map(s=>s.trim()).filter(Boolean);
       const card = document.createElement("div");
-      card.style.cssText = "background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;";
-      card.innerHTML = `
-        <div style="font-size:14px;font-weight:600;">${r.displayName||"ไม่ระบุ"}</div>
-        <div style="font-size:12px;color:var(--text-mid);">${r.reason||""}</div>
-        <div style="font-size:11px;color:var(--text-soft);">${r.createdAt||""}</div>
+      card.className = "case-card";
+      card.style.cssText = "padding:14px;display:flex;flex-direction:column;gap:10px;";
+      card.innerHTML =
+        `<div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text);">${r.displayName||"นักเรียน"}</div>
+            <div style="font-size:11px;color:var(--text-soft);margin-top:2px;">${r.createdAt||""} · Case: ${r.caseId||"—"}</div>
+          </div>
+          <span class="pr-status pending">รอจัดเวลา</span>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-mid);margin-bottom:6px;font-weight:600;">ช่วงเวลาที่ขอ:</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            ${slots.map(s=>`<span style="background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:3px 10px;font-size:11px;color:#7A5C00;">${s}</span>`).join("")}
+          </div>
+        </div>
+        ${r.timeNote ? `<div style="font-size:12px;color:var(--text-mid);font-style:italic;">หมายเหตุ: ${r.timeNote}</div>` : ""}
         <div style="display:flex;gap:8px;">
-          <button class="btn-sm gold" onclick="approveRequest('${r.id}',this)">✓ อนุมัติ</button>
-          <button class="btn-sm ghost" onclick="rejectRequest('${r.id}',this)">✕ ปฏิเสธ</button>
+          <button class="btn-full gold" onclick="openAssignOverlay(${JSON.stringify({id:r.id,caseId:r.caseId||"",name:r.displayName||"นักเรียน",slots}).replace(/"/g,"&quot;")})">จัดเวลาให้ →</button>
+          <button class="btn-sm ghost" onclick="dismissSpecialRequest('${r.id}',this)" style="flex-shrink:0;">ปิด</button>
         </div>`;
       el.appendChild(card);
     });
   } catch(e) { el.innerHTML = "<div class='empty'>โหลดไม่ได้</div>"; }
+}
+
+// ── Assign slot to special request ───────────────────────────
+let _assignData = null;
+function openAssignOverlay(data) {
+  _assignData = data;
+  const overlay = document.getElementById("assign-overlay");
+  document.getElementById("assign-student-name").textContent = data.name;
+  document.getElementById("assign-case-id").value = data.caseId || "";
+  // Show requested slots as chips
+  const reqEl = document.getElementById("assign-requested-slots");
+  reqEl.innerHTML = (data.slots||[]).map(s=>
+    `<span style="background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:4px 12px;font-size:12px;color:#7A5C00;">${s}</span>`
+  ).join("");
+  // Build slot select from requested slots + all week slots
+  const slotSel = document.getElementById("assign-slot-select");
+  slotSel.innerHTML = "";
+  const allSlots = ["จันทร์ 15:30–16:30","จันทร์ 16:00–17:00","จันทร์ 16:30–17:30",
+    "อังคาร 15:30–16:30","อังคาร 16:00–17:00","อังคาร 16:30–17:30",
+    "พุธ 15:30–16:30","พุธ 16:00–17:00","พุธ 16:30–17:30",
+    "พฤหัสบดี 15:30–16:30","พฤหัสบดี 16:00–17:00","พฤหัสบดี 16:30–17:30",
+    "ศุกร์ 12:30–13:30","ศุกร์ 13:00–14:00","ศุกร์ 15:30–16:30","ศุกร์ 16:00–17:00","ศุกร์ 16:30–17:30"];
+  // Put requested slots first
+  const priority = [...(data.slots||[]), ...allSlots.filter(s=>!(data.slots||[]).includes(s))];
+  priority.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s; opt.textContent = s;
+    slotSel.appendChild(opt);
+  });
+  // Build PR select from team members
+  const prSel = document.getElementById("assign-pr-select");
+  prSel.innerHTML = "<option value=''>กำลังโหลด PR...</option>";
+  apiCall({action:"getAvailableSlots"}).then(d => {
+    const slots = d.slots || [];
+    const prs = [...new Set(slots.map(s=>s.peer).filter(Boolean))];
+    prSel.innerHTML = prs.length
+      ? prs.map(p=>`<option value="${p}">${p}</option>`).join("")
+      : "<option value=''>ยังไม่มี PR ลงตาราง</option>";
+  }).catch(()=>{ prSel.innerHTML = "<option value=''>โหลดไม่ได้</option>"; });
+  overlay.style.display = "flex";
+}
+
+function closeAssignOverlay() {
+  document.getElementById("assign-overlay").style.display = "none";
+  _assignData = null;
+}
+
+async function confirmAssignSlot() {
+  const slot   = document.getElementById("assign-slot-select").value;
+  const pr     = document.getElementById("assign-pr-select").value;
+  const caseId = document.getElementById("assign-case-id").value;
+  const reqId  = _assignData?.id || "";
+  if(!slot){ toast("กรุณาเลือก slot"); return; }
+  const btn = document.getElementById("assign-confirm-btn");
+  btn.disabled=true; btn.textContent="กำลังยืนยัน...";
+  try {
+    await apiCall({action:"assignSpecialSlot", caseId, slot, prUserId:pr, requestId:reqId});
+    toast("ยืนยันแล้ว — แจ้ง LINE นักเรียนแล้ว 💛");
+    closeAssignOverlay();
+    loadRequestsTab();
+  } catch(e) {
+    toast("เกิดข้อผิดพลาด กรุณาลองใหม่");
+  } finally {
+    btn.disabled=false; btn.textContent="ยืนยันและแจ้งนักเรียน →";
+  }
+}
+
+async function dismissSpecialRequest(id, btn) {
+  if(btn){ btn.disabled=true; }
+  await apiCall({action:"dismissSpecialRequest", id}).catch(()=>{});
+  loadRequestsTab();
 }
 
 async function approveRequest(id, btn) {
@@ -4008,6 +4019,49 @@ async function saveEditPerson() {
 // ── goHome ────────────────────────────────────────────────────
 function goHome() {
   window.location.href = "index.html";
+}
+
+// ── Load pause status into settings tab ──────────────────────
+async function loadPauseStatus() {
+  try {
+    const d = await apiCall({action:"getPauseStatus"});
+    const banner = document.getElementById("pause-status-banner");
+    const activeCard = document.getElementById("pause-active-card");
+    const inactiveCard = document.getElementById("pause-inactive-card");
+    if (!banner) return;
+    if (d.pause) {
+      banner.style.cssText = "background:#FEE2E2;color:#991B1B;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:14px;";
+      banner.textContent = "🔴 ระบบปิดอยู่ตอนนี้ — " + (d.pause.reason||"") + " (ถึง " + (d.pause.end||"") + ")";
+      if(activeCard) activeCard.style.display="flex";
+      if(inactiveCard) inactiveCard.style.display="none";
+      const detailEl = document.getElementById("pause-active-detail");
+      if(detailEl) detailEl.textContent = (d.pause.reason||"") + " · สิ้นสุด " + (d.pause.end||"");
+    } else {
+      banner.style.cssText = "background:#D1FAE5;color:#065F46;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:14px;";
+      banner.textContent = "🟢 ระบบเปิดรับนัดอยู่";
+      if(activeCard) activeCard.style.display="none";
+      if(inactiveCard) inactiveCard.style.display="flex";
+    }
+  } catch(e) { console.warn("loadPauseStatus failed", e); }
+}
+
+// ── Open edit person modal ────────────────────────────────────
+function openEditPerson(p) {
+  const modal = document.getElementById("edit-person-modal");
+  if(!modal) return;
+  document.getElementById("ep-id").value      = p.id      || "";
+  document.getElementById("ep-name").value    = p.name    || "";
+  document.getElementById("ep-subject").value = p.subject || "";
+  document.getElementById("ep-year").value    = p.year_group || "m4";
+  const tagEl = document.getElementById("ep-tag");
+  if(tagEl) tagEl.value = p.tag || "";
+  const bioEl = document.getElementById("ep-bio");
+  if(bioEl) bioEl.value = p.bio || "";
+  const ytEl = document.getElementById("ep-youtube");
+  if(ytEl) ytEl.value = p.youtube_url || "";
+  const thumbEl = document.getElementById("ep-thumb");
+  if(thumbEl) thumbEl.value = p.thumbnail_url || "";
+  modal.style.display = "flex";
 }
 </script>
 </body>
