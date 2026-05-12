@@ -316,6 +316,26 @@
     .arch-progress{height:4px;border-radius:99px;background:var(--border);margin-top:6px;overflow:hidden;display:none;}
     .arch-progress-bar{height:100%;background:var(--gold);border-radius:99px;transition:width .3s;}
     .arch-status{font-size:12px;color:var(--text-mid);text-align:center;padding:6px 0;}
+
+    //new add
+    .stab {
+  flex-shrink: 0;
+  padding: 8px 16px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-soft);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: 'Sarabun', sans-serif;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+}
+.stab.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
   </style>
 </head>
 <body>
@@ -479,10 +499,10 @@
       <div id="pause-preview" style="display:none;background:var(--yellow-soft);border:1px solid var(--gold-border);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--yellow);margin-bottom:4px;">
         Preview: นักเรียนจะเห็น countdown <span id="pause-preview-days">—</span> วัน
       </div>
-      <button class="btn-full gold" onclick="setPause()">🔴 ปิดระบบและบันทึก</button>
+     <button class="btn-full gold" onclick="setPause()">🔴 ปิดระบบและบันทึก</button>
     </div>
     <div class="divider"></div>
-    
+  </div><!-- ← closes tab-settings -->
 
   <!-- CONTENT TEAM — Puzzle Builder (3-step, no-code) -->
   <div class="tab-content" id="tab-content">
