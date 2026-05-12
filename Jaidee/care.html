@@ -950,9 +950,50 @@ function routeToLayer(tab, scrollTargetId) {
   }, 240);
 }
 
+  async function loadCareArticleSuggestions() {
+  const LAYER_CONTAINERS = {
+    "ร่างกาย":      "cards-ร่างกาย",
+    "ความสัมพันธ์":  "cards-ความสัมพันธ์",
+    "การแสดงออก":   "cards-การแสดงออก",
+    "สิ่งแวดล้อม":  "cards-สิ่งแวดล้อม",
+    "ความเชื่อ":    "cards-ความเชื่อ",
+  };
+  try {
+    const res = await fetch(API_URL + "?action=getContent&world=puzzle");
+    const d = await res.json();
+    const articles = (d.status === "OK" && d.items) ? d.items : [];
+    const tagged = articles.filter(a => a.careLayer && LAYER_CONTAINERS[a.careLayer]);
+    tagged.forEach(art => {
+      const containerId = LAYER_CONTAINERS[art.careLayer];
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!container.dataset.hasSuggestions) {
+        container.dataset.hasSuggestions = "1";
+        const header = document.createElement("div");
+        header.style.cssText = "font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--soft);padding:8px 0 4px;margin:4px 0;";
+        header.textContent = "📖 บทความแนะนำจากทีม";
+        container.appendChild(header);
+      }
+      const card = document.createElement("div");
+      card.style.cssText = "background:var(--card-bg);border:1px solid var(--cream-border);border-radius:14px;padding:14px;cursor:pointer;margin-bottom:8px;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;";
+      card.innerHTML = `
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--green);margin-bottom:6px;">${art.tag||"บทความ"}</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.4;">${art.title}</div>
+        <div style="font-size:12px;font-weight:300;color:var(--mid);line-height:1.6;">${art.desc||""}</div>
+        <div style="font-size:11px;color:var(--soft);margin-top:8px;">${art.level||""} · ⏱ ${art.readTime||""}</div>`;
+      card.onclick = () => {
+        try { sessionStorage.setItem("bodyArticle", JSON.stringify(art)); } catch(e) {}
+        window.location.href = "puzzle.html?bodyArticle=1";
+      };
+      container.appendChild(card);
+      setTimeout(() => { card.style.opacity = "1"; card.style.transform = "translateY(0)"; }, 50);
+    });
+  } catch(e) {}
+}
 
 async function loadCare() {
   loadBodyArticles();
+  loadCareArticleSuggestions();
   try {
     const res = await fetch(API_URL + "?action=getCare");
     const d = await res.json();
