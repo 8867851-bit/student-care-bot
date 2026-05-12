@@ -1683,16 +1683,19 @@ function switchTab(tabId,item){
   const el=document.getElementById(tabId);
   if(el){el.style.display="flex";el.classList.add("active");}
   if(item) item.classList.add("active");
-  if(tabId==="tab-archive")       loadArchiveTab();
-  if(tabId==="tab-settings")      loadPauseStatus();
-  if(tabId==="tab-tools")         loadToolsTab();
-  if(tabId==="tab-my-cases")      loadPRData();
-  if(tabId==="tab-requests")      loadTeacherRequestsTab();
+  if(tabId==="tab-archive")          loadArchiveTab();
+  if(tabId==="tab-settings")         loadPauseStatus();
+  if(tabId==="tab-tools")            loadToolsTab();
+  if(tabId==="tab-my-cases")         loadPRData();
+  if(tabId==="tab-requests")         loadTeacherRequestsTab();
   if(tabId==="tab-special-requests") loadRequestsTab();
-  if(tabId==="tab-schedule")      buildScheduleTab();
-  if(tabId==="tab-feedback")      loadFeedback();
-  if(tabId==="tab-overview")      loadAdminData();
-  if(tabId==="tab-programs")      loadProgramData();
+  if(tabId==="tab-schedule")         buildScheduleTab();
+  if(tabId==="tab-feedback")         loadFeedback();
+  if(tabId==="tab-overview")         loadAdminData();
+  if(tabId==="tab-programs")         loadProgramData();
+  // ADD THESE:
+  if(tabId==="tab-content")  { pzGoStep(1); pzUpdatePreview(); }
+  if(tabId==="tab-people")   { updatePeopleDashPreview(); loadPeopleReqList(); }
   // Close sidebar on mobile after nav
   if(window.innerWidth<=600) closeSidebar();
 }
@@ -2038,10 +2041,19 @@ async function loadPRData(){
 }
 
 async function loadProgramData(){
+  const FALLBACK = [
+    { id:"demo1", name:"Intentional Listening Lab", short_desc:"ฝึกฟังอย่างมีความตั้งใจ สำหรับนักเรียนที่อยากช่วยเพื่อนได้ดีขึ้น",
+      category:"Wellbeing", type:"Workshop", emoji:"🌿", start_date:"เร็วๆ นี้", status:"active", form_url:"" },
+    { id:"demo2", name:"Study Smarter: Neuroscience Edition", short_desc:"เรียนรู้ว่าสมองทำงานยังไงเวลาเรียน",
+      category:"Academic", type:"Seminar", emoji:"🧠", start_date:"เร็วๆ นี้", status:"active", form_url:"" },
+  ];
   let programs;
   try{
-    const d=await apiCall({action:"getPrograms"});programs=d.programs||[];
-  }catch{programs=[];}
+    const d = await apiCall({action:"getPrograms"});
+    programs = (d.programs && d.programs.length) ? d.programs : FALLBACK;
+  }catch{
+    programs = FALLBACK;
+  }
   renderPrograms(programs);
 }
 
@@ -3981,16 +3993,22 @@ let toolsData = []; // [{row, name, desc, url, photo_url, active}, ...]
 async function loadToolsTab() {
   const list = document.getElementById("tools-list");
   list.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
+
+  const FALLBACK_TOOLS = [
+    { name:"1323 สายด่วนสุขภาพจิต", desc:"โทรฟรี 24 ชั่วโมง กรมสุขภาพจิต", url:"tel:1323", photo_url:"", active:true, _rowIndex:"" },
+    { name:"Stop NCII", desc:"แจ้งรูปภาพที่ถูกเผยแพร่โดยไม่ยินยอม", url:"https://www.stopncii.org/", photo_url:"", active:true, _rowIndex:"" },
+  ];
+
   try {
-    const res = await fetch(API_URL + "?action=getCare");
-    const d = await res.json();
-    toolsData = (d.status === "OK" && d.items)
-      ? d.items.filter(i => (i.category||"").trim() === "เครื่องมือ")
+    const d = await apiCall({ action: "getCare" });
+    const items = (d.status === "OK" && d.items)
+      ? d.items.filter(i => (i.category || "").trim() === "เครื่องมือ")
       : [];
-    renderToolsList();
+    toolsData = items.length ? items : FALLBACK_TOOLS;
   } catch(e) {
-    list.innerHTML = "<div class='empty'>โหลดไม่ได้ — ตรวจสอบ API</div>";
+    toolsData = FALLBACK_TOOLS;
   }
+  renderToolsList();
 }
 
 function renderToolsList() {
