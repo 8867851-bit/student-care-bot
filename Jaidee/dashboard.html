@@ -1531,7 +1531,17 @@ if (isPreview) {
           <option value="วิชาการ">วิชาการ — งานวิจัย บทความเชิงวิชาการ</option>
         </select>
       </div>
-
+<div class="input-group">
+        <div class="input-label">แสดงเป็นบทความแนะนำใน care.html (ไม่บังคับ)</div>
+        <select class="input-field" id="pz-care-layer">
+          <option value="">— ไม่แสดงใน care.html —</option>
+          <option value="ร่างกาย">🏃 ชั้น 1 — ร่างกาย</option>
+          <option value="ความสัมพันธ์">🫂 ชั้น 2 — ความสัมพันธ์</option>
+          <option value="การแสดงออก">🎨 ชั้น 3 — การแสดงออก</option>
+          <option value="สิ่งแวดล้อม">🌍 ชั้น 4 — สิ่งแวดล้อม</option>
+          <option value="ความเชื่อ">🪞 ชั้น 5 — ความเชื่อ</option>
+        </select>
+      </div>
       <div class="input-group">
         <div class="input-label">เวลาอ่าน</div>
 <select class="input-field" id="pz-readtime" onchange="pzUpdatePreview()">
@@ -4000,7 +4010,8 @@ async function pzPublishNew() {
     heroUrl: document.getElementById('pz-hero')?.value?.trim()||'',
     url:'',
     body: JSON.stringify(pzBuildBodyNew()),
-    addedBy: userId
+    addedBy: userId,
+    careLayer: document.getElementById('pz-care-layer')?.value||''
   };
 
   try {
