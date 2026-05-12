@@ -1093,31 +1093,62 @@ function openReader(a) {
   var lang = a.language || "";
   var scaleHtml = langScaleBar(lang);
 
-  document.getElementById("reader-content").innerHTML =
-    // Hero image if exists
+  // ── Parse body JSON ──────────────────────────────────────
+  var bodyData = null;
+  if (a.body) {
+    try { bodyData = typeof a.body === "string" ? JSON.parse(a.body) : a.body; } catch(e) {}
+  }
+
+  // ── Header ───────────────────────────────────────────────
+  var html =
     (a.heroUrl ? '<img src="'+a.heroUrl+'" style="width:100%;aspect-ratio:2/1;object-fit:cover;display:block;filter:saturate(.82);" onerror="this.style.display=\'none\'"/>' : '') +
-    // Header
     '<div style="padding:28px 22px 22px;border-bottom:1px solid var(--rule);text-align:center;">' +
       '<div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">'+(a.tag||"")+'</div>' +
-      '<div style="font-size:24px;font-weight:700;line-height:1.3;margin-bottom:12px;">'+a.title+'</div>' +
+      '<div style="font-size:24px;font-weight:700;line-height:1.3;margin-bottom:12px;font-family:\'Noto Serif Thai\',Georgia,serif;">'+a.title+'</div>' +
       '<div style="font-size:13px;color:var(--ink2);line-height:1.8;margin-bottom:14px;">'+(a.desc||"")+'</div>' +
       '<div style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;color:var(--ink3);">' +
         '<span>ใจดี TU</span><span style="color:var(--rule);">·</span>' +
         '<span>'+(a.level||"🟢 เบา")+'</span><span style="color:var(--rule);">·</span>' +
         '<span>⏱ '+(a.readTime||"5 นาที")+'</span>' +
       '</div>' +
-      // SCALE BAR — no text label below
       scaleHtml +
-    '</div>' +
-    // Body preview
-    '<div style="padding:24px 22px 0;">' +
-      '<p style="font-size:15px;font-weight:300;color:var(--ink2);line-height:2.1;margin-bottom:24px;">'+(a.desc ? a.desc + ' — เนื้อหาเต็มจะแสดงเมื่อ deploy จริง บทความนี้ถูกเก็บใน Google Sheets และโหลดผ่าน Apps Script' : "")+'</p>' +
-      '<div style="border:1.5px dashed var(--rule);border-radius:12px;padding:24px;text-align:center;color:var(--ink3);">'+
-        '<div style="font-size:24px;margin-bottom:8px;">🧩</div>'+
-        '<div style="font-size:13px;font-weight:600;margin-bottom:4px;">เนื้อหาเต็มใน production</div>'+
-        '<div style="font-size:12px;line-height:1.7;">บทความนี้เชื่อมกับ dashboard — ทีมเพิ่มเนื้อหาผ่าน puzzle builder แล้วแสดงที่นี่อัตโนมัติ</div>'+
-      '</div>'+
     '</div>';
+
+  // ── Block renderer ────────────────────────────────────────
+  if (bodyData && bodyData.sections && bodyData.sections.length) {
+    html += '<div style="padding:0 22px 40px;">';
+    bodyData.sections.forEach(function(block, bi) {
+      html += renderBlock(block, bi);
+    });
+
+    // Completion screen
+    var doneTitle = (bodyData.completionTitle || "ได้ชิ้นส่วนใหม่แล้ว 🧩");
+    var doneSub   = (bodyData.completionSub   || "");
+    html +=
+      '<div style="margin-top:32px;padding:24px;background:var(--gold-lt);border:1.5px solid var(--gold-bd);border-radius:16px;text-align:center;">' +
+        '<div style="font-size:28px;margin-bottom:8px;">🧩</div>' +
+        '<div style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px;">'+doneTitle+'</div>' +
+        (doneSub ? '<div style="font-size:13px;color:var(--ink2);line-height:1.75;">'+doneSub+'</div>' : '') +
+      '</div>';
+    html += '</div>';
+
+  } else {
+    // No body yet — show desc as article
+    html +=
+      '<div style="padding:24px 22px 0;">' +
+        '<p style="font-size:15px;font-weight:300;color:var(--ink2);line-height:2.1;margin-bottom:24px;">'+(a.desc||"")+'</p>' +
+        '<div style="border:1.5px dashed var(--rule);border-radius:12px;padding:24px;text-align:center;color:var(--ink3);">' +
+          '<div style="font-size:24px;margin-bottom:8px;">🧩</div>' +
+          '<div style="font-size:13px;font-weight:600;margin-bottom:4px;">เนื้อหาเต็มจะปรากฏที่นี่</div>' +
+          '<div style="font-size:12px;line-height:1.7;">ทีมกำลังเพิ่มเนื้อหาผ่าน Puzzle Builder ในแดชบอร์ด</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  document.getElementById("reader-content").innerHTML = html;
+
+  // Wire up interactive blocks after render
+  wireInteractions();
 
   var reader = document.getElementById("reader");
   reader.style.display = "flex";
@@ -1129,6 +1160,161 @@ function openReader(a) {
     if (!max) return;
     prog.style.width = Math.min(Math.round((body.scrollTop / max) * 100), 100) + "%";
   };
+}
+
+// ── Block renderers ───────────────────────────────────────────
+function renderBlock(block, idx) {
+  var type = block.type || "";
+
+  if (type === "text") {
+    return (block.heading
+      ? '<h3 style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:18px;font-weight:700;color:var(--ink);margin:28px 0 10px;line-height:1.35;">'+block.heading+'</h3>'
+      : '') +
+      '<p style="font-size:15px;font-weight:300;color:var(--ink2);line-height:2.05;margin-bottom:20px;white-space:pre-wrap;">'+
+        (block.content||"").replace(/\n/g,"<br/>")+'</p>';
+  }
+
+  if (type === "heading") {
+    return '<h2 style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:20px;font-weight:700;color:var(--ink);margin:32px 0 12px;border-left:3px solid var(--gold);padding-left:12px;line-height:1.3;">'+(block.text||"")+'</h2>';
+  }
+
+  if (type === "callout") {
+    return '<div style="margin:20px 0;background:var(--gold-lt);border:1.5px solid var(--gold-bd);border-radius:12px;padding:16px 18px;">' +
+      '<div style="font-size:14px;font-weight:600;color:var(--ink);line-height:1.75;">💡 '+(block.content||"")+'</div>' +
+    '</div>';
+  }
+
+  if (type === "pullquote") {
+    return '<div style="margin:24px -4px;padding:20px 20px 20px 24px;border-left:3px solid var(--gold);background:var(--warm);border-radius:0 12px 12px 0;">' +
+      '<div style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:17px;font-style:italic;color:var(--ink);line-height:1.7;margin-bottom:8px;">❝ '+(block.text||"")+'</div>' +
+      (block.attr ? '<div style="font-size:11px;color:var(--ink3);letter-spacing:.5px;">— '+block.attr+'</div>' : '') +
+    '</div>';
+  }
+
+  if (type === "image") {
+    return '<figure style="margin:20px 0;">' +
+      '<img src="'+(block.url||"")+'" style="width:100%;border-radius:12px;display:block;" onerror="this.style.display=\'none\'"/>' +
+      (block.caption ? '<figcaption style="font-size:11px;color:var(--ink3);text-align:center;margin-top:8px;">'+block.caption+'</figcaption>' : '') +
+    '</figure>';
+  }
+
+  if (type === "bleedimage") {
+    return '<figure style="margin:20px -22px;">' +
+      '<img src="'+(block.url||"")+'" style="width:100%;display:block;max-height:280px;object-fit:cover;" onerror="this.style.display=\'none\'"/>' +
+      (block.caption ? '<figcaption style="font-size:11px;color:var(--ink3);text-align:center;margin-top:8px;padding:0 22px;">'+block.caption+'</figcaption>' : '') +
+    '</figure>';
+  }
+
+  if (type === "video") {
+    var ytMatch = (block.url||"").match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    var ytId = ytMatch ? ytMatch[1] : null;
+    var inner = ytId
+      ? '<iframe src="https://www.youtube.com/embed/'+ytId+'?rel=0" style="width:100%;aspect-ratio:16/9;border:none;border-radius:12px;display:block;" allowfullscreen></iframe>'
+      : '<a href="'+(block.url||"")+'\" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--noir);border-radius:12px;padding:20px;color:rgba(255,255,255,.7);font-size:14px;text-decoration:none;">▶ ดูวิดีโอ</a>';
+    return '<div style="margin:20px 0;">' + inner +
+      (block.caption ? '<div style="font-size:11px;color:var(--ink3);text-align:center;margin-top:8px;">'+block.caption+'</div>' : '') +
+    '</div>';
+  }
+
+  if (type === "table") {
+    var headers = (block.headers||"").split("|").map(function(h){return h.trim();});
+    var rowLines = (block.rows||"").split("\n").filter(function(r){return r.trim();});
+    var theadCells = headers.map(function(h){ return '<th style="padding:8px 12px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--ink2);border-bottom:2px solid var(--rule);">'+h+'</th>'; }).join("");
+    var tbodyRows  = rowLines.map(function(row, ri){
+      var cells = row.split("|").map(function(c){return c.trim();});
+      return '<tr style="background:'+(ri%2?"var(--warm)":"transparent")+';">' +
+        cells.map(function(c){ return '<td style="padding:8px 12px;font-size:13px;color:var(--ink2);border-bottom:1px solid var(--rule);">'+c+'</td>'; }).join("") +
+      '</tr>';
+    }).join("");
+    return '<div style="margin:20px 0;overflow-x:auto;border-radius:12px;border:1px solid var(--rule);">' +
+      '<table style="width:100%;border-collapse:collapse;font-family:\'Sarabun\',sans-serif;">' +
+        '<thead><tr>'+theadCells+'</tr></thead>' +
+        '<tbody>'+tbodyRows+'</tbody>' +
+      '</table>' +
+    '</div>';
+  }
+
+  if (type === "interaction" || type === "quiz") {
+    var choices = block.choices || [];
+    var choiceHtml = choices.map(function(c, ci){
+      return '<button class="pz-choice-btn" data-block="'+idx+'" data-choice="'+ci+'" data-feedback="'+encodeURIComponent(c.feedback||"")+'" ' +
+        'style="width:100%;text-align:left;background:var(--warm);border:1.5px solid var(--rule);border-radius:10px;padding:11px 14px;font-size:13px;font-family:\'Sarabun\',sans-serif;color:var(--ink2);cursor:pointer;margin-bottom:8px;transition:all .18s;">' +
+        (c.text||"") +
+      '</button>';
+    }).join("");
+    return '<div class="pz-interaction" data-block="'+idx+'" style="margin:20px 0;background:var(--card);border:1.5px solid var(--rule);border-radius:14px;padding:18px;">' +
+      '<div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">💭 คำถาม</div>' +
+      '<div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:16px;line-height:1.5;">'+(block.question||"")+'</div>' +
+      choiceHtml +
+      '<div id="pz-feedback-'+idx+'" style="display:none;margin-top:8px;background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink);line-height:1.7;"></div>' +
+    '</div>';
+  }
+
+  if (type === "reflection") {
+    var opts = block.options || [];
+    var optHtml = opts.map(function(o, oi){
+      return '<button class="pz-reflect-btn" data-block="'+idx+'" data-opt="'+oi+'" ' +
+        'style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--warm);border:1.5px solid var(--rule);border-radius:10px;padding:10px 14px;font-size:13px;font-family:\'Sarabun\',sans-serif;color:var(--ink2);cursor:pointer;margin-bottom:8px;transition:all .18s;">' +
+        '<span style="font-size:18px;flex-shrink:0;">'+(o.icon||"💭")+'</span>' +
+        '<span>'+(o.text||"")+'</span>' +
+      '</button>';
+    }).join("");
+    return '<div class="pz-reflection" data-block="'+idx+'" style="margin:20px 0;background:var(--card);border:1.5px solid var(--rule);border-radius:14px;padding:18px;">' +
+      '<div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">🪞 สะท้อนตัวเอง</div>' +
+      '<div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:16px;line-height:1.5;">'+(block.prompt||"")+'</div>' +
+      optHtml +
+      '<div id="pz-reflect-result-'+idx+'" style="display:none;margin-top:8px;background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink);line-height:1.7;"></div>' +
+    '</div>';
+  }
+
+  return ""; // unknown block type — skip
+}
+
+// ── Wire interactive blocks after DOM render ──────────────────
+function wireInteractions() {
+  // Quiz choices
+  document.querySelectorAll(".pz-choice-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var blockIdx = this.dataset.block;
+      var feedback  = decodeURIComponent(this.dataset.feedback || "");
+      // Highlight selected
+      document.querySelectorAll('.pz-choice-btn[data-block="'+blockIdx+'"]').forEach(function(b){
+        b.style.background = "var(--warm)";
+        b.style.borderColor = "var(--rule)";
+        b.style.color = "var(--ink2)";
+      });
+      this.style.background = "var(--gold-lt)";
+      this.style.borderColor = "var(--gold-bd)";
+      this.style.color = "var(--ink)";
+      this.style.fontWeight = "600";
+      // Show feedback
+      var fbEl = document.getElementById("pz-feedback-"+blockIdx);
+      if (fbEl && feedback) { fbEl.style.display = "block"; fbEl.textContent = feedback; }
+    });
+  });
+
+  // Reflection options
+  document.querySelectorAll(".pz-reflect-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var blockIdx = this.dataset.block;
+      var optIdx   = this.dataset.opt;
+      // Highlight
+      document.querySelectorAll('.pz-reflect-btn[data-block="'+blockIdx+'"]').forEach(function(b){
+        b.style.background = "var(--warm)";
+        b.style.borderColor = "var(--rule)";
+        b.style.color = "var(--ink2)";
+      });
+      this.style.background = "var(--gold-lt)";
+      this.style.borderColor = "var(--gold-bd)";
+      this.style.color = "var(--ink)";
+      // Show result
+      var resEl = document.getElementById("pz-reflect-result-"+blockIdx);
+      if (resEl) {
+        resEl.style.display = "block";
+        resEl.textContent = "ขอบคุณที่แบ่งปันนะ 🤍 ไม่มีคำตอบถูกหรือผิด — แค่ฟังตัวเองให้ชัดขึ้นเรื่อยๆ";
+      }
+    });
+  });
 }
 
 function closeReader() {
