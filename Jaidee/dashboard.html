@@ -570,24 +570,15 @@
           <option value="ความเชื่อ">🪞 ชั้น 5 — ความเชื่อ</option>
         </select>
       </div>
-      <div class="input-group">
-        <div class="input-label">เวลาอ่าน</div>
-<select class="input-field" id="pz-readtime" onchange="pzUpdatePreview()">
-  <option value="1 นาที">1 นาที</option>
-  <option value="2 นาที">2 นาที</option>
-  <option value="3 นาที">3 นาที</option>
-  <option value="4 นาที">4 นาที</option>
-  <option value="5 นาที" selected>5 นาที</option>
-  <option value="6 นาที">6 นาที</option>
-  <option value="7 นาที">7 นาที</option>
-  <option value="8 นาที">8 นาที</option>
-  <option value="9 นาที">9 นาที</option>
-  <option value="10 นาที">10 นาที</option>
-  <option value="12 นาที">12 นาที</option>
-  <option value="15 นาที">15 นาที</option>
-  <option value="18 นาที">18 นาที</option>
-  <option value="20 นาที">20 นาที</option>
-</select>
+      
+     <div class="input-group">
+        <div class="input-label">เวลาอ่าน — <span id="pz-readtime-display">5 นาที</span></div>
+        <input type="range" id="pz-readtime" min="1" max="20" value="5"
+          style="width:100%;accent-color:var(--gold);"
+          oninput="document.getElementById('pz-readtime-display').textContent=this.value+' นาที';pzUpdatePreview()"/>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-soft);margin-top:2px;">
+          <span>1 นาที</span><span>10 นาที</span><span>20 นาที</span>
+        </div>
       </div>
 
       <!-- live preview card -->
@@ -704,9 +695,125 @@
 
     </div>
 
-    <!-- OTHER WORLDS FORM (non-puzzle) -->
+<!-- OTHER WORLDS FORM (non-puzzle) -->
     <div id="pz-world-section"><div class="divider"></div>
+
+    <!-- VIDEO STRIP MANAGER -->
+    <div class="section-label">🎬 วิดีโอใน Video Strip</div>
+    <div style="font-size:12px;color:var(--text-mid);margin-bottom:12px;line-height:1.6;">วิดีโอที่แสดงในแถวบนสุดของ Puzzle Piece — YouTube หรือ Facebook</div>
+    <div class="add-form" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+      <div class="input-group">
+        <div class="input-label">ชื่อวิดีโอ *</div>
+        <input class="input-field" id="vid-title" placeholder="เช่น Window of Tolerance คืออะไร"/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Tag</div>
+        <input class="input-field" id="vid-tag" placeholder="เช่น ระบบประสาท, ความเครียด"/>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="input-group">
+          <div class="input-label">แหล่งที่มา</div>
+          <select class="input-field" id="vid-source">
+            <option value="YouTube">YouTube</option>
+            <option value="Facebook">Facebook</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">ความยาว เช่น 8:42</div>
+          <input class="input-field" id="vid-duration" placeholder="8:42"/>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-label">URL วิดีโอ *</div>
+        <input class="input-field" id="vid-url" placeholder="https://youtube.com/watch?v=..." oninput="vidUpdatePreview()"/>
+      </div>
+      <!-- YouTube thumbnail preview -->
+      <div id="vid-thumb-preview" style="display:none;border-radius:10px;overflow:hidden;aspect-ratio:16/9;background:#000;max-width:240px;">
+        <img id="vid-thumb-img" style="width:100%;height:100%;object-fit:cover;" src="" alt="thumbnail"/>
+      </div>
+      <button class="btn-full gold" onclick="addVideoDash()">เพิ่มวิดีโอ →</button>
+    </div>
+
+    <!-- VIDEO LIST -->
+    <div class="section-label" style="margin-bottom:10px;">วิดีโอที่มีอยู่แล้ว</div>
+    <div id="video-list-dash"><div class="empty">กำลังโหลด...</div></div>
+
+    <div class="divider" style="margin:20px 0;"></div>
+
+    <!-- COLLABORATOR MANAGER -->
+    <div class="section-label">🤝 Collaborators</div>
+    <div style="font-size:12px;color:var(--text-mid);margin-bottom:12px;line-height:1.6;">ผู้เชี่ยวชาญที่ร่วมสร้างเนื้อหา — แสดงเป็น section พร้อมวิดีโอและบทความของแต่ละคน</div>
+
+    <!-- Sub-tabs -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;">
+      <button class="stab active" id="ctab-add-btn" onclick="switchCollabTab('add',this)" style="font-size:12px;padding:8px 14px 10px;">➕ เพิ่มใหม่</button>
+      <button class="stab" id="ctab-list-btn" onclick="switchCollabTab('list',this)" style="font-size:12px;padding:8px 14px 10px;">👥 รายชื่อ</button>
+    </div>
+
+    <!-- ADD COLLAB -->
+    <div id="ctab-add" style="display:flex;flex-direction:column;gap:12px;">
+      <div class="add-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="input-group">
+          <div class="input-label">ชื่อ *</div>
+          <input class="input-field" id="col-name" placeholder="เช่น ดร. สมใจ ใจดี"/>
+        </div>
+        <div class="input-group">
+          <div class="input-label">ตำแหน่ง / สังกัด</div>
+          <input class="input-field" id="col-role" placeholder="เช่น นักจิตวิทยาคลินิก · จุฬาฯ"/>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Bio สั้น</div>
+          <textarea class="input-field" id="col-bio" placeholder="อธิบายตัวตนและความเชี่ยวชาญ..." style="min-height:72px;resize:vertical;"></textarea>
+        </div>
+        <div class="input-group">
+          <div class="input-label">รูปโปรไฟล์ URL</div>
+          <input class="input-field" id="col-photo" placeholder="https://..."/>
+        </div>
+
+        <div class="input-label" style="margin-top:4px;">เนื้อหาของ Collaborator นี้</div>
+        <div style="font-size:11px;color:var(--text-soft);margin-bottom:6px;">เพิ่มวิดีโอและบทความที่จะแสดงใต้ชื่อของเขา/เธอ</div>
+        <div id="col-content-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+        <!-- Add content item -->
+        <div style="background:var(--surface2);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:8px;">
+            <select class="input-field" id="col-item-type" style="flex:0 0 100px;font-size:12px;" onchange="toggleCollabItemFields()">
+              <option value="video">▶ วิดีโอ</option>
+              <option value="article">📝 บทความ</option>
+            </select>
+            <input class="input-field" id="col-item-title" placeholder="ชื่อ..." style="flex:1;font-size:12px;"/>
+          </div>
+          <div id="col-item-video-fields" style="display:flex;flex-direction:column;gap:6px;">
+            <input class="input-field" id="col-item-url" placeholder="URL วิดีโอ" style="font-size:12px;"/>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+              <select class="input-field" id="col-item-source" style="font-size:12px;">
+                <option value="YouTube">YouTube</option>
+                <option value="Facebook">Facebook</option>
+              </select>
+              <input class="input-field" id="col-item-duration" placeholder="เวลา เช่น 8:42" style="font-size:12px;"/>
+            </div>
+          </div>
+          <div id="col-item-article-fields" style="display:none;flex-direction:column;gap:6px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+              <input class="input-field" id="col-item-tag" placeholder="Tag เช่น ความเครียด" style="font-size:12px;"/>
+              <input class="input-field" id="col-item-readtime" placeholder="เช่น 6 นาที" style="font-size:12px;"/>
+            </div>
+          </div>
+          <button class="btn-sm gold" onclick="addCollabContentItem()" style="align-self:flex-start;">+ เพิ่มรายการ</button>
+        </div>
+
+        <button class="btn-full gold" onclick="saveCollaborator()">บันทึก Collaborator →</button>
+      </div>
+    </div>
+
+    <!-- LIST COLLAB -->
+    <div id="ctab-list" style="display:none;flex-direction:column;gap:10px;">
+      <div id="collab-list-dash"><div class="empty">กำลังโหลด...</div></div>
+    </div>
+
+    <div class="divider"></div>
     <div class="section-label">เพิ่มเนื้อหาโลกอื่นๆ</div>
+      
     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:14px;">
       🚧 แต่ละโลกมีรูปแบบการเพิ่มเนื้อหาที่แตกต่างกัน<br>
       ขณะนี้เปิดให้ใช้งานเฉพาะ <strong>Puzzle Piece</strong> ก่อน<br>
@@ -1806,7 +1913,7 @@ function switchTab(tabId,item){
   if(tabId==="tab-overview")         loadAdminData();
   if(tabId==="tab-programs")         loadProgramData();
   // ADD THESE:
-  if(tabId==="tab-content")  { pzGoStep(1); pzUpdatePreview(); }
+  if(tabId==="tab-content")  { pzGoStep(1); pzUpdatePreview(); loadVideosDash(); }
   if(tabId==="tab-people")   { updatePeopleDashPreview(); loadPeopleReqList(); }
   // Close sidebar on mobile after nav
   if(window.innerWidth<=600) closeSidebar();
@@ -3033,7 +3140,7 @@ async function pzPublishNew() {
     type:'article',
     tag:  document.getElementById('pz-tag')?.value||'',
     level:document.getElementById('pz-level')?.value||'',
-    readTime:document.getElementById('pz-readtime')?.value||'5 นาที',
+    readTime:(document.getElementById('pz-readtime')?.value||'5') + ' นาที',
     desc: document.getElementById('pz-desc')?.value?.trim()||'',
     heroUrl: document.getElementById('pz-hero')?.value?.trim()||'',
     url:'',
@@ -4103,6 +4210,201 @@ async function archSaveYear(yi) {
 // ══════════════════════════════════════════════════════
 let toolsData = []; // [{row, name, desc, url, photo_url, active}, ...]
 
+  // ══════════════════════════════════════════════════════════════
+// VIDEO STRIP — dashboard manager
+// ══════════════════════════════════════════════════════════════
+function vidUpdatePreview(){
+  const url = document.getElementById('vid-url')?.value||'';
+  const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  const prev  = document.getElementById('vid-thumb-preview');
+  const img   = document.getElementById('vid-thumb-img');
+  if(m){ prev.style.display='block'; img.src=`https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`; }
+  else { prev.style.display='none'; }
+}
+
+async function addVideoDash(){
+  const title    = document.getElementById('vid-title').value.trim();
+  const url      = document.getElementById('vid-url').value.trim();
+  const tag      = document.getElementById('vid-tag').value.trim();
+  const source   = document.getElementById('vid-source').value;
+  const duration = document.getElementById('vid-duration').value.trim();
+  if(!title||!url){ toast('กรุณากรอกชื่อและ URL'); return; }
+  const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  const ytId = m ? m[1] : null;
+  const btn = document.querySelector('[onclick="addVideoDash()"]');
+  if(btn){ btn.disabled=true; btn.textContent='กำลังเพิ่ม...'; }
+  try {
+    const d = await apiCall({action:'addVideo', title, url, tag, source, duration, youtube_id:ytId||'', world:'puzzle'});
+    if(d.status==='OK'){
+      toast('เพิ่มวิดีโอแล้ว 🎬');
+      ['vid-title','vid-url','vid-tag','vid-duration'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+      document.getElementById('vid-thumb-preview').style.display='none';
+      loadVideosDash();
+    } else { toast('เกิดข้อผิดพลาด: '+(d.message||'')); }
+  } catch(e){ toast('เกิดข้อผิดพลาด'); }
+  finally { if(btn){ btn.disabled=false; btn.textContent='เพิ่มวิดีโอ →'; } }
+}
+
+async function loadVideosDash(){
+  const el = document.getElementById('video-list-dash');
+  if(!el) return;
+  el.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
+  try {
+    const d = await apiCall({action:'getVideos', world:'puzzle'});
+    const items = d.videos || d.items || [];
+    if(!items.length){ el.innerHTML="<div class='empty'>ยังไม่มีวิดีโอ</div>"; return; }
+    el.innerHTML='';
+    items.forEach((v,idx)=>{
+      const m = (v.url||'').match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      const thumb = m ? `https://img.youtube.com/vi/${m[1]}/mqdefault.jpg` : null;
+      const card = document.createElement('div');
+      card.className='case-card';
+      card.style.cssText='padding:12px;display:flex;gap:10px;align-items:center;';
+      card.innerHTML=`
+        ${thumb ? `<img src="${thumb}" style="width:64px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0;"/>` : `<div style="width:64px;height:36px;border-radius:6px;background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;">▶</div>`}
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;">${v.title||'—'}</div>
+          <div style="font-size:11px;color:var(--text-soft);">${v.source||'YouTube'} · ${v.duration||''} · ${v.tag||''}</div>
+        </div>
+        <button class="btn-sm ghost" onclick="deleteVideoDash('${v.id||idx}')" style="color:var(--red);font-size:11px;">🗑️</button>`;
+      el.appendChild(card);
+    });
+  } catch(e){ el.innerHTML="<div class='empty'>โหลดไม่ได้</div>"; }
+}
+
+async function deleteVideoDash(id){
+  if(!confirm('ลบวิดีโอนี้?')) return;
+  try{ await apiCall({action:'deleteVideo', id}); toast('ลบแล้ว'); loadVideosDash(); }
+  catch(e){ toast('เกิดข้อผิดพลาด'); }
+}
+
+// ══════════════════════════════════════════════════════════════
+// COLLABORATORS — dashboard manager
+// ══════════════════════════════════════════════════════════════
+let collabContentItems = [];
+
+function switchCollabTab(tab, btn){
+  ['add','list'].forEach(t=>{
+    const p = document.getElementById('ctab-'+t);
+    const b = document.getElementById('ctab-'+t+'-btn');
+    if(p) p.style.display = t===tab ? 'flex' : 'none';
+    if(b) b.classList.toggle('active', t===tab);
+  });
+  if(tab==='list') loadCollabsDash();
+}
+
+function toggleCollabItemFields(){
+  const type = document.getElementById('col-item-type').value;
+  document.getElementById('col-item-video-fields').style.display   = type==='video'   ? 'flex' : 'none';
+  document.getElementById('col-item-article-fields').style.display = type==='article' ? 'flex' : 'none';
+}
+
+function addCollabContentItem(){
+  const type  = document.getElementById('col-item-type').value;
+  const title = document.getElementById('col-item-title').value.trim();
+  if(!title){ toast('กรุณาใส่ชื่อ'); return; }
+  const item = {type, title};
+  if(type==='video'){
+    item.url      = document.getElementById('col-item-url').value.trim();
+    item.source   = document.getElementById('col-item-source').value;
+    item.duration = document.getElementById('col-item-duration').value.trim();
+    const m = (item.url||'').match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    item.youtube_id = m ? m[1] : null;
+  } else {
+    item.tag      = document.getElementById('col-item-tag').value.trim();
+    item.readTime = document.getElementById('col-item-readtime').value.trim();
+  }
+  collabContentItems.push(item);
+  renderCollabContentList();
+  // Clear fields
+  ['col-item-title','col-item-url','col-item-duration','col-item-tag','col-item-readtime']
+    .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+}
+
+function renderCollabContentList(){
+  const container = document.getElementById('col-content-list');
+  if(!container) return;
+  container.innerHTML='';
+  collabContentItems.forEach((item,idx)=>{
+    const el = document.createElement('div');
+    el.style.cssText='background:var(--surface2);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;';
+    el.innerHTML=`
+      <span style="font-size:14px;">${item.type==='video'?'▶':'📝'}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:600;">${item.title}</div>
+        <div style="font-size:10px;color:var(--text-soft);">${item.type==='video'?(item.source||'YouTube')+' · '+(item.duration||''):(item.tag||'')+' · '+(item.readTime||'')}</div>
+      </div>
+      <button onclick="removeCollabItem(${idx})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;">✕</button>`;
+    container.appendChild(el);
+  });
+}
+
+function removeCollabItem(idx){
+  collabContentItems.splice(idx,1);
+  renderCollabContentList();
+}
+
+async function saveCollaborator(){
+  const name  = document.getElementById('col-name').value.trim();
+  const role  = document.getElementById('col-role').value.trim();
+  const bio   = document.getElementById('col-bio').value.trim();
+  const photo = document.getElementById('col-photo').value.trim();
+  if(!name){ toast('กรุณาใส่ชื่อ'); return; }
+  const btn = document.querySelector('[onclick="saveCollaborator()"]');
+  if(btn){ btn.disabled=true; btn.textContent='กำลังบันทึก...'; }
+  try {
+    const d = await apiCall({
+      action:'addCollaborator',
+      name, role, description:bio, photo_url:photo,
+      content: JSON.stringify(collabContentItems),
+      active:'TRUE', world:'puzzle'
+    });
+    if(d.status==='OK'){
+      toast('เพิ่ม Collaborator แล้ว 🤝');
+      ['col-name','col-role','col-bio','col-photo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+      collabContentItems=[];
+      renderCollabContentList();
+      switchCollabTab('list', document.getElementById('ctab-list-btn'));
+    } else { toast('เกิดข้อผิดพลาด: '+(d.message||'')); }
+  } catch(e){ toast('เกิดข้อผิดพลาด'); }
+  finally { if(btn){ btn.disabled=false; btn.textContent='บันทึก Collaborator →'; } }
+}
+
+async function loadCollabsDash(){
+  const el = document.getElementById('collab-list-dash');
+  if(!el) return;
+  el.innerHTML="<div class='empty'>กำลังโหลด...</div>";
+  try {
+    const d = await apiCall({action:'getCollaborators'});
+    const list = d.collaborators || [];
+    if(!list.length){ el.innerHTML="<div class='empty'>ยังไม่มี Collaborator</div>"; return; }
+    el.innerHTML='';
+    list.forEach(c=>{
+      const card = document.createElement('div');
+      card.className='case-card';
+      card.style.cssText='padding:12px 14px;display:flex;align-items:center;gap:10px;';
+      const content = typeof c.content==='string' ? (()=>{try{return JSON.parse(c.content);}catch(e){return [];}})() : (c.content||[]);
+      const vCount = content.filter(x=>x.type==='video').length;
+      const aCount = content.filter(x=>x.type==='article').length;
+      card.innerHTML=`
+        ${c.photo_url ? `<img src="${c.photo_url}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;"/>` : `<div style="width:44px;height:44px;border-radius:50%;background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;">🤝</div>`}
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:600;">${c.name||'—'}</div>
+          <div style="font-size:11px;color:var(--text-soft);">${c.role||''}</div>
+          <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">▶ ${vCount} วิดีโอ · 📝 ${aCount} บทความ</div>
+        </div>
+        <button class="btn-sm ghost" onclick="deleteCollabDash('${c.id}')" style="color:var(--red);font-size:11px;">🗑️</button>`;
+      el.appendChild(card);
+    });
+  } catch(e){ el.innerHTML="<div class='empty'>โหลดไม่ได้</div>"; }
+}
+
+async function deleteCollabDash(id){
+  if(!confirm('ลบ Collaborator นี้?')) return;
+  try{ await apiCall({action:'deleteCollaborator', id}); toast('ลบแล้ว'); loadCollabsDash(); }
+  catch(e){ toast('เกิดข้อผิดพลาด'); }
+}
+  
 async function addCareItemDash() {
   const category = document.getElementById('care-category').value;
   const name     = document.getElementById('care-name').value.trim();
