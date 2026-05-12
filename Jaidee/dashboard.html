@@ -1,5 +1,978 @@
 <!DOCTYPE html>
+<html lang="th"><!DOCTYPE html>
 <html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>พื้นที่ใจ — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#FDFBF7; --cream-warm:#FFF8EE; --cream-border:#EDE9E0;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --green:#3A7D44; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+      --blue:#2563EB; --blue-soft:#EFF6FF; --blue-border:#BFDBFE;
+      --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
+      --amber:#D97706; --amber-soft:#FFFBEB; --amber-border:#FDE68A;
+      --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#99F6E4;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card-bg:#FFFFFF;
+      --radius:18px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;}
+
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:16px 20px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+    .back-btn:active{opacity:0.6;}
+
+    .hero{padding:12px 24px 24px;position:relative;overflow:hidden;}
+    .hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(58,125,68,0.07) 0%,transparent 70%);border-radius:50%;pointer-events:none;}
+    .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;margin-bottom:8px;}
+    .hero-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;color:var(--dark);line-height:1.2;}
+    .hero-sub{font-size:13px;font-weight:300;color:var(--soft);margin-top:6px;line-height:1.65;}
+
+    /* Layer Zero — removed (replaced by floating button) */
+
+    /* ── TAB NAV ──────────────────────────────────────── */
+    .tab-bar{display:flex;gap:0;padding:0 16px 16px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--cream-border);margin-bottom:0;}
+    .tab-bar::-webkit-scrollbar{display:none;}
+    .tab-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:20px;border:none;background:none;font-size:12px;font-weight:400;color:var(--soft);cursor:pointer;white-space:nowrap;font-family:'Mitr',sans-serif;transition:all 0.18s;position:relative;}
+    .tab-btn.active{background:var(--dark);color:#FDFBF7;border-radius:20px;}
+    .tab-btn:active{opacity:0.7;}
+
+    /* ── TAB PANELS ───────────────────────────────────── */
+    .tab-panel{display:none;padding-top:20px;animation:fadeTab 0.22s ease;}
+    .tab-panel.active{display:block;}
+    @keyframes fadeTab{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── FLOATING BUTTON ──────────────────────────────── */
+    .feel-fab{position:fixed;bottom:28px;right:20px;z-index:100;
+      display:flex;align-items:center;gap:8px;
+      background:var(--dark);color:#FDFBF7;
+      border:none;border-radius:28px;
+      padding:12px 18px 12px 14px;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;
+      cursor:pointer;
+      box-shadow:0 4px 20px rgba(0,0,0,0.22);
+      transition:transform 0.15s,box-shadow 0.15s;}
+    .feel-fab:active{transform:scale(0.96);box-shadow:0 2px 10px rgba(0,0,0,0.18);}
+    .feel-fab-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+
+    /* ── FEELING MODAL ────────────────────────────────── */
+    .feel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;
+      display:flex;align-items:center;justify-content:center;
+      padding:24px;pointer-events:none;
+      transition:background 0.25s ease;}
+    .feel-overlay.active{background:rgba(0,0,0,0.52);pointer-events:all;}
+    .feel-modal{background:var(--dark);border-radius:24px;width:100%;max-width:380px;
+      padding:22px 20px 18px;
+      transform:scale(0.9) translateY(16px);opacity:0;
+      transition:transform 0.3s cubic-bezier(0.34,1.4,0.64,1),opacity 0.22s ease;
+      pointer-events:none;}
+    .feel-overlay.active .feel-modal{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+    .feel-modal-label{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:500;margin-bottom:10px;}
+    .feel-modal-title{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:#FDFBF7;margin-bottom:16px;line-height:1.4;}
+    .feel-opts{display:flex;flex-direction:column;gap:8px;}
+    .feel-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;
+      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px;cursor:pointer;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:300;
+      color:rgba(253,251,247,0.85);text-align:left;width:100%;
+      transition:background 0.15s,border-color 0.15s;}
+    .feel-opt:active,.feel-opt.selected{background:rgba(232,150,12,0.18);border-color:rgba(232,150,12,0.5);color:#FDFBF7;}
+    .feel-opt-icon{font-size:16px;flex-shrink:0;}
+    .feel-modal-close{margin-top:12px;width:100%;background:none;border:none;
+      font-family:'Mitr',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);
+      cursor:pointer;padding:8px;text-align:center;}
+
+    /* Layer section */
+    .layer-section{margin-bottom:36px;scroll-margin-top:16px;}
+    .layer-header{padding:0 20px 14px;}
+    .layer-number{font-family:'Noto Serif Thai',serif;font-size:11px;font-weight:300;font-style:italic;color:var(--soft);margin-bottom:4px;letter-spacing:0;}
+    .layer-title-row{display:flex;align-items:baseline;gap:10px;margin-bottom:4px;}
+    .layer-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);}
+    .layer-emoji{font-size:18px;}
+    .layer-tagline{font-size:12px;font-weight:300;color:var(--soft);line-height:1.6;}
+
+    /* ── PARK CAROUSEL ───────────────────────────────── */
+    .park-carousel-wrap{position:relative;margin-bottom:20px;}
+    .park-carousel{display:flex;gap:12px;padding:0 16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+    .park-carousel::-webkit-scrollbar{display:none;}
+    .park-card{flex-shrink:0;width:200px;height:260px;border-radius:20px;overflow:hidden;position:relative;cursor:pointer;scroll-snap-align:start;box-shadow:0 2px 12px rgba(0,0,0,0.10);}
+    .park-card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s ease;}
+    .park-card-grad{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to top,rgba(0,0,0,0.72),transparent);border-radius:0 0 20px 20px;}
+    .park-card-body{position:absolute;bottom:0;left:0;right:0;padding:14px;}
+    .park-card-name{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:#fff;line-height:1.3;margin-bottom:3px;}
+    .park-card-loc{font-size:11px;font-weight:300;color:rgba(255,255,255,0.72);}
+    .park-card-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;}
+
+    /* Park modal overlay */
+    .park-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;pointer-events:none;transition:background 0.3s ease;}
+    .park-overlay.active{background:rgba(0,0,0,0.55);pointer-events:all;}
+    .park-modal{background:var(--card-bg);border-radius:24px;width:100%;max-width:380px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,0.25);transform:scale(0.88) translateY(20px);opacity:0;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s ease;pointer-events:none;}
+    .park-overlay.active .park-modal{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+    .park-modal-img{width:100%;height:160px;object-fit:cover;border-radius:16px;margin-bottom:16px;background:var(--green-soft);display:flex;align-items:center;justify-content:center;font-size:40px;}
+    .park-modal-name{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:var(--dark);margin-bottom:4px;}
+    .park-modal-desc{font-size:13px;font-weight:300;color:var(--mid);line-height:1.7;margin-bottom:14px;}
+    .park-modal-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+    .park-modal-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:300;color:var(--mid);background:var(--cream);border:1px solid var(--cream-border);border-radius:20px;padding:4px 10px;}
+    .park-modal-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;}
+    .park-modal-close{width:100%;padding:10px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;margin-top:6px;}
+
+    /* ── SIGNAL CARDS ────────────────────────────────── */
+    .signal-row{display:flex;flex-direction:column;gap:12px;padding:0 16px;margin-bottom:20px;}
+    .signal-card{background:var(--card-bg);border:1px solid var(--cream-border);border-radius:var(--radius);overflow:hidden;cursor:pointer;}
+    .signal-card-head{display:flex;align-items:center;gap:12px;padding:15px 16px;}
+    .signal-icon{font-size:22px;flex-shrink:0;}
+    .signal-head-text{flex:1;}
+    .signal-title{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);margin-bottom:2px;}
+    .signal-teaser{font-size:12px;font-weight:300;color:var(--soft);line-height:1.5;}
+    .signal-chevron{font-size:16px;color:var(--soft);transition:transform 0.25s;flex-shrink:0;}
+    .signal-card.open .signal-chevron{transform:rotate(180deg);}
+    .signal-body{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1);}
+    .signal-card.open .signal-body{max-height:1200px;}
+    .signal-body-inner{padding:0 16px 18px;}
+    .signal-mechanism{font-size:13px;font-weight:300;color:var(--mid);line-height:1.8;margin-bottom:14px;border-top:1px solid var(--cream-border);padding-top:14px;}
+    .signal-insight{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:500;color:var(--dark);background:var(--green-soft);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:10px 12px;margin-bottom:14px;line-height:1.6;}
+    .signal-actions{display:flex;flex-direction:column;gap:8px;}
+    .signal-action{background:var(--cream);border-radius:12px;padding:12px 14px;}
+    .signal-action-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;margin-bottom:5px;}
+    .signal-action-label.now{color:var(--green);}
+    .signal-action-label.habit{color:var(--blue);}
+    .signal-action-text{font-size:12px;font-weight:300;color:var(--dark);line-height:1.7;}
+
+    /* ── BODY ARTICLES ROW ───────────────────────────── */
+    .body-articles{margin-bottom:20px;}
+    .body-articles-scroll{display:flex;gap:10px;padding:0 16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+    .body-articles-scroll::-webkit-scrollbar{display:none;}
+    .body-art-card{flex-shrink:0;width:200px;background:var(--card-bg);border:1px solid var(--cream-border);border-radius:16px;padding:14px;cursor:pointer;scroll-snap-align:start;transition:box-shadow 0.15s;}
+    .body-art-card:active{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+    .body-art-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--green);margin-bottom:6px;}
+    .body-art-title{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:8px;}
+    .body-art-meta{display:flex;align-items:center;gap:6px;}
+    .body-art-level{font-size:10px;color:var(--soft);}
+    .body-art-time{font-size:10px;color:var(--soft);}
+
+    /* Science callout (kept for fallback style reuse) */
+    .sc-text{flex:1;}
+    .sc-label{font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:4px;font-weight:500;}
+    .sc-title{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:2px;}
+    .sc-sub{font-size:11px;font-weight:300;color:var(--mid);line-height:1.5;}
+    .sc-arrow{font-size:12px;background:var(--green);color:#fff;border-radius:20px;padding:5px 12px;white-space:nowrap;font-weight:500;flex-shrink:0;}
+
+    /* Environment tags */
+    .env-groups{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px;}
+    .env-tag{font-size:11px;font-weight:400;color:var(--amber);background:var(--amber-soft);border:1px solid var(--amber-border);border-radius:20px;padding:4px 10px;}
+
+    /* Reframe card */
+    .reframe-card{margin:0 16px 10px;background:linear-gradient(135deg,var(--amber-soft),#FFFBF0);border:1px solid var(--amber-border);border-radius:var(--radius);padding:14px 16px;}
+    .rf-label{font-size:9px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:6px;font-weight:500;}
+    .rf-text{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:500;color:var(--dark);line-height:1.6;}
+    .rf-sub{font-size:12px;font-weight:300;color:var(--mid);margin-top:6px;line-height:1.6;}
+    .rf-link{display:inline-block;margin-top:10px;font-size:12px;color:var(--amber);font-weight:500;text-decoration:none;}
+
+    /* Belief card */
+    .belief-card{margin:0 16px 10px;background:linear-gradient(135deg,var(--purple-soft),#FAF8FF);border:1px solid var(--purple-border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;}
+    .bc-label{font-size:9px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;margin-bottom:6px;font-weight:500;}
+    .bc-q{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px;}
+    .bc-sub{font-size:12px;font-weight:300;color:var(--mid);line-height:1.6;}
+    .bc-cta{margin-top:10px;font-size:12px;color:var(--purple);font-weight:500;}
+
+    /* Expression links */
+    .expression-links{display:flex;gap:8px;padding:0 16px 14px;flex-wrap:wrap;}
+    .exp-link{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:var(--card-bg);border:1px solid var(--cream-border);border-radius:12px;font-size:12px;font-weight:400;color:var(--dark);text-decoration:none;transition:border-color 0.15s;}
+    .exp-link:active{border-color:var(--dark);}
+
+    /* Pro escalation */
+    .pro-escalation{margin:0 16px 14px;background:var(--card-bg);border:1px solid var(--cream-border);border-radius:var(--radius);padding:14px 16px;}
+    .pro-label{font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:12px;font-weight:500;}
+    .pro-step{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--cream-border);cursor:pointer;text-decoration:none;color:inherit;}
+    .pro-step:last-child{border-bottom:none;padding-bottom:0;}
+    .pro-step:first-child{padding-top:0;}
+    .pro-step-num{width:24px;height:24px;border-radius:50%;background:var(--cream);border:1px solid var(--cream-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--mid);flex-shrink:0;margin-top:1px;}
+    .pro-step-body{flex:1;}
+    .pro-step-name{font-size:13px;font-weight:500;color:var(--dark);margin-bottom:2px;}
+    .pro-step-desc{font-size:12px;font-weight:300;color:var(--soft);line-height:1.5;}
+    .pro-step-arrow{color:var(--soft);font-size:14px;margin-top:3px;}
+
+    /* Subsection */
+    .subsection{margin-bottom:20px;}
+    .subsection-header{display:flex;align-items:center;gap:10px;padding:0 20px;margin-bottom:10px;}
+    .subsection-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+    .subsection-title{font-size:13px;font-weight:500;color:var(--mid);}
+    .subsection-line{flex:1;height:1px;background:var(--cream-border);}
+
+    /* Care card */
+    .care-cards{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+    .care-card{background:var(--card-bg);border:1px solid var(--cream-border);border-radius:var(--radius);padding:16px;cursor:pointer;opacity:0;transform:translateY(8px);text-decoration:none;display:block;color:inherit;}
+    .care-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s;}
+    .care-card:active{transform:scale(0.98);}
+    .care-card.school-card{border-color:var(--purple-border);background:linear-gradient(135deg,var(--purple-soft),#FDFBF7);}
+    .care-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .care-card-left{flex:1;}
+    .care-card-name{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:3px;}
+    .care-card-desc{font-size:12px;font-weight:300;color:var(--mid);line-height:1.5;}
+    .care-card-badge{flex-shrink:0;font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;white-space:nowrap;letter-spacing:0.5px;}
+    .badge-free{background:var(--green-soft);color:var(--green);border:1px solid var(--green-border);}
+    .badge-online{background:var(--blue-soft);color:var(--blue);border:1px solid var(--blue-border);}
+    .badge-clinic{background:var(--cream-warm);color:#8B5E00;border:1px solid var(--gold-border);}
+    .badge-school{background:var(--purple-soft);color:var(--purple);border:1px solid var(--purple-border);}
+    .badge-park{background:var(--green-soft);color:var(--green);border:1px solid var(--green-border);}
+    .care-card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+    .meta-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:300;color:var(--soft);background:var(--cream);border:1px solid var(--cream-border);border-radius:20px;padding:3px 8px;}
+    .meta-pill.price{color:var(--green);background:var(--green-soft);border-color:var(--green-border);font-weight:500;}
+    .care-card-cta{margin-top:12px;padding-top:12px;border-top:1px solid var(--cream-border);display:flex;align-items:center;justify-content:space-between;}
+    .cta-contact{font-size:12px;font-weight:400;color:var(--mid);}
+    .cta-arrow{font-size:14px;color:var(--soft);}
+
+    .skeleton{background:linear-gradient(90deg,#F0ECE4 25%,#EDE8DF 50%,#F0ECE4 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius);height:100px;margin:0 16px 10px;}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    .layer-divider{height:1px;background:var(--cream-border);margin:4px 20px 32px;}
+
+    .crisis-strip{margin:8px 16px 0;background:#FFF1F1;border:1px solid #FECACA;border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+    .crisis-text{font-size:13px;color:#991B1B;font-weight:400;}
+    .crisis-btn{background:#DC2626;color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;}
+  </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="history.back()">← กลับ</button>
+
+<div class="hero">
+  <div class="hero-eyebrow">พื้นที่ใจ</div>
+  <div class="hero-title">ไม่ต้องแบกคนเดียว</div>
+  <div class="hero-sub">สุขภาพจิตไม่ใช่แค่การไปหาหมอ<br/>มีหลายวิธีมากกว่านั้น — เริ่มจากที่รู้สึกว่าใช่สำหรับตัวเอง</div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar" id="tab-bar">
+  <button class="tab-btn active" data-tab="body"         onclick="switchTab('body')">🏃 ร่างกาย</button>
+  <button class="tab-btn"        data-tab="connection"   onclick="switchTab('connection')">🫂 ความสัมพันธ์</button>
+  <button class="tab-btn"        data-tab="expression"   onclick="switchTab('expression')">🎨 การแสดงออก</button>
+  <button class="tab-btn"        data-tab="environment"  onclick="switchTab('environment')">🌍 สิ่งแวดล้อม</button>
+  <button class="tab-btn"        data-tab="belief"       onclick="switchTab('belief')">🪞 ความเชื่อ</button>
+  <button class="tab-btn"        data-tab="professional" onclick="switchTab('professional')">🏥 ผู้เชี่ยวชาญ</button>
+</div>
+
+<!-- FLOATING BUTTON -->
+<button class="feel-fab" onclick="openFeelModal()">
+  <span class="feel-fab-dot"></span>
+  ตอนนี้รู้สึกยังไง?
+</button>
+
+<!-- FEELING MODAL -->
+<div class="feel-overlay" id="feel-overlay" onclick="handleFeelOverlayClick(event)">
+  <div class="feel-modal" id="feel-modal">
+    <div class="feel-modal-label">เริ่มจากตรงนี้</div>
+    <div class="feel-modal-title">ตอนนี้คุณรู้สึกยังไงอยู่?</div>
+    <div class="feel-opts">
+      <button class="feel-opt" onclick="routeToLayer('body','park-carousel')">
+        <span class="feel-opt-icon">🏃</span><span>รู้สึกล้า เครียดสะสม นอนไม่หลับ หรืออยากรีเซ็ตร่างกาย</span>
+      </button>
+      <button class="feel-opt" onclick="routeToLayer('connection','layer-connection')">
+        <span class="feel-opt-icon">🫂</span><span>เหงา อยากมีคนรับฟัง หรือรู้สึกโดดเดี่ยว</span>
+      </button>
+      <button class="feel-opt" onclick="routeToLayer('expression','layer-expression')">
+        <span class="feel-opt-icon">🎨</span><span>อยากระบาย อยากทำอะไรที่เป็นตัวเอง</span>
+      </button>
+      <button class="feel-opt" onclick="routeToLayer('environment','layer-environment')">
+        <span class="feel-opt-icon">📚</span><span>โดนกดดันจากโรงเรียน บ้าน เพื่อน หรือสังคมรอบข้าง</span>
+      </button>
+      <button class="feel-opt" onclick="routeToLayer('belief','layer-belief')">
+        <span class="feel-opt-icon">🪞</span><span>สงสัยในตัวเอง ความเชื่อ หรือความหมายของสิ่งที่ทำอยู่</span>
+      </button>
+      <button class="feel-opt" onclick="routeToLayer('professional','pro-ในโรงเรียน')">
+        <span class="feel-opt-icon">🏥</span><span>อยากคุยกับผู้เชี่ยวชาญ หรือไม่รู้จะเริ่มจากตรงไหน</span>
+      </button>
+    </div>
+    <button class="feel-modal-close" onclick="closeFeelModal()">ปิด ✕</button>
+  </div>
+</div>
+
+<!-- TAB PANELS -->
+<div class="tab-panel active" id="tab-body">
+<!-- LAYER 1: BODY -->
+<div class="layer-section" id="layer-body">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--green);">ชั้นที่หนึ่ง</div>
+    <div class="layer-title-row"><span class="layer-emoji">🏃</span><span class="layer-title">ร่างกาย</span></div>
+    <div class="layer-tagline">การออกกำลัง การนอน ฮอร์โมน และสัญญาณจากร่างกาย<br/>ร่างกายและจิตใจไม่เคยแยกจากกัน</div>
+  </div>
+
+  <!-- A: PARK CAROUSEL -->
+  <div class="subsection-header" style="padding:0 20px;margin-bottom:12px;">
+    <div class="subsection-dot" style="background:var(--green)"></div>
+    <div class="subsection-title">🌿 ออกไปเดิน — รีเซ็ตสมอง</div>
+    <div class="subsection-line"></div>
+  </div>
+  <div class="park-carousel-wrap">
+    <div class="park-carousel" id="park-carousel">
+      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
+      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
+      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
+    </div>
+  </div>
+
+  <!-- Park modal -->
+  <div class="park-overlay" id="park-overlay" onclick="closeParkModal(event)">
+    <div class="park-modal" id="park-modal">
+      <div id="park-modal-img-wrap"></div>
+      <div class="park-modal-name" id="park-modal-name"></div>
+      <div class="park-modal-desc" id="park-modal-desc"></div>
+      <div class="park-modal-pills" id="park-modal-pills"></div>
+      <a class="park-modal-btn" id="park-modal-btn" href="#" target="_blank" rel="noopener">🗺️ เปิด Google Maps</a>
+      <button class="park-modal-close" onclick="closeParkModal()">ปิด ✕</button>
+    </div>
+  </div>
+
+  <!-- B: SIGNAL CARDS -->
+  <div class="subsection-header" style="padding:0 20px;margin:24px 0 12px;">
+    <div class="subsection-dot" style="background:var(--blue)"></div>
+    <div class="subsection-title">🔬 สัญญาณที่ร่างกายส่งมา — และจะตอบยังไง</div>
+    <div class="subsection-line"></div>
+  </div>
+
+  <div class="signal-row">
+
+    <!-- Signal 1: Sleep -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">😴</span>
+        <div class="signal-head-text">
+          <div class="signal-title">การนอนและสมอง</div>
+          <div class="signal-teaser">ทำไมอารมณ์พังหลังนอนน้อย — ไม่ใช่ความอ่อนแอ</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            ระหว่างนอน ระบบ glymphatic ของสมองจะเปิดทำงานและชำระล้างของเสียทางเมตาบอลิก รวมถึงผลพลอยได้จาก cortisol ที่สะสมตลอดวัน การนอนช่วง REM โดยเฉพาะมีหน้าที่ประมวลผลความทรงจำทางอารมณ์ — สิ่งที่รู้สึกเหมือนหายนะตอนห้าทุ่มมักดูต่างออกไปในเช้าวันรุ่งขึ้น เพราะสมองทำงานกับมันขณะที่เราหลับ<br/><br/>
+            การนอนไม่ถึง 7 ชั่วโมงหนึ่งคืนเพิ่ม amygdala reactivity ประมาณ 60% — หมายความว่าสมองส่วนอารมณ์ตอบสนองราวกับว่าภัยคุกคามใหญ่กว่าความเป็นจริง สิ่งที่ปกติรับได้กลายเป็นสิ่งที่ทนไม่ไหว ไม่ใช่เพราะชีวิตเลวร้ายลง แต่เพราะตัวกรองของสมองอ่อนแอลง
+          </div>
+          <div class="signal-insight">อารมณ์ที่พังหลังนอนน้อยไม่ใช่ความอ่อนแอ — สมองกำลังทำงานในโหมดป้องกันภัยโดยไม่มีเหตุผลเพียงพอ</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">ถ้านอนไม่หลับอยู่ตอนนี้ — ลืมตาในห้องมืด หายใจออกให้ยาวกว่าหายใจเข้า: หายใจเข้า 4 วินาที, ค้าง 1 วินาที, หายใจออก 6 วินาที ทำ 5 รอบ ระบบประสาทพาราซิมพาเทติกจะเริ่มทำงานและลด arousal ลง</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">ตื่นให้ตรงเวลาทุกวัน รวมถึงวันหยุด — นาฬิกาชีวิตตั้งค่าตัวเองจากเวลาตื่น ไม่ใช่เวลานอน การนอนดึกแล้วตื่นสายวันหยุดรีเซ็ตนาฬิกาและทำให้วันจันทร์รู้สึกหนักกว่าเดิม</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 2: Somatic -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">🫀</span>
+        <div class="signal-head-text">
+          <div class="signal-title">สัญญาณจากร่างกาย</div>
+          <div class="signal-teaser">หน้าอกแน่น ปวดท้องก่อนสอบ — ร่างกายไม่ได้โกหก</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Polyvagal Theory (Porges, 2011) อธิบายว่าระบบประสาทสแกนสภาพแวดล้อมเพื่อหาสัญญาณความปลอดภัยตลอดเวลา — ก่อนที่จิตสำนึกจะรู้ตัว เมื่อมันตรวจพบภัยคุกคาม ไม่ว่าจะเป็นข้อสอบ บรรยากาศตึงเครียดในบ้าน หรือแม้แต่การนึกถึงสิ่งที่กังวล ร่างกายจะเตรียมพร้อม: หัวใจเต้นเร็วขึ้น กล้ามเนื้อเกร็ง ระบบย่อยอาหารชะลอลง<br/><br/>
+            อาการหน้าอกแน่นก่อนสอบ ปวดท้องทุกวันอาทิตย์ คอและไหล่ที่ไม่ยอมคลาย — ไม่ใช่เรื่องในหัว ร่างกายกำลังเก็บบัญชีความเครียดที่จิตสำนึกยังไม่ได้รับรู้ และมันพูดออกมาเป็นอาการทางกาย
+          </div>
+          <div class="signal-insight">ร่างกายไม่ได้โกหก มันแค่พูดภาษาที่เราไม่ได้ถูกสอนให้ฟัง</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">ล้างหน้าด้วยน้ำเย็น หรือกดน้ำเย็นที่หน้าผาก 30 วินาที วิธีนี้กระตุ้น dive reflex ซึ่งลด heart rate ได้เร็วและตรงกว่าเทคนิคการหายใจในสถานการณ์ที่ตื่นเต้นมาก ถ้าไม่มีน้ำเย็น — วางฝ่ามือบนหน้าอก รู้สึกหัวใจเต้น แล้วพูดเบาๆ ว่า "ปลอดภัย" สามครั้ง ระบบประสาทตอบสนองต่อการสัมผัสและเสียงของตัวเอง</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">Body scan ก่อนนอน 3 นาที — ไล่จากเท้าขึ้นมาถึงหัว สังเกตว่าส่วนไหนตึงหรือหนัก ไม่ต้องพยายามแก้ไข แค่รู้ว่ามีอยู่ การรับรู้เพียงอย่างเดียวกระตุ้น parasympathetic response และลด cortisol ได้โดยไม่ต้องทำอะไรเพิ่ม</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 3: Hormones -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">🌊</span>
+        <div class="signal-head-text">
+          <div class="signal-title">ฮอร์โมนและอารมณ์</div>
+          <div class="signal-teaser">อารมณ์ที่เปลี่ยนโดยไม่มีเหตุผล — มักมีเหตุผลทางชีววิทยา</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Cortisol พุ่งสูงสุดใน 30–45 นาทีแรกหลังตื่นนอน (Cortisol Awakening Response) — นี่คือเหตุผลที่เช้าวันจันทร์รู้สึกหนักที่สุด ไม่ใช่เพราะคุณอ่อนแอ แต่เพราะ cortisol กำลังทำงานอยู่<br/><br/>
+            Estrogen ปรับความไวของ receptor ของ serotonin และ dopamine — ทำให้อารมณ์สามารถเปลี่ยนตาม cycle รายเดือนโดยไม่มีเหตุการณ์ภายนอกใดๆ กระตุ้น Testosterone มีผลต่อ motivation และ energy floor ไม่ใช่แค่ลักษณะทางร่างกาย ทั้งสองฮอร์โมนนี้มีอยู่ในทุกคน แต่ระดับและช่วงเวลาต่างกัน<br/><br/>
+            Thyroid hormones (T3/T4) ควบคุมอัตราเมตาบอลิกและส่งผลโดยตรงต่อวิธีที่สมองประมวลผลอารมณ์ ภาวะ subclinical thyroid dysfunction พบบ่อยในวัยรุ่นและมักแสดงออกเป็น low mood เรื้อรังหรือ brain fog ก่อนที่จะมีอาการอื่น
+          </div>
+          <div class="signal-insight">อารมณ์ที่เปลี่ยนแปลงโดยไม่มีเหตุผลชัดเจนมักมีเหตุผลทางชีววิทยาที่ยังไม่ได้รับการอธิบาย — ไม่ใช่ความไม่มั่นคง</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">เปิด Notes แล้วจดแค่สามอย่าง: วันนี้รู้สึกยังไง, นอนกี่ชั่วโมง, กินอะไรล่าสุด ทำแค่ 7 วัน pattern จะเริ่มปรากฏชัดว่าอารมณ์ตกมักเกิดช่วงไหน หลังนอนน้อยหรือหลังกาแฟ</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">ลด caffeine หลัง 14:00 — caffeine ปิดกั้น adenosine receptor และยืดช่วงที่ cortisol สูง ส่งผลต่อ sleep architecture แม้จะไม่รู้สึกว่ากาแฟทำให้ตื่น สำหรับ thyroid: ถ้ามี low mood + brain fog + เหนื่อยง่ายเรื้อรังแม้นอนพอ ควรตรวจเลือดกับแพทย์ — ไม่ใช่เพราะป่วย แต่เพราะตรวจง่ายและรักษาได้</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 4: Movement -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">⚡</span>
+        <div class="signal-head-text">
+          <div class="signal-title">การเคลื่อนไหว</div>
+          <div class="signal-teaser">ไม่ต้องมีสวน ไม่ต้องมีชุด สมองไม่สนใจว่าคุณวิ่งที่ไหน</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            BDNF (Brain-Derived Neurotrophic Factor) คือโปรตีนที่กระตุ้นการสร้างและเชื่อมต่อของเซลล์สมอง มันเพิ่มขึ้นหลังออกกำลังกายแบบ aerobic 20+ นาทีที่ระดับ 60–70% ของ max heart rate แต่แม้แค่ 10 นาทีก็มีผลต่อ mood ผ่าน endorphin และ dopamine<br/><br/>
+            สิ่งสำคัญ: ผลเกิดจากการยกระดับ heart rate ไม่ใช่จากสถานที่หรืออุปกรณ์ การกระโดดตบในห้องน้ำโรงเรียน 3 นาทีก่อนสอบมีผลต่อสมองเหมือนกับการวิ่งในสวนสาธารณะ
+          </div>
+          <div class="signal-insight">ไม่ต้องมีสวนสาธารณะ ไม่ต้องมีชุดออกกำลังกาย สมองไม่สนใจว่าคุณเคลื่อนไหวที่ไหน</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">Movement snack — กระโดดตบ 30 ครั้ง หรือขึ้น-ลงบันได 3 ชั้น Heart rate จะขึ้น dopamine จะตาม ใช้เวลา 3 นาที เหมาะสำหรับช่วงพักระหว่างอ่านหนังสือที่รู้สึกว่าสมองหยุดทำงาน</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">เพิ่ม incidental movement — เดินไปโรงอาหารทางที่ไกลกว่า ยืนระหว่างอ่านหนังสือ ออกกำลังกาย 20 นาที 3 ครั้งต่อสัปดาห์คือ threshold ที่งานวิจัยยืนยันว่าเห็นผลต่อ depression และ anxiety — ต่ำกว่าที่คนส่วนใหญ่คิด</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 5: Sunlight -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">☀️</span>
+        <div class="signal-head-text">
+          <div class="signal-title">แสงแดดและนาฬิกาชีวิต</div>
+          <div class="signal-teaser">10 นาทีข้างนอกตอนเช้าส่งผลต่อสมองทั้งวัน</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Suprachiasmatic nucleus (SCN) ใน hypothalamus คือนาฬิกาชีวิตกลางของร่างกาย มันตั้งเวลาจากแสงที่เข้าตาใน 30–60 นาทีแรกหลังตื่น แสงนั้นกระตุ้น serotonin synthesis, ตั้ง cortisol curve ให้ถูกจังหวะ และกำหนดเวลาที่ melatonin จะหลั่งในคืนนั้น<br/><br/>
+            นักเรียนที่อยู่ใต้แสงฟลูออเรสเซนต์ตลอดวันโดยไม่ได้รับแสงธรรมชาติเลย วงจรนี้เริ่มหลุด ส่งผลต่อ mood, energy และ sleep quality พร้อมกัน ไม่ใช่เพราะขี้เกียจหรืออ่อนแอ แต่เพราะร่างกายขาดข้อมูลที่ต้องการในการตั้งนาฬิกา
+          </div>
+          <div class="signal-insight">10 นาทีข้างนอกตอนเช้าไม่ใช่แค่การพักผ่อน — มันคือข้อมูลที่สมองต้องการเพื่อทำงานได้ตลอดทั้งวัน</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">ออกไปข้างนอกหรือเปิดหน้าต่างรับแสงธรรมชาติภายใน 1 ชั่วโมงหลังตื่น ไม่ต้องทำอะไร แค่ให้แสงเข้าตา 10 นาที ไม่ต้องเจอแดดโดยตรง แสงจากท้องฟ้าก็เพียงพอ</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">จับคู่กับกิจวัตรที่มีอยู่แล้ว — กินข้าวเช้าข้างนอก รอรถที่นอกอาคารแทนในอาคาร เดินไปโรงเรียนแทนนั่งรถ Habit stacking ทำให้ไม่ต้องใช้ willpower เพิ่ม เพราะมันเกาะติดกับสิ่งที่ทำอยู่แล้ว</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end signal-row -->
+
+  <!-- C: BODY ARTICLES -->
+  <div class="subsection-header" style="padding:0 20px;margin:8px 0 12px;">
+    <div class="subsection-dot" style="background:var(--gold)"></div>
+    <div class="subsection-title">📖 อ่านเพิ่มเติม — บทความจากทีม</div>
+    <div class="subsection-line"></div>
+  </div>
+  <div class="body-articles">
+    <div class="body-articles-scroll" id="body-articles-scroll">
+      <!-- Populated by JS: pulls world=body from Content sheet, falls back to science.html card -->
+    </div>
+  </div>
+
+  <!-- Sheet-driven extra body cards (category=ร่างกาย) -->
+  <div class="care-cards" id="cards-ร่างกาย" style="margin-top:8px;"></div>
+
+</div><!-- end layer-body -->
+</div><!-- end tab-body -->
+
+<div class="tab-panel" id="tab-connection">
+<!-- LAYER 2: CONNECTION -->
+<div class="layer-section" id="layer-connection">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--blue);">ชั้นที่สอง</div>
+    <div class="layer-title-row"><span class="layer-emoji">🫂</span><span class="layer-title">ความสัมพันธ์</span></div>
+    <div class="layer-tagline">เพื่อน ครอบครัว กลุ่มสนับสนุน<br/>Oxytocin จากการมีคนรับฟังเปลี่ยน cortisol ได้จริงๆ</div>
+  </div>
+  <div class="care-cards" style="margin-bottom:14px;">
+    <a class="care-card visible" href="peer.html" style="border-color:var(--blue-border);background:linear-gradient(135deg,var(--blue-soft),#FDFBF7);">
+      <div class="care-card-top">
+        <div class="care-card-left">
+          <div class="care-card-name">ระบบ Peer Buddy</div>
+          <div class="care-card-desc">คุยกับรุ่นพี่ที่เป็นเพื่อน ไม่มีการตัดสิน ไม่ต้องนัดหมายล่วงหน้า</div>
+        </div>
+        <span class="care-card-badge badge-free">ฟรี</span>
+      </div>
+      <div class="care-card-cta"><span class="cta-contact">ใจดี TU Peer Support</span><span class="cta-arrow">→</span></div>
+    </a>
+  </div>
+  <div class="care-cards" id="cards-ความสัมพันธ์"></div>
+</div>
+</div><!-- end tab-connection -->
+
+<div class="tab-panel" id="tab-expression">
+<!-- LAYER 3: EXPRESSION -->
+<div class="layer-section" id="layer-expression">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--teal);">ชั้นที่สาม</div>
+    <div class="layer-title-row"><span class="layer-emoji">🎨</span><span class="layer-title">การแสดงออก</span></div>
+    <div class="layer-tagline">งานอดิเรก ความคิดสร้างสรรค์ การเขียนระบาย<br/>สิ่งที่ทำให้คุณยังเป็นตัวเอง</div>
+  </div>
+  <div class="expression-links">
+    <a class="exp-link" href="reflection.html">📓 บันทึกความคิด</a>
+    <a class="exp-link" href="puzzle.html">🧩 บทความจิตวิทยา</a>
+  </div>
+  <div class="care-cards" id="cards-การแสดงออก"></div>
+</div>
+</div><!-- end tab-expression -->
+
+<div class="tab-panel" id="tab-environment">
+<!-- LAYER 4: ENVIRONMENT -->
+<div class="layer-section" id="layer-environment">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--amber);">ชั้นที่สี่</div>
+    <div class="layer-title-row"><span class="layer-emoji">🌍</span><span class="layer-title">สิ่งแวดล้อม</span></div>
+    <div class="layer-tagline">ความกดดันไม่ได้มาจากแค่ที่เดียว</div>
+  </div>
+  <div class="env-groups">
+    <span class="env-tag">📊 GPA &amp; การเรียน</span>
+    <span class="env-tag">🎯 TCAS &amp; Admission</span>
+    <span class="env-tag">👨‍👩‍👧 ความคาดหวังจากครอบครัว</span>
+    <span class="env-tag">👥 ความสัมพันธ์เพื่อน</span>
+    <span class="env-tag">📋 กิจกรรมที่หนักเกินไป</span>
+    <span class="env-tag">💰 ปัญหาการเงิน</span>
+    <span class="env-tag">🪪 ความรู้สึกไม่เข้าพวก</span>
+  </div>
+  <div class="reframe-card">
+    <div class="rf-label">Reframe</div>
+    <div class="rf-text">ความเครียดที่รู้สึกอยู่ไม่ใช่ความอ่อนแอ — มันคือ signal<br/>ว่าบางอย่างในสิ่งแวดล้อมรอบตัวต้องการความใส่ใจ</div>
+    <div class="rf-sub">นักเรียนเตรียมฯ แต่ละคนเจอ pressure คนละแบบ ไม่มีใครผิดที่รู้สึกหนัก</div>
+    <a href="programs.html" class="rf-link">ดู workshops &amp; programs →</a>
+  </div>
+  <div class="care-cards" id="cards-สิ่งแวดล้อม"></div>
+</div>
+</div><!-- end tab-environment -->
+
+<div class="tab-panel" id="tab-belief">
+<!-- LAYER 5: BELIEF -->
+<div class="layer-section" id="layer-belief">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--purple);">ชั้นที่ห้า</div>
+    <div class="layer-title-row"><span class="layer-emoji">🪞</span><span class="layer-title">ความเชื่อ</span></div>
+    <div class="layer-tagline">Stigma การมองตัวเอง และความหมายของสิ่งที่ทำอยู่<br/>สิ่งที่เชื่อเกี่ยวกับตัวเองมีผลต่อทุกอย่าง</div>
+  </div>
+  <div class="belief-card" onclick="window.location.href='puzzle.html'">
+    <div class="bc-label">🧩 จากบทความในใจดี TU</div>
+    <div class="bc-q">เชื่อว่าต้องสู้คนเดียว?</div>
+    <div class="bc-sub">ความเชื่อที่ฝังอยู่ข้างในมักมาจากสิ่งแวดล้อม ไม่ใช่ความจริงตายตัว — อ่านบทความจิตวิทยาที่ช่วยตั้งคำถามกับความเชื่อพวกนั้น</div>
+    <div class="bc-cta">ไปที่บทความ →</div>
+  </div>
+  <div class="care-cards" id="cards-ความเชื่อ"></div>
+</div>
+</div><!-- end tab-belief -->
+
+<div class="tab-panel" id="tab-professional">
+<!-- LAYER 6: PROFESSIONAL -->
+<div class="layer-section" id="layer-professional">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--mid);">ชั้นที่หก</div>
+    <div class="layer-title-row"><span class="layer-emoji">🏥</span><span class="layer-title">ผู้เชี่ยวชาญ</span></div>
+    <div class="layer-tagline">บางครั้งก็ต้องการคนที่เชี่ยวชาญจริงๆ — และนั่นก็โอเคมาก<br/>เริ่มจาก peer แล้วค่อยๆ ไปตามที่ต้องการ</div>
+  </div>
+  <div class="pro-escalation">
+    <div class="pro-label">เส้นทางการขอความช่วยเหลือ</div>
+    <a class="pro-step" href="peer.html">
+      <div class="pro-step-num">1</div>
+      <div class="pro-step-body"><div class="pro-step-name">Peer Support — ใจดี TU</div><div class="pro-step-desc">รุ่นพี่ที่ผ่านการฝึก พร้อมรับฟังโดยไม่ตัดสิน</div></div>
+      <span class="pro-step-arrow">→</span>
+    </a>
+    <a class="pro-step" href="therapist.html">
+      <div class="pro-step-num">2</div>
+      <div class="pro-step-body"><div class="pro-step-name">นักจิตวิทยาโรงเรียน</div><div class="pro-step-desc">ฟรี อยู่ในโรงเรียน ไม่ต้องเดินทาง</div></div>
+      <span class="pro-step-arrow">→</span>
+    </a>
+    <a class="pro-step" href="guidance.html">
+      <div class="pro-step-num">3</div>
+      <div class="pro-step-body"><div class="pro-step-name">ครูแนะแนว</div><div class="pro-step-desc">ปรึกษาได้ทั้งเรื่องเรียน ชีวิต และ admission</div></div>
+      <span class="pro-step-arrow">→</span>
+    </a>
+    <div class="pro-step" style="cursor:default;">
+      <div class="pro-step-num">4</div>
+      <div class="pro-step-body"><div class="pro-step-name">คลินิก &amp; โรงพยาบาล กทม.</div><div class="pro-step-desc">เมื่อต้องการผู้เชี่ยวชาญด้านจิตเวชโดยตรง</div></div>
+    </div>
+  </div>
+  <div id="professional-cards">
+    <div class="skeleton"></div><div class="skeleton" style="height:80px"></div><div class="skeleton"></div>
+  </div>
+</div>
+</div><!-- end tab-professional -->
+
+<div class="crisis-strip">
+  <div class="crisis-text">🆘 วิกฤต ต้องการความช่วยเหลือตอนนี้</div>
+  <a href="crisis.html" class="crisis-btn">สายด่วน</a>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const LIFF_ID  = "2009806939-H06mwKgI";
+
+// ─────────────────────────────────────────────────────
+// SIGNAL CARDS — expand/collapse
+// ─────────────────────────────────────────────────────
+function toggleSignal(card) {
+  const isOpen = card.classList.contains("open");
+  document.querySelectorAll(".signal-card.open").forEach(c => c.classList.remove("open"));
+  if (!isOpen) card.classList.add("open");
+}
+
+// ─────────────────────────────────────────────────────
+// PARK CAROUSEL
+// Sheet: category=ออกไปเดิน, add photo_url column for photo
+// Falls back to gradient colour if photo_url is empty
+// Team adds a row → appears in carousel automatically
+// ─────────────────────────────────────────────────────
+const PARK_GRADIENTS = [
+  "linear-gradient(135deg,#4A7C59,#2D5A40)",
+  "linear-gradient(135deg,#3A7D44,#1E5B2A)",
+  "linear-gradient(135deg,#5A8A6A,#3A6B4A)",
+  "linear-gradient(135deg,#2D6A4F,#1B4332)",
+  "linear-gradient(135deg,#52796F,#354F52)",
+];
+let parkData = [];
+
+function renderParks(items) {
+  const carousel = document.getElementById("park-carousel");
+  carousel.innerHTML = "";
+  parkData = items;
+  items.forEach((park, idx) => {
+    const card = document.createElement("div");
+    card.className = "park-card";
+    card.onclick = () => openParkModal(idx);
+    const hasPhoto = park.photo_url && park.photo_url.trim();
+    const grad = PARK_GRADIENTS[idx % PARK_GRADIENTS.length];
+    card.innerHTML = `
+      ${hasPhoto
+        ? `<img class="park-card-img" src="${park.photo_url}" alt="${park.name}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+           <div class="park-card-fallback" style="display:none;background:${grad};position:absolute;inset:0;border-radius:20px;">🌳</div>`
+        : `<div class="park-card-fallback" style="background:${grad};position:absolute;inset:0;border-radius:20px;">🌳</div>`}
+      <div class="park-card-grad"></div>
+      <div class="park-card-body">
+        <div class="park-card-name">${park.name}</div>
+        <div class="park-card-loc">📍 ${park.location || ""}</div>
+      </div>`;
+    carousel.appendChild(card);
+  });
+}
+
+function openParkModal(idx) {
+  const park = parkData[idx];
+  if (!park) return;
+  const grad = PARK_GRADIENTS[idx % PARK_GRADIENTS.length];
+  const hasPhoto = park.photo_url && park.photo_url.trim();
+  document.getElementById("park-modal-img-wrap").innerHTML = hasPhoto
+    ? `<img style="width:100%;height:160px;object-fit:cover;border-radius:16px;margin-bottom:16px;display:block;" src="${park.photo_url}" alt="${park.name}"/>`
+    : `<div style="width:100%;height:160px;border-radius:16px;margin-bottom:16px;background:${grad};display:flex;align-items:center;justify-content:center;font-size:48px;">🌳</div>`;
+  document.getElementById("park-modal-name").textContent = park.name;
+  document.getElementById("park-modal-desc").textContent = park.desc || "";
+  const pills = [];
+  if (park.price_range) pills.push(`<span class="park-modal-pill">฿ ${park.price_range}</span>`);
+  if (park.location)    pills.push(`<span class="park-modal-pill">📍 ${park.location}</span>`);
+  if (park.bts_mrt)     pills.push(`<span class="park-modal-pill">🚇 ${park.bts_mrt}</span>`);
+  document.getElementById("park-modal-pills").innerHTML = pills.join("");
+  const btn = document.getElementById("park-modal-btn");
+  btn.href = park.url || "#";
+  btn.style.display = park.url ? "flex" : "none";
+  const overlay = document.getElementById("park-overlay");
+  overlay.style.display = "flex";
+  requestAnimationFrame(() => overlay.classList.add("active"));
+  document.body.style.overflow = "hidden";
+}
+
+function closeParkModal(e) {
+  if (e && e.target !== document.getElementById("park-overlay") &&
+      !e.target.classList.contains("park-modal-close")) return;
+  const overlay = document.getElementById("park-overlay");
+  overlay.classList.remove("active");
+  setTimeout(() => { overlay.style.display = "none"; document.body.style.overflow = ""; }, 300);
+}
+
+// ─────────────────────────────────────────────────────
+// BODY ARTICLES
+// Team: publish articles in dashboard with world=body
+// Falls back to science.html static card if Sheet empty
+// ─────────────────────────────────────────────────────
+const BODY_ARTICLE_FALLBACK = [{
+  id:"science", title:"ร่างกายและจิตใจไม่เคยแยกจากกัน",
+  tag:"Neuroscience", level:"🟡 กลาง", readTime:"15 นาที",
+  url:"science.html", isStatic:true,
+}];
+
+function renderBodyArticles(articles) {
+  const scroll = document.getElementById("body-articles-scroll");
+  scroll.innerHTML = "";
+  articles.forEach(art => {
+    const card = document.createElement("div");
+    card.className = "body-art-card";
+    card.innerHTML = `
+      <div class="body-art-tag">${art.tag || "Body"}</div>
+      <div class="body-art-title">${art.title}</div>
+      <div class="body-art-meta">
+        <span class="body-art-level">${art.level || ""}</span>
+        ${art.level && art.readTime ? `<span style="color:var(--cream-border);">·</span>` : ""}
+        <span class="body-art-time">${art.readTime || ""}</span>
+      </div>`;
+    card.onclick = art.isStatic && art.url
+      ? () => window.location.href = art.url
+      : () => { try { sessionStorage.setItem("bodyArticle", JSON.stringify(art)); } catch(e){} window.location.href = "puzzle.html?bodyArticle=1"; };
+    scroll.appendChild(card);
+  });
+}
+
+async function loadBodyArticles() {
+  try {
+    const res = await fetch(API_URL + "?action=getContent&world=body");
+    const d = await res.json();
+    const extra = (d.status === "OK" && d.items && d.items.length) ? d.items : [];
+    renderBodyArticles([...BODY_ARTICLE_FALLBACK, ...extra]);
+  } catch(e) { renderBodyArticles(BODY_ARTICLE_FALLBACK); }
+}
+
+
+// Sheet columns: category | name | desc | price_range | location | bts_mrt | contact | url | online | active
+//
+// NEW LAYER CATEGORIES (add rows with these values to expand each layer):
+//   "ออกไปเดิน"    → Layer 1: Body
+//   "ร่างกาย"      → Layer 1: Body (extra body resources)
+//   "ความสัมพันธ์"  → Layer 2: Connection
+//   "การแสดงออก"   → Layer 3: Expression
+//   "สิ่งแวดล้อม"  → Layer 4: Environment
+//   "ความเชื่อ"    → Layer 5: Belief
+//   "ในโรงเรียน"   → Layer 6: Professional
+//   "ฟรี"          → Layer 6: Professional
+//   "ออนไลน์"      → Layer 6: Professional
+//   "คลินิก"       → Layer 6: Professional
+// ─────────────────────────────────────────────────────
+const FALLBACK = [
+  {category:"ออกไปเดิน",name:"สวนลุมพินี",desc:"สวนกลางกรุง วิ่งได้รอบทะเลสาบ มีเส้นทางเดินชัดเจน",price_range:"ฟรี",location:"ปทุมวัน",bts_mrt:"MRT สีลม / BTS ราชดำริ",contact:"",url:"https://maps.app.goo.gl/LumpiniPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนจตุจักร",desc:"สวนขนาดใหญ่ ร่มรื่น มีทางเดิน-วิ่ง เหมาะกับคนแถวเหนือ กทม.",price_range:"ฟรี",location:"จตุจักร",bts_mrt:"MRT กำแพงเพชร",contact:"",url:"https://maps.app.goo.gl/ChatuchakPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนเบญจกิติ",desc:"ริมน้ำ ทันสมัย มีทางจักรยาน-วิ่งแยกชัดเจน แถวอโศก-สุขุมวิท",price_range:"ฟรี",location:"คลองเตย",bts_mrt:"MRT สุขุมวิท / BTS อโศก",contact:"",url:"https://maps.app.goo.gl/BenjakitiPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนสาธารณะรัชดาภิเษก",desc:"แถวรัชดา ใกล้ MRT เปิดเช้าตรู่ นักวิ่งเยอะ บรรยากาศดี",price_range:"ฟรี",location:"ห้วยขวาง",bts_mrt:"MRT ห้วยขวาง",contact:"",url:"https://maps.app.goo.gl/RatchadaPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนหลวง ร.9",desc:"สวนขนาดใหญ่ทางฝั่งตะวันออก เหมาะคนแถว อ่อนนุช ประเวศ",price_range:"ฟรี",location:"ประเวศ",bts_mrt:"BTS อ่อนนุช + รถ/แกร็บ",contact:"",url:"https://maps.app.goo.gl/SuanLuangR9",online:false},
+  {category:"ในโรงเรียน",name:"School Therapist",desc:"คุยได้ทุกเรื่องในใจ ไม่มีการตัดสิน",price_range:"ฟรี",location:"ห้องแนะแนว",bts_mrt:"",contact:"ติดต่อผ่านครูแนะแนว",url:"",online:false},
+  {category:"ในโรงเรียน",name:"Guidance Counselor",desc:"ปรึกษาเรื่อง admission เส้นทางการศึกษา และชีวิตหลังโรงเรียน",price_range:"ฟรี",location:"ห้องแนะแนว",bts_mrt:"",contact:"ติดต่อผ่านครูแนะแนว",url:"",online:false},
+  {category:"ฟรี",name:"กำแพงพักใจ",desc:"ปรึกษาจิตแพทย์/นักจิตวิทยาฟรี 4 ครั้ง สำหรับวัยรุ่น กทม. — ผ่าน OOCA",price_range:"ฟรี 4 ครั้ง",location:"Online",bts_mrt:"",contact:"ooca.co/how-to-use-wall-of-sharing-nhso",url:"https://ooca.co/how-to-use-wall-of-sharing-nhso",online:true},
+  {category:"ฟรี",name:"รามาธิบดี จิตเวช",desc:"โรงพยาบาลรัฐ — รอนานแต่ราคาถูกที่สุด มีจิตแพทย์เด็กและวัยรุ่น",price_range:"~500–1,000 บาท",location:"พระราม 6 ราชเทวี",bts_mrt:"MRT พระราม 9",contact:"02-201-1000",url:"https://www.rama.mahidol.ac.th",online:false},
+  {category:"ออนไลน์",name:"OOCA อูก้า",desc:"Video call กับจิตแพทย์/นักจิตวิทยา จากบ้านได้เลย ไม่ต้องเดินทาง",price_range:"นักจิตวิทยา 450 บ./30 นาที · จิตแพทย์ 1,000 บ./30 นาที",location:"Online",bts_mrt:"",contact:"ooca.co",url:"https://ooca.co",online:true},
+  {category:"ออนไลน์",name:"iSTRONG",desc:"นักจิตวิทยาผ่านการฝึกกว่า 5,000 ชั่วโมง รับทั้ง TH/EN",price_range:"สอบถาม LINE @istrong",location:"Online",bts_mrt:"",contact:"@istrong",url:"https://www.istrong.co",online:true},
+  {category:"คลินิก",name:"Morning Mind Clinic",desc:"9 สาขาทั่ว กทม. ปิ่นเกล้า สีลม ศรีนครินทร์ เอกมัย — อยู่ในห้างฯ เดินทางสะดวก",price_range:"~1,000 บาท/ครั้ง",location:"9 สาขา กทม.",bts_mrt:"ครอบคลุมทุกโซน",contact:"095-995-3216 | LINE: morningmindclinic",url:"https://morningmindclinic.co",online:false},
+  {category:"คลินิก",name:"Happy Me Clinic",desc:"เน้นราคาเข้าถึงได้ เปิดทุกวัน ไม่ต้องรอนาน",price_range:"สอบถาม 099-179-2416",location:"จตุจักร + พระโขนง",bts_mrt:"BTS ปุณณวิถี",contact:"099-179-2416",url:"https://happymeclinic.com",online:false},
+  {category:"คลินิก",name:"Relax Mind Clinic",desc:"คลินิกจิตเวชเฉพาะทาง รับอายุ 18 ปีขึ้นไป",price_range:"สอบถาม 065-587-9293",location:"สุขุมวิท พระโขนงเหนือ",bts_mrt:"BTS พระโขนง",contact:"065-587-9293",url:"https://www.relaxmindclinic.com",online:false},
+  {category:"คลินิก",name:"Mind D Clinic",desc:"คลินิกสุขภาพจิตครบวงจร ใจกลาง กทม.",price_range:"สอบถาม",location:"ใจกลาง กทม.",bts_mrt:"",contact:"minddclinic.com",url:"https://minddclinic.com",online:false},
+  {category:"คลินิก",name:"The Oasis",desc:"จิตเวช จิตบำบัด โยคะบำบัด กิจกรรมส่งเสริมสุขภาพจิต",price_range:"สอบถาม",location:"กรุงเทพฯ",bts_mrt:"",contact:"theoasiscare.com",url:"https://en.theoasiscare.com",online:false},
+];
+
+// LAYER MAP: category → container ID
+// To add a new resource to any layer, just add a row to the Care sheet
+// with the matching category value below.
+const LAYER_MAP = {
+  // "ออกไปเดิน" → park carousel (not card list)
+  "ร่างกาย":     "cards-ร่างกาย",
+  "ความสัมพันธ์": "cards-ความสัมพันธ์",
+  "การแสดงออก":  "cards-การแสดงออก",
+  "สิ่งแวดล้อม": "cards-สิ่งแวดล้อม",
+  "ความเชื่อ":   "cards-ความเชื่อ",
+  "ในโรงเรียน":  "pro-ในโรงเรียน",
+  "ฟรี":         "pro-ฟรี",
+  "ออนไลน์":    "pro-ออนไลน์",
+  "คลินิก":     "pro-คลินิก",
+};
+
+const PRO_CATEGORIES = [
+  {cat:"ในโรงเรียน", dot:"#7C3AED", label:"🏫 ในโรงเรียน"},
+  {cat:"ฟรี",        dot:"#3A7D44", label:"🆓 ฟรี / ต้นทุนต่ำ"},
+  {cat:"ออนไลน์",   dot:"#2563EB", label:"💻 Online"},
+  {cat:"คลินิก",    dot:"#E8960C", label:"🏥 คลินิก กทม."},
+];
+
+let cardIdx = 0;
+
+function makeCareCard(item, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const isSch = item.category === "ในโรงเรียน";
+  const el = document.createElement(item.url ? "a" : "div");
+  el.className = "care-card" + (isSch ? " school-card" : "");
+  if (item.url) { el.href = item.url; el.target = "_blank"; el.rel = "noopener"; }
+  const badge = item.price_range && item.price_range.includes("ฟรี") ? "badge-free"
+              : item.online ? "badge-online"
+              : isSch ? "badge-school"
+              : item.category === "ออกไปเดิน" ? "badge-park"
+              : "badge-clinic";
+  const badgeText = item.price_range && item.price_range.includes("ฟรี") ? "ฟรี"
+                  : item.online ? "Online"
+                  : item.category === "ออกไปเดิน" ? "ฟรี"
+                  : isSch ? "โรงเรียน" : "คลินิก";
+  const pills = [];
+  if (item.price_range) pills.push(`<span class="meta-pill price">฿ ${item.price_range}</span>`);
+  if (item.location) pills.push(`<span class="meta-pill">📍 ${item.location}</span>`);
+  if (item.bts_mrt) pills.push(`<span class="meta-pill">🚇 ${item.bts_mrt}</span>`);
+  el.innerHTML = `
+    <div class="care-card-top">
+      <div class="care-card-left">
+        <div class="care-card-name">${item.name}</div>
+        <div class="care-card-desc">${item.desc}</div>
+      </div>
+      <span class="care-card-badge ${badge}">${badgeText}</span>
+    </div>
+    ${pills.length ? `<div class="care-card-meta">${pills.join("")}</div>` : ""}
+    ${item.contact ? `<div class="care-card-cta"><span class="cta-contact">${item.contact}</span>${item.url ? `<span class="cta-arrow">→</span>` : ""}</div>` : ""}
+  `;
+  container.appendChild(el);
+  const i = cardIdx++;
+  setTimeout(() => el.classList.add("visible"), i * 45);
+}
+
+function buildProContainers() {
+  const wrapper = document.getElementById("professional-cards");
+  wrapper.innerHTML = "";
+  PRO_CATEGORIES.forEach(({cat, dot, label}) => {
+    const sec = document.createElement("div");
+    sec.className = "subsection";
+    sec.innerHTML = `
+      <div class="subsection-header">
+        <div class="subsection-dot" style="background:${dot}"></div>
+        <div class="subsection-title">${label}</div>
+        <div class="subsection-line"></div>
+      </div>
+      <div class="care-cards" id="pro-${cat}"></div>
+    `;
+    wrapper.appendChild(sec);
+  });
+}
+
+function renderCare(items) {
+  buildProContainers();
+  // Separate parks from other categories
+  const parks = items.filter(i => (i.category||"").trim() === "ออกไปเดิน");
+  const rest  = items.filter(i => (i.category||"").trim() !== "ออกไปเดิน");
+  // Render park carousel
+  if (parks.length) renderParks(parks);
+  else renderParks(FALLBACK.filter(i => i.category === "ออกไปเดิน"));
+  // Clear skeletons for other containers
+  if (!rest || !rest.length) return;
+  rest.forEach(item => {
+    const id = LAYER_MAP[(item.category || "").trim()];
+    if (id) makeCareCard(item, id);
+  });
+  // Hide empty pro subsections
+  PRO_CATEGORIES.forEach(({cat}) => {
+    const el = document.getElementById(`pro-${cat}`);
+    if (el && el.children.length === 0) {
+      const subsec = el.closest(".subsection");
+      if (subsec) subsec.style.display = "none";
+    }
+  });
+}
+
+// ─────────────────────────────────────────────────────
+// TAB SYSTEM
+// ─────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  const panel = document.getElementById("tab-" + tab);
+  if (panel) {
+    panel.classList.add("active");
+    window.scrollTo({top: 0, behavior: "smooth"});
+  }
+}
+
+// ─────────────────────────────────────────────────────
+// FEELING MODAL
+// ─────────────────────────────────────────────────────
+function openFeelModal() {
+  const ov = document.getElementById("feel-overlay");
+  ov.style.display = "flex";
+  requestAnimationFrame(() => ov.classList.add("active"));
+  document.body.style.overflow = "hidden";
+}
+
+function closeFeelModal() {
+  const ov = document.getElementById("feel-overlay");
+  ov.classList.remove("active");
+  document.querySelectorAll(".feel-opt").forEach(b => b.classList.remove("selected"));
+  setTimeout(() => { ov.style.display = "none"; document.body.style.overflow = ""; }, 280);
+}
+
+function handleFeelOverlayClick(e) {
+  if (e.target === document.getElementById("feel-overlay")) closeFeelModal();
+}
+
+// tab: which tab to switch to
+// scrollTargetId: element id to scroll to within that tab after switch
+function routeToLayer(tab, scrollTargetId) {
+  document.querySelectorAll(".feel-opt").forEach(b => b.classList.remove("selected"));
+  event.currentTarget.classList.add("selected");
+  setTimeout(() => {
+    closeFeelModal();
+    switchTab(tab);
+    if (scrollTargetId) {
+      setTimeout(() => {
+        const el = document.getElementById(scrollTargetId);
+        if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
+      }, 280);
+    }
+  }, 240);
+}
+
+
+async function loadCare() {
+  loadBodyArticles();
+  try {
+    const res = await fetch(API_URL + "?action=getCare");
+    const d = await res.json();
+    renderCare((d.status === "OK" && d.items && d.items.length) ? d.items : FALLBACK);
+  } catch(e) { renderCare(FALLBACK); }
+}
+
+const isPreview = new URLSearchParams(window.location.search).get("preview") === "1";
+if (isPreview) {
+  loadCare();
+} else {
+  liff.init({liffId: LIFF_ID})
+    .then(() => { if (!liff.isLoggedIn()) { liff.login(); return; } loadCare(); })
+    .catch(() => loadCare());
+}
+</script>
+</body>
+</html>
+
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
@@ -561,13 +1534,22 @@
 
       <div class="input-group">
         <div class="input-label">เวลาอ่าน</div>
-        <select class="input-field" id="pz-readtime">
-          <option value="3 นาที">3 นาที</option>
-          <option value="5 นาที" selected>5 นาที</option>
-          <option value="8 นาที">8 นาที</option>
-          <option value="10 นาที">10 นาที</option>
-          <option value="15 นาที">15 นาที</option>
-        </select>
+<select class="input-field" id="pz-readtime" onchange="pzUpdatePreview()">
+  <option value="1 นาที">1 นาที</option>
+  <option value="2 นาที">2 นาที</option>
+  <option value="3 นาที">3 นาที</option>
+  <option value="4 นาที">4 นาที</option>
+  <option value="5 นาที" selected>5 นาที</option>
+  <option value="6 นาที">6 นาที</option>
+  <option value="7 นาที">7 นาที</option>
+  <option value="8 นาที">8 นาที</option>
+  <option value="9 นาที">9 นาที</option>
+  <option value="10 นาที">10 นาที</option>
+  <option value="12 นาที">12 นาที</option>
+  <option value="15 นาที">15 นาที</option>
+  <option value="18 นาที">18 นาที</option>
+  <option value="20 นาที">20 นาที</option>
+</select>
       </div>
 
       <!-- live preview card -->
@@ -1071,9 +2053,90 @@
       <button class="btn-full gold" onclick="broadcast()">ส่ง Broadcast 💛</button>
     </div>
   </div>
+
+<!-- ═══════════ CARE LAYER ═══════════ -->
+<div class="tab-content" id="tab-care">
+  <div class="section-label" style="margin-bottom:4px;">พื้นที่ใจ — จัดการ Care Layers</div>
+  <div style="font-size:12px;color:var(--text-mid);margin-bottom:14px;line-height:1.6;">
+    เพิ่มแหล่งข้อมูลในแต่ละชั้นของ care.html — เลือกหมวดหมู่แล้วกรอกข้อมูล
+  </div>
+
+  <!-- ADD FORM -->
+  <div class="add-form" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+    <div class="input-group">
+      <div class="input-label">หมวดหมู่ (ชั้นที่จะแสดง) *</div>
+      <select class="input-field" id="care-category">
+        <option value="ออกไปเดิน">🌿 ออกไปเดิน (ชั้น 1 — สวนสาธารณะ)</option>
+        <option value="ร่างกาย">🏃 ร่างกาย (ชั้น 1 — แหล่งข้อมูล)</option>
+        <option value="ความสัมพันธ์">🫂 ความสัมพันธ์ (ชั้น 2)</option>
+        <option value="การแสดงออก">🎨 การแสดงออก (ชั้น 3)</option>
+        <option value="สิ่งแวดล้อม">🌍 สิ่งแวดล้อม (ชั้น 4)</option>
+        <option value="ความเชื่อ">🪞 ความเชื่อ (ชั้น 5)</option>
+        <option value="ในโรงเรียน">🏫 ในโรงเรียน (ชั้น 6)</option>
+        <option value="ฟรี">🆓 ฟรี / ต้นทุนต่ำ (ชั้น 6)</option>
+        <option value="ออนไลน์">💻 Online (ชั้น 6)</option>
+        <option value="คลินิก">🏥 คลินิก กทม. (ชั้น 6)</option>
+        <option value="เครื่องมือ">🛠 เครื่องมือ Crisis (crisis.html)</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">ชื่อ *</div>
+      <input class="input-field" id="care-name" placeholder="เช่น สวนลุมพินี หรือ OOCA อูก้า"/>
+    </div>
+    <div class="input-group">
+      <div class="input-label">คำอธิบาย *</div>
+      <textarea class="input-field" id="care-desc" placeholder="อธิบายสั้นๆ ว่าคืออะไร เหมาะกับใคร" style="min-height:72px;resize:vertical;"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="input-group">
+        <div class="input-label">ราคา / ค่าใช้จ่าย</div>
+        <input class="input-field" id="care-price" placeholder="ฟรี หรือ ~500 บาท"/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">ที่ตั้ง</div>
+        <input class="input-field" id="care-location" placeholder="เช่น ปทุมวัน หรือ Online"/>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="input-group">
+        <div class="input-label">BTS / MRT</div>
+        <input class="input-field" id="care-bts" placeholder="เช่น BTS อโศก"/>
+      </div>
+      <div class="input-group">
+        <div class="input-label">ติดต่อ</div>
+        <input class="input-field" id="care-contact" placeholder="เบอร์โทร / LINE ID"/>
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-label">URL ลิงก์</div>
+      <input class="input-field" id="care-url" placeholder="https://..."/>
+    </div>
+    <div class="input-group">
+      <div class="input-label">รูปภาพ URL (สำหรับสวนสาธารณะ)</div>
+      <input class="input-field" id="care-photo" placeholder="https://res.cloudinary.com/..."/>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Online?</div>
+      <select class="input-field" id="care-online">
+        <option value="FALSE">ไม่ใช่</option>
+        <option value="TRUE">ใช่ — ให้ใช้ผ่านอินเทอร์เน็ต</option>
+      </select>
+    </div>
+    <button class="btn-full gold" onclick="addCareItemDash()">เพิ่มลง Care Layer →</button>
+  </div>
+
+  <!-- LIST -->
+  <div class="section-label" style="margin-bottom:10px;">รายการที่มีอยู่แล้ว</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="care-filter-chips">
+    <button class="btn-sm ghost" style="font-size:11px;" onclick="loadCareList('')">ทั้งหมด</button>
+    <button class="btn-sm ghost" style="font-size:11px;" onclick="loadCareList('ออกไปเดิน')">🌿 สวน</button>
+    <button class="btn-sm ghost" style="font-size:11px;" onclick="loadCareList('ในโรงเรียน')">🏫 โรงเรียน</button>
+    <button class="btn-sm ghost" style="font-size:11px;" onclick="loadCareList('ฟรี')">🆓 ฟรี</button>
+    <button class="btn-sm ghost" style="font-size:11px;" onclick="loadCareList('คลินิก')">🏥 คลินิก</button>
+    <button class="btn-sm ghost" style="font-size:11px;" onclick="loadCareList('เครื่องมือ')">🛠 เครื่องมือ</button>
+  </div>
+  <div id="care-items-list"><div class="empty">กดปุ่มด้านบนเพื่อดูรายการ</div></div>
 </div>
-
-
   <!-- ═══════════ THERAPIST ═══════════ -->
   <div class="tab-content" id="tab-therapist">
     <div class="section-label" style="margin-bottom:14px;">นักจิตวิทยาโรงเรียน</div>
@@ -1622,6 +2685,7 @@ function buildTabs(viewRole){
       {id:"tab-rooms",     label:"ห้อง",           icon:"🚪", section:"System"},
       {id:"tab-settings",  label:"Settings",      icon:"⚙️", section:"System"},
       {id:"tab-archive",   label:"จดหมายเหตุ",   icon:"📜", section:"System"},
+      {id:"tab-care",  label:"พื้นที่ใจ", icon:"🌿", section:"Content"},
     ],
     member:[
       {id:"tab-my-cases",     label:"เคสของฉัน",    icon:"🤍", section:"Peer Support"},
@@ -1695,6 +2759,7 @@ function switchTab(tabId,item){
   if(tabId==="tab-archive")          loadArchiveTab();
   if(tabId==="tab-settings")         loadPauseStatus();
   if(tabId==="tab-tools")            loadToolsTab();
+  if(tabId==="tab-care")             loadCareList('');
   if(tabId==="tab-my-cases")         loadPRData();
   if(tabId==="tab-requests")         loadTeacherRequestsTab();
   if(tabId==="tab-special-requests") loadRequestsTab();
@@ -3999,6 +5064,79 @@ async function archSaveYear(yi) {
 // ══════════════════════════════════════════════════════
 let toolsData = []; // [{row, name, desc, url, photo_url, active}, ...]
 
+async function addCareItemDash() {
+  const category = document.getElementById('care-category').value;
+  const name     = document.getElementById('care-name').value.trim();
+  const desc     = document.getElementById('care-desc').value.trim();
+  if (!name || !desc) { toast('กรุณากรอกชื่อและคำอธิบาย'); return; }
+
+  const btn = document.querySelector('[onclick="addCareItemDash()"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'กำลังเพิ่ม...'; }
+
+  try {
+    const d = await apiCall({
+      action: 'addCareItem',
+      item: {
+        category,
+        name,
+        desc,
+        price_range: document.getElementById('care-price').value.trim(),
+        location:    document.getElementById('care-location').value.trim(),
+        bts_mrt:     document.getElementById('care-bts').value.trim(),
+        contact:     document.getElementById('care-contact').value.trim(),
+        url:         document.getElementById('care-url').value.trim(),
+        photo_url:   document.getElementById('care-photo').value.trim(),
+        online:      document.getElementById('care-online').value,
+        active:      'TRUE'
+      }
+    });
+    if (d.status === 'OK') {
+      toast('เพิ่มแล้ว 💛 จะแสดงใน care.html ทันที');
+      ['care-name','care-desc','care-price','care-location',
+       'care-bts','care-contact','care-url','care-photo'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = '';
+      });
+      loadCareList(category);
+    } else { toast('เกิดข้อผิดพลาด: ' + (d.message||'')); }
+  } catch(e) { toast('เกิดข้อผิดพลาด'); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = 'เพิ่มลง Care Layer →'; } }
+}
+
+async function loadCareList(filterCat) {
+  const el = document.getElementById('care-items-list');
+  el.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
+  try {
+    const d = await apiCall({ action: 'getCare' });
+    let items = d.items || [];
+    if (filterCat) items = items.filter(i => (i.category||'').trim() === filterCat);
+    if (!items.length) { el.innerHTML = "<div class='empty'>ไม่มีรายการ</div>"; return; }
+    el.innerHTML = '';
+    items.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'case-card';
+      card.style.cssText = 'padding:12px 14px;display:flex;align-items:center;gap:10px;';
+      card.innerHTML = `
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">${item.name||'—'}</div>
+          <div style="font-size:11px;color:var(--text-soft);">${item.category||''} · ${item.location||''}</div>
+          <div style="font-size:11px;color:var(--text-mid);margin-top:2px;">${(item.desc||'').slice(0,60)}${item.desc?.length>60?'…':''}</div>
+        </div>
+        <button class="btn-sm ghost" onclick="deleteCareItemDash(${idx+2})"
+          style="font-size:11px;color:var(--red);flex-shrink:0;">🗑️</button>`;
+      el.appendChild(card);
+    });
+  } catch(e) { el.innerHTML = "<div class='empty'>โหลดไม่ได้</div>"; }
+}
+
+async function deleteCareItemDash(rowIndex) {
+  if (!confirm('ลบรายการนี้?')) return;
+  try {
+    await apiCall({ action: 'deleteCareItem', rowIndex });
+    toast('ลบแล้ว');
+    document.getElementById('care-items-list').innerHTML = "<div class='empty'>กดปุ่มด้านบนเพื่อดูรายการ</div>";
+  } catch(e) { toast('เกิดข้อผิดพลาด'); }
+}
+  
 async function loadToolsTab() {
   const list = document.getElementById("tools-list");
   list.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
@@ -4374,17 +5512,35 @@ async function rejectRequest(id, btn) {
 }
 
 
-function pzUpdateHeroPreview() {
-  const url = (document.getElementById('pz-hero')?.value || '').trim();
-  const preview = document.getElementById('pz-hero-preview');
-  const img = document.getElementById('pz-hero-img');
-  if (url && preview && img) {
-    img.src = url;
-    preview.style.display = 'block';
-    img.onerror = () => { preview.style.display = 'none'; };
-  } else if (preview) {
-    preview.style.display = 'none';
-  }
+function pzUpdatePreview() {
+  const title = document.getElementById('pz-title')?.value || 'ชื่อบทความ';
+  const desc  = document.getElementById('pz-desc')?.value  || 'คำอธิบาย';
+  const tag   = (document.getElementById('pz-tag')?.value||'').replace(/^[^\s]+ /,'');
+  const level = document.getElementById('pz-level')?.value || '';
+  const time  = document.getElementById('pz-readtime')?.value || '5 นาที';
+  const lang  = document.getElementById('pz-lang')?.value || '';
+
+  const LANG_SCALE = {
+    'ทำให้เข้าใจง่าย': 0,
+    'ภาษาทั่วไป':       1,
+    'กึ่งวิชาการ':       2,
+    'วิชาการ':           3
+  };
+  const dotCount = LANG_SCALE[lang] ?? -1;
+  const dotsHtml = dotCount >= 0
+    ? `<div style="display:flex;align-items:center;gap:3px;margin-left:6px;">
+        ${[0,1,2].map(i =>
+          `<div style="width:5px;height:5px;border-radius:50%;background:${i < dotCount ? '#7C3AED' : '#E4DDD0'};"></div>`
+        ).join('')}
+       </div>`
+    : '';
+
+  const el = (id) => document.getElementById(id);
+  if(el('pzprev-title')) el('pzprev-title').textContent = title;
+  if(el('pzprev-desc'))  el('pzprev-desc').textContent  = desc;
+  if(el('pzprev-tag'))   el('pzprev-tag').textContent   = tag;
+  if(el('pzprev-meta'))  el('pzprev-meta').innerHTML =
+    level + ' · ⏱ ' + time + dotsHtml;
 }
 
 // ── switchPeopleTab ───────────────────────────────────────────
