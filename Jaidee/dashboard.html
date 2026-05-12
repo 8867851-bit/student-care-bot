@@ -394,6 +394,11 @@
     <div class="section-label" style="margin-top:8px;">⏳ Waiting List</div>
     <div id="waiting-list-overview"><div class="empty">กำลังโหลด...</div></div>
     <button class="btn-full gold" id="btn-notify-all-ov" onclick="notifyAll()" style="display:none;margin-top:4px;">แจ้งเตือน Waiting List →</button>
+    <div class="section-label" style="margin-top:8px;">📝 Session Notes สรุป</div>
+    <div class="kpi-grid" id="overview-sn-summary">
+      <div class="kpi-card"><div class="kpi-number" id="sn-ov-referral">—</div><div class="kpi-label">📤 มีการส่งต่อ</div></div>
+      <div class="kpi-card urgent"><div class="kpi-number" id="sn-ov-crisis">—</div><div class="kpi-label">🔴 สถานะวิกฤต</div></div>
+    </div>
   </div>
 
   <!-- ADMIN: CASES -->
@@ -420,14 +425,9 @@
       <input class="input-field" id="case-search" placeholder="ค้นหา Case ID..." oninput="filterCases()" style="padding-left:32px;font-size:13px;"/>
     </div>
     <div id="cases-list"><div class="empty">กำลังโหลด...</div></div>
-  </div>    <div id="pr-list"><div class="empty">กำลังโหลด...</div></div>
     <div class="divider"></div>
-    <div class="section-label">เพิ่ม PR ใหม่</div>
-    <div class="add-form">
-      <div class="input-group">
-      <div class="input-group"><div class="input-label">ชื่อ</div><input class="input-field" id="new-pr-name" placeholder="ชื่อ PR"/></div>
-      <button class="btn-full gold" onclick="addPR()">เพิ่ม PR</button>
-    </div>
+    <div class="section-label">PR ทั้งหมด</div>
+    <div id="pr-list"><div class="empty">กำลังโหลด...</div></div>
   </div>
 
   <!-- ADMIN: SETTINGS -->
@@ -1699,7 +1699,7 @@ function switchTab(tabId,item){
 
 async function loadData(){
   if(userRole==="admin"){loadAdminData();loadFeedback();buildWorldGrid();}
-  else { loadPRData();buildScheduleTab();buildWorldGrid(); }
+  else { loadPRData();buildScheduleTab();buildWorldGrid();initSessionNoteTab(); }
 }
 
 
@@ -1936,6 +1936,28 @@ function updatePeoplePreview(){
   }
 }
 
+function updatePeopleDashPreview(){
+  const name    = (document.getElementById("pdash-name-in")?.value||"ชื่ออาจารย์");
+  const subject = (document.getElementById("pdash-subject-in")?.value||"วิชา");
+  const year    = document.getElementById("pdash-year-in")?.value||"m4";
+  const youtube = document.getElementById("pdash-youtube-in")?.value||"";
+  const thumb   = document.getElementById("pdash-thumb-in")?.value||"";
+  const yearLabels={m4:"ม.4",m5:"ม.5",m6:"ม.6",others:"อื่นๆ"};
+  const nameEl    = document.getElementById("pdash-name");
+  const subjectEl = document.getElementById("pdash-subject");
+  const yearEl    = document.getElementById("pdash-year");
+  if(nameEl)    nameEl.innerText    = name;
+  if(subjectEl) subjectEl.innerText = subject;
+  if(yearEl)    yearEl.innerText    = yearLabels[year]||year;
+  const thumbEl = document.getElementById("pdash-thumb");
+  const imgSrc  = thumb || ytThumb(youtube);
+  if(thumbEl){
+    if(imgSrc){
+      thumbEl.innerHTML=`<img src="${imgSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.parentElement.innerText='👩‍🏫'"/>`;
+    } else { thumbEl.innerText="👩‍🏫"; }
+  }
+}
+
 async function addPerson(){
   const name    = document.getElementById("p-name").value.trim();
   const subject = document.getElementById("p-subject").value.trim();
@@ -1970,6 +1992,7 @@ async function loadAdminData(){
   renderSpecialRequests(special);
   renderCasesInto("cases-list",[...cases].sort((a,b)=>({red:0,yellow:1,green:2}[a.level]||2)-({red:0,yellow:1,green:2}[b.level]||2)),true);
   renderPRList(prList);renderPauseBanner(pause);renderWaitingList(waiting);
+  loadSessionNotesSummary();
 }
 
 async function loadContentViews(){
@@ -2094,7 +2117,7 @@ function renderPRList(list){
   list.forEach(pr=>{
     const card=document.createElement("div");card.className="pr-card";
     card.innerHTML=`
-      <div><div class="pr-name">${pr.name}</div><div class="pr-sub">${pr.userId}</div></div>
+      <div><div class="pr-name">${pr.name}</div><div class="pr-sub">${pr.hasSlots ? "ลงตาราง ✅" : "ยังไม่ลงตาราง"}</div></div>
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="pr-status ${pr.hasSlots?'done':'pending'}">${pr.hasSlots?"ลงตารางแล้ว":"ยังไม่ลง"}</span>
         <button class="btn-sm danger" onclick="removePR('${pr.userId}','${pr.name}')">ลบ</button>
@@ -2122,6 +2145,19 @@ function renderWaitingList(list){
     el.appendChild(card);
   });
   if(btn){btn.style.display="block";btn.innerText=`แจ้งเตือนทุกคน (${list.length} คน)`;}
+}
+
+async function loadSessionNotesSummary() {
+  try {
+    const d = await apiCall({action:"getSessionNotesAdmin"});
+    const notes = d.notes || [];
+    const referralCount = notes.filter(n => n.referral && n.referral !== "✅ ไม่ต้อง" && n.referral.trim()).length;
+    const crisisCount   = notes.filter(n => (n.finalStatus||"").includes("วิกฤต")).length;
+    const refEl  = document.getElementById("sn-ov-referral");
+    const crisEl = document.getElementById("sn-ov-crisis");
+    if (refEl)  refEl.textContent  = referralCount;
+    if (crisEl) crisEl.textContent = crisisCount;
+  } catch(e) {}
 }
 
 function switchProgTab(tab, btn) {
@@ -2645,20 +2681,22 @@ async function addProgram(){
   const shortDesc=document.getElementById("prog-short-desc").value.trim();
   const fullDesc=document.getElementById("prog-full-desc").value.trim();
   const category=document.getElementById("prog-category").value;
+  const type=document.getElementById("prog-type")?.value||"";
+  const emoji=document.getElementById("prog-emoji")?.value.trim()||"";
   const startDate=document.getElementById("prog-start-date").value;
-  const endDate=document.getElementById("prog-end-date").value||startDate;
   const deadline=document.getElementById("prog-deadline").value||startDate;
   const formUrl=document.getElementById("prog-form-url").value.trim();
   const photo=document.getElementById("prog-photo").value.trim();
   const status=document.getElementById("prog-status").value;
   if(!name||!startDate){toast("กรุณากรอกชื่อและวันที่");return;}
   try{await apiCall({action:"addProgram",name,short_desc:shortDesc,full_desc:fullDesc,
-      category,start_date:startDate,end_date:endDate,reg_deadline:deadline,
+      category,type,emoji,start_date:startDate,end_date:startDate,reg_deadline:deadline,
       form_url:formUrl,photo_url:photo,status});}catch{}
   ["prog-name","prog-short-desc","prog-full-desc","prog-form-url","prog-photo",
-   "prog-start-date","prog-end-date","prog-deadline"].forEach(id=>{
-    document.getElementById(id).value="";
+   "prog-start-date","prog-deadline"].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value="";
   });
+  const emojiEl=document.getElementById("prog-emoji"); if(emojiEl) emojiEl.value="";
   toast("เพิ่ม Program แล้ว 💛");loadData();
 }
 
@@ -4331,7 +4369,47 @@ function switchPeopleTab(tab, btn) {
     if (b)    b.classList.toggle("active", t===tab);
   });
   if (tab==="list") loadPeopleTab();
-  if (tab==="req")  loadRequestsTab();
+  if (tab==="req")  loadPeopleReqList(); // loads teacher requests into pdash-req-list
+}
+
+// ── loadPeopleReqList — loads teacher requests into pdash-req-list ──
+async function loadPeopleReqList() {
+  const el = document.getElementById("pdash-req-list");
+  if (!el) return;
+  el.innerHTML = "<div class='empty'>กำลังโหลด...</div>";
+  try {
+    const d = await apiCall({action: "getTeacherRequests"});
+    const reqs = d.requests || [];
+    const badge = document.getElementById("people-req-badge");
+    if (badge) badge.textContent = reqs.length;
+    if (!reqs.length) {
+      el.innerHTML = "<div class='empty'>ไม่มีคำขอครูตอนนี้ 💛</div>";
+      return;
+    }
+    el.innerHTML = "";
+    reqs.forEach(r => {
+      const card = document.createElement("div");
+      card.className = "case-card";
+      card.style.cssText = "padding:14px;display:flex;flex-direction:column;gap:8px;";
+      const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString("th-TH",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
+      card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text);">👩‍🏫 ${r.teacher_name||"—"}</div>
+            <div style="font-size:11px;color:var(--text-soft);margin-top:2px;">${date}</div>
+          </div>
+          <span class="pr-status pending">รอดำเนินการ</span>
+        </div>
+        ${r.note ? `<div style="font-size:12px;color:var(--text-mid);font-style:italic;">หมายเหตุ: ${r.note}</div>` : ""}
+        ${r.query && r.query !== r.teacher_name ? `<div style="font-size:11px;color:var(--text-soft);">ค้นหาด้วย: "${r.query}"</div>` : ""}
+        <div style="display:flex;gap:8px;">
+          <button class="btn-full gold" style="font-size:12px;"
+            onclick="markTeacherRequestDone('${r.id}',this)">✅ เพิ่มแล้ว / ดำเนินการแล้ว</button>
+          <button class="btn-sm ghost" onclick="dismissTeacherRequest('${r.id}',this)" style="flex-shrink:0;">ปิด</button>
+        </div>`;
+      el.appendChild(card);
+    });
+  } catch(e) { el.innerHTML = "<div class='empty'>โหลดไม่ได้</div>"; }
 }
 
 // ── addPersonDash ─────────────────────────────────────────────
@@ -4340,15 +4418,17 @@ async function addPersonDash() {
   const name    = (document.getElementById("pdash-name-in")?.value    || "").trim();
   const subject = (document.getElementById("pdash-subject-in")?.value || "").trim();
   const year    = document.getElementById("pdash-year-in")?.value || "m4";
-  const youtube = (document.getElementById("pdash-yt-url") || {value:""}?.value  || "").trim();
+  const youtube = (document.getElementById("pdash-youtube-in")?.value || "").trim();
   const thumb   = (document.getElementById("pdash-thumb-in")?.value    || "").trim();
   if (!name || !subject) { toast("กรุณากรอกชื่อและวิชา"); return; }
   const btn = document.getElementById("pdash-add-btn");
   if (btn) { btn.disabled=true; btn.textContent="กำลังเพิ่ม..."; }
   try {
-    await apiCall({ action:"addPerson", name, subject, year_group:year, youtube_url:youtube, thumbnail_url:thumb, addedBy:userId });
+    const bio   = (document.getElementById("pdash-bio-in")?.value    || "").trim();
+    const tag   = (document.getElementById("pdash-tag-in")?.value    || "").trim();
+    await apiCall({ action:"addPerson", name, subject, year_group:year, youtube_url:youtube, thumbnail_url:thumb, short_bio:bio, tag, addedBy:userId });
     toast("เพิ่มครูแล้ว 💛");
-    ["pdash-name-in","pdash-subject-in","pdash-yt-url","pdash-thumb-in"].forEach(id => {
+    ["pdash-name-in","pdash-subject-in","pdash-youtube-in","pdash-thumb-in"].forEach(id => {
       const el = document.getElementById(id); if(el) el.value="";
     });
     loadPeopleTab();
@@ -4372,7 +4452,9 @@ async function saveEditPerson() {
   const thumb   = (document.getElementById("ep-thumb")?.value    || "").trim();
   if (!name) { toast("กรุณากรอกชื่อ"); return; }
   try {
-    await apiCall({ action:"updatePerson", id, name, subject, year_group:year, youtube_url:youtube, thumbnail_url:thumb });
+    const bio     = (document.getElementById("ep-bio")?.value     || "").trim();
+    const tag     = (document.getElementById("ep-tag")?.value     || "").trim();
+    await apiCall({ action:"updatePerson", id, name, subject, year_group:year, youtube_url:youtube, thumbnail_url:thumb, short_bio:bio, tag });
     toast("บันทึกแล้ว 💛");
     document.getElementById("edit-person-modal").style.display = "none";
     loadPeopleTab();
