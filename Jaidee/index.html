@@ -12,21 +12,22 @@
       --dark:#1C1917; --mid:#6B6560; --soft:#A8A099;
       --card-bg:#FFFFFF; --card-border:#EDE9E0;
       --radius-card:20px; --radius-btn:14px;
+      --m4:#2E5FA3; --m4-soft:#EEF3FB; --m4-border:#C5D8F5;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;}
 
-    /* Hero */
-    .hero{padding:52px 24px 24px;position:relative;overflow:hidden;text-align:center;}
-    .hero::before{content:'';position:absolute;top:30px;left:50%;transform:translateX(-50%);width:220px;height:220px;background:radial-gradient(circle,rgba(255,255,255,0.85) 0%,rgba(255,255,255,0.3) 40%,transparent 70%);border-radius:50%;pointer-events:none;z-index:0;}
-    .hero::after{content:'';position:absolute;top:20px;left:50%;transform:translateX(-50%);width:300px;height:280px;background:radial-gradient(circle,rgba(232,150,12,0.06) 0%,rgba(253,251,247,0) 68%);border-radius:50%;pointer-events:none;z-index:0;}
+    /* Hero — tightened top padding */
+    .hero{padding:38px 24px 18px;position:relative;overflow:hidden;text-align:center;}
+    .hero::before{content:'';position:absolute;top:20px;left:50%;transform:translateX(-50%);width:220px;height:220px;background:radial-gradient(circle,rgba(255,255,255,0.85) 0%,rgba(255,255,255,0.3) 40%,transparent 70%);border-radius:50%;pointer-events:none;z-index:0;}
+    .hero::after{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:300px;height:280px;background:radial-gradient(circle,rgba(232,150,12,0.06) 0%,rgba(253,251,247,0) 68%);border-radius:50%;pointer-events:none;z-index:0;}
     .hero-name,.hero-eyebrow,.hero-sub{position:relative;z-index:1;}
-    .hero-eyebrow{font-size:11px;font-weight:400;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-top:6px;}
+    .hero-eyebrow{font-size:11px;font-weight:400;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-top:4px;}
     .hero-name{font-family:'Noto Serif Thai',serif;font-size:30px;font-weight:600;color:var(--dark);line-height:1.2;}
-    .hero-sub{font-size:14px;font-weight:300;color:var(--soft);margin-top:6px;}
+    .hero-sub{font-size:14px;font-weight:300;color:var(--soft);margin-top:4px;}
 
     /* PR Banner */
-    .pr-banner{margin:8px 20px 28px;background:linear-gradient(135deg,var(--cream-warm),#FFF5DD);border-radius:var(--radius-card);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--gold-border);box-shadow:0 2px 16px rgba(232,150,12,0.08);}
+    .pr-banner{margin:6px 20px 22px;background:linear-gradient(135deg,var(--cream-warm),#FFF5DD);border-radius:var(--radius-card);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--gold-border);box-shadow:0 2px 16px rgba(232,150,12,0.08);}
     .pr-banner-left{display:flex;flex-direction:column;gap:2px;}
     .pr-banner-label{font-size:11px;font-weight:400;color:var(--gold);letter-spacing:1px;text-transform:uppercase;}
     .pr-banner-text{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:#5C3D00;}
@@ -37,6 +38,25 @@
     .section-label{display:flex;align-items:center;gap:10px;padding:0 20px;margin-bottom:14px;}
     .section-label-text{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap;}
     .section-label-line{flex:1;height:1px;background:var(--cream-border);}
+
+    /* M4 Recommended Section */
+    .m4-section{margin:0 16px 8px;}
+    .m4-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+    .m4-badge{display:inline-flex;align-items:center;gap:6px;background:var(--m4-soft);border:1px solid var(--m4-border);border-radius:20px;padding:5px 12px 5px 10px;}
+    .m4-badge-dot{width:6px;height:6px;background:var(--m4);border-radius:50%;flex-shrink:0;}
+    .m4-badge-text{font-size:11px;font-weight:500;color:var(--m4);letter-spacing:0.5px;white-space:nowrap;}
+    .m4-header-line{flex:1;height:1px;background:var(--cream-border);}
+    .m4-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+    /* M4 Cards */
+    .m4-card{background:var(--card-bg);border-radius:var(--radius-card);padding:18px 16px 16px;cursor:pointer;border:1px solid var(--m4-border);box-shadow:0 1px 8px rgba(46,95,163,0.06);position:relative;overflow:hidden;opacity:0;transform:translateY(10px);}
+    .m4-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s ease;}
+    .m4-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(46,95,163,0.3),transparent);}
+    .m4-card:active{transform:scale(0.97)!important;}
+    .m4-icon{width:40px;height:40px;border-radius:12px;background:var(--m4-soft);border:1px solid var(--m4-border);display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:20px;}
+    .m4-name{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.3;}
+    .m4-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
+    .m4-new-tag{display:inline-block;background:var(--m4);color:#fff;font-size:8px;font-weight:500;letter-spacing:1px;text-transform:uppercase;border-radius:6px;padding:2px 6px;margin-bottom:8px;}
 
     /* Worlds */
     .worlds-wrap{display:flex;flex-direction:column;gap:10px;padding:0 16px;}
@@ -166,9 +186,10 @@
     </div>
   </div>
 
-  <div class="worlds-wrap" id="worlds-wrap">
+  <!-- M.4 Recommended Section (rendered dynamically) -->
+  <div id="m4-section-root"></div>
 
-  </div>
+  <div class="worlds-wrap" id="worlds-wrap"></div>
 
   <!-- Crisis strip — always visible -->
   <div class="crisis-strip" onclick="window.location.href='crisis.html'" style="cursor:pointer;">
@@ -195,29 +216,40 @@ const isPreview = new URLSearchParams(window.location.search).get("preview") ===
 
 // Worlds 1–4: grid 2×2
 const WORLDS_TOP = [
-  { name:"Puzzle Piece",    desc:"จิตวิทยาที่เข้าใจง่าย ",       url:"puzzle.html",     emoji:"🧩" },
-  { name:"People",          desc:"มุมมองของผู้คนที่หลากหลาย",          url:"people.html",     emoji:"👥" },
-  { name:"Programs",        desc:"Workshop และ กิจกรรมเดือนนี้",  url:"programs.html",   emoji:"🌱" },
-  { name:"จดหมายเหตุ",      desc:"จากประธานชมรม · รายงานการทํางาน", url:"founder.html",    emoji:"📜" },
+  { name:"Puzzle Piece",    desc:"จิตวิทยาที่เข้าใจง่าย",        url:"puzzle.html",     emoji:"🧩" },
+  { name:"People",          desc:"มุมมองของผู้คนที่หลากหลาย",    url:"people.html",     emoji:"👥" },
+  { name:"Programs",        desc:"Workshop และ กิจกรรมเดือนนี้", url:"programs.html",   emoji:"🌱" },
+  { name:"ใจดี TU คืออะไร?", desc:"โครงสร้างระบบ เเนวคิด ผลงานทีม", url:"founder.html", emoji:"📜" },
 ];
 
-// World 5: full-width
-const WORLD_5 = {
-  name:"จดหมายเหตุ", desc:"จดหมายผู้นำ · โครงสร้างระบบ",
-  url:"founder.html", emoji:"📜"
-};
+// ── M.4 Recommended Cards ──
+const M4_CARDS = [
+  {
+    name: "School Support",
+    desc: "สิ่งที่โรงเรียนลืมบอก",
+    url:  "school.html",
+    emoji: "🏫",
+    isNew: false
+  },
+  {
+    name: "PAT SAK",
+    thName: "โครงการพัฒนาศักยภาพ",
+    desc: "สรุปทุกอย่างจาก 2 วันที่ผ่านมา ให้อยู่ที่เดียว",
+    url:  "patsak.html",
+    emoji: "⭐",
+    isNew: true
+  },
+];
 
 // ── วันที่เปิด Worlds 6-8 (ISO "YYYY-MM-DD") ──
-// เปลี่ยน date นี้เพื่อ set countdown
 const UNLOCK_DATE = "2028-07-12";
 
 // Worlds 6–7: grid 2 cols (locked จนถึง UNLOCK_DATE)
 const WORLDS_LOCKED_GRID = [
-  { name:"School Support",   desc:"สิ่งที่โรงเรียนลืมบอก",     url:"school.html",   emoji:"🏫" },
   { name:"Academic Support", desc:"เรียนให้ดีขึ้นในแบบที่ใช่", url:"academic.html", emoji:"📚" },
 ];
 
-// World 8: full-width (locked)
+// World 8: half-width left locked
 const WORLD_8 = {
   name:"Career Support", desc:"วางแผนอนาคต เริ่มได้เลย", url:"career.html", emoji:"🎯"
 };
@@ -251,7 +283,7 @@ function startCountdown() {
 }
 
 // ═══════════════════════════════════════════════════════
-// BUILD CARD
+// BUILD REGULAR WORLD CARD
 // ═══════════════════════════════════════════════════════
 function makeCard(w, full, locked, delay) {
   const el = document.createElement("div");
@@ -273,18 +305,76 @@ function makeCard(w, full, locked, delay) {
 }
 
 // ═══════════════════════════════════════════════════════
-// RENDER
+// BUILD M4 CARD
+// ═══════════════════════════════════════════════════════
+function makeM4Card(w, delay) {
+  const el = document.createElement("div");
+  el.className = "m4-card";
+  el.onclick = () => window.location.href = w.url;
+
+  el.innerHTML = `
+    <div class="m4-icon">${w.emoji}</div>
+    ${w.isNew ? `<div class="m4-new-tag">ใหม่</div>` : ""}
+    <div class="m4-name">${w.name}${w.thName ? `<br><span style="font-size:10px;font-weight:300;color:var(--soft);">${w.thName}</span>` : ""}</div>
+    <div class="m4-desc">${w.desc}</div>
+  `;
+
+  setTimeout(() => el.classList.add("visible"), delay);
+  return el;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER M4 SECTION
+// ═══════════════════════════════════════════════════════
+function renderM4Section(baseDelay) {
+  const root = document.getElementById("m4-section-root");
+  root.innerHTML = "";
+
+  const section = document.createElement("div");
+  section.className = "m4-section";
+
+  // Header with badge
+  const header = document.createElement("div");
+  header.className = "m4-header";
+  header.innerHTML = `
+    <div class="m4-badge">
+      <div class="m4-badge-dot"></div>
+      <div class="m4-badge-text">แนะนำสำหรับน้อง ม.4</div>
+    </div>
+    <div class="m4-header-line"></div>
+  `;
+  section.appendChild(header);
+
+  // Card row
+  const row = document.createElement("div");
+  row.className = "m4-row";
+  let d = baseDelay;
+  M4_CARDS.forEach(w => {
+    row.appendChild(makeM4Card(w, d));
+    d += 55;
+  });
+  section.appendChild(row);
+
+  root.appendChild(section);
+  return d;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER WORLDS
 // ═══════════════════════════════════════════════════════
 function renderAll() {
   const wrap = document.getElementById("worlds-wrap");
-  wrap.innerHTML = ""; // clear static HTML, replace with dynamic
+  wrap.innerHTML = "";
   let d = 0; const S = 55;
   const isOpen = new Date(UNLOCK_DATE) <= new Date();
 
-  // Section label
+  // ── M4 Section (rendered first, above explore) ──
+  d = renderM4Section(d + 30);
+
+  // Section label for explore
   const lbl = document.createElement("div");
   lbl.className = "section-label";
-  lbl.style.marginBottom = "12px";
+  lbl.style.cssText = "margin-bottom:12px;margin-top:16px;";
   lbl.innerHTML = `<div class="section-label-text">สำรวจ</div><div class="section-label-line"></div>`;
   wrap.appendChild(lbl);
 
@@ -297,7 +387,7 @@ function renderAll() {
     wrap.appendChild(row);
   }
 
-  // Divider: ปิดใช้งาน + countdown (only if still locked)
+  // Locked divider (only if still locked)
   if (!isOpen) {
     const div = document.createElement("div");
     div.className = "divider-locked";
@@ -309,7 +399,7 @@ function renderAll() {
     setTimeout(startCountdown, 0);
   }
 
-  // Worlds 6–7: locked grid
+  // Worlds locked: Academic Support only (School Support moved to M4 section)
   const lockedRow = document.createElement("div");
   lockedRow.className = "world-row";
   WORLDS_LOCKED_GRID.forEach(w => {
@@ -317,7 +407,7 @@ function renderAll() {
   });
   wrap.appendChild(lockedRow);
 
-  // World 8: half-width left locked
+  // World 8: Career Support (locked)
   const row8 = document.createElement("div");
   row8.className = "world-row";
   row8.appendChild(makeCard(WORLD_8, false, !isOpen, d)); d+=S;
@@ -333,7 +423,7 @@ function renderAll() {
   const sp = document.createElement("div");
   sp.className = "spoiler-card";
   sp.innerHTML = `
-    <div class="spoiler-title">ใจดี TU คือพื้นที่ของทุก identity (extended space for clubs and unnamed identities...yet )</div>
+    <div class="spoiler-title">ใจดี TU คือพื้นที่ของทุก identity (extended space for clubs and unnamed identities...yet)</div>
     <div class="spoiler-sub">ไม่ว่าคุณจะเป็นคนชมรมละคร นักกีฬา สายโอลิมปิก หรือคนที่แค่อยากหาเพื่อนที่เข้าใจ — เรากำลังสร้าง World ให้ทุกคนในโรงเรียนนี้</div>
     <div class="spoiler-chips">${COMING_SOON.map(w=>`<span class="spoiler-chip">${w.emoji} ${w.name}</span>`).join("")}</div>`;
   wrap.appendChild(sp);
