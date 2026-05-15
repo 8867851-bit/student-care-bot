@@ -102,6 +102,14 @@
     .br-tag{display:inline-block;background:var(--green-soft);border:1px solid var(--green-border);border-radius:99px;padding:6px 16px;font-size:12px;font-weight:500;color:var(--green);margin:10px 0 28px;}
     .br-main{width:100%;max-width:320px;background:var(--green);color:#fff;border:none;border-radius:28px;padding:16px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:10px;transition:transform 0.15s;}
     .br-main:active{transform:scale(0.97);}
+    .br-tools{
+      width:100%;max-width:320px;
+      background:var(--cream);border:1.5px solid var(--cream-border);
+      border-radius:28px;padding:15px;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;
+      color:var(--mid);cursor:pointer;margin-bottom:10px;
+      transition:all 0.18s;}
+    .br-tools:active{border-color:var(--dark);color:var(--dark);}
     .br-peer{width:100%;max-width:320px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:28px;padding:15px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--mid);cursor:pointer;margin-bottom:10px;transition:all 0.18s;}
     .br-peer:active{border-color:var(--dark);color:var(--dark);}
     .br-exit{background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;margin-top:6px;}
@@ -277,6 +285,8 @@
   <div class="br-sub" id="br-sub"></div>
   <div class="br-tag" id="br-tag"></div>
   <button class="br-main" id="br-main">ไปพื้นที่ใจ →</button>
+  <button class="br-tools" onclick="window.location.href='alltools.html'">
+  หรือลองใช้เครื่องมือตอนนี้เลย → </button>
   <button class="br-peer" onclick="window.location.href='peer.html'">หรือคุยกับ PR แทน 💛</button>
   <button class="br-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
 </div>
