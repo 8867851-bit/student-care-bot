@@ -10,6 +10,8 @@
       --cream:#FDFBF7; --cream-border:#EDE9E0;
       --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
       --green:#3A7D44; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+      --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#5EEAD4;
+      --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
       --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card:#FFFFFF;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -95,24 +97,69 @@
     .oq-opt{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:16px;cursor:pointer;font-family:'Mitr',sans-serif;font-size:14px;font-weight:400;color:var(--dark);text-align:left;transition:all 0.18s;}
     .oq-opt.sel{border-color:var(--dark);background:var(--dark);color:var(--cream);}
 
-    /* BRIDGE */
-    #s-bridge{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:0;}
-    .br-thanks{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.5;margin-bottom:10px;}
-    .br-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;margin-bottom:8px;max-width:300px;white-space:pre-line;}
-    .br-tag{display:inline-block;background:var(--green-soft);border:1px solid var(--green-border);border-radius:99px;padding:6px 16px;font-size:12px;font-weight:500;color:var(--green);margin:10px 0 28px;}
-    .br-main{width:100%;max-width:320px;background:var(--green);color:#fff;border:none;border-radius:28px;padding:16px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:10px;transition:transform 0.15s;}
-    .br-main:active{transform:scale(0.97);}
-    .br-tools{
-      width:100%;max-width:320px;
-      background:var(--cream);border:1.5px solid var(--cream-border);
-      border-radius:28px;padding:15px;
+    /* ══════════════════════════════════════
+       BRIDGE — redesigned
+    ══════════════════════════════════════ */
+    #s-bridge{padding:0 0 48px;}
+
+    .br-top{padding:48px 28px 24px;text-align:center;}
+    .br-thanks{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.5;margin-bottom:8px;}
+    .br-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;max-width:300px;margin:0 auto;}
+
+    /* State summary card */
+    .br-state{margin:0 24px 24px;background:var(--card);border:1px solid var(--cream-border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;}
+    .br-state-icon{font-size:28px;flex-shrink:0;}
+    .br-state-body{flex:1;}
+    .br-state-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:3px;}
+    .br-state-name{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);}
+    .br-state-desc{font-size:11px;font-weight:300;color:var(--mid);margin-top:2px;line-height:1.5;}
+
+    /* PRIMARY route block */
+    .br-primary{margin:0 24px 10px;}
+    .br-primary-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:8px;padding:0 2px;}
+
+    .br-tool-card{
+      border-radius:18px;padding:18px 18px 16px;cursor:pointer;
+      border:none;width:100%;text-align:left;font-family:'Mitr',sans-serif;
+      transition:transform 0.15s;display:block;text-decoration:none;
+    }
+    .br-tool-card:active{transform:scale(0.97);}
+    .br-tool-card.teal{background:linear-gradient(135deg,var(--teal-soft),#E0FAF7);border:1.5px solid var(--teal-border);}
+    .br-tool-card.purple{background:linear-gradient(135deg,var(--purple-soft),#FAF8FF);border:1.5px solid var(--purple-border);}
+    .br-tool-card.green{background:linear-gradient(135deg,var(--green-soft),#F5FBF6);border:1.5px solid var(--green-border);}
+
+    .br-tool-icon{font-size:28px;margin-bottom:10px;display:block;}
+    .br-tool-eyebrow{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;margin-bottom:4px;}
+    .br-tool-card.teal   .br-tool-eyebrow{color:var(--teal);}
+    .br-tool-card.purple .br-tool-eyebrow{color:var(--purple);}
+    .br-tool-card.green  .br-tool-eyebrow{color:var(--green);}
+    .br-tool-name{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);margin-bottom:4px;}
+    .br-tool-why{font-size:12px;font-weight:300;color:var(--mid);line-height:1.65;}
+    .br-tool-arrow{float:right;font-size:16px;color:var(--soft);margin-top:-28px;}
+
+    /* Layer chip inside green card */
+    .br-layer-chip{display:inline-flex;align-items:center;gap:5px;margin-top:10px;background:rgba(58,125,68,0.12);border:1px solid var(--green-border);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:500;color:var(--green);}
+
+    /* SECONDARY row */
+    .br-secondary{margin:0 24px;display:flex;flex-direction:column;gap:8px;}
+    .br-sec-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:2px;padding:0 2px;}
+
+    .br-sec-btn{
+      width:100%;background:var(--card);border:1.5px solid var(--cream-border);
+      border-radius:14px;padding:14px 16px;
       font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;
-      color:var(--mid);cursor:pointer;margin-bottom:10px;
-      transition:all 0.18s;}
-    .br-tools:active{border-color:var(--dark);color:var(--dark);}
-    .br-peer{width:100%;max-width:320px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:28px;padding:15px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--mid);cursor:pointer;margin-bottom:10px;transition:all 0.18s;}
-    .br-peer:active{border-color:var(--dark);color:var(--dark);}
-    .br-exit{background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;margin-top:6px;}
+      color:var(--mid);cursor:pointer;text-align:left;
+      display:flex;align-items:center;gap:10px;
+      transition:border-color 0.18s,color 0.18s;
+    }
+    .br-sec-btn:active{border-color:var(--dark);color:var(--dark);}
+    .br-sec-btn-icon{font-size:18px;flex-shrink:0;}
+    .br-sec-btn-body{flex:1;}
+    .br-sec-btn-name{font-size:13px;font-weight:500;color:var(--dark);margin-bottom:1px;}
+    .br-sec-btn-desc{font-size:11px;font-weight:300;color:var(--soft);}
+    .br-sec-arrow{font-size:14px;color:var(--soft);flex-shrink:0;}
+
+    .br-exit{display:block;text-align:center;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;margin:20px auto 0;padding:8px;}
 
     /* NO MATCH */
     #s-nomatch{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:0;}
@@ -279,15 +326,37 @@
   <div class="q-foot"><button class="next-btn" id="oq-next" onclick="buildBridge()">เสร็จแล้ว →</button></div>
 </div>
 
-<!-- BRIDGE -->
+<!-- ════════════════════════════════════════
+     BRIDGE — smart routing
+════════════════════════════════════════ -->
 <div class="screen" id="s-bridge">
-  <div class="br-thanks">ขอบคุณที่อยู่กับ<br>ตัวเองสักครู่นะ</div>
-  <div class="br-sub" id="br-sub"></div>
-  <div class="br-tag" id="br-tag"></div>
-  <button class="br-main" id="br-main">ไปพื้นที่ใจ →</button>
-  <button class="br-tools" onclick="window.location.href='alltools.html'">
-  หรือลองใช้เครื่องมือตอนนี้เลย → </button>
-  <button class="br-peer" onclick="window.location.href='peer.html'">หรือคุยกับ PR แทน 💛</button>
+  <div class="br-top">
+    <div class="br-thanks">ขอบคุณที่อยู่กับ<br>ตัวเองสักครู่นะ</div>
+    <div class="br-sub" id="br-sub"></div>
+  </div>
+
+  <!-- State summary -->
+  <div class="br-state" id="br-state">
+    <div class="br-state-icon" id="br-state-icon"></div>
+    <div class="br-state-body">
+      <div class="br-state-label">ความรู้สึกตอนนี้</div>
+      <div class="br-state-name" id="br-state-name"></div>
+      <div class="br-state-desc" id="br-state-desc"></div>
+    </div>
+  </div>
+
+  <!-- Primary recommendation -->
+  <div class="br-primary">
+    <div class="br-primary-label" id="br-primary-label">แนะนำสำหรับตอนนี้</div>
+    <div id="br-primary-card"></div>
+  </div>
+
+  <!-- Secondary options -->
+  <div class="br-secondary">
+    <div class="br-sec-label">หรือลองทางนี้</div>
+    <div id="br-secondary-btns"></div>
+  </div>
+
   <button class="br-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
 </div>
 
@@ -302,198 +371,280 @@
 </div>
 
 <script>
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
 const S = { body:null, valence:null, arousal:null, name:null, noname:false, _data:null };
 
-const DB = {
-  bad_high:{
-    opts:[
-      {w:"วิตกกังวล",d:"รู้สึกเหมือนมีอะไรบางอย่างที่ยังไม่โอเค รอคอยสิ่งที่ยังไม่มาถึง"},
-      {w:"กดดัน",d:"ความคาดหวังรู้สึกหนักกว่าที่รับได้ ทั้งจากตัวเองและคนรอบข้าง"},
-      {w:"หงุดหงิด",d:"มีอะไรบางอย่างที่รู้สึกไม่ยุติธรรม หรือไม่เป็นอย่างที่อยากให้เป็น"}
-    ],
-    q:{t:"ความกดดันนี้มาจากไหนมากกว่า?",o:["จากคนอื่นหรือสิ่งรอบข้าง","จากตัวเอง","ทั้งสองอย่าง","ไม่แน่ใจ"]},
-    layer:"environment",lt:"สภาพแวดล้อม",
-    bs:"ความรู้สึกแบบนี้มักเชื่อมกับแรงกดดันรอบตัว\nพื้นที่ใจมีชั้นที่พูดถึงเรื่องนี้โดยตรง"
-  },
-  bad_mid:{
-    opts:[
-      {w:"เหนื่อยใจ",d:"รู้สึกล้าจากการพยายามมานาน ไม่ใช่แค่ร่างกาย แต่ข้างใน"},
-      {w:"สับสน",d:"ไม่รู้จะไปทางไหน หรือไม่รู้ว่าตัวเองรู้สึกอะไรกันแน่"},
-      {w:"โดดเดี่ยว",d:"อยู่กับคนเยอะ แต่รู้สึกว่าไม่มีใครเข้าใจจริงๆ"}
-    ],
-    q:{t:"ตอนนี้รู้สึกอยากทำอะไรมากกว่า?",o:["อยู่คนเดียวสักพัก","คุยกับใครบางคน","ไม่รู้เหมือนกัน","แค่อยากให้มันผ่านไป"]},
-    layer:"connection",lt:"ความสัมพันธ์",
-    bs:"ความรู้สึกแบบนี้มักเกี่ยวกับการเชื่อมต่อกับคนอื่น\nพื้นที่ใจมีชั้นที่พูดถึงเรื่องนี้"
-  },
-  bad_low:{
-    opts:[
-      {w:"เศร้า",d:"มีบางอย่างที่รู้สึกสูญเสีย หรือรู้สึกหนักในอก"},
-      {w:"ถอยห่าง",d:"อยากหายไปจากทุกอย่างสักพัก ไม่อยากมีส่วนร่วมกับอะไร"},
-      {w:"หมดแรง",d:"ทำทุกอย่างต้องใช้แรงมากกว่าปกติมาก"}
-    ],
-    q:{t:"ความรู้สึกนี้อยู่มาแล้วนานแค่ไหน?",o:["วันสองวันนี้","สัปดาห์นี้","นานกว่านั้น","ไม่รู้เหมือนกัน"]},
-    layer:"body",lt:"ร่างกาย",
-    bs:"ความรู้สึกแบบนี้มักมีรากในร่างกายด้วย\nพื้นที่ใจเริ่มที่ชั้นร่างกายก่อนเสมอ"
-  },
-  neutral_high:{
-    opts:[
-      {w:"ลุ้น · ตื่นเต้น",d:"มีอะไรบางอย่างที่กำลังจะเกิดขึ้น รู้สึกทั้งดีและไม่แน่ใจ"},
-      {w:"กระสับกระส่าย",d:"อยู่เฉยไม่ค่อยได้ มีพลังงานล้น แต่ยังไม่รู้จะทำอะไรกับมัน"},
-      {w:"ค้างคา",d:"มีเรื่องในหัวหลายอย่าง ยังไม่ได้ตัดสินใจหรือลงเอยซักที"}
-    ],
-    q:{t:"สิ่งที่ครองความคิดมากที่สุดตอนนี้คือ?",o:["เรื่องการเรียน","เรื่องคนอื่น","เรื่องอนาคต","ยังไม่รู้แน่"]},
-    layer:"expression",lt:"การแสดงออก",
-    bs:"พลังงานนี้ต้องการพื้นที่ระบาย\nพื้นที่ใจมีชั้นเกี่ยวกับการแสดงออกและสร้างสรรค์"
-  },
-  neutral_mid:{
-    opts:[
-      {w:"เรียบๆ",d:"ไม่ได้มีอะไรผิดปกติ แต่ก็ไม่ได้รู้สึกว่าดีพิเศษ"},
-      {w:"รอดู",d:"กำลังดูว่าอะไรจะเกิดขึ้น ยังไม่ได้ลงหลักปักฐาน"},
-      {w:"เหนื่อยแบบเบาๆ",d:"มีความเหนื่อยเล็กๆ ที่ยังอธิบายไม่ถูกชัดเจน"}
-    ],
-    q:{t:"มีเรื่องที่อยู่ในหัวแต่ยังไม่ได้พูดถึงไหม?",o:["มี แต่ยังไม่พร้อมพูด","มี และอยากพูด","ไม่มีเท่าไหร่","ไม่รู้เหมือนกัน"]},
-    layer:"belief",lt:"ความเชื่อเกี่ยวกับตัวเอง",
-    bs:"บางทีความรู้สึกเรียบๆ ซ่อนอะไรบางอย่างไว้\nพื้นที่ใจมีชั้นที่ช่วยสำรวจเรื่องนี้"
-  },
-  neutral_low:{
-    opts:[
-      {w:"เฉื่อย",d:"ไม่ได้อยากทำอะไรเป็นพิเศษ ไม่มีแรงขับ"},
-      {w:"ชา",d:"รู้สึกน้อยลง ทั้งดีและไม่ดี ทุกอย่างดูเหมือนกันหมด"},
-      {w:"ต้องการพัก",d:"ร่างกายและหัวใจต้องการพัก ซึ่งนั่นก็โอเคเหมือนกัน"}
-    ],
-    q:{t:"ความรู้สึกนี้ต้องการอะไรมากกว่า?",o:["ต้องการพัก","ต้องการแรงบันดาลใจ","ต้องการใครซักคน","ยังไม่รู้"]},
-    layer:"body",lt:"ร่างกาย",
-    bs:"ร่างกายและระบบประสาทอาจต้องการการดูแลก่อน\nพื้นที่ใจเริ่มที่ชั้นร่างกาย"
-  },
-  good_high:{
-    opts:[
-      {w:"มีพลัง",d:"รู้สึกพร้อม อยากทำอะไรบางอย่าง มีไฟ"},
-      {w:"มีความหวัง",d:"เห็นอนาคตในแบบที่ดี อยากก้าวไปข้างหน้า"},
-      {w:"ตื่นเต้น",d:"มีอะไรที่น่าสนใจกำลังมา รู้สึกเปิดรับ"}
-    ],
-    q:{t:"พลังงานนี้อยากใส่ไว้ที่ไหน?",o:["งานหรือการเรียน","ความสัมพันธ์","ตัวเองและความฝัน","ยังไม่รู้"]},
-    layer:"expression",lt:"การแสดงออก",
-    bs:"ดีใจที่คุณมาในวันแบบนี้\nพื้นที่ใจมีชั้นที่ช่วยต่อยอดความรู้สึกดีๆ ให้คงอยู่"
-  },
-  good_mid:{
-    opts:[
-      {w:"สงบ",d:"รู้สึกเบาและโอเคกับสิ่งที่เป็นอยู่"},
-      {w:"พอใจ",d:"มีบางอย่างที่เดินหน้าได้ดี รู้สึกขอบคุณ"},
-      {w:"เชื่อมต่อ",d:"รู้สึกเป็นส่วนหนึ่งของบางอย่างหรือใครบางคน"}
-    ],
-    q:{t:"อยากให้ความรู้สึกนี้อยู่นานขึ้นไหม?",o:["อยากมากเลย","พอแล้ว แค่นี้ก็ดี","ไม่ได้คิดถึง","ยังไม่รู้"]},
-    layer:"connection",lt:"ความสัมพันธ์",
-    bs:"ดีใจที่คุณมาในวันแบบนี้\nพื้นที่ใจมีเครื่องมือช่วยรักษาความรู้สึกดีนี้ไว้"
-  },
-  good_low:{
-    opts:[
-      {w:"ผ่อนคลาย",d:"รู้สึกเบา วางลงได้ ไม่ต้องทำอะไรเพิ่ม"},
-      {w:"ขอบคุณ",d:"รู้สึกดีกับบางอย่างในชีวิตตอนนี้ แม้จะเล็กน้อย"},
-      {w:"เบาใจ",d:"อะไรบางอย่างที่เคยหนักรู้สึกเบาลงแล้ว"}
-    ],
-    q:{t:"ช่วงนี้มีอะไรที่ทำให้รู้สึกดีขึ้นบ้างไหม?",o:["มี อยากจำมันไว้","มี แต่ยังไม่ชัด","ยังนึกไม่ออก","ไม่มีอะไรชัดเจน"]},
-    layer:"expression",lt:"การแสดงออก",
-    bs:"การมาอยู่กับความรู้สึกดีก็เป็นการดูแลตัวเองเหมือนกัน\nพื้นที่ใจมีชั้นการแสดงออกเพื่อต่อยอด"
-  }
+// ══════════════════════════════════════════════════════
+// TAB INDEX for care.html
+// ══════════════════════════════════════════════════════
+const LAYER_TAB = { body:0, connection:1, expression:2, environment:3, belief:4, professional:5 };
+const LAYER_LABEL = {
+  body:        '🏃 ชั้นร่างกาย',
+  connection:  '🫂 ชั้นความสัมพันธ์',
+  expression:  '🎨 ชั้นการแสดงออก',
+  environment: '🌍 ชั้นสิ่งแวดล้อม',
+  belief:      '🪞 ชั้นความเชื่อ',
+  professional:'🏥 ชั้นผู้เชี่ยวชาญ',
 };
 
-const LAYER_TAB = {body:0,connection:1,expression:2,environment:3,belief:4,professional:5};
+// ══════════════════════════════════════════════════════
+// DATABASE
+// Each entry now has:
+//   primaryRoute: 'tool' | 'care'
+//   tool: { type:'breathe'|'journal', why: string }  (when primaryRoute='tool')
+//   layer: string  (care layer to deep-link)
+//   bs: bridge subtitle
+//   stateIcon / stateName / stateDesc: the summary card
+// ══════════════════════════════════════════════════════
+const DB = {
 
-function goTo(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  const t=document.getElementById(id);
-  t.classList.add('active','screen-enter');
-  setTimeout(()=>t.classList.remove('screen-enter'),400);
-  window.scrollTo(0,0);
-  if(id==='s-regulate') startRegulation();
+  bad_high: {
+    opts:[
+      {w:"วิตกกังวล",   d:"รู้สึกเหมือนมีอะไรบางอย่างที่ยังไม่โอเค รอคอยสิ่งที่ยังไม่มาถึง"},
+      {w:"กดดัน",       d:"ความคาดหวังรู้สึกหนักกว่าที่รับได้ ทั้งจากตัวเองและคนรอบข้าง"},
+      {w:"หงุดหงิด",    d:"มีอะไรบางอย่างที่รู้สึกไม่ยุติธรรม หรือไม่เป็นอย่างที่อยากให้เป็น"},
+    ],
+    q:{ t:"ความกดดันนี้มาจากไหนมากกว่า?", o:["จากคนอื่นหรือสิ่งรอบข้าง","จากตัวเอง","ทั้งสองอย่าง","ไม่แน่ใจ"] },
+    // ── ROUTING ──
+    primaryRoute: 'tool',
+    tool: {
+      type: 'breathe',
+      why: 'ตอนที่พลังงานสูงแบบนี้ ระบบประสาทต้องการรีเซ็ตก่อน\nการหายใจช่วยลด arousal ได้เร็วที่สุด',
+    },
+    layer: 'environment',
+    bs: 'ความรู้สึกแบบนี้มักเชื่อมกับแรงกดดันรอบตัว\nหลังหายใจแล้ว พื้นที่ใจชั้นสิ่งแวดล้อมรอคุณอยู่',
+    stateIcon: '🌀', stateName: 'ตึงเครียด · พลังงานสูง',
+    stateDesc: 'ร่างกายตื่นตัวมาก จิตใจกำลังประมวลผลอะไรบางอย่าง',
+  },
+
+  bad_mid: {
+    opts:[
+      {w:"เหนื่อยใจ",   d:"รู้สึกล้าจากการพยายามมานาน ไม่ใช่แค่ร่างกาย แต่ข้างใน"},
+      {w:"สับสน",       d:"ไม่รู้จะไปทางไหน หรือไม่รู้ว่าตัวเองรู้สึกอะไรกันแน่"},
+      {w:"โดดเดี่ยว",  d:"อยู่กับคนเยอะ แต่รู้สึกว่าไม่มีใครเข้าใจจริงๆ"},
+    ],
+    q:{ t:"ตอนนี้รู้สึกอยากทำอะไรมากกว่า?", o:["อยู่คนเดียวสักพัก","คุยกับใครบางคน","ไม่รู้เหมือนกัน","แค่อยากให้มันผ่านไป"] },
+    primaryRoute: 'tool',
+    tool: {
+      type: 'journal',
+      why: 'ความรู้สึกแบบนี้มักวนในหัว เขียนออกมาช่วยให้มันอยู่ข้างนอกแทน\nแค่ 3 คำถามสั้นๆ',
+    },
+    layer: 'connection',
+    bs: 'เมื่อรู้สึกโดดเดี่ยว การเชื่อมต่อกับคนอื่น\nหรือแค่ระบายออกมาก็ช่วยได้มาก',
+    stateIcon: '🌧', stateName: 'หนักใจ · พลังงานกลาง',
+    stateDesc: 'มีบางอย่างค้างอยู่ข้างใน ยังหาทางออกไม่เจอ',
+  },
+
+  bad_low: {
+    opts:[
+      {w:"เศร้า",       d:"มีบางอย่างที่รู้สึกสูญเสีย หรือรู้สึกหนักในอก"},
+      {w:"ถอยห่าง",    d:"อยากหายไปจากทุกอย่างสักพัก ไม่อยากมีส่วนร่วมกับอะไร"},
+      {w:"หมดแรง",    d:"ทำทุกอย่างต้องใช้แรงมากกว่าปกติมาก"},
+    ],
+    q:{ t:"ความรู้สึกนี้อยู่มาแล้วนานแค่ไหน?", o:["วันสองวันนี้","สัปดาห์นี้","นานกว่านั้น","ไม่รู้เหมือนกัน"] },
+    primaryRoute: 'tool',
+    tool: {
+      type: 'journal',
+      why: 'เมื่อพลังงานต่ำมาก การบังคับตัวเองไปอ่านอะไรยาวๆ ยาก\nบันทึกสั้นๆ ช่วยให้รู้สึกว่าได้ทำบางอย่างเพื่อตัวเอง',
+    },
+    layer: 'body',
+    bs: 'ความรู้สึกแบบนี้มักมีรากในร่างกายด้วย\nพื้นที่ใจชั้นร่างกายเริ่มจากจุดเล็กๆ ที่ทำได้ตอนนี้เลย',
+    stateIcon: '🌑', stateName: 'หนักเหนื่อย · พลังงานต่ำ',
+    stateDesc: 'ร่างกายและใจต้องการการดูแลเป็นพิเศษตอนนี้',
+  },
+
+  neutral_high: {
+    opts:[
+      {w:"ลุ้น · ตื่นเต้น",    d:"มีอะไรบางอย่างที่กำลังจะเกิดขึ้น รู้สึกทั้งดีและไม่แน่ใจ"},
+      {w:"กระสับกระส่าย",      d:"อยู่เฉยไม่ค่อยได้ มีพลังงานล้น แต่ยังไม่รู้จะทำอะไรกับมัน"},
+      {w:"ค้างคา",             d:"มีเรื่องในหัวหลายอย่าง ยังไม่ได้ตัดสินใจหรือลงเอยซักที"},
+    ],
+    q:{ t:"สิ่งที่ครองความคิดมากที่สุดตอนนี้คือ?", o:["เรื่องการเรียน","เรื่องคนอื่น","เรื่องอนาคต","ยังไม่รู้แน่"] },
+    primaryRoute: 'tool',
+    tool: {
+      type: 'breathe',
+      why: 'พลังงานสูงแบบนี้ต้องการพื้นที่ระบายก่อน\nหายใจช่วย ground ลงมาแล้วค่อยทำอะไรต่อได้ชัดขึ้น',
+    },
+    layer: 'expression',
+    bs: 'พลังงานนี้ต้องการพื้นที่ระบายออก\nชั้นการแสดงออกมีเครื่องมือช่วยจัดการกับมัน',
+    stateIcon: '⚡', stateName: 'ตื่นตัว · เฉยๆ',
+    stateDesc: 'มีพลังงานอยู่ แต่ยังไม่ชัดว่าจะไปทางไหน',
+  },
+
+  neutral_mid: {
+    opts:[
+      {w:"เรียบๆ",            d:"ไม่ได้มีอะไรผิดปกติ แต่ก็ไม่ได้รู้สึกว่าดีพิเศษ"},
+      {w:"รอดู",              d:"กำลังดูว่าอะไรจะเกิดขึ้น ยังไม่ได้ลงหลักปักฐาน"},
+      {w:"เหนื่อยแบบเบาๆ",  d:"มีความเหนื่อยเล็กๆ ที่ยังอธิบายไม่ถูกชัดเจน"},
+    ],
+    q:{ t:"มีเรื่องที่อยู่ในหัวแต่ยังไม่ได้พูดถึงไหม?", o:["มี แต่ยังไม่พร้อมพูด","มี และอยากพูด","ไม่มีเท่าไหร่","ไม่รู้เหมือนกัน"] },
+    primaryRoute: 'tool',
+    tool: {
+      type: 'journal',
+      why: 'บางทีความรู้สึกเรียบๆ ซ่อนอะไรบางอย่างไว้\nการเขียนช่วยให้มันลอยขึ้นมาเอง',
+    },
+    layer: 'belief',
+    bs: 'ความรู้สึกเรียบๆ อาจซ่อนอะไรบางอย่างไว้\nชั้นความเชื่อช่วยสำรวจเรื่องนี้',
+    stateIcon: '🌤', stateName: 'เฉยๆ · พลังงานกลาง',
+    stateDesc: 'ไม่ได้ดีไม่ได้แย่ แต่มีบางอย่างที่ยังไม่ชัด',
+  },
+
+  neutral_low: {
+    opts:[
+      {w:"เฉื่อย",          d:"ไม่ได้อยากทำอะไรเป็นพิเศษ ไม่มีแรงขับ"},
+      {w:"ชา",             d:"รู้สึกน้อยลง ทั้งดีและไม่ดี ทุกอย่างดูเหมือนกันหมด"},
+      {w:"ต้องการพัก",    d:"ร่างกายและหัวใจต้องการพัก ซึ่งนั่นก็โอเคเหมือนกัน"},
+    ],
+    q:{ t:"ความรู้สึกนี้ต้องการอะไรมากกว่า?", o:["ต้องการพัก","ต้องการแรงบันดาลใจ","ต้องการใครซักคน","ยังไม่รู้"] },
+    primaryRoute: 'care',
+    layer: 'body',
+    bs: 'ร่างกายและระบบประสาทอาจต้องการการดูแลก่อน\nพื้นที่ใจชั้นร่างกายเริ่มจากสิ่งเล็กๆ ที่ทำได้ตอนนี้',
+    stateIcon: '🌑', stateName: 'เฉื่อย · พลังงานต่ำ',
+    stateDesc: 'ร่างกายต้องการพัก การ "ไม่ทำอะไร" ก็เป็นการดูแลตัวเองเหมือนกัน',
+  },
+
+  good_high: {
+    opts:[
+      {w:"มีพลัง",       d:"รู้สึกพร้อม อยากทำอะไรบางอย่าง มีไฟ"},
+      {w:"มีความหวัง",  d:"เห็นอนาคตในแบบที่ดี อยากก้าวไปข้างหน้า"},
+      {w:"ตื่นเต้น",    d:"มีอะไรที่น่าสนใจกำลังมา รู้สึกเปิดรับ"},
+    ],
+    q:{ t:"พลังงานนี้อยากใส่ไว้ที่ไหน?", o:["งานหรือการเรียน","ความสัมพันธ์","ตัวเองและความฝัน","ยังไม่รู้"] },
+    primaryRoute: 'care',
+    layer: 'expression',
+    bs: 'ดีใจที่คุณมาในวันแบบนี้\nพื้นที่ใจชั้นการแสดงออกช่วยต่อยอดและคงความรู้สึกดีนี้ไว้',
+    stateIcon: '🔥', stateName: 'มีพลัง · รู้สึกดี',
+    stateDesc: 'พลังงานกำลังดี ดีที่ต่อยอดมันตอนนี้เลย',
+  },
+
+  good_mid: {
+    opts:[
+      {w:"สงบ",          d:"รู้สึกเบาและโอเคกับสิ่งที่เป็นอยู่"},
+      {w:"พอใจ",         d:"มีบางอย่างที่เดินหน้าได้ดี รู้สึกขอบคุณ"},
+      {w:"เชื่อมต่อ",   d:"รู้สึกเป็นส่วนหนึ่งของบางอย่างหรือใครบางคน"},
+    ],
+    q:{ t:"อยากให้ความรู้สึกนี้อยู่นานขึ้นไหม?", o:["อยากมากเลย","พอแล้ว แค่นี้ก็ดี","ไม่ได้คิดถึง","ยังไม่รู้"] },
+    primaryRoute: 'care',
+    layer: 'connection',
+    bs: 'ดีใจที่คุณมาในวันแบบนี้\nชั้นความสัมพันธ์มีเครื่องมือช่วยรักษาและลึกซึ้งกว่านี้',
+    stateIcon: '☀️', stateName: 'สงบ · รู้สึกดี',
+    stateDesc: 'วันนี้ดีมาก ใช้โอกาสนี้เสริมความแข็งแรงให้ตัวเอง',
+  },
+
+  good_low: {
+    opts:[
+      {w:"ผ่อนคลาย",   d:"รู้สึกเบา วางลงได้ ไม่ต้องทำอะไรเพิ่ม"},
+      {w:"ขอบคุณ",      d:"รู้สึกดีกับบางอย่างในชีวิตตอนนี้ แม้จะเล็กน้อย"},
+      {w:"เบาใจ",       d:"อะไรบางอย่างที่เคยหนักรู้สึกเบาลงแล้ว"},
+    ],
+    q:{ t:"ช่วงนี้มีอะไรที่ทำให้รู้สึกดีขึ้นบ้างไหม?", o:["มี อยากจำมันไว้","มี แต่ยังไม่ชัด","ยังนึกไม่ออก","ไม่มีอะไรชัดเจน"] },
+    primaryRoute: 'care',
+    layer: 'expression',
+    bs: 'การมาอยู่กับความรู้สึกดีก็เป็นการดูแลตัวเองเหมือนกัน\nชั้นการแสดงออกช่วยให้ความรู้สึกนี้คงอยู่ได้นานขึ้น',
+    stateIcon: '🌿', stateName: 'ผ่อนคลาย · รู้สึกดี',
+    stateDesc: 'ร่างกายสงบ ใจเบา ช่วงเวลาดีๆ ที่ควรอยู่กับมัน',
+  },
+};
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const t = document.getElementById(id);
+  t.classList.add('active', 'screen-enter');
+  setTimeout(() => t.classList.remove('screen-enter'), 400);
+  window.scrollTo(0, 0);
+  if (id === 's-regulate') startRegulation();
 }
 
-// Regulation stagger
-let regTimers=[];
-function startRegulation(){
-  regTimers.forEach(clearTimeout);
-  regTimers=[];
-  ['rl0','rl1','rl2','rl3'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){el.classList.remove('show','dim');}
+// ── Regulation stagger ──
+let regTimers = [];
+function startRegulation() {
+  regTimers.forEach(clearTimeout); regTimers = [];
+  ['rl0','rl1','rl2','rl3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show','dim');
   });
-  const btn=document.getElementById('reg-ready');
-  if(btn) btn.classList.remove('show');
-  const delays=[400,1600,2900,4200];
-  ['rl0','rl1','rl2','rl3'].forEach((id,i)=>{
-    regTimers.push(setTimeout(()=>{
-      const el=document.getElementById(id);
-      if(!el) return;
-      if(i>0) document.getElementById(['rl0','rl1','rl2','rl3'][i-1]).classList.add('dim');
+  const btn = document.getElementById('reg-ready');
+  if (btn) btn.classList.remove('show');
+  const delays = [400, 1600, 2900, 4200];
+  ['rl0','rl1','rl2','rl3'].forEach((id, i) => {
+    regTimers.push(setTimeout(() => {
+      const el = document.getElementById(id); if (!el) return;
+      if (i > 0) document.getElementById(['rl0','rl1','rl2','rl3'][i-1]).classList.add('dim');
       el.classList.add('show');
     }, delays[i]));
   });
-  regTimers.push(setTimeout(()=>{
-    const btn=document.getElementById('reg-ready');
-    if(btn) btn.classList.add('show');
+  regTimers.push(setTimeout(() => {
+    const b = document.getElementById('reg-ready'); if (b) b.classList.add('show');
   }, 5800));
 }
 startRegulation();
 
-// Generic pick
-function pick(el,key,cls,btnId){
-  el.closest('.screen').querySelectorAll('.'+cls).forEach(c=>c.classList.remove('sel'));
+// ── Generic pick ──
+function pick(el, key, cls, btnId) {
+  el.closest('.screen').querySelectorAll('.' + cls).forEach(c => c.classList.remove('sel'));
   el.classList.add('sel');
-  S[key]=el.dataset.v;
-  const btn=document.getElementById(btnId);
-  if(btn){btn.classList.add('on');}
+  S[key] = el.dataset.v;
+  const btn = document.getElementById(btnId);
+  if (btn) btn.classList.add('on');
 }
 
-// Naming
-function buildNaming(){
-  const key=(S.valence||'neutral')+'_'+(S.arousal||'mid');
-  const data=DB[key]||DB['neutral_mid'];
-  S._data=data;
-  const container=document.getElementById('name-cards');
-  container.innerHTML='';
-  data.opts.forEach((opt,i)=>{
-    const d=document.createElement('div');
-    d.className='n-card';
-    d.innerHTML=`<div class="n-word">${opt.w}</div><div class="n-desc">${opt.d}</div>`;
-    d.onclick=function(){pickName(this);};
+// ══════════════════════════════════════════════════════
+// NAMING
+// ══════════════════════════════════════════════════════
+function buildNaming() {
+  const key = (S.valence || 'neutral') + '_' + (S.arousal || 'mid');
+  const data = DB[key] || DB['neutral_mid'];
+  S._data = data;
+  const container = document.getElementById('name-cards');
+  container.innerHTML = '';
+  data.opts.forEach(opt => {
+    const d = document.createElement('div');
+    d.className = 'n-card';
+    d.innerHTML = `<div class="n-word">${opt.w}</div><div class="n-desc">${opt.d}</div>`;
+    d.onclick = function() { pickName(this); };
     container.appendChild(d);
   });
   document.getElementById('n-none').classList.remove('sel');
   document.getElementById('name-next').classList.remove('on');
-  S.name=null; S.noname=false;
+  S.name = null; S.noname = false;
   goTo('s-name');
 }
 
-function pickName(el){
-  document.querySelectorAll('.n-card').forEach(c=>c.classList.remove('sel'));
+function pickName(el) {
+  document.querySelectorAll('.n-card').forEach(c => c.classList.remove('sel'));
   document.getElementById('n-none').classList.remove('sel');
   el.classList.add('sel');
-  S.name=el.querySelector('.n-word').textContent;
-  S.noname=false;
+  S.name = el.querySelector('.n-word').textContent;
+  S.noname = false;
   document.getElementById('name-next').classList.add('on');
 }
 
-function pickNone(){
-  document.querySelectorAll('.n-card').forEach(c=>c.classList.remove('sel'));
+function pickNone() {
+  document.querySelectorAll('.n-card').forEach(c => c.classList.remove('sel'));
   document.getElementById('n-none').classList.add('sel');
-  S.noname=true; S.name=null;
+  S.noname = true; S.name = null;
   document.getElementById('name-next').classList.add('on');
 }
 
-function afterNaming(){
-  if(S.noname){ goTo('s-nomatch'); return; }
-  const q=S._data.q;
-  document.getElementById('oq-title').textContent=q.t;
-  const container=document.getElementById('oq-opts');
-  container.innerHTML='';
-  q.o.forEach(opt=>{
-    const b=document.createElement('button');
-    b.className='oq-opt';
-    b.textContent=opt;
-    b.onclick=function(){
-      document.querySelectorAll('.oq-opt').forEach(x=>x.classList.remove('sel'));
+function afterNaming() {
+  if (S.noname) { goTo('s-nomatch'); return; }
+  const q = S._data.q;
+  document.getElementById('oq-title').textContent = q.t;
+  const container = document.getElementById('oq-opts');
+  container.innerHTML = '';
+  q.o.forEach(opt => {
+    const b = document.createElement('button');
+    b.className = 'oq-opt';
+    b.textContent = opt;
+    b.onclick = function() {
+      document.querySelectorAll('.oq-opt').forEach(x => x.classList.remove('sel'));
       b.classList.add('sel');
-      S.question=opt;
+      S.question = opt;
       document.getElementById('oq-next').classList.add('on');
     };
     container.appendChild(b);
@@ -502,14 +653,93 @@ function afterNaming(){
   goTo('s-question');
 }
 
-function buildBridge(){
-  const data=S._data;
-  document.getElementById('br-sub').textContent=data.bs;
-  document.getElementById('br-tag').textContent='→ ชั้น'+data.lt;
-  const tab=LAYER_TAB[data.layer]||0;
-  document.getElementById('br-main').onclick=function(){
-    window.location.href='care.html?tab='+tab;
-  };
+// ══════════════════════════════════════════════════════
+// BUILD BRIDGE — the smart routing engine
+// ══════════════════════════════════════════════════════
+function buildBridge() {
+  const data = S._data;
+
+  // Bridge subtitle
+  document.getElementById('br-sub').textContent = data.bs;
+
+  // State summary card
+  document.getElementById('br-state-icon').textContent = data.stateIcon;
+  document.getElementById('br-state-name').textContent =
+    S.name ? S.name + ' · ' + data.stateName : data.stateName;
+  document.getElementById('br-state-desc').textContent = data.stateDesc;
+
+  // Render primary recommendation
+  const primaryCard = document.getElementById('br-primary-card');
+  const tab = LAYER_TAB[data.layer] || 0;
+
+  if (data.primaryRoute === 'tool') {
+    // ── TOOL FIRST ──
+    const isBreathe = data.tool.type === 'breathe';
+    const colorClass = isBreathe ? 'teal' : 'purple';
+    const icon       = isBreathe ? '🌬️' : '📓';
+    const toolName   = isBreathe ? 'หายใจก่อนเลย' : 'เขียนระบายก่อนเลย';
+    const toolUrl    = 'alltools.html#' + data.tool.type;
+
+    primaryCard.innerHTML = `
+      <a class="br-tool-card ${colorClass}" href="${toolUrl}">
+        <span class="br-tool-icon">${icon}</span>
+        <div class="br-tool-eyebrow">แนะนำสำหรับตอนนี้</div>
+        <div class="br-tool-name">${toolName}</div>
+        <div class="br-tool-why">${data.tool.why.replace(/\n/g,'<br/>')}</div>
+        <span class="br-tool-arrow">→</span>
+      </a>`;
+
+    // Secondary = care (specific layer) + peer
+    document.getElementById('br-secondary-btns').innerHTML = `
+      <button class="br-sec-btn" onclick="window.location.href='care.html?tab=${data.layer}'">
+        <span class="br-sec-btn-icon">🌿</span>
+        <span class="br-sec-btn-body">
+          <span class="br-sec-btn-name">พื้นที่ใจ</span>
+          <span class="br-sec-btn-desc">${LAYER_LABEL[data.layer]} · อ่านและทำความเข้าใจ</span>
+        </span>
+        <span class="br-sec-arrow">→</span>
+      </button>
+      <button class="br-sec-btn" onclick="window.location.href='peer.html'">
+        <span class="br-sec-btn-icon">💛</span>
+        <span class="br-sec-btn-body">
+          <span class="br-sec-btn-name">คุยกับ PR</span>
+          <span class="br-sec-btn-desc">บางทีแค่มีคนรับฟังก็เบาขึ้นได้เยอะ</span>
+        </span>
+        <span class="br-sec-arrow">→</span>
+      </button>`;
+
+  } else {
+    // ── CARE FIRST ──
+    primaryCard.innerHTML = `
+      <a class="br-tool-card green" href="care.html?tab=${data.layer}">
+        <span class="br-tool-icon">🌿</span>
+        <div class="br-tool-eyebrow">แนะนำสำหรับตอนนี้</div>
+        <div class="br-tool-name">พื้นที่ใจ</div>
+        <div class="br-tool-why">${data.bs.replace(/\n/g,'<br/>')}</div>
+        <span class="br-layer-chip">${LAYER_LABEL[data.layer]}</span>
+        <span class="br-tool-arrow" style="margin-top:-14px;">→</span>
+      </a>`;
+
+    // Secondary = journal + peer
+    document.getElementById('br-secondary-btns').innerHTML = `
+      <button class="br-sec-btn" onclick="window.location.href='alltools.html#journal'">
+        <span class="br-sec-btn-icon">📓</span>
+        <span class="br-sec-btn-body">
+          <span class="br-sec-btn-name">บันทึกสั้นๆ</span>
+          <span class="br-sec-btn-desc">3 คำถามง่ายๆ ก่อนก็ได้</span>
+        </span>
+        <span class="br-sec-arrow">→</span>
+      </button>
+      <button class="br-sec-btn" onclick="window.location.href='peer.html'">
+        <span class="br-sec-btn-icon">💛</span>
+        <span class="br-sec-btn-body">
+          <span class="br-sec-btn-name">คุยกับ PR</span>
+          <span class="br-sec-btn-desc">บางทีแค่มีคนรับฟังก็เบาขึ้นได้เยอะ</span>
+        </span>
+        <span class="br-sec-arrow">→</span>
+      </button>`;
+  }
+
   goTo('s-bridge');
 }
 </script>
