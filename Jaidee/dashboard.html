@@ -335,8 +335,59 @@
 }
 .stab.active {
   color: var(--gold);
-  border-bottom-color: var(--gold);
-}
+  border-bottom-color: var(--gold);}
+    /* ═══ Puzzle Builder v2 additions ═══ */
+    .pz-hint{font-size:11px;color:var(--text-soft);line-height:1.5;background:var(--surface2);border-radius:8px;padding:8px 12px;border-left:3px solid var(--gold-border);margin-top:4px;}
+    .pz-hint strong{color:var(--gold);font-weight:600;}
+    .pz-block-actions{display:flex;align-items:center;gap:4px;}
+    .pz-action{background:none;border:none;font-size:14px;color:var(--text-soft);cursor:pointer;padding:4px 6px;border-radius:6px;transition:all 0.1s;}
+    .pz-action:hover{background:var(--surface2);color:var(--text);}
+    .pz-action.danger:hover{background:var(--red-soft);color:var(--red);}
+    .pz-format-bar{display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--surface2);border-radius:8px;font-size:11px;color:var(--text-mid);flex-wrap:wrap;margin-bottom:6px;}
+    .pz-format-btn{background:#fff;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;color:var(--text);transition:all 0.1s;min-width:30px;}
+    .pz-format-btn:hover{border-color:var(--gold);color:var(--gold);}
+    .pz-format-btn.b{font-weight:700;}
+    .pz-format-btn.i{font-style:italic;}
+    .pz-format-help{color:var(--text-soft);font-size:10px;margin-left:auto;}
+    .pz-progress{background:linear-gradient(135deg,var(--gold-soft),#FFF8E7);border:1px solid var(--gold-border);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+    .pz-progress-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .pz-progress-title{font-size:12px;font-weight:700;color:#5C3A00;letter-spacing:0.5px;}
+    .pz-progress-percent{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--gold);}
+    .pz-progress-bar{height:6px;background:#fff;border-radius:99px;overflow:hidden;border:1px solid var(--gold-border);}
+    .pz-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),#E5A82C);border-radius:99px;transition:width 0.3s;}
+    .pz-progress-stats{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:#7A5200;}
+    .pz-progress-stat{background:#fff;border-radius:99px;padding:3px 10px;border:1px solid var(--gold-border);font-weight:500;}
+    .pz-progress-tip{font-size:11px;color:#7A5200;line-height:1.6;padding-top:6px;border-top:1px dashed var(--gold-border);}
+    .pz-progress-tip strong{color:#5C3A00;}
+    .pz-guide-fab{position:fixed;bottom:24px;right:20px;background:var(--gold);color:#fff;border:none;border-radius:99px;padding:12px 18px;font-size:13px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;display:none;align-items:center;gap:6px;box-shadow:0 8px 24px rgba(200,134,10,0.35);z-index:80;transition:transform 0.15s;}
+    .pz-guide-fab.visible{display:flex;}
+    .pz-guide-fab:hover{transform:translateY(-2px);}
+    .pz-modal-overlay{display:none;position:fixed;inset:0;background:rgba(28,23,20,0.6);z-index:200;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+    .pz-modal-overlay.open{display:flex;}
+    .pz-modal{background:var(--surface);border-radius:24px 24px 0 0;padding:20px 20px 40px;width:100%;max-width:680px;max-height:88vh;overflow-y:auto;position:relative;}
+    .pz-modal-handle{width:40px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 14px;}
+    .pz-modal-close{position:absolute;top:20px;right:20px;background:var(--surface2);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;color:var(--text-mid);z-index:2;}
+    .pz-modal-head{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+    .pz-modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--text);}
+    .pz-modal-sub{font-size:13px;color:var(--text-mid);margin-bottom:18px;}
+    .pz-guide-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto;}
+    .pz-guide-tab{flex-shrink:0;padding:10px 14px 12px;font-size:12px;font-weight:600;color:var(--text-soft);background:none;border:none;cursor:pointer;font-family:'Sarabun',sans-serif;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;}
+    .pz-guide-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+    .pz-guide-panel{display:none;flex-direction:column;gap:14px;}
+    .pz-guide-panel.active{display:flex;}
+    .pz-guide-card{background:var(--surface2);border-radius:12px;padding:14px;}
+    .pz-guide-card h4{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+    .pz-guide-card p{font-size:13px;color:var(--text-mid);line-height:1.75;}
+    .pz-guide-card .good{color:var(--green);font-weight:600;}
+    .pz-guide-card .bad{color:var(--red);font-weight:600;}
+    .pz-guide-example{background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:12px;color:var(--text);font-style:italic;line-height:1.7;}
+    .pz-guide-example strong{color:var(--gold);font-style:normal;}
+    .pz-autosave{font-size:11px;color:var(--text-soft);display:flex;align-items:center;gap:5px;}
+    .pz-autosave.saving{color:var(--gold);}
+    .pz-autosave.saved{color:var(--green);}
+    .pz-pill-divider{background:#F1F5F9;color:#475569;}
+    .pz-pill-list{background:#ECFDF5;color:#065F46;}
+    .pz-pill-definition{background:#FEF3C7;color:#78350F;}
   </style>
 </head>
 <body>
@@ -361,7 +412,83 @@
   <button onclick="document.getElementById('dev-overlay').style.display='none'" style="position:absolute;top:16px;right:16px;background:none;border:none;color:white;font-size:20px;cursor:pointer;">✕</button>
   <pre id="dev-output" style="color:#0f0;font-size:11px;font-family:monospace;max-width:90vw;overflow:auto;max-height:80vh;white-space:pre-wrap;"></pre>
 </div>
+<!-- ═══ Puzzle Builder v2 — Guide FAB + Modal ═══ -->
+<button class="pz-guide-fab" id="pz-guide-fab" onclick="openGuide()">
+  <span>💡</span> คู่มือเขียน
+</button>
 
+<div class="pz-modal-overlay" id="pz-guide-modal" onclick="closeGuide(event)">
+  <div class="pz-modal" onclick="event.stopPropagation()">
+    <div class="pz-modal-handle"></div>
+    <button class="pz-modal-close" onclick="closeGuide()">✕</button>
+    <div class="pz-modal-head">
+      <span style="font-size:22px;">💡</span>
+      <div class="pz-modal-title">คู่มือเขียนบทความ</div>
+    </div>
+    <div class="pz-modal-sub">เทคนิคและตัวอย่างจากบทความที่อ่านง่ายและน่าจดจำ</div>
+    <div class="pz-guide-tabs">
+      <button class="pz-guide-tab active" onclick="switchGuide('structure',this)">โครงสร้าง</button>
+      <button class="pz-guide-tab" onclick="switchGuide('blocks',this)">บล็อก</button>
+      <button class="pz-guide-tab" onclick="switchGuide('format',this)">รูปแบบ</button>
+      <button class="pz-guide-tab" onclick="switchGuide('length',this)">ความยาว</button>
+      <button class="pz-guide-tab" onclick="switchGuide('voice',this)">น้ำเสียง</button>
+    </div>
+
+    <div class="pz-guide-panel active" id="guide-structure">
+      <div class="pz-guide-card">
+        <h4>🎯 โครงสร้างพื้นฐาน (4 ส่วน)</h4>
+        <p>บทความที่ดีมักไหลตามลำดับนี้</p>
+        <p style="margin-top:8px;"><strong style="color:var(--gold);">1. เปิด (Hook)</strong> — เริ่มด้วยสถานการณ์ที่ผู้อ่านเคยเจอ ไม่ใช่นิยาม<br><strong style="color:var(--gold);">2. บริบท</strong> — ทำไมเรื่องนี้สำคัญ ใครเคยศึกษา<br><strong style="color:var(--gold);">3. เนื้อหาหลัก</strong> — แบ่งเป็น sub-sections ด้วยหัวข้อ<br><strong style="color:var(--gold);">4. สะท้อน</strong> — ปิดด้วยคำถามให้ผู้อ่านเอาไปคิดต่อ</p>
+      </div>
+      <div class="pz-guide-card">
+        <h4>🪜 ลำดับบล็อกที่แนะนำ</h4>
+        <p>📝 → 💭 (quiz เปิดเรื่อง) → 🔤 → 📝 → ❝ pullquote → 📝 → 📊 ตาราง → ▶️ วิดีโอ → 📝 → 🪞 reflection</p>
+        <div class="pz-guide-example"><strong>หลักง่ายๆ:</strong> สลับ "เนื้อหายาว" กับ "อะไรที่ดูเร็ว" (รูป/ตาราง/quiz) ทุก 2-3 paragraph ผู้อ่านจะไม่เหนื่อย</div>
+      </div>
+      <div class="pz-guide-card">
+        <h4>✨ เคล็ดลับเปิดเรื่อง</h4>
+        <p class="bad">❌ "แรงจูงใจคือพลังที่ขับเคลื่อนพฤติกรรม..."</p>
+        <p class="good">✅ "บางวันเราทำได้ไม่หยุด บางวันแค่เปิดหนังสือก็ยังสู้ไม่ไหว — ความแตกต่างนั้นมาจากอะไร?"</p>
+        <p style="margin-top:6px;">เริ่มจากประสบการณ์ก่อน นิยามมาทีหลัง</p>
+      </div>
+    </div>
+
+    <div class="pz-guide-panel" id="guide-blocks">
+      <div class="pz-guide-card"><h4>📝 ข้อความ</h4><p>เนื้อหาหลัก ย่อหน้าละ 3-5 บรรทัดกำลังดี</p><p><span class="good">ใช้บ่อย</span> — 60% ของบทความ</p></div>
+      <div class="pz-guide-card"><h4>🔤 หัวข้อ</h4><p>แบ่งบทความเป็น sections ทุก 3-4 paragraph</p><p><span class="good">ใช้พอประมาณ</span> — 10 นาทีควรมี 2-4 หัวข้อ</p></div>
+      <div class="pz-guide-card"><h4>💡 Callout</h4><p>กล่องเน้นข้อมูลสำคัญ ใช้กับ tip, warning, key insight</p><p><span class="good">ใช้น้อย</span> — 1-2 ครั้งต่อบทความ</p></div>
+      <div class="pz-guide-card"><h4>❝ Pullquote</h4><p>ประโยคที่อยากให้ผู้อ่านจำ มักเป็นคำคมหรือ insight</p><p><span class="good">ใช้น้อยมาก</span> — 1-2 ครั้งต่อบทความ</p></div>
+      <div class="pz-guide-card"><h4>📖 Definition</h4><p>นิยามศัพท์เทคนิคที่ผู้อ่านอาจไม่คุ้น เช่น EM, Flow, Autonomy</p><p><span class="good">ใช้ตามจำเป็น</span> — เมื่อมีศัพท์ใหม่ที่จะใช้ต่อ</p></div>
+      <div class="pz-guide-card"><h4>📋 List</h4><p>แสดงรายการ ขั้นตอน หรือตัวอย่าง 3-5 ข้อ</p><p><span class="good">ใช้แทน paragraph</span> — เมื่อข้อมูลเป็นรายการเทียบกันได้</p></div>
+      <div class="pz-guide-card"><h4>📊 ตาราง</h4><p>เปรียบเทียบ 2-4 สิ่งในมิติเดียวกัน</p><p><span class="good">ทรงพลัง</span> — แทน paragraph ยาวได้</p><div class="pz-guide-example"><strong>ตัวอย่าง:</strong> "EM vs IM vs IBM" บอกความแตกต่างได้ใน 1 ตาราง</div></div>
+      <div class="pz-guide-card"><h4>🖼️ รูป & 🌅 Full-bleed</h4><p>รูปธรรมดามีกรอบ Full-bleed ออกขอบทั้งสองข้าง</p><p><span class="good">Full-bleed</span> — ใช้ครั้งเดียวต่อบทความ</p></div>
+      <div class="pz-guide-card"><h4>▶️ วิดีโอ</h4><p>วิดีโอประกอบจาก YouTube ช่วยให้เข้าใจลึกขึ้น</p><p><span class="good">เลือกพิถีพิถัน</span> — วิดีโอที่อยากดูจริง ไม่ใช่แค่ตัวอย่าง</p></div>
+      <div class="pz-guide-card"><h4>💭 คำถาม (Quiz)</h4><p>คำถามให้ reflect ระหว่างอ่าน มี feedback แต่ละตัวเลือก</p><p><span class="good">เพิ่ม engagement</span> — 1-2 ครั้งกลางบทความ</p></div>
+      <div class="pz-guide-card"><h4>🪞 สะท้อนตัวเอง</h4><p>คำถามปิดท้ายให้ผู้อ่านนำไปคิดต่อ มี insight tag</p><p><span class="good">วางท้ายบทความ</span> — เกือบทุกบทความควรมี</p></div>
+      <div class="pz-guide-card"><h4>➖ เส้นคั่น</h4><p>แบ่งระหว่าง section ใหญ่ ใช้แทนหัวข้อในบางกรณี</p></div>
+    </div>
+
+    <div class="pz-guide-panel" id="guide-format">
+      <div class="pz-guide-card"><h4>✨ การเน้นข้อความ</h4><p>ในช่อง textarea ใช้ปุ่ม <strong>B</strong> และ <em>I</em> เพื่อทำตัวหนา/ตัวเอียง</p><div class="pz-guide-example">พิมพ์ <strong>**ตัวหนา**</strong> → จะแสดง <strong>ตัวหนา</strong><br>พิมพ์ <strong>*ตัวเอียง*</strong> → จะแสดง <em>ตัวเอียง</em></div></div>
+      <div class="pz-guide-card"><h4>🎯 ใช้ตัวหนาเมื่อไหร่</h4><p class="good">✅ ศัพท์เทคนิคสำคัญ เช่น <strong>Flow</strong>, <strong>Overjustification Effect</strong></p><p class="good">✅ ประโยคหลักของย่อหน้า (1 ครั้งต่อย่อหน้า)</p><p class="bad">❌ เน้นทั้งย่อหน้า — เน้นทุกอย่างคือไม่เน้นอะไร</p></div>
+      <div class="pz-guide-card"><h4>🎨 ใช้ตัวเอียงเมื่อไหร่</h4><p class="good">✅ ชื่อหนังสือ ชื่อทฤษฎี เช่น <em>Identity: Youth and Crisis</em></p><p class="good">✅ คำต่างประเทศที่ไม่ได้แปลเป็นไทย</p><p class="good">✅ คำพูดในใจของตัวละคร</p></div>
+      <div class="pz-guide-card"><h4>📏 ความยาวย่อหน้า</h4><p class="good">✅ 3-5 บรรทัดต่อย่อหน้า</p><p class="bad">❌ ย่อหน้าเดียวยาว 10+ บรรทัด — แบ่งเถอะ</p></div>
+    </div>
+
+    <div class="pz-guide-panel" id="guide-length">
+      <div class="pz-guide-card"><h4>⏱ ความยาวแนะนำ</h4><p><strong style="color:var(--green);">🟢 เบา (3-5 นาที)</strong> — 5-8 บล็อก<br><br><strong style="color:var(--yellow);">🟡 กลาง (6-10 นาที)</strong> — 10-15 บล็อก<br><br><strong style="color:var(--red);">🔴 ลึก (11-15 นาที)</strong> — 15-20 บล็อก</p></div>
+      <div class="pz-guide-card"><h4>🔢 สูตรประมาณเวลาอ่าน</h4><p>คนไทยอ่าน ~200 คำต่อนาที · บทความ 1,500 คำ = 7-8 นาที</p><div class="pz-guide-example"><strong>เคล็ดลับ:</strong> ตั้งเวลาตามที่ตั้งใจให้คนอ่าน ไม่ใช่ตามที่บทความเขียนเสร็จ</div></div>
+      <div class="pz-guide-card"><h4>⚖️ สัดส่วนที่ดี</h4><p>ของบทความ 10 บล็อก:</p><p style="margin-top:6px;">• 5-6 บล็อก ข้อความ<br>• 1-2 บล็อก visual (รูป/ตาราง/วิดีโอ)<br>• 1-2 บล็อก interactive (quiz/reflection)<br>• 1 บล็อก pullquote หรือ callout<br>• 1 บล็อก divider หรือ heading</p></div>
+    </div>
+
+    <div class="pz-guide-panel" id="guide-voice">
+      <div class="pz-guide-card"><h4>🗣 น้ำเสียงของใจดี TU</h4><p>เราไม่ใช่ตำราเรียน เราคือเพื่อนที่รู้จิตวิทยา</p><p style="margin-top:8px;"><span class="good">✅ ใช้</span> "เรา" "คุณ" สร้างความใกล้ชิด<br><span class="good">✅ ถามคำถาม</span> ให้ผู้อ่านมีส่วนร่วม<br><span class="good">✅ ตัวอย่างจากชีวิตจริง</span> "นักเรียนที่กำลังเตรียมสอบ"<br><span class="bad">❌ หลีกเลี่ยง</span> "นักเรียนทั้งหลาย" "ดังนั้นจึงสรุปได้ว่า"</p></div>
+      <div class="pz-guide-card"><h4>💬 ภาษาวิชาการ vs ภาษาเพื่อน</h4><p class="bad">❌ "Intrinsic Motivation มีลักษณะเฉพาะคือเป็นแรงขับเคลื่อนที่ไม่ต้องอาศัยปัจจัยภายนอก"</p><p class="good">✅ "Intrinsic Motivation (IM) คือเมื่อเราทำเพราะรู้สึกสนุก ไม่ต้องมีรางวัล"</p></div>
+      <div class="pz-guide-card"><h4>🎯 แนะนำเสมอ</h4><p>• <strong>อธิบายศัพท์ภาษาอังกฤษ</strong> ใส่ definition block หรือนิยามไทยในวงเล็บ<br>• <strong>อ้างอิงนักวิจัย</strong> "Csikszentmihalyi ในทศวรรษ 1970..."<br>• <strong>ปิดด้วยคำถามให้คิดต่อ</strong> ใส่ reflection ท้ายบทความ</p></div>
+      <div class="pz-guide-card"><h4>⚠️ ระวังเรื่องสุขภาพจิต</h4><p>เมื่อพูดถึงหัวข้อหนัก (depression, self-harm, eating disorders)</p><p style="margin-top:6px;"><span class="good">✅ ใช้น้ำเสียงเข้าใจ</span> ไม่ตัดสิน<br><span class="good">✅ ใส่ callout ชี้ทาง</span> ไป peer support / professionals<br><span class="bad">❌ ไม่ใช้</span> "คุณเป็น depressed" → ใช้ "อาจมีอาการแบบ depression"<br><span class="bad">❌ ไม่ romanticize</span> ความเจ็บปวด</p></div>
+    </div>
+  </div>
+</div>
 <div id="app">
   <!-- MODE BANNER -->
   <!-- TOPBAR -->
@@ -597,11 +724,34 @@
 
     <!-- STEP 2: BLOCKS -->
     <div id="pz-step2" style="display:none;flex-direction:column;gap:14px;">
+<!-- ═══ Puzzle Builder v2 — Progress + Auto-save ═══ -->
+      <div class="pz-progress" id="pz-progress">
+        <div class="pz-progress-head">
+          <div class="pz-progress-title">ความพร้อมของบทความ</div>
+          <div class="pz-progress-percent" id="pz-progress-percent">0%</div>
+        </div>
+        <div class="pz-progress-bar"><div class="pz-progress-fill" id="pz-progress-fill" style="width:0%"></div></div>
+        <div class="pz-progress-stats" id="pz-progress-stats">
+          <div class="pz-progress-stat">⬜ หน้าปก</div>
+          <div class="pz-progress-stat">📝 0 ข้อความ</div>
+          <div class="pz-progress-stat">🖼 0 visual</div>
+          <div class="pz-progress-stat">⏱ ~0 นาที</div>
+        </div>
+        <div class="pz-progress-tip" id="pz-progress-tip">
+          <strong>💡 เริ่มจาก:</strong> เพิ่มรูปหน้าปกและบล็อกแรกได้เลย
+        </div>
+      </div>
 
+      <div style="display:flex;justify-content:flex-end;margin-bottom:-6px;">
+        <div class="pz-autosave" id="pz-autosave">
+          <span id="pz-autosave-icon">💾</span>
+          <span id="pz-autosave-text">บันทึก draft อัตโนมัติ</span>
+        </div>
+      </div>
       <div class="input-group">
         <div class="input-label">รูปหน้าปก (URL)</div>
         <div style="display:flex;gap:8px;">
-          <input class="input-field" id="pz-hero" placeholder="https://res.cloudinary.com/... หรือ Unsplash URL" style="flex:1;" oninput="pzUpdateHeroPreview()"/>
+          <input class="input-field" id="pz-hero" placeholder="https://res.cloudinary.com/... หรือ Unsplash URL" style="flex:1;" oninput="pzUpdateHeroPreview();updateProgress();triggerAutoSave();"/>
           <button class="btn-sm ghost" onclick="triggerUpload('pz-hero-file','pz-hero')" style="flex-shrink:0;white-space:nowrap;">📷 อัปโหลด</button>
         </div>
         <input type="file" id="pz-hero-file" accept="image/*" style="display:none;" onchange="uploadToCloudinary(this,'pz-hero')"/>
@@ -634,6 +784,9 @@
           <button class="pz-add-btn" onclick="pzAddBlock('video')"><span style="font-size:20px;">▶️</span><span>วิดีโอ</span></button>
           <button class="pz-add-btn" onclick="pzAddBlock('quiz')"><span style="font-size:20px;">💭</span><span>คำถาม</span></button>
           <button class="pz-add-btn" onclick="pzAddBlock('reflect')"><span style="font-size:20px;">🪞</span><span>สะท้อนตัวเอง</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('definition')"><span style="font-size:20px;">📖</span><span>Definition</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('list')"><span style="font-size:20px;">📋</span><span>List</span></button>
+          <button class="pz-add-btn" onclick="pzAddBlock('divider')"><span style="font-size:20px;">➖</span><span>เส้นคั่น</span></button>
         </div>
       </div>
 
@@ -1889,6 +2042,9 @@ function switchViewRole(role){
 }
 
 function switchTab(tabId,item){
+  // Toggle Puzzle Builder guide FAB (only on puzzle content tab)
+  const _pzFab = document.getElementById('pz-guide-fab');
+  if (_pzFab) _pzFab.classList.toggle('visible', tabId === 'tab-content');
   document.querySelectorAll(".tab-content").forEach(t=>{t.classList.remove("active");t.style.display="none";});
   if(tabId==="tab-people")loadPeopleTab();
   if(tabId==="tab-therapist")loadStaffTab("therapist");
@@ -2949,7 +3105,140 @@ function toast(msg){
   const t=document.createElement("div");t.className="toast";t.innerText=msg;
   document.body.appendChild(t);setTimeout(()=>t.remove(),3000);
 }
+// ═══ Puzzle Builder v2 — helper functions ═══
+const PZ_BLOCK_HINTS = {
+  text:       '<strong>💡 ใช้บ่อย</strong> — เนื้อหาหลักของบทความ ย่อหน้าละ 3-5 บรรทัด',
+  heading:    '<strong>💡 ใช้พอประมาณ</strong> — แบ่ง sections บทความ 10 นาทีควรมี 2-4 หัวข้อ',
+  callout:    '<strong>💡 ใช้น้อย</strong> — 1-2 ครั้งต่อบทความ สำหรับ insight สำคัญ',
+  pullquote:  '<strong>💡 ใช้น้อยมาก</strong> — 1-2 ครั้ง สำหรับประโยคที่อยากให้คนจดจำ',
+  definition: '<strong>💡 อธิบายศัพท์</strong> — เช่น EM, Flow, Autonomy คำที่จะใช้ต่อในบทความ',
+  list:       '<strong>💡 แทน paragraph</strong> — เมื่อข้อมูลเป็นรายการเทียบกันได้',
+  table:      '<strong>💡 ทรงพลัง</strong> — เปรียบเทียบ 2-4 สิ่งในมิติเดียวกัน',
+  image:      '<strong>💡 รูปเสริมเนื้อหา</strong> — มีคำบรรยายช่วยให้เข้าใจ',
+  bleedimage: '<strong>💡 ใช้ครั้งเดียวต่อบทความ</strong> — โมเมนต์ที่อยากให้คนหยุดดู',
+  video:      '<strong>💡 เลือกพิถีพิถัน</strong> — วิดีโอที่ผู้อ่านอยากดูจริง',
+  quiz:       '<strong>💡 เพิ่ม engagement</strong> — 1-2 ครั้งกลางบทความ',
+  reflect:    '<strong>💡 วางท้ายบทความ</strong> — คำถามให้ผู้อ่านนำไปคิดต่อ',
+  divider:    '<strong>💡 แบ่ง sections ใหญ่</strong>'
+};
 
+function buildFormatBar(textareaId) {
+  return `<div class="pz-format-bar">
+    <button type="button" class="pz-format-btn b" onclick="formatSelection('${textareaId}','**','**')" title="ตัวหนา">B</button>
+    <button type="button" class="pz-format-btn i" onclick="formatSelection('${textareaId}','*','*')" title="ตัวเอียง">I</button>
+    <span class="pz-format-help">เลือกข้อความก่อนกด · **หนา** *เอียง*</span>
+  </div>`;
+}
+
+function formatSelection(textareaId, prefix, suffix) {
+  const ta = document.getElementById(textareaId);
+  if (!ta) return;
+  const start = ta.selectionStart;
+  const end   = ta.selectionEnd;
+  const sel   = ta.value.substring(start, end);
+  const replacement = sel || 'ข้อความ';
+  ta.value = ta.value.substring(0, start) + prefix + replacement + suffix + ta.value.substring(end);
+  ta.focus();
+  ta.setSelectionRange(start + prefix.length, start + prefix.length + replacement.length);
+  triggerAutoSave();
+}
+
+function pzMoveBlock(id, dir) {
+  const el = document.getElementById('pzb-' + id);
+  if (!el) return;
+  const sib = dir === -1 ? el.previousElementSibling : el.nextElementSibling;
+  if (!sib || !sib.classList.contains('pz-block')) return;
+  if (dir === -1) el.parentNode.insertBefore(el, sib);
+  else el.parentNode.insertBefore(sib, el);
+  triggerAutoSave();
+}
+
+function pzDuplicateBlock(id) {
+  const el = document.getElementById('pzb-' + id);
+  if (!el) return;
+  const type = el.dataset.type;
+  pzAddBlock(type);
+  toast('ทำซ้ำบล็อกแล้ว');
+}
+
+function updateProgress() {
+  const blocks = document.querySelectorAll('.pz-block');
+  const counts = {text:0,image:0,bleedimage:0,video:0,table:0,quiz:0,reflect:0,callout:0,pullquote:0,heading:0,definition:0,list:0,divider:0};
+  blocks.forEach(b => { const t = b.dataset.type; if (counts[t] !== undefined) counts[t]++; });
+  const hasHero = !!(document.getElementById('pz-hero')?.value || '').trim();
+  const total = blocks.length;
+  const visuals = counts.image + counts.bleedimage + counts.video + counts.table;
+  const interactive = counts.quiz + counts.reflect;
+  let score = 0;
+  if (hasHero) score += 15;
+  if (counts.text >= 3) score += 25; else if (counts.text >= 1) score += 15;
+  if (counts.heading >= 1) score += 10;
+  if (visuals >= 1) score += 15;
+  if (interactive >= 1) score += 15;
+  if (counts.callout + counts.pullquote >= 1) score += 10;
+  if (total >= 8) score += 10;
+  score = Math.min(100, score);
+  const pctEl = document.getElementById('pz-progress-percent');
+  const fillEl = document.getElementById('pz-progress-fill');
+  const statsEl = document.getElementById('pz-progress-stats');
+  const tipEl = document.getElementById('pz-progress-tip');
+  if (!pctEl) return;
+  pctEl.textContent = score + '%';
+  fillEl.style.width = score + '%';
+  const readMin = Math.max(1, Math.round((counts.text * 1.2) + (counts.heading * 0.2)));
+  statsEl.innerHTML = `
+    <div class="pz-progress-stat">${hasHero ? '✅' : '⬜'} หน้าปก</div>
+    <div class="pz-progress-stat">📝 ${counts.text} ข้อความ</div>
+    <div class="pz-progress-stat">🖼 ${visuals} visual</div>
+    <div class="pz-progress-stat">💭 ${interactive} interactive</div>
+    <div class="pz-progress-stat">⏱ ~${readMin} นาที</div>`;
+  let tip = '';
+  if (!hasHero) tip = '<strong>💡 เริ่มจาก:</strong> เพิ่มรูปหน้าปกก่อน เพื่อให้บทความดูดึงดูดในการ์ดรายการ';
+  else if (total === 0) tip = '<strong>💡 ขั้นต่อไป:</strong> เพิ่มบล็อก 📝 ข้อความ เปิดเรื่องด้วยสถานการณ์';
+  else if (counts.text === 0) tip = '<strong>💡 สำคัญ:</strong> ทุกบทความต้องมีบล็อกข้อความ — เพิ่มเลย';
+  else if (counts.heading === 0 && counts.text >= 3) tip = '<strong>💡 แนะนำ:</strong> เพิ่มหัวข้อ 🔤 เพื่อแบ่ง sections';
+  else if (visuals === 0 && total >= 4) tip = '<strong>💡 แนะนำ:</strong> เพิ่ม visual อย่างน้อย 1 อัน';
+  else if (interactive === 0 && total >= 6) tip = '<strong>💡 แนะนำ:</strong> เพิ่ม 💭 คำถาม หรือ 🪞 reflection';
+  else if (counts.pullquote + counts.callout === 0 && total >= 8) tip = '<strong>💡 ทรงพลัง:</strong> เพิ่ม ❝ pullquote 1 อัน';
+  else if (counts.reflect === 0 && total >= 5) tip = '<strong>💡 ปิดด้วย:</strong> เพิ่ม 🪞 reflection ท้ายบทความ';
+  else if (score >= 85) tip = '<strong>🎉 พร้อมเผยแพร่!</strong> บทความครบองค์ประกอบทั้งหมดแล้ว';
+  else tip = '<strong>👍 ดีมาก!</strong> ลองเพิ่มเติมหรือปรับแต่งให้ลึกขึ้นได้';
+  tipEl.innerHTML = tip;
+}
+
+let _pzAutoSaveTimer = null;
+function triggerAutoSave() {
+  const ind = document.getElementById('pz-autosave');
+  const icon = document.getElementById('pz-autosave-icon');
+  const text = document.getElementById('pz-autosave-text');
+  if (!ind) return;
+  ind.className = 'pz-autosave saving';
+  icon.textContent = '⏳';
+  text.textContent = 'กำลังบันทึก...';
+  clearTimeout(_pzAutoSaveTimer);
+  _pzAutoSaveTimer = setTimeout(() => {
+    ind.className = 'pz-autosave saved';
+    icon.textContent = '✓';
+    text.textContent = 'บันทึก draft แล้ว';
+    setTimeout(() => {
+      ind.className = 'pz-autosave';
+      icon.textContent = '💾';
+      text.textContent = 'บันทึก draft อัตโนมัติ';
+    }, 2000);
+  }, 800);
+}
+
+function openGuide() { document.getElementById('pz-guide-modal').classList.add('open'); }
+function closeGuide(e) {
+  if (e && e.target.id !== 'pz-guide-modal' && !e.target.classList.contains('pz-modal-close')) return;
+  document.getElementById('pz-guide-modal').classList.remove('open');
+}
+function switchGuide(panel, btn) {
+  document.querySelectorAll('.pz-guide-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pz-guide-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('guide-' + panel).classList.add('active');
+}
 // ── PUZZLE BUILDER (new 3-step, no-code) ─────────────────────────
 let pzBlockCount = 0;
 
@@ -2985,90 +3274,116 @@ function pzAddBlock(type) {
   const empty = document.getElementById('pz-blocks-empty');
   if(empty) empty.style.display = 'none';
 
-  const pillMap = {text:'pz-pill-text',callout:'pz-pill-callout',quiz:'pz-pill-quiz',reflect:'pz-pill-reflect',image:'pz-pill-image',video:'pz-pill-video',heading:'pz-pill-heading',pullquote:'pz-pill-pullquote',table:'pz-pill-table',bleedimage:'pz-pill-bleedimage'};
-  const labelMap = {text:'📝 ข้อความ',callout:'💡 Callout',quiz:'💭 คำถาม',reflect:'🪞 สะท้อนตัวเอง',image:'🖼️ รูปภาพ',video:'▶️ วิดีโอ',heading:'🔤 หัวข้อ',pullquote:'❝ Pullquote',table:'📊 ตาราง',bleedimage:'🌅 Full-bleed'};
+  const pillMap = {text:'pz-pill-text',callout:'pz-pill-callout',quiz:'pz-pill-quiz',reflect:'pz-pill-reflect',image:'pz-pill-image',video:'pz-pill-video',heading:'pz-pill-heading',pullquote:'pz-pill-pullquote',table:'pz-pill-table',bleedimage:'pz-pill-bleedimage',definition:'pz-pill-definition',list:'pz-pill-list',divider:'pz-pill-divider'};
+  const labelMap = {text:'📝 ข้อความ',callout:'💡 Callout',quiz:'💭 คำถาม',reflect:'🪞 สะท้อนตัวเอง',image:'🖼️ รูปภาพ',video:'▶️ วิดีโอ',heading:'🔤 หัวข้อ',pullquote:'❝ Pullquote',table:'📊 ตาราง',bleedimage:'🌅 Full-bleed',definition:'📖 Definition',list:'📋 List',divider:'➖ เส้นคั่น'};
 
   let fields = '';
+  const taId = `pb${id}-content`;
+
   if(type==='text') {
     fields = `
-      <div class="input-group"><div class="input-label">หัวข้อ (ไม่บังคับ)</div><input class="input-field" id="pb${id}-heading" placeholder="เช่น แรงจูงใจภายใน"/></div>
-      <div class="input-group" style="margin-bottom:0;"><div class="input-label">เนื้อหา *</div><textarea class="input-field" id="pb${id}-content" placeholder="พิมพ์เนื้อหา..." style="min-height:100px;resize:vertical;line-height:1.7;"></textarea></div>`;
+      <div class="input-group"><div class="input-label">หัวข้อ (ไม่บังคับ)</div><input class="input-field" id="pb${id}-heading" placeholder="เช่น แรงจูงใจภายใน" oninput="triggerAutoSave()"/></div>
+      <div class="input-group" style="margin-bottom:0;"><div class="input-label">เนื้อหา *</div>${buildFormatBar(taId)}<textarea class="input-field" id="${taId}" placeholder="พิมพ์เนื้อหา... ใช้ **ตัวหนา** หรือ *ตัวเอียง* ได้" style="min-height:100px;resize:vertical;line-height:1.7;" oninput="triggerAutoSave()"></textarea></div>`;
   } else if(type==='callout') {
-    fields = `<div class="input-group" style="margin-bottom:0;"><div class="input-label">ประโยคเน้น *</div><textarea class="input-field" id="pb${id}-content" placeholder="ข้อความสำคัญที่อยากเน้น..." style="min-height:70px;resize:vertical;"></textarea></div>`;
+    fields = `<div class="input-group" style="margin-bottom:0;"><div class="input-label">ประโยคเน้น *</div>${buildFormatBar(taId)}<textarea class="input-field" id="${taId}" placeholder="ข้อความสำคัญ..." style="min-height:70px;resize:vertical;" oninput="triggerAutoSave()"></textarea></div>`;
   } else if(type==='image') {
     fields = `
-      <div class="input-group"><div class="input-label">URL รูปภาพ *</div><input class="input-field" id="pb${id}-url" placeholder="https://images.unsplash.com/... หรือ Cloudinary"/></div>
-      <div class="input-group" style="margin-bottom:0;"><div class="input-label">คำบรรยาย</div><input class="input-field" id="pb${id}-cap" placeholder="เช่น นักเรียนกำลังสำรวจความสนใจ"/></div>`;
+      <div class="input-group"><div class="input-label">URL รูปภาพ *</div><input class="input-field" id="pb${id}-url" placeholder="https://..." oninput="triggerAutoSave()"/></div>
+      <div class="input-group" style="margin-bottom:0;"><div class="input-label">คำบรรยาย</div><input class="input-field" id="pb${id}-cap" placeholder="คำบรรยายรูป" oninput="triggerAutoSave()"/></div>`;
   } else if(type==='video') {
     fields = `
-      <div class="input-group"><div class="input-label">YouTube URL *</div><input class="input-field" id="pb${id}-url" placeholder="https://www.youtube.com/watch?v=..."/></div>
-      <div class="input-group" style="margin-bottom:0;"><div class="input-label">คำบรรยาย</div><input class="input-field" id="pb${id}-cap" placeholder="เช่น TED Talk โดย Csikszentmihalyi"/></div>`;
+      <div class="input-group"><div class="input-label">YouTube URL *</div><input class="input-field" id="pb${id}-url" placeholder="https://www.youtube.com/watch?v=..." oninput="triggerAutoSave()"/></div>
+      <div class="input-group" style="margin-bottom:0;"><div class="input-label">คำบรรยาย</div><input class="input-field" id="pb${id}-cap" placeholder="เช่น TED Talk โดย ..." oninput="triggerAutoSave()"/></div>`;
   } else if(type==='quiz') {
     fields = `
-      <div class="input-group"><div class="input-label">คำถาม *</div><input class="input-field" id="pb${id}-q" placeholder="เช่น ตอนนี้คุณรู้สึกอยู่ที่จุดไหน?"/></div>
+      <div class="input-group"><div class="input-label">คำถาม *</div><input class="input-field" id="pb${id}-q" placeholder="เช่น ตอนนี้คุณรู้สึกอยู่ที่จุดไหน?" oninput="triggerAutoSave()"/></div>
       <div class="input-label" style="margin-bottom:6px;">ตัวเลือก + feedback</div>
       <div class="pz-choice-grid">${[1,2,3,4].map(i=>`
-        <div class="pz-choice-col">
-          <span class="pz-choice-sub">ตัวเลือก ${i}</span>
-          <input class="input-field" id="pb${id}-c${i}" placeholder="ข้อความ" style="margin-bottom:4px;font-size:12px;"/>
-          <input class="input-field" id="pb${id}-f${i}" placeholder="feedback..." style="font-size:12px;background:var(--surface2);"/>
-        </div>`).join('')}
-      </div>`;
+        <div class="pz-choice-col"><span class="pz-choice-sub">ตัวเลือก ${i}</span>
+          <input class="input-field" id="pb${id}-c${i}" placeholder="ข้อความ" style="margin-bottom:4px;font-size:12px;" oninput="triggerAutoSave()"/>
+          <input class="input-field" id="pb${id}-f${i}" placeholder="feedback..." style="font-size:12px;background:var(--surface2);" oninput="triggerAutoSave()"/>
+        </div>`).join('')}</div>`;
   } else if(type==='reflect') {
     fields = `
-      <div class="input-group"><div class="input-label">คำถามสะท้อน *</div><input class="input-field" id="pb${id}-prompt" placeholder="เช่น แรงจูงใจหลักตอนนี้มาจากไหน?"/></div>
+      <div class="input-group"><div class="input-label">คำถามสะท้อน *</div><input class="input-field" id="pb${id}-prompt" placeholder="เช่น แรงจูงใจหลักของคุณมาจากไหน?" oninput="triggerAutoSave()"/></div>
       <div class="input-label" style="margin-bottom:6px;">ตัวเลือก (emoji · ข้อความ · insight tag)</div>
       <div class="pz-choice-grid">${[1,2,3,4].map(i=>`
-        <div class="pz-choice-col">
-          <span class="pz-choice-sub">ตัวเลือก ${i}</span>
-          <input class="input-field" id="pb${id}-oi${i}" placeholder="🔥" style="width:50px;text-align:center;margin-bottom:4px;font-size:14px;"/>
-          <input class="input-field" id="pb${id}-ot${i}" placeholder="ข้อความ" style="margin-bottom:4px;font-size:12px;"/>
-          <input class="input-field" id="pb${id}-ok${i}" placeholder="insight tag" style="font-size:12px;background:var(--surface2);"/>
-        </div>`).join('')}
-      </div>`;
+        <div class="pz-choice-col"><span class="pz-choice-sub">ตัวเลือก ${i}</span>
+          <input class="input-field" id="pb${id}-oi${i}" placeholder="🔥" style="width:50px;text-align:center;margin-bottom:4px;font-size:14px;" oninput="triggerAutoSave()"/>
+          <input class="input-field" id="pb${id}-ot${i}" placeholder="ข้อความ" style="margin-bottom:4px;font-size:12px;" oninput="triggerAutoSave()"/>
+          <input class="input-field" id="pb${id}-ok${i}" placeholder="insight tag" style="font-size:12px;background:var(--surface2);" oninput="triggerAutoSave()"/>
+        </div>`).join('')}</div>`;
   } else if(type==='heading') {
-    fields = `
-      <div class="input-group" style="margin-bottom:0;"><div class="input-label">ข้อความหัวข้อ *</div>
-        <input class="input-field" id="pb${id}-text" placeholder="เช่น แรงจูงใจภายนอก"/></div>`;
+    fields = `<div class="input-group" style="margin-bottom:0;"><div class="input-label">ข้อความหัวข้อ *</div><input class="input-field" id="pb${id}-text" placeholder="เช่น แรงจูงใจภายนอก" oninput="triggerAutoSave()"/></div>`;
   } else if(type==='pullquote') {
     fields = `
-      <div class="input-group"><div class="input-label">ข้อความ Pullquote *</div>
-        <textarea class="input-field" id="pb${id}-text" placeholder="ข้อความที่อยากเน้นเป็นพิเศษ..." style="min-height:70px;resize:vertical;"></textarea></div>
-      <div class="input-group" style="margin-bottom:0;"><div class="input-label">แหล่งที่มา (ไม่บังคับ)</div>
-        <input class="input-field" id="pb${id}-attr" placeholder="เช่น Daphna Oyserman · Identity-Based Motivation Theory"/></div>`;
+      <div class="input-group"><div class="input-label">ข้อความ Pullquote *</div>${buildFormatBar(`pb${id}-text`)}<textarea class="input-field" id="pb${id}-text" placeholder="ประโยคที่อยากเน้น..." style="min-height:70px;resize:vertical;" oninput="triggerAutoSave()"></textarea></div>
+      <div class="input-group" style="margin-bottom:0;"><div class="input-label">แหล่งที่มา (ไม่บังคับ)</div><input class="input-field" id="pb${id}-attr" placeholder="เช่น Erik Erikson · Identity: Youth and Crisis" oninput="triggerAutoSave()"/></div>`;
   } else if(type==='table') {
     fields = `
-      <div class="input-group"><div class="input-label">หัว Column (คั่นด้วย |)</div>
-        <input class="input-field" id="pb${id}-headers" placeholder="เช่น ย่อว่า | ชื่อเต็ม | พลังงานมาจาก"/></div>
-      <div class="input-label" style="margin-bottom:6px;">แถวข้อมูล (แถวละ 1 บรรทัด คั่นด้วย |)</div>
-      <textarea class="input-field" id="pb${id}-rows" placeholder="EM | Extrinsic Motivation | ผลลัพธ์ภายนอก&#10;IM | Intrinsic Motivation | ความสนใจในตัวกิจกรรม&#10;IBM | Identity-Based Motivation | ตัวตน" style="min-height:100px;resize:vertical;line-height:1.8;font-size:12px;margin-bottom:0;"></textarea>`;
+      <div class="input-group"><div class="input-label">หัว Column (คั่นด้วย |)</div><input class="input-field" id="pb${id}-headers" placeholder="ย่อว่า | ชื่อเต็ม | พลังงานมาจาก" oninput="triggerAutoSave()"/></div>
+      <div class="input-label" style="margin-bottom:6px;">แถวข้อมูล (1 บรรทัด/แถว คั่นด้วย |)</div>
+      <textarea class="input-field" id="pb${id}-rows" placeholder="EM | Extrinsic Motivation | ผลลัพธ์ภายนอก" style="min-height:100px;resize:vertical;line-height:1.8;font-size:12px;margin-bottom:0;" oninput="triggerAutoSave()"></textarea>`;
   } else if(type==='bleedimage') {
     fields = `
-      <div class="input-group"><div class="input-label">URL รูปภาพ * <span style="font-weight:300;color:var(--text-soft);">— full-bleed ออกขอบทั้งสองข้าง</span></div>
-        <input class="input-field" id="pb${id}-url" placeholder="https://images.unsplash.com/..."/></div>
-      <div class="input-group" style="margin-bottom:0;"><div class="input-label">คำบรรยาย</div>
-        <input class="input-field" id="pb${id}-cap" placeholder="เช่น การสำรวจความสนใจร่วมกับผู้อื่น"/></div>`;
+      <div class="input-group"><div class="input-label">URL รูป * <span style="font-weight:300;color:var(--text-soft);">— ออกขอบทั้งสองข้าง</span></div><input class="input-field" id="pb${id}-url" placeholder="https://..." oninput="triggerAutoSave()"/></div>
+      <div class="input-group" style="margin-bottom:0;"><div class="input-label">คำบรรยาย</div><input class="input-field" id="pb${id}-cap" placeholder="คำบรรยายรูป" oninput="triggerAutoSave()"/></div>`;
+  } else if(type==='definition') {
+    fields = `
+      <div style="display:grid;grid-template-columns:120px 1fr;gap:8px;">
+        <div class="input-group" style="margin-bottom:0;"><div class="input-label">ย่อ</div><input class="input-field" id="pb${id}-term" placeholder="EM" style="text-align:center;font-weight:600;" oninput="triggerAutoSave()"/></div>
+        <div class="input-group" style="margin-bottom:0;"><div class="input-label">ชื่อเต็ม</div><input class="input-field" id="pb${id}-english" placeholder="Extrinsic Motivation" oninput="triggerAutoSave()"/></div>
+      </div>
+      <div class="input-group" style="margin-bottom:0;"><div class="input-label">นิยาม *</div>${buildFormatBar(`pb${id}-meaning`)}<textarea class="input-field" id="pb${id}-meaning" placeholder="คำอธิบายสั้น 1-2 ประโยค..." style="min-height:70px;resize:vertical;" oninput="triggerAutoSave()"></textarea></div>`;
+  } else if(type==='list') {
+    fields = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="input-group" style="margin-bottom:0;"><div class="input-label">รูปแบบ</div>
+          <select class="input-field" id="pb${id}-style" onchange="triggerAutoSave()"><option value="bullet">• Bullet</option><option value="number">1. Numbered</option></select></div>
+        <div class="input-group" style="margin-bottom:0;"><div class="input-label">หัวข้อ (ไม่บังคับ)</div><input class="input-field" id="pb${id}-title" placeholder="เช่น 3 องค์ประกอบของ Flow" oninput="triggerAutoSave()"/></div>
+      </div>
+      <div class="input-group" style="margin-bottom:0;"><div class="input-label">รายการ (1 ข้อ/บรรทัด)</div><textarea class="input-field" id="pb${id}-items" placeholder="Autonomy — เลือกเองได้&#10;Competence — รู้สึกพัฒนา&#10;Relatedness — เชื่อมกับคนอื่น" style="min-height:100px;font-size:13px;line-height:1.8;" oninput="triggerAutoSave()"></textarea></div>`;
+  } else if(type==='divider') {
+    fields = `<div class="input-group" style="margin-bottom:0;"><div class="input-label">รูปแบบเส้นคั่น</div>
+      <select class="input-field" id="pb${id}-style" onchange="triggerAutoSave()">
+        <option value="line">― เส้นบางๆ</option>
+        <option value="dots">• • • จุด 3 จุด</option>
+        <option value="star">✦ ดาวกลาง</option>
+        <option value="wave">〜 คลื่น</option>
+      </select></div>`;
   }
 
   const wrap = document.createElement('div');
-  wrap.className = 'pz-block'; wrap.id = 'pzb-'+id;
+  wrap.className = 'pz-block'; wrap.id = 'pzb-'+id; wrap.dataset.type = type;
   wrap.innerHTML = `
     <div class="pz-block-header">
       <span class="pz-pill ${pillMap[type]}">${labelMap[type]}</span>
-      <button class="pz-del" onclick="pzDelBlock(${id})">✕</button>
+      <div class="pz-block-actions">
+        <button class="pz-action" onclick="pzMoveBlock(${id},-1)" title="เลื่อนขึ้น">⬆</button>
+        <button class="pz-action" onclick="pzMoveBlock(${id},1)" title="เลื่อนลง">⬇</button>
+        <button class="pz-action" onclick="pzDuplicateBlock(${id})" title="ทำซ้ำ">📋</button>
+        <button class="pz-action danger pz-del" onclick="pzDelBlock(${id})" title="ลบ">✕</button>
+      </div>
     </div>
-    ${fields}`;
+    ${fields}
+    <div class="pz-hint">${PZ_BLOCK_HINTS[type] || ''}</div>`;
   document.getElementById('pz-blocks').appendChild(wrap);
   toast('เพิ่ม ' + labelMap[type] + ' แล้ว 💛');
+  updateProgress();
+  triggerAutoSave();
+  wrap.scrollIntoView({behavior:'smooth', block:'center'});
 }
 
 function pzDelBlock(id) {
+  if (!confirm('ลบบล็อกนี้ไหม?')) return;
   const el = document.getElementById('pzb-'+id);
   if(el) el.remove();
   if(!document.querySelectorAll('.pz-block').length) {
     const empty = document.getElementById('pz-blocks-empty');
     if(empty) empty.style.display = 'block';
   }
+  updateProgress();
+  triggerAutoSave();
 }
 
 function pzFillReview() {
@@ -3090,23 +3405,40 @@ function pzBuildBodyNew() {
   const sections = [];
   document.querySelectorAll('.pz-block').forEach(block => {
     const id  = block.id.replace('pzb-','');
-    const pill = block.querySelector('.pz-pill');
-    if(!pill) return;
-    const label = pill.textContent;
+    const type = block.dataset.type;
     const g = (sfx) => (document.getElementById('pb'+id+'-'+sfx)?.value||'').trim();
 
-    if(label.includes('ข้อความ'))
+    if(type==='text')
       sections.push({type:'text', heading:g('heading'), content:g('content')});
-    else if(label.includes('Callout'))
+    else if(type==='callout')
       sections.push({type:'callout', content:g('content')});
-    else if(label.includes('รูปภาพ'))
+    else if(type==='image')
       sections.push({type:'image', url:g('url'), caption:g('cap')});
-    else if(label.includes('วิดีโอ'))
+    else if(type==='video')
       sections.push({type:'video', url:g('url'), caption:g('cap')});
-    else if(label.includes('คำถาม')) {
+    else if(type==='heading')
+      sections.push({type:'heading', text:g('text')});
+    else if(type==='pullquote')
+      sections.push({type:'pullquote', text:g('text'), attribution:g('attr')});
+    else if(type==='table') {
+      const headers = g('headers').split('|').map(s=>s.trim()).filter(Boolean);
+      const rows = g('rows').split('\n').map(line => line.split('|').map(c=>c.trim())).filter(r=>r.length && r[0]);
+      sections.push({type:'table', headers, rows});
+    }
+    else if(type==='bleedimage')
+      sections.push({type:'bleedimage', url:g('url'), caption:g('cap')});
+    else if(type==='definition')
+      sections.push({type:'definition', term:g('term'), english:g('english'), meaning:g('meaning')});
+    else if(type==='list') {
+      const items = g('items').split('\n').map(s=>s.trim()).filter(Boolean);
+      sections.push({type:'list', style:g('style')||'bullet', title:g('title'), items});
+    }
+    else if(type==='divider')
+      sections.push({type:'divider', style:g('style')||'line'});
+    else if(type==='quiz') {
       const choices = [1,2,3,4].map(i=>({text:g('c'+i),feedback:g('f'+i)})).filter(c=>c.text);
       sections.push({type:'interaction', id:'i'+id, question:g('q'), choices});
-    } else if(label.includes('สะท้อน')) {
+    } else if(type==='reflect') {
       const options=[]; const insightMap={};
       [1,2,3,4].forEach(i=>{
         const t=g('ot'+i);
