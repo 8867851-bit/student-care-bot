@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>แผนดูแลตัวเอง — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#FDFBF7; --cream-border:#EDE9E0; --cream-warm:#FFF8EE;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card:#FFFFFF;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --green:#3A7D44; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+      --red:#DC2626; --red-soft:#FEF2F2; --red-border:#FECACA;
+      --blue:#2563EB; --blue-soft:#EFF6FF; --blue-border:#BFDBFE;
+      --amber:#D97706; --amber-soft:#FFFBEB; --amber-border:#FDE68A;
+      --indigo:#4338CA; --indigo-soft:#EEF2FF; --indigo-border:#C7D2FE;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{
+      font-family:'Mitr',sans-serif;
+      background:var(--cream);
+      color:var(--dark);
+      min-height:100vh;
+      padding-bottom:80px;
+      overflow-x:hidden;
+    }
+
+    /* ── BACK ── */
+    .back-btn{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:20px 20px 0;font-size:13px;color:var(--soft);
+      cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;
+    }
+
+    /* ── SCREENS ── */
+    .screen{display:none;flex-direction:column;min-height:calc(100vh - 40px);}
+    .screen.active{display:flex;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .fade-up{animation:fadeUp 0.32s ease forwards;}
+
+    /* ════════════════════════════════════════
+       SCREEN 1: LANDING
+    ════════════════════════════════════════ */
+    #s-landing{padding:0 0 40px;}
+
+    .landing-hero{padding:20px 24px 28px;position:relative;overflow:hidden;}
+    .landing-hero::before{
+      content:'';position:absolute;
+      top:-40px;right:-40px;
+      width:180px;height:180px;
+      background:radial-gradient(circle,rgba(232,150,12,0.07) 0%,transparent 70%);
+      border-radius:50%;pointer-events:none;
+    }
+    .hero-eyebrow{
+      font-size:10px;letter-spacing:2.5px;color:var(--gold);
+      text-transform:uppercase;font-weight:400;margin-bottom:10px;
+    }
+    .hero-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:26px;font-weight:600;color:var(--dark);line-height:1.25;
+      margin-bottom:8px;
+    }
+    .hero-sub{
+      font-size:13px;font-weight:300;color:var(--soft);line-height:1.75;
+    }
+
+    /* Honest framing card */
+    .honest-card{
+      margin:0 20px 28px;
+      background:var(--cream-warm);
+      border:1px solid var(--gold-border);
+      border-radius:16px;padding:14px 16px;
+    }
+    .honest-card-label{
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:var(--gold);margin-bottom:6px;
+    }
+    .honest-card-text{
+      font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;
+    }
+    .honest-card-text strong{font-weight:500;color:var(--dark);}
+
+    /* Section label */
+    .section-label{
+      display:flex;align-items:center;gap:10px;
+      padding:0 20px;margin-bottom:14px;
+    }
+    .section-label-text{
+      font-size:10px;font-weight:500;color:var(--soft);
+      letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap;
+    }
+    .section-label-line{flex:1;height:1px;background:var(--cream-border);}
+
+    /* Plan area cards */
+    .plans-list{display:flex;flex-direction:column;gap:10px;padding:0 20px;}
+
+    .plan-card{
+      background:var(--card);border:1.5px solid var(--cream-border);
+      border-radius:18px;padding:18px 16px 16px;
+      cursor:pointer;position:relative;overflow:hidden;
+      transition:transform 0.15s,box-shadow 0.15s;
+      display:flex;align-items:flex-start;gap:14px;
+    }
+    .plan-card::before{
+      content:'';position:absolute;left:0;top:0;bottom:0;
+      width:3px;border-radius:3px 0 0 3px;
+    }
+    .plan-card:active{transform:scale(0.98);}
+    .plan-card.coming{opacity:0.45;cursor:default;pointer-events:none;}
+
+    /* Color variants */
+    .plan-card.dopamine::before  {background:#8B5CF6;}
+    .plan-card.resilience::before{background:var(--teal,#0D9488);}
+    .plan-card.sleep-plan::before{background:#818CF8;}
+    .plan-card.anxiety::before   {background:var(--blue);}
+    .plan-card.mood::before      {background:var(--green);}
+
+    .plan-icon{
+      width:44px;height:44px;border-radius:13px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;flex-shrink:0;
+    }
+    .plan-card.dopamine   .plan-icon{background:#F5F3FF;}
+    .plan-card.resilience .plan-icon{background:#F0FDFA;}
+    .plan-card.sleep-plan .plan-icon{background:#EEF0FF;}
+    .plan-card.anxiety    .plan-icon{background:var(--blue-soft);}
+    .plan-card.mood       .plan-icon{background:var(--green-soft);}
+
+    .plan-body{flex:1;}
+    .plan-name{
+      font-family:'Noto Serif Thai',serif;
+      font-size:15px;font-weight:600;color:var(--dark);
+      margin-bottom:3px;line-height:1.3;
+    }
+    .plan-desc{font-size:12px;font-weight:300;color:var(--mid);line-height:1.6;}
+    .plan-meta{
+      display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;
+    }
+    .plan-pill{
+      font-size:10px;font-weight:400;color:var(--soft);
+      background:var(--cream);border:1px solid var(--cream-border);
+      border-radius:20px;padding:3px 8px;
+    }
+    .plan-badge{
+      font-size:9px;font-weight:500;letter-spacing:1px;
+      text-transform:uppercase;padding:2px 8px;border-radius:20px;
+      align-self:flex-start;margin-top:1px;flex-shrink:0;
+    }
+    .badge-available{
+      background:var(--green-soft);color:var(--green);
+      border:1px solid var(--green-border);
+    }
+    .badge-soon{
+      background:var(--cream);color:var(--soft);
+      border:1px solid var(--cream-border);
+    }
+    .badge-psych{
+      background:var(--blue-soft);color:var(--blue);
+      border:1px solid var(--blue-border);
+    }
+
+    /* Always-visible support strip */
+    .support-strip{
+      margin:28px 20px 0;
+      background:var(--dark);border-radius:16px;
+      padding:14px 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+    }
+    .support-strip-left{display:flex;flex-direction:column;gap:3px;}
+    .support-strip-label{
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:rgba(232,150,12,0.7);
+    }
+    .support-strip-text{
+      font-family:'Noto Serif Thai',serif;
+      font-size:13px;font-weight:500;color:#FDFBF7;line-height:1.4;
+    }
+    .support-strip-sub{
+      font-size:11px;font-weight:300;
+      color:rgba(253,251,247,0.4);
+    }
+    .support-strip-btn{
+      background:rgba(232,150,12,0.15);
+      border:1px solid rgba(232,150,12,0.3);
+      color:var(--gold);border-radius:12px;
+      padding:9px 14px;font-size:12px;
+      font-family:'Mitr',sans-serif;font-weight:500;
+      cursor:pointer;white-space:nowrap;flex-shrink:0;
+      text-decoration:none;display:inline-block;
+      transition:background 0.15s;
+    }
+    .support-strip-btn:active{background:rgba(232,150,12,0.25);}
+
+
+    /* ════════════════════════════════════════
+       SCREEN 2: READINESS CHECK
+    ════════════════════════════════════════ */
+    #s-check{padding:0;}
+
+    .check-hero{padding:28px 24px 24px;}
+    .check-plan-tag{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--cream);border:1px solid var(--cream-border);
+      border-radius:20px;padding:5px 12px;
+      font-size:11px;font-weight:400;color:var(--mid);
+      margin-bottom:14px;
+    }
+    .check-plan-icon{font-size:14px;}
+    .check-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:22px;font-weight:600;color:var(--dark);
+      line-height:1.4;margin-bottom:6px;
+    }
+    .check-sub{
+      font-size:13px;font-weight:300;color:var(--soft);line-height:1.7;
+    }
+
+    /* Progress */
+    .check-progress{
+      display:flex;gap:5px;padding:0 24px;margin-bottom:28px;
+    }
+    .cp-dot{
+      flex:1;height:3px;border-radius:2px;
+      background:var(--cream-border);transition:background 0.3s;
+    }
+    .cp-dot.done{background:var(--gold);}
+    .cp-dot.active{background:rgba(232,150,12,0.45);}
+
+    /* Question */
+    .check-q-wrap{padding:0 24px;flex:1;}
+    .check-q-num{
+      font-size:10px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:var(--gold);margin-bottom:10px;
+    }
+    .check-q{
+      font-family:'Noto Serif Thai',serif;
+      font-size:20px;font-weight:600;color:var(--dark);
+      line-height:1.45;margin-bottom:6px;
+    }
+    .check-q-sub{
+      font-size:12px;font-weight:300;color:var(--soft);
+      line-height:1.65;margin-bottom:20px;
+    }
+
+    /* Options */
+    .check-opts{display:flex;flex-direction:column;gap:8px;}
+    .check-opt{
+      background:var(--card);border:1.5px solid var(--cream-border);
+      border-radius:13px;padding:14px 16px;
+      cursor:pointer;text-align:left;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;
+      color:var(--dark);transition:all 0.18s;
+      display:flex;align-items:flex-start;gap:10px;
+    }
+    .check-opt:active,.check-opt.sel{
+      border-color:var(--dark);background:var(--dark);color:#FDFBF7;
+    }
+    .check-opt-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .check-opt-body{flex:1;}
+    .check-opt-label{font-size:13px;font-weight:500;margin-bottom:2px;}
+    .check-opt-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
+    .check-opt.sel .check-opt-desc{color:rgba(253,251,247,0.5);}
+
+    .check-foot{padding:24px 24px 44px;}
+    .check-next{
+      width:100%;background:var(--dark);color:var(--cream);
+      border:none;border-radius:28px;padding:15px;
+      font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;
+      cursor:pointer;opacity:0.28;pointer-events:none;
+      transition:opacity 0.2s,transform 0.15s;
+    }
+    .check-next.on{opacity:1;pointer-events:all;}
+    .check-next:active{transform:scale(0.97);}
+
+
+    /* ════════════════════════════════════════
+       SCREEN 3A: READY — plan overview
+    ════════════════════════════════════════ */
+    #s-ready{padding:0 0 48px;}
+
+    .ready-hero{padding:32px 24px 24px;text-align:center;}
+    .ready-icon{font-size:44px;margin-bottom:16px;}
+    .ready-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:22px;font-weight:600;color:var(--dark);
+      line-height:1.4;margin-bottom:8px;
+    }
+    .ready-sub{
+      font-size:13px;font-weight:300;color:var(--mid);
+      line-height:1.75;max-width:300px;margin:0 auto;
+    }
+
+    /* Weeks preview */
+    .weeks-wrap{padding:0 20px;margin-bottom:20px;}
+    .week-row{
+      display:flex;gap:12px;align-items:flex-start;
+      padding:14px 0;border-bottom:1px solid var(--cream-border);
+    }
+    .week-row:last-child{border-bottom:none;}
+    .week-num{
+      width:32px;height:32px;border-radius:50%;
+      background:var(--cream);border:1px solid var(--cream-border);
+      display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:600;color:var(--mid);
+      flex-shrink:0;margin-top:2px;
+    }
+    .week-body{flex:1;}
+    .week-name{
+      font-family:'Noto Serif Thai',serif;
+      font-size:14px;font-weight:600;color:var(--dark);margin-bottom:3px;
+    }
+    .week-desc{font-size:12px;font-weight:300;color:var(--mid);line-height:1.6;}
+    .week-locked{
+      width:28px;height:28px;border-radius:50%;
+      background:var(--cream);border:1px solid var(--cream-border);
+      display:flex;align-items:center;justify-content:center;
+      font-size:12px;color:var(--soft);flex-shrink:0;margin-top:4px;
+    }
+
+    /* Important note */
+    .important-note{
+      margin:0 20px 20px;
+      background:var(--amber-soft);border:1px solid var(--amber-border);
+      border-radius:14px;padding:13px 15px;
+    }
+    .important-note-label{
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:var(--amber);margin-bottom:5px;
+    }
+    .important-note-text{
+      font-size:12px;font-weight:300;color:var(--mid);line-height:1.7;
+    }
+
+    .start-btn{
+      display:block;margin:0 20px;
+      background:var(--dark);color:var(--cream);
+      border:none;border-radius:28px;padding:16px;
+      font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;
+      cursor:pointer;text-align:center;
+      transition:transform 0.15s;text-decoration:none;
+    }
+    .start-btn:active{transform:scale(0.97);}
+
+    .not-now-btn{
+      display:block;text-align:center;margin-top:10px;
+      background:none;border:none;font-family:'Mitr',sans-serif;
+      font-size:12px;color:var(--soft);cursor:pointer;padding:8px;
+    }
+
+
+    /* ════════════════════════════════════════
+       SCREEN 3B: NOT READY — gentle redirect
+    ════════════════════════════════════════ */
+    #s-notready{
+      align-items:center;justify-content:center;
+      text-align:center;padding:48px 28px;
+    }
+
+    .nr-icon{font-size:44px;margin-bottom:20px;}
+    .nr-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:22px;font-weight:600;color:var(--dark);
+      line-height:1.4;margin-bottom:10px;
+    }
+    .nr-sub{
+      font-size:13px;font-weight:300;color:var(--mid);
+      line-height:1.8;margin-bottom:28px;max-width:300px;
+    }
+
+    /* — the key design principle cards — */
+    .nr-cards{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px;margin-bottom:20px;}
+
+    .nr-card{
+      border-radius:14px;padding:14px 16px;
+      display:flex;align-items:center;gap:12px;
+      cursor:pointer;text-decoration:none;
+      transition:transform 0.15s;text-align:left;
+      border:none;font-family:'Mitr',sans-serif;width:100%;
+    }
+    .nr-card:active{transform:scale(0.97);}
+
+    .nr-card.primary{
+      background:var(--dark);
+    }
+    .nr-card.primary .nr-card-icon{color:#FDFBF7;}
+    .nr-card.primary .nr-card-name{color:#FDFBF7;}
+    .nr-card.primary .nr-card-desc{color:rgba(253,251,247,0.5);}
+
+    .nr-card.peer{
+      background:var(--gold-soft);
+      border:1px solid var(--gold-border);
+    }
+    .nr-card.peer .nr-card-name{color:#5C3D00;}
+    .nr-card.peer .nr-card-desc{color:rgba(92,61,0,0.6);}
+
+    .nr-card.tools{
+      background:var(--card);
+      border:1px solid var(--cream-border);
+    }
+    .nr-card.tools .nr-card-name{color:var(--dark);}
+    .nr-card.tools .nr-card-desc{color:var(--soft);}
+
+    .nr-card-icon{font-size:20px;flex-shrink:0;}
+    .nr-card-body{flex:1;}
+    .nr-card-name{font-size:13px;font-weight:500;margin-bottom:2px;}
+    .nr-card-desc{font-size:11px;font-weight:300;line-height:1.5;}
+    .nr-card-arrow{font-size:14px;color:var(--soft);flex-shrink:0;}
+    .nr-card.primary .nr-card-arrow{color:rgba(253,251,247,0.3);}
+    .nr-card.peer .nr-card-arrow{color:rgba(92,61,0,0.3);}
+
+    /* The key message */
+    .nr-note{
+      font-size:12px;font-weight:300;color:var(--soft);
+      line-height:1.75;max-width:280px;
+    }
+
+    .nr-back{
+      margin-top:20px;background:none;border:none;
+      font-family:'Mitr',sans-serif;font-size:12px;
+      color:var(--soft);cursor:pointer;
+    }
+
+
+    /* ════════════════════════════════════════
+       SCREEN 3C: TRIED EVERYTHING
+       — when user has tried multiple things
+         and nothing worked
+    ════════════════════════════════════════ */
+    #s-tried{
+      align-items:center;justify-content:center;
+      text-align:center;padding:48px 28px;
+    }
+
+    .tried-icon{font-size:44px;margin-bottom:16px;}
+    .tried-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:22px;font-weight:600;color:var(--dark);
+      line-height:1.4;margin-bottom:10px;
+    }
+    .tried-sub{
+      font-size:13px;font-weight:300;color:var(--mid);
+      line-height:1.8;margin-bottom:8px;max-width:300px;
+    }
+
+    /* THE IMPORTANT REFRAME */
+    .tried-reframe{
+      background:var(--cream-warm);border:1px solid var(--gold-border);
+      border-radius:14px;padding:14px 16px;
+      margin:16px 0 24px;max-width:340px;text-align:left;
+    }
+    .tried-reframe-label{
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:var(--gold);margin-bottom:6px;
+    }
+    .tried-reframe-text{
+      font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;
+    }
+    .tried-reframe-text strong{font-weight:500;color:var(--dark);}
+
+    /* 1323 card — prominent, not emergency-coded */
+    .call-1323{
+      width:100%;max-width:340px;
+      background:var(--dark);border-radius:18px;
+      padding:18px 18px 16px;margin-bottom:10px;
+      cursor:pointer;text-align:left;
+      display:flex;align-items:center;gap:14px;
+      border:none;font-family:'Mitr',sans-serif;
+      transition:transform 0.15s;text-decoration:none;
+    }
+    .call-1323:active{transform:scale(0.97);}
+    .call-1323-icon{font-size:28px;flex-shrink:0;}
+    .call-1323-body{flex:1;}
+    .call-1323-label{
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:rgba(232,150,12,0.7);margin-bottom:4px;
+    }
+    .call-1323-name{
+      font-family:'Noto Serif Thai',serif;
+      font-size:16px;font-weight:600;color:#FDFBF7;
+      margin-bottom:3px;
+    }
+    .call-1323-desc{
+      font-size:11px;font-weight:300;
+      color:rgba(253,251,247,0.5);line-height:1.5;
+    }
+    .call-1323-arrow{font-size:16px;color:rgba(253,251,247,0.3);flex-shrink:0;}
+
+    .tried-secondary{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px;}
+    .tried-sec-btn{
+      width:100%;background:var(--card);
+      border:1px solid var(--cream-border);border-radius:14px;
+      padding:13px 16px;font-family:'Mitr',sans-serif;
+      font-size:13px;font-weight:400;color:var(--mid);
+      cursor:pointer;text-align:left;
+      display:flex;align-items:center;gap:10px;
+      transition:border-color 0.15s;text-decoration:none;
+    }
+    .tried-sec-btn:active{border-color:var(--dark);color:var(--dark);}
+    .tried-sec-icon{font-size:16px;flex-shrink:0;}
+    .tried-sec-name{flex:1;font-weight:500;color:var(--dark);}
+    .tried-sec-desc{font-size:11px;font-weight:300;color:var(--soft);}
+    .tried-sec-arrow{font-size:14px;color:var(--soft);}
+
+    .tried-note{
+      margin-top:20px;font-size:12px;font-weight:300;
+      color:var(--soft);line-height:1.75;max-width:280px;
+    }
+    .tried-back{
+      margin-top:14px;background:none;border:none;
+      font-family:'Mitr',sans-serif;font-size:12px;
+      color:var(--soft);cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="history.back()">← กลับ</button>
+
+
+<!-- ════════════════════════════════════════════
+     SCREEN 1: LANDING — pick a problem area
+════════════════════════════════════════════ -->
+<div class="screen active" id="s-landing">
+
+  <div class="landing-hero">
+    <div class="hero-eyebrow">ใจดี TU · แผน</div>
+    <div class="hero-title">ทำงานกับบางอย่าง<br>อย่างจริงจัง</div>
+    <div class="hero-sub">
+      สำหรับคนที่รู้แล้วว่าอยากแก้อะไร<br>
+      และพร้อมทำทีละนิดเป็นเวลาหลายสัปดาห์
+    </div>
+  </div>
+
+  <!-- Honest framing — set expectations before anything -->
+  <div class="honest-card">
+    <div class="honest-card-label">ก่อนเริ่ม</div>
+    <div class="honest-card-text">
+      แผนเหล่านี้<strong>ไม่ใช่การรักษา</strong> — มันคือเครื่องมือที่ออกแบบมาให้คนที่พร้อมลองทำอะไรบางอย่างด้วยตัวเอง<br><br>
+      ถ้าใช้แล้วรู้สึกว่ายังไม่พอ นั่นไม่ใช่ความล้มเหลว — มันหมายความว่าคุณอาจต้องการการสนับสนุนที่ลึกกว่านี้ และมีคนพร้อมช่วยอยู่เสมอ
+    </div>
+  </div>
+
+  <div class="section-label">
+    <div class="section-label-text">เลือกพื้นที่ที่อยากทำงาน</div>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="plans-list">
+
+    <!-- PLAN 1: Neurodivergent Reset -->
+    <div class="plan-card dopamine" onclick="startCheck('dopamine')">
+      <div class="plan-icon">🧠</div>
+      <div class="plan-body">
+        <div class="plan-name">Dopamine Reset</div>
+        <div class="plan-desc">
+          โฟกัสยาก ทำสิ่งที่สำคัญได้ยาก เริ่มอะไรไม่เสร็จ —
+          สำหรับสมองที่ถูก wire มาด้วยความเร็ว
+        </div>
+        <div class="plan-meta">
+          <span class="plan-pill">⏱ 4 สัปดาห์</span>
+          <span class="plan-pill">📋 กำลังพัฒนากับนักจิตวิทยา</span>
+        </div>
+      </div>
+      <span class="plan-badge badge-psych">เร็วๆ นี้</span>
+    </div>
+
+    <!-- PLAN 2: Resilient Nervous System -->
+    <div class="plan-card resilience coming">
+      <div class="plan-icon">🌊</div>
+      <div class="plan-body">
+        <div class="plan-name">ระบบประสาทที่ยืดหยุ่น</div>
+        <div class="plan-desc">
+          ตื่นตัวง่าย ฟื้นตัวช้า เครียดสะสม —
+          สร้าง capacity ให้รับมือกับความเครียดได้ดีขึ้น
+        </div>
+        <div class="plan-meta">
+          <span class="plan-pill">⏱ 3 สัปดาห์</span>
+        </div>
+      </div>
+      <span class="plan-badge badge-soon">เร็วๆ นี้</span>
+    </div>
+
+    <!-- PLAN 3: Sleep Rebuild -->
+    <div class="plan-card sleep-plan coming">
+      <div class="plan-icon">🌙</div>
+      <div class="plan-body">
+        <div class="plan-name">สร้างการนอนใหม่</div>
+        <div class="plan-desc">
+          นอนไม่หลับเป็นนิสัย ตื่นมาไม่สดชื่น —
+          ปรับ circadian rhythm ทีละนิด
+        </div>
+        <div class="plan-meta">
+          <span class="plan-pill">⏱ 3 สัปดาห์</span>
+        </div>
+      </div>
+      <span class="plan-badge badge-soon">เร็วๆ นี้</span>
+    </div>
+
+    <!-- PLAN 4: Anxiety & Worry -->
+    <div class="plan-card anxiety coming">
+      <div class="plan-icon">🌀</div>
+      <div class="plan-body">
+        <div class="plan-name">จัดการความวิตกกังวล</div>
+        <div class="plan-desc">
+          วนคิดซ้ำ กังวลล่วงหน้า ควบคุมไม่ได้ —
+          เครื่องมือ CBT ที่ใช้ได้จริงในชีวิตประจำวัน
+        </div>
+        <div class="plan-meta">
+          <span class="plan-pill">⏱ 4 สัปดาห์</span>
+        </div>
+      </div>
+      <span class="plan-badge badge-soon">เร็วๆ นี้</span>
+    </div>
+
+  </div>
+
+  <!-- Always visible — not framed as emergency -->
+  <div class="support-strip">
+    <div class="support-strip-left">
+      <div class="support-strip-label">พูดคุยกับผู้เชี่ยวชาญ</div>
+      <div class="support-strip-text">1323 · ฟรี · ตลอด 24 ชั่วโมง</div>
+      <div class="support-strip-sub">ไม่ต้องรอถึงวิกฤต พูดได้เลยทุกเรื่อง</div>
+    </div>
+    <a class="support-strip-btn" href="tel:1323">โทรเลย</a>
+  </div>
+
+</div><!-- end s-landing -->
+
+
+<!-- ════════════════════════════════════════════
+     SCREEN 2: READINESS CHECK — 3 questions
+════════════════════════════════════════════ -->
+<div class="screen" id="s-check">
+  <div class="check-hero">
+    <div class="check-plan-tag" id="check-plan-tag">
+      <span class="check-plan-icon" id="check-plan-icon">🧠</span>
+      <span id="check-plan-name">Dopamine Reset</span>
+    </div>
+    <div class="check-title">ก่อนเริ่ม<br>ขอถามสั้นๆ 3 ข้อ</div>
+    <div class="check-sub">
+      เพื่อให้แน่ใจว่าแผนนี้เหมาะกับตอนนี้<br>
+      ไม่มีคำตอบที่ถูกหรือผิด
+    </div>
+  </div>
+
+  <div class="check-progress">
+    <div class="cp-dot active" id="cp-0"></div>
+    <div class="cp-dot" id="cp-1"></div>
+    <div class="cp-dot" id="cp-2"></div>
+  </div>
+
+  <div class="check-q-wrap" id="check-q-wrap"></div>
+
+  <div class="check-foot">
+    <button class="check-next" id="check-next" onclick="nextCheckQ()">ถัดไป →</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     SCREEN 3A: READY — show the plan
+════════════════════════════════════════════ -->
+<div class="screen" id="s-ready">
+  <div class="ready-hero">
+    <div class="ready-icon">🗺️</div>
+    <div class="ready-title" id="ready-title">พร้อมแล้ว</div>
+    <div class="ready-sub" id="ready-sub"></div>
+  </div>
+
+  <div class="section-label" style="padding:0 20px;margin-bottom:12px;">
+    <div class="section-label-text" id="ready-plan-name">แผน 4 สัปดาห์</div>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="weeks-wrap" id="weeks-wrap"></div>
+
+  <div class="important-note">
+    <div class="important-note-label">สำคัญ</div>
+    <div class="important-note-text">
+      ถ้าสัปดาห์ไหนทำได้ไม่ครบ นั่นไม่ใช่ความล้มเหลว —
+      แค่ทำต่อในสัปดาห์ถัดไปได้เลย<br><br>
+      ถ้าผ่านไปสองสัปดาห์แล้วรู้สึกว่าหนักเกินกว่าแผนจะช่วยได้
+      มีคนพร้อมคุยด้วยอยู่เสมอ
+    </div>
+  </div>
+
+  <button class="start-btn" id="start-btn">เริ่มสัปดาห์ที่ 1 →</button>
+  <button class="not-now-btn" onclick="goTo('s-landing')">ยังไม่พร้อม กลับไปก่อน</button>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     SCREEN 3B: NOT READY
+     — capacity too low, show support options
+════════════════════════════════════════════ -->
+<div class="screen" id="s-notready">
+  <div class="nr-icon">🌿</div>
+  <div class="nr-title">ตอนนี้อาจยังไม่ใช่<br>เวลาของแผน</div>
+  <div class="nr-sub">
+    แผนทำงานได้ดีที่สุดเมื่อมีแรงลองทำสิ่งใหม่บ้าง<br>
+    ตอนนี้ร่างกายและใจอาจต้องการอะไรที่เบากว่าก่อน
+  </div>
+
+  <div class="nr-cards">
+    <!-- Support — framed as natural next step, not emergency -->
+    <a class="nr-card primary" href="tel:1323">
+      <span class="nr-card-icon">📞</span>
+      <span class="nr-card-body">
+        <span class="nr-card-name">โทร 1323 · ฟรี ตลอดวัน</span>
+        <span class="nr-card-desc">พูดคุยกับผู้เชี่ยวชาญ ไม่ต้องรอถึงวิกฤต</span>
+      </span>
+      <span class="nr-card-arrow">→</span>
+    </a>
+
+    <a class="nr-card peer" href="peer.html">
+      <span class="nr-card-icon">💛</span>
+      <span class="nr-card-body">
+        <span class="nr-card-name">คุยกับ PR</span>
+        <span class="nr-card-desc">บางทีแค่มีคนรับฟังก็เบาขึ้นได้เยอะ</span>
+      </span>
+      <span class="nr-card-arrow">→</span>
+    </a>
+
+    <a class="nr-card tools" href="alltools.html">
+      <span class="nr-card-icon">🌬️</span>
+      <span class="nr-card-body">
+        <span class="nr-card-name">เครื่องมือดูแลใจ</span>
+        <span class="nr-card-desc">หายใจ บันทึก นอนหลับ — ทำได้ตอนนี้เลย</span>
+      </span>
+      <span class="nr-card-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="nr-note">
+    กลับมาดูแผนได้เสมอเมื่อรู้สึกพร้อมขึ้น<br>
+    ไม่มีกำหนดเวลา
+  </div>
+  <button class="nr-back" onclick="goTo('s-landing')">← กลับหน้าแผน</button>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     SCREEN 3C: TRIED EVERYTHING
+     — the most important screen in the app
+════════════════════════════════════════════ -->
+<div class="screen" id="s-tried">
+  <div class="tried-icon">🤍</div>
+  <div class="tried-title">คุณพยายามมากแล้ว</div>
+  <div class="tried-sub">
+    การที่ลองหลายอย่างแล้วยังไม่ดีขึ้น<br>
+    ไม่ได้หมายความว่าคุณทำไม่พอ
+  </div>
+
+  <!-- THE KEY REFRAME -->
+  <div class="tried-reframe">
+    <div class="tried-reframe-label">สิ่งที่ต้องรู้</div>
+    <div class="tried-reframe-text">
+      มันหมายความว่า<strong>เครื่องมือเหล่านั้นไม่ใช่สิ่งที่คุณต้องการตอนนี้</strong><br><br>
+      เหมือนยาแก้ปวดหัวที่ไม่ได้ผล — ปัญหาไม่ได้อยู่ที่คนกิน
+      แต่เพราะอาจต้องการยาอีกชนิดหนึ่ง<br><br>
+      ขั้นต่อไปคือการคุยกับคนที่เชี่ยวชาญเรื่องนี้จริงๆ
+      และนั่นเป็นสิ่งที่ฉลาดมาก ไม่ใช่การยอมแพ้
+    </div>
+  </div>
+
+  <!-- 1323 — prominent, warm, not red/emergency -->
+  <a class="call-1323" href="tel:1323">
+    <span class="call-1323-icon">📞</span>
+    <span class="call-1323-body">
+      <span class="call-1323-label">ฟรี · ตลอด 24 ชั่วโมง · ไม่ต้องนัด</span>
+      <span class="call-1323-name">โทร 1323</span>
+      <span class="call-1323-desc">กรมสุขภาพจิต — พูดคุยได้ทุกเรื่อง<br>ไม่ใช่แค่วิกฤต</span>
+    </span>
+    <span class="call-1323-arrow">→</span>
+  </a>
+
+  <div class="tried-secondary">
+    <a class="tried-sec-btn" href="care.html?tab=professional">
+      <span class="tried-sec-icon">🏥</span>
+      <span class="tried-sec-name">ดูตัวเลือกผู้เชี่ยวชาญอื่นๆ</span>
+      <span class="tried-sec-arrow">→</span>
+    </a>
+    <a class="tried-sec-btn" href="peer.html">
+      <span class="tried-sec-icon">💛</span>
+      <span class="tried-sec-name">คุยกับ PR ก่อนก็ได้</span>
+      <span class="tried-sec-arrow">→</span>
+    </a>
+    <a class="tried-sec-btn" href="crisis.html">
+      <span class="tried-sec-icon">🛠</span>
+      <span class="tried-sec-name">เครื่องมือและสายด่วนอื่นๆ</span>
+      <span class="tried-sec-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="tried-note">
+    แผนยังอยู่ที่นี่เสมอ<br>
+    กลับมาได้เมื่อรู้สึกพร้อม
+  </div>
+  <button class="tried-back" onclick="goTo('s-landing')">← กลับหน้าแผน</button>
+</div>
+
+
+<script>
+// ══════════════════════════════════════════════
+// PLAN DEFINITIONS
+// Shell only — content to be filled by psychologist
+// ══════════════════════════════════════════════
+const PLANS = {
+  dopamine: {
+    icon: '🧠', name: 'Dopamine Reset',
+    weeks: [
+      { name:'สังเกตและเข้าใจ', desc:'ไม่เปลี่ยนอะไรก่อน แค่สังเกตว่า dopamine drop เกิดตอนไหน และอะไรที่ทำให้โฟกัสหลุด' },
+      { name:'ลด stimulation ทีละนิด', desc:'เลือกหนึ่งอย่างที่จะลดลง — ไม่ต้องหยุดหมด แค่สร้าง gap เล็กๆ ให้สมองได้พัก' },
+      { name:'สร้าง micro-focus', desc:'ฝึก single-task 5 นาทีต่อวัน ไม่ใช่เพราะ discipline แต่เพื่อให้สมองรู้จักความรู้สึกนั้น' },
+      { name:'ต่อยอดและ review', desc:'ดูว่าอะไรได้ผล อะไรไม่ได้ผล และตัดสินใจว่าจะไปต่ออย่างไร — รวมถึงถ้าควรคุยกับใครเพิ่ม' },
+    ],
+    readySub: 'แผนนี้จะพาคุณผ่าน 4 สัปดาห์ที่ทำได้จริง\nเริ่มจากการสังเกต ไม่ใช่การเปลี่ยนทุกอย่างทันที',
+    startUrl: '#', // will link to week 1 page when built
+  },
+};
+
+// ══════════════════════════════════════════════
+// CHECK QUESTIONS
+// 3 questions that determine routing
+// ══════════════════════════════════════════════
+const CHECK_QS = [
+  {
+    num: 'คำถามที่ 1 / 3',
+    q: 'เรื่องนี้อยู่กับคุณมานานแค่ไหนแล้ว?',
+    sub: 'ไม่มีคำตอบที่ถูกหรือผิด แค่อยากรู้จริงๆ',
+    opts: [
+      { icon:'🌱', label:'เพิ่งสังเกตเห็นไม่นาน', desc:'ไม่กี่สัปดาห์ที่ผ่านมา', value:'recent' },
+      { icon:'🌿', label:'สักพักแล้ว', desc:'หลายเดือน หรือมาเป็นช่วงๆ', value:'medium' },
+      { icon:'🌳', label:'นานมาก', desc:'รู้สึกแบบนี้มาตลอด หรือนานหลายปี', value:'long' },
+    ],
+    // 'long' alone doesn't trigger referral — just context
+    referralTrigger: null,
+  },
+  {
+    num: 'คำถามที่ 2 / 3',
+    q: 'ช่วงนี้มีแรงลองทำอะไรใหม่บ้างไหม?',
+    sub: 'ไม่ต้องมีมาก แค่นิดเดียวก็นับ',
+    opts: [
+      { icon:'✨', label:'มีอยู่บ้าง', desc:'ไม่มาก แต่พอลองได้', value:'yes' },
+      { icon:'🌫', label:'ไม่แน่ใจ', desc:'ขึ้นๆ ลงๆ บางวันมี บางวันไม่มี', value:'unsure' },
+      { icon:'🪨', label:'ไม่มีเลยตอนนี้', desc:'แค่ผ่านแต่ละวันก็หนักพออยู่แล้ว', value:'no' },
+    ],
+    // 'no' → not ready screen
+    referralTrigger: 'no',
+    referralScreen: 's-notready',
+  },
+  {
+    num: 'คำถามที่ 3 / 3',
+    q: 'เคยลองแก้เรื่องนี้มาก่อนไหม?',
+    sub: 'ลองอะไรก็นับ ไม่ว่าจะได้ผลหรือเปล่า',
+    opts: [
+      { icon:'🆕', label:'ยังไม่เคยลอง', desc:'นี่เป็นครั้งแรก', value:'never' },
+      { icon:'🔄', label:'ลองมาบ้าง', desc:'ได้ผลบ้าง ไม่ได้ผลบ้าง', value:'some' },
+      { icon:'😔', label:'ลองหลายอย่างแล้ว', desc:'แต่ยังรู้สึกว่าไม่ดีขึ้นเท่าที่อยากได้', value:'many' },
+    ],
+    // 'many' → tried everything screen — the most important routing
+    referralTrigger: 'many',
+    referralScreen: 's-tried',
+  },
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let currentPlan = null;
+let checkStep   = 0;
+let checkAnswer = null;
+const checkAnswers = [];
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════════
+// START CHECK — called when user picks a plan
+// ══════════════════════════════════════════════
+function startCheck(planKey) {
+  currentPlan = PLANS[planKey];
+  if (!currentPlan) return;
+
+  // Reset state
+  checkStep = 0;
+  checkAnswers.length = 0;
+  checkAnswer = null;
+
+  // Set plan tag
+  document.getElementById('check-plan-icon').textContent = currentPlan.icon;
+  document.getElementById('check-plan-name').textContent = currentPlan.name;
+
+  goTo('s-check');
+  renderCheckQ();
+}
+
+// ══════════════════════════════════════════════
+// RENDER CHECK QUESTION
+// ══════════════════════════════════════════════
+function renderCheckQ() {
+  const q    = CHECK_QS[checkStep];
+  const wrap = document.getElementById('check-q-wrap');
+
+  // Progress dots
+  CHECK_QS.forEach((_, i) => {
+    const dot = document.getElementById('cp-' + i);
+    if (!dot) return;
+    dot.classList.remove('done', 'active');
+    if (i < checkStep)  dot.classList.add('done');
+    if (i === checkStep) dot.classList.add('active');
+  });
+
+  // Reset next btn
+  const nextBtn = document.getElementById('check-next');
+  nextBtn.classList.remove('on');
+  nextBtn.textContent = checkStep < CHECK_QS.length - 1 ? 'ถัดไป →' : 'ดูผล →';
+  checkAnswer = null;
+
+  // Render question
+  const optsHTML = q.opts.map(opt => `
+    <button class="check-opt" data-value="${opt.value}" onclick="pickCheckOpt(this)">
+      <span class="check-opt-icon">${opt.icon}</span>
+      <span class="check-opt-body">
+        <span class="check-opt-label">${opt.label}</span><br>
+        <span class="check-opt-desc">${opt.desc}</span>
+      </span>
+    </button>`).join('');
+
+  wrap.innerHTML = `
+    <div class="fade-up">
+      <div class="check-q-num">${q.num}</div>
+      <div class="check-q">${q.q}</div>
+      <div class="check-q-sub">${q.sub}</div>
+      <div class="check-opts">${optsHTML}</div>
+    </div>`;
+}
+
+function pickCheckOpt(el) {
+  el.closest('.check-opts').querySelectorAll('.check-opt').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  checkAnswer = el.dataset.value;
+  document.getElementById('check-next').classList.add('on');
+}
+
+// ══════════════════════════════════════════════
+// NEXT CHECK QUESTION — routing logic lives here
+// ══════════════════════════════════════════════
+function nextCheckQ() {
+  if (!checkAnswer) return;
+
+  const q = CHECK_QS[checkStep];
+  checkAnswers.push(checkAnswer);
+
+  // Check if this answer triggers immediate referral
+  if (q.referralTrigger && checkAnswer === q.referralTrigger) {
+    goTo(q.referralScreen);
+    return;
+  }
+
+  checkStep++;
+
+  if (checkStep >= CHECK_QS.length) {
+    // All questions answered without referral triggers — show the plan
+    buildReadyScreen();
+    goTo('s-ready');
+  } else {
+    renderCheckQ();
+  }
+}
+
+// ══════════════════════════════════════════════
+// BUILD READY SCREEN
+// ══════════════════════════════════════════════
+function buildReadyScreen() {
+  if (!currentPlan) return;
+
+  document.getElementById('ready-title').textContent = 'พร้อมแล้ว 🎯';
+  document.getElementById('ready-sub').textContent   = currentPlan.readySub;
+  document.getElementById('ready-plan-name').textContent = currentPlan.name + ' · ' + currentPlan.weeks.length + ' สัปดาห์';
+
+  // Weeks
+  const wrap = document.getElementById('weeks-wrap');
+  wrap.innerHTML = currentPlan.weeks.map((w, i) => `
+    <div class="week-row">
+      <div class="week-num">${i + 1}</div>
+      <div class="week-body">
+        <div class="week-name">${w.name}</div>
+        <div class="week-desc">${w.desc}</div>
+      </div>
+      ${i > 0 ? `<div class="week-locked">🔒</div>` : ''}
+    </div>`).join('');
+
+  // Start button
+  const btn = document.getElementById('start-btn');
+  btn.textContent = 'เริ่มสัปดาห์ที่ 1 →';
+  btn.onclick = () => {
+    if (currentPlan.startUrl && currentPlan.startUrl !== '#') {
+      window.location.href = currentPlan.startUrl;
+    } else {
+      // Plan not yet built — honest message
+      alert('แผนนี้กำลังอยู่ในระหว่างการพัฒนากับนักจิตวิทยา\nจะเปิดให้ใช้เร็วๆ นี้');
+    }
+  };
+}
+</script>
+</body>
+</html>
