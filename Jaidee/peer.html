@@ -13,7 +13,7 @@
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;}
-    .screen{display:none;flex-direction:column;min-height:100vh;padding:48px 24px 40px;position:relative;overflow:hidden;}
+    .screen{display:none;flex-direction:column;min-height:100vh;padding:48px 24px 40px;}
     .screen.active{display:flex;animation:fadeUp 0.4s ease both;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
     .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:flex-end;}
@@ -39,47 +39,11 @@
     @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
     .transition-word{font-family:'Playfair Display',serif;font-size:26px;color:white;font-style:italic;}
     #screen-question{justify-content:flex-start;gap:0;}
-
-    /* ── lead-in whisper (replaces clinical "ข้อ X จาก Y") ── */
-    .q-lead-in{font-size:12px;color:var(--soft);letter-spacing:0.5px;margin-bottom:10px;min-height:18px;opacity:0;transform:translateY(4px);transition:opacity 0.4s ease 0.06s,transform 0.4s ease 0.06s;}
-    .q-lead-in.visible{opacity:1;transform:translateY(0);}
-
-    /* ── progress dots ── */
-    .progress-dots{display:flex;gap:7px;margin-bottom:28px;}
-    .progress-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background 0.4s ease,transform 0.3s ease;}
-    .progress-dot.active{background:var(--gold);transform:scale(1.25);}
-    .progress-dot.done{background:#C8B47A;}
-
-    .question-text{font-family:'Playfair Display',serif;font-size:28px;line-height:1.4;font-weight:600;margin-bottom:28px;opacity:0;transform:translateY(12px);transition:opacity 0.4s ease 0.14s,transform 0.4s ease 0.14s;}
-    .question-text.visible{opacity:1;transform:translateY(0);}
-    .options{display:flex;flex-direction:column;gap:10px;opacity:0;transform:translateY(10px);transition:opacity 0.35s ease 0.22s,transform 0.35s ease 0.22s;}
-    .options.visible{opacity:1;transform:translateY(0);}
+    .q-meta{font-size:12px;color:var(--softer);font-weight:600;margin-bottom:24px;}
+    .question-text{font-family:'Playfair Display',serif;font-size:28px;line-height:1.4;font-weight:600;margin-bottom:28px;}
+    .options{display:flex;flex-direction:column;gap:10px;}
     .option-btn{background:white;border:1.5px solid var(--border);border-radius:14px;padding:15px 18px;font-size:15px;font-family:'Sarabun',sans-serif;color:var(--dark);cursor:pointer;text-align:left;line-height:1.5;transition:all 0.18s ease;}
-    .option-btn:hover{border-color:#E0D9CC;background:#FEFDF9;}
     .option-btn.pressed{background:var(--gold-soft);border-color:var(--gold);transform:scale(0.985);}
-
-    /* ── acknowledgment layer ── */
-    .ack-layer{
-      position:absolute;inset:0;background:var(--cream);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:14px;text-align:center;padding:40px;
-      opacity:0;pointer-events:none;transition:opacity 0.3s ease;z-index:10;
-    }
-    .ack-layer.visible{opacity:1;pointer-events:auto;}
-    .ack-heart{font-size:40px;animation:pulse 1.4s ease infinite;}
-    .ack-main{
-      font-family:'Playfair Display',serif;font-size:22px;font-style:italic;
-      color:var(--dark);line-height:1.4;
-      opacity:0;transform:translateY(8px);
-      transition:opacity 0.4s ease 0.15s,transform 0.4s ease 0.15s;
-    }
-    .ack-layer.visible .ack-main{opacity:1;transform:translateY(0);}
-    .ack-sub-text{
-      font-size:13px;color:var(--soft);
-      opacity:0;transition:opacity 0.3s ease 0.32s;
-    }
-    .ack-layer.visible .ack-sub-text{opacity:1;}
-
     #screen-booking{gap:18px;}
     .booking-headline{font-family:'Playfair Display',serif;font-size:28px;line-height:1.3;}
     .booking-sub{font-size:14px;color:var(--mid);line-height:1.7;margin-top:-6px;}
@@ -205,22 +169,9 @@
 <!-- SCREEN 3: QUESTIONS -->
 <div class="screen" id="screen-question">
   <button onclick="goBackFromQuestion()" style="background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:0 0 8px 0;align-self:flex-start;display:flex;align-items:center;gap:4px;">← กลับ</button>
-
-  <!-- progress dots -->
-  <div class="progress-dots" id="progress-dots"></div>
-
-  <!-- lead-in whisper -->
-  <div class="q-lead-in" id="q-meta"></div>
-
+  <div class="q-meta" id="q-meta">ข้อ 1 จาก 5</div>
   <div class="question-text" id="question-text"></div>
   <div class="options" id="options-container"></div>
-
-  <!-- acknowledgment layer -->
-  <div class="ack-layer" id="ack-layer">
-    <div class="ack-heart">🤍</div>
-    <div class="ack-main" id="ack-main"></div>
-    <div class="ack-sub-text" id="ack-sub"></div>
-  </div>
 </div>
 
 <!-- SCREEN 4: BOOKING -->
@@ -264,7 +215,7 @@
   </div>
 </div>
 
-<!-- SPECIAL REQUEST -->
+<!-- SPECIAL REQUEST — select exact after-school slots, same format as booking -->
 <div class="screen" id="screen-special">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
     <button onclick="show('screen-no-slots')" style="background:none;border:none;color:var(--soft);font-size:20px;cursor:pointer;padding:0;line-height:1;">←</button>
@@ -272,10 +223,16 @@
   </div>
   <div class="special-headline" style="margin-top:4px;">เลือก slot<br>ที่สะดวกได้เลย 🤍</div>
   <div class="intro-body" style="margin-top:-8px;font-size:13px;">เลือกได้หลาย slot — ทีมงานจะหา PR ให้ภายใน 1-2 วัน แล้ว LINE มาแจ้ง</div>
+
   <div style="display:flex;flex-direction:column;gap:12px;width:100%;margin-top:4px;">
+
+    <!-- Slot grid — same after-school times as booking -->
     <div id="special-slot-grid" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+    <!-- Note -->
     <textarea id="special-note" placeholder="อยากบอกอะไรเพิ่มไหม? เช่น ติดซ้อม ติดกวดวิชา (optional)" style="background:var(--cream);border:1.5px solid var(--border);border-radius:12px;padding:12px;font-size:13px;font-family:'Sarabun',sans-serif;min-height:60px;resize:none;color:var(--dark);"></textarea>
   </div>
+
   <div class="booking-bottom">
     <button class="btn-gold" id="btn-special-submit" onclick="submitSpecialRequest()">ส่งคำขอ →</button>
     <button class="btn-ghost" onclick="show('screen-no-slots')">← กลับ</button>
@@ -349,6 +306,7 @@
   <div class="success-glow">💛</div>
   <div class="success-title">นัดแล้ว<br>แล้วเจอกันนะ</div>
   <div class="success-card" id="success-card"></div>
+  <!-- Next steps — only true things -->
   <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:4px;">
     <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(0,0,0,0.04);border-radius:12px;padding:12px 14px;">
       <span style="font-size:16px;flex-shrink:0;">📩</span>
@@ -374,6 +332,7 @@
 // ================================================================
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
 
+// GET-based API call to avoid CORS
 async function apiCall(data) {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(data)) {
@@ -383,6 +342,21 @@ async function apiCall(data) {
   return await res.json();
 }
 const LIFF_ID = "2009806939-AONYlCkT";
+
+// ================================================================
+// MOCK FALLBACK DATA
+// Used ONLY when API is unreachable (network error, quota, etc.)
+// Real data always takes priority
+// ================================================================
+const MOCK_SLOTS = [
+  { slot:"อังคาร 15:30–16:30", count:2 },
+  { slot:"อังคาร 16:00–17:00", count:1 },
+  { slot:"พุธ 15:30–16:30",    count:3 },
+  { slot:"พุธ 16:00–17:00",    count:1 },
+  { slot:"พฤหัสบดี 16:00–17:00", count:2 },
+  { slot:"ศุกร์ 13:00–14:00",  count:1 },
+  { slot:"ศุกร์ 14:00–15:00",  count:2 },
+];
 
 // ================================================================
 // STATE
@@ -404,46 +378,6 @@ const questions = [
     opts:["ยังเลย นี่เป็นครั้งแรก","เคยลอง แต่ไม่ค่อยได้ผล","เคย แต่ยังต้องการความช่วยเหลืออยู่"] },
   { q:"อยากได้อะไรจากการคุยครั้งนี้?",
     opts:["แค่อยากให้มีคนรับฟัง","อยากได้คำแนะนำว่าจะทำยังไงต่อ","ยังไม่แน่ใจ แค่รู้สึกว่าต้องเริ่มสักที"] },
-];
-
-// Lead-in whispers — one per question
-const leadIns = [
-  "เริ่มกันเลยนะ",
-  "อยากรู้จักคุณมากขึ้นหน่อย",
-  "แค่อยากเข้าใจมากขึ้น",
-  "เกือบถึงแล้วนะ",
-  "ข้อสุดท้ายแล้วนะ 🤍",
-];
-
-// Contextual acknowledgment — [main, sub] per answer
-const ackMap = [
-  {
-    "ความเครียด / แรงกดดัน": ["หนักมากเลยนะ","ขอบคุณที่บอกเรา"],
-    "ความสัมพันธ์":           ["เรื่องแบบนี้ไม่ง่ายเลย","ขอบคุณที่บอกเรา"],
-    "ความรู้สึกของตัวเอง":    ["กล้าพูดออกมาได้เลยนะ","ขอบคุณที่ไว้ใจเรา"],
-    "เรื่องเรียน":             ["เข้าใจเลย หนักมากได้เหมือนกัน","ขอบคุณที่บอกเรา"],
-    "ยังบอกไม่ถูกเลย":        ["ไม่ต้องรู้ก็ได้ แค่มาก็พอ","เราอยู่ตรงนี้แล้ว"],
-  },
-  {
-    "นิดหน่อย แต่ก็คิดอยู่":              ["รับรู้แล้วนะ","ดีแล้วที่บอกเรา"],
-    "ค่อนข้างมาก เริ่มยากขึ้นแล้ว":      ["ไม่ง่ายเลยนะ","ขอบคุณที่พูดออกมา"],
-    "มากเลย ยากมากตอนนี้":               ["กล้ามากเลยที่บอกเรา","เราอยู่ตรงนี้แล้ว"],
-  },
-  {
-    "เพิ่งเกิดขึ้น":                            ["ดีแล้วที่ไม่รอ","เราพร้อมรับฟังแล้ว"],
-    "สักพักแล้ว ประมาณไม่กี่อาทิตย์":          ["แบกมาได้นานเลยนะ","ขอบคุณที่ยังอยู่ที่นี่"],
-    "นานมากแล้ว นานกว่าที่อยากยอมรับ":        ["ขอบคุณที่ยังอยู่ที่นี่นะ","เราพร้อมรับฟัง"],
-  },
-  {
-    "ยังเลย นี่เป็นครั้งแรก":                   ["วันนี้ก็เป็นก้าวใหญ่มากแล้ว","ขอบคุณที่ไว้ใจเรา"],
-    "เคยลอง แต่ไม่ค่อยได้ผล":                  ["ขอบคุณที่ยังลองอีกครั้ง","เราจะรับฟังอย่างตั้งใจ"],
-    "เคย แต่ยังต้องการความช่วยเหลืออยู่":      ["ดีแล้วที่ยังขอความช่วยเหลืออยู่","เราพร้อมแล้ว"],
-  },
-  {
-    "แค่อยากให้มีคนรับฟัง":                    ["เราอยู่ตรงนี้เพื่อฟังเลยนะ","ขอบคุณที่มา"],
-    "อยากได้คำแนะนำว่าจะทำยังไงต่อ":          ["เราจะช่วยคิดด้วยกัน","ขอบคุณที่บอกเรา"],
-    "ยังไม่แน่ใจ แค่รู้สึกว่าต้องเริ่มสักที": ["แค่มาก็พอแล้ว","เราพร้อมแล้ว"],
-  },
 ];
 
 // ================================================================
@@ -482,6 +416,8 @@ function generateTimes(startStr,endStr) {
   return times;
 }
 
+// ── After-school slots only — จันทร์–ศุกร์ 15:30–17:30
+// ศุกร์ออกเร็วกว่า แต่ก็ยังเป็น after school เช่นกัน
 const ALL_SLOT_TIMES={
   จันทร์:   generateTimes("15:30","17:30"),
   อังคาร:   generateTimes("15:30","17:30"),
@@ -503,17 +439,22 @@ function toast(msg) {
 
 // ================================================================
 // LIFF INIT
+// Interconnection 0: Get LINE userId from LIFF
+// This userId is used in ALL subsequent API calls
 // ================================================================
 window.onload=async()=>{
   try {
     await liff.init({liffId:LIFF_ID});
     if(!liff.isLoggedIn()){liff.login();return;}
     const p=await liff.getProfile();
-    userId=p.userId;
+    userId=p.userId; // ← LINE userId used for all API calls
   } catch(err) {
     console.warn("LIFF unavailable, using test userId");
     userId="test_"+Date.now();
   }
+
+  // Check pause status on load
+  // Interconnection: GET ?action=getPauseStatus → Apps Script
   checkPauseStatus();
 };
 
@@ -525,7 +466,9 @@ async function checkPauseStatus() {
       const end      = new Date(d.pause.end);
       const daysLeft = Math.max(0, Math.ceil((end - new Date()) / 86400000));
       const type     = d.pause.type || "midterm";
+      // Set days in pause screen
       document.getElementById("pause-days").innerText = daysLeft;
+      // Set message based on type
       const msgs = {
         midterm:  "ช่วงนี้เป็นช่วงสอบกลางภาค",
         finals:   "ช่วงนี้เป็นช่วงสอบปลายภาค",
@@ -545,12 +488,14 @@ async function checkPauseStatus() {
       window._pauseActive = true;
       window._pauseDays   = daysLeft;
       window._pauseType   = type;
+      // ── KEY FIX: disable the start button so user never enters the flow ──
       const startBtn = document.querySelector("#screen-intro .btn-primary");
       if (startBtn) {
         startBtn.disabled = true;
         startBtn.textContent = "ระบบปิดชั่วคราว";
         startBtn.style.cssText = "background:#ddd;color:#999;cursor:not-allowed;opacity:1;";
       }
+      // Replace intro content with pause message directly
       const introMiddle = document.querySelector("#screen-intro .intro-middle");
       if (introMiddle) {
         introMiddle.innerHTML = `
@@ -602,90 +547,36 @@ function startFlow(){
   setTimeout(()=>{currentQ=0;answers=[];renderQuestion();show("screen-question");},1600);
 }
 
-// ── Build progress dots ──────────────────────────────────────
-function buildProgressDots() {
-  const container = document.getElementById("progress-dots");
-  container.innerHTML = "";
-  questions.forEach((_, i) => {
-    const d = document.createElement("div");
-    d.className = "progress-dot" +
-      (i < currentQ ? " done" : i === currentQ ? " active" : "");
-    container.appendChild(d);
+function renderQuestion(){
+  const d=questions[currentQ];
+  document.getElementById("q-meta").innerText="ข้อ "+(currentQ+1)+" จาก "+questions.length;
+  const qEl=document.getElementById("question-text");
+  qEl.style.opacity="0";qEl.style.transform="translateY(10px)";qEl.style.transition="none";qEl.innerText=d.q;
+  setTimeout(()=>{qEl.style.transition="opacity 0.3s,transform 0.3s";qEl.style.opacity="1";qEl.style.transform="translateY(0)";},40);
+  const c=document.getElementById("options-container");
+  c.innerHTML="";c.style.opacity="0";c.style.transition="none";
+  d.opts.forEach(opt=>{
+    const btn=document.createElement("button");
+    btn.className="option-btn";btn.innerText=opt;
+    btn.onclick=()=>selectAnswer(btn,opt);c.appendChild(btn);
   });
+  setTimeout(()=>{c.style.transition="opacity 0.3s";c.style.opacity="1";},100);
 }
 
-function renderQuestion() {
-  const d = questions[currentQ];
-
-  // Lead-in whisper
-  const leadEl = document.getElementById("q-meta");
-  leadEl.classList.remove("visible");
-  leadEl.innerText = leadIns[currentQ] || "";
-
-  // Question text
-  const qEl = document.getElementById("question-text");
-  qEl.classList.remove("visible");
-  qEl.innerText = d.q;
-
-  // Options
-  const c = document.getElementById("options-container");
-  c.classList.remove("visible");
-  c.innerHTML = "";
-  d.opts.forEach(opt => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.innerText = opt;
-    btn.onclick = () => selectAnswer(btn, opt);
-    c.appendChild(btn);
-  });
-
-  // Hide ack layer
-  document.getElementById("ack-layer").classList.remove("visible");
-
-  // Progress dots
-  buildProgressDots();
-
-  // Staggered entrance
-  requestAnimationFrame(() => {
-    setTimeout(() => leadEl.classList.add("visible"), 60);
-    setTimeout(() => qEl.classList.add("visible"), 120);
-    setTimeout(() => c.classList.add("visible"), 200);
-  });
-}
-
-function selectAnswer(btn, answer) {
-  // Lock all options immediately
-  document.querySelectorAll(".option-btn").forEach(b => b.style.pointerEvents = "none");
-  btn.classList.add("pressed");
-  answers.push(answer);
-
-  // Contextual acknowledgment
-  const pair = (ackMap[currentQ] || {})[answer] || ["ขอบคุณที่บอกเรา", ""];
-  document.getElementById("ack-main").innerText = pair[0];
-  document.getElementById("ack-sub").innerText  = pair[1];
-
-  // Show ack layer after short delay
-  setTimeout(() => {
-    document.getElementById("ack-layer").classList.add("visible");
-  }, 180);
-
-  // Hold a beat on last question, then advance
-  const holdMs = currentQ === questions.length - 1 ? 1800 : 1500;
-  setTimeout(() => {
-    document.getElementById("ack-layer").classList.remove("visible");
-    setTimeout(() => {
-      currentQ++;
-      if (currentQ < questions.length) renderQuestion();
-      else submitAndRoute();
-    }, 340);
-  }, holdMs);
+function selectAnswer(btn,answer){
+  btn.classList.add("pressed");answers.push(answer);
+  setTimeout(()=>{currentQ++;if(currentQ<questions.length)renderQuestion();else submitAndRoute();},320);
 }
 
 // ================================================================
 // INTERCONNECTION 1: createCase
+// After all 5 questions answered → POST to Apps Script
+// Sends: userId, q1-q5, triage level
+// Receives: caseId (used in all subsequent booking calls)
+// Fallback: generates local mock caseId if API unreachable
 // ================================================================
 async function submitAndRoute(){
-  if(window._pauseActive){ return; }
+  if(window._pauseActive){ return; } // already blocked at intro screen
   show("screen-booking");
 
   let level="green";
@@ -701,6 +592,8 @@ async function submitAndRoute(){
     if(d.status==="OK") caseId=d.caseId;
     else throw new Error();
   } catch {
+    // FALLBACK: generate local caseId — booking will still work
+    // Apps Script will receive this and create a new case on bookSlot
     caseId="CASE_LOCAL_"+Date.now();
     console.warn("createCase failed, using local caseId:", caseId);
   }
@@ -710,6 +603,10 @@ async function submitAndRoute(){
 
 // ================================================================
 // INTERCONNECTION 2: getSlots
+// GET ?action=getSlots → Apps Script reads Availability sheet
+// Receives: array of { slot, count } for current week
+// Filters out: expired days/times, locked slots (already booked)
+// Fallback: uses MOCK_SLOTS if API unreachable
 // ================================================================
 async function loadSlots(){
   document.getElementById("booking-week-badge").innerHTML=
@@ -726,6 +623,7 @@ async function loadSlots(){
     slots = [];
   }
 
+  // Filter expired days and times
   const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
   const todayIdx=dayOrder.indexOf(getTodayDayName());
   const todayTime=getCurrentTime();
@@ -744,7 +642,7 @@ async function loadSlots(){
 
   if(!active.length){show("screen-no-slots");buildSpecialSlots();return;}
   renderSlots(active);
-  buildSpecialSlots();
+  buildSpecialSlots(); // pre-build for if user needs it
 }
 
 function renderSlots(slots){
@@ -775,13 +673,20 @@ function selectSlot(chip,slot){
 
 // ================================================================
 // INTERCONNECTION 3: bookSlot
+// POST action=bookSlot → Apps Script
+// Sends: userId, caseId, chosen slot
+// Receives: OK (booking created, push sent to student + PR)
+//         | SLOT_TAKEN (race condition — another user booked same slot)
+// On SLOT_TAKEN: show sorry screen 5s → auto return to booking
 // ================================================================
-let _bookingInProgress = false;
+let _bookingInProgress = false; // global guard — survives overlay close/reopen
 
 async function finalConfirm(){
+  // Guard 1: global flag
   if(_bookingInProgress) return;
   _bookingInProgress = true;
 
+  // Guard 2: disable button immediately
   const btn = document.getElementById("btn-confirm-final");
   if(btn){ btn.disabled = true; btn.textContent = "กำลังยืนยัน..."; }
 
@@ -801,8 +706,9 @@ async function finalConfirm(){
       showSorry(); return;
     }
     console.warn("bookSlot error:", e);
-    showSuccess(null);
+    showSuccess(null); // show success if uncertain — better than leaving user stuck
   } finally {
+    // Always re-enable so user can retry if needed
     _bookingInProgress = false;
     if(btn){ btn.disabled = false; btn.textContent = "ยืนยันเลย →"; }
   }
@@ -813,6 +719,7 @@ function showSorry(){
   setTimeout(()=>{
     chosenSlot=null;
     document.getElementById("btn-book").disabled=true;
+    // Re-enable confirm button for next attempt
     const btn=document.getElementById("btn-confirm-final");
     if(btn){ btn.disabled=false; btn.textContent="ยืนยันเลย →"; }
     document.querySelectorAll(".slot-chip").forEach(c=>c.classList.remove("chosen"));
@@ -836,6 +743,10 @@ function showSuccess(room){
 
 // ================================================================
 // INTERCONNECTION 4: saveWaiting
+// POST action=saveWaiting → Apps Script
+// Sends: userId, caseId, answers (q1-q5 saved so user won't repeat)
+// Apps Script saves to Waiting sheet
+// Trigger: when slots open → notifyWaitingList() sends LINE push
 // ================================================================
 async function saveAndNotify(){
   try {
@@ -845,20 +756,21 @@ async function saveAndNotify(){
 }
 
 // ================================================================
-// SPECIAL REQUEST
+// SPECIAL REQUEST SCREEN
 // ================================================================
 function showSpecialRequest(){
   show("screen-special");
 }
 
 function buildSpecialSlots(){
-  const container=document.getElementById("special-slot-grid");
-  if(!container) return;
+  document.getElementById("special-week-badge").innerHTML=
+    `<span class="week-badge">📅 ${getWeekRange()}</span>`;
+  const container=document.getElementById("special-slots-container");
   container.innerHTML="";
   const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
   const todayIdx=dayOrder.indexOf(getTodayDayName());
   const todayTime=getCurrentTime();
-  _specialSelectedSlots.clear();
+  specialSlots=[];
 
   dayOrder.forEach((day,di)=>{
     if(di<todayIdx)return;
@@ -871,39 +783,92 @@ function buildSpecialSlots(){
       return true;
     });
     if(!filtered.length)return;
-    const g=document.createElement("div");
-    g.style.cssText="display:flex;flex-direction:column;gap:6px;";
-    const lbl=document.createElement("div");
-    lbl.style.cssText="font-size:11px;font-weight:700;color:var(--mid);letter-spacing:0.5px;";
-    lbl.textContent=day; g.appendChild(lbl);
-    const chips=document.createElement("div");
-    chips.style.cssText="display:flex;gap:6px;flex-wrap:wrap;";
+    const g=document.createElement("div");g.className="day-group";
+    const l=document.createElement("div");l.className="day-name";l.innerText=day;g.appendChild(l);
+    const r=document.createElement("div");r.className="slots-row";
     filtered.forEach(time=>{
-      const key=day+" "+time;
-      const btn=document.createElement("button");
-      btn.className="option-btn";
-      btn.style.cssText="padding:8px 14px;font-size:13px;border-radius:10px;";
-      btn.textContent=time;
-      btn.onclick=()=>{
-        if(_specialSelectedSlots.has(key)){
-          _specialSelectedSlots.delete(key);
-          btn.style.background=""; btn.style.borderColor="";
-        } else {
-          _specialSelectedSlots.add(key);
-          btn.style.background="var(--gold-soft)"; btn.style.borderColor="var(--gold)";
-        }
-      };
-      chips.appendChild(btn);
+      const full=day+" "+time;
+      const chip=document.createElement("button");chip.className="slot-chip";
+      chip.innerText=time;
+      chip.onclick=()=>toggleSpecialSlot(chip,full);r.appendChild(chip);
     });
-    g.appendChild(chips); container.appendChild(g);
+    g.appendChild(r);container.appendChild(g);
   });
 }
 
-let _specialSelectedSlots = new Set();
+function toggleSpecialSlot(chip,slot){
+  if(specialSlots.includes(slot)){specialSlots=specialSlots.filter(s=>s!==slot);chip.classList.remove("chosen");}
+  else{specialSlots.push(slot);chip.classList.add("chosen");}
+  const btn=document.getElementById("btn-special-submit");
+  const sum=document.getElementById("special-summary");
+  if(specialSlots.length===0){sum.innerText="ยังไม่ได้เลือก";btn.disabled=true;}
+  else{sum.innerText="เลือกแล้ว "+specialSlots.length+" ช่วงเวลา";btn.disabled=false;}
+}
 
 // ================================================================
 // INTERCONNECTION 5: createSpecialRequest
+// POST action=createSpecialRequest → Apps Script
+// Sends: userId, caseId, requested slots array
+// Apps Script saves to SpecialRequests sheet
+// Admin sees this in dashboard → can addTempPR to fulfill
+// If not fulfilled by 20:00 of requested day → push message auto-sent
 // ================================================================
+// Track selected time windows for special request
+let selectedTimeWindows = [];
+
+// ── Special Request slot selection ──────────────────────────
+const SPECIAL_SLOTS = {
+  "จันทร์":    ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  "อังคาร":    ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  "พุธ":       ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  "พฤหัสบดี": ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  "ศุกร์":     ["12:30–13:30","13:00–14:00","13:30–14:30","14:00–15:00","14:30–15:30","15:00–16:00","15:30–16:30","16:00–17:00"]
+};
+let _specialSelectedSlots = new Set();
+
+function buildSpecialSlotGrid(){
+  const grid = document.getElementById("special-slot-grid");
+  if(!grid) return;
+  _specialSelectedSlots.clear();
+  grid.innerHTML = "";
+  Object.entries(SPECIAL_SLOTS).forEach(([day, times]) => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;flex-direction:column;gap:6px;";
+    const lbl = document.createElement("div");
+    lbl.style.cssText = "font-size:11px;font-weight:700;color:var(--mid);letter-spacing:0.5px;";
+    lbl.textContent = day;
+    row.appendChild(lbl);
+    const chips = document.createElement("div");
+    chips.style.cssText = "display:flex;gap:6px;flex-wrap:wrap;";
+    times.forEach(time => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.style.cssText = "padding:8px 14px;font-size:13px;border-radius:10px;";
+      btn.textContent = time;
+      const key = day + " " + time;
+      btn.onclick = () => {
+        const on = _specialSelectedSlots.has(key);
+        if(on){ _specialSelectedSlots.delete(key); btn.classList.remove("selected"); btn.style.background=""; btn.style.borderColor=""; }
+        else  { _specialSelectedSlots.add(key);    btn.classList.add("selected");    btn.style.background="var(--gold-soft)"; btn.style.borderColor="var(--gold)"; }
+      };
+      chips.appendChild(btn);
+    });
+    row.appendChild(chips);
+    grid.appendChild(row);
+  });
+}
+
+function toggleTimeWindow(btn, value){
+  // Legacy — kept for compatibility
+  if(selectedTimeWindows.includes(value)){
+    selectedTimeWindows = selectedTimeWindows.filter(v=>v!==value);
+    btn.classList.remove("pressed");
+  } else {
+    selectedTimeWindows.push(value);
+    btn.classList.add("pressed");
+  }
+}
+
 async function submitSpecialRequest(){
   const slots = [..._specialSelectedSlots];
   if(!slots.length){ toast("กรุณาเลือก slot อย่างน้อย 1 ช่วงเวลา"); return; }
@@ -914,7 +879,7 @@ async function submitSpecialRequest(){
     await apiCall({
       action:   "createSpecialRequest",
       userId,   caseId,
-      slots:    JSON.stringify(slots),
+      slots:    JSON.stringify(slots),  // specific after-school slots
       timeNote: note,
       q1:       answers[0],
       level:    answers[1]==="มากเลย ยากมากตอนนี้"  ? "red"    :
@@ -923,38 +888,44 @@ async function submitSpecialRequest(){
   } catch(e) { console.warn("createSpecialRequest failed", e); }
   finally { if(btn){ btn.disabled=false; btn.textContent="ส่งคำขอ →"; } }
   _specialSelectedSlots.clear();
+  selectedTimeWindows = [];
   show("screen-notify-success");
 }
 
-function goHome(){ window.location.href="index.html"; }
+function goHome(){window.location.href="index.html";}
 
 function goBackFromQuestion(){
-  const ack = document.getElementById("ack-layer");
-  ack.classList.remove("visible");
+  // Back from questions → return to intro
   if(currentQ > 0){
+    // Can go back within questions
     currentQ--;
     answers.pop();
     renderQuestion();
   } else {
+    // At Q1 → go back to intro
     show("screen-intro");
   }
 }
 
 function goBackFromBooking(){
+  // Back from booking → return to last question
   currentQ = questions.length - 1;
   answers = answers.slice(0, currentQ);
   renderQuestion();
   show("screen-question");
 }
 
-// ================================================================
-// BOOKING STATUS GATE
-// ================================================================
+
+// ── BOOKING STATUS GATE ──────────────────────────────────────
+// Called after pause check passes.
+// If Sat/Sun and peers have not registered yet, morph the intro
+// screen into a warm "PR is setting up" message instead of
+// letting the student enter the flow and see zero slots.
 async function checkBookingStatus() {
   try {
     const res = await fetch(API_URL + '?action=getBookingStatus');
     const d   = await res.json();
-    if (d.booking !== 'pending') return;
+    if (d.booking !== 'pending') return; // open — normal intro stays
     const openEst = d.openEstimate || 'อาทิตย์ 20:00 น.';
     const introMiddle = document.querySelector('#screen-intro .intro-middle');
     const startBtn    = document.querySelector('#screen-intro .btn-primary');
