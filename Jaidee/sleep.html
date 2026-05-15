@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>นอนหลับ — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:      #08090F;
+      --bg2:     #0F1018;
+      --bg3:     #161720;
+      --border:  rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.12);
+      --cream:   #FDFBF7;
+      --soft:    rgba(253,251,247,0.45);
+      --muted:   rgba(253,251,247,0.22);
+      --accent:  #818CF8; /* indigo — calming, not stimulating */
+      --accent-soft: rgba(129,140,248,0.15);
+      --accent-border: rgba(129,140,248,0.3);
+      --teal:    #5EEAD4;
+      --teal-soft: rgba(94,234,212,0.12);
+    }
+    *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html, body {
+      background:var(--bg);
+      color:var(--cream);
+      font-family:'Mitr',sans-serif;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    /* ── SCREENS ── */
+    .screen{ display:none; min-height:100vh; flex-direction:column; }
+    .screen.active{ display:flex; }
+    @keyframes fadeUp { from{ opacity:0; transform:translateY(14px) } to{ opacity:1; transform:translateY(0) } }
+    @keyframes fadeIn { from{ opacity:0 } to{ opacity:1 } }
+    .fade-up { animation: fadeUp 0.4s ease forwards; }
+    .fade-in  { animation: fadeIn 0.6s ease forwards; }
+
+    /* ── BACK ── */
+    .back-btn{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:20px 20px 0;
+      font-size:13px; color:var(--muted);
+      cursor:pointer; background:none; border:none;
+      font-family:'Mitr',sans-serif;
+    }
+
+    /* ── STEP DOTS ── */
+    .step-dots{
+      display:flex; gap:6px; justify-content:center;
+      padding:16px 0 0;
+    }
+    .step-dot{
+      width:6px; height:6px; border-radius:50%;
+      background:var(--border2); transition:all 0.3s;
+    }
+    .step-dot.done   { background:rgba(129,140,248,0.5); }
+    .step-dot.active { background:var(--accent); width:18px; border-radius:3px; }
+
+    /* ────────────────────────────────────────────
+       SCREEN 1: WELCOME
+    ──────────────────────────────────────────── */
+    #s-welcome{
+      align-items:center; justify-content:center;
+      text-align:center; padding:48px 32px;
+      gap:0;
+    }
+    .w-moon{
+      font-size:52px; margin-bottom:32px;
+      opacity:0; animation:fadeUp 1s 0.2s ease forwards;
+    }
+    .w-eyebrow{
+      font-size:10px; letter-spacing:2.5px;
+      color:var(--accent); text-transform:uppercase; font-weight:400;
+      margin-bottom:12px;
+      opacity:0; animation:fadeUp 0.7s 0.5s ease forwards;
+    }
+    .w-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:26px; font-weight:600; line-height:1.4;
+      color:var(--cream); margin-bottom:10px;
+      opacity:0; animation:fadeUp 0.7s 0.65s ease forwards;
+    }
+    .w-sub{
+      font-size:13px; font-weight:300; color:var(--soft);
+      line-height:1.85; margin-bottom:48px;
+      opacity:0; animation:fadeUp 0.7s 0.8s ease forwards;
+    }
+    .w-btn{
+      background:rgba(129,140,248,0.15);
+      border:1px solid var(--accent-border);
+      border-radius:28px; padding:15px 36px;
+      font-family:'Mitr',sans-serif; font-size:14px; font-weight:500;
+      color:var(--accent); cursor:pointer;
+      transition:transform 0.15s, background 0.18s;
+      opacity:0; animation:fadeUp 0.7s 1s ease forwards;
+      display:block; width:100%; max-width:280px; margin:0 auto 10px;
+    }
+    .w-btn:active{ transform:scale(0.96); background:rgba(129,140,248,0.22); }
+    .w-btn-alt{
+      background:none; border:1px solid var(--border2);
+      border-radius:28px; padding:13px 36px;
+      font-family:'Mitr',sans-serif; font-size:13px; font-weight:300;
+      color:var(--soft); cursor:pointer;
+      transition:transform 0.15s;
+      opacity:0; animation:fadeUp 0.7s 1.12s ease forwards;
+      display:block; width:100%; max-width:280px; margin:0 auto;
+    }
+    .w-btn-alt:active{ transform:scale(0.96); }
+
+    /* ────────────────────────────────────────────
+       SCREEN 2: UNLOAD / WORRY PARKING
+    ──────────────────────────────────────────── */
+    #s-unload{ justify-content:space-between; }
+    .unload-body{ padding:40px 28px 0; flex:1; display:flex; flex-direction:column; }
+    .ul-eyebrow{
+      font-size:10px; letter-spacing:2px; color:var(--accent);
+      text-transform:uppercase; font-weight:400; margin-bottom:16px;
+    }
+    .ul-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:22px; font-weight:600; line-height:1.4;
+      color:var(--cream); margin-bottom:8px;
+    }
+    .ul-sub{
+      font-size:13px; font-weight:300; color:var(--soft);
+      line-height:1.75; margin-bottom:24px;
+    }
+    .ul-ta{
+      flex:1; min-height:160px; max-height:240px;
+      background:var(--bg3);
+      border:1px solid var(--border2); border-radius:16px;
+      padding:16px; font-family:'Mitr',sans-serif;
+      font-size:15px; font-weight:300; color:var(--cream);
+      resize:none; outline:none; line-height:1.8;
+      transition:border-color 0.2s;
+    }
+    .ul-ta:focus{ border-color:rgba(129,140,248,0.5); }
+    .ul-ta::placeholder{ color:var(--muted); }
+
+    /* Parked state */
+    .ul-parked{
+      display:none; flex-direction:column; align-items:center;
+      justify-content:center; flex:1; text-align:center; gap:12px;
+      padding-bottom:20px;
+    }
+    .ul-parked-icon{ font-size:40px; }
+    .ul-parked-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:18px; font-weight:600; color:var(--cream);
+    }
+    .ul-parked-sub{
+      font-size:13px; font-weight:300; color:var(--soft);
+      line-height:1.75; max-width:260px;
+    }
+
+    .ul-foot{ padding:24px 28px 44px; }
+    .ul-btn{
+      width:100%; background:rgba(129,140,248,0.15);
+      border:1px solid var(--accent-border); border-radius:28px;
+      padding:15px; font-family:'Mitr',sans-serif;
+      font-size:14px; font-weight:500; color:var(--accent);
+      cursor:pointer; transition:transform 0.15s, background 0.18s;
+    }
+    .ul-btn:active{ transform:scale(0.97); }
+    .ul-btn.skip{
+      margin-top:10px; background:none;
+      border:1px solid var(--border);
+      color:var(--muted); font-weight:300; font-size:13px;
+    }
+
+    /* ────────────────────────────────────────────
+       SCREEN 3: BODY SCAN
+    ──────────────────────────────────────────── */
+    #s-body{ align-items:center; justify-content:space-between; }
+    .bs-body{
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:0 32px; text-align:center; gap:0;
+    }
+    .bs-figure{
+      width:88px; height:180px; position:relative; margin-bottom:32px;
+    }
+    /* Simple body outline — SVG inline */
+    .bs-region{
+      transition:fill 0.6s ease, opacity 0.6s ease;
+      fill:var(--bg3); cursor:default;
+    }
+    .bs-region.active{ fill:rgba(94,234,212,0.35); }
+    .bs-region.done  { fill:rgba(94,234,212,0.1); }
+
+    .bs-eyebrow{
+      font-size:10px; letter-spacing:2px; color:var(--teal);
+      text-transform:uppercase; font-weight:400; margin-bottom:14px;
+    }
+    .bs-instruction{
+      font-family:'Noto Serif Thai',serif;
+      font-size:21px; font-weight:600; line-height:1.5;
+      color:var(--cream); margin-bottom:10px; min-height:66px;
+      transition:opacity 0.3s;
+    }
+    .bs-hint{
+      font-size:13px; font-weight:300; color:var(--soft);
+      line-height:1.75; min-height:44px;
+    }
+    .bs-foot{ padding:28px 28px 44px; width:100%; }
+    .bs-btn{
+      width:100%; background:var(--bg3);
+      border:1px solid var(--border2); border-radius:28px;
+      padding:16px; font-family:'Mitr',sans-serif;
+      font-size:14px; font-weight:400; color:var(--soft);
+      cursor:pointer; transition:all 0.18s;
+    }
+    .bs-btn:active{ background:rgba(255,255,255,0.06); }
+    .bs-btn.primary{
+      background:rgba(94,234,212,0.12); border-color:rgba(94,234,212,0.3);
+      color:var(--teal);
+    }
+
+    /* ────────────────────────────────────────────
+       SCREEN 4: BREATHE (4-7-8)
+    ──────────────────────────────────────────── */
+    #s-breathe{ align-items:center; justify-content:space-between; }
+    .br-body{
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; padding:0 28px;
+    }
+    .br-eyebrow{
+      font-size:10px; letter-spacing:2px; color:var(--accent);
+      text-transform:uppercase; font-weight:400; margin-bottom:28px;
+    }
+    .circle-wrap{ position:relative; width:180px; height:180px; margin-bottom:28px; }
+    .c-ring{
+      position:absolute; inset:-16px; border-radius:50%;
+      border:1px solid rgba(129,140,248,0.1);
+      transition:all 0.5s ease;
+    }
+    .c-main{
+      position:absolute; inset:0; border-radius:50%;
+      background:radial-gradient(circle at 38% 32%, rgba(129,140,248,0.6), rgba(99,102,241,0.3));
+      box-shadow:0 0 40px rgba(129,140,248,0.18);
+      display:flex; align-items:center; justify-content:center;
+      flex-direction:column;
+      transition:transform 1s ease-in-out, box-shadow 1s ease-in-out;
+    }
+    /* 4-7-8 phases: in=4s, hold=7s, out=8s */
+    .c-main.expand  { transform:scale(1.22); box-shadow:0 0 60px rgba(129,140,248,0.32); }
+    .c-main.hold-in { transform:scale(1.22); box-shadow:0 0 50px rgba(129,140,248,0.25); }
+    .c-main.contract{ transform:scale(0.78); box-shadow:0 0 20px rgba(129,140,248,0.1); }
+
+    .c-count{ font-family:'Noto Serif Thai',serif; font-size:38px; font-weight:600; color:var(--cream); line-height:1; }
+    .br-phase{
+      font-size:14px; font-weight:300; color:var(--soft);
+      letter-spacing:1px; min-height:22px; text-align:center; margin-bottom:4px;
+    }
+    .br-cycle{
+      font-size:12px; color:var(--muted); text-align:center;
+    }
+    .br-cycle-dots{ display:flex; gap:8px; justify-content:center; margin-top:6px; }
+    .br-cycle-dot{
+      width:8px; height:8px; border-radius:50%;
+      background:var(--border2); transition:background 0.4s;
+    }
+    .br-cycle-dot.done{ background:rgba(129,140,248,0.6); }
+    .br-cycle-dot.active{ background:var(--accent); }
+
+    .br-foot{ padding:24px 28px 44px; width:100%; text-align:center; }
+    .br-skip{
+      background:none; border:none;
+      font-family:'Mitr',sans-serif; font-size:12px;
+      color:var(--muted); cursor:pointer; padding:10px;
+    }
+
+    /* ────────────────────────────────────────────
+       SCREEN 5: COGNITIVE SHUFFLE
+    ──────────────────────────────────────────── */
+    #s-shuffle{ align-items:center; justify-content:space-between; }
+    .sh-body{
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:0 32px; text-align:center;
+    }
+    .sh-eyebrow{
+      font-size:10px; letter-spacing:2px; color:rgba(253,251,247,0.3);
+      text-transform:uppercase; font-weight:400; margin-bottom:20px;
+    }
+    .sh-instruction{
+      font-family:'Noto Serif Thai',serif;
+      font-size:16px; font-weight:400; color:var(--soft);
+      line-height:1.7; margin-bottom:32px; max-width:260px;
+    }
+    .sh-image-wrap{
+      width:200px; height:130px;
+      background:var(--bg3); border:1px solid var(--border);
+      border-radius:20px; display:flex; align-items:center;
+      justify-content:center; margin-bottom:28px;
+      transition:opacity 0.4s;
+    }
+    .sh-image-emoji{ font-size:52px; }
+    .sh-word{
+      font-family:'Noto Serif Thai',serif;
+      font-size:28px; font-weight:600; color:var(--cream);
+      margin-bottom:10px; min-height:40px;
+    }
+    .sh-sub{
+      font-size:12px; font-weight:300; color:var(--muted);
+      line-height:1.7; max-width:240px;
+    }
+    .sh-foot{ padding:24px 28px 44px; width:100%; }
+    .sh-btn{
+      width:100%; background:var(--bg3);
+      border:1px solid var(--border2); border-radius:28px;
+      padding:15px; font-family:'Mitr',sans-serif;
+      font-size:14px; font-weight:400; color:var(--soft);
+      cursor:pointer; transition:all 0.18s; margin-bottom:10px;
+    }
+    .sh-btn:active{ background:rgba(255,255,255,0.06); }
+    .sh-end{
+      background:none; border:none; font-family:'Mitr',sans-serif;
+      font-size:12px; color:var(--muted); cursor:pointer;
+      display:block; width:100%; padding:8px;
+    }
+
+    /* ────────────────────────────────────────────
+       SCREEN 6: DARK — put the phone down
+    ──────────────────────────────────────────── */
+    #s-dark{
+      align-items:center; justify-content:center;
+      text-align:center; padding:48px 32px;
+      background:var(--bg);
+    }
+    .dk-moon{
+      font-size:40px; margin-bottom:28px;
+      opacity:0; animation:fadeIn 2s 0.5s ease forwards;
+    }
+    .dk-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:20px; font-weight:400; color:rgba(253,251,247,0.35);
+      line-height:1.6; margin-bottom:12px;
+      opacity:0; animation:fadeIn 2s 1.2s ease forwards;
+    }
+    .dk-sub{
+      font-size:12px; font-weight:300; color:rgba(253,251,247,0.18);
+      line-height:1.8;
+      opacity:0; animation:fadeIn 2s 2s ease forwards;
+    }
+    .dk-restart{
+      margin-top:48px; background:none; border:none;
+      font-family:'Mitr',sans-serif; font-size:11px;
+      color:rgba(255,255,255,0.1); cursor:pointer;
+      opacity:0; animation:fadeIn 1s 4s ease forwards;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 1: WELCOME
+══════════════════════════════════════════════ -->
+<div class="screen active" id="s-welcome">
+  <div class="w-moon">🌙</div>
+  <div class="w-eyebrow">ใจดี TU · Sleep</div>
+  <div class="w-title">ยังหลับไม่ได้<br>ก็โอเค</div>
+  <div class="w-sub">เราจะพาผ่านทีละขั้น<br>ใช้เวลาประมาณ 10 นาที<br>แล้วค่อยวางโทรศัพท์ลง</div>
+  <button class="w-btn" onclick="goTo('s-unload')">เริ่มต้น →</button>
+  <button class="w-btn-alt" onclick="goTo('s-breathe');startBreathe()">แค่หายใจก็พอ →</button>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 2: UNLOAD / WORRY PARKING
+══════════════════════════════════════════════ -->
+<div class="screen" id="s-unload">
+  <button class="back-btn" onclick="goTo('s-welcome')">← กลับ</button>
+  <div class="step-dots">
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <!-- Input state -->
+  <div class="unload-body" id="ul-input-state">
+    <div class="ul-eyebrow fade-up">ขั้นที่ 1 · ปล่อยวาง</div>
+    <div class="ul-title fade-up">มีอะไรวนอยู่ในหัวตอนนี้?</div>
+    <div class="ul-sub fade-up">เทออกมาให้หมดก่อนเลย<br>ไม่ต้องจัดระเบียบ ไม่ต้องสวยงาม</div>
+    <textarea
+      class="ul-ta" id="ul-ta"
+      placeholder="พิมพ์ทุกอย่างที่วนอยู่ในหัว... งานที่ยังไม่ได้ทำ เรื่องที่กังวล สิ่งที่ลืมไม่ได้..."
+      rows="6"
+    ></textarea>
+  </div>
+
+  <!-- Parked state -->
+  <div class="ul-parked" id="ul-parked-state">
+    <div class="ul-parked-icon">🔒</div>
+    <div class="ul-parked-title">โอเค เก็บไว้ที่นี่แล้ว</div>
+    <div class="ul-parked-sub">ทุกอย่างที่เขียนออกมา<br>จะยังอยู่ตรงนี้พรุ่งนี้<br>ตอนนี้ไม่ต้องแบกมันแล้ว</div>
+  </div>
+
+  <div class="ul-foot">
+    <button class="ul-btn" id="ul-main-btn" onclick="parkWorries()">เก็บไว้ก่อน พรุ่งนี้ค่อยคิด →</button>
+    <button class="ul-btn skip" onclick="goToBodyScan()">ข้ามขั้นนี้</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 3: BODY SCAN
+══════════════════════════════════════════════ -->
+<div class="screen" id="s-body">
+  <button class="back-btn" onclick="goTo('s-unload')">← กลับ</button>
+  <div class="step-dots">
+    <div class="step-dot done"></div>
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <div class="bs-body">
+    <div class="bs-figure">
+      <!-- Simple body outline SVG -->
+      <svg width="88" height="180" viewBox="0 0 88 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Head -->
+        <ellipse id="bs-head" class="bs-region" cx="44" cy="14" rx="13" ry="14" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <!-- Neck + Shoulders (upper) -->
+        <rect id="bs-shoulders" class="bs-region" x="20" y="30" width="48" height="22" rx="8" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <!-- Chest / Belly -->
+        <rect id="bs-chest" class="bs-region" x="24" y="54" width="40" height="40" rx="6" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <!-- Hips / Lower back -->
+        <rect id="bs-hips" class="bs-region" x="22" y="96" width="44" height="24" rx="6" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <!-- Legs -->
+        <rect id="bs-legs" class="bs-region" x="24" y="122" width="18" height="42" rx="5" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <rect class="bs-region" id="bs-legs2" x="46" y="122" width="18" height="42" rx="5" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <!-- Feet -->
+        <rect id="bs-feet" class="bs-region" x="22" y="165" width="20" height="12" rx="4" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <rect class="bs-region" id="bs-feet2" x="46" y="165" width="20" height="12" rx="4" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div class="bs-eyebrow" id="bs-eyebrow">ขั้นที่ 2 · Body scan</div>
+    <div class="bs-instruction" id="bs-instruction">สังเกตปลายเท้าทั้งสองข้าง</div>
+    <div class="bs-hint" id="bs-hint">ไม่ต้องเปลี่ยนอะไร แค่รู้ว่ามันอยู่ตรงนั้น<br>แล้วปล่อยให้มันหนักลงตามธรรมชาติ</div>
+  </div>
+
+  <div class="bs-foot">
+    <button class="bs-btn primary" id="bs-btn" onclick="nextBodyStep()">ถัดไป →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 4: BREATHE (4-7-8)
+══════════════════════════════════════════════ -->
+<div class="screen" id="s-breathe">
+  <button class="back-btn" onclick="stopBreathe();goTo('s-body')">← กลับ</button>
+  <div class="step-dots">
+    <div class="step-dot done"></div>
+    <div class="step-dot done"></div>
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <div class="br-body">
+    <div class="br-eyebrow">ขั้นที่ 3 · 4 · 7 · 8</div>
+    <div class="circle-wrap">
+      <div class="c-ring"></div>
+      <div class="c-main" id="br-circle">
+        <span class="c-count" id="br-count">4</span>
+      </div>
+    </div>
+    <div class="br-phase" id="br-phase">หายใจเข้า</div>
+    <div class="br-cycle">รอบที่ <span id="br-cycle-num">1</span> / 3</div>
+    <div class="br-cycle-dots">
+      <div class="br-cycle-dot active" id="cd-0"></div>
+      <div class="br-cycle-dot" id="cd-1"></div>
+      <div class="br-cycle-dot" id="cd-2"></div>
+    </div>
+  </div>
+
+  <div class="br-foot">
+    <button class="br-skip" id="br-skip" onclick="goTo('s-shuffle')">ข้ามไปขั้นสุดท้าย →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 5: COGNITIVE SHUFFLE
+══════════════════════════════════════════════ -->
+<div class="screen" id="s-shuffle">
+  <div class="step-dots" style="padding-top:20px;">
+    <div class="step-dot done"></div>
+    <div class="step-dot done"></div>
+    <div class="step-dot done"></div>
+    <div class="step-dot active"></div>
+  </div>
+
+  <div class="sh-body">
+    <div class="sh-eyebrow">ขั้นสุดท้าย · ภาพสุ่ม</div>
+    <div class="sh-instruction">
+      นึกภาพในหัวตามคำแต่ละคำ<br>
+      ไม่ต้องเชื่อมกัน ไม่ต้องสมเหตุสมผล
+    </div>
+    <div class="sh-image-wrap" id="sh-wrap">
+      <span class="sh-image-emoji" id="sh-emoji">🐱</span>
+    </div>
+    <div class="sh-word" id="sh-word">แมวบนหลังคา</div>
+    <div class="sh-sub">ลองเห็นรายละเอียด สี พื้นผิว<br>ให้ภาพนั้นอยู่ในหัวสักครู่</div>
+  </div>
+
+  <div class="sh-foot">
+    <button class="sh-btn" onclick="nextShuffle()">ภาพถัดไป →</button>
+    <button class="sh-end" onclick="goTo('s-dark')">ง่วงแล้ว วางโทรศัพท์ได้เลย</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 6: DARK
+══════════════════════════════════════════════ -->
+<div class="screen" id="s-dark">
+  <div class="dk-moon">🌙</div>
+  <div class="dk-title">วางโทรศัพท์ลงได้แล้ว<br>ทุกอย่างรอพรุ่งนี้ได้</div>
+  <div class="dk-sub">ไม่ต้องทำอะไรอีกแล้วคืนนี้<br>แค่หลับตาลง</div>
+  <button class="dk-restart" onclick="goTo('s-welcome')">เริ่มใหม่</button>
+</div>
+
+
+<script>
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+
+  // Side effects on screen entry
+  if (id === 's-body')    { bsStep = 0; renderBodyStep(); }
+  if (id === 's-breathe') { startBreathe(); }
+  if (id === 's-shuffle') { shIdx = 0; renderShuffle(); }
+}
+
+
+// ══════════════════════════════════════════════════════
+// SCREEN 2: WORRY PARKING
+// ══════════════════════════════════════════════════════
+let worryParked = false;
+
+function parkWorries() {
+  if (worryParked) { goToBodyScan(); return; }
+
+  const ta = document.getElementById('ul-ta');
+  const hasText = ta && ta.value.trim().length > 0;
+
+  if (!hasText) { goToBodyScan(); return; }
+
+  // Save to shared localStorage (same key as alltools.html journal)
+  try {
+    const STORAGE_KEY = 'jaidee_entries';
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    existing.unshift({ id:Date.now(), type:'worry', ts:new Date().toISOString(), text:ta.value.trim() });
+    if (existing.length > 50) existing.splice(50);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+  } catch(e) {}
+
+  // Show parked state
+  document.getElementById('ul-input-state').style.display = 'none';
+  document.getElementById('ul-parked-state').style.display = 'flex';
+
+  const btn = document.getElementById('ul-main-btn');
+  btn.textContent = 'พร้อมแล้ว ไปต่อ →';
+  worryParked = true;
+
+  // Update dots
+  updateDots('s-unload', 0);
+}
+
+function goToBodyScan() {
+  worryParked = false;
+  // Reset unload screen for re-use
+  document.getElementById('ul-input-state').style.display = 'flex';
+  document.getElementById('ul-parked-state').style.display = 'none';
+  const btn = document.getElementById('ul-main-btn');
+  btn.textContent = 'เก็บไว้ก่อน พรุ่งนี้ค่อยคิด →';
+  goTo('s-body');
+}
+
+
+// ══════════════════════════════════════════════════════
+// SCREEN 3: BODY SCAN
+// ══════════════════════════════════════════════════════
+const BS_STEPS = [
+  {
+    region: ['bs-feet','bs-feet2'],
+    instruction: 'สังเกตปลายเท้าทั้งสองข้าง',
+    hint: 'ไม่ต้องเปลี่ยนอะไร แค่รู้ว่ามันอยู่ตรงนั้น\nแล้วปล่อยให้มันหนักลงตามธรรมชาติ',
+    btn: 'ถัดไป →',
+  },
+  {
+    region: ['bs-legs','bs-legs2'],
+    instruction: 'ขึ้นมาที่น่องและต้นขา',
+    hint: 'สังเกตว่ากล้ามเนื้อตึงหรือเปล่า\nถ้าตึง ไม่ต้องบังคับ แค่รู้ว่ามีอยู่',
+    btn: 'ถัดไป →',
+  },
+  {
+    region: ['bs-hips'],
+    instruction: 'สะโพกและหลังส่วนล่าง',
+    hint: 'พื้นที่ที่มักเก็บความเครียดสะสมไว้\nหายใจออก แล้วปล่อยให้มันหนักลงหน่อย',
+    btn: 'ถัดไป →',
+  },
+  {
+    region: ['bs-chest'],
+    instruction: 'ท้องและหน้าอก',
+    hint: 'สังเกตการเคลื่อนไหวของลมหายใจตรงนี้\nไม่ต้องควบคุม แค่ดู',
+    btn: 'ถัดไป →',
+  },
+  {
+    region: ['bs-shoulders'],
+    instruction: 'ไหล่และต้นคอ',
+    hint: 'ไหล่หดขึ้นไปไหม?\nลองปล่อยมันลงช้าๆ พร้อมหายใจออก',
+    btn: 'ถัดไป →',
+  },
+  {
+    region: ['bs-head'],
+    instruction: 'ใบหน้าและศีรษะ',
+    hint: 'ขมับ หน้าผาก กรามตึงไหม\nปล่อยให้กล้ามเนื้อในหน้าอ่อนลง',
+    btn: 'หายใจต่อ →',
+  },
+];
+
+let bsStep = 0;
+
+function renderBodyStep() {
+  const step = BS_STEPS[bsStep];
+  if (!step) { goTo('s-breathe'); return; }
+
+  // SVG regions
+  document.querySelectorAll('.bs-region').forEach(r => {
+    r.classList.remove('active');
+    if (!r.classList.contains('done')) {/* keep done */}
+  });
+  // Mark previous as done
+  for (let i = 0; i < bsStep; i++) {
+    BS_STEPS[i].region.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('active'); el.classList.add('done'); }
+    });
+  }
+  // Mark current as active
+  step.region.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.add('active'); el.classList.remove('done'); }
+  });
+
+  // Text with fade
+  const inst = document.getElementById('bs-instruction');
+  const hint = document.getElementById('bs-hint');
+  inst.style.opacity = '0';
+  hint.style.opacity = '0';
+  setTimeout(() => {
+    inst.textContent = step.instruction;
+    hint.innerHTML   = step.hint.replace(/\n/g,'<br/>');
+    inst.style.opacity = '1'; inst.style.transition = 'opacity 0.4s';
+    hint.style.opacity = '1'; hint.style.transition = 'opacity 0.4s';
+  }, 180);
+
+  document.getElementById('bs-btn').textContent = step.btn;
+}
+
+function nextBodyStep() {
+  bsStep++;
+  if (bsStep >= BS_STEPS.length) {
+    goTo('s-breathe');
+  } else {
+    renderBodyStep();
+  }
+}
+
+
+// ══════════════════════════════════════════════════════
+// SCREEN 4: BREATHE — 4-7-8 pattern
+// ══════════════════════════════════════════════════════
+// Phases: in=4s, hold=7s, out=8s — total 19s per cycle
+const PHASES_478 = [
+  { label:'หายใจเข้า',  dur:4, cls:'expand'   },
+  { label:'ค้าง',       dur:7, cls:'hold-in'  },
+  { label:'หายใจออก', dur:8, cls:'contract' },
+];
+
+const TOTAL_CYCLES = 3;
+let bPhase = 0, bCycle = 0, bCount = 0;
+let bPhaseTimer = null, bCountInterval = null;
+let bRunning = false;
+
+function startBreathe() {
+  stopBreathe();
+  bPhase = 0; bCycle = 0; bCount = 0; bRunning = true;
+  updateCycleDots();
+  runPhase478();
+}
+
+function stopBreathe() {
+  clearTimeout(bPhaseTimer);
+  clearInterval(bCountInterval);
+  bRunning = false;
+  const circle = document.getElementById('br-circle');
+  if (circle) circle.className = 'c-main';
+}
+
+function runPhase478() {
+  if (!bRunning) return;
+  const phase = PHASES_478[bPhase];
+  const circle = document.getElementById('br-circle');
+  const countEl = document.getElementById('br-count');
+  const phaseEl = document.getElementById('br-phase');
+
+  // Set circle class
+  circle.className = 'c-main ' + phase.cls;
+  phaseEl.textContent = phase.label;
+
+  bCount = phase.dur;
+  countEl.textContent = bCount;
+
+  clearInterval(bCountInterval);
+  bCountInterval = setInterval(() => {
+    bCount--;
+    if (bCount <= 0) {
+      clearInterval(bCountInterval);
+    } else {
+      if (countEl) countEl.textContent = bCount;
+    }
+  }, 1000);
+
+  bPhaseTimer = setTimeout(() => {
+    if (!bRunning) return;
+    bPhase++;
+    if (bPhase >= PHASES_478.length) {
+      // End of cycle
+      bPhase = 0;
+      bCycle++;
+      updateCycleDots();
+      document.getElementById('br-cycle-num').textContent = Math.min(bCycle + 1, TOTAL_CYCLES);
+      if (bCycle >= TOTAL_CYCLES) {
+        // Done — go to shuffle
+        stopBreathe();
+        setTimeout(() => goTo('s-shuffle'), 800);
+        return;
+      }
+    }
+    runPhase478();
+  }, phase.dur * 1000);
+}
+
+function updateCycleDots() {
+  for (let i = 0; i < TOTAL_CYCLES; i++) {
+    const dot = document.getElementById('cd-' + i);
+    if (!dot) continue;
+    dot.classList.remove('active','done');
+    if (i < bCycle) dot.classList.add('done');
+    else if (i === bCycle) dot.classList.add('active');
+  }
+}
+
+
+// ══════════════════════════════════════════════════════
+// SCREEN 5: COGNITIVE SHUFFLE
+// Research: Beaudoin (2019) — random unconnected imagery
+// interrupts the coherent narrative loop that prevents sleep.
+// ══════════════════════════════════════════════════════
+const SHUFFLE_ITEMS = [
+  { emoji:'🐱', word:'แมวบนหลังคา' },
+  { emoji:'🎈', word:'ลูกโป่งสีแดง' },
+  { emoji:'🌵', word:'ต้นกระบองเพชรกลางทะเลทราย' },
+  { emoji:'🎻', word:'ไวโอลินเก่าๆ ในกล่องไม้' },
+  { emoji:'🦋', word:'ผีเสื้อสีฟ้าที่บินช้ามาก' },
+  { emoji:'☕', word:'กาแฟร้อนที่ลืมไว้บนโต๊ะ' },
+  { emoji:'🏠', word:'บ้านเล็กๆ ริมทะเลสาบ' },
+  { emoji:'🪨', word:'ก้อนหินก้อนใหญ่ในป่า' },
+  { emoji:'🌊', word:'คลื่นที่ม้วนเข้าหาฝั่งช้าๆ' },
+  { emoji:'🧩', word:'จิ๊กซอว์ที่ยังต่อไม่เสร็จ' },
+  { emoji:'🕯️', word:'เทียนไขเล่มเดียวในห้องมืด' },
+  { emoji:'🍃', word:'ใบไม้ที่ลอยในสายน้ำ' },
+  { emoji:'🌙', word:'พระจันทร์เสี้ยวกลางฟ้าครึ้ม' },
+  { emoji:'🦉', word:'นกฮูกนั่งนิ่งบนกิ่งไม้' },
+  { emoji:'🎐', word:'ระฆังลมที่ค่อยๆ แกว่ง' },
+  { emoji:'🐚', word:'หอยสังข์ที่เก็บมาจากชายหาด' },
+  { emoji:'🌄', word:'ท้องฟ้าสีชมพูก่อนพระอาทิตย์ขึ้น' },
+  { emoji:'🧸', word:'ตุ๊กตาหมีที่นั่งพิงผนัง' },
+  { emoji:'🌿', word:'ใบเฟิร์นที่เปียกน้ำค้าง' },
+  { emoji:'⛵', word:'เรือเล็กที่ลอยอยู่โดยไม่มีคนถือ' },
+];
+
+let shIdx = 0;
+let shUsed = [];
+
+function renderShuffle() {
+  // Shuffle on first render
+  if (shIdx === 0) {
+    shUsed = [...SHUFFLE_ITEMS].sort(() => Math.random() - 0.5);
+  }
+  const item = shUsed[shIdx % shUsed.length];
+  const wrap = document.getElementById('sh-wrap');
+  const emojiEl = document.getElementById('sh-emoji');
+  const wordEl  = document.getElementById('sh-word');
+
+  wrap.style.opacity = '0';
+  wordEl.style.opacity = '0';
+  setTimeout(() => {
+    emojiEl.textContent = item.emoji;
+    wordEl.textContent  = item.word;
+    wrap.style.opacity  = '1'; wrap.style.transition  = 'opacity 0.5s';
+    wordEl.style.opacity = '1'; wordEl.style.transition = 'opacity 0.5s';
+  }, 220);
+}
+
+function nextShuffle() {
+  shIdx++;
+  renderShuffle();
+  // After 8 images, softly encourage putting the phone down
+  if (shIdx >= 8) {
+    const endBtn = document.querySelector('.sh-end');
+    if (endBtn) endBtn.style.color = 'rgba(253,251,247,0.35)';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// ENTRY FROM alltools.html
+// If URL has #sleep, open directly
+// ══════════════════════════════════════════════════════
+if (window.location.hash === '#sleep') {
+  goTo('s-welcome');
+}
+</script>
+</body>
+</html>
