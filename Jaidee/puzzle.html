@@ -763,7 +763,6 @@ function loadLiveData() {
         var parsed = [];
         d.content.forEach(function(c) {
           try {
-            var body = typeof c.body === "string" ? JSON.parse(c.body) : c.body;
             parsed.push({
               id: c.id,
               title: c.title || "",
@@ -772,7 +771,8 @@ function loadLiveData() {
               level: c.level || "🟢 เบา",
               readTime: c.readTime || c.read_time || "5 นาที",
               language: c.language || "",
-              heroUrl: c.heroUrl || c.hero_url || ""
+              heroUrl: c.heroUrl || c.hero_url || "",
+              body: c.body || ""    // preserve raw body for reader to parse
             });
           } catch(e) {}
         });
@@ -1162,6 +1162,18 @@ function openReader(a) {
   };
 }
 
+// ══════════════════════════════════════════════════════════════
+// INLINE FORMATTING HELPER
+// Converts **bold** → <strong>, *italic* → <em>, \n → <br/>
+// ══════════════════════════════════════════════════════════════
+function renderInline(text) {
+  if (!text) return '';
+  return String(text)
+    .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br/>');
+}
+
 // ── Block renderers ───────────────────────────────────────────
 function renderBlock(block, idx) {
   var type = block.type || "";
@@ -1170,8 +1182,8 @@ function renderBlock(block, idx) {
     return (block.heading
       ? '<h3 style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:18px;font-weight:700;color:var(--ink);margin:28px 0 10px;line-height:1.35;">'+block.heading+'</h3>'
       : '') +
-      '<p style="font-size:15px;font-weight:300;color:var(--ink2);line-height:2.05;margin-bottom:20px;white-space:pre-wrap;">'+
-        (block.content||"").replace(/\n/g,"<br/>")+'</p>';
+      '<p style="font-size:15px;font-weight:300;color:var(--ink2);line-height:2.05;margin-bottom:20px;">'+
+        renderInline(block.content||"")+'</p>';
   }
 
   if (type === "heading") {
@@ -1180,14 +1192,16 @@ function renderBlock(block, idx) {
 
   if (type === "callout") {
     return '<div style="margin:20px 0;background:var(--gold-lt);border:1.5px solid var(--gold-bd);border-radius:12px;padding:16px 18px;">' +
-      '<div style="font-size:14px;font-weight:600;color:var(--ink);line-height:1.75;">💡 '+(block.content||"")+'</div>' +
+      '<div style="font-size:14px;font-weight:600;color:var(--ink);line-height:1.75;">💡 '+renderInline(block.content||"")+'</div>' +
     '</div>';
   }
 
   if (type === "pullquote") {
+    // accept both block.attribution (new) and block.attr (legacy)
+    var attribution = block.attribution || block.attr || "";
     return '<div style="margin:24px -4px;padding:20px 20px 20px 24px;border-left:3px solid var(--gold);background:var(--warm);border-radius:0 12px 12px 0;">' +
-      '<div style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:17px;font-style:italic;color:var(--ink);line-height:1.7;margin-bottom:8px;">❝ '+(block.text||"")+'</div>' +
-      (block.attr ? '<div style="font-size:11px;color:var(--ink3);letter-spacing:.5px;">— '+block.attr+'</div>' : '') +
+      '<div style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:17px;font-style:italic;color:var(--ink);line-height:1.7;margin-bottom:8px;">❝ '+renderInline(block.text||"")+'</div>' +
+      (attribution ? '<div style="font-size:11px;color:var(--ink3);letter-spacing:.5px;">— '+attribution+'</div>' : '') +
     '</div>';
   }
 
@@ -1217,13 +1231,20 @@ function renderBlock(block, idx) {
   }
 
   if (type === "table") {
-    var headers = (block.headers||"").split("|").map(function(h){return h.trim();});
-    var rowLines = (block.rows||"").split("\n").filter(function(r){return r.trim();});
+    // accept both new format (headers:array, rows:2D array) and legacy (string)
+    var headers = Array.isArray(block.headers)
+      ? block.headers
+      : (block.headers||"").split("|").map(function(h){return h.trim();});
+    var rows = Array.isArray(block.rows)
+      ? block.rows
+      : (block.rows||"").split("\n")
+          .filter(function(r){return r.trim();})
+          .map(function(r){return r.split("|").map(function(c){return c.trim();});});
+
     var theadCells = headers.map(function(h){ return '<th style="padding:8px 12px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--ink2);border-bottom:2px solid var(--rule);">'+h+'</th>'; }).join("");
-    var tbodyRows  = rowLines.map(function(row, ri){
-      var cells = row.split("|").map(function(c){return c.trim();});
+    var tbodyRows = rows.map(function(row, ri){
       return '<tr style="background:'+(ri%2?"var(--warm)":"transparent")+';">' +
-        cells.map(function(c){ return '<td style="padding:8px 12px;font-size:13px;color:var(--ink2);border-bottom:1px solid var(--rule);">'+c+'</td>'; }).join("") +
+        row.map(function(c){ return '<td style="padding:8px 12px;font-size:13px;color:var(--ink2);border-bottom:1px solid var(--rule);">'+renderInline(c)+'</td>'; }).join("") +
       '</tr>';
     }).join("");
     return '<div style="margin:20px 0;overflow-x:auto;border-radius:12px;border:1px solid var(--rule);">' +
@@ -1232,6 +1253,41 @@ function renderBlock(block, idx) {
         '<tbody>'+tbodyRows+'</tbody>' +
       '</table>' +
     '</div>';
+  }
+
+  if (type === "definition") {
+    // term — short label like "EM"
+    // english — full English name like "Extrinsic Motivation"
+    // meaning — explanation (supports markdown inline formatting)
+    return '<div style="margin:24px 0;background:var(--gold-lt);border-left:4px solid var(--gold);border-radius:0 12px 12px 0;padding:18px 20px;">' +
+      '<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px;">' +
+        '<span style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:22px;font-weight:700;color:#5C3A00;">'+(block.term||"")+'</span>' +
+        (block.english ? '<span style="font-size:13px;font-style:italic;color:#7A5200;font-weight:300;">'+block.english+'</span>' : '') +
+      '</div>' +
+      '<div style="font-size:14px;color:var(--ink);line-height:1.8;">'+renderInline(block.meaning||"")+'</div>' +
+    '</div>';
+  }
+
+  if (type === "list") {
+    var items = block.items || [];
+    var tag = block.style === "number" ? "ol" : "ul";
+    var itemHtml = items.map(function(it){
+      return '<li style="font-size:14px;color:var(--ink2);line-height:1.85;margin-bottom:6px;padding-left:4px;">'+renderInline(it)+'</li>';
+    }).join("");
+    return '<div style="margin:22px 0;">' +
+      (block.title ? '<div style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:10px;">'+block.title+'</div>' : '') +
+      '<'+tag+' style="padding-left:24px;color:var(--gold);">'+itemHtml+'</'+tag+'>' +
+    '</div>';
+  }
+
+  if (type === "divider") {
+    var style = block.style || "line";
+    if (style === "line") {
+      return '<div style="height:1px;background:var(--rule);margin:32px auto;width:60%;"></div>';
+    }
+    var symbols = { dots: "• • •", star: "✦", wave: "〜〜〜" };
+    var sym = symbols[style] || "〜";
+    return '<div style="text-align:center;margin:32px 0;font-size:18px;color:var(--ink3);letter-spacing:8px;">'+sym+'</div>';
   }
 
   if (type === "interaction" || type === "quiz") {
