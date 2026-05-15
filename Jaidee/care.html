@@ -1009,6 +1009,41 @@ if (isPreview) {
     .then(() => { if (!liff.isLoggedIn()) { liff.login(); return; } loadCare(); })
     .catch(() => loadCare());
 }
+  // ── ADD THIS to the bottom of care.html's <script>, just before the closing </script> ──
+// Reads ?tab=body|connection|expression|environment|belief|professional from URL
+// and switches to that tab automatically (works both from Reflection and from alltools)
+
+(function applyTabParam() {
+  const TAB_ALIASES = {
+    // layer key  →  tab id used in switchTab()
+    body:         'body',
+    connection:   'connection',
+    expression:   'expression',
+    environment:  'environment',
+    belief:       'belief',
+    professional: 'professional',
+    // numeric aliases (legacy from old LAYER_TAB routing)
+    '0': 'body', '1': 'connection', '2': 'expression',
+    '3': 'environment', '4': 'belief', '5': 'professional',
+  };
+  const param = new URLSearchParams(window.location.search).get('tab');
+  if (param && TAB_ALIASES[param]) {
+    // Wait until loadCare() has rendered the panels, then switch
+    const target = TAB_ALIASES[param];
+    const trySwitch = () => {
+      const panel = document.getElementById('tab-' + target);
+      if (panel) {
+        switchTab(target);
+        // Smooth scroll down past the tab bar
+        setTimeout(() => window.scrollTo({ top: 120, behavior: 'smooth' }), 100);
+      } else {
+        setTimeout(trySwitch, 80);
+      }
+    };
+    trySwitch();
+  }
+})();
+
 </script>
 </body>
 </html>
