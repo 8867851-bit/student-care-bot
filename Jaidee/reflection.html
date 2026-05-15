@@ -161,6 +161,72 @@
 
     .br-exit{display:block;text-align:center;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;margin:20px auto 0;padding:8px;}
 
+    /* STILL HEAVY STRIP */
+    .br-still{
+      margin:20px 24px 0;
+      border-top:1px solid var(--cream-border);
+      padding-top:18px;
+    }
+    .br-still-q{
+      font-size:12px;font-weight:400;color:var(--soft);
+      margin-bottom:10px;text-align:center;
+    }
+    .br-still-btns{display:flex;gap:8px;}
+    .br-still-ok{
+      flex:1;background:var(--green-soft);
+      border:1px solid var(--green-border);border-radius:12px;
+      padding:11px 8px;font-family:'Mitr',sans-serif;
+      font-size:12px;font-weight:400;color:var(--green);
+      cursor:pointer;transition:transform 0.15s;
+    }
+    .br-still-ok:active{transform:scale(0.96);}
+    .br-still-no{
+      flex:1;background:var(--card);
+      border:1.5px solid var(--cream-border);border-radius:12px;
+      padding:11px 8px;font-family:'Mitr',sans-serif;
+      font-size:12px;font-weight:400;color:var(--mid);
+      cursor:pointer;transition:all 0.18s;
+    }
+    .br-still-no:active{border-color:var(--dark);color:var(--dark);}
+
+    /* STILL-HEAVY EXPANDED STATE */
+    .br-heavy{
+      display:none;margin-top:12px;
+      background:var(--dark);border-radius:16px;
+      padding:16px;
+    }
+    .br-heavy.show{display:block;}
+    .br-heavy-label{
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:rgba(232,150,12,0.7);margin-bottom:10px;
+    }
+    .br-heavy-note{
+      font-size:12px;font-weight:300;
+      color:rgba(253,251,247,0.55);line-height:1.75;margin-bottom:14px;
+    }
+    .br-heavy-note strong{font-weight:500;color:rgba(253,251,247,0.85);}
+    .br-heavy-btns{display:flex;flex-direction:column;gap:8px;}
+    .br-heavy-btn{
+      display:flex;align-items:center;gap:10px;
+      padding:12px 14px;border-radius:12px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.1);
+      cursor:pointer;font-family:'Mitr',sans-serif;
+      text-decoration:none;transition:background 0.15s;
+    }
+    .br-heavy-btn:active{background:rgba(255,255,255,0.1);}
+    .br-heavy-btn-icon{font-size:16px;flex-shrink:0;}
+    .br-heavy-btn-body{flex:1;}
+    .br-heavy-btn-name{font-size:13px;font-weight:500;color:#FDFBF7;margin-bottom:1px;}
+    .br-heavy-btn-desc{font-size:11px;font-weight:300;color:rgba(253,251,247,0.45);}
+    .br-heavy-btn-arrow{font-size:12px;color:rgba(255,255,255,0.2);flex-shrink:0;}
+    .br-1323-line{
+      margin-top:12px;text-align:center;
+      font-size:11px;font-weight:300;color:rgba(253,251,247,0.3);
+      line-height:1.7;
+    }
+    .br-1323-line a{color:rgba(232,150,12,0.7);text-decoration:none;}
+
     /* NO MATCH */
     #s-nomatch{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:0;}
     .nm-icon{font-size:44px;margin-bottom:24px;}
@@ -355,6 +421,53 @@
   <div class="br-secondary">
     <div class="br-sec-label">หรือลองทางนี้</div>
     <div id="br-secondary-btns"></div>
+  </div>
+
+  <!-- ยังหนักอยู่ไหม? — always at the bottom of bridge -->
+  <div class="br-still">
+    <div class="br-still-q">ลองแล้ว ยังรู้สึกหนักอยู่ไหม?</div>
+    <div class="br-still-btns">
+      <button class="br-still-ok" onclick="bridgeFeelOk()">เบาขึ้นบ้างแล้ว</button>
+      <button class="br-still-no" onclick="bridgeStillHeavy()">ยังหนักอยู่</button>
+    </div>
+    <!-- expanded when user says still heavy -->
+    <div class="br-heavy" id="br-heavy">
+      <div class="br-heavy-label">ไม่ใช่ความล้มเหลว</div>
+      <div class="br-heavy-note">
+        <strong>เครื่องมือไม่ได้ผลกับทุกคนในทุกวัน</strong><br>
+        นั่นหมายความว่าตอนนี้คุณอาจต้องการการสนับสนุนที่ต่างออกไป ไม่ใช่ว่าคุณไม่พยายามพอ
+      </div>
+      <div class="br-heavy-btns">
+        <a class="br-heavy-btn" href="tel:1323">
+          <span class="br-heavy-btn-icon">📞</span>
+          <span class="br-heavy-btn-body">
+            <span class="br-heavy-btn-name">โทร 1323</span>
+            <span class="br-heavy-btn-desc">ฟรี ตลอด 24 ชั่วโมง · ไม่ต้องรอถึงวิกฤต</span>
+          </span>
+          <span class="br-heavy-btn-arrow">→</span>
+        </a>
+        <a class="br-heavy-btn" href="peer.html">
+          <span class="br-heavy-btn-icon">💛</span>
+          <span class="br-heavy-btn-body">
+            <span class="br-heavy-btn-name">คุยกับ PR</span>
+            <span class="br-heavy-btn-desc">บางทีแค่มีคนรับฟังก็เบาขึ้นได้เยอะ</span>
+          </span>
+          <span class="br-heavy-btn-arrow">→</span>
+        </a>
+        <a class="br-heavy-btn" href="crisis.html">
+          <span class="br-heavy-btn-icon">🛠</span>
+          <span class="br-heavy-btn-body">
+            <span class="br-heavy-btn-name">เครื่องมือและสายด่วนอื่นๆ</span>
+            <span class="br-heavy-btn-desc">ทรัพยากรทั้งหมดที่มีอยู่</span>
+          </span>
+          <span class="br-heavy-btn-arrow">→</span>
+        </a>
+      </div>
+      <div class="br-1323-line">
+        หรือพูดคุยกับผู้เชี่ยวชาญโดยตรง —
+        <a href="tel:1323">1323</a> ฟรี ไม่ต้องนัด ไม่ต้องรอถึงวิกฤต
+      </div>
+    </div>
   </div>
 
   <button class="br-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
@@ -654,8 +767,28 @@ function afterNaming() {
 }
 
 // ══════════════════════════════════════════════════════
-// BUILD BRIDGE — the smart routing engine
+// BRIDGE STILL-HEAVY INTERACTION
 // ══════════════════════════════════════════════════════
+function bridgeFeelOk() {
+  const strip = document.querySelector('.br-still');
+  if (strip) {
+    strip.innerHTML = `<div style="text-align:center;font-size:13px;font-weight:300;color:var(--green);padding:8px 0;">
+      🌿 ดีใจที่ได้ยิน — ดูแลตัวเองต่อไปนะ
+    </div>`;
+  }
+}
+
+function bridgeStillHeavy() {
+  const heavy = document.getElementById('br-heavy');
+  if (heavy) heavy.classList.add('show');
+  // Hide the buttons so only one state shows
+  const btns = document.querySelector('.br-still-btns');
+  if (btns) btns.style.display = 'none';
+  const q = document.querySelector('.br-still-q');
+  if (q) q.style.display = 'none';
+  // Smooth scroll to it
+  setTimeout(() => heavy.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
+}
 function buildBridge() {
   const data = S._data;
 
