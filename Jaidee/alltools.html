@@ -157,6 +157,63 @@
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     .fade-up{animation:fadeUp 0.28s ease forwards;}
+
+    /* STILL HEAVY STRIP — shared by breathe done + journal done */
+    .still-strip{
+      margin-top:20px;border-top:1px solid var(--cream-border);
+      padding-top:16px;
+    }
+    .still-q{
+      font-size:12px;font-weight:400;color:var(--soft);
+      margin-bottom:10px;text-align:center;
+    }
+    .still-btns{display:flex;gap:8px;}
+    .still-ok{
+      flex:1;background:var(--green-soft);
+      border:1px solid var(--green-border);border-radius:12px;
+      padding:11px 8px;font-family:'Mitr',sans-serif;
+      font-size:12px;font-weight:400;color:var(--green);
+      cursor:pointer;transition:transform 0.15s;
+    }
+    .still-ok:active{transform:scale(0.96);}
+    .still-no{
+      flex:1;background:var(--card);
+      border:1.5px solid var(--cream-border);border-radius:12px;
+      padding:11px 8px;font-family:'Mitr',sans-serif;
+      font-size:12px;font-weight:400;color:var(--mid);
+      cursor:pointer;transition:all 0.18s;
+    }
+    .still-no:active{border-color:var(--dark);color:var(--dark);}
+    .still-heavy{
+      display:none;margin-top:12px;
+      background:var(--dark);border-radius:14px;padding:14px;
+    }
+    .still-heavy.show{display:block;}
+    .still-heavy-note{
+      font-size:12px;font-weight:300;
+      color:rgba(253,251,247,0.55);line-height:1.75;margin-bottom:12px;
+    }
+    .still-heavy-note strong{font-weight:500;color:rgba(253,251,247,0.85);}
+    .still-heavy-links{display:flex;flex-direction:column;gap:7px;}
+    .still-link{
+      display:flex;align-items:center;gap:10px;
+      padding:11px 13px;border-radius:11px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.1);
+      cursor:pointer;text-decoration:none;
+      transition:background 0.15s;
+    }
+    .still-link:active{background:rgba(255,255,255,0.1);}
+    .still-link-icon{font-size:15px;flex-shrink:0;}
+    .still-link-body{flex:1;}
+    .still-link-name{font-size:13px;font-weight:500;color:#FDFBF7;display:block;}
+    .still-link-desc{font-size:10px;font-weight:300;color:rgba(253,251,247,0.4);display:block;margin-top:1px;}
+    .still-link-arrow{font-size:12px;color:rgba(255,255,255,0.2);flex-shrink:0;}
+    .still-1323{
+      margin-top:10px;text-align:center;
+      font-size:11px;font-weight:300;color:rgba(253,251,247,0.28);line-height:1.7;
+    }
+    .still-1323 a{color:rgba(232,150,12,0.65);text-decoration:none;}
   </style>
 </head>
 <body>
@@ -277,6 +334,15 @@
       <div class="b-done-sub">ระบบประสาทของคุณเพิ่งได้พัก<br/>สังเกตว่าตอนนี้รู้สึกต่างจากก่อนไหม</div>
       <button class="b-done-again" onclick="resetBreathe()">หายใจอีกรอบ</button>
       <button class="b-done-close" onclick="closeBreathe()">ปิด</button>
+      <!-- still heavy strip -->
+      <div class="still-strip" style="margin:16px 0 0;">
+        <div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div>
+        <div class="still-btns">
+          <button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button>
+          <button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button>
+        </div>
+        <div class="still-heavy" id="b-still-heavy"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -468,6 +534,15 @@ function renderJStep(){
         <div class="j-done-title">ขอบคุณที่เขียนออกมา</div>
         <div class="j-done-sub">การเขียนช่วยเอาสิ่งที่อยู่ในหัว<br/>ออกมาอยู่ข้างนอกแทน<br/>หวังว่าจะเบาขึ้นบ้างนะ</div>
         <button class="j-done-close" onclick="closeJournal()">← กลับ</button>
+        <!-- still heavy strip -->
+        <div class="still-strip">
+          <div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div>
+          <div class="still-btns">
+            <button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button>
+            <button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button>
+          </div>
+          <div class="still-heavy" id="j-still-heavy"></div>
+        </div>
       </div>`;
     return;
   }
@@ -489,8 +564,65 @@ function renderJStep(){
 function jNext(){const ta=document.getElementById('j-ta');if(ta)jAnswers[jStep]=ta.value.trim();jStep++;renderJStep();}
 function jSkip(){jAnswers[jStep]='';jStep++;renderJStep();}
 
+// ══════════════════════════════════════════════════════
+// STILL HEAVY — shared by breathe + journal done screens
+// ══════════════════════════════════════════════════════
+const STILL_HEAVY_HTML = `
+  <div class="still-heavy-note">
+    <strong>เครื่องมือไม่ได้ผลกับทุกคนในทุกวัน</strong><br>
+    นั่นไม่ใช่ความล้มเหลวของคุณ — มันหมายความว่าตอนนี้คุณอาจต้องการการสนับสนุนที่ต่างออกไป
+  </div>
+  <div class="still-heavy-links">
+    <a class="still-link" href="tel:1323">
+      <span class="still-link-icon">📞</span>
+      <span class="still-link-body">
+        <span class="still-link-name">โทร 1323</span>
+        <span class="still-link-desc">ฟรี ตลอด 24 ชั่วโมง · ไม่ต้องรอถึงวิกฤต</span>
+      </span>
+      <span class="still-link-arrow">→</span>
+    </a>
+    <a class="still-link" href="peer.html">
+      <span class="still-link-icon">💛</span>
+      <span class="still-link-body">
+        <span class="still-link-name">คุยกับ PR</span>
+        <span class="still-link-desc">บางทีแค่มีคนรับฟังก็เบาขึ้นได้เยอะ</span>
+      </span>
+      <span class="still-link-arrow">→</span>
+    </a>
+    <a class="still-link" href="crisis.html">
+      <span class="still-link-icon">🛠</span>
+      <span class="still-link-body">
+        <span class="still-link-name">เครื่องมือและสายด่วนอื่นๆ</span>
+        <span class="still-link-desc">ทรัพยากรทั้งหมดที่มีอยู่</span>
+      </span>
+      <span class="still-link-arrow">→</span>
+    </a>
+  </div>
+  <div class="still-1323">
+    พูดคุยกับผู้เชี่ยวชาญได้เลย —
+    <a href="tel:1323">1323</a> ฟรี ไม่ต้องนัด ไม่ต้องรอถึงวิกฤต
+  </div>`;
+
+function stillOk(btn) {
+  const strip = btn.closest('.still-strip');
+  strip.innerHTML = `<div style="text-align:center;font-size:13px;font-weight:300;color:var(--green);padding:6px 0;">
+    🌿 ดีใจที่ได้ยิน — ดูแลตัวเองต่อไปนะ
+  </div>`;
+}
+
+function stillHeavy(btn) {
+  const strip   = btn.closest('.still-strip');
+  const heavy   = strip.querySelector('.still-heavy');
+  const btnsDiv = strip.querySelector('.still-btns');
+  const qDiv    = strip.querySelector('.still-q');
+  heavy.innerHTML = STILL_HEAVY_HTML;
+  heavy.classList.add('show');
+  if (btnsDiv) btnsDiv.style.display = 'none';
+  if (qDiv)    qDiv.style.display    = 'none';
+  setTimeout(() => heavy.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
+}
+
 // ══════════════════════════════════════════════
-// INIT
 // ══════════════════════════════════════════════
 renderEntries();
 if(window.location.hash==='#journal'){openJournal();}
