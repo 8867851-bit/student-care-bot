@@ -3,94 +3,302 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <title>ใจดี TU — ขอความช่วยเหลือ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <title>ใจดี TU — เครื่องมือดูแลใจ & ขอความช่วยเหลือ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      --cream:#FDFCF9;--dark:#1A1A1A;--mid:#555;--soft:#999;
-      --border:#EEEBE4;--red:#D94F4F;--red-soft:#FFF0F0;
-      --gold:#E8960C;--gold-soft:#FFF5E0;--gold-border:#FFE4A0;
-      --green:#3A7D44;--green-soft:#EEF6EF;--green-border:#C2DFC6;
+      --cream:#FDFCF9; --cream-border:#EDE9E0; --cream-warm:#FFF8EE;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card:#FFFFFF;
+      --red:#DC2626; --red-soft:#FEF2F2; --red-border:#FECACA;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --green:#3A7D44; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+      --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#99F6E4;
+      --blue:#2563EB; --blue-soft:#EFF6FF; --blue-border:#BFDBFE;
+      --indigo:#4338CA; --indigo-soft:#EEF2FF;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;overflow-x:hidden;}
+
     .topnav{display:flex;align-items:center;padding:16px 20px 0;}
     .back-btn{background:none;border:none;color:var(--soft);font-size:13px;font-family:'Mitr',sans-serif;cursor:pointer;}
-    .header{padding:20px 24px 24px;}
-    .eyebrow{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
-    .headline{font-family:'Noto Serif Thai',serif;font-size:30px;font-weight:700;line-height:1.25;margin-bottom:10px;}
-    .headline em{font-style:normal;color:var(--red);}
-    .body-text{font-size:14px;font-weight:300;color:var(--mid);line-height:1.7;}
-    .grounding-card{margin:0 20px 24px;background:var(--dark);border-radius:20px;padding:18px 20px;}
-    .grounding-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:6px;}
-    .grounding-title{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:#F5F3EF;margin-bottom:3px;}
-    .grounding-sub{font-size:12px;font-weight:300;color:rgba(255,255,255,0.45);margin-bottom:14px;line-height:1.5;}
-    .audio-player{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.07);border-radius:14px;padding:14px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);transition:background 0.15s;user-select:none;}
-    .audio-player:active{background:rgba(255,255,255,0.11);}
-    .play-circle{width:40px;height:40px;border-radius:50%;background:var(--gold);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:transform 0.1s;}
-    .play-circle:active{transform:scale(0.92);}
-    .waveform{flex:1;overflow:hidden;height:36px;display:flex;align-items:center;}
-    .wf-bars{display:flex;align-items:center;gap:2.5px;width:100%;height:100%;}
-    .wf-bar{flex-shrink:0;width:3px;border-radius:99px;background:rgba(255,255,255,0.22);transition:background 0.1s;}
-    .wf-bar.played{background:var(--gold);}
-    .track-time{font-size:11px;color:rgba(255,255,255,0.4);flex-shrink:0;font-variant-numeric:tabular-nums;}
-    .audio-note{font-size:11px;color:rgba(255,255,255,0.22);text-align:center;margin-top:10px;line-height:1.5;}
-    .section{padding:0 20px;}
-    .section-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:12px;}
-    .hotline-card{background:white;border-radius:16px;padding:16px 18px;border:1px solid var(--border);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;text-decoration:none;transition:transform 0.15s;}
-    .hotline-card:active{transform:scale(0.97);}
-    .hotline-card.urgent{border-left:4px solid var(--red);}
-    .hotline-card.warm{border-left:4px solid var(--gold);}
-    .hotline-number{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:var(--dark);}
-    .hotline-name{font-size:13px;color:var(--mid);margin-top:2px;}
-    .hotline-hours{font-size:11px;color:var(--soft);margin-top:1px;}
-    .call-btn{background:var(--red);color:white;border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-family:'Mitr',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap;}
-    .call-btn.gold{background:var(--gold);}
-    .divider{height:1px;background:var(--border);margin:24px 20px;}
 
-    /* ── Tools carousel ── */
-    .tools-wrap{padding:0;}
-    .tools-carousel{display:flex;gap:12px;padding:0 20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+    /* ── HEADER ── */
+    .header{padding:20px 24px 24px;}
+    .eyebrow{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--mid);margin-bottom:10px;}
+    .headline{font-family:'Noto Serif Thai',serif;font-size:28px;font-weight:700;line-height:1.25;margin-bottom:10px;}
+    .body-text{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;}
+
+    /* ── SECTION LABEL ── */
+    .sec-label-wrap{display:flex;align-items:center;gap:10px;padding:0 20px;margin-bottom:14px;}
+    .sec-label{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);white-space:nowrap;}
+    .sec-line{flex:1;height:1px;background:var(--cream-border);}
+
+    .divider{height:1px;background:var(--cream-border);margin:28px 20px;}
+
+    /* ════════════════════════════════════════
+       GROUNDING GUIDE — interactive
+    ════════════════════════════════════════ */
+    .grounding-wrap{margin:0 20px 8px;}
+    .grounding-card{background:var(--dark);border-radius:20px;padding:20px;position:relative;overflow:hidden;}
+    .grounding-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(232,150,12,0.08) 0%,transparent 70%);border-radius:50%;pointer-events:none;}
+
+    .g-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:rgba(232,150,12,0.6);margin-bottom:6px;}
+    .g-title{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:#FDFBF7;margin-bottom:3px;}
+    .g-sub{font-size:12px;font-weight:300;color:rgba(255,255,255,0.4);margin-bottom:16px;line-height:1.5;}
+
+    /* START state */
+    .g-start{display:flex;flex-direction:column;align-items:center;gap:10px;}
+    .g-start-btn{
+      width:100%;background:rgba(232,150,12,0.15);
+      border:1px solid rgba(232,150,12,0.35);
+      border-radius:14px;padding:14px;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;
+      color:var(--gold);cursor:pointer;transition:background 0.18s;
+    }
+    .g-start-btn:active{background:rgba(232,150,12,0.25);}
+    .g-start-btn.secondary{
+      background:rgba(255,255,255,0.04);
+      border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);
+      font-weight:300;font-size:12px;
+    }
+
+    /* ACTIVE state */
+    .g-active{display:none;}
+    .g-step-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:rgba(255,255,255,0.3);margin-bottom:8px;}
+    .g-instruction{
+      font-family:'Noto Serif Thai',serif;
+      font-size:20px;font-weight:600;color:#FDFBF7;
+      line-height:1.5;margin-bottom:6px;min-height:62px;
+      transition:opacity 0.3s;
+    }
+    .g-detail{font-size:12px;font-weight:300;color:rgba(255,255,255,0.45);line-height:1.7;min-height:40px;margin-bottom:16px;}
+
+    /* Progress dots */
+    .g-dots{display:flex;gap:5px;margin-bottom:16px;}
+    .g-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s;}
+    .g-dot.done{background:rgba(232,150,12,0.6);}
+    .g-dot.active{background:var(--gold);width:14px;border-radius:3px;}
+
+    .g-next-btn{
+      width:100%;background:rgba(232,150,12,0.15);
+      border:1px solid rgba(232,150,12,0.35);
+      border-radius:14px;padding:13px;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;
+      color:var(--gold);cursor:pointer;transition:all 0.18s;
+      margin-bottom:6px;
+    }
+    .g-next-btn:active{background:rgba(232,150,12,0.25);}
+    .g-skip-btn{
+      width:100%;background:none;border:none;
+      font-family:'Mitr',sans-serif;font-size:11px;
+      color:rgba(255,255,255,0.2);cursor:pointer;padding:6px;
+    }
+
+    /* DONE state */
+    .g-done{display:none;text-align:center;padding:8px 0 4px;}
+    .g-done-icon{font-size:36px;margin-bottom:10px;}
+    .g-done-text{font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:#FDFBF7;margin-bottom:4px;}
+    .g-done-sub{font-size:12px;font-weight:300;color:rgba(255,255,255,0.4);line-height:1.65;margin-bottom:14px;}
+    .g-done-again{background:none;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:10px 20px;font-family:'Mitr',sans-serif;font-size:12px;color:rgba(255,255,255,0.35);cursor:pointer;}
+
+    /* ════════════════════════════════════════
+       HOTLINES
+    ════════════════════════════════════════ */
+    .hotlines{padding:0 20px;display:flex;flex-direction:column;gap:8px;}
+
+    .hotline-card{
+      background:var(--card);border-radius:14px;
+      padding:14px 16px;border:1px solid var(--cream-border);
+      display:flex;align-items:center;justify-content:space-between;
+      text-decoration:none;transition:transform 0.15s;
+    }
+    .hotline-card:active{transform:scale(0.97);}
+    .hotline-card.primary{border-left:3px solid var(--dark);}
+    .hotline-card.gold{border-left:3px solid var(--gold);}
+    .hotline-left{flex:1;}
+    .hotline-number{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:var(--dark);}
+    .hotline-name{font-size:13px;color:var(--mid);margin-top:1px;}
+    .hotline-hours{font-size:10px;color:var(--soft);margin-top:2px;letter-spacing:0.3px;}
+    .call-btn{
+      background:var(--dark);color:#fff;border:none;
+      border-radius:10px;padding:10px 16px;
+      font-size:12px;font-family:'Mitr',sans-serif;font-weight:500;
+      cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;
+    }
+    .call-btn.gold{background:var(--gold);}
+    .call-btn.outline{background:none;border:1px solid var(--cream-border);color:var(--mid);}
+
+    /* 1323 booking card */
+    .booking-card{
+      background:linear-gradient(135deg,var(--cream-warm),#FFF5DD);
+      border:1px solid var(--gold-border);border-radius:14px;
+      padding:14px 16px;display:flex;align-items:center;gap:12px;
+      text-decoration:none;transition:transform 0.15s;
+    }
+    .booking-card:active{transform:scale(0.97);}
+    .booking-icon{font-size:24px;flex-shrink:0;}
+    .booking-body{flex:1;}
+    .booking-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:3px;}
+    .booking-name{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:#5C3D00;}
+    .booking-desc{font-size:11px;font-weight:300;color:#8B6914;margin-top:2px;line-height:1.5;}
+    .booking-arrow{font-size:14px;color:rgba(92,61,0,0.3);flex-shrink:0;}
+
+    /* Go to hospital card */
+    .hospital-card{
+      background:var(--red-soft);border:1px solid var(--red-border);
+      border-radius:14px;padding:14px 16px;
+      display:flex;align-items:flex-start;gap:12px;
+    }
+    .hospital-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
+    .hospital-body{flex:1;}
+    .hospital-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--red);margin-bottom:4px;}
+    .hospital-text{font-size:13px;font-weight:400;color:#7F1D1D;line-height:1.7;}
+    .hospital-sub{font-size:11px;font-weight:300;color:rgba(127,29,29,0.65);margin-top:4px;line-height:1.6;}
+
+    /* ════════════════════════════════════════
+       APPS & TOOLS CAROUSEL
+    ════════════════════════════════════════ */
+    .tools-carousel{
+      display:flex;gap:10px;padding:0 20px;
+      overflow-x:auto;scroll-snap-type:x mandatory;
+      scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
     .tools-carousel::-webkit-scrollbar{display:none;}
-    .tool-card{flex-shrink:0;width:155px;border-radius:16px;overflow:hidden;background:white;border:1px solid var(--border);cursor:pointer;scroll-snap-align:start;text-decoration:none;color:inherit;display:block;transition:transform 0.15s;}
+
+    .tool-card{
+      flex-shrink:0;width:148px;border-radius:16px;
+      background:var(--card);border:1px solid var(--cream-border);
+      cursor:pointer;scroll-snap-align:start;
+      text-decoration:none;color:inherit;display:block;
+      transition:transform 0.15s;overflow:hidden;
+    }
     .tool-card:active{transform:scale(0.97);}
-    .tool-img{width:100%;height:96px;object-fit:cover;display:block;}
-    .tool-img-fallback{width:100%;height:96px;display:flex;align-items:center;justify-content:center;}
-    .tool-initial{font-family:'Noto Serif Thai',serif;font-size:28px;font-weight:600;color:rgba(0,0,0,0.25);}
+    .tool-thumb{
+      width:100%;height:88px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:32px;
+    }
     .tool-body{padding:10px 12px 12px;}
+    .tool-tag{font-size:9px;letter-spacing:1px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:4px;}
     .tool-name{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px;}
     .tool-desc{font-size:11px;font-weight:300;color:var(--mid);line-height:1.5;}
-    .tool-skeleton{flex-shrink:0;width:155px;height:175px;border-radius:16px;background:linear-gradient(90deg,#F0ECE4 25%,#EDE8DF 50%,#F0ECE4 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+    .tool-skeleton{flex-shrink:0;width:148px;height:172px;border-radius:16px;background:linear-gradient(90deg,#F0ECE4 25%,#EDE8DF 50%,#F0ECE4 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-    /* ── PR Button ── */
-    .bottom-cta{padding:0 20px;}
-    .pr-eyebrow-line{
-      font-size:11px;font-weight:400;text-align:center;margin-bottom:8px;
-      color:var(--mid);
-      background:linear-gradient(90deg,rgba(232,150,12,0) 0%,rgba(232,150,12,0.08) 30%,rgba(232,150,12,0.12) 50%,rgba(232,150,12,0.08) 70%,rgba(232,150,12,0) 100%);
-      border-radius:20px;padding:5px 12px;position:relative;
-    }
-    .pr-eyebrow-line::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:55%;height:1px;background:linear-gradient(90deg,transparent,rgba(232,150,12,0.25),transparent);}
-    .btn-pr-pill{
-      display:flex;align-items:center;justify-content:center;gap:12px;
-      background:var(--dark);border-radius:50px;padding:15px 28px;width:100%;
-      cursor:pointer;text-decoration:none;border:none;font-family:'Mitr',sans-serif;
-      position:relative;overflow:hidden;
-      transition:transform 0.15s,box-shadow 0.15s;
-      box-shadow:0 3px 10px rgba(0,0,0,0.12);
-    }
-    .btn-pr-pill:active{transform:scale(0.97);box-shadow:0 1px 6px rgba(0,0,0,0.10);}
-    .btn-pr-pill::before{content:'';position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:70%;height:50px;background:radial-gradient(ellipse,rgba(232,150,12,0.05) 0%,transparent 70%);pointer-events:none;}
-    .pr-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;box-shadow:0 0 4px rgba(232,150,12,0.5);}
-    .pr-text{font-size:15px;font-weight:600;color:#fff;text-shadow:0 0 6px rgba(255,255,255,0.15);}
-    .pr-arrow{font-size:15px;color:rgba(255,255,255,0.35);}
+    /* ════════════════════════════════════════
+       SITUATIONAL GUIDES
+    ════════════════════════════════════════ */
+    .situations{display:flex;flex-direction:column;gap:8px;padding:0 20px;}
 
-    .care-offramp{display:flex;align-items:center;gap:12px;padding:13px 16px;background:linear-gradient(135deg,var(--green-soft),#FDFBF7);border:1px solid var(--green-border);border-radius:14px;text-decoration:none;color:inherit;margin-top:10px;}
+    .situation-card{
+      background:var(--card);border:1px solid var(--cream-border);
+      border-radius:14px;overflow:hidden;cursor:pointer;
+    }
+    .situation-head{
+      display:flex;align-items:center;gap:12px;
+      padding:14px 16px;
+    }
+    .situation-icon{font-size:20px;flex-shrink:0;}
+    .situation-head-body{flex:1;}
+    .situation-q{font-size:13px;font-weight:500;color:var(--dark);margin-bottom:2px;line-height:1.4;}
+    .situation-who{font-size:11px;font-weight:300;color:var(--soft);}
+    .situation-chev{font-size:16px;color:var(--soft);transition:transform 0.25s;flex-shrink:0;}
+    .situation-card.open .situation-chev{transform:rotate(180deg);}
+    .situation-body{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1);}
+    .situation-card.open .situation-body{max-height:600px;}
+    .situation-inner{padding:0 16px 16px;border-top:1px solid var(--cream-border);}
+    .situation-step{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--cream-border);}
+    .situation-step:last-of-type{border-bottom:none;}
+    .situation-step-num{
+      width:22px;height:22px;border-radius:50%;
+      background:var(--cream);border:1px solid var(--cream-border);
+      display:flex;align-items:center;justify-content:center;
+      font-size:10px;font-weight:600;color:var(--mid);flex-shrink:0;margin-top:1px;
+    }
+    .situation-step-text{font-size:12px;font-weight:300;color:var(--mid);line-height:1.7;flex:1;}
+    .situation-step-text strong{font-weight:500;color:var(--dark);}
+
+    /* ════════════════════════════════════════
+       VIDEOS SECTION
+    ════════════════════════════════════════ */
+    .videos-list{display:flex;flex-direction:column;gap:10px;padding:0 20px;}
+
+    .video-card{
+      background:var(--card);border:1px solid var(--cream-border);
+      border-radius:14px;overflow:hidden;cursor:pointer;
+      text-decoration:none;color:inherit;display:block;
+      transition:transform 0.15s;
+    }
+    .video-card:active{transform:scale(0.98);}
+    .video-thumb-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#111;overflow:hidden;}
+    .video-thumb{width:100%;height:100%;object-fit:cover;display:block;}
+    .video-thumb-fallback{
+      width:100%;height:100%;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,#1A1A2E,#16213E);
+      font-size:36px;
+    }
+    .video-play-overlay{
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .video-play-btn{
+      width:44px;height:44px;border-radius:50%;
+      background:rgba(255,255,255,0.9);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 2px 12px rgba(0,0,0,0.3);
+    }
+    .video-body{padding:12px 14px;}
+    .video-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:4px;}
+    .video-title{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:3px;}
+    .video-source{font-size:11px;font-weight:300;color:var(--soft);}
+
+    .videos-coming{
+      margin:0 20px;background:var(--cream);border:1px dashed var(--cream-border);
+      border-radius:14px;padding:20px;text-align:center;
+    }
+    .videos-coming-text{font-size:13px;font-weight:300;color:var(--soft);line-height:1.7;}
+
+    /* ════════════════════════════════════════
+       BOTTOM CTAs
+    ════════════════════════════════════════ */
+    .bottom-cta{padding:0 20px;}
+
+    .pr-banner{
+      background:var(--dark);border-radius:16px;
+      padding:16px 18px;display:flex;align-items:center;
+      justify-content:space-between;gap:12px;margin-bottom:8px;
+    }
+    .pr-banner-left{flex:1;}
+    .pr-banner-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:rgba(232,150,12,0.6);margin-bottom:3px;}
+    .pr-banner-text{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:#FDFBF7;line-height:1.35;}
+    .pr-banner-sub{font-size:11px;font-weight:300;color:rgba(253,251,247,0.4);margin-top:2px;}
+    .pr-banner-btn{
+      background:var(--gold);color:#fff;border:none;border-radius:12px;
+      padding:10px 16px;font-size:12px;font-family:'Mitr',sans-serif;
+      font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;
+      text-decoration:none;display:inline-block;
+    }
+
+    .care-offramp{
+      display:flex;align-items:center;gap:12px;
+      padding:13px 16px;
+      background:linear-gradient(135deg,var(--green-soft),#FDFBF7);
+      border:1px solid var(--green-border);border-radius:14px;
+      text-decoration:none;color:inherit;margin-bottom:8px;
+      transition:transform 0.15s;
+    }
+    .care-offramp:active{transform:scale(0.98);}
     .care-offramp-body{flex:1;}
-    .care-offramp-title{font-size:13px;font-weight:500;color:#1C1917;margin-bottom:2px;}
-    .care-offramp-sub{font-size:12px;font-weight:300;color:#6B6560;line-height:1.5;}
-    .btn-back-bottom{width:100%;background:none;border:none;color:var(--soft);font-size:13px;font-family:'Mitr',sans-serif;cursor:pointer;padding:14px;text-align:center;}
+    .care-offramp-name{font-size:13px;font-weight:500;color:var(--dark);margin-bottom:2px;}
+    .care-offramp-desc{font-size:11px;font-weight:300;color:var(--mid);line-height:1.5;}
+
+    .btn-back{
+      width:100%;background:none;border:none;
+      color:var(--soft);font-size:13px;
+      font-family:'Mitr',sans-serif;cursor:pointer;
+      padding:14px;text-align:center;
+    }
   </style>
 </head>
 <body>
@@ -100,40 +308,161 @@
 </div>
 
 <div class="header">
-  <div class="eyebrow">Crisis Support</div>
-  <div class="headline">คุณไม่ได้<br>อยู่คน<em>เดียว</em></div>
-  <div class="body-text">มีคนพร้อมรับฟังตลอด 24 ชั่วโมง — ไม่ต้องรู้สึกดีก่อนจะขอความช่วยเหลือ</div>
+  <div class="eyebrow">ใจดี TU · เครื่องมือดูแลใจ</div>
+  <div class="headline">มีคนพร้อมช่วย<br>เสมอ</div>
+  <div class="body-text">ไม่ต้องรอถึงวิกฤต ไม่ต้องรู้สึกดีก่อนจะขอความช่วยเหลือ<br>เริ่มจากตรงที่รู้สึกอยู่ตอนนี้ก็ได้</div>
 </div>
 
-<div class="grounding-card">
-  <div class="grounding-label">ถ้าตอนนี้รู้สึกท่วมทับ</div>
-  <div class="grounding-title">หยุดพักตรงนี้ก่อนได้นะ</div>
-  <div class="grounding-sub">กดแล้วหลับตาได้เลย ไม่ต้องอ่านอะไร</div>
-  <div class="audio-player" id="audio-player" onclick="togglePlay()">
-    <button class="play-circle" id="play-btn" aria-label="เล่นเสียง">
-      <svg id="icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13 8L4 13.5V2.5Z" fill="white"/></svg>
-      <svg id="icon-pause" width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:none;"><rect x="3" y="2" width="4" height="12" rx="1.5" fill="white"/><rect x="9" y="2" width="4" height="12" rx="1.5" fill="white"/></svg>
-    </button>
-    <div class="waveform" id="waveform"><div class="wf-bars" id="wf-bars"></div></div>
-    <div class="track-time" id="track-time">1:30</div>
+
+<!-- ════════════════════════════════════════════
+     GROUNDING GUIDE
+════════════════════════════════════════════ -->
+<div class="sec-label-wrap">
+  <div class="sec-label">ถ้าตอนนี้รู้สึกท่วมทับ</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="grounding-wrap">
+  <div class="grounding-card">
+    <div class="g-label">Grounding · หยุดตรงนี้ก่อน</div>
+    <div class="g-title">พาตัวเองกลับมา</div>
+    <div class="g-sub">เทคนิค grounding ใช้เวลาแค่ 3–5 นาที</div>
+
+    <!-- START -->
+    <div class="g-start" id="g-start">
+      <button class="g-start-btn" onclick="startGrounding('54321')">🌿 5-4-3-2-1 Grounding</button>
+      <button class="g-start-btn" onclick="startGrounding('animals')">🐾 ชื่อสัตว์ 5 ตัว</button>
+      <button class="g-start-btn secondary" onclick="startGrounding('date')">📅 รู้ตัวว่าอยู่ที่ไหน ตอนไหน</button>
+    </div>
+
+    <!-- ACTIVE -->
+    <div class="g-active" id="g-active">
+      <div class="g-dots" id="g-dots"></div>
+      <div class="g-step-label" id="g-step-label"></div>
+      <div class="g-instruction" id="g-instruction"></div>
+      <div class="g-detail" id="g-detail"></div>
+      <button class="g-next-btn" id="g-next-btn" onclick="nextGrounding()">ถัดไป →</button>
+      <button class="g-skip-btn" onclick="endGrounding()">ข้ามออก</button>
+    </div>
+
+    <!-- DONE -->
+    <div class="g-done" id="g-done">
+      <div class="g-done-icon">🌊</div>
+      <div class="g-done-text">ทำได้ดีมาก</div>
+      <div class="g-done-sub">ร่างกายเพิ่งได้รับรู้ว่าตอนนี้ปลอดภัย<br>สังเกตว่ารู้สึกต่างจากก่อนไหม</div>
+      <button class="g-done-again" onclick="resetGrounding()">ลองอีกแบบ</button>
+    </div>
   </div>
-  <div class="audio-note">หายใจกับฉัน · เสียงจากทีม ใจดี TU 🤍</div>
-  <audio id="main-audio" src="audio/grounding-breathing.mp3" preload="none"></audio>
-</div>
-
-<div class="section">
-  <div class="section-label">สายด่วน — กดโทรได้เลย</div>
-  <a class="hotline-card urgent" href="tel:1323"><div><div class="hotline-number">1323</div><div class="hotline-name">กรมสุขภาพจิต</div><div class="hotline-hours">24 ชั่วโมง ทุกวัน ✓</div></div><div class="call-btn">โทรเลย</div></a>
-  <a class="hotline-card urgent" href="tel:1667"><div><div class="hotline-number">1667</div><div class="hotline-name">สายด่วนสุขภาพจิต</div><div class="hotline-hours">24 ชั่วโมง ทุกวัน ✓</div></div><div class="call-btn">โทรเลย</div></a>
-  <a class="hotline-card warm" href="tel:1300"><div><div class="hotline-number">1300</div><div class="hotline-name">ศูนย์ช่วยเหลือสังคม</div><div class="hotline-hours">24 ชั่วโมง ทุกวัน ✓</div></div><div class="call-btn gold">โทรเลย</div></a>
-  <a class="hotline-card urgent" href="tel:191"><div><div class="hotline-number">191</div><div class="hotline-name">ตำรวจ — เหตุฉุกเฉิน</div><div class="hotline-hours">24 ชั่วโมง ทุกวัน ✓</div></div><div class="call-btn">โทรเลย</div></a>
 </div>
 
 <div class="divider"></div>
 
-<div class="section" style="margin-bottom:12px;">
-  <div class="section-label">เครื่องมือที่ช่วยได้</div>
+
+<!-- ════════════════════════════════════════════
+     HOTLINES
+════════════════════════════════════════════ -->
+<div class="sec-label-wrap">
+  <div class="sec-label">คุยกับคนได้เลย</div>
+  <div class="sec-line"></div>
 </div>
+
+<div class="hotlines">
+
+  <!-- 1323 call -->
+  <a class="hotline-card primary" href="tel:1323">
+    <div class="hotline-left">
+      <div class="hotline-number">1323</div>
+      <div class="hotline-name">กรมสุขภาพจิต</div>
+      <div class="hotline-hours">📞 ฟรี · ตลอด 24 ชั่วโมง · ไม่ต้องนัด</div>
+    </div>
+    <div class="call-btn">โทรเลย</div>
+  </a>
+
+  <!-- 1323 online booking — confirmed URL -->
+  <a class="booking-card" href="https://1323alltime.camri.go.th/appointment" target="_blank" rel="noopener">
+    <span class="booking-icon">📅</span>
+    <span class="booking-body">
+      <span class="booking-label">จองคิวออนไลน์</span>
+      <span class="booking-name">1323 All Time — นัดคุยกับนักจิตวิทยา</span>
+      <span class="booking-desc">ลงทะเบียนครั้งแรก → เลือกวันเวลาที่สะดวก<br>บริการทางโทรศัพท์ โดยทีมนักจิตวิทยา · ฟรี</span>
+    </span>
+    <span class="booking-arrow">→</span>
+  </a>
+
+  <!-- 1323 LINE/Facebook chat -->
+  <a class="hotline-card gold" href="https://m.me/helpline1323" target="_blank" rel="noopener">
+    <div class="hotline-left">
+      <div class="hotline-name" style="font-weight:500;font-size:14px;">แชทกับ 1323</div>
+      <div class="hotline-hours">FB @helpline1323 · มีแชทบอทตอบเบื้องต้น + นักจิตวิทยา</div>
+    </div>
+    <div class="call-btn outline">แชท →</div>
+  </a>
+
+  <!-- 1667 -->
+  <a class="hotline-card" href="tel:1667">
+    <div class="hotline-left">
+      <div class="hotline-number">1667</div>
+      <div class="hotline-name">สายด่วนสุขภาพจิต</div>
+      <div class="hotline-hours">📞 ฟรี · ตลอด 24 ชั่วโมง</div>
+    </div>
+    <div class="call-btn">โทรเลย</div>
+  </a>
+
+  <!-- 1300 -->
+  <a class="hotline-card" href="tel:1300">
+    <div class="hotline-left">
+      <div class="hotline-number">1300</div>
+      <div class="hotline-name">ศูนย์ช่วยเหลือสังคม · OSCC</div>
+      <div class="hotline-hours">📞 ฟรี · ตลอด 24 ชั่วโมง</div>
+    </div>
+    <div class="call-btn">โทรเลย</div>
+  </a>
+
+  <!-- สะมาริตันส์ -->
+  <a class="hotline-card" href="tel:026717452">
+    <div class="hotline-left">
+      <div class="hotline-name" style="font-weight:500;font-size:14px;">สะมาริตันส์แห่งประเทศไทย</div>
+      <div class="hotline-hours">02-671-7452 · 12:00 – 22:00 น. ทุกวัน</div>
+    </div>
+    <div class="call-btn outline">โทร</div>
+  </a>
+
+  <!-- Go to hospital — accurate official wording -->
+  <div class="hospital-card">
+    <div class="hospital-icon">🏥</div>
+    <div class="hospital-body">
+      <div class="hospital-label">หากอยู่ในภาวะวิกฤต</div>
+      <div class="hospital-text">
+        เดินทางไปห้องฉุกเฉินของโรงพยาบาลรัฐใกล้บ้านได้ทันที
+        <strong>ไม่ต้องนัดหมายล่วงหน้า</strong>
+      </div>
+      <div class="hospital-sub">แจ้งว่า "มีปัญหาด้านสุขภาพจิตและต้องการความช่วยเหลือเร่งด่วน"<br>โรงพยาบาลรัฐทุกแห่งมีหน้าที่ให้การช่วยเหลือ</div>
+    </div>
+  </div>
+
+  <!-- 191 emergency -->
+  <a class="hotline-card" href="tel:191">
+    <div class="hotline-left">
+      <div class="hotline-number">191</div>
+      <div class="hotline-name">ตำรวจ — เหตุฉุกเฉิน</div>
+      <div class="hotline-hours">📞 ตลอด 24 ชั่วโมง</div>
+    </div>
+    <div class="call-btn">โทรเลย</div>
+  </a>
+
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ════════════════════════════════════════════
+     APPS & TOOLS CAROUSEL
+════════════════════════════════════════════ -->
+<div class="sec-label-wrap">
+  <div class="sec-label">แอปและเครื่องมือ</div>
+  <div class="sec-line"></div>
+</div>
+
 <div class="tools-carousel" id="tools-carousel">
   <div class="tool-skeleton"></div>
   <div class="tool-skeleton"></div>
@@ -142,120 +471,406 @@
 
 <div class="divider"></div>
 
+
+<!-- ════════════════════════════════════════════
+     SITUATIONAL GUIDES
+════════════════════════════════════════════ -->
+<div class="sec-label-wrap">
+  <div class="sec-label">ถ้าเจอสถานการณ์แบบนี้</div>
+  <div class="sec-line"></div>
+</div>
+
+<div class="situations">
+
+  <div class="situation-card" onclick="toggleSituation(this)">
+    <div class="situation-head">
+      <span class="situation-icon">🤝</span>
+      <div class="situation-head-body">
+        <div class="situation-q">มีคนในชีวิตพูดถึงเรื่องอยากตาย</div>
+        <div class="situation-who">คุณเป็นคนรับฟัง</div>
+      </div>
+      <span class="situation-chev">↓</span>
+    </div>
+    <div class="situation-body">
+      <div class="situation-inner">
+        <div class="situation-step">
+          <div class="situation-step-num">1</div>
+          <div class="situation-step-text"><strong>รับฟังจริงๆ</strong> — อย่ารีบหาทางออก อย่าบอกว่า "มันไม่ได้แย่ขนาดนั้น" แค่อยู่กับเขา</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">2</div>
+          <div class="situation-step-text"><strong>ถามตรงๆ ได้</strong> — "คุณกำลังคิดเรื่องทำร้ายตัวเองอยู่ไหม?" การถามไม่ได้ทำให้แย่ลง มันแสดงว่าคุณใส่ใจ</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">3</div>
+          <div class="situation-step-text"><strong>อย่าทิ้งให้อยู่คนเดียว</strong> — อยู่กับเขา หรือหาคนอื่นมาอยู่ด้วยก่อน</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">4</div>
+          <div class="situation-step-text"><strong>โทร 1323 ด้วยกัน</strong> — ชวนเขาโทรด้วยกัน หรือโทรถามผู้เชี่ยวชาญว่าควรทำอะไรต่อ</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">5</div>
+          <div class="situation-step-text"><strong>ดูแลตัวเองด้วย</strong> — การรับฟังเรื่องหนักๆ มีผลต่อจิตใจ โอเคที่จะขอความช่วยเหลือเองด้วย</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="situation-card" onclick="toggleSituation(this)">
+    <div class="situation-head">
+      <span class="situation-icon">🛡️</span>
+      <div class="situation-head-body">
+        <div class="situation-q">มีคนในบ้านบอกว่าโดนล่วงละเมิด</div>
+        <div class="situation-who">คุณเป็นคนรับฟัง</div>
+      </div>
+      <span class="situation-chev">↓</span>
+    </div>
+    <div class="situation-body">
+      <div class="situation-inner">
+        <div class="situation-step">
+          <div class="situation-step-num">1</div>
+          <div class="situation-step-text"><strong>เชื่อเขาก่อน</strong> — อย่าตั้งคำถามว่า "แน่ใจไหม?" หรือ "เขาทำจริงเหรอ?" การบอกเรื่องนี้ต้องใช้ความกล้ามาก</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">2</div>
+          <div class="situation-step-text"><strong>อย่าให้เขาอยู่คนเดียว</strong> — อยู่กับเขา และถามว่าต้องการอะไรตอนนี้</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">3</div>
+          <div class="situation-step-text"><strong>ติดต่อ 1300</strong> — ศูนย์ช่วยเหลือสังคม OSCC มีทีมสหวิชาชีพช่วยวางแผนขั้นตอนต่อไป ทั้งด้านกฎหมายและจิตใจ</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">4</div>
+          <div class="situation-step-text"><strong>ไม่ต้องรีบตัดสินใจทุกอย่างคืนนี้</strong> — ก้าวแรกที่สำคัญคือเขารู้ว่ามีคนเชื่อเขาและอยู่เคียงข้าง</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="situation-card" onclick="toggleSituation(this)">
+    <div class="situation-head">
+      <span class="situation-icon">📵</span>
+      <div class="situation-head-body">
+        <div class="situation-q">ภาพหรือคลิปถูกแชร์โดยไม่ยินยอม</div>
+        <div class="situation-who">เกิดขึ้นกับตัวคุณหรือคนที่รู้จัก</div>
+      </div>
+      <span class="situation-chev">↓</span>
+    </div>
+    <div class="situation-body">
+      <div class="situation-inner">
+        <div class="situation-step">
+          <div class="situation-step-num">1</div>
+          <div class="situation-step-text"><strong>Screenshot หลักฐาน</strong> — บันทึก URL, ชื่อบัญชี, วันเวลาไว้ก่อน แม้จะยังไม่พร้อมทำอะไรตอนนี้</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">2</div>
+          <div class="situation-step-text"><strong>Stop NCII</strong> — stopncii.org ช่วยให้ platform ลบภาพโดยไม่ต้องอัปโหลดภาพจริง ฟรี และเป็นความลับ</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">3</div>
+          <div class="situation-step-text"><strong>แจ้ง 1300</strong> — ทีม OSCC มีนักสังคมสงเคราะห์และนักกฎหมายช่วยประสานงาน</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">4</div>
+          <div class="situation-step-text"><strong>ความผิดอยู่ที่คนแชร์ ไม่ใช่คุณ</strong> — และมีคนพร้อมช่วยเสมอ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="situation-card" onclick="toggleSituation(this)">
+    <div class="situation-head">
+      <span class="situation-icon">💙</span>
+      <div class="situation-head-body">
+        <div class="situation-q">รู้สึกอยากทำร้ายตัวเอง</div>
+        <div class="situation-who">เกิดขึ้นกับตัวคุณตอนนี้</div>
+      </div>
+      <span class="situation-chev">↓</span>
+    </div>
+    <div class="situation-body">
+      <div class="situation-inner">
+        <div class="situation-step">
+          <div class="situation-step-num">1</div>
+          <div class="situation-step-text"><strong>คุณไม่จำเป็นต้องรับมือคนเดียว</strong> — ความรู้สึกนี้หนักมาก และมีคนพร้อมช่วยอยู่ตลอดเวลา</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">2</div>
+          <div class="situation-step-text"><strong>เอาตัวเองออกจากสถานการณ์</strong> — ไปห้องอื่น ออกไปข้างนอก หาคนอยู่ด้วย ทำอะไรก็ได้เพื่อสร้างระยะ</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">3</div>
+          <div class="situation-step-text"><strong>โทร 1323 ได้เลย</strong> — บอกแค่ว่า "ตอนนี้รู้สึกไม่ปลอดภัย" เขาจะดูแลขั้นตอนต่อไปเอง</div>
+        </div>
+        <div class="situation-step">
+          <div class="situation-step-num">4</div>
+          <div class="situation-step-text"><strong>ถ้าอยู่ในอันตรายทันที</strong> — โทร 191 หรือไปห้องฉุกเฉินโรงพยาบาลใกล้บ้านได้เลย</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ════════════════════════════════════════════
+     VIDEOS — dashboard managed
+════════════════════════════════════════════ -->
+<div class="sec-label-wrap">
+  <div class="sec-label">วิดีโอที่อาจช่วยได้</div>
+  <div class="sec-line"></div>
+</div>
+
+<div id="videos-wrap">
+  <div class="videos-coming">
+    <div class="videos-coming-text">
+      วิดีโอแนะนำกำลังจะมาเร็วๆ นี้<br>
+      <span style="font-size:11px;opacity:0.6;">จัดการผ่าน dashboard โดยทีม ใจดี TU</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ════════════════════════════════════════════
+     BOTTOM CTAs
+════════════════════════════════════════════ -->
 <div class="bottom-cta">
-  <div class="pr-eyebrow-line">บริการพิเศษสำหรับนักเรียนเตรียมอุดมศึกษา</div>
-  <button class="btn-pr-pill" onclick="window.location.href='peer.html'">
-    <span class="pr-dot"></span>
-    <span class="pr-text">นัดคุยกับ PR ได้เลย</span>
-    <span class="pr-arrow">→</span>
-  </button>
-  <a href="care.html" class="care-offramp">
+
+  <div class="pr-banner">
+    <div class="pr-banner-left">
+      <div class="pr-banner-label">Peer Support</div>
+      <div class="pr-banner-text">คุยกับรุ่นพี่ที่เข้าใจ</div>
+      <div class="pr-banner-sub">จ–ศ หลังเลิกเรียน · นักเรียนเตรียมฯ เท่านั้น</div>
+    </div>
+    <a class="pr-banner-btn" href="peer.html">นัดคุย →</a>
+  </div>
+
+  <a class="care-offramp" href="care.html">
     <span style="font-size:20px;flex-shrink:0;">🌿</span>
     <div class="care-offramp-body">
-      <div class="care-offramp-title">เริ่มต้นจาก "พื้นที่ใจ" ก่อนก็ได้</div>
-      <div class="care-offramp-sub">ไม่ต้องพร้อม ไม่ต้องรู้ว่าจะเริ่มยังไง</div>
+      <div class="care-offramp-name">เริ่มจาก "พื้นที่ใจ" ก่อนก็ได้</div>
+      <div class="care-offramp-desc">6 ชั้นดูแลตัวเอง — ไม่ต้องพร้อมก่อน</div>
     </div>
-    <span style="color:#A8A099;font-size:16px;">→</span>
+    <span style="color:var(--soft);font-size:16px;">→</span>
   </a>
-  <button class="btn-back-bottom" onclick="window.history.back()">← กลับ</button>
+
+  <button class="btn-back" onclick="window.history.back()">← กลับ</button>
 </div>
+
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
 
-// ─────────────────────────────────────────────────────
-// TOOLS CAROUSEL
-// Sheet: Care sheet, category = "เครื่องมือ"
-// Columns used: name | desc | url | photo_url | active
-// Team adds/edits/removes rows in dashboard → updates here
-// ─────────────────────────────────────────────────────
+// ══════════════════════════════════════════════
+// GROUNDING GUIDE
+// Three modes: 54321 | animals | date
+// ══════════════════════════════════════════════
+const GROUNDING_FLOWS = {
+  '54321': [
+    { label:'ขั้นที่ 1 / 5', instruction:'มองรอบตัวแล้วนึกถึง 5 สิ่งที่มองเห็น', detail:'ต้นไม้ข้างถนน โต๊ะ หน้าต่าง มือของคุณ แสงไฟ — อะไรก็ได้ที่ตาเห็นตอนนี้', btn:'ได้แล้ว →' },
+    { label:'ขั้นที่ 2 / 5', instruction:'สัมผัส 4 สิ่งที่อยู่ใกล้ๆ', detail:'พื้น เสื้อผ้า โต๊ะ ผนัง — ลองสังเกตว่านุ่ม แข็ง เรียบ หรือขรุขระ', btn:'ได้แล้ว →' },
+    { label:'ขั้นที่ 3 / 5', instruction:'ฟังเสียง 3 อย่างรอบตัว', detail:'เสียงแอร์ เสียงรถ เสียงลมหายใจ — ไม่ต้องตีความ แค่รับรู้ว่ามีเสียงอะไรบ้าง', btn:'ได้แล้ว →' },
+    { label:'ขั้นที่ 4 / 5', instruction:'สังเกตกลิ่น 2 อย่าง', detail:'กลิ่นอากาศ กลิ่นเสื้อผ้า กลิ่นอาหาร — ถ้านึกไม่ออกแค่หายใจเข้าลึกๆ ก็ได้', btn:'ได้แล้ว →' },
+    { label:'ขั้นที่ 5 / 5', instruction:'รับรู้รสชาติ 1 อย่าง', detail:'รสในปากตอนนี้ หรือลองดื่มน้ำซักอึก แค่นั้นก็พอ', btn:'เสร็จแล้ว ✓' },
+  ],
+  'animals': [
+    { label:'เริ่มต้น', instruction:'วันนี้นึกชื่อสัตว์ 5 ตัว', detail:'อะไรก็ได้ที่นึกออกตอนนี้ ค่อยๆ นึก ไม่ต้องรีบ — สิงโต นก แมว ช้าง เต่า...', btn:'ฉันนึกออกแล้ว →' },
+    { label:'ดี!', instruction:'ลองนึกสีของสัตว์แต่ละตัว', detail:'สิงโตสีเหลือง นกสีแดง — สร้างภาพในหัวช้าๆ ให้มันชัดขึ้น', btn:'ชัดแล้ว →' },
+    { label:'เกือบจบแล้ว', instruction:'สัตว์ตัวไหนที่ชอบที่สุด?', detail:'แค่สังเกตว่าตัวเองคิดอะไร ไม่มีคำตอบที่ถูกหรือผิด', btn:'เสร็จแล้ว ✓' },
+  ],
+  'date': [
+    { label:'ขั้นที่ 1', instruction:'วันนี้วันที่เท่าไหร่?', detail:(() => { const d = new Date(); const days = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์']; const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `วัน${days[d.getDay()]}ที่ ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`; })(), btn:'รู้แล้ว →' },
+    { label:'ขั้นที่ 2', instruction:'ตอนนี้คุณอยู่ที่ไหน?', detail:'ห้องเรียน บ้าน ห้องน้ำ ห้องสมุด — นึกชื่อสถานที่ที่อยู่ตอนนี้ในหัว', btn:'รู้แล้ว →' },
+    { label:'ขั้นที่ 3', instruction:'มีคนที่ไว้ใจได้อยู่ใกล้ๆ ไหม?', detail:'ไม่ต้องโทรหาทันที แค่นึกถึงชื่อคนที่รู้สึกว่าโทรหาได้ถ้าต้องการ', btn:'เสร็จแล้ว ✓' },
+  ],
+};
+
+let gMode = null, gStep = 0, gFlow = [];
+
+function startGrounding(mode) {
+  gMode = mode; gStep = 0;
+  gFlow = GROUNDING_FLOWS[mode];
+  document.getElementById('g-start').style.display = 'none';
+  document.getElementById('g-active').style.display = 'block';
+  document.getElementById('g-done').style.display   = 'none';
+  buildDots(); renderStep();
+}
+
+function buildDots() {
+  const wrap = document.getElementById('g-dots');
+  wrap.innerHTML = gFlow.map((_, i) =>
+    `<div class="g-dot ${i === 0 ? 'active' : ''}" id="gd-${i}"></div>`
+  ).join('');
+}
+
+function updateDots() {
+  gFlow.forEach((_, i) => {
+    const d = document.getElementById('gd-' + i);
+    if (!d) return;
+    d.className = 'g-dot' + (i < gStep ? ' done' : i === gStep ? ' active' : '');
+  });
+}
+
+function renderStep() {
+  const step = gFlow[gStep];
+  if (!step) { endGrounding(); return; }
+  const inst   = document.getElementById('g-instruction');
+  const detail = document.getElementById('g-detail');
+  inst.style.opacity = '0';
+  detail.style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('g-step-label').textContent = step.label;
+    inst.textContent   = step.instruction;
+    detail.textContent = step.detail;
+    document.getElementById('g-next-btn').textContent = step.btn;
+    inst.style.opacity = '1'; inst.style.transition = 'opacity 0.35s';
+    detail.style.opacity = '1'; detail.style.transition = 'opacity 0.35s';
+  }, 180);
+  updateDots();
+}
+
+function nextGrounding() {
+  gStep++;
+  if (gStep >= gFlow.length) { endGrounding(); return; }
+  renderStep();
+}
+
+function endGrounding() {
+  document.getElementById('g-active').style.display = 'none';
+  document.getElementById('g-done').style.display   = 'block';
+}
+
+function resetGrounding() {
+  gMode = null; gStep = 0; gFlow = [];
+  document.getElementById('g-start').style.display  = '';
+  document.getElementById('g-active').style.display = 'none';
+  document.getElementById('g-done').style.display   = 'none';
+}
+
+// ══════════════════════════════════════════════
+// SITUATIONAL CARDS
+// ══════════════════════════════════════════════
+function toggleSituation(card) {
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.situation-card.open').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+
+// ══════════════════════════════════════════════
+// APPS & TOOLS CAROUSEL
+// Sheet category = "เครื่องมือ" or "แอป"
+// ══════════════════════════════════════════════
 const TOOLS_FALLBACK = [
-  {name:"พื้นที่ใจ",  desc:"6 วิธีดูแลตัวเองที่ไม่ใช่แค่ไปหาหมอ — สร้างโดยนักเรียนเตรียมฯ เพื่อนักเรียนเตรียมฯ", url:"care.html", photo_url:""},
-  {name:"Stop NCII",    desc:"ภาพถูกแชร์โดยไม่ยินยอม — ให้ platform ลบออก", url:"https://stopncii.org",                photo_url:""},
-  {name:"BuddyThai",   desc:"โดนบูลลี่หรือโดดเดี่ยว — คุยกับนักจิตวิทยา",  url:"https://www.buddy4thai.com",          photo_url:""},
-  {name:"DMIND",       desc:"ประเมินภาวะซึมเศร้าด้วย AI ฟรี",               url:"https://dmind.dmh.go.th",             photo_url:""},
-  {name:"คุยกัน",      desc:"LINE @KhuiKan ปรึกษาผู้เชี่ยวชาญ",             url:"https://line.me/R/ti/p/@khuikan",     photo_url:""},
+  { emoji:'🛡', bg:'#EEF2FF', tag:'ฟรี',  name:'Stop NCII',    desc:'ภาพถูกแชร์โดยไม่ยินยอม — ให้ platform ลบออกโดยไม่ต้องอัปโหลดภาพจริง', url:'https://stopncii.org' },
+  { emoji:'🌱', bg:'#F0FDF4', tag:'แอป',  name:'Liven',         desc:'แผนดูแลสุขภาพจิตแบบ CBT — เป้าหมาย อารมณ์ กิจกรรม', url:'https://liven.app' },
+  { emoji:'🧘', bg:'#F5F3FF', tag:'แอป',  name:'Calm',          desc:'Meditation, sleep stories, breathing — ใช้งานได้บางส่วนฟรี', url:'https://calm.com' },
+  { emoji:'💚', bg:'#F0FDFA', tag:'แอป',  name:'Rootd',         desc:'Panic attack & anxiety — มีปุ่มช่วยฉุกเฉินเมื่อตื่นตระหนก', url:'https://www.rootd.io' },
+  { emoji:'📊', bg:'#FFF7ED', tag:'ฟรี',  name:'วัดใจ.com',     desc:'ประเมินความเครียด ซึมเศร้า วิตกกังวล โดยกรมสุขภาพจิต', url:'https://วัดใจ.com' },
+  { emoji:'💬', bg:'#EFF6FF', tag:'ฟรี',  name:'DMIND',         desc:'ประเมินภาวะซึมเศร้าด้วย AI กรมสุขภาพจิต', url:'https://dmind.dmh.go.th' },
+  { emoji:'🤝', bg:'#FFF0F0', tag:'ฟรี',  name:'Buddy Thai',    desc:'โดนบูลลี่หรือโดดเดี่ยว — คุยกับนักจิตวิทยา', url:'https://www.buddy4thai.com' },
+  { emoji:'📖', bg:'#FFFBEB', tag:'เว็บ', name:'Reasons to Stay', desc:'เว็บไซต์เพื่อคนที่กำลังต่อสู้กับความคิดหนักๆ', url:'https://www.reasonstostayalive.com' },
 ];
-const TOOL_GRADIENTS = [
-  "linear-gradient(135deg,#E8E3D8,#D4CFC4)",
-  "linear-gradient(135deg,#D8E4D8,#C4D4C8)",
-  "linear-gradient(135deg,#D8DCE8,#C4CCD8)",
-  "linear-gradient(135deg,#E8D8DC,#D4C4C8)",
-  "linear-gradient(135deg,#E4E0D4,#D8D0C0)",
-];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function renderTools(items) {
-  const carousel = document.getElementById("tools-carousel");
-  carousel.innerHTML = "";
-  items.forEach((tool, idx) => {
-    const card = document.createElement("a");
-    card.className = "tool-card";
-    card.href = tool.url || "#";
-    card.target = "_blank"; card.rel = "noopener";
-    const hasPhoto = tool.photo_url && tool.photo_url.trim();
-    const grad = TOOL_GRADIENTS[idx % TOOL_GRADIENTS.length];
-    const initial = (tool.name || "?")[0].toUpperCase();
-    const fallbackDiv = `<div class="tool-img-fallback" style="background:${grad};"><span class="tool-initial">${initial}</span></div>`;
-    card.innerHTML = hasPhoto
-      ? `<img class="tool-img" src="${tool.photo_url}" alt="${tool.name}" loading="lazy"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-         ${fallbackDiv.replace('display:flex', 'display:none')}
-         <div class="tool-body"><div class="tool-name">${tool.name}</div><div class="tool-desc">${tool.desc}</div></div>`
-      : `${fallbackDiv}
-         <div class="tool-body"><div class="tool-name">${tool.name}</div><div class="tool-desc">${tool.desc}</div></div>`;
+  const carousel = document.getElementById('tools-carousel');
+  carousel.innerHTML = '';
+  items.forEach(tool => {
+    const card = document.createElement('a');
+    card.className = 'tool-card';
+    card.href = tool.url || '#';
+    card.target = '_blank'; card.rel = 'noopener';
+    const bg = tool.bg || '#F5F5F5';
+    card.innerHTML = `
+      <div class="tool-thumb" style="background:${bg};">${tool.emoji || '🔧'}</div>
+      <div class="tool-body">
+        <div class="tool-tag">${tool.tag || ''}</div>
+        <div class="tool-name">${tool.name}</div>
+        <div class="tool-desc">${tool.desc}</div>
+      </div>`;
     carousel.appendChild(card);
   });
 }
 
 async function loadTools() {
   try {
-    const res = await fetch(API_URL + "?action=getCare");
-    const d = await res.json();
-    const tools = (d.status === "OK" && d.items)
-      ? d.items.filter(i => (i.category||"").trim() === "เครื่องมือ")
+    const res = await fetch(API_URL + '?action=getCare');
+    const d   = await res.json();
+    const sheet = (d.status === 'OK' && d.items)
+      ? d.items.filter(i => ['เครื่องมือ','แอป'].includes((i.category||'').trim()))
       : [];
-    renderTools(tools.length ? tools : TOOLS_FALLBACK);
+    renderTools(sheet.length ? sheet.map(t => ({
+      emoji: t.emoji || '🔧',
+      bg:    t.bg    || '#F5F5F5',
+      tag:   t.category,
+      name:  t.name,
+      desc:  t.desc,
+      url:   t.url,
+    })) : TOOLS_FALLBACK);
   } catch(e) { renderTools(TOOLS_FALLBACK); }
 }
-loadTools();
 
-// ─────────────────────────────────────────────────────
-// WAVEFORM PLAYER
-// ─────────────────────────────────────────────────────
-const BAR_COUNT=48,HEIGHTS=[];
-(function(){const s=[0.4,0.6,0.8,1.0,0.9,0.7,0.5,0.3,0.5,0.7,0.9,1.0,0.8,0.6,0.7,0.9,1.0,0.8,0.5,0.4,0.6,0.8,1.0,0.9,0.7,0.5,0.4,0.6,0.9,1.0,0.8,0.7,0.5,0.3,0.4,0.6,0.8,1.0,0.9,0.7,0.5,0.6,0.8,0.9,0.7,0.5,0.4,0.6];for(let i=0;i<BAR_COUNT;i++)HEIGHTS.push(s[i%s.length]);})();
-function buildWaveform(){const c=document.getElementById("wf-bars");if(!c)return;c.innerHTML="";HEIGHTS.forEach((h,i)=>{const b=document.createElement("div");b.className="wf-bar";b.id="bar-"+i;b.style.height=Math.round(h*32+4)+"px";c.appendChild(b);});}
-const audio=document.getElementById("main-audio"),iconPlay=document.getElementById("icon-play"),iconPause=document.getElementById("icon-pause"),timeEl=document.getElementById("track-time");let _raf=null;
-function togglePlay(){if(audio.paused){audio.play().then(startAnim).catch(()=>{startAnim();setTimeout(stopAnim,90000);});setPlaying(true);}else{audio.pause();setPlaying(false);stopAnim();}}
-function setPlaying(p){iconPlay.style.display=p?"none":"block";iconPause.style.display=p?"block":"none";}
-function startAnim(){_raf=requestAnimationFrame(function tick(){updateWave();updateTime();_raf=requestAnimationFrame(tick);});}
-function stopAnim(){if(_raf){cancelAnimationFrame(_raf);_raf=null;}}
-function updateWave(){const pct=audio.duration?audio.currentTime/audio.duration:0;const pl=Math.floor(pct*BAR_COUNT);for(let i=0;i<BAR_COUNT;i++){const b=document.getElementById("bar-"+i);if(b)b.classList.toggle("played",i<pl);}}
-function updateTime(){if(audio.duration){const r=Math.max(0,audio.duration-audio.currentTime);timeEl.textContent=Math.floor(r/60)+":"+String(Math.floor(r%60)).padStart(2,"0");}}
-audio.addEventListener("ended",()=>{setPlaying(false);stopAnim();document.querySelectorAll(".wf-bar").forEach(b=>b.classList.remove("played"));timeEl.textContent="1:30";});
-document.getElementById("waveform")?.addEventListener("click",function(e){if(!audio.duration)return;audio.currentTime=(e.clientX-this.getBoundingClientRect().left)/this.getBoundingClientRect().width*audio.duration;});
-buildWaveform();
+// ══════════════════════════════════════════════
+// VIDEOS — dashboard managed via Google Sheet
+// Sheet: add columns: title | youtube_id | tag | source | active
+// category = "วิดีโอ"
+// ══════════════════════════════════════════════
+async function loadVideos() {
+  try {
+    const res = await fetch(API_URL + '?action=getCare');
+    const d   = await res.json();
+    const videos = (d.status === 'OK' && d.items)
+      ? d.items.filter(i => (i.category || '').trim() === 'วิดีโอ')
+      : [];
+    if (!videos.length) return; // keep "coming soon" state
+
+    const wrap = document.getElementById('videos-wrap');
+    wrap.innerHTML = '';
+    const list = document.createElement('div');
+    list.className = 'videos-list';
+
+    videos.forEach(v => {
+      if (!v.youtube_id) return;
+      const card = document.createElement('a');
+      card.className = 'video-card';
+      card.href = `https://www.youtube.com/watch?v=${v.youtube_id}`;
+      card.target = '_blank'; card.rel = 'noopener';
+      card.innerHTML = `
+        <div class="video-thumb-wrap">
+          <img class="video-thumb"
+            src="https://img.youtube.com/vi/${v.youtube_id}/mqdefault.jpg"
+            alt="${v.title || ''}"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+            loading="lazy"/>
+          <div class="video-thumb-fallback" style="display:none;">🎬</div>
+          <div class="video-play-overlay">
+            <div class="video-play-btn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 2.5L13 8L4 13.5V2.5Z" fill="#1C1917"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="video-body">
+          <div class="video-tag">${v.tag || 'วิดีโอ'}</div>
+          <div class="video-title">${v.title || ''}</div>
+          <div class="video-source">${v.source || 'YouTube'}</div>
+        </div>`;
+      list.appendChild(card);
+    });
+
+    wrap.appendChild(list);
+  } catch(e) { /* keep coming soon */ }
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+loadTools();
+loadVideos();
 </script>
 </body>
 </html>
