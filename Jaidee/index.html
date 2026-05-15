@@ -109,7 +109,6 @@
 
     /* ── Signature Tools ── */
     .sig-wrap{padding:0 16px;margin-bottom:8px;}
-    .sig-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
     .sig-card{border-radius:20px;padding:20px 16px 18px;cursor:pointer;position:relative;overflow:hidden;border:1px solid transparent;transition:transform 0.15s,box-shadow 0.15s;}
     .sig-card:active{transform:scale(0.97);}
@@ -162,26 +161,75 @@
     <button class="pr-btn" onclick="window.location.href='peer.html'">นัดคุย →</button>
   </div>
 
-  <!-- Signature Tools -->
+<!-- Signature Tools — consolidated -->
   <div class="sig-wrap">
     <div class="section-label" style="margin-bottom:12px;">
-      <div class="section-label-text">เครื่องมือหลัก</div>
+      <div class="section-label-text">ดูแลตัวเอง 24/7</div>
       <div class="section-label-line"></div>
     </div>
-    <div class="sig-row">
-      <div class="sig-card reflection" onclick="window.location.href='reflection.html'">
-        <span class="sig-icon">🪞</span>
-        <div class="sig-label">Reflection</div>
-        <div class="sig-name">ยังไม่รู้ว่ารู้สึกยังไง</div>
-        <div class="sig-hint">เริ่มจากตรงนี้ก่อนได้เลย</div>
-        <span class="sig-arrow">→</span>
+
+    <div class="sig-card reflection" onclick="openCareSheet()" style="background:linear-gradient(145deg,#1C1917 0%,#2C2520 100%);border-color:#3A332D;display:flex;align-items:center;gap:16px;padding:18px 20px;">
+      <div style="flex:1;">
+        <div class="sig-label" style="color:rgba(232,150,12,0.8);margin-bottom:6px;">ดูแลตัวเอง 24/7</div>
+        <div class="sig-name" style="color:#FDFBF7;font-size:16px;margin-bottom:4px;">ตอนนี้อยู่ตรงไหน?</div>
+        <div class="sig-hint" style="color:rgba(253,251,247,0.45);">reflection · พื้นที่ใจ · เครื่องมือ</div>
       </div>
-      <div class="sig-card care" onclick="window.location.href='care.html'">
-        <span class="sig-icon">🌿</span>
-        <div class="sig-label">พื้นที่ใจ</div>
-        <div class="sig-name">รู้แล้วว่าต้องการอะไร</div>
-        <div class="sig-hint">6 ชั้นดูแลตัวเอง ที่ไม่ใช่แค่ไปหาหมอ</div>
-        <span class="sig-arrow">→</span>
+      <div style="font-size:22px;opacity:0.5;">→</div>
+    </div>
+
+    <div style="text-align:center;margin-top:10px;">
+      <a href="tel:1323" style="font-size:11px;font-weight:300;color:var(--soft);text-decoration:none;letter-spacing:0.3px;">
+        หรือคุยกับผู้เชี่ยวชาญได้เลย — <span style="color:var(--gold);">1323</span> ฟรี ตลอดวัน
+      </a>
+    </div>
+  </div>
+
+  <!-- CARE SHEET -->
+  <div id="care-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0);z-index:300;align-items:flex-end;justify-content:center;transition:background 0.3s;pointer-events:none;" onclick="handleCareOverlay(event)">
+    <div id="care-sheet" style="background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);padding-bottom:env(safe-area-inset-bottom,16px);">
+      <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:14px auto 20px;"></div>
+      <div style="padding:0 20px 8px;">
+        <div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:16px;">ตอนนี้อยู่ตรงไหน?</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+
+          <a href="reflection.html" style="display:flex;align-items:center;gap:14px;padding:16px;background:#1C1917;border-radius:16px;text-decoration:none;" onclick="closeCareSheet()">
+            <span style="font-size:22px;">🪞</span>
+            <span style="flex:1;">
+              <span style="display:block;font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:#FDFBF7;margin-bottom:2px;">ยังไม่รู้ว่ารู้สึกยังไง</span>
+              <span style="display:block;font-size:11px;font-weight:300;color:rgba(253,251,247,0.45);">ให้ Reflection ช่วยหาทางก่อน</span>
+            </span>
+            <span style="font-size:14px;color:rgba(255,255,255,0.2);">→</span>
+          </a>
+
+          <a href="care.html" style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--green-soft);border:1.5px solid var(--green-border);border-radius:16px;text-decoration:none;" onclick="closeCareSheet()">
+            <span style="font-size:22px;">🌿</span>
+            <span style="flex:1;">
+              <span style="display:block;font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:#1C3A1F;margin-bottom:2px;">รู้แล้วว่าต้องการอะไร</span>
+              <span style="display:block;font-size:11px;font-weight:300;color:#5A7A5C;">พื้นที่ใจ 6 ชั้น — เริ่มที่ชั้นที่ใช่สำหรับตัวเอง</span>
+            </span>
+            <span style="font-size:14px;color:rgba(58,125,68,0.4);">→</span>
+          </a>
+
+          <a href="alltools.html" style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:16px;text-decoration:none;" onclick="closeCareSheet()">
+            <span style="font-size:22px;">⚡</span>
+            <span style="flex:1;">
+              <span style="display:block;font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);margin-bottom:2px;">อยากทำอะไรตอนนี้เลย</span>
+              <span style="display:block;font-size:11px;font-weight:300;color:var(--soft);">หายใจ · บันทึก · นอนหลับ · และอื่นๆ</span>
+            </span>
+            <span style="font-size:14px;color:var(--soft);">→</span>
+          </a>
+
+        </div>
+
+        <div style="margin-top:16px;padding:12px 14px;background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+          <div>
+            <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:3px;">คุยกับผู้เชี่ยวชาญ</div>
+            <div style="font-size:12px;font-weight:300;color:var(--mid);">1323 · ฟรี · ตลอด 24 ชั่วโมง · ไม่ต้องรอถึงวิกฤต</div>
+          </div>
+          <a href="tel:1323" style="background:var(--gold);color:#fff;border-radius:10px;padding:8px 14px;font-size:12px;font-family:'Mitr',sans-serif;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0;">โทรเลย</a>
+        </div>
+
+        <button onclick="closeCareSheet()" style="width:100%;margin-top:10px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:10px;">ปิด</button>
       </div>
     </div>
   </div>
@@ -448,6 +496,32 @@ if (isPreview) {
       })
       .catch(() => renderAll());
   } catch(e) { renderAll(); }
+}
+  // ── CARE SHEET ──────────────────────────────────────
+function openCareSheet() {
+  const ov = document.getElementById('care-overlay');
+  ov.style.display = 'flex';
+  ov.style.pointerEvents = 'all';
+  requestAnimationFrame(() => {
+    ov.style.background = 'rgba(0,0,0,0.52)';
+    document.getElementById('care-sheet').style.transform = 'translateY(0)';
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCareSheet() {
+  const ov = document.getElementById('care-overlay');
+  ov.style.background = 'rgba(0,0,0,0)';
+  document.getElementById('care-sheet').style.transform = 'translateY(100%)';
+  setTimeout(() => {
+    ov.style.display = 'none';
+    ov.style.pointerEvents = 'none';
+    document.body.style.overflow = '';
+  }, 360);
+}
+
+function handleCareOverlay(e) {
+  if (e.target === document.getElementById('care-overlay')) closeCareSheet();
 }
 </script>
 </body>
