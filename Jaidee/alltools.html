@@ -244,7 +244,7 @@
     <div class="section-label-line"></div>
   </div>
   <div class="tools-grid">
-    <div class="tool-card breathe" onclick="openBreathe()">
+    <div class="tool-card breathe" onclick="markToolTapped();openBreathe()">
       <div class="tool-icon">🌬️</div>
       <div class="tool-name">หายใจ</div>
       <div class="tool-desc">เมื่อรู้สึกอึดอัด กดดัน หรืออยากรีเซ็ต</div>
@@ -256,7 +256,7 @@
       <div class="tool-desc">เกมเบาๆ ช่วย ground ความคิด</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
-    <div class="tool-card journal" onclick="openJournal()">
+    <div class="tool-card journal" onclick="markToolTapped();openJournal()">
       <div class="tool-icon">📓</div>
       <div class="tool-name">บันทึก</div>
       <div class="tool-desc">เขียนระบาย 3 คำถามง่ายๆ</div>
@@ -274,13 +274,34 @@
       <div class="tool-desc">เสียงนำทาง body scan และอื่นๆ</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
-    <div class="tool-card sleep" onclick="window.location.href='sleep.html'">
+    <div class="tool-card sleep" onclick="markToolTapped();window.location.href='sleep.html'">
       <div class="tool-icon">🌙</div>
       <div class="tool-name">นอนหลับ</div>
       <div class="tool-desc">เมื่อหัวไม่ยอมหยุดตอนกลางคืน</div>
       <span class="tool-badge badge-ready">ใช้ได้เลย</span>
     </div>
   </div>
+</div>
+
+<!-- PASSIVE EXIT RAMP — always visible below tools -->
+<div style="text-align:center;padding:20px 24px 8px;">
+  <div style="font-size:12px;font-weight:300;color:var(--soft);line-height:1.75;">
+    ไม่แน่ใจว่าจะเริ่มจากตรงไหน?<br/>
+    <a href="reflection.html" style="color:var(--dark);font-weight:400;text-decoration:none;">ลอง Reflection ก่อน</a>
+    <span style="color:var(--cream-border);margin:0 8px;">·</span>
+    <a href="care.html" style="color:var(--dark);font-weight:400;text-decoration:none;">วิธีดูแลตัวเองใน 6 ชั้น</a>
+  </div>
+</div>
+
+<!-- IDLE NUDGE — fades in after 45s if no tool tapped -->
+<div id="idle-nudge" style="display:none;margin:0 16px 16px;background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:14px;padding:14px 16px;opacity:0;transition:opacity 0.5s;">
+  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:5px;">ยังหาจุดเริ่มต้นอยู่ไหม?</div>
+  <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;margin-bottom:10px;">บางทีการเข้าใจว่าเกิดอะไรขึ้น<br/>ช่วยได้มากกว่าการลองทำบางอย่าง</div>
+  <div style="display:flex;gap:8px;">
+    <a href="reflection.html" style="flex:1;display:block;text-align:center;background:var(--dark);color:var(--cream);border-radius:12px;padding:10px;font-size:12px;font-weight:500;text-decoration:none;">🪞 Reflection</a>
+    <a href="care.html" style="flex:1;display:block;text-align:center;background:var(--card);border:1px solid var(--cream-border);border-radius:12px;padding:10px;font-size:12px;font-weight:400;color:var(--dark);text-decoration:none;">🌿 6 ชั้น</a>
+  </div>
+  <button onclick="document.getElementById('idle-nudge').style.display='none'" style="display:block;width:100%;background:none;border:none;font-family:'Mitr',sans-serif;font-size:11px;color:var(--soft);cursor:pointer;margin-top:8px;padding:4px;">ปิด</button>
 </div>
 
 <!-- BREATHE MODAL -->
@@ -334,6 +355,10 @@
       <div class="b-done-sub">ระบบประสาทของคุณเพิ่งได้พัก<br/>สังเกตว่าตอนนี้รู้สึกต่างจากก่อนไหม</div>
       <button class="b-done-again" onclick="resetBreathe()">หายใจอีกรอบ</button>
       <button class="b-done-close" onclick="closeBreathe()">ปิด</button>
+      <!-- care bridge -->
+      <a href="care.html?tab=body" onclick="closeBreathe()" style="display:block;text-align:center;margin-top:12px;font-size:12px;font-weight:300;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">
+        อยากรู้ว่าทำไมมันช่วยได้? → <span style="color:rgba(94,234,212,0.6);">ชั้นร่างกาย</span>
+      </a>
       <!-- still heavy strip -->
       <div class="still-strip" style="margin:16px 0 0;">
         <div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div>
@@ -534,6 +559,10 @@ function renderJStep(){
         <div class="j-done-title">ขอบคุณที่เขียนออกมา</div>
         <div class="j-done-sub">การเขียนช่วยเอาสิ่งที่อยู่ในหัว<br/>ออกมาอยู่ข้างนอกแทน<br/>หวังว่าจะเบาขึ้นบ้างนะ</div>
         <button class="j-done-close" onclick="closeJournal()">← กลับ</button>
+        <!-- care bridge -->
+        <a href="care.html?tab=belief" onclick="closeJournal()" style="display:block;text-align:center;margin-top:10px;font-size:12px;font-weight:300;color:var(--soft);text-decoration:none;padding:6px;">
+          อยากรู้ว่าทำไมการเขียนถึงช่วยได้? → <span style="color:var(--purple);">ชั้นความเชื่อ</span>
+        </a>
         <!-- still heavy strip -->
         <div class="still-strip">
           <div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div>
@@ -623,8 +652,32 @@ function stillHeavy(btn) {
 }
 
 // ══════════════════════════════════════════════
+// IDLE NUDGE — 45s without tapping any tool
+// ══════════════════════════════════════════════
+let _idleTimer = null;
+let _toolTapped = false;
+
+function startIdleTimer() {
+  _idleTimer = setTimeout(() => {
+    if (_toolTapped) return;
+    const nudge = document.getElementById('idle-nudge');
+    if (nudge) {
+      nudge.style.display = 'block';
+      requestAnimationFrame(() => nudge.style.opacity = '1');
+    }
+  }, 45000);
+}
+
+function markToolTapped() {
+  _toolTapped = true;
+  clearTimeout(_idleTimer);
+  const nudge = document.getElementById('idle-nudge');
+  if (nudge) nudge.style.display = 'none';
+}
+
 // ══════════════════════════════════════════════
 renderEntries();
+startIdleTimer();
 if(window.location.hash==='#journal'){openJournal();}
 if(window.location.hash==='#breathe'){openBreathe();}
 </script>
