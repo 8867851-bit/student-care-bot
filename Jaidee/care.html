@@ -29,21 +29,19 @@
     .hero-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;color:var(--dark);line-height:1.2;}
     .hero-sub{font-size:13px;font-weight:300;color:var(--soft);margin-top:6px;line-height:1.65;}
 
-    /* Layer Zero — removed (replaced by floating button) */
-
-    /* ── TAB NAV ──────────────────────────────────────── */
+    /* ── TAB NAV ── */
     .tab-bar{display:flex;gap:0;padding:0 16px 16px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--cream-border);margin-bottom:0;}
     .tab-bar::-webkit-scrollbar{display:none;}
     .tab-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:20px;border:none;background:none;font-size:12px;font-weight:400;color:var(--soft);cursor:pointer;white-space:nowrap;font-family:'Mitr',sans-serif;transition:all 0.18s;position:relative;}
     .tab-btn.active{background:var(--dark);color:#FDFBF7;border-radius:20px;}
     .tab-btn:active{opacity:0.7;}
 
-    /* ── TAB PANELS ───────────────────────────────────── */
+    /* ── TAB PANELS ── */
     .tab-panel{display:none;padding-top:20px;animation:fadeTab 0.22s ease;}
     .tab-panel.active{display:block;}
     @keyframes fadeTab{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-    /* ── FLOATING BUTTON ──────────────────────────────── */
+    /* ── FLOATING BUTTON ── */
     .feel-fab{position:fixed;bottom:28px;right:20px;z-index:100;
       display:flex;align-items:center;gap:8px;
       background:var(--dark);color:#FDFBF7;
@@ -56,7 +54,7 @@
     .feel-fab:active{transform:scale(0.96);box-shadow:0 2px 10px rgba(0,0,0,0.18);}
     .feel-fab-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;}
 
-    /* ── FEELING MODAL ────────────────────────────────── */
+    /* ── FEELING MODAL ── */
     .feel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;
       display:flex;align-items:center;justify-content:center;
       padding:24px;pointer-events:none;
@@ -92,7 +90,7 @@
     .layer-emoji{font-size:18px;}
     .layer-tagline{font-size:12px;font-weight:300;color:var(--soft);line-height:1.6;}
 
-    /* ── PARK CAROUSEL ───────────────────────────────── */
+    /* ── PARK CAROUSEL ── */
     .park-carousel-wrap{position:relative;margin-bottom:20px;}
     .park-carousel{display:flex;gap:12px;padding:0 16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
     .park-carousel::-webkit-scrollbar{display:none;}
@@ -103,8 +101,6 @@
     .park-card-name{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:#fff;line-height:1.3;margin-bottom:3px;}
     .park-card-loc{font-size:11px;font-weight:300;color:rgba(255,255,255,0.72);}
     .park-card-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;}
-
-    /* Park modal overlay */
     .park-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;pointer-events:none;transition:background 0.3s ease;}
     .park-overlay.active{background:rgba(0,0,0,0.55);pointer-events:all;}
     .park-modal{background:var(--card-bg);border-radius:24px;width:100%;max-width:380px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,0.25);transform:scale(0.88) translateY(20px);opacity:0;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s ease;pointer-events:none;}
@@ -117,7 +113,7 @@
     .park-modal-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;}
     .park-modal-close{width:100%;padding:10px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;margin-top:6px;}
 
-    /* ── SIGNAL CARDS ────────────────────────────────── */
+    /* ── SIGNAL CARDS ── */
     .signal-row{display:flex;flex-direction:column;gap:12px;padding:0 16px;margin-bottom:20px;}
     .signal-card{background:var(--card-bg);border:1px solid var(--cream-border);border-radius:var(--radius);overflow:hidden;cursor:pointer;}
     .signal-card-head{display:flex;align-items:center;gap:12px;padding:15px 16px;}
@@ -128,7 +124,7 @@
     .signal-chevron{font-size:16px;color:var(--soft);transition:transform 0.25s;flex-shrink:0;}
     .signal-card.open .signal-chevron{transform:rotate(180deg);}
     .signal-body{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1);}
-    .signal-card.open .signal-body{max-height:1200px;}
+    .signal-card.open .signal-body{max-height:1400px;}
     .signal-body-inner{padding:0 16px 18px;}
     .signal-mechanism{font-size:13px;font-weight:300;color:var(--mid);line-height:1.8;margin-bottom:14px;border-top:1px solid var(--cream-border);padding-top:14px;}
     .signal-insight{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:500;color:var(--dark);background:var(--green-soft);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:10px 12px;margin-bottom:14px;line-height:1.6;}
@@ -139,7 +135,11 @@
     .signal-action-label.habit{color:var(--blue);}
     .signal-action-text{font-size:12px;font-weight:300;color:var(--dark);line-height:1.7;}
 
-    /* ── BODY ARTICLES ROW ───────────────────────────── */
+    /* Signal bridge link */
+    .signal-bridge{display:flex;align-items:center;gap:8px;margin-top:10px;padding:10px 12px;border-radius:10px;text-decoration:none;font-size:12px;font-weight:400;transition:opacity 0.15s;}
+    .signal-bridge:active{opacity:0.7;}
+
+    /* ── BODY ARTICLES ── */
     .body-articles{margin-bottom:20px;}
     .body-articles-scroll{display:flex;gap:10px;padding:0 16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
     .body-articles-scroll::-webkit-scrollbar{display:none;}
@@ -151,12 +151,12 @@
     .body-art-level{font-size:10px;color:var(--soft);}
     .body-art-time{font-size:10px;color:var(--soft);}
 
-    /* Science callout (kept for fallback style reuse) */
-    .sc-text{flex:1;}
-    .sc-label{font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:4px;font-weight:500;}
-    .sc-title{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:2px;}
-    .sc-sub{font-size:11px;font-weight:300;color:var(--mid);line-height:1.5;}
-    .sc-arrow{font-size:12px;background:var(--green);color:#fff;border-radius:20px;padding:5px 12px;white-space:nowrap;font-weight:500;flex-shrink:0;}
+    /* Subsection */
+    .subsection{margin-bottom:20px;}
+    .subsection-header{display:flex;align-items:center;gap:10px;padding:0 20px;margin-bottom:10px;}
+    .subsection-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+    .subsection-title{font-size:13px;font-weight:500;color:var(--mid);}
+    .subsection-line{flex:1;height:1px;background:var(--cream-border);}
 
     /* Environment tags */
     .env-groups{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px;}
@@ -192,13 +192,6 @@
     .pro-step-name{font-size:13px;font-weight:500;color:var(--dark);margin-bottom:2px;}
     .pro-step-desc{font-size:12px;font-weight:300;color:var(--soft);line-height:1.5;}
     .pro-step-arrow{color:var(--soft);font-size:14px;margin-top:3px;}
-
-    /* Subsection */
-    .subsection{margin-bottom:20px;}
-    .subsection-header{display:flex;align-items:center;gap:10px;padding:0 20px;margin-bottom:10px;}
-    .subsection-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-    .subsection-title{font-size:13px;font-weight:500;color:var(--mid);}
-    .subsection-line{flex:1;height:1px;background:var(--cream-border);}
 
     /* Care card */
     .care-cards{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
@@ -240,7 +233,7 @@
 <div class="hero">
   <div class="hero-eyebrow">พื้นที่ใจ</div>
   <div class="hero-title">ไม่ต้องแบกคนเดียว</div>
-  <div class="hero-sub">วิธีดูแลตัวเองใน 6 ชั้น<br/>วิทยาศาตร์ที่อยู่เบื่องหลัง</div>
+  <div class="hero-sub">วิธีดูแลตัวเองใน 6 ชั้น<br/>วิทยาศาสตร์ที่อยู่เบื้องหลัง</div>
 </div>
 
 <!-- TAB BAR -->
@@ -265,7 +258,7 @@
     <div class="feel-modal-label">เริ่มจากตรงนี้</div>
     <div class="feel-modal-title">ตอนนี้คุณรู้สึกยังไงอยู่?</div>
     <div class="feel-opts">
-      <button class="feel-opt" onclick="routeToLayer('body','park-carousel')">
+      <button class="feel-opt" onclick="routeToLayer('body','layer-body')">
         <span class="feel-opt-icon">🏃</span><span>รู้สึกล้า เครียดสะสม นอนไม่หลับ หรืออยากรีเซ็ตร่างกาย</span>
       </button>
       <button class="feel-opt" onclick="routeToLayer('connection','layer-connection')">
@@ -280,7 +273,7 @@
       <button class="feel-opt" onclick="routeToLayer('belief','layer-belief')">
         <span class="feel-opt-icon">🪞</span><span>สงสัยในตัวเอง ความเชื่อ หรือความหมายของสิ่งที่ทำอยู่</span>
       </button>
-      <button class="feel-opt" onclick="routeToLayer('professional','pro-ในโรงเรียน')">
+      <button class="feel-opt" onclick="routeToLayer('professional','layer-professional')">
         <span class="feel-opt-icon">🏥</span><span>อยากคุยกับผู้เชี่ยวชาญ หรือไม่รู้จะเริ่มจากตรงไหน</span>
       </button>
     </div>
@@ -288,9 +281,10 @@
   </div>
 </div>
 
-<!-- TAB PANELS -->
+<!-- ═══════════════════════════════════════════
+     TAB 1: ร่างกาย
+═══════════════════════════════════════════ -->
 <div class="tab-panel active" id="tab-body">
-<!-- LAYER 1: BODY -->
 <div class="layer-section" id="layer-body">
   <div class="layer-header">
     <div class="layer-number" style="color:var(--green);">ชั้นที่หนึ่ง</div>
@@ -298,34 +292,8 @@
     <div class="layer-tagline">การออกกำลัง การนอน ฮอร์โมน และสัญญาณจากร่างกาย<br/>ร่างกายและจิตใจไม่เคยแยกจากกัน</div>
   </div>
 
-  <!-- A: PARK CAROUSEL -->
-  <div class="subsection-header" style="padding:0 20px;margin-bottom:12px;">
-    <div class="subsection-dot" style="background:var(--green)"></div>
-    <div class="subsection-title">🌿 ออกไปเดิน — รีเซ็ตสมอง</div>
-    <div class="subsection-line"></div>
-  </div>
-  <div class="park-carousel-wrap">
-    <div class="park-carousel" id="park-carousel">
-      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
-      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
-      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
-    </div>
-  </div>
-
-  <!-- Park modal -->
-  <div class="park-overlay" id="park-overlay" onclick="closeParkModal(event)">
-    <div class="park-modal" id="park-modal">
-      <div id="park-modal-img-wrap"></div>
-      <div class="park-modal-name" id="park-modal-name"></div>
-      <div class="park-modal-desc" id="park-modal-desc"></div>
-      <div class="park-modal-pills" id="park-modal-pills"></div>
-      <a class="park-modal-btn" id="park-modal-btn" href="#" target="_blank" rel="noopener">🗺️ เปิด Google Maps</a>
-      <button class="park-modal-close" onclick="closeParkModal()">ปิด ✕</button>
-    </div>
-  </div>
-
-  <!-- B: SIGNAL CARDS -->
-  <div class="subsection-header" style="padding:0 20px;margin:24px 0 12px;">
+  <!-- ── A: SIGNAL CARDS (moved to top) ── -->
+  <div class="subsection-header" style="padding:0 20px;margin:0 0 12px;">
     <div class="subsection-dot" style="background:var(--blue)"></div>
     <div class="subsection-title">🔬 สัญญาณที่ร่างกายส่งมา — และจะตอบยังไง</div>
     <div class="subsection-line"></div>
@@ -360,6 +328,9 @@
               <div class="signal-action-text">ตื่นให้ตรงเวลาทุกวัน รวมถึงวันหยุด — นาฬิกาชีวิตตั้งค่าตัวเองจากเวลาตื่น ไม่ใช่เวลานอน การนอนดึกแล้วตื่นสายวันหยุดรีเซ็ตนาฬิกาและทำให้วันจันทร์รู้สึกหนักกว่าเดิม</div>
             </div>
           </div>
+          <a href="alltools.html#breathe" class="signal-bridge" style="background:var(--teal-soft);border:1px solid var(--teal-border);color:var(--teal);">
+            🌬️ ลองหายใจตอนนี้เลย →
+          </a>
         </div>
       </div>
     </div>
@@ -391,6 +362,9 @@
               <div class="signal-action-text">Body scan ก่อนนอน 3 นาที — ไล่จากเท้าขึ้นมาถึงหัว สังเกตว่าส่วนไหนตึงหรือหนัก ไม่ต้องพยายามแก้ไข แค่รู้ว่ามีอยู่ การรับรู้เพียงอย่างเดียวกระตุ้น parasympathetic response และลด cortisol ได้โดยไม่ต้องทำอะไรเพิ่ม</div>
             </div>
           </div>
+          <a href="alltools.html#breathe" class="signal-bridge" style="background:var(--teal-soft);border:1px solid var(--teal-border);color:var(--teal);">
+            🌬️ ลองหายใจตอนนี้เลย →
+          </a>
         </div>
       </div>
     </div>
@@ -423,6 +397,9 @@
               <div class="signal-action-text">ลด caffeine หลัง 14:00 — caffeine ปิดกั้น adenosine receptor และยืดช่วงที่ cortisol สูง ส่งผลต่อ sleep architecture แม้จะไม่รู้สึกว่ากาแฟทำให้ตื่น สำหรับ thyroid: ถ้ามี low mood + brain fog + เหนื่อยง่ายเรื้อรังแม้นอนพอ ควรตรวจเลือดกับแพทย์ — ไม่ใช่เพราะป่วย แต่เพราะตรวจง่ายและรักษาได้</div>
             </div>
           </div>
+          <a href="alltools.html#journal" class="signal-bridge" style="background:var(--purple-soft);border:1px solid var(--purple-border);color:var(--purple);">
+            📓 บันทึกสังเกตอารมณ์ →
+          </a>
         </div>
       </div>
     </div>
@@ -454,6 +431,9 @@
               <div class="signal-action-text">เพิ่ม incidental movement — เดินไปโรงอาหารทางที่ไกลกว่า ยืนระหว่างอ่านหนังสือ ออกกำลังกาย 20 นาที 3 ครั้งต่อสัปดาห์คือ threshold ที่งานวิจัยยืนยันว่าเห็นผลต่อ depression และ anxiety — ต่ำกว่าที่คนส่วนใหญ่คิด</div>
             </div>
           </div>
+          <a href="alltools.html#breathe" class="signal-bridge" style="background:var(--teal-soft);border:1px solid var(--teal-border);color:var(--teal);">
+            🌬️ เปิดเครื่องมือทำตอนนี้เลย →
+          </a>
         </div>
       </div>
     </div>
@@ -489,28 +469,204 @@
       </div>
     </div>
 
+    <!-- ── HAPPY HORMONES GROUP HEADER ── -->
+    <div class="subsection-header" style="padding:0 4px;margin:8px 0 4px;">
+      <div class="subsection-dot" style="background:#8B5CF6"></div>
+      <div class="subsection-title" style="color:var(--mid);">เพิ่มได้เอง · Happy Hormones</div>
+      <div class="subsection-line"></div>
+    </div>
+
+    <!-- Signal 6: Dopamine -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">⚡</span>
+        <div class="signal-head-text">
+          <div class="signal-title">Dopamine — ระบบรางวัลในสมอง</div>
+          <div class="signal-teaser">ทำไมหลังเลื่อน TikTok แล้วยิ่งรู้สึกว่าง — ไม่ใช่ความอ่อนแอ</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Dopamine ไม่ใช่ "ฮอร์โมนแห่งความสุข" — มันคือฮอร์โมนแห่ง <strong>การคาดหวัง</strong> สมองหลั่ง dopamine ก่อนที่จะได้รางวัล ไม่ใช่ตอนที่ได้แล้ว<br/><br/>
+            Social media ออกแบบมาให้ trigger dopamine ทุก 3–5 วินาที ผ่าน infinite scroll, notification, และ variable reward (บางทีได้ไลก์มาก บางทีไม่ได้เลย — ความไม่แน่นอนนี้คือหัวใจของ addiction loop)<br/><br/>
+            เมื่อสมองถูกกระตุ้นสูงซ้ำๆ มัน downregulate receptor — ต้องการสิ่งกระตุ้นมากขึ้นเรื่อยๆ เพื่อให้รู้สึกเท่าเดิม และสิ่งที่เคยทำให้มีความสุข (อ่านหนังสือ คุยกับเพื่อน เดินเล่น) เริ่มรู้สึกน่าเบื่อ — ไม่ใช่เพราะคุณเปลี่ยน แต่เพราะ baseline สูงขึ้น
+          </div>
+          <div class="signal-insight">ความรู้สึกว่าชีวิตปกติน่าเบื่อหลังจากใช้หน้าจอเยอะ ไม่ใช่ความขี้เกียจหรือนิสัยไม่ดี — มันคือสมองที่ถูก rewire ให้ต้องการ dopamine spike สูงกว่าที่ชีวิตจริงให้ได้</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">Movement snack 5 นาที — กระโดดตบ ขึ้นบันได หรือเดินเร็ว dopamine จาก movement เป็น natural spike ที่ไม่ทำให้ baseline สูงขึ้น หรือลองทำงาน/อ่านหนังสือเสร็จ 1 ชิ้นเล็กๆ แล้วหยุดพัก — dopamine จาก completion ต่างจาก dopamine จากการเลื่อนหน้าจอ เพราะมันมาพร้อมกับความรู้สึกว่าทำอะไรบางอย่างสำเร็จ</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">สร้าง "Dopamine Menu" — รายการกิจกรรมที่ให้ dopamine แบบ natural เช่น เดิน ฟังเพลงชอบ คุยกับเพื่อน ทำอาหาร เล่นดนตรี เวลารู้สึกอยากหยิบโทรศัพท์โดยไม่มีเหตุผล ให้เลือกจาก menu แทน ไม่ต้องทำทั้งหมด แค่หนึ่งอย่าง และสังเกตว่ารู้สึกยังไง</div>
+            </div>
+          </div>
+          <a href="plans.html" class="signal-bridge" style="background:var(--purple-soft);border:1px solid var(--purple-border);color:var(--purple);">
+            🗺️ ถ้าสังเกตว่าต้องการสิ่งกระตุ้นมากขึ้นเรื่อยๆ → แผน Dopamine Reset
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 7: Oxytocin -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">🤝</span>
+        <div class="signal-head-text">
+          <div class="signal-title">Oxytocin — ฮอร์โมนแห่งความผูกพัน</div>
+          <div class="signal-teaser">ทำไมการถูกปฏิเสธถึงเจ็บจริงๆ ทางร่างกาย</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Oxytocin หลั่งจากการสัมผัส การมองตา การรู้สึกว่ามีคนรับฟัง และการทำสิ่งดีเพื่อคนอื่น มันลด cortisol โดยตรง และเพิ่มความรู้สึกปลอดภัยในสภาพแวดล้อมทางสังคม<br/><br/>
+            แต่ที่น่าสนใจกว่านั้นคือฝั่งตรงข้าม: เมื่อสมองตรวจพบ social exclusion หรือการถูกปฏิเสธ มันกระตุ้น anterior cingulate cortex — พื้นที่เดียวกับที่ประมวลผลความเจ็บปวดทางกาย นั่นคือเหตุผลที่การถูกเพื่อนทิ้งหรือถูก ignore เจ็บแบบเดียวกับการโดนตี ไม่ใช่แค่ความรู้สึก<br/><br/>
+            Text message และ social media มอบ oxytocin ได้น้อยกว่าการเจอหน้ากันมาก เพราะสัญญาณที่ trigger การหลั่ง oxytocin ส่วนใหญ่ต้องการ physical presence — เสียง สายตา และการสัมผัส
+          </div>
+          <div class="signal-insight">ความเจ็บปวดจากการถูกปฏิเสธหรือโดดเดี่ยวไม่ใช่ความอ่อนแอ และไม่ใช่เรื่องที่ "ไม่ควรเอามาคิด" — มันคือระบบประสาทที่ทำงานถูกต้อง เพราะมนุษย์วิวัฒนาการมาเพื่ออยู่ร่วมกัน</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">กอดใครซักคน หรือสัมผัสสัตว์เลี้ยงถ้ามี — oxytocin หลั่งจากการสัมผัส ไม่ต้องพูดอะไร แค่อยู่ด้วยกันก็พอ ถ้าอยู่คนเดียว: โทรหาคนที่ไว้ใจได้และ<strong>พูดคุยจริงๆ</strong> (ไม่ใช่แค่ส่งสติกเกอร์) แค่ 10 นาทีที่มีคนรับฟังเปลี่ยน cortisol ได้จริง</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">คุยกับคนหน้าต่อหน้าอย่างน้อยวันละ 1 ครั้งโดยวางโทรศัพท์ ไม่ต้องเป็นเรื่องสำคัญ แค่ presence ที่แท้จริง งานวิจัยพบว่า eye contact ระหว่างคุยช่วยซิงค์ brainwave และสร้าง oxytocin ในทั้งสองคน ไม่ใช่แค่คนที่ได้รับการสนใจ</div>
+            </div>
+          </div>
+          <a href="peer.html" class="signal-bridge" style="background:var(--gold-soft);border:1px solid var(--gold-border);color:#7A5C00;">
+            💛 คุยกับ PR — oxytocin เพิ่มขึ้นจริงๆ เมื่อมีคนรับฟัง
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 8: Endorphin -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">😄</span>
+        <div class="signal-head-text">
+          <div class="signal-title">Endorphin — ยาแก้ปวดธรรมชาติ</div>
+          <div class="signal-teaser">ไม่ต้องวิ่งมาราธอน — หัวเราะก็ได้เหมือนกัน</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Endorphin เป็น opioid peptide ที่สมองผลิตเองเพื่อบรรเทาความเจ็บปวดและสร้างความรู้สึก euphoria ชั่วคราว คนส่วนใหญ่รู้จักมันในชื่อ "runner's high" แต่ threshold ต่ำกว่าที่คิดมาก<br/><br/>
+            สิ่งที่ trigger endorphin ได้นอกจากการออกกำลังกาย: การหัวเราะ (จริงๆ ไม่ใช่แค่ยิ้ม), การร้องไห้ (endorphin หลั่งเพื่อบรรเทาความเจ็บปวดทางอารมณ์), การกินอาหารรสเผ็ด (capsaicin กระตุ้นตัวรับความเจ็บปวด สมองหลั่ง endorphin เพื่อตอบสนอง), และดนตรีที่ทำให้ขนลุก<br/><br/>
+            20 นาทีที่ระดับ 60–70% ของ max heart rate เพียงพอให้เห็นผลต่ออารมณ์ ไม่จำเป็นต้อง "เจ็บจึงจะได้ผล" — ความเชื่อนั้นมาจากวัฒนธรรม "no pain no gain" ไม่ใช่จากวิทยาศาสตร์
+          </div>
+          <div class="signal-insight">การร้องไห้แล้วรู้สึกดีขึ้นหลังจากนั้นไม่ใช่ความบังเอิญ — มันคือ endorphin ที่หลั่งเพื่อบรรเทาความเจ็บปวดทางอารมณ์ ร่างกายดูแลตัวเองด้วยวิธีที่เราไม่รู้ตัว</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">เปิดคลิปหรือซีรีส์ที่ทำให้หัวเราะได้จริงๆ แค่ 10 นาที หรือเดินเร็ว 20 นาที ไม่ต้องวิ่ง ไม่ต้องมีอุปกรณ์ ถ้ารู้สึกอยากร้องไห้และหยุดไม่ได้ — อนุญาตให้ตัวเองร้องได้ มันเป็นกลไกที่ร่างกายใช้ระบาย ไม่ใช่สัญญาณว่าอ่อนแอ</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">3 ครั้งต่อสัปดาห์ที่ heart rate ขึ้น 20 นาทีขึ้นไป — เลือกกิจกรรมที่ enjoy จริงๆ ไม่ใช่แค่ที่คิดว่า "ควรทำ" เพราะ endorphin จาก enjoyable activity มีผลต่อ mood มากกว่า endorphin จากการฝืนทำสิ่งที่ไม่ชอบในระยะยาว</div>
+            </div>
+          </div>
+          <a href="alltools.html#breathe" class="signal-bridge" style="background:var(--teal-soft);border:1px solid var(--teal-border);color:var(--teal);">
+            🌬️ เริ่มจากหายใจก็ได้ → เปิดเครื่องมือ
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 9: Serotonin -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">🌤</span>
+        <div class="signal-head-text">
+          <div class="signal-title">Serotonin — ฮอร์โมนแห่งความมั่นคง</div>
+          <div class="signal-teaser">ความรู้สึกหนักๆ เฉื่อยๆ อาจไม่ใช่นิสัย</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Serotonin ทำงานต่างจาก dopamine โดยสิ้นเชิง — มันไม่ได้ให้ความสุขแบบ spike แต่รักษาระดับ mood ให้มั่นคง คนที่มี serotonin เพียงพอจะรู้สึก "โอเค" กับชีวิตปกติ ไม่ต้องการสิ่งกระตุ้นพิเศษเพื่อให้รู้สึกดี<br/><br/>
+            Serotonin สังเคราะห์จาก tryptophan (กรดอะมิโนในอาหาร) โดยมี 3 ปัจจัยที่ช่วย: แสงแดด, การออกกำลังกาย, และ tryptophan จากอาหาร เช่น ไข่ ถั่ว กล้วย นม<br/><br/>
+            ที่น่าสนใจ: serotonin 90% ผลิตในลำไส้ ไม่ใช่สมอง ความสัมพันธ์ระหว่าง gut และ brain ทำงานสองทาง — ความเครียดทำให้ระบบย่อยอาหารแย่ลง และระบบย่อยที่ไม่ดีทำให้ mood ไม่ดีด้วย<br/><br/>
+            ตอนกลางคืน serotonin แปลงเป็น melatonin — นี่คือเหตุผลที่การนอนและ serotonin เชื่อมกันโดยตรง คนที่ serotonin ต่ำมักนอนหลับยากและตื่นมาไม่รู้สึกสดชื่น
+          </div>
+          <div class="signal-insight">ความรู้สึกหนัก เฉื่อย ไม่อยากทำอะไร แม้จะพักผ่อนพอแล้ว อาจไม่ใช่นิสัยหรือความขี้เกียจ — อาจเป็น serotonin ที่ต่ำจากการขาดแสงแดด การไม่ได้ขยับร่างกาย หรือการกินอาหารที่ขาด tryptophan ซึ่งทั้งหมดนี้แก้ได้โดยไม่ต้องมียา</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">ออกไปรับแสงแดดภายนอก 10 นาทีตอนเช้า ถ้าไม่มีแดด แค่อยู่ข้างนอกก็ช่วยได้ แสงธรรมชาติ (แม้วันที่ท้องฟ้าครึ้ม) มีความเข้มแสงสูงกว่าในอาคาร 10–50 เท่า และนั่นเพียงพอให้ serotonin เริ่มสังเคราะห์</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">Morning triple stack — แสงแดด + โปรตีนมื้อเช้า + เคลื่อนไหว ทำสามอย่างนี้พร้อมกันในชั่วโมงแรกหลังตื่น แต่ละอย่างมีผลต่อ serotonin แยกกัน แต่เมื่อทำร่วมกัน ผลรวมมากกว่าผลบวก — และทุกอย่างทำใช้เวลาไม่เกิน 30 นาที ลำไส้ก็สำคัญ: ลองลดอาหารแปรรูปและน้ำตาลสูงดูสัปดาห์หนึ่ง แล้วสังเกตว่า mood เปลี่ยนไหม</div>
+            </div>
+          </div>
+          <a href="alltools.html" class="signal-bridge" style="background:var(--green-soft);border:1px solid var(--green-border);color:var(--green);">
+            ⚡ ดูเครื่องมือทั้งหมด →
+          </a>
+        </div>
+      </div>
+    </div>
+
   </div><!-- end signal-row -->
 
-  <!-- C: BODY ARTICLES -->
-  <div class="subsection-header" style="padding:0 20px;margin:8px 0 12px;">
+  <!-- ── B: BODY ARTICLES (moved to second) ── -->
+  <div class="subsection-header" style="padding:0 20px;margin:0 0 12px;">
     <div class="subsection-dot" style="background:var(--gold)"></div>
-    <div class="subsection-title">📖 อ่านเพิ่มเติม — บทความจากทีม</div>
+    <div class="subsection-title">📖 บทความจากทีม</div>
     <div class="subsection-line"></div>
   </div>
   <div class="body-articles">
     <div class="body-articles-scroll" id="body-articles-scroll">
-      <!-- Populated by JS: pulls world=body from Content sheet, falls back to science.html card -->
+      <!-- Populated by JS -->
     </div>
   </div>
 
-  <!-- Sheet-driven extra body cards (category=ร่างกาย) -->
+  <!-- Sheet-driven extra body cards -->
   <div class="care-cards" id="cards-ร่างกาย" style="margin-top:8px;"></div>
+
+  <!-- ── C: PARK CAROUSEL (moved to bottom) ── -->
+  <div class="subsection-header" style="padding:0 20px;margin:20px 0 12px;">
+    <div class="subsection-dot" style="background:var(--green)"></div>
+    <div class="subsection-title">🌿 ออกไปเดิน — รีเซ็ตสมอง</div>
+    <div class="subsection-line"></div>
+  </div>
+  <div class="park-carousel-wrap">
+    <div class="park-carousel" id="park-carousel">
+      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
+      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
+      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
+    </div>
+  </div>
+
+  <!-- Park modal -->
+  <div class="park-overlay" id="park-overlay" onclick="closeParkModal(event)">
+    <div class="park-modal" id="park-modal">
+      <div id="park-modal-img-wrap"></div>
+      <div class="park-modal-name" id="park-modal-name"></div>
+      <div class="park-modal-desc" id="park-modal-desc"></div>
+      <div class="park-modal-pills" id="park-modal-pills"></div>
+      <a class="park-modal-btn" id="park-modal-btn" href="#" target="_blank" rel="noopener">🗺️ เปิด Google Maps</a>
+      <button class="park-modal-close" onclick="closeParkModal()">ปิด ✕</button>
+    </div>
+  </div>
 
 </div><!-- end layer-body -->
 </div><!-- end tab-body -->
 
+<!-- ═══════════════════════════════════════════
+     TAB 2: ความสัมพันธ์
+═══════════════════════════════════════════ -->
 <div class="tab-panel" id="tab-connection">
-<!-- LAYER 2: CONNECTION -->
 <div class="layer-section" id="layer-connection">
   <div class="layer-header">
     <div class="layer-number" style="color:var(--blue);">ชั้นที่สอง</div>
@@ -529,12 +685,17 @@
       <div class="care-card-cta"><span class="cta-contact">ใจดี TU Peer Support</span><span class="cta-arrow">→</span></div>
     </a>
   </div>
+  <a href="alltools.html#journal" style="display:flex;align-items:center;gap:8px;margin:0 16px 14px;padding:12px 14px;background:var(--purple-soft);border:1px solid var(--purple-border);border-radius:14px;text-decoration:none;font-size:12px;font-weight:400;color:var(--purple);">
+    📓 ระบายก่อนคุยกับคนอื่นก็ได้ →
+  </a>
   <div class="care-cards" id="cards-ความสัมพันธ์"></div>
 </div>
-</div><!-- end tab-connection -->
+</div>
 
+<!-- ═══════════════════════════════════════════
+     TAB 3: การแสดงออก
+═══════════════════════════════════════════ -->
 <div class="tab-panel" id="tab-expression">
-<!-- LAYER 3: EXPRESSION -->
 <div class="layer-section" id="layer-expression">
   <div class="layer-header">
     <div class="layer-number" style="color:var(--teal);">ชั้นที่สาม</div>
@@ -545,12 +706,17 @@
     <a class="exp-link" href="reflection.html">📓 บันทึกความคิด</a>
     <a class="exp-link" href="puzzle.html">🧩 บทความจิตวิทยา</a>
   </div>
+  <a href="alltools.html#journal" style="display:flex;align-items:center;gap:8px;margin:0 16px 14px;padding:12px 14px;background:var(--purple-soft);border:1px solid var(--purple-border);border-radius:14px;text-decoration:none;font-size:12px;font-weight:400;color:var(--purple);">
+    📓 เปิดบันทึกเลย →
+  </a>
   <div class="care-cards" id="cards-การแสดงออก"></div>
 </div>
-</div><!-- end tab-expression -->
+</div>
 
+<!-- ═══════════════════════════════════════════
+     TAB 4: สิ่งแวดล้อม
+═══════════════════════════════════════════ -->
 <div class="tab-panel" id="tab-environment">
-<!-- LAYER 4: ENVIRONMENT -->
 <div class="layer-section" id="layer-environment">
   <div class="layer-header">
     <div class="layer-number" style="color:var(--amber);">ชั้นที่สี่</div>
@@ -574,10 +740,12 @@
   </div>
   <div class="care-cards" id="cards-สิ่งแวดล้อม"></div>
 </div>
-</div><!-- end tab-environment -->
+</div>
 
+<!-- ═══════════════════════════════════════════
+     TAB 5: ความเชื่อ
+═══════════════════════════════════════════ -->
 <div class="tab-panel" id="tab-belief">
-<!-- LAYER 5: BELIEF -->
 <div class="layer-section" id="layer-belief">
   <div class="layer-header">
     <div class="layer-number" style="color:var(--purple);">ชั้นที่ห้า</div>
@@ -590,12 +758,17 @@
     <div class="bc-sub">ความเชื่อที่ฝังอยู่ข้างในมักมาจากสิ่งแวดล้อม ไม่ใช่ความจริงตายตัว — อ่านบทความจิตวิทยาที่ช่วยตั้งคำถามกับความเชื่อพวกนั้น</div>
     <div class="bc-cta">ไปที่บทความ →</div>
   </div>
+  <a href="reflection.html" style="display:flex;align-items:center;gap:8px;margin:0 16px 10px;padding:12px 14px;background:var(--dark);border-radius:14px;text-decoration:none;font-size:12px;font-weight:500;color:#FDFBF7;">
+    🪞 ลอง Reflection — ช่วยตั้งคำถามกับความเชื่อ →
+  </a>
   <div class="care-cards" id="cards-ความเชื่อ"></div>
 </div>
-</div><!-- end tab-belief -->
+</div>
 
+<!-- ═══════════════════════════════════════════
+     TAB 6: ผู้เชี่ยวชาญ
+═══════════════════════════════════════════ -->
 <div class="tab-panel" id="tab-professional">
-<!-- LAYER 6: PROFESSIONAL -->
 <div class="layer-section" id="layer-professional">
   <div class="layer-header">
     <div class="layer-number" style="color:var(--mid);">ชั้นที่หก</div>
@@ -628,7 +801,7 @@
     <div class="skeleton"></div><div class="skeleton" style="height:80px"></div><div class="skeleton"></div>
   </div>
 </div>
-</div><!-- end tab-professional -->
+</div>
 
 <div class="crisis-strip">
   <div class="crisis-text">🆘 วิกฤต ต้องการความช่วยเหลือตอนนี้</div>
@@ -640,21 +813,18 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
 const LIFF_ID  = "2009806939-H06mwKgI";
 
-// ─────────────────────────────────────────────────────
-// SIGNAL CARDS — expand/collapse
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// SIGNAL CARDS
+// ─────────────────────────────────────────────
 function toggleSignal(card) {
   const isOpen = card.classList.contains("open");
   document.querySelectorAll(".signal-card.open").forEach(c => c.classList.remove("open"));
   if (!isOpen) card.classList.add("open");
 }
 
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 // PARK CAROUSEL
-// Sheet: category=ออกไปเดิน, add photo_url column for photo
-// Falls back to gradient colour if photo_url is empty
-// Team adds a row → appears in carousel automatically
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 const PARK_GRADIENTS = [
   "linear-gradient(135deg,#4A7C59,#2D5A40)",
   "linear-gradient(135deg,#3A7D44,#1E5B2A)",
@@ -721,11 +891,9 @@ function closeParkModal(e) {
   setTimeout(() => { overlay.style.display = "none"; document.body.style.overflow = ""; }, 300);
 }
 
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 // BODY ARTICLES
-// Team: publish articles in dashboard with world=body
-// Falls back to science.html static card if Sheet empty
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 const BODY_ARTICLE_FALLBACK = [{
   id:"science", title:"ร่างกายและจิตใจไม่เคยแยกจากกัน",
   tag:"Neuroscience", level:"🟡 กลาง", readTime:"15 นาที",
@@ -762,21 +930,9 @@ async function loadBodyArticles() {
   } catch(e) { renderBodyArticles(BODY_ARTICLE_FALLBACK); }
 }
 
-
-// Sheet columns: category | name | desc | price_range | location | bts_mrt | contact | url | online | active
-//
-// NEW LAYER CATEGORIES (add rows with these values to expand each layer):
-//   "ออกไปเดิน"    → Layer 1: Body
-//   "ร่างกาย"      → Layer 1: Body (extra body resources)
-//   "ความสัมพันธ์"  → Layer 2: Connection
-//   "การแสดงออก"   → Layer 3: Expression
-//   "สิ่งแวดล้อม"  → Layer 4: Environment
-//   "ความเชื่อ"    → Layer 5: Belief
-//   "ในโรงเรียน"   → Layer 6: Professional
-//   "ฟรี"          → Layer 6: Professional
-//   "ออนไลน์"      → Layer 6: Professional
-//   "คลินิก"       → Layer 6: Professional
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// CARE DATA
+// ─────────────────────────────────────────────
 const FALLBACK = [
   {category:"ออกไปเดิน",name:"สวนลุมพินี",desc:"สวนกลางกรุง วิ่งได้รอบทะเลสาบ มีเส้นทางเดินชัดเจน",price_range:"ฟรี",location:"ปทุมวัน",bts_mrt:"MRT สีลม / BTS ราชดำริ",contact:"",url:"https://maps.app.goo.gl/LumpiniPark",online:false},
   {category:"ออกไปเดิน",name:"สวนจตุจักร",desc:"สวนขนาดใหญ่ ร่มรื่น มีทางเดิน-วิ่ง เหมาะกับคนแถวเหนือ กทม.",price_range:"ฟรี",location:"จตุจักร",bts_mrt:"MRT กำแพงเพชร",contact:"",url:"https://maps.app.goo.gl/ChatuchakPark",online:false},
@@ -796,11 +952,7 @@ const FALLBACK = [
   {category:"คลินิก",name:"The Oasis",desc:"จิตเวช จิตบำบัด โยคะบำบัด กิจกรรมส่งเสริมสุขภาพจิต",price_range:"สอบถาม",location:"กรุงเทพฯ",bts_mrt:"",contact:"theoasiscare.com",url:"https://en.theoasiscare.com",online:false},
 ];
 
-// LAYER MAP: category → container ID
-// To add a new resource to any layer, just add a row to the Care sheet
-// with the matching category value below.
 const LAYER_MAP = {
-  // "ออกไปเดิน" → park carousel (not card list)
   "ร่างกาย":     "cards-ร่างกาย",
   "ความสัมพันธ์": "cards-ความสัมพันธ์",
   "การแสดงออก":  "cards-การแสดงออก",
@@ -877,19 +1029,15 @@ function buildProContainers() {
 
 function renderCare(items) {
   buildProContainers();
-  // Separate parks from other categories
   const parks = items.filter(i => (i.category||"").trim() === "ออกไปเดิน");
   const rest  = items.filter(i => (i.category||"").trim() !== "ออกไปเดิน");
-  // Render park carousel
   if (parks.length) renderParks(parks);
   else renderParks(FALLBACK.filter(i => i.category === "ออกไปเดิน"));
-  // Clear skeletons for other containers
   if (!rest || !rest.length) return;
   rest.forEach(item => {
     const id = LAYER_MAP[(item.category || "").trim()];
     if (id) makeCareCard(item, id);
   });
-  // Hide empty pro subsections
   PRO_CATEGORIES.forEach(({cat}) => {
     const el = document.getElementById(`pro-${cat}`);
     if (el && el.children.length === 0) {
@@ -899,9 +1047,9 @@ function renderCare(items) {
   });
 }
 
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 // TAB SYSTEM
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 function switchTab(tab) {
   document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
@@ -912,9 +1060,9 @@ function switchTab(tab) {
   }
 }
 
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 // FEELING MODAL
-// ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 function openFeelModal() {
   const ov = document.getElementById("feel-overlay");
   ov.style.display = "flex";
@@ -933,8 +1081,6 @@ function handleFeelOverlayClick(e) {
   if (e.target === document.getElementById("feel-overlay")) closeFeelModal();
 }
 
-// tab: which tab to switch to
-// scrollTargetId: element id to scroll to within that tab after switch
 function routeToLayer(tab, scrollTargetId) {
   document.querySelectorAll(".feel-opt").forEach(b => b.classList.remove("selected"));
   event.currentTarget.classList.add("selected");
@@ -950,7 +1096,10 @@ function routeToLayer(tab, scrollTargetId) {
   }, 240);
 }
 
-  async function loadCareArticleSuggestions() {
+// ─────────────────────────────────────────────
+// ARTICLE SUGGESTIONS PER LAYER
+// ─────────────────────────────────────────────
+async function loadCareArticleSuggestions() {
   const LAYER_CONTAINERS = {
     "ร่างกาย":      "cards-ร่างกาย",
     "ความสัมพันธ์":  "cards-ความสัมพันธ์",
@@ -1001,6 +1150,9 @@ async function loadCare() {
   } catch(e) { renderCare(FALLBACK); }
 }
 
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
 const isPreview = new URLSearchParams(window.location.search).get("preview") === "1";
 if (isPreview) {
   loadCare();
@@ -1009,32 +1161,22 @@ if (isPreview) {
     .then(() => { if (!liff.isLoggedIn()) { liff.login(); return; } loadCare(); })
     .catch(() => loadCare());
 }
-  // ── ADD THIS to the bottom of care.html's <script>, just before the closing </script> ──
-// Reads ?tab=body|connection|expression|environment|belief|professional from URL
-// and switches to that tab automatically (works both from Reflection and from alltools)
 
+// ?tab= deep-link param
 (function applyTabParam() {
   const TAB_ALIASES = {
-    // layer key  →  tab id used in switchTab()
-    body:         'body',
-    connection:   'connection',
-    expression:   'expression',
-    environment:  'environment',
-    belief:       'belief',
-    professional: 'professional',
-    // numeric aliases (legacy from old LAYER_TAB routing)
-    '0': 'body', '1': 'connection', '2': 'expression',
-    '3': 'environment', '4': 'belief', '5': 'professional',
+    body:'body', connection:'connection', expression:'expression',
+    environment:'environment', belief:'belief', professional:'professional',
+    '0':'body','1':'connection','2':'expression',
+    '3':'environment','4':'belief','5':'professional',
   };
   const param = new URLSearchParams(window.location.search).get('tab');
   if (param && TAB_ALIASES[param]) {
-    // Wait until loadCare() has rendered the panels, then switch
     const target = TAB_ALIASES[param];
     const trySwitch = () => {
       const panel = document.getElementById('tab-' + target);
       if (panel) {
         switchTab(target);
-        // Smooth scroll down past the tab bar
         setTimeout(() => window.scrollTo({ top: 120, behavior: 'smooth' }), 100);
       } else {
         setTimeout(trySwitch, 80);
@@ -1043,12 +1185,12 @@ if (isPreview) {
     trySwitch();
   }
 })();
-// ── FIRST VISIT: auto-open feeling modal ──────────────────
+
+// First-visit: auto-open feeling modal
 (function() {
   const KEY = 'jaidee_care_visited';
   if (!localStorage.getItem(KEY)) {
     localStorage.setItem(KEY, '1');
-    // Small delay so page renders first
     setTimeout(openFeelModal, 600);
   }
 })();
