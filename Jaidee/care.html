@@ -240,7 +240,7 @@
 <div class="hero">
   <div class="hero-eyebrow">พื้นที่ใจ</div>
   <div class="hero-title">ไม่ต้องแบกคนเดียว</div>
-  <div class="hero-sub">สุขภาพจิตไม่ใช่แค่การไปหาหมอ<br/>มีหลายวิธีมากกว่านั้น — เริ่มจากที่รู้สึกว่าใช่สำหรับตัวเอง</div>
+  <div class="hero-sub">วิธีดูแลตัวเองใน 6 ชั้น<br/>วิทยาศาตร์ที่อยู่เบื่องหลัง</div>
 </div>
 
 <!-- TAB BAR -->
@@ -1043,7 +1043,15 @@ if (isPreview) {
     trySwitch();
   }
 })();
-
+// ── FIRST VISIT: auto-open feeling modal ──────────────────
+(function() {
+  const KEY = 'jaidee_care_visited';
+  if (!localStorage.getItem(KEY)) {
+    localStorage.setItem(KEY, '1');
+    // Small delay so page renders first
+    setTimeout(openFeelModal, 600);
+  }
+})();
 </script>
 </body>
 </html>
