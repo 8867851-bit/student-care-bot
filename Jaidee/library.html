@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ห้องสมุด ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --room:    #F0E8DC;
+      --wall:    #E8DDD0;
+      --cream:   #FDFBF7;
+      --ink:     #1C1917;
+      --mid:     #6B6560;
+      --soft:    #A8A099;
+      --border:  #E0D8CC;
+      --gold:    #B07D10;
+      --gold-lt: #FBF3E2;
+      --gold-bd: #E2C060;
+      /* shelf wood colours — get richer each level */
+      --wood-1:  #D4AA60;
+      --wood-2:  #B8863C;
+      --wood-3:  #9B6B28;
+      --wood-4:  #7A5220;
+      --wood-5:  #4A3010;
+    }
+    *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body{
+      font-family:'Mitr',sans-serif;
+      background:var(--room);
+      color:var(--ink);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    /* ── HEADER ── */
+    .header{
+      padding:20px 20px 0;
+      display:flex;align-items:flex-start;justify-content:space-between;
+    }
+    .header-left{}
+    .header-eyebrow{
+      font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+      font-weight:500;color:var(--gold);margin-bottom:4px;
+    }
+    .header-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:22px;font-weight:700;color:var(--ink);line-height:1.25;
+    }
+    .header-back{
+      background:none;border:none;font-family:'Mitr',sans-serif;
+      font-size:12px;color:var(--soft);cursor:pointer;padding:4px 0;
+    }
+
+    /* Progress strip */
+    .progress-strip{
+      margin:12px 20px 0;
+      background:rgba(255,255,255,0.6);
+      border:1px solid var(--border);border-radius:12px;
+      padding:10px 14px;
+      display:flex;align-items:center;gap:10px;
+    }
+    .ps-icon{font-size:18px;flex-shrink:0;}
+    .ps-body{flex:1;}
+    .ps-label{font-size:10px;font-weight:500;color:var(--mid);margin-bottom:4px;}
+    .ps-bar-wrap{height:4px;background:var(--border);border-radius:99px;overflow:hidden;}
+    .ps-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold-bd),var(--gold));transition:width 0.6s ease;}
+    .ps-count{font-size:10px;color:var(--soft);flex-shrink:0;white-space:nowrap;}
+
+    /* ── CATEGORY CHIPS ── */
+    .chips{
+      display:flex;gap:7px;padding:14px 20px;
+      overflow-x:auto;scrollbar-width:none;
+    }
+    .chips::-webkit-scrollbar{display:none;}
+    .chip{
+      flex-shrink:0;background:rgba(255,255,255,0.55);
+      border:1px solid var(--border);border-radius:99px;
+      padding:6px 14px;font-family:'Mitr',sans-serif;
+      font-size:11px;font-weight:400;color:var(--mid);
+      cursor:pointer;white-space:nowrap;transition:all 0.18s;
+    }
+    .chip.active{
+      background:var(--ink);color:var(--cream);border-color:var(--ink);
+    }
+
+    /* ── ROOM / SHELVES ── */
+    .room{
+      padding:8px 16px 120px;
+      /* Subtle wall texture */
+      background-image:repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 40px,
+        rgba(0,0,0,0.015) 40px,
+        rgba(0,0,0,0.015) 41px
+      );
+    }
+
+    .shelf-section{ margin-bottom:4px; }
+    .shelf-label{
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:var(--soft);margin-bottom:10px;
+      padding:0 4px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .shelf-label-line{flex:1;height:1px;background:var(--border);}
+    .shelf-label-badge{
+      font-size:9px;font-weight:400;color:var(--gold);
+      background:var(--gold-lt);border:1px solid var(--gold-bd);
+      border-radius:20px;padding:2px 8px;
+    }
+
+    /* Books grid */
+    .books-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+      margin-bottom:0;
+    }
+
+    /* Book tile — flip card */
+    .book-tile{
+      aspect-ratio:2/3;
+      cursor:pointer;
+      perspective:500px;
+      position:relative;
+    }
+    .book-inner{
+      width:100%;height:100%;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform 0.45s cubic-bezier(0.34,1.1,0.64,1);
+      border-radius:4px;
+    }
+    .book-tile.flipped .book-inner{ transform:rotateY(180deg); }
+
+    .book-front,.book-back{
+      position:absolute;inset:0;
+      border-radius:4px;
+      backface-visibility:hidden;
+      overflow:hidden;
+    }
+    .book-front{
+      box-shadow:2px 3px 8px rgba(0,0,0,0.22),-1px 0 0 rgba(0,0,0,0.1);
+    }
+    .book-front img{
+      width:100%;height:100%;object-fit:cover;display:block;
+    }
+    .book-front-fallback{
+      width:100%;height:100%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:9px;font-weight:600;text-align:center;
+      padding:4px;color:rgba(255,255,255,0.8);line-height:1.3;
+    }
+    /* Spine shadow */
+    .book-front::after{
+      content:'';position:absolute;left:0;top:0;bottom:0;
+      width:6px;
+      background:linear-gradient(90deg,rgba(0,0,0,0.25),transparent);
+    }
+
+    .book-back{
+      transform:rotateY(180deg);
+      background:#FFFEF9;
+      border:1px solid var(--border);
+      display:flex;flex-direction:column;
+      padding:6px 5px;
+      box-shadow:2px 3px 8px rgba(0,0,0,0.15);
+    }
+    .bb-name{
+      font-family:'Noto Serif Thai',serif;
+      font-size:7.5px;font-weight:700;color:var(--ink);
+      line-height:1.3;margin-bottom:4px;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    }
+    .bb-cat{
+      font-size:6px;font-weight:500;letter-spacing:0.5px;
+      color:var(--gold);margin-bottom:4px;
+      display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
+    }
+    .bb-divider{height:1px;background:var(--border);margin-bottom:4px;}
+    .bb-label{font-size:6px;letter-spacing:1px;text-transform:uppercase;color:var(--soft);margin-bottom:2px;}
+    .bb-text{
+      font-size:6.5px;font-weight:300;color:var(--mid);line-height:1.5;
+      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+      margin-bottom:3px;
+    }
+    .bb-by{font-size:6px;color:var(--soft);margin-top:auto;}
+
+    /* Empty slot */
+    .book-empty{
+      aspect-ratio:2/3;
+      border:1.5px dashed rgba(0,0,0,0.1);
+      border-radius:4px;
+      background:rgba(255,255,255,0.2);
+    }
+
+    /* Shelf plank */
+    .shelf-plank{
+      height:16px;
+      border-radius:3px;
+      margin-top:6px;
+      position:relative;
+      box-shadow:0 4px 10px rgba(0,0,0,0.22),0 1px 0 rgba(255,255,255,0.15) inset;
+    }
+    .shelf-plank::before{
+      content:'';position:absolute;top:0;left:0;right:0;
+      height:4px;border-radius:3px 3px 0 0;
+      background:rgba(255,255,255,0.18);
+    }
+    /* wood grain lines */
+    .shelf-plank::after{
+      content:'';position:absolute;inset:0;border-radius:3px;
+      background-image:repeating-linear-gradient(
+        90deg,transparent,transparent 28px,
+        rgba(0,0,0,0.04) 28px,rgba(0,0,0,0.04) 30px
+      );
+    }
+    /* colour per shelf level */
+    .shelf-plank[data-level="1"]{ background:linear-gradient(180deg,#DDB870 0%,#C4993A 50%,#A87E28 100%); }
+    .shelf-plank[data-level="2"]{ background:linear-gradient(180deg,#C49848 0%,#A87830 50%,#8C6018 100%); }
+    .shelf-plank[data-level="3"]{ background:linear-gradient(180deg,#A87A38 0%,#8C5E20 50%,#6E4810 100%); }
+    .shelf-plank[data-level="4"]{ background:linear-gradient(180deg,#8C6028 0%,#6E4810 50%,#522E00 100%); }
+    .shelf-plank[data-level="5"]{ background:linear-gradient(180deg,#5A3A18 0%,#3C2008 50%,#1C0800 100%); }
+
+    /* Shelf gap between sections */
+    .shelf-gap{ height:32px; }
+
+    /* Locked next shelf teaser */
+    .next-shelf-teaser{
+      border:1.5px dashed rgba(0,0,0,0.12);
+      border-radius:8px;padding:16px;
+      text-align:center;margin-top:4px;
+    }
+    .nst-lock{font-size:20px;margin-bottom:6px;}
+    .nst-title{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--mid);margin-bottom:3px;}
+    .nst-sub{font-size:11px;font-weight:300;color:var(--soft);line-height:1.55;}
+
+    /* ── UNLOCK ANIMATION ── */
+    @keyframes shelfUnlock{
+      0%  { opacity:0; transform:translateY(20px) scale(0.95); }
+      60% { opacity:1; transform:translateY(-4px) scale(1.01); }
+      100%{ opacity:1; transform:translateY(0)  scale(1); }
+    }
+    .shelf-section.unlocking{ animation:shelfUnlock 0.6s cubic-bezier(0.34,1.3,0.64,1) both; }
+
+    /* ── FAB ── */
+    .fab{
+      position:fixed;bottom:32px;right:20px;
+      width:56px;height:56px;border-radius:50%;
+      background:var(--ink);border:none;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 4px 20px rgba(0,0,0,0.28);
+      cursor:pointer;z-index:100;
+      transition:transform 0.15s;
+    }
+    .fab:active{transform:scale(0.93);}
+    .fab svg{ color:#FDFBF7; }
+
+    /* ── UPLOAD MODAL ── */
+    .modal-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,0);
+      z-index:200;display:none;align-items:flex-end;justify-content:center;
+      pointer-events:none;transition:background 0.3s;
+    }
+    .modal-overlay.active{ background:rgba(0,0,0,0.5);pointer-events:all; }
+    .modal-sheet{
+      background:var(--cream);border-radius:24px 24px 0 0;
+      width:100%;max-width:480px;
+      transform:translateY(100%);
+      transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);
+      max-height:92vh;overflow-y:auto;
+      padding-bottom:env(safe-area-inset-bottom,24px);
+    }
+    .modal-overlay.active .modal-sheet{ transform:translateY(0); }
+    .modal-handle{ width:40px;height:4px;background:var(--border);border-radius:2px;margin:14px auto 0; }
+
+    /* Step indicators */
+    .step-bar{ display:flex;gap:6px;padding:16px 24px 0; }
+    .step-dot{
+      flex:1;height:3px;border-radius:2px;background:var(--border);
+      transition:background 0.3s;
+    }
+    .step-dot.done{ background:var(--gold); }
+    .step-dot.active{ background:rgba(176,125,16,0.4); }
+
+    .step-wrap{ padding:20px 24px 0; }
+    .step-eyebrow{
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:var(--gold);margin-bottom:8px;
+    }
+    .step-title{
+      font-family:'Noto Serif Thai',serif;
+      font-size:20px;font-weight:700;color:var(--ink);
+      line-height:1.35;margin-bottom:4px;
+    }
+    .step-sub{ font-size:12px;font-weight:300;color:var(--soft);margin-bottom:20px;line-height:1.6; }
+
+    /* Photo upload zone */
+    .photo-zone{
+      width:100%;aspect-ratio:3/4;
+      background:var(--room);border:2px dashed var(--border);
+      border-radius:16px;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:10px;
+      cursor:pointer;transition:border-color 0.2s;
+      position:relative;overflow:hidden;max-height:280px;
+    }
+    .photo-zone.has-photo{ border-color:transparent; }
+    .photo-zone img{
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;border-radius:14px;
+    }
+    .photo-zone-icon{ font-size:32px;opacity:0.4; }
+    .photo-zone-label{ font-size:13px;font-weight:300;color:var(--soft); }
+    #photo-input{ display:none; }
+
+    /* Form fields */
+    .field-label{
+      font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+      font-weight:500;color:var(--soft);margin-bottom:6px;
+    }
+    .field-input{
+      width:100%;background:var(--room);
+      border:1.5px solid var(--border);border-radius:12px;
+      padding:13px 14px;font-family:'Mitr',sans-serif;
+      font-size:14px;font-weight:300;color:var(--ink);
+      outline:none;transition:border-color 0.2s;margin-bottom:16px;
+    }
+    .field-input:focus{ border-color:var(--gold); }
+    .field-ta{
+      width:100%;background:var(--room);
+      border:1.5px solid var(--border);border-radius:12px;
+      padding:13px 14px;font-family:'Mitr',sans-serif;
+      font-size:14px;font-weight:300;color:var(--ink);
+      outline:none;resize:none;line-height:1.75;
+      transition:border-color 0.2s;margin-bottom:16px;
+      min-height:90px;
+    }
+    .field-ta:focus{ border-color:var(--gold); }
+    .field-ta::placeholder,.field-input::placeholder{ color:var(--soft); }
+
+    /* Category chips in modal */
+    .cat-chips{
+      display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;
+    }
+    .cat-chip{
+      background:var(--room);border:1.5px solid var(--border);
+      border-radius:99px;padding:6px 12px;
+      font-family:'Mitr',sans-serif;font-size:11px;
+      font-weight:400;color:var(--mid);cursor:pointer;
+      transition:all 0.15s;
+    }
+    .cat-chip.sel{
+      background:var(--ink);border-color:var(--ink);color:var(--cream);
+    }
+
+    /* Buttons */
+    .btn-next{
+      width:100%;background:var(--ink);color:var(--cream);
+      border:none;border-radius:28px;padding:15px;
+      font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;
+      cursor:pointer;transition:transform 0.15s,opacity 0.2s;
+      opacity:0.3;pointer-events:none;
+    }
+    .btn-next.on{ opacity:1;pointer-events:all; }
+    .btn-next:active{ transform:scale(0.97); }
+    .btn-skip{
+      width:100%;background:none;border:none;
+      font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);
+      cursor:pointer;padding:10px;margin-top:6px;
+    }
+
+    /* Success state */
+    .upload-success{
+      text-align:center;padding:32px 24px 40px;
+    }
+    .us-icon{ font-size:48px;margin-bottom:16px; }
+    .us-title{
+      font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:700;
+      color:var(--ink);margin-bottom:8px;
+    }
+    .us-sub{ font-size:13px;font-weight:300;color:var(--mid);line-height:1.75; }
+
+    /* Book detail overlay */
+    .detail-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,0);
+      z-index:201;display:none;align-items:flex-end;justify-content:center;
+      pointer-events:none;transition:background 0.3s;
+    }
+    .detail-overlay.active{ background:rgba(0,0,0,0.55);pointer-events:all; }
+    .detail-sheet{
+      background:var(--cream);border-radius:24px 24px 0 0;
+      width:100%;max-width:480px;
+      transform:translateY(100%);
+      transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);
+      padding:0 0 40px;
+    }
+    .detail-overlay.active .detail-sheet{ transform:translateY(0); }
+    .detail-img{
+      width:100%;aspect-ratio:3/2;object-fit:cover;
+      border-radius:24px 24px 0 0;display:block;
+    }
+    .detail-body{ padding:20px 24px 0; }
+    .detail-cat{
+      font-size:9px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:500;color:var(--gold);margin-bottom:6px;
+    }
+    .detail-title{
+      font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:700;
+      color:var(--ink);margin-bottom:14px;line-height:1.3;
+    }
+    .detail-label{
+      font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+      font-weight:500;color:var(--soft);margin-bottom:4px;
+    }
+    .detail-text{
+      font-size:13px;font-weight:300;color:var(--mid);line-height:1.8;
+      margin-bottom:14px;
+    }
+    .detail-by{
+      font-size:11px;font-weight:400;color:var(--soft);
+      padding-top:14px;border-top:1px solid var(--border);
+    }
+    .detail-close{
+      position:absolute;top:14px;right:14px;
+      width:32px;height:32px;border-radius:50%;
+      background:rgba(0,0,0,0.3);border:none;
+      display:flex;align-items:center;justify-content:center;
+      font-size:14px;color:#fff;cursor:pointer;
+      font-family:'Mitr',sans-serif;
+    }
+
+    /* ── TOAST ── */
+    .toast{
+      position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+      background:var(--ink);color:var(--cream);
+      padding:10px 20px;border-radius:99px;
+      font-size:13px;font-family:'Mitr',sans-serif;
+      white-space:nowrap;z-index:300;
+      animation:fadeUp 0.3s ease both;
+      pointer-events:none;
+    }
+    @keyframes fadeUp{ from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)} }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-eyebrow">ใจดี TU</div>
+    <div class="header-title">ห้องสมุดของเรา</div>
+  </div>
+  <button class="header-back" onclick="history.back()">← กลับ</button>
+</div>
+
+<!-- PROGRESS STRIP -->
+<div class="progress-strip">
+  <div class="ps-icon">📚</div>
+  <div class="ps-body">
+    <div class="ps-label" id="ps-label">กำลังโหลด...</div>
+    <div class="ps-bar-wrap">
+      <div class="ps-bar-fill" id="ps-bar" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="ps-count" id="ps-count">0 เล่ม</div>
+</div>
+
+<!-- CATEGORY CHIPS -->
+<div class="chips" id="chip-bar">
+  <button class="chip active" onclick="filterCat(this,'')">ทั้งหมด</button>
+  <button class="chip" onclick="filterCat(this,'000')">000</button>
+  <button class="chip" onclick="filterCat(this,'100')">100 จิตวิทยา</button>
+  <button class="chip" onclick="filterCat(this,'200')">200 ศาสนา</button>
+  <button class="chip" onclick="filterCat(this,'300')">300 สังคม</button>
+  <button class="chip" onclick="filterCat(this,'400')">400 ภาษา</button>
+  <button class="chip" onclick="filterCat(this,'500')">500 วิทย์</button>
+  <button class="chip" onclick="filterCat(this,'600')">600 ประยุกต์</button>
+  <button class="chip" onclick="filterCat(this,'700')">700 ศิลปะ</button>
+  <button class="chip" onclick="filterCat(this,'800')">800 วรรณคดี</button>
+  <button class="chip" onclick="filterCat(this,'900')">900 ประวัติ</button>
+  <button class="chip" onclick="filterCat(this,'วรรณกรรมไทย')">วรรณกรรมไทย</button>
+  <button class="chip" onclick="filterCat(this,'วรรณกรรมแปล')">วรรณกรรมแปล</button>
+  <button class="chip" onclick="filterCat(this,'วรรณกรรมเยาวชน')">เยาวชน</button>
+  <button class="chip" onclick="filterCat(this,'อนิเมะ+การ์ตูน')">อนิเมะ</button>
+  <button class="chip" onclick="filterCat(this,'คู่มือเตรียมสอบ')">คู่มือสอบ</button>
+</div>
+
+<!-- SHELF ROOM -->
+<div class="room" id="room"></div>
+
+<!-- FAB -->
+<button class="fab" onclick="openUpload()" aria-label="เพิ่มหนังสือ">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </svg>
+</button>
+
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="upload-modal" onclick="handleUploadOverlay(event)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="step-bar">
+      <div class="step-dot active" id="sd-0"></div>
+      <div class="step-dot" id="sd-1"></div>
+      <div class="step-dot" id="sd-2"></div>
+    </div>
+    <div id="step-content"></div>
+  </div>
+</div>
+
+
+<!-- BOOK DETAIL OVERLAY -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail(event)">
+  <div class="detail-sheet" id="detail-sheet" onclick="event.stopPropagation()">
+    <button class="detail-close" onclick="closeDetail()">✕</button>
+    <img class="detail-img" id="detail-img" src="" alt=""/>
+    <div class="detail-body">
+      <div class="detail-cat" id="detail-cat"></div>
+      <div class="detail-title" id="detail-title"></div>
+      <div class="detail-label">สิ่งที่สังเกตเห็น</div>
+      <div class="detail-text" id="detail-noticed"></div>
+      <div class="detail-label">ทำให้นึกถึง</div>
+      <div class="detail-text" id="detail-reminded"></div>
+      <div class="detail-by" id="detail-by"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+// ══════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════
+const API_URL  = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const LIFF_ID  = "2009806939-H06mwKgI";
+
+// Shelf capacity: shelf n holds n * 10 books
+const shelfCap = n => n * 10;
+// Book spine colours (fallback when no photo)
+const SPINE_COLORS = [
+  '#8B4513','#2F6A2F','#1A3A6B','#6B1A1A','#4A4A1A',
+  '#2A4A6B','#6B3A1A','#1A5A4A','#4A1A6B','#5A3A2A'
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let allBooks     = [];
+let filteredCat  = '';
+let userId       = null;
+let userName     = 'นักเรียน';
+let uploadStep   = 0;
+let uploadPhoto  = null; // base64
+let uploadData   = { title:'', category:'', noticed:'', reminded:'' };
+
+// Demo books so the shelf is never empty on first load
+const DEMO_BOOKS = [
+  { id:'D1', title:'Atomic Habits', category:'100 จิตวิทยา', noticed:'นิสัยเล็กๆ มีพลังมากกว่าที่คิด', reminded:'ตอนพยายามตื่นเช้า', imageUrl:'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=200&q=80', userName:'น้องมิ้น', ts:'' },
+  { id:'D2', title:'สิทธารถะ', category:'200 ศาสนา', noticed:'การค้นหาตัวเองต้องเดินทางคนเดียว', reminded:'ช่วงที่ตั้งคำถามกับตัวเอง', imageUrl:'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&q=80', userName:'พี่เนม', ts:'' },
+  { id:'D3', title:'The Alchemist', category:'วรรณกรรมแปล', noticed:'ทุกคนมีตำนานส่วนตัวของตัวเอง', reminded:'ความฝันที่ยังไม่ได้ทำ', imageUrl:'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&q=80', userName:'น้องบีม', ts:'' },
+  { id:'D4', title:'Wonder', category:'วรรณกรรมเยาวชน', noticed:'ความกล้าไม่ใช่การไม่กลัว', reminded:'วันแรกที่เข้าโรงเรียนใหม่', imageUrl:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80', userName:'น้องปลา', ts:'' },
+  { id:'D5', title:'คนค้นฅน', category:'วรรณกรรมไทย', noticed:'มนุษย์ทุกคนมีเรื่องราวที่ซ่อนอยู่', reminded:'คนในรถไฟที่ไม่รู้จะไปที่ไหน', imageUrl:'', userName:'พี่กาย', ts:'' },
+  { id:'D6', title:'Sapiens', category:'900 ประวัติ', noticed:'ประวัติศาสตร์เต็มไปด้วยเรื่องที่เราเลือกเชื่อ', reminded:'บทเรียนสังคมที่ครูเคยสอน', imageUrl:'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&q=80', userName:'น้องเจมส์', ts:'' },
+  { id:'D7', title:'Ikigai', category:'100 จิตวิทยา', noticed:'ความสุขอยู่ในงานเล็กๆ', reminded:'เวลาทำขนมแล้วลืมเวลา', imageUrl:'', userName:'น้องแพร', ts:'' },
+];
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+window.onload = async () => {
+  // Render demo books immediately
+  allBooks = [...DEMO_BOOKS];
+  renderRoom();
+
+  // LIFF
+  try {
+    await liff.init({ liffId: LIFF_ID });
+    if (liff.isLoggedIn()) {
+      const p = await liff.getProfile();
+      userId   = p.userId;
+      userName = p.displayName.split(' ')[0];
+    }
+  } catch(e) { userId = 'guest_' + Date.now(); }
+
+  // Load live books
+  loadBooks();
+};
+
+async function loadBooks() {
+  try {
+    const res = await fetch(API_URL + '?action=getBooks');
+    const d   = await res.json();
+    if (d.status === 'OK' && d.books && d.books.length) {
+      allBooks = d.books;
+      renderRoom();
+    }
+  } catch(e) { /* keep demo books */ }
+}
+
+// ══════════════════════════════════════════════
+// RENDER ROOM
+// ══════════════════════════════════════════════
+function renderRoom() {
+  const room = document.getElementById('room');
+  const books = filteredCat
+    ? allBooks.filter(b => (b.category||'').includes(filteredCat))
+    : allBooks;
+
+  // Update progress strip
+  const total    = books.length;
+  const curShelf = currentShelfLevel(total);
+  const capThis  = shelfCap(curShelf);
+  const capPrev  = curShelf > 1 ? shelfCap(curShelf - 1) : 0;
+  const onThis   = total - capPrev;
+  const pct      = capThis > 0 ? Math.min((onThis / (capThis - capPrev)) * 100, 100) : 0;
+
+  document.getElementById('ps-label').textContent =
+    `ชั้นที่ ${curShelf} · ${onThis}/${capThis - capPrev} เล่ม`;
+  document.getElementById('ps-bar').style.width = pct + '%';
+  document.getElementById('ps-count').textContent = total + ' เล่ม';
+
+  // Build shelves
+  room.innerHTML = '';
+  if (!books.length) {
+    room.innerHTML = `
+      <div style="text-align:center;padding:48px 24px;">
+        <div style="font-size:40px;margin-bottom:16px;">📚</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;color:var(--mid);margin-bottom:8px;">ชั้นยังว่างอยู่</div>
+        <div style="font-size:13px;font-weight:300;color:var(--soft);line-height:1.7;">เป็นคนแรกที่วางหนังสือบนชั้นนี้</div>
+      </div>`;
+    return;
+  }
+
+  // Distribute books across shelves
+  let placed = 0;
+  let level  = 1;
+  while (placed < books.length) {
+    const cap      = shelfCap(level);
+    const capPrevL = level > 1 ? shelfCap(level - 1) : 0;
+    const slotCount = cap - capPrevL;
+    const shelfBooks = books.slice(placed, placed + slotCount);
+    room.appendChild(makeShelf(level, shelfBooks, slotCount));
+    room.appendChild(Object.assign(document.createElement('div'), { className:'shelf-gap' }));
+    placed += shelfBooks.length;
+    level++;
+    if (placed >= books.length) break;
+  }
+
+  // Show next shelf teaser if current shelf is not the last unlocked one
+  const nextLevel   = level;
+  const nextCap     = shelfCap(nextLevel);
+  const nextCapPrev = shelfCap(nextLevel - 1);
+  const needed      = nextCapPrev - books.length;
+  if (needed > 0) {
+    const teaser = document.createElement('div');
+    teaser.className = 'next-shelf-teaser';
+    teaser.innerHTML = `
+      <div class="nst-lock">🔒</div>
+      <div class="nst-title">ชั้นที่ ${nextLevel} — ยังล็อคอยู่</div>
+      <div class="nst-sub">เพิ่มอีก ${needed} เล่มเพื่อปลดล็อค<br>ชั้นนี้มีดีไซน์พิเศษ</div>`;
+    room.appendChild(teaser);
+  }
+}
+
+function currentShelfLevel(totalBooks) {
+  let level = 1;
+  while (shelfCap(level) < totalBooks) level++;
+  return level;
+}
+
+function makeShelf(level, books, slotCount) {
+  const sec  = document.createElement('div');
+  sec.className = 'shelf-section';
+
+  // Label
+  const label = document.createElement('div');
+  label.className = 'shelf-label';
+  const full = books.length >= slotCount;
+  label.innerHTML = `
+    <div class="shelf-label-line"></div>
+    ชั้นที่ ${level}
+    ${full ? '<span class="shelf-label-badge">✓ เต็ม</span>' : ''}
+    <div class="shelf-label-line"></div>`;
+  sec.appendChild(label);
+
+  // Grid
+  const grid = document.createElement('div');
+  grid.className = 'books-grid';
+
+  books.forEach((book, i) => {
+    grid.appendChild(makeBookTile(book, i));
+  });
+  // Empty slots
+  for (let e = books.length; e < slotCount; e++) {
+    const empty = document.createElement('div');
+    empty.className = 'book-empty';
+    grid.appendChild(empty);
+  }
+  sec.appendChild(grid);
+
+  // Plank
+  const plank = document.createElement('div');
+  plank.className = 'shelf-plank';
+  plank.dataset.level = Math.min(level, 5);
+  sec.appendChild(plank);
+
+  return sec;
+}
+
+function makeBookTile(book, idx) {
+  const tile  = document.createElement('div');
+  tile.className = 'book-tile';
+
+  const color = SPINE_COLORS[idx % SPINE_COLORS.length];
+  const frontHtml = book.imageUrl
+    ? `<img src="${book.imageUrl}" alt="${book.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+       <div class="book-front-fallback" style="display:none;background:${color};">${book.title}</div>`
+    : `<div class="book-front-fallback" style="background:${color};">${book.title}</div>`;
+
+  tile.innerHTML = `
+    <div class="book-inner">
+      <div class="book-front">${frontHtml}</div>
+      <div class="book-back">
+        <div class="bb-name">${book.title}</div>
+        <div class="bb-cat">${book.category || ''}</div>
+        <div class="bb-divider"></div>
+        <div class="bb-label">สังเกตเห็น</div>
+        <div class="bb-text">${book.noticed || ''}</div>
+        <div class="bb-by">— ${book.userName || 'นักเรียน'}</div>
+      </div>
+    </div>`;
+
+  tile.addEventListener('click', () => {
+    if (tile.classList.contains('flipped')) {
+      openDetail(book);
+    } else {
+      // First tap: flip
+      document.querySelectorAll('.book-tile.flipped').forEach(t => t.classList.remove('flipped'));
+      tile.classList.add('flipped');
+    }
+  });
+
+  return tile;
+}
+
+// ══════════════════════════════════════════════
+// CATEGORY FILTER
+// ══════════════════════════════════════════════
+function filterCat(btn, cat) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  filteredCat = cat;
+  // Close any flipped books
+  document.querySelectorAll('.book-tile.flipped').forEach(t => t.classList.remove('flipped'));
+  renderRoom();
+}
+
+// ══════════════════════════════════════════════
+// BOOK DETAIL
+// ══════════════════════════════════════════════
+function openDetail(book) {
+  const ov = document.getElementById('detail-overlay');
+  document.getElementById('detail-img').src    = book.imageUrl || '';
+  document.getElementById('detail-img').style.display = book.imageUrl ? 'block' : 'none';
+  document.getElementById('detail-cat').textContent      = book.category || '';
+  document.getElementById('detail-title').textContent    = book.title;
+  document.getElementById('detail-noticed').textContent  = book.noticed || '';
+  document.getElementById('detail-reminded').textContent = book.reminded || '';
+  document.getElementById('detail-by').textContent       = '— ' + (book.userName || 'นักเรียน');
+  ov.style.display = 'flex';
+  requestAnimationFrame(() => ov.classList.add('active'));
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+  if (e && e.target !== document.getElementById('detail-overlay')) return;
+  const ov = document.getElementById('detail-overlay');
+  ov.classList.remove('active');
+  setTimeout(() => { ov.style.display = 'none'; document.body.style.overflow = ''; }, 320);
+  document.querySelectorAll('.book-tile.flipped').forEach(t => t.classList.remove('flipped'));
+}
+
+// ══════════════════════════════════════════════
+// UPLOAD MODAL
+// ══════════════════════════════════════════════
+const CATEGORIES_LIST = [
+  '000 ความรู้ทั่วไป','100 จิตวิทยา','200 ศาสนา','300 สังคมศาสตร์',
+  '400 ภาษาศาสตร์','500 วิทยาศาสตร์','600 วิทยาศาสตร์ประยุกต์',
+  '700 ศิลปะและนันทนาการ','800 วรรณคดี','900 ประวัติศาสตร์',
+  'วรรณกรรมไทย','วรรณกรรมแปล','วรรณกรรมเยาวชน',
+  'อนิเมะ+การ์ตูน','หนังสือซีไรต์','คู่มือเตรียมสอบ',
+];
+
+function openUpload() {
+  uploadStep   = 0;
+  uploadPhoto  = null;
+  uploadData   = { title:'', category:'', noticed:'', reminded:'' };
+  const ov = document.getElementById('upload-modal');
+  ov.style.display = 'flex';
+  requestAnimationFrame(() => ov.classList.add('active'));
+  document.body.style.overflow = 'hidden';
+  renderUploadStep();
+}
+
+function closeUpload() {
+  const ov = document.getElementById('upload-modal');
+  ov.classList.remove('active');
+  setTimeout(() => { ov.style.display = 'none'; document.body.style.overflow = ''; }, 360);
+}
+
+function handleUploadOverlay(e) {
+  if (e.target === document.getElementById('upload-modal')) closeUpload();
+}
+
+function updateStepDots() {
+  [0,1,2].forEach(i => {
+    const dot = document.getElementById('sd-' + i);
+    dot.classList.remove('done','active');
+    if (i < uploadStep) dot.classList.add('done');
+    if (i === uploadStep) dot.classList.add('active');
+  });
+}
+
+function renderUploadStep() {
+  updateStepDots();
+  const wrap = document.getElementById('step-content');
+
+  if (uploadStep === 0) {
+    // Step 1: Photo
+    wrap.innerHTML = `
+      <div class="step-wrap">
+        <div class="step-eyebrow">ขั้นที่ 1 / 3</div>
+        <div class="step-title">ถ่ายปกหนังสือ</div>
+        <div class="step-sub">ถ่ายให้เห็นปกชัดๆ หน้าหนังสือได้เลย</div>
+        <div class="photo-zone ${uploadPhoto ? 'has-photo' : ''}" id="photo-zone" onclick="document.getElementById('photo-input').click()">
+          ${uploadPhoto
+            ? `<img src="${uploadPhoto}" alt="cover"/>`
+            : `<div class="photo-zone-icon">📸</div>
+               <div class="photo-zone-label">แตะเพื่อเลือกรูป</div>`}
+        </div>
+        <input type="file" id="photo-input" accept="image/*" capture="environment" onchange="onPhotoSelect(event)"/>
+        <div style="margin-top:16px;">
+          <button class="btn-next ${uploadPhoto ? 'on' : ''}" id="btn-next-0" onclick="uploadStep=1;renderUploadStep()">ถัดไป →</button>
+          <button class="btn-skip" onclick="closeUpload()">ยกเลิก</button>
+        </div>
+      </div>`;
+
+  } else if (uploadStep === 1) {
+    // Step 2: Title + Category
+    const catChips = CATEGORIES_LIST.map(c =>
+      `<button class="cat-chip ${uploadData.category === c ? 'sel' : ''}" onclick="pickCat(this,'${c}')">${c}</button>`
+    ).join('');
+    wrap.innerHTML = `
+      <div class="step-wrap">
+        <div class="step-eyebrow">ขั้นที่ 2 / 3</div>
+        <div class="step-title">หนังสืออะไร?</div>
+        <div class="step-sub">ชื่อเล่มและประเภท</div>
+        <div class="field-label">ชื่อหนังสือ</div>
+        <input class="field-input" id="f-title" type="text" placeholder="เช่น Atomic Habits, สิทธารถะ..."
+          value="${uploadData.title}" oninput="uploadData.title=this.value;checkStep1()"/>
+        <div class="field-label" style="margin-bottom:8px;">หมวดหมู่</div>
+        <div class="cat-chips">${catChips}</div>
+        <div style="margin-top:8px;">
+          <button class="btn-next" id="btn-next-1" onclick="uploadStep=2;renderUploadStep()">ถัดไป →</button>
+          <button class="btn-skip" onclick="uploadStep=0;renderUploadStep()">← กลับ</button>
+        </div>
+      </div>`;
+    setTimeout(checkStep1, 50);
+
+  } else if (uploadStep === 2) {
+    // Step 3: Review
+    wrap.innerHTML = `
+      <div class="step-wrap">
+        <div class="step-eyebrow">ขั้นที่ 3 / 3</div>
+        <div class="step-title">เขียนสิ่งที่สังเกตเห็น</div>
+        <div class="step-sub">ไม่มีถูกผิด แค่เขียนออกมาตามความรู้สึกจริงๆ</div>
+        <div class="field-label">สิ่งที่สังเกตเห็น</div>
+        <textarea class="field-ta" id="f-noticed" placeholder="อะไรที่ทำให้หยุดคิด หรือเห็นต่างออกไป..."
+          oninput="uploadData.noticed=this.value;checkStep2()">${uploadData.noticed}</textarea>
+        <div class="field-label">ทำให้นึกถึง</div>
+        <textarea class="field-ta" id="f-reminded" placeholder="เรื่อง คน หรือความรู้สึกอะไรที่นึกขึ้นมา..."
+          oninput="uploadData.reminded=this.value;checkStep2()">${uploadData.reminded}</textarea>
+        <div style="margin-top:4px;">
+          <button class="btn-next" id="btn-next-2" onclick="submitBook()">วางลงบนชั้น 📚</button>
+          <button class="btn-skip" onclick="uploadStep=1;renderUploadStep()">← กลับ</button>
+        </div>
+      </div>`;
+    setTimeout(checkStep2, 50);
+  }
+}
+
+function pickCat(btn, cat) {
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('sel'));
+  btn.classList.add('sel');
+  uploadData.category = cat;
+  checkStep1();
+}
+
+function checkStep1() {
+  const btn = document.getElementById('btn-next-1');
+  if (!btn) return;
+  const ok = uploadData.title.trim().length > 0 && uploadData.category.length > 0;
+  btn.classList.toggle('on', ok);
+}
+
+function checkStep2() {
+  const btn = document.getElementById('btn-next-2');
+  if (!btn) return;
+  const ok = uploadData.noticed.trim().length > 0 && uploadData.reminded.trim().length > 0;
+  btn.classList.toggle('on', ok);
+}
+
+// ── Image compression ──────────────────────────
+function onPhotoSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(re) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX = 800;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = h * MAX / w; w = MAX; }
+        else { w = w * MAX / h; h = MAX; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      uploadPhoto = canvas.toDataURL('image/jpeg', 0.78);
+      renderUploadStep();
+    };
+    img.src = re.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Submit ─────────────────────────────────────
+async function submitBook() {
+  const btn = document.getElementById('btn-next-2');
+  if (btn) { btn.textContent = 'กำลังวาง...'; btn.classList.remove('on'); btn.style.pointerEvents = 'none'; }
+
+  const payload = {
+    action:   'addBook',
+    userId:   userId || 'guest',
+    userName: userName,
+    title:    uploadData.title.trim(),
+    category: uploadData.category,
+    noticed:  uploadData.noticed.trim(),
+    reminded: uploadData.reminded.trim(),
+    imageB64: uploadPhoto || '',
+    ts:       new Date().toISOString(),
+  };
+
+  let savedBook = null;
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+    });
+    const d = await res.json();
+    if (d.status === 'OK') savedBook = d.book;
+  } catch(e) { /* offline — add locally */ }
+
+  // Optimistic update
+  const newBook = savedBook || {
+    id:       'local_' + Date.now(),
+    title:    uploadData.title.trim(),
+    category: uploadData.category,
+    noticed:  uploadData.noticed.trim(),
+    reminded: uploadData.reminded.trim(),
+    imageUrl: uploadPhoto || '',
+    userName: userName,
+    ts:       new Date().toISOString(),
+  };
+
+  const prevTotal = allBooks.length;
+  allBooks.unshift(newBook);
+
+  // Close modal
+  closeUpload();
+
+  // Re-render
+  renderRoom();
+
+  // Check if a new shelf just unlocked
+  const newLevel = currentShelfLevel(allBooks.length);
+  const oldLevel = currentShelfLevel(prevTotal);
+  if (newLevel > oldLevel) {
+    setTimeout(() => {
+      const sections = document.querySelectorAll('.shelf-section');
+      const newSec   = sections[sections.length - 1];
+      if (newSec) newSec.classList.add('unlocking');
+      showToast(`🎉 ชั้นที่ ${newLevel} ปลดล็อคแล้ว!`);
+    }, 300);
+  } else {
+    showToast('📚 วางหนังสือแล้ว ขอบคุณที่แบ่งปัน');
+  }
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+</script>
+
+<!--
+══════════════════════════════════════════════════════════════
+APPS SCRIPT — ADD THESE HANDLERS TO YOUR EXISTING SCRIPT
+
+function doPost(e) {
+  const data = JSON.parse(e.postData.contents);
+  if (data.action === 'addBook') {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet()
+      .getSheetByName('Books') || SpreadsheetApp.getActiveSpreadsheet().insertSheet('Books');
+
+    let imageUrl = '';
+    if (data.imageB64 && data.imageB64.length > 100) {
+      const blob = Utilities.newBlob(
+        Utilities.base64Decode(data.imageB64.split(',')[1]),
+        'image/jpeg',
+        'book_' + Date.now() + '.jpg'
+      );
+      const folder = DriveApp.getFoldersByName('jaidee-library').hasNext()
+        ? DriveApp.getFoldersByName('jaidee-library').next()
+        : DriveApp.createFolder('jaidee-library');
+      const file = folder.createFile(blob);
+      file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.VIEW);
+      imageUrl = 'https://drive.google.com/uc?id=' + file.getId();
+    }
+
+    const id = 'B_' + Date.now();
+    sheet.appendRow([id, data.userId, data.userName, data.title,
+      data.category, data.noticed, data.reminded, imageUrl, data.ts]);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'OK',
+      book: { id, userId:data.userId, userName:data.userName,
+              title:data.title, category:data.category,
+              noticed:data.noticed, reminded:data.reminded,
+              imageUrl, ts:data.ts }
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// Add to doGet():
+if (e.parameter.action === 'getBooks') {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Books');
+  if (!sheet) return json({ status:'OK', books:[] });
+  const rows = sheet.getDataRange().getValues().slice(1);
+  const books = rows.map(r => ({
+    id:r[0], userId:r[1], userName:r[2], title:r[3],
+    category:r[4], noticed:r[5], reminded:r[6], imageUrl:r[7], ts:r[8]
+  })).reverse(); // newest first
+  return json({ status:'OK', books });
+}
+══════════════════════════════════════════════════════════════
+-->
+
+</body>
+</html>
