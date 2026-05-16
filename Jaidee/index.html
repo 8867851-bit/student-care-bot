@@ -567,12 +567,21 @@ function renderAll() {
       </div>
     </div>`;
 
-  wrap.appendChild(libCard);
-  setTimeout(() => {
-    libCard.classList.add('visible');
-    const fill = document.getElementById('lib-fill');
-    if (fill) setTimeout(() => fill.style.width = pct + '%', 100);
-  }, d + 100);
+ // After wrap.appendChild(libCard) and the setTimeout for visibility,
+// add this fetch to update with real data:
+fetch(API_URL + '?action=getBooks')
+  .then(r => r.json())
+  .then(d => {
+    if (d.status === 'OK' && d.books) {
+      const real = d.books.length;
+      const realPct = Math.min((real / shelfCap) * 100, 100);
+      const countEl = libCard.querySelector('.library-progress-count');
+      const fillEl  = document.getElementById('lib-fill');
+      if (countEl) countEl.textContent = `${real} / ${shelfCap} เล่ม`;
+      if (fillEl)  fillEl.style.width  = realPct + '%';
+    }
+  })
+  .catch(() => {});
 
   // Spoiler card
   const sp = document.createElement("div");
