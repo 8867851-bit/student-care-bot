@@ -220,10 +220,6 @@
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
     .layer-divider{height:1px;background:var(--cream-border);margin:4px 20px 32px;}
-
-    .crisis-strip{margin:8px 16px 0;background:#FFF1F1;border:1px solid #FECACA;border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
-    .crisis-text{font-size:13px;color:#991B1B;font-weight:400;}
-    .crisis-btn{background:#DC2626;color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;}
   </style>
 </head>
 <body>
@@ -803,9 +799,18 @@
 </div>
 </div>
 
-<div class="crisis-strip">
-  <div class="crisis-text">🆘 วิกฤต ต้องการความช่วยเหลือตอนนี้</div>
-  <a href="crisis.html" class="crisis-btn">สายด่วน</a>
+<div style="margin:8px 16px 0;background:#FFF8EE;border-radius:18px;padding:16px 18px;border:1.5px solid #FFE0A0;">
+  <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:#B07D10;margin-bottom:5px;">พร้อมให้ตลอดวัน</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:#5C3D00;margin-bottom:3px;">คุยกับคนได้เลยตอนนี้</div>
+  <div style="font-size:12px;font-weight:300;color:#8B6914;margin-bottom:12px;">ไม่ต้องรอถึงวิกฤต</div>
+  <div style="display:flex;gap:8px;">
+    <a href="peer.html" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 12px;background:#E8960C;border-radius:12px;text-decoration:none;font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;color:#fff;">
+      💛 นัดคุยกับ PR
+    </a>
+    <a href="tel:1323" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 12px;background:#FFF3DC;border:1px solid #FFE0A0;border-radius:12px;text-decoration:none;font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;color:#7A5C00;">
+      📞 1323 ฟรี
+    </a>
+  </div>
 </div>
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
