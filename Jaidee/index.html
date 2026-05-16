@@ -524,64 +524,55 @@ function renderAll() {
   ds.className = "divider-soon";
   ds.innerHTML = `<div class="divider-soon-line"></div><div class="divider-soon-text">Coming Soon</div><div class="divider-soon-line"></div>`;
   wrap.appendChild(ds);
-// ── Library released card (was a surprise, now live) ──
-const libCard = document.createElement('div');
-libCard.className = 'library-card';
-libCard.onclick = () => window.location.href = 'library.html';
 
-const SPINE_COLORS = ['#8B4513','#2F6A2F','#1A3A6B','#6B1A1A','#4A4A1A','#2A4A6B','#6B3A1A'];
-const DEMO_TITLES  = ['Atomic Habits','สิทธารถะ','The Alchemist','Wonder','Sapiens'];
-const totalBooks   = 7; // update this dynamically if you fetch from sheet
-const shelfCap     = 10;
-const pct          = Math.min((totalBooks / shelfCap) * 100, 100);
+  // ── Library released card — between divider and spoiler ──
+  const libCard = document.createElement('div');
+  libCard.className = 'library-card';
+  libCard.onclick = () => window.location.href = 'library.html';
 
-// Row 1 — 5 books
-let booksHtml = `<div class="library-books-row">`;
-DEMO_TITLES.forEach((title, i) => {
-  booksHtml += `<div class="library-book" style="background:linear-gradient(160deg,${SPINE_COLORS[i]},${SPINE_COLORS[i]}99);"></div>`;
-});
-booksHtml += `</div>`;
+  const SPINE_COLORS = ['#8B4513','#2F6A2F','#1A3A6B','#6B1A1A','#4A4A1A','#2A4A6B','#6B3A1A'];
+  const totalBooks = 7;
+  const shelfCap   = 10;
+  const pct        = Math.min((totalBooks / shelfCap) * 100, 100);
 
-// Row 2 — 2 books + 3 empty
-booksHtml += `<div class="library-books-row">`;
-[SPINE_COLORS[5], SPINE_COLORS[6]].forEach(c => {
-  booksHtml += `<div class="library-book" style="background:linear-gradient(160deg,${c},${c}99);"></div>`;
-});
-for (let e = 0; e < 3; e++) {
-  booksHtml += `<div class="library-book-empty"></div>`;
-}
-booksHtml += `</div>`;
+  let booksHtml = `<div class="library-books-row">`;
+  ['Atomic Habits','สิทธารถะ','The Alchemist','Wonder','Sapiens'].forEach((t, i) => {
+    booksHtml += `<div class="library-book" style="background:linear-gradient(160deg,${SPINE_COLORS[i]},${SPINE_COLORS[i]}99);"></div>`;
+  });
+  booksHtml += `</div><div class="library-books-row">`;
+  [SPINE_COLORS[5], SPINE_COLORS[6]].forEach(c => {
+    booksHtml += `<div class="library-book" style="background:linear-gradient(160deg,${c},${c}99);"></div>`;
+  });
+  for (let e = 0; e < 3; e++) booksHtml += `<div class="library-book-empty"></div>`;
+  booksHtml += `</div>`;
 
-libCard.innerHTML = `
-  <div class="library-shelf-preview">
-    ${booksHtml}
-    <div class="library-plank"></div>
-  </div>
-  <div class="library-body">
-    <div class="library-badge">ใหม่ · เพิ่งเปิดตัว</div>
-    <div class="library-name">ห้องสมุดของเรา</div>
-    <div class="library-desc">ชั้นหนังสือที่นักเรียนสร้างร่วมกัน<br/>อ่าน · ถ่ายรูป · วางลงบนชั้น</div>
-    <div class="library-progress">
-      <div class="library-progress-top">
-        <span class="library-progress-label">ชั้นที่ 1</span>
-        <span class="library-progress-count">${totalBooks} / ${shelfCap} เล่ม</span>
-      </div>
-      <div class="library-progress-track">
-        <div class="library-progress-fill" id="lib-fill" style="width:0%"></div>
-      </div>
+  libCard.innerHTML = `
+    <div class="library-shelf-preview">
+      ${booksHtml}
+      <div class="library-plank"></div>
     </div>
-  </div>`;
+    <div class="library-body">
+      <div class="library-badge">ใหม่ · เพิ่งเปิดตัว</div>
+      <div class="library-name">ห้องสมุดของเรา</div>
+      <div class="library-desc">ชั้นหนังสือที่นักเรียนสร้างร่วมกัน<br/>อ่าน · ถ่ายรูป · วางลงบนชั้น</div>
+      <div class="library-progress">
+        <div class="library-progress-top">
+          <span class="library-progress-label">ชั้นที่ 1</span>
+          <span class="library-progress-count">${totalBooks} / ${shelfCap} เล่ม</span>
+        </div>
+        <div class="library-progress-track">
+          <div class="library-progress-fill" id="lib-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>`;
 
-wrap.appendChild(libCard);
-setTimeout(() => {
-  libCard.classList.add('visible');
-  const fill = document.getElementById('lib-fill');
-  if (fill) setTimeout(() => fill.style.width = pct + '%', 100);
-}, d + 100);
+  wrap.appendChild(libCard);
+  setTimeout(() => {
+    libCard.classList.add('visible');
+    const fill = document.getElementById('lib-fill');
+    if (fill) setTimeout(() => fill.style.width = pct + '%', 100);
+  }, d + 100);
 
-// ── Coming Soon divider ── (this was already here)
-const ds = document.createElement('div');
-// ... rest of your existing spoiler code unchanged
   // Spoiler card
   const sp = document.createElement("div");
   sp.className = "spoiler-card";
@@ -590,7 +581,7 @@ const ds = document.createElement('div');
     <div class="spoiler-sub">ไม่ว่าคุณจะเป็นคนชมรมละคร นักกีฬา สายโอลิมปิก หรือคนที่แค่อยากหาเพื่อนที่เข้าใจ — เรากำลังสร้าง World ให้ทุกคนในโรงเรียนนี้</div>
     <div class="spoiler-chips">${COMING_SOON.map(w=>`<span class="spoiler-chip">${w.emoji} ${w.name}</span>`).join("")}</div>`;
   wrap.appendChild(sp);
-  setTimeout(() => sp.classList.add("visible"), d+100);
+  setTimeout(() => sp.classList.add("visible"), d + 200);
 }
 
 // ═══════════════════════════════════════════════════════
