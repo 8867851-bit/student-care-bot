@@ -403,12 +403,13 @@ function makeCard(w, full, locked, delay) {
 
   if (full) {
     el.innerHTML = `<div class="world-icon">${icon}</div><div class="world-body"><div class="world-name">${w.name}</div><div class="world-desc">${w.desc}</div></div>`;
-  } else {
+} else {
     el.innerHTML = `
   <div class="world-icon">${icon}</div>
   <div class="world-name">${w.name}</div>
   <div class="world-desc">${w.desc}</div>
   ${w.newBadge ? `<div style="display:inline-flex;align-items:center;margin-top:8px;background:#4A1A25;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:500;color:#FDF5F5;letter-spacing:0.5px;">${w.newBadge}</div>` : ''}`;
+  }
 
   setTimeout(() => el.classList.add("visible"), delay);
   return el;
