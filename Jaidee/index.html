@@ -575,19 +575,19 @@ wrap.appendChild(libCard);
   }, d + 100);
 
   // ← PASTE THE FETCH RIGHT HERE, after the setTimeout block above
-  fetch(API_URL + '?action=getBooks')
-    .then(r => r.json())
-    .then(d => {
-      if (d.status === 'OK' && d.books) {
-        const real    = d.books.length;
-        const realPct = Math.min((real / shelfCap) * 100, 100);
-        const countEl = libCard.querySelector('.library-progress-count');
-        const fillEl  = document.getElementById('lib-fill');
-        if (countEl) countEl.textContent = `${real} / ${shelfCap} เล่ม`;
-        if (fillEl)  fillEl.style.width  = realPct + '%';
-      }
-    })
-    .catch(() => {});
+fetch(API_URL + '?action=getBooks')
+  .then(r => r.json())
+  .then(res => {                          // ← was 'd', rename to 'res'
+    if (res.status === 'OK' && res.books) {
+      const real    = res.books.length;
+      const realPct = Math.min((real / shelfCap) * 100, 100);
+      const countEl = libCard.querySelector('.library-progress-count');
+      const fillEl  = document.getElementById('lib-fill');
+      if (countEl) countEl.textContent = `${real} / ${shelfCap} เล่ม`;
+      if (fillEl)  fillEl.style.width  = realPct + '%';
+    }
+  })
+  .catch(() => {});
 
   // Spoiler card — continues below
   const sp = document.createElement("div");
