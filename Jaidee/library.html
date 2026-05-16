@@ -529,6 +529,42 @@
   </div>
 </div>
 
+<!-- EDIT / DELETE SHEET -->
+<div class="modal-overlay" id="edit-modal" onclick="handleEditOverlay(event)">
+  <div class="modal-sheet" onclick="event.stopPropagation()" style="padding-bottom:env(safe-area-inset-bottom,24px);">
+    <div class="modal-handle"></div>
+    <div style="padding:16px 24px 24px;display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:4px;" id="edit-book-title-label"></div>
+      <button onclick="startEditText()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--room);border:1px solid var(--border);border-radius:13px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:400;color:var(--ink);cursor:pointer;text-align:left;width:100%;">
+        <span style="font-size:18px;">✏️</span><span style="flex:1;">แก้ไขข้อความ</span><span style="color:var(--soft);font-size:13px;">→</span>
+      </button>
+      <button onclick="startEditPhoto()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--room);border:1px solid var(--border);border-radius:13px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:400;color:var(--ink);cursor:pointer;text-align:left;width:100%;">
+        <span style="font-size:18px;">📸</span><span style="flex:1;">เปลี่ยนรูปปก</span><span style="color:var(--soft);font-size:13px;">→</span>
+      </button>
+      <button onclick="confirmDelete()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#FEF2F2;border:1px solid #FECACA;border-radius:13px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:400;color:#DC2626;cursor:pointer;text-align:left;width:100%;">
+        <span style="font-size:18px;">🗑</span><span style="flex:1;">ลบออกจากชั้น</span>
+      </button>
+      <button onclick="closeEditModal()" style="background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:8px;">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM SHEET -->
+<div class="modal-overlay" id="delete-modal" onclick="handleDeleteOverlay(event)">
+  <div class="modal-sheet" onclick="event.stopPropagation()" style="padding-bottom:env(safe-area-inset-bottom,24px);">
+    <div class="modal-handle"></div>
+    <div style="padding:20px 24px 24px;text-align:center;">
+      <div style="font-size:32px;margin-bottom:12px;">🗑</div>
+      <div style="font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:8px;">ลบออกจากชั้น?</div>
+      <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:24px;">หนังสือเล่มนี้จะหายไปจากชั้นรวม<br>แต่บันทึกของคุณยังคงอยู่ในระบบ</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button id="btn-confirm-delete" onclick="executeDelete()" style="background:#DC2626;color:#fff;border:none;border-radius:14px;padding:15px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;">ลบเลย</button>
+        <button onclick="closeDeleteModal()" style="background:none;border:1px solid var(--border);border-radius:14px;padding:13px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
 // ══════════════════════════════════════════════
@@ -555,6 +591,7 @@ let userName     = 'นักเรียน';
 let uploadStep   = 0;
 let uploadPhoto  = null; // base64
 let uploadData   = { title:'', category:'', noticed:'', reminded:'' };
+let editingBook  = null; // book currently being edited
 
 // Demo books so the shelf is never empty on first load
 const DEMO_BOOKS = [
@@ -737,11 +774,32 @@ function makeBookTile(book, idx) {
     if (tile.classList.contains('flipped')) {
       openDetail(book);
     } else {
-      // First tap: flip
       document.querySelectorAll('.book-tile.flipped').forEach(t => t.classList.remove('flipped'));
       tile.classList.add('flipped');
     }
   });
+
+  // Long-press to edit/delete own books
+  let _pressTimer = null;
+  tile.addEventListener('touchstart', () => {
+    _pressTimer = setTimeout(() => {
+      if (book.userId && book.userId === userId) {
+        openEditModal(book);
+      }
+    }, 500);
+  }, { passive:true });
+  tile.addEventListener('touchend',   () => clearTimeout(_pressTimer));
+  tile.addEventListener('touchmove',  () => clearTimeout(_pressTimer));
+  // Mouse fallback for desktop/iPad
+  tile.addEventListener('mousedown', () => {
+    _pressTimer = setTimeout(() => {
+      if (book.userId && book.userId === userId) {
+        openEditModal(book);
+      }
+    }, 500);
+  });
+  tile.addEventListener('mouseup',   () => clearTimeout(_pressTimer));
+  tile.addEventListener('mouseleave',() => clearTimeout(_pressTimer));
 
   return tile;
 }
@@ -938,24 +996,148 @@ function onPhotoSelect(e) {
   reader.readAsDataURL(file);
 }
 
-// ── Submit ─────────────────────────────────────
+// ══════════════════════════════════════════════
+// EDIT / DELETE
+// ══════════════════════════════════════════════
+
+// ── Open edit action sheet ──
+function openEditModal(book) {
+  editingBook = book;
+  document.getElementById('edit-book-title-label').textContent = book.title;
+  const ov = document.getElementById('edit-modal');
+  ov.style.display = 'flex';
+  requestAnimationFrame(() => ov.classList.add('active'));
+  document.body.style.overflow = 'hidden';
+  // Unflip any flipped books so long-press doesn't also trigger detail
+  document.querySelectorAll('.book-tile.flipped').forEach(t => t.classList.remove('flipped'));
+}
+
+function closeEditModal() {
+  const ov = document.getElementById('edit-modal');
+  ov.classList.remove('active');
+  setTimeout(() => { ov.style.display = 'none'; document.body.style.overflow = ''; }, 320);
+}
+
+function handleEditOverlay(e) {
+  if (e.target === document.getElementById('edit-modal')) closeEditModal();
+}
+
+// ── SITUATION 1: Edit text (title + category + review) ──
+function startEditText() {
+  closeEditModal();
+  if (!editingBook) return;
+  // Pre-fill upload data from existing book
+  uploadPhoto = editingBook.imageUrl || null;
+  uploadData  = {
+    title:    editingBook.title    || '',
+    category: editingBook.category || '',
+    noticed:  editingBook.noticed  || '',
+    reminded: editingBook.reminded || '',
+  };
+  // Open modal at step 1 (title + category), skip photo step
+  uploadStep = 1;
+  const ov = document.getElementById('upload-modal');
+  ov.style.display = 'flex';
+  requestAnimationFrame(() => ov.classList.add('active'));
+  document.body.style.overflow = 'hidden';
+  // Mark as edit mode — submit will call editBook not addBook
+  document.getElementById('upload-modal').dataset.editMode = 'true';
+  renderUploadStep();
+}
+
+// ── SITUATION 2: Change photo only ──
+function startEditPhoto() {
+  closeEditModal();
+  if (!editingBook) return;
+  uploadPhoto = null;
+  uploadData  = {
+    title:    editingBook.title    || '',
+    category: editingBook.category || '',
+    noticed:  editingBook.noticed  || '',
+    reminded: editingBook.reminded || '',
+  };
+  // Open modal at step 0 (photo only), mark as photo-edit mode
+  uploadStep = 0;
+  const ov = document.getElementById('upload-modal');
+  ov.style.display = 'flex';
+  requestAnimationFrame(() => ov.classList.add('active'));
+  document.body.style.overflow = 'hidden';
+  document.getElementById('upload-modal').dataset.editMode = 'photo';
+  renderUploadStep();
+}
+
+// ── SITUATION 3: Delete ──
+function confirmDelete() {
+  closeEditModal();
+  setTimeout(() => {
+    const ov = document.getElementById('delete-modal');
+    ov.style.display = 'flex';
+    requestAnimationFrame(() => ov.classList.add('active'));
+    document.body.style.overflow = 'hidden';
+  }, 340);
+}
+
+function closeDeleteModal() {
+  const ov = document.getElementById('delete-modal');
+  ov.classList.remove('active');
+  setTimeout(() => { ov.style.display = 'none'; document.body.style.overflow = ''; }, 320);
+}
+
+function handleDeleteOverlay(e) {
+  if (e.target === document.getElementById('delete-modal')) closeDeleteModal();
+}
+
+async function executeDelete() {
+  if (!editingBook) return;
+  const btn = document.getElementById('btn-confirm-delete');
+  if (btn) { btn.textContent = 'กำลังลบ...'; btn.style.opacity = '0.6'; btn.style.pointerEvents = 'none'; }
+
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action:'deleteBook', bookId: editingBook.id, userId }),
+    });
+  } catch(e) { /* optimistic — proceed anyway */ }
+
+  // Soft-remove from local array
+  allBooks = allBooks.filter(b => b.id !== editingBook.id);
+  editingBook = null;
+  closeDeleteModal();
+  renderRoom();
+  showToast('ลบออกจากชั้นแล้ว');
+  if (btn) { btn.textContent = 'ลบเลย'; btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; }
+}
+
+// ══════════════════════════════════════════════
+// SUBMIT — handles both add and edit modes
+// ══════════════════════════════════════════════
 async function submitBook() {
-  const btn = document.getElementById('btn-next-2');
-  if (btn) { btn.textContent = 'กำลังวาง...'; btn.classList.remove('on'); btn.style.pointerEvents = 'none'; }
+  const modal    = document.getElementById('upload-modal');
+  const editMode = modal.dataset.editMode; // 'true' | 'photo' | undefined
+  const btn      = document.getElementById('btn-next-2');
+
+  if (btn) { btn.textContent = 'กำลังบันทึก...'; btn.classList.remove('on'); btn.style.pointerEvents = 'none'; }
+
+  const isEdit      = editMode === 'true' || editMode === 'photo';
+  const isPhotoOnly = editMode === 'photo';
 
   const payload = {
-    action:   'addBook',
-    userId:   userId || 'guest',
-    userName: userName,
+    action:   isEdit ? 'editBook' : 'addBook',
+    userId,
+    userName,
+    bookId:   isEdit && editingBook ? editingBook.id : undefined,
+    oldImageUrl: isPhotoOnly && editingBook ? editingBook.imageUrl : undefined,
     title:    uploadData.title.trim(),
     category: uploadData.category,
     noticed:  uploadData.noticed.trim(),
     reminded: uploadData.reminded.trim(),
-    imageB64: uploadPhoto || '',
+    imageB64: uploadPhoto && uploadPhoto.startsWith('data:') ? uploadPhoto : '',
+    keepImage: !isPhotoOnly && isEdit ? 'true' : 'false',
     ts:       new Date().toISOString(),
   };
 
-  let savedBook = null;
+  let updatedBook = null;
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -963,48 +1145,54 @@ async function submitBook() {
       body: JSON.stringify(payload),
     });
     const d = await res.json();
-    if (d.status === 'OK') savedBook = d.book;
-  } catch(e) { /* offline — add locally */ }
+    if (d.status === 'OK') updatedBook = d.book;
+  } catch(e) { /* offline — update locally */ }
 
-  // Optimistic update
-  const newBook = savedBook || {
-    id:       'local_' + Date.now(),
-    title:    uploadData.title.trim(),
-    category: uploadData.category,
-    noticed:  uploadData.noticed.trim(),
-    reminded: uploadData.reminded.trim(),
-    imageUrl: uploadPhoto || '',
-    userName: userName,
-    ts:       new Date().toISOString(),
-  };
-
-  const prevTotal = allBooks.length;
-  allBooks.unshift(newBook);
-
-  // Close modal
-  closeUpload();
-
-  // Re-render
-  renderRoom();
-
-  // Check if a new shelf just unlocked
-  const newLevel = currentShelfLevel(allBooks.length);
-  const oldLevel = currentShelfLevel(prevTotal);
-  if (newLevel > oldLevel) {
-    setTimeout(() => {
-      const sections = document.querySelectorAll('.shelf-section');
-      const newSec   = sections[sections.length - 1];
-      if (newSec) newSec.classList.add('unlocking');
-      showToast(`🎉 ชั้นที่ ${newLevel} ปลดล็อคแล้ว!`);
-    }, 300);
+  // Local update
+  if (isEdit && editingBook) {
+    const idx = allBooks.findIndex(b => b.id === editingBook.id);
+    if (idx !== -1) {
+      allBooks[idx] = {
+        ...allBooks[idx],
+        title:    uploadData.title.trim(),
+        category: uploadData.category,
+        noticed:  uploadData.noticed.trim(),
+        reminded: uploadData.reminded.trim(),
+        imageUrl: updatedBook?.imageUrl || (isPhotoOnly ? (uploadPhoto || '') : allBooks[idx].imageUrl),
+      };
+    }
+    editingBook = null;
   } else {
-    showToast('📚 วางหนังสือแล้ว ขอบคุณที่แบ่งปัน');
+    // New book
+    const newBook = updatedBook || {
+      id: 'local_' + Date.now(), title: uploadData.title.trim(),
+      category: uploadData.category, noticed: uploadData.noticed.trim(),
+      reminded: uploadData.reminded.trim(), imageUrl: uploadPhoto || '',
+      userName, ts: new Date().toISOString(),
+    };
+    const prevTotal = allBooks.length;
+    allBooks.unshift(newBook);
+    // Shelf unlock check
+    const newLevel = currentShelfLevel(allBooks.length);
+    const oldLevel = currentShelfLevel(prevTotal);
+    if (newLevel > oldLevel) {
+      setTimeout(() => {
+        const sections = document.querySelectorAll('.shelf-section');
+        const newSec   = sections[sections.length - 1];
+        if (newSec) newSec.classList.add('unlocking');
+        showToast(`🎉 ชั้นที่ ${newLevel} ปลดล็อคแล้ว!`);
+      }, 300);
+    }
   }
-}
 
-// ══════════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════════
+  // Reset modal state
+  modal.dataset.editMode = '';
+  closeUpload();
+  renderRoom();
+  if (!isEdit) showToast(isEdit ? '✓ แก้ไขแล้ว' : '📚 วางหนังสือแล้ว ขอบคุณที่แบ่งปัน');
+  else showToast('✓ แก้ไขแล้ว');
+  if (btn) { btn.textContent = 'เสร็จแล้ว ✓'; btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; }
+}
 function showToast(msg) {
   const t = document.createElement('div');
   t.className = 'toast';
