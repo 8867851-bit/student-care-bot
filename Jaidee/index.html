@@ -407,7 +407,7 @@ function renderAll() {
 
   // Community card — mini photo wall preview
   const comCard = document.createElement('div');
-  comCard.onclick = () => window.location.href = 'community.html';
+  comCard.onclick = () => window.location.href = 'communitywork.html';
   comCard.style.cssText = 'background:#1C1917;border-radius:20px;overflow:hidden;cursor:pointer;border:1px solid rgba(76,175,80,0.2);opacity:0;transform:translateY(10px);display:flex;flex-direction:column;transition:transform 0.15s;';
   comCard.addEventListener('touchstart', () => comCard.style.transform='scale(0.97)', {passive:true});
   comCard.addEventListener('touchend', () => comCard.style.transform='', {passive:true});
