@@ -27,7 +27,7 @@
     .hero-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;color:var(--dark);line-height:1.2;margin-bottom:4px;}
     .hero-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.65;}
 
-    /* ── AI SEARCH BAR (Google-style slim) ── */
+    /* ── AI SEARCH BAR ── */
     .ai-search-wrap{margin:4px 16px 0;}
     .ai-search-bar{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--cream-border);border-radius:99px;padding:0 16px 0 18px;height:46px;box-shadow:0 1px 6px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s;}
     .ai-search-bar:focus-within{border-color:rgba(46,95,163,0.35);box-shadow:0 2px 12px rgba(46,95,163,0.1);}
@@ -44,7 +44,7 @@
     .sec-div-text{font-size:11px;font-weight:500;color:var(--mid);white-space:nowrap;}
     .sec-div-line{flex:1;height:1px;background:var(--cream-border);}
 
-    /* ── FULL LINK CARD ── */
+    /* ── LINK CARD ── */
     .link-card{display:flex;align-items:center;gap:14px;margin:0 16px 10px;padding:16px 18px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);text-decoration:none;color:inherit;cursor:pointer;transition:transform 0.15s;}
     .link-card:active{transform:scale(0.97);}
     .link-card-icon{font-size:24px;flex-shrink:0;}
@@ -54,14 +54,14 @@
     .link-card-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
     .link-card-arrow{font-size:14px;color:var(--soft);flex-shrink:0;}
 
-    /* ── HALF-HALF ── */
-    .half-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:10px;}
-    .half-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px 14px;text-decoration:none;color:inherit;cursor:pointer;transition:transform 0.15s;display:flex;flex-direction:column;gap:5px;}
-    .half-card:active{transform:scale(0.97);}
-    .half-icon{font-size:22px;}
-    .half-name{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);line-height:1.3;}
-    .half-desc{font-size:10px;font-weight:300;color:var(--soft);line-height:1.5;}
-    .half-arrow{font-size:11px;color:var(--soft);margin-top:auto;padding-top:4px;}
+    /* ── CHANNEL LIST ── */
+    .channel-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--cream-border);text-decoration:none;color:inherit;transition:background 0.15s;}
+    .channel-row:active{background:var(--cream-warm);}
+    .channel-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center;}
+    .channel-body{flex:1;}
+    .channel-name{font-size:13.5px;font-weight:500;color:var(--dark);line-height:1.3;}
+    .channel-url{font-size:11px;font-weight:300;color:var(--soft);margin-top:1px;}
+    .channel-arrow{font-size:12px;color:var(--soft);flex-shrink:0;white-space:nowrap;}
 
     /* ── CHECKLIST ── */
     .check-progress{margin:0 16px 10px;background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:12px 14px;}
@@ -74,10 +74,10 @@
     .check-group{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);margin:0 16px 10px;overflow:hidden;}
     .cg-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--soft);padding:12px 16px 8px;border-bottom:1px solid var(--cream-border);}
 
-    /* check item row */
     .check-item{border-bottom:1px solid var(--cream-border);}
     .check-item:last-child{border-bottom:none;}
-    .check-row{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;}
+    .check-row{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;transition:background 0.12s;}
+    .check-row:active{background:var(--cream-warm);}
     .check-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--cream-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.18s;background:var(--card);}
     .check-item.done .check-box{background:var(--green);border-color:var(--green);}
     .check-tick{font-size:11px;color:#fff;opacity:0;transition:opacity 0.15s;}
@@ -85,41 +85,27 @@
     .check-label{font-size:13px;font-weight:400;color:var(--dark);line-height:1.4;transition:color 0.2s;flex:1;}
     .check-item.done .check-label{color:var(--soft);text-decoration:line-through;}
 
-    /* info button */
-    .info-btn{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--cream-border);background:var(--cream);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;margin-top:2px;transition:background 0.15s,border-color 0.15s;}
+    .info-btn{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--cream-border);background:var(--cream);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;margin-top:2px;transition:background 0.15s,border-color 0.15s;position:relative;}
     .info-btn:active{background:var(--blue-soft);}
     .info-btn-i{font-size:10px;font-style:italic;font-weight:600;color:var(--mid);line-height:1;font-family:Georgia,serif;}
 
-    /* expandable detail */
     .check-detail{max-height:0;overflow:hidden;transition:max-height 0.28s ease,opacity 0.2s;opacity:0;background:var(--blue-soft);border-top:1px solid var(--blue-border);}
     .check-detail.open{max-height:200px;opacity:1;}
     .check-detail-inner{padding:10px 16px 12px 50px;font-size:11.5px;font-weight:300;color:#1E3A8A;line-height:1.75;}
 
-    /* link badge */
     .lnk{display:inline-flex;align-items:center;gap:3px;background:rgba(46,95,163,0.1);border-radius:4px;padding:1px 7px;font-size:10px;font-weight:500;color:var(--blue);text-decoration:none;vertical-align:middle;}
     .lnk-pink{background:#FDF2F8;border:1px solid #FBCFE8;color:#DB2777;}
     .lnk-purple{background:var(--purple-soft);border:1px solid var(--purple-border);color:var(--purple);}
     .lnk-green{background:var(--green-soft);border:1px solid var(--green-border);color:var(--green);}
 
-    /* UX: tap hint on check-row */
-    .check-row{transition:background 0.12s;}
-    .check-row:active{background:var(--cream-warm);}
-    /* ripple hint on first load */
-    @keyframes rowpulse{0%{background:transparent}50%{background:var(--gold-soft)}100%{background:transparent}}
-    .info-btn{position:relative;}
-    .info-btn::after{content:'กด';position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--soft);white-space:nowrap;font-family:'Mitr',sans-serif;opacity:0;transition:opacity 0.2s;pointer-events:none;}
-    .check-group:hover .info-btn::after,.check-group:focus-within .info-btn::after{opacity:1;}
-
     /* ── CALLOUT ── */
     .callout{margin:0 16px 10px;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
     .callout.warn{background:var(--red-soft);border:1px solid var(--red-border);}
-    .callout.tip{background:var(--gold-soft);border:1px solid var(--gold-border);}
     .callout.info{background:var(--blue-soft);border:1px solid var(--blue-border);}
     .callout.green{background:var(--green-soft);border:1px solid var(--green-border);}
     .callout-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
     .callout-text{font-size:12px;font-weight:300;line-height:1.75;}
     .callout.warn .callout-text{color:#7F1D1D;}
-    .callout.tip .callout-text{color:#7A5200;}
     .callout.info .callout-text{color:#1E3A8A;}
     .callout.green .callout-text{color:#1C3A1F;}
     .callout-text strong{font-weight:500;}
@@ -164,7 +150,6 @@
     .video-name{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);line-height:1.3;}
     .video-tbd{font-size:9px;font-weight:300;color:var(--soft);margin-top:4px;}
 
-    /* modal */
     .modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;align-items:flex-end;justify-content:center;}
     .modal-ov.open{display:flex;}
     .modal-sheet{background:#111;border-radius:20px 20px 0 0;width:100%;max-width:540px;padding-bottom:env(safe-area-inset-bottom,20px);}
@@ -177,15 +162,6 @@
     .modal-close-btn{display:block;width:calc(100% - 40px);margin:12px 20px 0;padding:13px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.45);font-family:'Mitr',sans-serif;font-size:13px;cursor:pointer;}
 
     .tbd{display:inline-block;background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:4px;padding:1px 6px;font-size:9px;font-weight:500;color:var(--soft);letter-spacing:1px;text-transform:uppercase;margin-left:4px;vertical-align:middle;}
-
-    /* ── CHANNEL LIST ── */
-    .channel-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--cream-border);text-decoration:none;color:inherit;transition:background 0.15s;}
-    .channel-row:active{background:var(--cream-warm);}
-    .channel-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center;}
-    .channel-body{flex:1;}
-    .channel-name{font-size:13.5px;font-weight:500;color:var(--dark);line-height:1.3;}
-    .channel-url{font-size:11px;font-weight:300;color:var(--soft);margin-top:1px;}
-    .channel-arrow{font-size:12px;color:var(--soft);flex-shrink:0;white-space:nowrap;}
 
     /* ── TOOL CAROUSEL ── */
     .tool-carousel-wrap{padding:0 0 16px;position:relative;}
@@ -201,16 +177,18 @@
     .tool-badge{display:inline-block;margin-top:6px;border-radius:4px;padding:2px 7px;font-size:9px;font-weight:500;}
     .tool-badge.pdf{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;}
     .tool-badge.ext{background:var(--blue-soft);color:var(--blue);border:1px solid var(--blue-border);}
-    .tool-badge.soon{background:var(--cream-warm);color:var(--soft);border:1px solid var(--cream-border);}
     .carousel-hint{display:flex;align-items:center;gap:6px;padding:6px 20px 0;font-size:10px;color:var(--soft);}
     .carousel-dots{display:flex;gap:4px;padding:10px 0 0 20px;}
     .cdot{width:5px;height:5px;border-radius:50%;background:var(--cream-border);transition:background 0.2s;}
     .cdot.on{background:var(--mid);}
+
+    .logo-img{width:36px;height:36px;border-radius:8px;object-fit:contain;flex-shrink:0;background:var(--cream-warm);border:1px solid var(--cream-border);}
+    .logo-img.sm{width:28px;height:28px;border-radius:6px;}
+    .logo-img.round{border-radius:50%;}
   </style>
 </head>
 <body>
 
-<!-- VIDEO MODAL -->
 <div class="modal-ov" id="vid-modal" onclick="if(event.target===this)closeVid()">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -223,7 +201,6 @@
   </div>
 </div>
 
-<!-- HEADER -->
 <button class="back-btn" onclick="history.back()">← กลับ</button>
 <div class="hero">
   <div class="hero-eyebrow">ใจดี TU · M4 Recommended</div>
@@ -231,7 +208,6 @@
   <div class="hero-sub">สิ่งที่โรงเรียนลืมบอก — รวมไว้ที่นี่แล้ว</div>
 </div>
 
-<!-- AI SEARCH BAR — Google-style slim -->
 <div class="ai-search-wrap">
   <div class="ai-search-bar">
     <span class="ai-search-icon">✦</span>
@@ -243,24 +219,14 @@
   <div class="ai-search-note" id="ai-note">⚡ AI ที่ฝึกจาก database ของโรงเรียนเตรียมอุดมฯ · กำลังพัฒนา</div>
 </div>
 
-<!-- ════════════════════════════
-     1. สมัครเข้าสมาคม
-════════════════════════════ -->
+<!-- สมัครเข้าสมาคม -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--blue)"></div>
   <div class="sec-div-text">สมัครเข้าสมาคม</div>
   <div class="sec-div-line"></div>
 </div>
 
-<!-- logo helper styles -->
-<style>
-  .logo-img{width:36px;height:36px;border-radius:8px;object-fit:contain;flex-shrink:0;background:var(--cream-warm);border:1px solid var(--cream-border);}
-  .logo-img.sm{width:28px;height:28px;border-radius:6px;}
-  .logo-img.round{border-radius:50%;}
-</style>
-
 <a class="link-card" href="#" target="_blank" rel="noopener">
-  <!-- Upload your file to /public/logos/samakorn1.png on Vercel -->
   <img class="logo-img" src="/logos/samakorn1.png"
        onerror="this.src='https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64'" alt="สมาคม"/>
   <div class="link-card-body">
@@ -272,9 +238,8 @@
 </a>
 
 <a class="link-card" href="#" target="_blank" rel="noopener">
-  <!-- Upload your file to /public/logos/samakorn2.png on Vercel -->
   <img class="logo-img" src="/logos/samakorn2.png"
-       onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-size:24px\'>🏛️</span>')" alt="สมาคม"/>
+       onerror="this.style.display='none'" alt="สมาคม"/>
   <div class="link-card-body">
     <div class="link-card-label" style="color:var(--blue);">สมาคม</div>
     <div class="link-card-name">สมาคมที่ 2 <span class="tbd">TBD</span></div>
@@ -283,17 +248,14 @@
   <span class="link-card-arrow">→</span>
 </a>
 
-<!-- ════════════════════════════
-     2. ช่องทางหลัก
-════════════════════════════ -->
+<!-- ช่องทางหลัก -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--gold)"></div>
   <div class="sec-div-text">ช่องทางหลัก</div>
   <div class="sec-div-line"></div>
 </div>
 
-<!-- channel list card -->
-<div class="channel-card" style="margin:0 16px 10px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;">
+<div style="margin:0 16px 10px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;">
   <a class="channel-row" href="https://triamudom.ac.th" target="_blank" rel="noopener">
     <img class="logo-img sm" src="https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64" alt="เว็บโรงเรียน"/>
     <div class="channel-body">
@@ -311,7 +273,6 @@
     <span class="channel-arrow">→</span>
   </a>
   <a class="channel-row" href="#" target="_blank" rel="noopener">
-    <!-- Upload to /public/logos/tupro.png — fallback to favicon -->
     <img class="logo-img sm" src="/logos/tupro.png"
          onerror="this.src='https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64'" alt="TU Pro"/>
     <div class="channel-body">
@@ -321,7 +282,6 @@
     <span class="channel-arrow">→</span>
   </a>
   <a class="channel-row" href="#" target="_blank" rel="noopener" style="border-bottom:none;">
-    <!-- Upload to /public/logos/korchor.png — fallback to favicon -->
     <img class="logo-img sm" src="/logos/korchor.png"
          onerror="this.src='https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64'" alt="กช."/>
     <div class="channel-body">
@@ -332,9 +292,7 @@
   </a>
 </div>
 
-<!-- ════════════════════════════
-     CHECKLIST
-════════════════════════════ -->
+<!-- CHECKLIST -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--green)"></div>
   <div class="sec-div-text">Starter Pack · Orientation Checklist</div>
@@ -349,9 +307,9 @@
   <div class="cp-bar"><div class="cp-fill" id="cp-fill" style="width:0%"></div></div>
 </div>
 
-<!-- GROUP 1: ระบบและแอป -->
+<!-- GROUP 1 -->
 <div class="check-group">
-  <div class="cg-label">📱 ระบบและแอป</div>
+  <div class="cg-label">ระบบและแอป</div>
 
   <div class="check-item" id="ci0">
     <div class="check-row" onclick="toggleCheck('ci0')">
@@ -398,9 +356,9 @@
   </div>
 </div>
 
-<!-- GROUP 2: ตาราง -->
+<!-- GROUP 2 -->
 <div class="check-group">
-  <div class="cg-label">📅 ตาราง</div>
+  <div class="cg-label">ตาราง</div>
 
   <div class="check-item" id="ci4">
     <div class="check-row" onclick="toggleCheck('ci4')">
@@ -424,9 +382,9 @@
   </div>
 </div>
 
-<!-- GROUP 3: กฎ -->
+<!-- GROUP 3 -->
 <div class="check-group">
-  <div class="cg-label">⚖️ กฎ</div>
+  <div class="cg-label">กฎ</div>
 
   <div class="check-item" id="ci7">
     <div class="check-row" onclick="toggleCheck('ci7')">
@@ -465,9 +423,9 @@
   </div>
 </div>
 
-<!-- GROUP 4: สิทธิ์ต้องรู้ -->
+<!-- GROUP 4 -->
 <div class="check-group">
-  <div class="cg-label">🛡️ สิทธิ์ต้องรู้</div>
+  <div class="cg-label">สิทธิ์ต้องรู้</div>
 
   <div class="check-item" id="ci11">
     <div class="check-row" onclick="toggleCheck('ci11')">
@@ -505,9 +463,9 @@
   </div>
 </div>
 
-<!-- GROUP 5: ลงทะเบียน -->
+<!-- GROUP 5 -->
 <div class="check-group">
-  <div class="cg-label">📋 ลงทะเบียน</div>
+  <div class="cg-label">ลงทะเบียน</div>
 
   <div class="check-item" id="ci16">
     <div class="check-row" onclick="toggleCheck('ci16')">
@@ -517,9 +475,9 @@
   </div>
 </div>
 
-<!-- GROUP 6: ควรรู้ -->
+<!-- GROUP 6 -->
 <div class="check-group">
-  <div class="cg-label">💡 ควรรู้</div>
+  <div class="cg-label">ควรรู้</div>
 
   <div class="check-item" id="ci17">
     <div class="check-row" onclick="toggleCheck('ci17')">
@@ -601,17 +559,7 @@
   </div>
 </div>
 
-<div class="callout warn">
-  <span class="callout-icon">⚠️</span>
-  <div class="callout-text">
-    <strong>มุกที่ไม่ควรลอง:</strong> ลาวันสอบ · ลา 1 สัปดาห์ก่อนสอบกลางภาคหรือปลายภาค<br/>
-    ผลกระทบต่อเกรดและความสัมพันธ์กับครูยาวนานกว่าที่คิด
-  </div>
-</div>
-
-<!-- ════════════════════════════
-     ปรากฏการณ์ที่เจอบ่อย
-════════════════════════════ -->
+<!-- ปรากฏการณ์ที่เจอบ่อย -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--gold)"></div>
   <div class="sec-div-text">ปรากฏการณ์ที่เจอบ่อย — ม.4 ถึง ม.6</div>
@@ -654,7 +602,6 @@
   </div>
 </div>
 
-<!-- Safe zone -->
 <div class="safezone">
   <div class="sz-label">คุณมี safe zone เหล่านี้ไหม?</div>
   <div class="sz-title">คนที่เข้าหาได้เมื่อรู้สึกหนัก</div>
@@ -671,9 +618,7 @@
   </div>
 </div>
 
-<!-- ════════════════════════════
-     วัฒนธรรมแต่ละตึก
-════════════════════════════ -->
+<!-- วัฒนธรรมแต่ละตึก -->
 <div class="sec-div" id="section-buildings">
   <div class="sec-div-dot" style="background:var(--purple)"></div>
   <div class="sec-div-text">วัฒนธรรมแต่ละตึก — เสียงจากหัวหน้าตึก</div>
@@ -690,9 +635,7 @@
 
 <div class="video-grid" id="video-grid"></div>
 
-<!-- ════════════════════════════
-     เครื่องมือและเอกสาร
-════════════════════════════ -->
+<!-- เครื่องมือและเอกสาร -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--soft)"></div>
   <div class="sec-div-text">เครื่องมือและเอกสาร</div>
@@ -704,7 +647,6 @@
 <div class="tool-carousel-wrap">
   <div class="tool-carousel" id="tool-carousel">
 
-    <!-- NES Care -->
     <a class="tool-card" href="https://elastic-vase-e0b.notion.site/Triamudom-Family-NES" target="_blank" rel="noopener">
       <div class="tool-thumb" style="background:linear-gradient(135deg,#FFF8EE,#FFF3DC);">💛</div>
       <div class="tool-body">
@@ -715,7 +657,6 @@
       </div>
     </a>
 
-    <!-- LINE Open Chat -->
     <a class="tool-card" href="#" target="_blank">
       <div class="tool-thumb" style="background:linear-gradient(135deg,#DCFCE7,#BBF7D0);">💬</div>
       <div class="tool-body">
@@ -726,7 +667,6 @@
       </div>
     </a>
 
-    <!-- คู่มือนักเรียน -->
     <a class="tool-card" href="#" target="_blank">
       <div class="tool-thumb" style="background:linear-gradient(135deg,#EEF3FB,#C5D8F5);">📖</div>
       <div class="tool-body">
@@ -737,7 +677,6 @@
       </div>
     </a>
 
-    <!-- วารสารโรงเรียน -->
     <a class="tool-card" href="#" target="_blank">
       <div class="tool-thumb" style="background:linear-gradient(135deg,#F5F3FF,#DDD6FE);">📰</div>
       <div class="tool-body">
@@ -748,7 +687,6 @@
       </div>
     </a>
 
-    <!-- ระเบียบการสำหรับครู 2569 -->
     <a class="tool-card" href="#" target="_blank">
       <div class="tool-thumb" style="background:linear-gradient(135deg,#FEF2F2,#FECACA);">📋</div>
       <div class="tool-body">
@@ -759,7 +697,6 @@
       </div>
     </a>
 
-    <!-- แนะแนว TCAS -->
     <a class="tool-card" href="#" target="_blank">
       <div class="tool-thumb" style="background:linear-gradient(135deg,#FFF3DC,#FFE0A0);">🧠</div>
       <div class="tool-body">
@@ -886,7 +823,7 @@ function updateProgress() {
     const el = document.getElementById('ci' + i);
     if (el && el.classList.contains('done')) done++;
   }
-  const pct = Math.round((done / TOTAL_ITEMS) * 100);
+  const pct   = Math.round((done / TOTAL_ITEMS) * 100);
   const fill  = document.getElementById('cp-fill');
   const count = document.getElementById('cp-count');
   if (fill)  fill.style.width = pct + '%';
@@ -912,8 +849,7 @@ function initCarouselDots() {
   const dotsWrap = document.getElementById('carousel-dots');
   if (!carousel || !dotsWrap) return;
   const cards = carousel.querySelectorAll('.tool-card');
-  const total = cards.length;
-  dotsWrap.innerHTML = Array.from({length: total}, (_,i) =>
+  dotsWrap.innerHTML = Array.from({length: cards.length}, (_,i) =>
     `<div class="cdot${i===0?' on':''}" id="dot${i}"></div>`).join('');
   carousel.addEventListener('scroll', () => {
     const idx = Math.round(carousel.scrollLeft / 160);
