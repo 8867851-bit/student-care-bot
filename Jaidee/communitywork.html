@@ -1,1 +1,492 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Community Work · ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#FDFBF7; --cream-warm:#FFF8EE; --cream-border:#EDE9E0;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099;
+      --card-bg:#FFFFFF; --card-border:#EDE9E0;
+      --radius-card:20px; --radius-btn:14px;
+      --green:#2F6B38; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
 
+    .topbar{display:flex;align-items:center;gap:10px;padding:18px 20px 0;}
+    .back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:400;color:var(--soft);text-decoration:none;cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+    .back-btn:active{opacity:0.6;}
+
+    .hero{padding:22px 24px 20px;position:relative;overflow:hidden;}
+    .hero-eyebrow{font-size:10px;font-weight:500;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;margin-bottom:8px;}
+    .hero-title{font-family:'Noto Serif Thai',serif;font-size:27px;font-weight:700;color:var(--dark);line-height:1.2;margin-bottom:8px;}
+    .hero-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.7;max-width:340px;}
+
+    .section-label{display:flex;align-items:center;gap:10px;padding:0 20px;margin-bottom:14px;}
+    .section-label-text{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap;}
+    .section-label-line{flex:1;height:1px;background:var(--cream-border);}
+
+    .tabs{display:flex;gap:8px;padding:0 16px;margin-bottom:20px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .tabs::-webkit-scrollbar{display:none;}
+    .tab{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:8px 16px;font-size:12px;font-weight:500;font-family:'Mitr',sans-serif;cursor:pointer;border:1.5px solid var(--cream-border);background:var(--card-bg);color:var(--mid);white-space:nowrap;transition:all 0.15s;}
+    .tab.active{background:var(--dark);color:#FDFBF7;border-color:var(--dark);}
+    .tab:active{transform:scale(0.96);}
+
+    .cards-wrap{padding:0 16px;display:flex;flex-direction:column;gap:12px;}
+
+    .venue-card{background:var(--card-bg);border-radius:var(--radius-card);border:1px solid var(--card-border);overflow:hidden;cursor:pointer;transition:box-shadow 0.15s,transform 0.15s;opacity:0;transform:translateY(10px);}
+    .venue-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease;}
+    .venue-card:active{transform:scale(0.98)!important;box-shadow:0 1px 8px rgba(0,0,0,0.08);}
+
+    .venue-header{display:flex;align-items:flex-start;gap:14px;padding:16px 16px 12px;}
+    .venue-icon-wrap{width:52px;height:52px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;border:1px solid var(--cream-border);background:var(--cream);}
+    .venue-meta{flex:1;}
+    .venue-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;}
+    .tag{display:inline-block;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:500;letter-spacing:0.3px;}
+    .tag.open{background:#EEF6EF;color:var(--green);}
+    .tag.batch{background:var(--gold-soft);color:#7A4A00;}
+    .tag.online{background:#EEF3FB;color:#2E5FA3;}
+    .venue-name{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);line-height:1.3;margin-bottom:2px;}
+    .venue-type{font-size:11px;font-weight:300;color:var(--soft);}
+
+    .venue-body{padding:0 16px 14px;}
+    .venue-desc{font-size:12px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:10px;}
+
+    .venue-details{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+    .detail-row{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--soft);}
+    .detail-icon{width:16px;text-align:center;flex-shrink:0;margin-top:1px;}
+    .detail-text{flex:1;line-height:1.6;}
+
+    .venue-tips{background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:12px;padding:10px 12px;margin-bottom:12px;}
+    .tips-label{font-size:9px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+    .tips-text{font-size:11px;font-weight:300;color:#5C3D00;line-height:1.7;}
+
+    .venue-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+    .venue-age{font-size:10px;color:var(--soft);}
+    .venue-btn{background:var(--dark);color:#FDFBF7;border:none;border-radius:12px;padding:9px 18px;font-size:12px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;text-decoration:none;transition:opacity 0.15s;}
+    .venue-btn:active{opacity:0.8;}
+
+    /* ── UPLOAD BANNER — leaf green ── */
+    .upload-banner{
+      margin:24px 16px 0;
+      background:linear-gradient(135deg,#4CAF50 0%,#2E7D32 100%);
+      border-radius:20px;padding:20px;position:relative;overflow:hidden;
+      border:1px solid rgba(255,255,255,0.1);
+      cursor:pointer;
+    }
+    .upload-banner::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.07);}
+    .upload-banner::after{content:'';position:absolute;bottom:-20px;left:-10px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.05);}
+    .upload-label{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75);margin-bottom:8px;position:relative;z-index:1;}
+    .upload-title{font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:#FDFBF7;margin-bottom:6px;line-height:1.3;position:relative;z-index:1;}
+    .upload-sub{font-size:11px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:14px;position:relative;z-index:1;}
+    .upload-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#FDFBF7;border-radius:12px;padding:10px 18px;font-size:12px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;width:100%;justify-content:center;position:relative;z-index:1;}
+
+    /* ── PHOTO GRID ── */
+    .photo-grid-wrap{margin:16px 16px 0;}
+    .photo-grid-title{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--mid);margin-bottom:10px;}
+    .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+    .photo-slot{aspect-ratio:1;border-radius:12px;overflow:hidden;position:relative;background:var(--cream-warm);border:1.5px dashed var(--cream-border);display:flex;align-items:center;justify-content:center;}
+    .photo-slot.filled{border:none;}
+    .photo-slot.filled img{width:100%;height:100%;object-fit:cover;}
+    .photo-slot-label{font-size:18px;opacity:0.35;}
+
+    .skeleton{background:linear-gradient(90deg,#F0ECE4 25%,#EDE8DF 50%,#F0ECE4 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-card);height:140px;}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    #upload-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0);z-index:300;align-items:flex-end;justify-content:center;transition:background 0.3s;pointer-events:none;}
+    #upload-overlay.open{display:flex;background:rgba(0,0,0,0.52);pointer-events:all;}
+    #upload-sheet{background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);padding-bottom:env(safe-area-inset-bottom,16px);}
+    #upload-overlay.open #upload-sheet{transform:translateY(0);}
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <button class="back-btn" onclick="history.back()">← กลับ</button>
+  </div>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Community Work</div>
+    <div class="hero-title">ทำจิตอาสา</div>
+    <div class="hero-sub">งานอาสาที่เหมาะสำหรับนักเรียนเตรียมฯ รวบรวมไว้แล้ว</div>
+    <!-- Decorative heart — balanced top-right -->
+    <div style="position:absolute;top:-4px;right:20px;pointer-events:none;z-index:0;">
+      <svg width="120" height="112" viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 100 C60 100 10 65 10 35 C10 18 23 8 38 8 C48 8 56 14 60 20 C64 14 72 8 82 8 C97 8 110 18 110 35 C110 65 60 100 60 100Z"
+          fill="#4CAF50" opacity="0.18"/>
+        <path d="M60 88 C60 88 18 58 18 33 C18 20 28 12 40 12 C49 12 56 17 60 23 C64 17 71 12 80 12 C92 12 102 20 102 33 C102 58 60 88 60 88Z"
+          fill="none" stroke="#4CAF50" stroke-width="2" opacity="0.35"/>
+        <path d="M60 72 C60 72 32 54 32 38 C32 30 38 25 45 25 C51 25 56 29 60 33 C64 29 69 25 75 25 C82 25 88 30 88 38 C88 54 60 72 60 72Z"
+          fill="#4CAF50" opacity="0.55"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Booking websites -->
+  <div style="margin:0 16px 20px;">
+    <div class="section-label" style="margin-bottom:12px;">
+      <div class="section-label-text">เว็บสมัครอาสา</div>
+      <div class="section-label-line"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <a href="https://www.si.mahidol.ac.th/th/division/csr/volunteersiriraj/" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;text-decoration:none;gap:12px;">
+        <div>
+          <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:2px;">ศูนย์อาสาสมัครศิริราช</div>
+          <div style="font-size:11px;font-weight:300;color:var(--soft);">si.mahidol.ac.th/volunteer · รับเป็นรอบ</div>
+        </div>
+        <span style="font-size:14px;color:var(--soft);">→</span>
+      </a>
+      <a href="https://www.volunteerspirit.org" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;text-decoration:none;gap:12px;">
+        <div>
+          <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:2px;">Volunteer Spirit</div>
+          <div style="font-size:11px;font-weight:300;color:var(--soft);">volunteerspirit.org · รวมงานอาสาทุกประเภท</div>
+        </div>
+        <span style="font-size:14px;color:var(--soft);">→</span>
+      </a>
+      <a href="https://www.jitarsabank.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;text-decoration:none;gap:12px;">
+        <div>
+          <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:2px;">จิตอาสาแบงค์</div>
+          <div style="font-size:11px;font-weight:300;color:var(--soft);">jitarsabank.com · งานอาสาหลากหลาย กรุงเทพ</div>
+        </div>
+        <span style="font-size:14px;color:var(--soft);">→</span>
+      </a>
+      <a href="https://www.happyhospital.org/volunteer.php" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;text-decoration:none;gap:12px;">
+        <div>
+          <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:2px;">Happy Hospital</div>
+          <div style="font-size:11px;font-weight:300;color:var(--soft);">happyhospital.org · อาสาเพื่อนเด็กป่วย</div>
+        </div>
+        <span style="font-size:14px;color:var(--soft);">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="filterCards('all',this)">ทั้งหมด</button>
+    <button class="tab" onclick="filterCards('temple',this)">วัด</button>
+    <button class="tab" onclick="filterCards('hospital',this)">โรงพยาบาล</button>
+    <button class="tab" onclick="filterCards('online',this)">ออนไลน์</button>
+  </div>
+
+  <div class="cards-wrap" id="cards-wrap"></div>
+
+  <!-- Upload banner — leaf green -->
+  <div class="upload-banner" onclick="openUpload()">
+    <div class="upload-label">Community Wall</div>
+    <div class="upload-title">ไปทำมาแล้ว?<br/>แชร์รูปให้เพื่อนดูได้เลย</div>
+    <div class="upload-sub">ไม่ต้องรอให้ใครเชิญ — รูปของคุณจะอยู่ในผนังชุมชนนี้ เป็นแรงบันดาลใจให้คนอื่นต่อไป</div>
+    <div class="upload-btn">📷 อัปโหลดรูปของฉัน</div>
+  </div>
+
+  <!-- Photo grid — populated from Apps Script when photos exist -->
+  <div class="photo-grid-wrap">
+    <div class="photo-grid-title">รูปจากชาวเตรียมฯ</div>
+    <div class="photo-grid" id="photo-grid">
+      <!-- Filled by loadCommunityPhotos() — fallback empty slots shown until data arrives -->
+      <div class="photo-slot"><div class="photo-slot-label">📷</div></div>
+      <div class="photo-slot"><div class="photo-slot-label">📷</div></div>
+      <div class="photo-slot"><div class="photo-slot-label">📷</div></div>
+      <div class="photo-slot"><div class="photo-slot-label">📷</div></div>
+      <div class="photo-slot"><div class="photo-slot-label">📷</div></div>
+      <div class="photo-slot"><div class="photo-slot-label">📷</div></div>
+    </div>
+  </div>
+
+  <!-- Upload sheet -->
+  <div id="upload-overlay" onclick="handleUploadOverlay(event)">
+    <div id="upload-sheet">
+      <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:14px auto 20px;"></div>
+      <div style="padding:0 20px 24px;">
+        <div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:14px;">อัปโหลดรูป</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:var(--dark);margin-bottom:6px;">แชร์ประสบการณ์ให้เพื่อน</div>
+        <div style="font-size:12px;font-weight:300;color:var(--soft);line-height:1.7;margin-bottom:20px;">รูปของคุณจะขึ้นในผนังชุมชน ไม่มีชื่อ ไม่มีข้อมูลส่วนตัว — แค่ช่วงเวลาดีๆ ที่อยากแบ่งปัน</div>
+
+        <div id="photo-preview" style="display:none;margin-bottom:14px;border-radius:14px;overflow:hidden;aspect-ratio:4/3;background:var(--cream-warm);">
+          <img id="preview-img" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+        </div>
+
+        <label style="display:block;border:2px dashed var(--cream-border);border-radius:16px;padding:32px 16px;text-align:center;margin-bottom:16px;background:var(--cream-warm);cursor:pointer;" id="photo-label">
+          <input type="file" accept="image/*" id="photo-input" style="display:none;" onchange="previewPhoto(this)"/>
+          <div style="font-size:32px;margin-bottom:8px;">📷</div>
+          <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px;">แตะเพื่อเลือกรูป</div>
+          <div style="font-size:11px;color:var(--soft);">JPG, PNG ไม่เกิน 5MB</div>
+        </label>
+
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;font-weight:500;color:var(--mid);margin-bottom:6px;">ทำที่ไหน? (ไม่บังคับ)</div>
+          <input type="text" id="upload-location" placeholder="เช่น วัดปทุมวนาราม, ศิริราช..." style="width:100%;padding:12px 14px;border:1.5px solid var(--cream-border);border-radius:12px;font-size:13px;font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);outline:none;"/>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px;font-weight:500;color:var(--mid);margin-bottom:6px;">อยากบอกอะไรไว้? (ไม่บังคับ)</div>
+          <textarea id="upload-caption" placeholder="ประสบการณ์ที่ได้ รู้สึกยังไง หรืออยากแนะนำอะไร..." style="width:100%;padding:12px 14px;border:1.5px solid var(--cream-border);border-radius:12px;font-size:13px;font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);outline:none;resize:none;height:80px;line-height:1.6;"></textarea>
+        </div>
+
+        <button id="submit-btn" onclick="submitPhoto()" style="width:100%;background:#4CAF50;color:#fff;border:none;border-radius:var(--radius-btn);padding:14px;font-size:14px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;margin-bottom:10px;">ส่งรูป</button>
+        <button onclick="closeUpload()" style="width:100%;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:8px;">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+
+// ═══════════════════════════════════════════════════════
+// VENUE DATA
+// ═══════════════════════════════════════════════════════
+const VENUES = [
+  {
+    id:'wat-pathumwan', type:'temple', emoji:'🛕',
+    name:'วัดปทุมวนารามราชวรวิหาร',
+    typelabel:'วัด · ปทุมวัน (ใกล้ BTS สยาม)',
+    tags:['open'], tagLabels:['เปิดตลอดปี'],
+    desc:'วัดกลางกรุงที่สามารถไปช่วยทำความสะอาด กวาดลาน จัดดอกไม้ หรือช่วยงานทั่วไปได้เกือบทุกสุดสัปดาห์ เหมาะมากสำหรับครั้งแรก เพราะใกล้รถไฟฟ้า ไม่ต้องนัดล่วงหน้าซับซ้อน',
+    details:[
+      {icon:'📍',text:'969 ถ.พระราม 1 เขตปทุมวัน กรุงเทพฯ (BTS สยาม ทางออก 1)'},
+      {icon:'⏰',text:'ทุกเสาร์-อาทิตย์ เช้า 7:00–10:00 น. หรือนัดผ่านเพจวัดโดยตรง'},
+      {icon:'👤',text:'ไม่จำกัดอายุ ยิ่งน้องๆ มาก็ยิ่งดี'},
+    ],
+    tips:'ใส่ชุดสุภาพ สีขาว/สีอ่อน ห้ามใส่กางเกงขาสั้น เตรียมน้ำไปเองด้วยนะ อากาศตอนเช้าสบายมาก ทำแล้วรู้สึกสงบจริงๆ',
+    ageText:'อายุ 12 ปีขึ้นไป',
+    link:'https://maps.google.com/?q=วัดปทุมวนาราม+กรุงเทพ',
+    linkText:'ดูแผนที่',
+  },
+  {
+    id:'siriraj', type:'hospital', emoji:'🏥',
+    name:'อาสาสมัครศิริราช',
+    typelabel:'โรงพยาบาล · รับเป็นรอบๆ',
+    tags:['batch'], tagLabels:['เปิดเป็นรอบ'],
+    desc:'ศูนย์อาสาสมัครศิริราชเปิดรับนักเรียน อายุ 15+ ปีขึ้นไป มาช่วยงานหลากหลาย เช่น วัดความดัน พาผู้ป่วยเดิน แนะนำแอปฯ และรับเกียรติบัตรเมื่อครบกำหนด ที่นี่เต็มเร็วมาก ต้องเตรียมตัวก่อนเปิด',
+    details:[
+      {icon:'📍',text:'โรงพยาบาลศิริราช ถ.พระนคร (ฝั่งธนฯ)'},
+      {icon:'⏰',text:'เปิดรับสมัครเป็นรอบ — ปกติช่วง ก.พ.–เม.ย. เฉลี่ยเต็มภายใน 8 นาที!'},
+      {icon:'📝',text:'สมัครผ่านเว็บ si.mahidol.ac.th/volunteer แล้วรออนุมัติ 2 วัน'},
+    ],
+    tips:'ตั้ง alert รอเปิดรับสมัคร เข้าเว็บก่อนเวลาเปิด 10 นาที เตรียมข้อมูลส่วนตัวไว้ให้พร้อม รอบปีหน้าก็ยังมีนะ ไม่ต้องเสียใจถ้าพลาดรอบนี้',
+    ageText:'อายุ 15–45 ปี',
+    link:'https://www.si.mahidol.ac.th/th/division/csr/volunteersiriraj/',
+    linkText:'ไปสมัครเลย →',
+  },
+  {
+    id:'vajira', type:'hospital', emoji:'🏥',
+    name:'อาสาสมัครวชิรพยาบาล',
+    typelabel:'โรงพยาบาล · รับเป็นรอบๆ',
+    tags:['batch'], tagLabels:['เปิดเป็นรอบ'],
+    desc:'โรงพยาบาลวชิรพยาบาลเปิดรับอาสาสมัครนักเรียนปฏิบัติงานในโรงพยาบาล เหมาะสำหรับคนสนใจสายแพทย์-พยาบาล งานรวมถึงช่วยนำทาง จัดเอกสาร และอำนวยความสะดวก',
+    details:[
+      {icon:'📍',text:'โรงพยาบาลวชิรพยาบาล ถ.สามเสน เขตดุสิต'},
+      {icon:'⏰',text:'ติดตามประกาศรับสมัครผ่านเพจ Facebook: VajiraHospitalOfficial'},
+      {icon:'📝',text:'กรอกใบสมัครออนไลน์ผ่านทางเพจ รอการติดต่อกลับ'},
+    ],
+    tips:'ใส่เสื้อสีขาว กางเกงขาว หรือชุดนักเรียน — ดูเป็นมืออาชีพมากขึ้น เป็น background ที่ดีสำหรับสมัคร TCAS สายสุขภาพ',
+    ageText:'นักเรียน ม.ต้น–ม.ปลาย',
+    link:'https://www.facebook.com/VajiraHospitalOfficial',
+    linkText:'ดูเพจ Facebook',
+  },
+  {
+    id:'happyhospital', type:'hospital', emoji:'🧸',
+    name:'อาสาเด็กป่วย (Happy Hospital)',
+    typelabel:'โรงพยาบาล · อาสาเด็ก',
+    tags:['open'], tagLabels:['เปิดตลอดปี'],
+    desc:'โครงการ Happy Hospital เปิดรับอาสาสมัครมาเป็นเพื่อนเด็กป่วยในโรงพยาบาล ทำกิจกรรมศิลปะ เล่านิทาน เล่นเกม เหมาะสำหรับคนชอบเด็กและอยากสร้างรอยยิ้ม',
+    details:[
+      {icon:'📍',text:'หลายโรงพยาบาล ดูรายละเอียดผ่านเว็บ happyhospital.org'},
+      {icon:'⏰',text:'สมัครได้ตลอดปี นัดวันตามสะดวก'},
+      {icon:'💡',text:'ทักษะที่ช่วยได้: วาดรูป ร้องเพลง เล่านิทาน ใช้แท็บเล็ต'},
+    ],
+    tips:'ต้องรักเด็กและอดทนได้ บางครั้งเด็กป่วยอาจหงุดหงิดหรือเงียบ — แค่อยู่เป็นเพื่อนก็เพียงพอแล้ว ประสบการณ์นี้เปลี่ยนมุมมองได้จริงๆ',
+    ageText:'อายุ 15 ปีขึ้นไป',
+    link:'https://www.happyhospital.org/volunteer.php',
+    linkText:'ดูรายละเอียด',
+  },
+  {
+    id:'jitarsa-online', type:'online', emoji:'💻',
+    name:'จิตอาสาออนไลน์ (มีเกียรติบัตร)',
+    typelabel:'ออนไลน์ · ทำจากบ้านได้เลย',
+    tags:['online','open'], tagLabels:['ออนไลน์','ทำเมื่อไหร่ก็ได้'],
+    desc:'มีโครงการจิตอาสาออนไลน์หลายโครงการที่ทำผ่านอินเทอร์เน็ตได้เลย เช่น พิมพ์ข้อมูลเพื่อมนุษย์ตาบอด ช่วยแปลภาษา บันทึกเสียง หรือสอนออนไลน์ — และมีเกียรติบัตรจริงๆ',
+    details:[
+      {icon:'🌐',text:'สมัครผ่าน donatekind.org, BeVolunteer, หรือ Manpower Thailand'},
+      {icon:'⏰',text:'ทำได้ตลอด 24 ชั่วโมง ตามเวลาที่สะดวก ไม่มีเดดไลน์แน่นอน'},
+      {icon:'📜',text:'ได้เกียรติบัตรดิจิตัลที่สามารถแนบ portfolio ได้'},
+    ],
+    tips:'เหมาะสำหรับช่วงปิดเทอมหรือคืนว่างๆ ใช้เวลาไม่มากแต่ได้ประสบการณ์จริง เลือกโครงการที่ match กับสิ่งที่ชอบ เช่น ถ้าชอบภาษาก็เลือกแปล',
+    ageText:'ทุกช่วงอายุ',
+    link:'https://www.manpowerthailand.com/th/insights/blogs/2025/10/volunteer-certificate',
+    linkText:'ดูรายการโครงการ',
+  },
+  {
+    id:'wat-general', type:'temple', emoji:'🧹',
+    name:'วัดใกล้บ้านคุณ',
+    typelabel:'วัด · ยืดหยุ่น · เดินไปเองได้',
+    tags:['open'], tagLabels:['เปิดตลอดปี'],
+    desc:'ไม่ต้องรอโครงการ — ลองเดินเข้าไปหาพระที่วัดใกล้บ้าน บอกว่าอยากมาช่วยงานวัด ส่วนใหญ่ยินดีมากๆ งานที่ทำได้คือกวาดลาน ทำความสะอาดห้องน้ำ จัดดอกไม้ หรือช่วยงานบุญ',
+    details:[
+      {icon:'📍',text:'วัดใกล้บ้านหรือใกล้โรงเรียน — ค้นหาใน Google Maps ว่า "วัด + ชื่อย่าน"'},
+      {icon:'⏰',text:'เช้าวันเสาร์-อาทิตย์ เวลา 7:00–10:00 น. เหมาะที่สุด'},
+      {icon:'💬',text:'บอกพระหรือเจ้าหน้าที่ว่ามาอาสาช่วยงาน — ไม่ต้องนัดล่วงหน้า'},
+    ],
+    tips:'วัดเล็กๆ ใกล้บ้านมักต้องการความช่วยเหลือมากกว่าวัดใหญ่ที่มีทีมงาน ลองเลือกวัดที่ไม่ใหญ่มาก จะได้ลงมือทำจริงๆ ไม่ใช่แค่ยืนดู',
+    ageText:'ทุกวัย · ไปคนเดียวก็ได้',
+    link:'https://maps.google.com/?q=วัดใกล้ฉัน',
+    linkText:'หาวัดใกล้บ้าน',
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// RENDER VENUE CARDS
+// ═══════════════════════════════════════════════════════
+function renderCards(filter) {
+  const wrap = document.getElementById('cards-wrap');
+  wrap.innerHTML = '';
+  const list = filter === 'all' ? VENUES : VENUES.filter(v => v.type === filter);
+  list.forEach((v, i) => {
+    const card = document.createElement('div');
+    card.className = 'venue-card';
+    const tagsHtml = v.tags.map((t,ti) => `<span class="tag ${t}">${v.tagLabels[ti]}</span>`).join('');
+    const detailsHtml = v.details.map(d => `
+      <div class="detail-row">
+        <span class="detail-icon">${d.icon}</span>
+        <span class="detail-text">${d.text}</span>
+      </div>`).join('');
+    card.innerHTML = `
+      <div class="venue-header">
+        <div class="venue-icon-wrap">${v.emoji}</div>
+        <div class="venue-meta">
+          <div class="venue-tags">${tagsHtml}</div>
+          <div class="venue-name">${v.name}</div>
+          <div class="venue-type">${v.typelabel}</div>
+        </div>
+      </div>
+      <div class="venue-body">
+        <div class="venue-desc">${v.desc}</div>
+        <div class="venue-details">${detailsHtml}</div>
+        <div class="venue-tips">
+          <div class="tips-label">💡 เตรียมตัวยังไง?</div>
+          <div class="tips-text">${v.tips}</div>
+        </div>
+        <div class="venue-footer">
+          <span class="venue-age">👤 ${v.ageText}</span>
+          <a href="${v.link}" target="_blank" class="venue-btn">${v.linkText}</a>
+        </div>
+      </div>`;
+    setTimeout(() => card.classList.add('visible'), i * 60 + 40);
+    wrap.appendChild(card);
+  });
+}
+
+function filterCards(filter, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(filter);
+}
+
+// ═══════════════════════════════════════════════════════
+// PHOTO GRID — loads real photos from Apps Script
+// Falls back to empty slots if none uploaded yet
+// ═══════════════════════════════════════════════════════
+async function loadCommunityPhotos() {
+  try {
+    const res = await fetch(API_URL + '?action=getCommunityPhotos');
+    const d   = await res.json();
+    if (d.status === 'OK' && d.photos && d.photos.length) {
+      const grid = document.getElementById('photo-grid');
+      grid.innerHTML = '';
+      // Show up to 6 most recent
+      const recent = d.photos.slice(0, 6);
+      recent.forEach(p => {
+        const slot = document.createElement('div');
+        slot.className = 'photo-slot filled';
+        slot.innerHTML = `<img src="${p.imageUrl}" alt="${p.location||'จิตอาสา'}" loading="lazy"
+          onerror="this.parentElement.className='photo-slot';this.parentElement.innerHTML='<div class=\\'photo-slot-label\\'>📷</div>'"/>`;
+        grid.appendChild(slot);
+      });
+      // Pad remaining slots
+      for (let i = recent.length; i < 6; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'photo-slot';
+        slot.innerHTML = '<div class="photo-slot-label">📷</div>';
+        grid.appendChild(slot);
+      }
+    }
+  } catch(e) { /* keep fallback empty slots */ }
+}
+
+// ═══════════════════════════════════════════════════════
+// PHOTO UPLOAD
+// ═══════════════════════════════════════════════════════
+let selectedPhotoB64 = null;
+
+function previewPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    selectedPhotoB64 = e.target.result;
+    document.getElementById('preview-img').src = e.target.result;
+    document.getElementById('photo-preview').style.display = 'block';
+    document.getElementById('photo-label').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function submitPhoto() {
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = 'กำลังส่ง...';
+  btn.style.opacity = '0.6';
+  btn.style.pointerEvents = 'none';
+
+  const payload = {
+    action:   'addCommunityPhoto',
+    imageB64: selectedPhotoB64 || '',
+    location: document.getElementById('upload-location').value.trim(),
+    caption:  document.getElementById('upload-caption').value.trim(),
+    ts:       new Date().toISOString(),
+  };
+
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload),
+    });
+  } catch(e) {}
+
+  closeUpload();
+  loadCommunityPhotos();
+  btn.textContent = 'ส่งรูป';
+  btn.style.opacity = '1';
+  btn.style.pointerEvents = 'all';
+  selectedPhotoB64 = null;
+}
+
+function openUpload() {
+  document.getElementById('upload-overlay').classList.add('open');
+  document.getElementById('upload-overlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeUpload() {
+  const ov = document.getElementById('upload-overlay');
+  ov.classList.remove('open');
+  setTimeout(() => { ov.style.display = 'none'; document.body.style.overflow = ''; }, 360);
+  // Reset form
+  document.getElementById('photo-input').value = '';
+  document.getElementById('upload-location').value = '';
+  document.getElementById('upload-caption').value = '';
+  document.getElementById('photo-preview').style.display = 'none';
+  document.getElementById('photo-label').style.display = 'block';
+}
+function handleUploadOverlay(e) {
+  if (e.target === document.getElementById('upload-overlay')) closeUpload();
+}
+
+// Init
+renderCards('all');
+loadCommunityPhotos();
+</script>
+</body>
+</html>
