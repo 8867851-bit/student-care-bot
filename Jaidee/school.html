@@ -27,17 +27,16 @@
     .hero-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;color:var(--dark);line-height:1.2;margin-bottom:4px;}
     .hero-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.65;}
 
-    /* ── AI CHAT ── */
-    .ai-card{margin:4px 16px 0;background:linear-gradient(135deg,var(--dark),#2C2520);border-radius:var(--radius);padding:16px 18px;border:1px solid #3A332D;}
-    .ai-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:rgba(232,150,12,0.7);margin-bottom:5px;}
-    .ai-title{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:#FDFBF7;margin-bottom:10px;line-height:1.4;}
-    .ai-row{display:flex;gap:8px;}
-    .ai-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:10px 14px;font-family:'Mitr',sans-serif;font-size:13px;color:#FDFBF7;outline:none;transition:border-color 0.2s;}
-    .ai-input::placeholder{color:rgba(255,255,255,0.28);}
-    .ai-input:focus{border-color:rgba(232,150,12,0.5);}
-    .ai-btn{background:var(--gold);border:none;border-radius:12px;width:42px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;transition:transform 0.15s;}
-    .ai-btn:active{transform:scale(0.92);}
-    .ai-note{font-size:10px;color:rgba(255,255,255,0.22);margin-top:8px;line-height:1.5;}
+    /* ── AI SEARCH BAR (Google-style slim) ── */
+    .ai-search-wrap{margin:4px 16px 0;}
+    .ai-search-bar{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--cream-border);border-radius:99px;padding:0 16px 0 18px;height:46px;box-shadow:0 1px 6px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s;}
+    .ai-search-bar:focus-within{border-color:rgba(46,95,163,0.35);box-shadow:0 2px 12px rgba(46,95,163,0.1);}
+    .ai-search-icon{font-size:15px;flex-shrink:0;opacity:0.4;}
+    .ai-search-input{flex:1;border:none;outline:none;background:transparent;font-family:'Mitr',sans-serif;font-size:13.5px;color:var(--dark);}
+    .ai-search-input::placeholder{color:var(--soft);}
+    .ai-search-send{background:var(--blue);border:none;border-radius:99px;padding:6px 14px;font-family:'Mitr',sans-serif;font-size:12px;color:#fff;cursor:pointer;flex-shrink:0;transition:transform 0.15s,opacity 0.15s;}
+    .ai-search-send:active{transform:scale(0.94);}
+    .ai-search-note{font-size:10px;color:var(--soft);margin-top:6px;padding-left:6px;}
 
     /* ── SECTION DIVIDER ── */
     .sec-div{display:flex;align-items:center;gap:10px;padding:0 20px;margin:24px 0 12px;}
@@ -71,17 +70,33 @@
     .cp-count{font-size:12px;font-weight:500;color:var(--green);}
     .cp-bar{height:4px;background:var(--cream-border);border-radius:99px;overflow:hidden;}
     .cp-fill{height:100%;background:var(--green);border-radius:99px;transition:width 0.4s ease;}
+
     .check-group{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);margin:0 16px 10px;overflow:hidden;}
     .cg-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--soft);padding:12px 16px 8px;border-bottom:1px solid var(--cream-border);}
-    .check-item{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-bottom:1px solid var(--cream-border);cursor:pointer;}
+
+    /* check item row */
+    .check-item{border-bottom:1px solid var(--cream-border);}
     .check-item:last-child{border-bottom:none;}
+    .check-row{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;}
     .check-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--cream-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.18s;background:var(--card);}
     .check-item.done .check-box{background:var(--green);border-color:var(--green);}
     .check-tick{font-size:11px;color:#fff;opacity:0;transition:opacity 0.15s;}
     .check-item.done .check-tick{opacity:1;}
-    .check-label{font-size:13px;font-weight:400;color:var(--dark);line-height:1.4;transition:color 0.2s;}
-    .check-sub{font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;}
+    .check-label{font-size:13px;font-weight:400;color:var(--dark);line-height:1.4;transition:color 0.2s;flex:1;}
     .check-item.done .check-label{color:var(--soft);text-decoration:line-through;}
+
+    /* info button */
+    .info-btn{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--cream-border);background:var(--cream);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;margin-top:2px;transition:background 0.15s,border-color 0.15s;}
+    .info-btn:active{background:var(--blue-soft);}
+    .info-btn-i{font-size:10px;font-style:italic;font-weight:600;color:var(--mid);line-height:1;font-family:Georgia,serif;}
+
+    /* expandable detail */
+    .check-detail{max-height:0;overflow:hidden;transition:max-height 0.28s ease,opacity 0.2s;opacity:0;background:var(--blue-soft);border-top:1px solid var(--blue-border);}
+    .check-detail.open{max-height:200px;opacity:1;}
+    .check-detail-inner{padding:10px 16px 12px 50px;font-size:11.5px;font-weight:300;color:#1E3A8A;line-height:1.75;}
+
+    /* link badge */
+    .lnk{display:inline-flex;align-items:center;gap:3px;background:rgba(46,95,163,0.1);border-radius:4px;padding:1px 7px;font-size:10px;font-weight:500;color:var(--blue);text-decoration:none;vertical-align:middle;}
 
     /* ── CALLOUT ── */
     .callout{margin:0 16px 10px;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
@@ -175,17 +190,16 @@
   <div class="hero-sub">สิ่งที่โรงเรียนลืมบอก — รวมไว้ที่นี่แล้ว</div>
 </div>
 
-<!-- AI CHAT -->
-<div class="ai-card">
-  <div class="ai-label">AI · School Assistant</div>
-  <div class="ai-title">ถามอะไรเกี่ยวกับโรงเรียนได้เลย</div>
-  <div class="ai-row">
-    <input class="ai-input" id="ai-q" type="text"
-      placeholder="เช่น ขาดเรียนได้กี่ครั้ง? / ยืม iPad ยังไง?"
+<!-- AI SEARCH BAR — Google-style slim -->
+<div class="ai-search-wrap">
+  <div class="ai-search-bar">
+    <span class="ai-search-icon">✦</span>
+    <input class="ai-search-input" id="ai-q" type="text"
+      placeholder="ถามอะไรก็ได้ เช่น ขาดเรียนได้กี่ครั้ง?"
       onkeydown="if(event.key==='Enter')aiSend()"/>
-    <button class="ai-btn" onclick="aiSend()">→</button>
+    <button class="ai-search-send" onclick="aiSend()">ถาม</button>
   </div>
-  <div class="ai-note" id="ai-note">⚡ AI ที่ฝึกจาก database ของโรงเรียนเตรียมอุดมฯ · กำลังพัฒนา</div>
+  <div class="ai-search-note" id="ai-note">⚡ AI ที่ฝึกจาก database ของโรงเรียนเตรียมอุดมฯ · กำลังพัฒนา</div>
 </div>
 
 <!-- ════════════════════════════
@@ -218,7 +232,7 @@
 </a>
 
 <!-- ════════════════════════════
-     2. Website + Facebook (half-half)
+     2. ช่องทางหลัก
 ════════════════════════════ -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--gold)"></div>
@@ -241,9 +255,6 @@
   </a>
 </div>
 
-<!-- ════════════════════════════
-     3. TU Pro + กช. (half-half)
-════════════════════════════ -->
 <div class="half-row">
   <a class="half-card" href="#" target="_blank" rel="noopener">
     <span class="half-icon">🎓</span>
@@ -260,111 +271,271 @@
 </div>
 
 <!-- ════════════════════════════
-     4. CHECKLIST
+     CHECKLIST
 ════════════════════════════ -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--green)"></div>
-  <div class="sec-div-text">Checklist ก่อนหมดสัปดาห์แรก</div>
+  <div class="sec-div-text">Starter Pack · Orientation Checklist</div>
   <div class="sec-div-line"></div>
 </div>
 
 <div class="check-progress">
   <div class="cp-top">
     <div class="cp-label">ทำไปแล้วเท่าไหร่?</div>
-    <div class="cp-count" id="cp-count">0 / 16</div>
+    <div class="cp-count" id="cp-count">0 / 26</div>
   </div>
   <div class="cp-bar"><div class="cp-fill" id="cp-fill" style="width:0%"></div></div>
 </div>
 
+<!-- GROUP 1: ระบบและแอป -->
 <div class="check-group">
   <div class="cg-label">📱 ระบบและแอป</div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">โหลด StudentCare (นักเรียน + ผู้ปกครอง)</div>
-    <div class="check-sub">ติดตามผลการเรียนและข้อความจากครู</div></div>
+
+  <div class="check-item" id="ci0">
+    <div class="check-row" onclick="toggleCheck('ci0')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">โหลดแอป Student Care</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d0')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d0">
+      <div class="check-detail-inner">ติดตามผลการเรียน · แอปติดตามครู/นักเรียน<br/>มีทั้งสำหรับนักเรียนและผู้ปกครอง</div>
+    </div>
   </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">ตั้งค่าแอปสแกนหน้า</div>
-    <div class="check-sub">ขาด 3 ครั้งติด → แจ้งผู้ปกครองอัตโนมัติ</div></div>
+
+  <div class="check-item" id="ci1">
+    <div class="check-row" onclick="toggleCheck('ci1')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">เข้า/สร้าง LINE กลุ่มห้องประจำชั้น</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d1')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d1">
+      <div class="check-detail-inner">1 ห้องมีครูประจำชั้น 1–2 คน<br/>ใช้สื่อสารงาน ข่าวด่วน และนัดหมายจากครู</div>
+    </div>
   </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">เข้า Google Classroom ทุกวิชา</div>
-    <div class="check-sub">ดูจากตารางเรียน — ครูส่งงานที่นี่</div></div>
+
+  <div class="check-item" id="ci2">
+    <div class="check-row" onclick="toggleCheck('ci2')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">เข้า LINE กลุ่มประจำวิชา</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d2')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d2">
+      <div class="check-detail-inner">ครูบางท่านอาจเลือกไม่สร้าง LINE กลุ่ม<br/>กรณีนั้นส่งเอกสารผ่านตัวแทนห้องเมื่อจำเป็น<br/>ทั้งนี้ต้องไม่ตกข่าว — ตรวจสอบกับเพื่อนสม่ำเสมอ</div>
+    </div>
   </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">เข้า LINE กลุ่มทุกกลุ่ม</div>
-    <div class="check-sub">ห้อง · วิชา · ผู้ปกครอง · Open Chat</div></div>
-  </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">โหลดตารางเรียนและไฟล์หนังสือเรียน</div>
-    <div class="check-sub">จาก LINE กลุ่มวิชาหรือเว็บโรงเรียน</div></div>
+
+  <div class="check-item" id="ci3">
+    <div class="check-row" onclick="toggleCheck('ci3')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">เข้า Google Classroom ประจำวิชา</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d3')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d3">
+      <div class="check-detail-inner">จำเป็นต้องไม่ตกข่าว — ครูส่งงานและเอกสารที่นี่<br/>เช็กกับครูหรือเพื่อนหากยังไม่ได้รหัสห้อง</div>
+    </div>
   </div>
 </div>
 
+<!-- GROUP 2: ตาราง -->
 <div class="check-group">
-  <div class="cg-label">📅 ตารางและระเบียบ</div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">มีตารางวันสำคัญตลอดปีแล้ว</div>
-    <div class="check-sub">ทัศนศึกษา · ไหว้ครู · สอบกลางภาค · สอบปลายภาค <span class="tbd">TBD</span></div></div>
+  <div class="cg-label">📅 ตาราง</div>
+
+  <div class="check-item" id="ci4">
+    <div class="check-row" onclick="toggleCheck('ci4')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">โหลด/save ตารางเรียน จ.–ศ. <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
   </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">รู้กฎการแต่งกายและเวลาเข้าโรงเรียน</div>
-    <div class="check-sub">มาทัน 7:40 · โบว์/เสื้อ/กระโปรง · เครื่องประดับ · แต่งหน้า (แยกชาย/หญิง)</div></div>
+
+  <div class="check-item" id="ci5">
+    <div class="check-row" onclick="toggleCheck('ci5')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">โหลด/save กำหนดการเทอม 1 <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
   </div>
-</div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">ดูตารางเรียน → list ชื่อครูทุกวิชา</div>
-    <div class="check-sub">บันทึก ชื่อ · ชื่อเล่น · LINE · เบอร์ · ห้องพักครู</div></div>
-  </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">รู้จักครูประจำชั้นและหัวหน้าตึก</div>
-    <div class="check-sub">คนที่เข้าหาได้ก่อนเมื่อรู้สึกหนัก</div></div>
+
+  <div class="check-item" id="ci6">
+    <div class="check-row" onclick="toggleCheck('ci6')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">โหลด/save ประมวลผลรายวิชา (ถ้ามี) <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
   </div>
 </div>
 
+<!-- GROUP 3: กฎ -->
 <div class="check-group">
-  <div class="cg-label">📋 ลงทะเบียนและสมาคม</div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">ลงทะเบียนชมรมผ่านเว็บ กช.</div>
-    <div class="check-sub">เปิดรับช่วงต้นภาค อย่ารอจนปิด</div></div>
+  <div class="cg-label">⚖️ กฎ</div>
+
+  <div class="check-item" id="ci7">
+    <div class="check-row" onclick="toggleCheck('ci7')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">แต่งตัวตามกฎการแต่งกาย <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
   </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">สมัครเข้าสมาคม (ถ้าต้องการ)</div>
-    <div class="check-sub">ลิงก์อยู่ด้านบน — มีสิทธิ์พิเศษสำหรับสมาชิก</div></div>
+
+  <div class="check-item" id="ci8">
+    <div class="check-row" onclick="toggleCheck('ci8')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">ทราบเวลาเข้า/ออกนอกโรงเรียน</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d8')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d8">
+      <div class="check-detail-inner">มาทัน 7:40 · รายละเอียดเวลาออกนอกโรงเรียน <span class="tbd">TBD</span></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci9">
+    <div class="check-row" onclick="toggleCheck('ci9')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">รู้ว่าต้องทำอย่างไรเมื่อมาสาย <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci10">
+    <div class="check-row" onclick="toggleCheck('ci10')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">ทราบเกณฑ์การขาดสแกนหน้า</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d10')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d10">
+      <div class="check-detail-inner">ขาดสแกนหน้าเกิน 3 ครั้ง → โดนเรียกพบผู้ปกครอง<br/>กรณีลาโรงเรียนมีขั้นตอนเฉพาะ <span class="tbd">TBD</span></div>
+    </div>
   </div>
 </div>
 
+<!-- GROUP 4: สิทธิ์ต้องรู้ -->
 <div class="check-group">
-  <div class="cg-label">⚖️ สิทธิ์ที่ต้องรู้</div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">รู้วิธีลา — ลาป่วย / ลากิจ / ออกนอกโรงเรียน</div>
-    <div class="check-sub">เอกสารและขั้นตอน <span class="tbd">TBD</span></div></div>
+  <div class="cg-label">🛡️ สิทธิ์ต้องรู้</div>
+
+  <div class="check-item" id="ci11">
+    <div class="check-row" onclick="toggleCheck('ci11')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">วิธีลาป่วย / ลากิจ / ออกนอกโรงเรียน <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
   </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">รู้ขั้นตอนยืม iPad</div>
-    <div class="check-sub">รายละเอียด <span class="tbd">TBD</span></div></div>
+
+  <div class="check-item" id="ci12">
+    <div class="check-row" onclick="toggleCheck('ci12')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">วิธียืม iPad <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
   </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">ทราบสิทธิ์ประกันสังคม + ประกันอุบัติเหตุ</div>
-    <div class="check-sub">รายละเอียด <span class="tbd">TBD</span></div></div>
+
+  <div class="check-item" id="ci13">
+    <div class="check-row" onclick="toggleCheck('ci13')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">ทราบสิทธิ์ประกันสังคม / อุบัติเหตุ <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
   </div>
-  <div class="check-item" onclick="toggleCheck(this)">
-    <div class="check-box"><span class="check-tick">✓</span></div>
-    <div><div class="check-label">อ่านสิทธิ์ดูแลสุขภาพจิต</div>
-    <div class="check-sub">คู่มือจากการประชุมผู้ปกครองต้นปี <span class="tbd">TBD</span></div></div>
+
+  <div class="check-item" id="ci14">
+    <div class="check-row" onclick="toggleCheck('ci14')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">อ่านสิทธิ์การดูแลสุขภาพจิต <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci15">
+    <div class="check-row" onclick="toggleCheck('ci15')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">อ่านสิทธิ์ดูแลการเรียนของนักเรียน <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- GROUP 5: ลงทะเบียน -->
+<div class="check-group">
+  <div class="cg-label">📋 ลงทะเบียน</div>
+
+  <div class="check-item" id="ci16">
+    <div class="check-row" onclick="toggleCheck('ci16')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">ลงทะเบียนชมรม <a class="lnk" href="#" onclick="return false;">กช.</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- GROUP 6: ควรรู้ -->
+<div class="check-group">
+  <div class="cg-label">💡 ควรรู้</div>
+
+  <div class="check-item" id="ci17">
+    <div class="check-row" onclick="toggleCheck('ci17')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">รู้จักหัวหน้าตึกของท่าน <a class="lnk" href="#" onclick="return false;">Route</a></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci18">
+    <div class="check-row" onclick="toggleCheck('ci18')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">รู้จักชื่อเล่น + ช่องทางติดต่อครูประจำชั้น <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci19">
+    <div class="check-row" onclick="toggleCheck('ci19')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">รู้จักชื่อเล่น · ห้องพัก · ช่องทางติดต่อครูประจำวิชา <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci20">
+    <div class="check-row" onclick="toggleCheck('ci20')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">แผนผังโรงเรียน (ละเอียดที่สุด) <a class="lnk" href="#" onclick="return false;">Link</a></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci21">
+    <div class="check-row" onclick="toggleCheck('ci21')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">แหล่งที่ทำสาธารณประโยชน์ <a class="lnk" href="#" onclick="return false;">Route</a></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci22">
+    <div class="check-row" onclick="toggleCheck('ci22')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">กีฬาสี — ทุกคนต้องมีหน้าที่</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d22')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d22">
+      <div class="check-detail-inner">หน้าที่ได้แก่: เชียร์ · กรรมการ · นักกีฬา · ฯลฯ<br/>ติดตามข่าวสารกีฬาสีผ่านช่องทาง <span class="tbd">TBD</span></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci23">
+    <div class="check-row" onclick="toggleCheck('ci23')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">ของหายแจ้งที่ไหน?</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d23')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d23">
+      <div class="check-detail-inner">รายละเอียดสถานที่แจ้งและขั้นตอน <span class="tbd">TBD</span></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci24">
+    <div class="check-row" onclick="toggleCheck('ci24')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">ซื้อเสื้อพละเพิ่มที่ไหน?</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d24')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d24">
+      <div class="check-detail-inner">สถานที่จำหน่าย / ราคา <span class="tbd">TBD</span></div>
+    </div>
+  </div>
+
+  <div class="check-item" id="ci25">
+    <div class="check-row" onclick="toggleCheck('ci25')">
+      <div class="check-box"><span class="check-tick">✓</span></div>
+      <div class="check-label">ขอ ปพ.1 / ปพ.7 ทำอย่างไร?</div>
+      <button class="info-btn" onclick="toggleInfo(event,'d25')"><span class="info-btn-i">i</span></button>
+    </div>
+    <div class="check-detail" id="d25">
+      <div class="check-detail-inner">ขั้นตอนการขอเอกสารทางการ + ระยะเวลาดำเนินการ <span class="tbd">TBD</span></div>
+    </div>
   </div>
 </div>
 
@@ -377,7 +548,7 @@
 </div>
 
 <!-- ════════════════════════════
-     5. ปรากฏการณ์ที่เจอบ่อย
+     ปรากฏการณ์ที่เจอบ่อย
 ════════════════════════════ -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--gold)"></div>
@@ -439,7 +610,7 @@
 </div>
 
 <!-- ════════════════════════════
-     6. วัฒนธรรมแต่ละตึก — videos
+     วัฒนธรรมแต่ละตึก
 ════════════════════════════ -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--purple)"></div>
@@ -465,9 +636,7 @@
   </div>
 </div>
 
-<!-- ════════════════════════════
-     ลิงก์เพิ่มเติม
-════════════════════════════ -->
+<!-- ลิงก์เพิ่มเติม -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--soft)"></div>
   <div class="sec-div-text">ลิงก์เพิ่มเติม</div>
@@ -506,11 +675,10 @@
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const TOTAL_ITEMS = 26;
 
 // ── VIDEO GRID ─────────────────────────────
-const BUILDINGS = [
-  "ตึก 1","ตึก 2","ตึก 3","ตึก 4","ตึก 5","ตึก 6"
-];
+const BUILDINGS = ["ตึก 1","ตึก 2","ตึก 3","ตึก 4","ตึก 5","ตึก 6"];
 
 function ytId(url) {
   const m = (url||"").match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
@@ -520,7 +688,6 @@ function ytId(url) {
 function renderVideos(items) {
   const grid = document.getElementById('video-grid');
   grid.innerHTML = '';
-  // Always show all building slots — fill with data if available
   BUILDINGS.forEach((bname, i) => {
     const data = items.find(v => (v.name||'').includes(bname.replace('ตึก ',''))) || items[i] || null;
     const id   = data ? ytId(data.youtube_url) : null;
@@ -545,9 +712,7 @@ function renderVideos(items) {
         <div class="video-name">${bname}</div>
         ${!id ? `<div class="video-tbd">กำลังถ่ายทำ</div>` : ''}
       </div>`;
-    if (id) {
-      card.onclick = () => openVid(id, bname, 'วัฒนธรรม' + bname);
-    }
+    if (id) card.onclick = () => openVid(id, bname, 'วัฒนธรรม' + bname);
     grid.appendChild(card);
   });
 }
@@ -561,32 +726,30 @@ function openVid(id, name, label) {
   document.getElementById('vid-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function closeVid() {
   document.getElementById('vid-frame').innerHTML = '';
   document.getElementById('vid-modal').classList.remove('open');
   document.body.style.overflow = '';
 }
-
 async function loadVideos() {
   try {
     const res = await fetch(API_URL + '?action=getCare');
     const d   = await res.json();
     const vids = (d.status === 'OK' && d.items)
-      ? d.items.filter(i => (i.category||'').trim() === 'วัฒนธรรมตึก')
-      : [];
+      ? d.items.filter(i => (i.category||'').trim() === 'วัฒนธรรมตึก') : [];
     renderVideos(vids);
   } catch(e) { renderVideos([]); }
 }
 
 // ── CHECKLIST ─────────────────────────────
-const CK_KEY = 'jaidee_school_v3';
+const CK_KEY = 'jaidee_school_v4';
 
 function loadChecklist() {
   try {
     const saved = JSON.parse(localStorage.getItem(CK_KEY) || '[]');
-    document.querySelectorAll('.check-item').forEach((el, i) => {
-      if (saved.includes(i)) el.classList.add('done');
+    saved.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('done');
     });
     updateProgress();
   } catch(e) {}
@@ -594,27 +757,40 @@ function loadChecklist() {
 
 function saveChecklist() {
   const done = [];
-  document.querySelectorAll('.check-item').forEach((el, i) => {
-    if (el.classList.contains('done')) done.push(i);
-  });
+  for (let i = 0; i < TOTAL_ITEMS; i++) {
+    const el = document.getElementById('ci' + i);
+    if (el && el.classList.contains('done')) done.push('ci' + i);
+  }
   try { localStorage.setItem(CK_KEY, JSON.stringify(done)); } catch(e) {}
 }
 
-function toggleCheck(item) {
-  item.classList.toggle('done');
+function toggleCheck(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('done');
   saveChecklist();
   updateProgress();
 }
 
+function toggleInfo(e, detailId) {
+  e.stopPropagation();
+  const el = document.getElementById(detailId);
+  if (!el) return;
+  el.classList.toggle('open');
+}
+
 function updateProgress() {
-  const total = document.querySelectorAll('.check-item').length;
-  const done  = document.querySelectorAll('.check-item.done').length;
-  const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+  let done = 0;
+  for (let i = 0; i < TOTAL_ITEMS; i++) {
+    const el = document.getElementById('ci' + i);
+    if (el && el.classList.contains('done')) done++;
+  }
+  const pct = Math.round((done / TOTAL_ITEMS) * 100);
   const fill  = document.getElementById('cp-fill');
   const count = document.getElementById('cp-count');
   if (fill)  fill.style.width = pct + '%';
-  if (count) count.textContent = done === total && total > 0
-    ? '✓ ครบแล้ว 🎉' : `${done} / ${total}`;
+  if (count) count.textContent = done === TOTAL_ITEMS
+    ? '✓ ครบแล้ว 🎉' : `${done} / ${TOTAL_ITEMS}`;
 }
 
 // ── AI ─────────────────────────────────────
