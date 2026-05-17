@@ -17,7 +17,6 @@
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;}
 
-    /* Hero — tightened top padding */
     .hero{padding:38px 24px 18px;position:relative;overflow:hidden;text-align:center;}
     .hero::before{content:'';position:absolute;top:20px;left:50%;transform:translateX(-50%);width:220px;height:220px;background:radial-gradient(circle,rgba(255,255,255,0.85) 0%,rgba(255,255,255,0.3) 40%,transparent 70%);border-radius:50%;pointer-events:none;z-index:0;}
     .hero::after{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:300px;height:280px;background:radial-gradient(circle,rgba(232,150,12,0.06) 0%,rgba(253,251,247,0) 68%);border-radius:50%;pointer-events:none;z-index:0;}
@@ -26,20 +25,18 @@
     .hero-name{font-family:'Noto Serif Thai',serif;font-size:30px;font-weight:600;color:var(--dark);line-height:1.2;}
     .hero-sub{font-size:14px;font-weight:300;color:var(--soft);margin-top:4px;}
 
-    /* PR Banner */
     .pr-banner{margin:6px 20px 22px;background:linear-gradient(135deg,var(--cream-warm),#FFF5DD);border-radius:var(--radius-card);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--gold-border);box-shadow:0 2px 16px rgba(232,150,12,0.08);}
     .pr-banner-left{display:flex;flex-direction:column;gap:2px;}
     .pr-banner-label{font-size:11px;font-weight:400;color:var(--gold);letter-spacing:1px;text-transform:uppercase;}
     .pr-banner-text{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:#5C3D00;}
     .pr-btn{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-btn);padding:10px 20px;font-size:13px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px rgba(232,150,12,0.3);transition:transform 0.15s;}
     .pr-btn:active{transform:scale(0.96);}
+    .pr-avail{font-size:10px;font-weight:400;color:var(--soft);margin-top:3px;letter-spacing:0.3px;}
 
-    /* Section label */
     .section-label{display:flex;align-items:center;gap:10px;padding:0 20px;margin-bottom:14px;}
     .section-label-text{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap;}
     .section-label-line{flex:1;height:1px;background:var(--cream-border);}
 
-    /* M4 Recommended Section */
     .m4-section{margin:0 16px 8px;}
     .m4-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
     .m4-badge{display:inline-flex;align-items:center;gap:6px;background:var(--m4-soft);border:1px solid var(--m4-border);border-radius:20px;padding:5px 12px 5px 10px;}
@@ -48,7 +45,6 @@
     .m4-header-line{flex:1;height:1px;background:var(--cream-border);}
     .m4-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-    /* M4 Cards */
     .m4-card{background:var(--card-bg);border-radius:var(--radius-card);padding:18px 16px 16px;cursor:pointer;border:1px solid var(--m4-border);box-shadow:0 1px 8px rgba(46,95,163,0.06);position:relative;overflow:hidden;opacity:0;transform:translateY(10px);}
     .m4-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s ease;}
     .m4-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(46,95,163,0.3),transparent);}
@@ -58,11 +54,9 @@
     .m4-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
     .m4-new-tag{display:inline-block;background:var(--m4);color:#fff;font-size:8px;font-weight:500;letter-spacing:1px;text-transform:uppercase;border-radius:6px;padding:2px 6px;margin-bottom:8px;}
 
-    /* Worlds */
     .worlds-wrap{display:flex;flex-direction:column;gap:10px;padding:0 16px;}
     .world-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-    /* Card */
     .world-card{background:var(--card-bg);border-radius:var(--radius-card);padding:18px 16px 16px;cursor:pointer;border:1px solid var(--card-border);box-shadow:0 1px 4px rgba(0,0,0,0.04);position:relative;overflow:hidden;opacity:0;transform:translateY(10px);}
     .world-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s ease;}
     .world-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(232,150,12,0.18),transparent);opacity:0;transition:opacity 0.2s;}
@@ -79,127 +73,64 @@
     .world-name{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.3;}
     .world-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
 
-    /* Locked divider */
     .divider-locked{margin:4px 0;padding:0 4px;display:flex;align-items:center;gap:8px;}
     .divider-locked-line{flex:1;height:1px;background:var(--cream-border);}
     .divider-locked-tag{display:inline-flex;align-items:center;gap:5px;background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:500;color:var(--soft);white-space:nowrap;}
     #countdown-display{font-size:11px;font-weight:600;color:var(--gold);}
 
-    /* Coming Soon */
     .divider-soon{margin:12px 0 14px;padding:0 4px;display:flex;align-items:center;gap:10px;}
     .divider-soon-line{flex:1;height:1px;background:var(--cream-border);}
     .divider-soon-text{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
 
-    /* Spoiler card */
     .spoiler-card{background:transparent;border-radius:0;padding:8px 4px 16px;border:none;box-shadow:none;opacity:0;transform:translateY(8px);}
     .spoiler-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.4s ease,transform 0.4s ease;}
-    .spoiler-label{font-size:9px;letter-spacing:2px;color:var(--soft);text-transform:uppercase;margin-bottom:8px;font-weight:500;}
     .spoiler-title{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--mid);margin-bottom:6px;}
     .spoiler-sub{font-size:12px;font-weight:300;color:var(--soft);line-height:1.65;margin-bottom:12px;}
     .spoiler-chips{display:flex;flex-wrap:wrap;gap:6px;}
     .spoiler-chip{display:inline-flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--cream-border);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--soft);font-weight:400;}
 
-    /* Skeleton */
     .skeleton{background:linear-gradient(90deg,#F0ECE4 25%,#EDE8DF 50%,#F0ECE4 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-card);height:120px;}
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-    /* Footer */
     .footer{padding:28px 20px 12px;text-align:center;}
     .footer a{font-size:12px;font-weight:300;color:var(--soft);text-decoration:none;}
 
-    /* ── Signature Tools ── */
     .sig-wrap{padding:0 16px;margin-bottom:8px;}
-
     .sig-card{border-radius:20px;padding:20px 16px 18px;cursor:pointer;position:relative;overflow:hidden;border:1px solid transparent;transition:transform 0.15s,box-shadow 0.15s;}
     .sig-card:active{transform:scale(0.97);}
-
     .sig-card.reflection{background:linear-gradient(145deg,#1C1917 0%,#2C2520 100%);border-color:#3A332D;}
-    .sig-card.care{background:linear-gradient(145deg,#EEF6EF 0%,#E0F0E2 100%);border-color:#C2DFC6;}
-
     .sig-card::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(145deg,rgba(255,255,255,0.04),transparent);pointer-events:none;}
-
-    .sig-icon{font-size:22px;margin-bottom:12px;display:block;}
     .sig-label{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
-    .sig-card.reflection .sig-label{color:rgba(232,150,12,0.8);}
-    .sig-card.care .sig-label{color:#4A8A52;}
     .sig-name{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;line-height:1.3;margin-bottom:6px;}
-    .sig-card.reflection .sig-name{color:#FDFBF7;}
-    .sig-card.care .sig-name{color:#1C3A1F;}
     .sig-hint{font-size:11px;font-weight:300;line-height:1.6;}
-    .sig-card.reflection .sig-hint{color:rgba(253,251,247,0.5);}
-    .sig-card.care .sig-hint{color:#5A7A5C;}
-    .sig-arrow{position:absolute;bottom:16px;right:16px;font-size:14px;opacity:0.35;}
-    .sig-card.reflection .sig-arrow{color:#FDFBF7;}
-    .sig-card.care .sig-arrow{color:#1C3A1F;}
 
-    /* Peer availability chip */
-    .pr-avail{font-size:10px;font-weight:400;color:var(--soft);margin-top:3px;letter-spacing:0.3px;}
-
-    /* Crisis strip */
     .crisis-strip{margin:24px 16px 0;background:#1C1917;border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #2E2925;}
     .crisis-strip-left{display:flex;flex-direction:column;gap:2px;}
     .crisis-strip-label{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(232,150,12,0.7);}
     .crisis-strip-text{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:500;color:#FDFBF7;line-height:1.4;}
     .crisis-strip-btn{background:rgba(232,150,12,0.15);border:1px solid rgba(232,150,12,0.3);color:var(--gold);border-radius:12px;padding:9px 16px;font-size:12px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s;}
     .crisis-strip-btn:active{background:rgba(232,150,12,0.25);}
-    /* Library released card */
-.library-card{
-  background:#1C1917;border-radius:20px;overflow:hidden;
-  cursor:pointer;margin:0 auto 0;        /* ← center it */
-  max-width:500px;                        /* ← cap the width */
-  border:1px solid rgba(255,255,255,0.08);
-  opacity:0;transform:translateY(10px);
-}
-.library-card.visible{
-  opacity:1;transform:translateY(0);
-  transition:opacity 0.4s ease,transform 0.4s ease;
-}
-.library-shelf-preview{
-  background:#F0E8DC;padding:14px 12px 0;position:relative;
-}
-.library-books-row{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:4px;}
-.library-book{
-  aspect-ratio:2/3;border-radius:3px;position:relative;overflow:hidden;
-  box-shadow:2px 3px 5px rgba(0,0,0,0.28),-1px 0 0 rgba(0,0,0,0.1);
-}
-.library-book::after{
-  content:'';position:absolute;left:0;top:0;bottom:0;
-  width:5px;background:linear-gradient(90deg,rgba(0,0,0,0.25),transparent);
-}
-.library-book-empty{
-  aspect-ratio:2/3;border-radius:3px;
-  border:1.5px dashed rgba(0,0,0,0.1);
-  background:rgba(255,255,255,0.25);
-}
-.library-plank{
-  height:13px;margin-top:5px;border-radius:2px;
-  background:linear-gradient(180deg,#DDB870 0%,#C4993A 50%,#A87E28 100%);
-  box-shadow:0 4px 8px rgba(0,0,0,0.22);position:relative;
-}
-.library-plank::before{
-  content:'';position:absolute;top:2px;left:0;right:0;
-  height:3px;background:rgba(255,255,255,0.15);border-radius:2px 2px 0 0;
-}
-.library-body{padding:13px 16px 15px;}
-.library-badge{
-  display:inline-block;background:var(--m4);color:#fff;
-  font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;
-  border-radius:6px;padding:2px 8px;margin-bottom:7px;
-}
-.library-name{
-  font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;
-  color:#FDFBF7;margin-bottom:4px;line-height:1.3;
-}
-.library-desc{font-size:11px;font-weight:300;color:rgba(253,251,247,0.45);line-height:1.65;}
-.library-progress{margin-top:11px;}
-.library-progress-top{
-  display:flex;justify-content:space-between;
-  font-size:9px;letter-spacing:0.5px;margin-bottom:5px;
-}
-.library-progress-label{color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:1px;}
-.library-progress-count{color:rgba(176,125,16,0.75);}
-.library-progress-track{height:3px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;}
-.library-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(226,192,96,0.6),rgba(176,125,16,0.9));transition:width 1s ease;}
+
+    /* Library card */
+    .library-card{background:#1C1917;border-radius:20px;overflow:hidden;cursor:pointer;margin:0 auto;max-width:260px;border:1px solid rgba(255,255,255,0.08);opacity:0;transform:translateY(10px);}
+    .library-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.4s ease,transform 0.4s ease;}
+    .library-shelf-preview{background:#F0E8DC;padding:14px 12px 0;position:relative;}
+    .library-books-row{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:4px;}
+    .library-book{aspect-ratio:2/3;border-radius:3px;position:relative;overflow:hidden;box-shadow:2px 3px 5px rgba(0,0,0,0.28),-1px 0 0 rgba(0,0,0,0.1);}
+    .library-book::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(90deg,rgba(0,0,0,0.25),transparent);}
+    .library-book-empty{aspect-ratio:2/3;border-radius:3px;border:1.5px dashed rgba(0,0,0,0.1);background:rgba(255,255,255,0.25);}
+    .library-plank{height:13px;margin-top:5px;border-radius:2px;background:linear-gradient(180deg,#DDB870 0%,#C4993A 50%,#A87E28 100%);box-shadow:0 4px 8px rgba(0,0,0,0.22);position:relative;}
+    .library-plank::before{content:'';position:absolute;top:2px;left:0;right:0;height:3px;background:rgba(255,255,255,0.15);border-radius:2px 2px 0 0;}
+    .library-body{padding:13px 16px 15px;}
+    .library-badge{display:inline-block;background:var(--m4);color:#fff;font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;border-radius:6px;padding:2px 8px;margin-bottom:7px;}
+    .library-name{font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:#FDFBF7;margin-bottom:4px;line-height:1.3;}
+    .library-desc{font-size:11px;font-weight:300;color:rgba(253,251,247,0.45);line-height:1.65;}
+    .library-progress{margin-top:11px;}
+    .library-progress-top{display:flex;justify-content:space-between;font-size:9px;letter-spacing:0.5px;margin-bottom:5px;}
+    .library-progress-label{color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:1px;}
+    .library-progress-count{color:rgba(176,125,16,0.75);}
+    .library-progress-track{height:3px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;}
+    .library-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(226,192,96,0.6),rgba(176,125,16,0.9));transition:width 1s ease;}
   </style>
 </head>
 <body>
@@ -219,13 +150,11 @@
     <button class="pr-btn" onclick="window.location.href='peer.html'">นัดคุย →</button>
   </div>
 
-<!-- Signature Tools — consolidated -->
   <div class="sig-wrap">
     <div class="section-label" style="margin-bottom:12px;">
       <div class="section-label-text">ดูแลตัวเอง 24/7</div>
       <div class="section-label-line"></div>
     </div>
-
     <div class="sig-card reflection" onclick="openCareSheet()" style="background:linear-gradient(145deg,#1C1917 0%,#2C2520 100%);border-color:#3A332D;display:flex;align-items:center;gap:16px;padding:18px 20px;">
       <div style="flex:1;">
         <div class="sig-label" style="color:rgba(232,150,12,0.8);margin-bottom:6px;">ดูแลตัวเอง 24/7</div>
@@ -234,7 +163,6 @@
       </div>
       <div style="font-size:22px;opacity:0.5;">→</div>
     </div>
-
     <div style="text-align:center;margin-top:10px;">
       <a href="tel:1323" style="font-size:11px;font-weight:300;color:var(--soft);text-decoration:none;letter-spacing:0.3px;">
         หรือคุยกับผู้เชี่ยวชาญได้เลย — <span style="color:var(--gold);">1323</span> ฟรี ตลอดวัน
@@ -259,16 +187,16 @@
             <span style="font-size:14px;color:rgba(255,255,255,0.2);">→</span>
           </a>
 
-          <a href="care.html" style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--green-soft);border:1.5px solid var(--green-border);border-radius:16px;text-decoration:none;" onclick="closeCareSheet()">
+          <a href="care.html" style="display:flex;align-items:center;gap:14px;padding:16px;background:#EEF6EF;border:1.5px solid #C2DFC6;border-radius:16px;text-decoration:none;" onclick="closeCareSheet()">
             <span style="font-size:22px;">🌿</span>
             <span style="flex:1;">
               <span style="display:block;font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:#1C3A1F;margin-bottom:2px;">วิธีดูแลตัวเองใน 6 ชั้น</span>
-<span style="display:block;font-size:11px;font-weight:300;color:#5A7A5C;">ร่างกาย · ความสัมพันธ์ · การแสดงออก · และอีก 3 ชั้น</span>
+              <span style="display:block;font-size:11px;font-weight:300;color:#5A7A5C;">ร่างกาย · ความสัมพันธ์ · การแสดงออก · และอีก 3 ชั้น</span>
             </span>
             <span style="font-size:14px;color:rgba(58,125,68,0.4);">→</span>
           </a>
 
-          <a href="alltools.html" style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:16px;text-decoration:none;" onclick="closeCareSheet()">
+          <a href="alltools.html" style="display:flex;align-items:center;gap:14px;padding:16px;background:#FFFFFF;border:1.5px solid var(--cream-border);border-radius:16px;text-decoration:none;" onclick="closeCareSheet()">
             <span style="font-size:22px;">⚡</span>
             <span style="flex:1;">
               <span style="display:block;font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);margin-bottom:2px;">อยากทำอะไรตอนนี้เลย</span>
@@ -292,16 +220,13 @@
     </div>
   </div>
 
-  <!-- M.4 Recommended Section (rendered dynamically) -->
   <div id="m4-section-root"></div>
-
   <div class="worlds-wrap" id="worlds-wrap"></div>
 
-  <!-- Crisis strip — always visible -->
   <div class="crisis-strip" onclick="window.location.href='crisis.html'" style="cursor:pointer;">
     <div class="crisis-strip-left">
-      <div class="crisis-strip-label"> ฉุกเฉิน · 24/7</div>
-      <div class="crisis-strip-text">ถ้าตอนนี้รู้สึกไม่ไหวเเล้ว/ตกอยู๋ในอันตราย <br>กดปุ่มนี้</div>
+      <div class="crisis-strip-label">ฉุกเฉิน · 24/7</div>
+      <div class="crisis-strip-text">ถ้าตอนนี้รู้สึกไม่ไหวแล้ว/ตกอยู่ในอันตราย<br/>กดปุ่มนี้</div>
     </div>
     <button class="crisis-strip-btn">ขอความช่วยเหลือ</button>
   </div>
@@ -316,52 +241,28 @@ const API_URL  = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0M
 const LIFF_ID  = "2009806939-H06mwKgI";
 const isPreview = new URLSearchParams(window.location.search).get("preview") === "student";
 
-// ═══════════════════════════════════════════════════════
-// LAYOUT CONFIG — แก้ที่นี่ที่เดียว ไม่ต้องแตะส่วนอื่น
-// ═══════════════════════════════════════════════════════
-
-// Worlds 1–4: grid 2×2
+// ═══ LAYOUT CONFIG ═══════════════════════════════════════
 const WORLDS_TOP = [
   { name:"แผนดูแลตัวเอง", desc:"รู้แล้วว่าอยากทำงานกับอะไร พร้อมทำทีละนิดเป็นเวลาหลายสัปดาห์", url:"plans.html", emoji:"🗺️" },
-  { name:"Puzzle Piece",    desc:"คลังความรู้จิตวิทยาที่เข้าใจง่าย",        url:"puzzle.html",     emoji:"🧩" },
-  { name:"People", desc:"มุมมองของผู้คนที่หลากหลาย", url:"people.html", emoji:"👥", newBadge:"🏠 ห่างบ้าน" },
-  { name:"Programs",        desc:"Workshop และ กิจกรรมเดือนนี้", url:"programs.html",   emoji:"🌱" },
-  { name:"ใจดี TU คืออะไร?", desc:"โครงสร้างระบบ เเนวคิด ผลงานทีม", url:"founder.html", emoji:"📜" },
+  { name:"Puzzle Piece",   desc:"คลังความรู้จิตวิทยาที่เข้าใจง่าย", url:"puzzle.html", emoji:"🧩" },
+  { name:"People",         desc:"มุมมองของผู้คนที่หลากหลาย", url:"people.html", emoji:"👥", newBadge:"🏠 ห่างบ้าน" },
+  { name:"Programs",       desc:"Workshop และ กิจกรรมเดือนนี้", url:"programs.html", emoji:"🌱" },
+  { name:"ใจดี TU คืออะไร?", desc:"โครงสร้างระบบ แนวคิด ผลงานทีม", url:"founder.html", emoji:"📜" },
 ];
 
-// ── M.4 Recommended Cards ──
 const M4_CARDS = [
-  {
-    name: "School Support",
-    desc: "สิ่งที่โรงเรียนลืมบอก",
-    url:  "school.html",
-    emoji: "🏫",
-    isNew: false
-  },
-  {
-    name: "PAT SAK",
-    thName: "โครงการพัฒนาศักยภาพการดํารงตน",
-    desc: "สรุปทุกอย่างจาก 2 วันที่ผ่านมา ให้อยู่ที่เดียว",
-    url:  "patsak.html",
-    emoji: "⭐",
-    isNew: true
-  },
+  { name:"School Support", desc:"สิ่งที่โรงเรียนลืมบอก", url:"school.html", emoji:"🏫", isNew:false },
+  { name:"PAT SAK", thName:"โครงการพัฒนาศักยภาพการดํารงตน", desc:"สรุปทุกอย่างจาก 2 วันที่ผ่านมา ให้อยู่ที่เดียว", url:"patsak.html", emoji:"⭐", isNew:true },
 ];
 
-// ── วันที่เปิด Worlds 6-8 (ISO "YYYY-MM-DD") ──
 const UNLOCK_DATE = "2028-07-12";
 
-// Worlds 6–7: grid 2 cols (locked จนถึง UNLOCK_DATE)
 const WORLDS_LOCKED_GRID = [
   { name:"Academic Support", desc:"เรียนให้ดีขึ้นในแบบที่ใช่", url:"academic.html", emoji:"📚" },
 ];
 
-// World 8: half-width left locked
-const WORLD_8 = {
-  name:"Career Support", desc:"วางแผนอนาคต เริ่มได้เลย", url:"career.html", emoji:"🎯"
-};
+const WORLD_8 = { name:"Career Support", desc:"วางแผนอนาคต เริ่มได้เลย", url:"career.html", emoji:"🎯" };
 
-// Coming Soon — เพิ่ม/ลบได้เลย
 const COMING_SOON = [
   { name:"Drama & Arts",   emoji:"🎭", desc:"ชมรมละคร time management + passion" },
   { name:"POSN Corner",    emoji:"🔬", desc:"พื้นที่สายโอลิมปิก" },
@@ -370,9 +271,7 @@ const COMING_SOON = [
   { name:"Community Work", emoji:"🤝", desc:"จิตอาสา ค่าย กิจกรรม" },
 ];
 
-// ═══════════════════════════════════════════════════════
-// COUNTDOWN
-// ═══════════════════════════════════════════════════════
+// ═══ COUNTDOWN ════════════════════════════════════════════
 let _timer = null;
 function startCountdown() {
   const el = document.getElementById("countdown-display");
@@ -389,9 +288,7 @@ function startCountdown() {
   _timer = setInterval(tick, 60000);
 }
 
-// ═══════════════════════════════════════════════════════
-// BUILD REGULAR WORLD CARD
-// ═══════════════════════════════════════════════════════
+// ═══ WORLD CARD ════════════════════════════════════════════
 function makeCard(w, full, locked, delay) {
   const el = document.createElement("div");
   el.className = "world-card" + (full?" full":"") + (locked?" locked":"");
@@ -403,48 +300,38 @@ function makeCard(w, full, locked, delay) {
 
   if (full) {
     el.innerHTML = `<div class="world-icon">${icon}</div><div class="world-body"><div class="world-name">${w.name}</div><div class="world-desc">${w.desc}</div></div>`;
-} else {
+  } else {
     el.innerHTML = `
-  <div class="world-icon">${icon}</div>
-  <div class="world-name">${w.name}</div>
-  <div class="world-desc">${w.desc}</div>
-  ${w.newBadge ? `<div style="display:inline-flex;align-items:center;margin-top:8px;background:#4A1A25;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:500;color:#FDF5F5;letter-spacing:0.5px;">${w.newBadge}</div>` : ''}`;
+      <div class="world-icon">${icon}</div>
+      <div class="world-name">${w.name}</div>
+      <div class="world-desc">${w.desc}</div>
+      ${w.newBadge ? `<div style="display:inline-flex;align-items:center;margin-top:8px;background:#4A1A25;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:500;color:#FDF5F5;letter-spacing:0.5px;">${w.newBadge}</div>` : ''}`;
   }
 
   setTimeout(() => el.classList.add("visible"), delay);
   return el;
 }
 
-// ═══════════════════════════════════════════════════════
-// BUILD M4 CARD
-// ═══════════════════════════════════════════════════════
+// ═══ M4 CARD ═══════════════════════════════════════════════
 function makeM4Card(w, delay) {
   const el = document.createElement("div");
   el.className = "m4-card";
   el.onclick = () => window.location.href = w.url;
-
   el.innerHTML = `
     <div class="m4-icon">${w.emoji}</div>
     ${w.isNew ? `<div class="m4-new-tag">ใหม่</div>` : ""}
     <div class="m4-name">${w.name}${w.thName ? `<br><span style="font-size:10px;font-weight:300;color:var(--soft);">${w.thName}</span>` : ""}</div>
-    <div class="m4-desc">${w.desc}</div>
-  `;
-
+    <div class="m4-desc">${w.desc}</div>`;
   setTimeout(() => el.classList.add("visible"), delay);
   return el;
 }
 
-// ═══════════════════════════════════════════════════════
-// RENDER M4 SECTION
-// ═══════════════════════════════════════════════════════
+// ═══ RENDER M4 ══════════════════════════════════════════════
 function renderM4Section(baseDelay) {
   const root = document.getElementById("m4-section-root");
   root.innerHTML = "";
-
   const section = document.createElement("div");
   section.className = "m4-section";
-
-  // Header with badge
   const header = document.createElement("div");
   header.className = "m4-header";
   header.innerHTML = `
@@ -452,53 +339,40 @@ function renderM4Section(baseDelay) {
       <div class="m4-badge-dot"></div>
       <div class="m4-badge-text">แนะนำสำหรับน้อง ม.4</div>
     </div>
-    <div class="m4-header-line"></div>
-  `;
+    <div class="m4-header-line"></div>`;
   section.appendChild(header);
-
-  // Card row
   const row = document.createElement("div");
   row.className = "m4-row";
   let d = baseDelay;
-  M4_CARDS.forEach(w => {
-    row.appendChild(makeM4Card(w, d));
-    d += 55;
-  });
+  M4_CARDS.forEach(w => { row.appendChild(makeM4Card(w, d)); d += 55; });
   section.appendChild(row);
-
   root.appendChild(section);
   return d;
 }
 
-// ═══════════════════════════════════════════════════════
-// RENDER WORLDS
-// ═══════════════════════════════════════════════════════
+// ═══ RENDER ALL ══════════════════════════════════════════════
 function renderAll() {
   const wrap = document.getElementById("worlds-wrap");
   wrap.innerHTML = "";
   let d = 0; const S = 55;
   const isOpen = new Date(UNLOCK_DATE) <= new Date();
 
-  // ── M4 Section (rendered first, above explore) ──
   d = renderM4Section(d + 30);
 
-  // Section label for explore
   const lbl = document.createElement("div");
   lbl.className = "section-label";
   lbl.style.cssText = "margin-bottom:12px;margin-top:16px;";
   lbl.innerHTML = `<div class="section-label-text">สำรวจ</div><div class="section-label-line"></div>`;
   wrap.appendChild(lbl);
 
-  // Worlds 1–4: grid (2x2)
-  for (let i=0; i<WORLDS_TOP.length; i+=2) {
+  for (let i = 0; i < WORLDS_TOP.length; i += 2) {
     const row = document.createElement("div");
     row.className = "world-row";
-    row.appendChild(makeCard(WORLDS_TOP[i],   false, false, d)); d+=S;
-    if (WORLDS_TOP[i+1]) { row.appendChild(makeCard(WORLDS_TOP[i+1], false, false, d)); d+=S; }
+    row.appendChild(makeCard(WORLDS_TOP[i], false, false, d)); d += S;
+    if (WORLDS_TOP[i+1]) { row.appendChild(makeCard(WORLDS_TOP[i+1], false, false, d)); d += S; }
     wrap.appendChild(row);
   }
 
-  // Locked divider (only if still locked)
   if (!isOpen) {
     const div = document.createElement("div");
     div.className = "divider-locked";
@@ -510,18 +384,14 @@ function renderAll() {
     setTimeout(startCountdown, 0);
   }
 
-  // Worlds locked: Academic Support only (School Support moved to M4 section)
   const lockedRow = document.createElement("div");
   lockedRow.className = "world-row";
-  WORLDS_LOCKED_GRID.forEach(w => {
-    lockedRow.appendChild(makeCard(w, false, !isOpen, d)); d+=S;
-  });
+  WORLDS_LOCKED_GRID.forEach(w => { lockedRow.appendChild(makeCard(w, false, !isOpen, d)); d += S; });
   wrap.appendChild(lockedRow);
 
-  // World 8: Career Support (locked)
   const row8 = document.createElement("div");
   row8.className = "world-row";
-  row8.appendChild(makeCard(WORLD_8, false, !isOpen, d)); d+=S;
+  row8.appendChild(makeCard(WORLD_8, false, !isOpen, d)); d += S;
   wrap.appendChild(row8);
 
   // Coming Soon divider
@@ -530,9 +400,47 @@ function renderAll() {
   ds.innerHTML = `<div class="divider-soon-line"></div><div class="divider-soon-text">Coming Soon</div><div class="divider-soon-line"></div>`;
   wrap.appendChild(ds);
 
-  // ── Library released card — between divider and spoiler ──
+  // 2-col row: library + community
+  const surpriseRow = document.createElement('div');
+  surpriseRow.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:10px;';
+  wrap.appendChild(surpriseRow);
+
+  // Community card — mini photo wall preview
+  const comCard = document.createElement('div');
+  comCard.onclick = () => window.location.href = 'community.html';
+  comCard.style.cssText = 'background:#1C1917;border-radius:20px;overflow:hidden;cursor:pointer;border:1px solid rgba(76,175,80,0.2);opacity:0;transform:translateY(10px);display:flex;flex-direction:column;transition:transform 0.15s;';
+  comCard.addEventListener('touchstart', () => comCard.style.transform='scale(0.97)', {passive:true});
+  comCard.addEventListener('touchend', () => comCard.style.transform='', {passive:true});
+
+  // Mini photo wall — 6 slots in 3×2
+  const slotColors = ['#2D4A2E','#1A3A20','#2E4A1A','#1A3020','#3A3A1A','#1E2E3A'];
+  const slotIcons  = ['🌿','','🤝','','🛕',''];
+  let slotsHtml = '';
+  slotColors.forEach((c, i) => {
+    slotsHtml += `<div style="aspect-ratio:1;border-radius:5px;background:${c};display:flex;align-items:center;justify-content:center;font-size:12px;opacity:${slotIcons[i]?'0.7':'0.3'};">${slotIcons[i] || '📷'}</div>`;
+  });
+
+  comCard.innerHTML = `
+    <div style="background:#1A2E1A;padding:12px 11px 0;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:5px;">
+        ${slotsHtml}
+      </div>
+      <div style="height:10px;margin-top:4px;border-radius:2px;background:linear-gradient(180deg,rgba(76,175,80,0.4) 0%,rgba(46,125,50,0.6) 100%);box-shadow:0 3px 6px rgba(0,0,0,0.2);position:relative;">
+        <div style="position:absolute;top:1px;left:0;right:0;height:2px;background:rgba(255,255,255,0.1);border-radius:2px 2px 0 0;"></div>
+      </div>
+    </div>
+    <div style="padding:11px 13px 13px;flex:1;display:flex;flex-direction:column;gap:4px;">
+      <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:rgba(76,175,80,0.85);">ใหม่ · เพิ่งเปิดตัว</div>
+      <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:#FDFBF7;line-height:1.3;">Community Wall</div>
+      <div style="font-size:10px;font-weight:300;color:rgba(253,251,247,0.38);line-height:1.55;margin-top:1px;">ทำแล้ว แชร์รูปให้เพื่อน</div>
+    </div>`;
+  surpriseRow.appendChild(comCard);
+  setTimeout(() => { comCard.style.opacity='1'; comCard.style.transform='translateY(0)'; comCard.style.transition='opacity 0.4s ease,transform 0.4s ease'; }, d + 100);
+
+  // Library card
   const libCard = document.createElement('div');
   libCard.className = 'library-card';
+  libCard.style.maxWidth = '';  // remove max-width — let grid control size
   libCard.onclick = () => window.location.href = 'library.html';
 
   const SPINE_COLORS = ['#8B4513','#2F6A2F','#1A3A6B','#6B1A1A','#4A4A1A','#2A4A6B','#6B3A1A'];
@@ -558,8 +466,8 @@ function renderAll() {
     </div>
     <div class="library-body">
       <div class="library-badge">ใหม่ · เพิ่งเปิดตัว</div>
-      <div class="library-name">ชั้นหนังสือของชาวเตรียม </div>
-      <div class="library-desc">อ่านแล้ว บอกต่อ สร้างร่วมกัน<br/> โดย...ชมรมรมห้องสมุด</div>
+      <div class="library-name">ชั้นหนังสือของชาวเตรียม</div>
+      <div class="library-desc">อ่านแล้ว บอกต่อ สร้างร่วมกัน<br/>โดย...ชมรมห้องสมุด</div>
       <div class="library-progress">
         <div class="library-progress-top">
           <span class="library-progress-label">ชั้นที่ 1</span>
@@ -571,29 +479,29 @@ function renderAll() {
       </div>
     </div>`;
 
-wrap.appendChild(libCard);
+  surpriseRow.appendChild(libCard);
   setTimeout(() => {
     libCard.classList.add('visible');
     const fill = document.getElementById('lib-fill');
     if (fill) setTimeout(() => fill.style.width = pct + '%', 100);
   }, d + 100);
 
-  // ← PASTE THE FETCH RIGHT HERE, after the setTimeout block above
-fetch(API_URL + '?action=getBooks')
-  .then(r => r.json())
-  .then(res => {                          // ← was 'd', rename to 'res'
-    if (res.status === 'OK' && res.books) {
-      const real    = res.books.length;
-      const realPct = Math.min((real / shelfCap) * 100, 100);
-      const countEl = libCard.querySelector('.library-progress-count');
-      const fillEl  = document.getElementById('lib-fill');
-      if (countEl) countEl.textContent = `${real} / ${shelfCap} เล่ม`;
-      if (fillEl)  fillEl.style.width  = realPct + '%';
-    }
-  })
-  .catch(() => {});
+  // Fetch real book count
+  fetch(API_URL + '?action=getBooks')
+    .then(r => r.json())
+    .then(res => {
+      if (res.status === 'OK' && res.books) {
+        const real    = res.books.length;
+        const realPct = Math.min((real / shelfCap) * 100, 100);
+        const countEl = libCard.querySelector('.library-progress-count');
+        const fillEl  = document.getElementById('lib-fill');
+        if (countEl) countEl.textContent = `${real} / ${shelfCap} เล่ม`;
+        if (fillEl)  fillEl.style.width  = realPct + '%';
+      }
+    })
+    .catch(() => {});
 
-  // Spoiler card — continues below
+  // Spoiler card
   const sp = document.createElement("div");
   sp.className = "spoiler-card";
   sp.innerHTML = `
@@ -604,9 +512,7 @@ fetch(API_URL + '?action=getBooks')
   setTimeout(() => sp.classList.add("visible"), d + 200);
 }
 
-// ═══════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════
+// ═══ INIT ════════════════════════════════════════════════════
 if (isPreview) {
   document.getElementById("greeting-name").innerText = "สวัสดี 🤍";
   renderAll();
@@ -623,7 +529,8 @@ if (isPreview) {
       .catch(() => renderAll());
   } catch(e) { renderAll(); }
 }
-  // ── CARE SHEET ──────────────────────────────────────
+
+// ═══ CARE SHEET ══════════════════════════════════════════════
 function openCareSheet() {
   const ov = document.getElementById('care-overlay');
   ov.style.display = 'flex';
