@@ -97,6 +97,18 @@
 
     /* link badge */
     .lnk{display:inline-flex;align-items:center;gap:3px;background:rgba(46,95,163,0.1);border-radius:4px;padding:1px 7px;font-size:10px;font-weight:500;color:var(--blue);text-decoration:none;vertical-align:middle;}
+    .lnk-pink{background:#FDF2F8;border:1px solid #FBCFE8;color:#DB2777;}
+    .lnk-purple{background:var(--purple-soft);border:1px solid var(--purple-border);color:var(--purple);}
+    .lnk-green{background:var(--green-soft);border:1px solid var(--green-border);color:var(--green);}
+
+    /* UX: tap hint on check-row */
+    .check-row{transition:background 0.12s;}
+    .check-row:active{background:var(--cream-warm);}
+    /* ripple hint on first load */
+    @keyframes rowpulse{0%{background:transparent}50%{background:var(--gold-soft)}100%{background:transparent}}
+    .info-btn{position:relative;}
+    .info-btn::after{content:'กด';position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--soft);white-space:nowrap;font-family:'Mitr',sans-serif;opacity:0;transition:opacity 0.2s;pointer-events:none;}
+    .check-group:hover .info-btn::after,.check-group:focus-within .info-btn::after{opacity:1;}
 
     /* ── CALLOUT ── */
     .callout{margin:0 16px 10px;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
@@ -166,6 +178,15 @@
 
     .tbd{display:inline-block;background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:4px;padding:1px 6px;font-size:9px;font-weight:500;color:var(--soft);letter-spacing:1px;text-transform:uppercase;margin-left:4px;vertical-align:middle;}
 
+    /* ── CHANNEL LIST ── */
+    .channel-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--cream-border);text-decoration:none;color:inherit;transition:background 0.15s;}
+    .channel-row:active{background:var(--cream-warm);}
+    .channel-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center;}
+    .channel-body{flex:1;}
+    .channel-name{font-size:13.5px;font-weight:500;color:var(--dark);line-height:1.3;}
+    .channel-url{font-size:11px;font-weight:300;color:var(--soft);margin-top:1px;}
+    .channel-arrow{font-size:12px;color:var(--soft);flex-shrink:0;white-space:nowrap;}
+
     /* ── TOOL CAROUSEL ── */
     .tool-carousel-wrap{padding:0 0 16px;position:relative;}
     .tool-carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:0 16px 4px;scrollbar-width:none;}
@@ -231,8 +252,17 @@
   <div class="sec-div-line"></div>
 </div>
 
+<!-- logo helper styles -->
+<style>
+  .logo-img{width:36px;height:36px;border-radius:8px;object-fit:contain;flex-shrink:0;background:var(--cream-warm);border:1px solid var(--cream-border);}
+  .logo-img.sm{width:28px;height:28px;border-radius:6px;}
+  .logo-img.round{border-radius:50%;}
+</style>
+
 <a class="link-card" href="#" target="_blank" rel="noopener">
-  <span class="link-card-icon">🎓</span>
+  <!-- Upload your file to /public/logos/samakorn1.png on Vercel -->
+  <img class="logo-img" src="/logos/samakorn1.png"
+       onerror="this.src='https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64'" alt="สมาคม"/>
   <div class="link-card-body">
     <div class="link-card-label" style="color:var(--blue);">สมาคม</div>
     <div class="link-card-name">สมาคมนักเรียนเก่าเตรียมอุดมศึกษา</div>
@@ -242,7 +272,9 @@
 </a>
 
 <a class="link-card" href="#" target="_blank" rel="noopener">
-  <span class="link-card-icon">🏛️</span>
+  <!-- Upload your file to /public/logos/samakorn2.png on Vercel -->
+  <img class="logo-img" src="/logos/samakorn2.png"
+       onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-size:24px\'>🏛️</span>')" alt="สมาคม"/>
   <div class="link-card-body">
     <div class="link-card-label" style="color:var(--blue);">สมาคม</div>
     <div class="link-card-name">สมาคมที่ 2 <span class="tbd">TBD</span></div>
@@ -260,33 +292,43 @@
   <div class="sec-div-line"></div>
 </div>
 
-<div class="half-row">
-  <a class="half-card" href="https://triamudom.ac.th" target="_blank" rel="noopener">
-    <span class="half-icon">🌐</span>
-    <div class="half-name">เว็บโรงเรียน</div>
-    <div class="half-desc">ข้อมูลทางการ ปฏิทิน ประกาศ</div>
-    <div class="half-arrow">→</div>
+<!-- channel list card -->
+<div class="channel-card" style="margin:0 16px 10px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;">
+  <a class="channel-row" href="https://triamudom.ac.th" target="_blank" rel="noopener">
+    <img class="logo-img sm"    src="/logos/school-logo.png" alt="เว็บโรงเรียน"/>
+    <div class="channel-body">
+      <div class="channel-name">เว็บโรงเรียนเตรียมอุดมศึกษา</div>
+      <div class="channel-url">triamudom.ac.th</div>
+    </div>
+    <span class="channel-arrow">→</span>
   </a>
-  <a class="half-card" href="#" target="_blank" rel="noopener">
-    <span class="half-icon">📣</span>
-    <div class="half-name">Facebook ประชาสัมพันธ์</div>
-    <div class="half-desc">ข่าวกิจกรรม อัปเดตเร็วที่สุด</div>
-    <div class="half-arrow">→</div>
+  <a class="channel-row" href="#" target="_blank" rel="noopener">
+    <img class="logo-img sm round" src="/logos/school-fb.png" alt="Facebook"/>
+    <div class="channel-body">
+      <div class="channel-name">เพจประชาสัมพันธ์โรงเรียน</div>
+      <div class="channel-url">facebook.com/triamudom</div>
+    </div>
+    <span class="channel-arrow">→</span>
   </a>
-</div>
-
-<div class="half-row">
-  <a class="half-card" href="#" target="_blank" rel="noopener">
-    <span class="half-icon">🎓</span>
-    <div class="half-name">TU Pro</div>
-    <div class="half-desc">Portfolio กิจกรรม คุณสมบัติ</div>
-    <div class="half-arrow">→</div>
+  <a class="channel-row" href="#" target="_blank" rel="noopener">
+    <!-- Upload to /public/logos/tupro.png — fallback to favicon -->
+    <img class="logo-img sm" src="/logos/tupro.png"
+         onerror="this.src='https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64'" alt="TU Pro"/>
+    <div class="channel-body">
+      <div class="channel-name">TU Pro</div>
+      <div class="channel-url">portfolio · กิจกรรม · คุณสมบัติ</div>
+    </div>
+    <span class="channel-arrow">→</span>
   </a>
-  <a class="half-card" href="#" target="_blank" rel="noopener">
-    <span class="half-icon">📋</span>
-    <div class="half-name">กช. — ลงทะเบียนชมรม</div>
-    <div class="half-desc">เปิดต้นภาค อย่ารอช้า</div>
-    <div class="half-arrow">→</div>
+  <a class="channel-row" href="#" target="_blank" rel="noopener" style="border-bottom:none;">
+    <!-- Upload to /public/logos/korchor.png — fallback to favicon -->
+    <img class="logo-img sm" src="/logos/korchor.png"
+         onerror="this.src='https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64'" alt="กช."/>
+    <div class="channel-body">
+      <div class="channel-name" style="color:#DB2777;">กช. — ลงทะเบียนชมรม</div>
+      <div class="channel-url">เปิดต้นภาค อย่ารอช้า</div>
+    </div>
+    <span class="channel-arrow" style="color:#DB2777;">กดเลย →</span>
   </a>
 </div>
 
@@ -470,7 +512,7 @@
   <div class="check-item" id="ci16">
     <div class="check-row" onclick="toggleCheck('ci16')">
       <div class="check-box"><span class="check-tick">✓</span></div>
-      <div class="check-label">ลงทะเบียนชมรม <a class="lnk" href="#" onclick="return false;">กช.</a></div>
+      <div class="check-label">ลงทะเบียนชมรม <a class="lnk lnk-pink" href="#" onclick="return false;">กช. กดเลย →</a></div>
     </div>
   </div>
 </div>
@@ -482,21 +524,21 @@
   <div class="check-item" id="ci17">
     <div class="check-row" onclick="toggleCheck('ci17')">
       <div class="check-box"><span class="check-tick">✓</span></div>
-      <div class="check-label">รู้จักหัวหน้าตึกของท่าน <a class="lnk" href="#" onclick="return false;">Route</a></div>
+      <div class="check-label">รู้จักหัวหน้าตึกของท่าน <a class="lnk lnk-purple" href="#section-buildings" onclick="event.stopPropagation();document.getElementById('section-buildings').scrollIntoView({behavior:'smooth'});return false;">กดเลย ↓</a></div>
     </div>
   </div>
 
   <div class="check-item" id="ci18">
     <div class="check-row" onclick="toggleCheck('ci18')">
       <div class="check-box"><span class="check-tick">✓</span></div>
-      <div class="check-label">รู้จักชื่อเล่น + ช่องทางติดต่อครูประจำชั้น <a class="lnk" href="#" onclick="return false;">Link</a></div>
+      <div class="check-label">รู้จักชื่อเล่น + ช่องทางติดต่อครูประจำชั้น</div>
     </div>
   </div>
 
   <div class="check-item" id="ci19">
     <div class="check-row" onclick="toggleCheck('ci19')">
       <div class="check-box"><span class="check-tick">✓</span></div>
-      <div class="check-label">รู้จักชื่อเล่น · ห้องพัก · ช่องทางติดต่อครูประจำวิชา <a class="lnk" href="#" onclick="return false;">Link</a></div>
+      <div class="check-label">รู้จักชื่อเล่น · ห้องพัก · ช่องทางติดต่อครูประจำวิชา</div>
     </div>
   </div>
 
@@ -510,7 +552,7 @@
   <div class="check-item" id="ci21">
     <div class="check-row" onclick="toggleCheck('ci21')">
       <div class="check-box"><span class="check-tick">✓</span></div>
-      <div class="check-label">แหล่งที่ทำสาธารณประโยชน์ <a class="lnk" href="#" onclick="return false;">Route</a></div>
+      <div class="check-label">แหล่งที่ทำสาธารณประโยชน์ <a class="lnk lnk-green" href="communitywork.html" onclick="event.stopPropagation();">กดเลย →</a></div>
     </div>
   </div>
 
@@ -632,7 +674,7 @@
 <!-- ════════════════════════════
      วัฒนธรรมแต่ละตึก
 ════════════════════════════ -->
-<div class="sec-div">
+<div class="sec-div" id="section-buildings">
   <div class="sec-div-dot" style="background:var(--purple)"></div>
   <div class="sec-div-text">วัฒนธรรมแต่ละตึก — เสียงจากหัวหน้าตึก</div>
   <div class="sec-div-line"></div>
