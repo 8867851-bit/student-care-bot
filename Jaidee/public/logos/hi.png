@@ -1,0 +1,11 @@
+
+  your-project/
+   └── public/
+       └── logos/
+           ├── school-logo.png  ← logo เว็บโรงเรียน
+           ├── school-fb.png    ← profile pic Facebook
+           ├── tupro.png
+           └── korchor.png
+
+           /public/logos/samakorn1.png   ← logo สมาคมนักเรียนเก่า
+/public/logos/samakorn2.png   ← logo สมาคมที่ 2
