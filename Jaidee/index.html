@@ -406,7 +406,7 @@ function renderAll() {
   wrap.appendChild(surpriseRow);
 
   // Community card — mini photo wall preview
- const comCard = document.createElement('div');
+const comCard = document.createElement('div');
 comCard.onclick = () => window.location.href = 'communitywork.html';
 comCard.style.cssText = 'background:#EEF7EF;border-radius:20px;overflow:hidden;cursor:pointer;border:1px solid #B8E0BC;opacity:0;transform:translateY(10px);display:flex;flex-direction:column;transition:transform 0.15s;';
 comCard.addEventListener('touchstart', () => comCard.style.transform='scale(0.97)', {passive:true});
