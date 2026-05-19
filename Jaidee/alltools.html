@@ -13,6 +13,8 @@
       --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#5EEAD4;
       --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
       --indigo:#4338CA; --indigo-soft:#EEF2FF; --indigo-border:#C7D2FE;
+      --rose:#E11D48; --rose-soft:#FFF1F2; --rose-border:#FECDD3;
+      --blue:#2E5FA3; --blue-soft:#EEF3FB; --blue-border:#C5D8F5;
       --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card:#FFFFFF;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -74,11 +76,14 @@
     .tool-card:active{transform:scale(0.96);}
     .tool-card.coming{opacity:0.5;cursor:default;pointer-events:none;}
     .tool-card.breathe::before{background:var(--teal);}
-    .tool-card.play::before   {background:var(--gold);}
+    .tool-card.reframe::before{background:var(--rose);}
     .tool-card.journal::before{background:var(--purple);}
-    .tool-card.learn::before  {background:var(--green);}
-    .tool-card.listen::before {background:var(--indigo);}
-    .tool-card.sleep::before  {background:#818CF8;}
+    .tool-card.worry-tool::before{background:var(--blue);}
+    .tool-card.clarity::before{background:var(--gold);}
+    .tool-card.sleep::before{background:#818CF8;}
+    .tool-card.play::before{background:var(--green);}
+    .tool-card.learn::before{background:var(--green);}
+    .tool-card.listen::before{background:var(--indigo);}
     .tool-icon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px;}
     .tool-card.breathe .tool-icon{background:var(--teal-soft);}
     .tool-card.play    .tool-icon{background:var(--gold-soft);}
@@ -213,7 +218,89 @@
       margin-top:10px;text-align:center;
       font-size:11px;font-weight:300;color:rgba(253,251,247,0.28);line-height:1.7;
     }
-    .still-1323 a{color:rgba(232,150,12,0.65);text-decoration:none;}
+    .tool-card.reframe    .tool-icon{background:var(--rose-soft);}
+    .tool-card.worry-tool .tool-icon{background:var(--blue-soft);}
+    .tool-card.clarity    .tool-icon{background:var(--gold-soft);}
+
+    /* ── SHARED MULTI-STEP MODAL STYLES ── */
+    .mstep-inner{padding:24px 24px 40px;}
+    .mstep-progress{display:flex;gap:6px;margin-bottom:24px;}
+    .mstep-dot{flex:1;height:3px;border-radius:2px;background:var(--cream-border);transition:background 0.3s;}
+    .mstep-dot.done{background:var(--dark);}
+    .mstep-dot.active{background:rgba(28,25,23,0.35);}
+    .mstep-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;margin-bottom:8px;}
+    .mstep-q{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:6px;}
+    .mstep-sub{font-size:13px;font-weight:300;color:var(--soft);margin-bottom:20px;line-height:1.65;}
+    .mstep-choices{display:flex;flex-direction:column;gap:10px;margin-bottom:4px;}
+    .mstep-choice{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:border-color 0.18s,background 0.18s;text-align:left;font-family:'Mitr',sans-serif;}
+    .mstep-choice:active{transform:scale(0.98);}
+    .mstep-choice-title{font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;}
+    .mstep-choice-sub{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
+    .mstep-ta{width:100%;min-height:110px;background:var(--cream);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:300;color:var(--dark);resize:none;outline:none;line-height:1.75;transition:border-color 0.2s;}
+    .mstep-ta:focus{border-color:var(--dark);}
+    .mstep-ta::placeholder{color:var(--soft);}
+    .mstep-next{width:100%;margin-top:14px;background:var(--dark);color:var(--cream);border:none;border-radius:28px;padding:15px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:transform 0.15s;}
+    .mstep-next:active{transform:scale(0.97);}
+    .mstep-back{width:100%;margin-top:8px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:8px;}
+
+    /* reframe specific */
+    .reframe-phrase{
+      background:var(--rose-soft);border:1.5px solid var(--rose-border);
+      border-radius:16px;padding:18px;margin-bottom:20px;
+    }
+    .reframe-prefix{font-size:11px;font-weight:400;color:var(--rose);margin-bottom:6px;letter-spacing:0.5px;}
+    .reframe-thought{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:#7F1D1D;line-height:1.45;}
+    .reframe-permission{
+      background:var(--cream-warm);border:1px solid var(--gold-border);
+      border-radius:14px;padding:16px;margin-bottom:20px;
+    }
+    .reframe-permission-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:8px;}
+    .reframe-permission-text{font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:400;color:var(--dark);line-height:1.6;}
+
+    /* breath moment inside reframe */
+    .mini-breath{
+      background:var(--teal-soft);border:1px solid var(--teal-border);
+      border-radius:14px;padding:16px;text-align:center;margin-bottom:16px;
+    }
+    .mini-breath-label{font-size:11px;color:var(--teal);font-weight:500;margin-bottom:10px;letter-spacing:0.5px;}
+    .mini-breath-circle{
+      width:64px;height:64px;border-radius:50%;
+      background:radial-gradient(circle,rgba(13,148,136,0.6),rgba(13,148,136,0.25));
+      margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
+      font-size:22px;
+      animation:breathePulse 4s ease-in-out infinite;
+    }
+    @keyframes breathePulse{0%,100%{transform:scale(0.85);opacity:0.6}50%{transform:scale(1.15);opacity:1}}
+    .mini-breath-hint{font-size:11px;font-weight:300;color:var(--teal);opacity:0.75;}
+
+    /* worry fork */
+    .worry-fork{display:flex;gap:10px;margin-bottom:4px;}
+    .worry-fork-btn{
+      flex:1;padding:16px 12px;border-radius:16px;
+      border:1.5px solid var(--cream-border);background:var(--card);
+      cursor:pointer;font-family:'Mitr',sans-serif;
+      text-align:center;transition:all 0.18s;
+    }
+    .worry-fork-btn:active{transform:scale(0.97);}
+    .worry-fork-icon{font-size:22px;margin-bottom:6px;}
+    .worry-fork-label{font-size:13px;font-weight:500;color:var(--dark);}
+    .worry-fork-sub{font-size:10px;font-weight:300;color:var(--soft);margin-top:2px;line-height:1.4;}
+
+    /* clarity mirror */
+    .clarity-mirror{
+      background:var(--cream-warm);border:1px solid var(--gold-border);
+      border-radius:16px;padding:18px;margin-bottom:20px;
+    }
+    .cm-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:10px;}
+    .cm-line{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:6px;}
+    .cm-line strong{font-weight:500;color:var(--dark);}
+
+    /* done screen shared */
+    .tool-done{text-align:center;padding:12px 0 20px;}
+    .tool-done-icon{font-size:48px;margin-bottom:16px;}
+    .tool-done-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);margin-bottom:8px;}
+    .tool-done-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:24px;max-width:280px;margin-left:auto;margin-right:auto;}
+    .tool-done-close{background:none;border:1.5px solid var(--cream-border);border-radius:14px;padding:12px 28px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;}
   </style>
 </head>
 <body>
@@ -244,23 +331,51 @@
     <div class="section-label-line"></div>
   </div>
   <div class="tools-grid">
+    <!-- Row 1 -->
     <div class="tool-card breathe" onclick="markToolTapped();openBreathe()">
       <div class="tool-icon">🌬️</div>
       <div class="tool-name">หายใจ</div>
       <div class="tool-desc">เมื่อรู้สึกอึดอัด กดดัน หรืออยากรีเซ็ต</div>
       <span class="tool-badge badge-ready">ใช้ได้เลย</span>
     </div>
-    <div class="tool-card play coming">
-      <div class="tool-icon">🎮</div>
-      <div class="tool-name">เล่น</div>
-      <div class="tool-desc">เกมเบาๆ ช่วย ground ความคิด</div>
-      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+    <div class="tool-card reframe" onclick="markToolTapped();openReframe()">
+      <div class="tool-icon">🔄</div>
+      <div class="tool-name">ปรับความคิด</div>
+      <div class="tool-desc">เมื่อความคิดวนซ้ำหรือกดตัวเองมากเกินไป</div>
+      <span class="tool-badge badge-ready" style="background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-border);">ใช้ได้เลย</span>
     </div>
+    <!-- Row 2 -->
     <div class="tool-card journal" onclick="markToolTapped();openJournal()">
       <div class="tool-icon">📓</div>
       <div class="tool-name">บันทึก</div>
       <div class="tool-desc">เขียนระบาย 3 คำถามง่ายๆ</div>
       <span class="tool-badge badge-ready">ใช้ได้เลย</span>
+    </div>
+    <div class="tool-card worry-tool" onclick="markToolTapped();openWorry()">
+      <div class="tool-icon">🌀</div>
+      <div class="tool-name">คลายกังวล</div>
+      <div class="tool-desc">เมื่อความกังวลวนอยู่ในหัวและหาทางออกไม่เจอ</div>
+      <span class="tool-badge badge-ready" style="background:var(--blue-soft);color:var(--blue);border:1px solid var(--blue-border);">ใช้ได้เลย</span>
+    </div>
+    <!-- Row 3 -->
+    <div class="tool-card clarity" onclick="markToolTapped();openClarity()">
+      <div class="tool-icon">🧭</div>
+      <div class="tool-name">หาความชัด</div>
+      <div class="tool-desc">เมื่อรู้สึกหลงทางหรือไม่รู้ว่าตัวเองต้องการอะไร</div>
+      <span class="tool-badge badge-ready" style="background:var(--gold-soft);color:#7A5200;border:1px solid var(--gold-border);">ใช้ได้เลย</span>
+    </div>
+    <div class="tool-card sleep" onclick="markToolTapped();window.location.href='sleep.html'">
+      <div class="tool-icon">🌙</div>
+      <div class="tool-name">นอนหลับ</div>
+      <div class="tool-desc">เมื่อหัวไม่ยอมหยุดตอนกลางคืน</div>
+      <span class="tool-badge badge-ready">ใช้ได้เลย</span>
+    </div>
+    <!-- Coming soon -->
+    <div class="tool-card play coming">
+      <div class="tool-icon">🎮</div>
+      <div class="tool-name">เล่น</div>
+      <div class="tool-desc">เกมเบาๆ ช่วย ground ความคิด</div>
+      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
     <div class="tool-card learn coming">
       <div class="tool-icon">📖</div>
@@ -268,17 +383,15 @@
       <div class="tool-desc">บทความสั้น เรื่องที่กำลังรู้สึกอยู่</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
-    <div class="tool-card listen coming">
-      <div class="tool-icon">🎧</div>
-      <div class="tool-name">ฟัง</div>
-      <div class="tool-desc">เสียงนำทาง body scan และอื่นๆ</div>
-      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
-    </div>
-    <div class="tool-card sleep" onclick="markToolTapped();window.location.href='sleep.html'">
-      <div class="tool-icon">🌙</div>
-      <div class="tool-name">นอนหลับ</div>
-      <div class="tool-desc">เมื่อหัวไม่ยอมหยุดตอนกลางคืน</div>
-      <span class="tool-badge badge-ready">ใช้ได้เลย</span>
+    <div class="tool-card listen coming" style="grid-column:1/-1;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="tool-icon">🎧</div>
+        <div>
+          <div class="tool-name">ฟัง</div>
+          <div class="tool-desc">เสียงนำทาง body scan และอื่นๆ</div>
+          <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -377,6 +490,30 @@
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle" style="margin-bottom:4px;"></div>
     <div class="journal-inner" id="journal-inner"></div>
+  </div>
+</div>
+
+<!-- REFRAME MODAL -->
+<div class="modal-overlay" id="reframe-modal" onclick="handleOverlayClick(event,'reframe-modal',closeReframe)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle" style="margin-bottom:4px;"></div>
+    <div class="mstep-inner" id="reframe-inner"></div>
+  </div>
+</div>
+
+<!-- WORRY MODAL -->
+<div class="modal-overlay" id="worry-modal" onclick="handleOverlayClick(event,'worry-modal',closeWorry)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle" style="margin-bottom:4px;"></div>
+    <div class="mstep-inner" id="worry-inner"></div>
+  </div>
+</div>
+
+<!-- CLARITY MODAL -->
+<div class="modal-overlay" id="clarity-modal" onclick="handleOverlayClick(event,'clarity-modal',closeClarity)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle" style="margin-bottom:4px;"></div>
+    <div class="mstep-inner" id="clarity-inner"></div>
   </div>
 </div>
 
@@ -676,10 +813,327 @@ function markToolTapped() {
 }
 
 // ══════════════════════════════════════════════
+// REFRAME TOOL — cognitive defusion
+// ══════════════════════════════════════════════
+const REFRAME_PATTERNS = [
+  {
+    id:'perfect',
+    title:'ต้องทำให้สมบูรณ์แบบ',
+    sub:'ถ้าไม่ดีพอแสดงว่าฉันไม่เก่ง',
+    thought:'ฉันต้องทำทุกอย่างให้สมบูรณ์แบบ',
+    permission:'ฉันทำได้ดีพอ แม้ว่าจะไม่สมบูรณ์แบบ\nความผิดพลาดเป็นส่วนหนึ่งของการเรียนรู้ ไม่ใช่หลักฐานของความล้มเหลว',
+    bridge:'ชั้นความเชื่อ',
+    bridgeUrl:'care.html?tab=belief',
+  },
+  {
+    id:'compare',
+    title:'ทุกคนเก่งกว่าฉัน',
+    sub:'ฉันไม่เหมาะที่จะอยู่ที่นี่',
+    thought:'ฉันด้อยกว่าคนรอบข้างทุกคน',
+    permission:'ทุกคนที่นี่เคยเป็นคนเก่งที่สุดในห้องมาก่อน\nความรู้สึกนี้ไม่ได้หมายความว่าความจริงเป็นแบบนั้น',
+    bridge:'ชั้นความสัมพันธ์',
+    bridgeUrl:'care.html?tab=relationship',
+  },
+  {
+    id:'blame',
+    title:'ฉันทำให้ทุกคนผิดหวัง',
+    sub:'ฉันเป็นภาระให้คนอื่น',
+    thought:'ฉันทำให้คนที่รักผิดหวังเสมอ',
+    permission:'ฉันมีคุณค่าอยู่แล้ว โดยไม่ต้องพิสูจน์อะไร\nความรู้สึกผิดไม่ใช่ข้อเท็จจริง — มันคือสัญญาณว่าฉันใส่ใจ',
+    bridge:'ชั้นร่างกาย',
+    bridgeUrl:'care.html?tab=body',
+  },
+  {
+    id:'helpless',
+    title:'ไม่ว่าจะทำอะไรก็ไม่ดีขึ้น',
+    sub:'ฉันเปลี่ยนแปลงอะไรไม่ได้',
+    thought:'ความพยายามของฉันไม่มีความหมาย',
+    permission:'ฉันไม่จำเป็นต้องเปลี่ยนทุกอย่างในครั้งเดียว\nก้าวเล็กๆ หนึ่งก้าวก็นับ',
+    bridge:'แผนดูแลตัวเอง',
+    bridgeUrl:'plans.html',
+  },
+];
+
+let _reframePattern = null;
+let _reframeStep = 0; // 0=pick, 1=defuse, 2=permission, 3=breath, 4=done
+
+function openReframe() { _reframeStep=0; _reframePattern=null; openModal('reframe-modal'); renderReframe(); }
+function closeReframe() { closeModal('reframe-modal'); }
+
+function renderReframe() {
+  const el = document.getElementById('reframe-inner');
+  if (_reframeStep === 0) {
+    el.innerHTML = `
+      <div class="mstep-eyebrow" style="color:var(--rose);">ปรับความคิด</div>
+      <div class="mstep-q">ตอนนี้มีความคิดแบบไหนอยู่?</div>
+      <div class="mstep-sub">เลือกอันที่ใกล้เคียงที่สุด — ไม่ต้องตรงทุกคำ</div>
+      <div class="mstep-choices">
+        ${REFRAME_PATTERNS.map((p,i) => `
+          <button class="mstep-choice" onclick="reframePick(${i})">
+            <div class="mstep-choice-title">${p.title}</div>
+            <div class="mstep-choice-sub">${p.sub}</div>
+          </button>`).join('')}
+      </div>`;
+  } else if (_reframeStep === 1) {
+    const p = _reframePattern;
+    el.innerHTML = `
+      <div class="mstep-progress">${[0,1,2,3].map(i=>`<div class="mstep-dot ${i<1?'done':i===1?'active':''}"></div>`).join('')}</div>
+      <div class="mstep-eyebrow" style="color:var(--rose);">ถือความคิดไว้ห่างๆ</div>
+      <div class="mstep-q" style="margin-bottom:16px;">ลองอ่านประโยคนี้ดู</div>
+      <div class="reframe-phrase">
+        <div class="reframe-prefix">ฉันกำลังมีความคิดว่า...</div>
+        <div class="reframe-thought">${p.thought}</div>
+      </div>
+      <div class="mstep-sub">การเพิ่มคำว่า "ฉันกำลังมีความคิดว่า..." ช่วยสร้างระยะห่างระหว่างคุณกับความคิดนั้น — มันเป็นแค่ความคิด ไม่ใช่ความจริงทั้งหมด</div>
+      <button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);">ถัดไป →</button>
+      <button class="mstep-back" onclick="_reframeStep=0;renderReframe()">← เปลี่ยนความคิด</button>`;
+  } else if (_reframeStep === 2) {
+    const p = _reframePattern;
+    el.innerHTML = `
+      <div class="mstep-progress">${[0,1,2,3].map(i=>`<div class="mstep-dot ${i<2?'done':i===2?'active':''}"></div>`).join('')}</div>
+      <div class="mstep-eyebrow" style="color:var(--rose);">สิ่งที่อนุญาตให้ตัวเอง</div>
+      <div class="mstep-q" style="margin-bottom:16px;">อ่านช้าๆ สักรอบ</div>
+      <div class="reframe-permission">
+        <div class="reframe-permission-label">Permission</div>
+        <div class="reframe-permission-text">${p.permission.replace(/\n/g,'<br/>')}</div>
+      </div>
+      <div class="mstep-sub">ไม่ต้องเชื่อ 100% ตอนนี้ก็ได้ — แค่เปิดพื้นที่ให้ความเป็นไปได้นี้อยู่ร่วมกับความคิดเดิม</div>
+      <button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);">ถัดไป →</button>`;
+  } else if (_reframeStep === 3) {
+    el.innerHTML = `
+      <div class="mstep-progress">${[0,1,2,3].map(i=>`<div class="mstep-dot ${i<3?'done':i===3?'active':''}"></div>`).join('')}</div>
+      <div class="mstep-eyebrow" style="color:var(--teal);">หายใจ</div>
+      <div class="mstep-q" style="margin-bottom:16px;">สักครู่หนึ่ง</div>
+      <div class="mini-breath">
+        <div class="mini-breath-label">ดูวงกลม — หายใจตามจังหวะ</div>
+        <div class="mini-breath-circle">🌬️</div>
+        <div class="mini-breath-hint">หายใจเข้า 4 วินาที · หายใจออก 4 วินาที</div>
+      </div>
+      <div class="mstep-sub" style="text-align:center;">ทำสัก 3–4 รอบ แล้วกดถัดไป</div>
+      <button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);margin-top:16px;">เสร็จแล้ว ✓</button>`;
+  } else {
+    const p = _reframePattern;
+    el.innerHTML = `
+      <div class="tool-done fade-up">
+        <div class="tool-done-icon">🌸</div>
+        <div class="tool-done-title">ดีมากเลย</div>
+        <div class="tool-done-sub">การสังเกตความคิดโดยไม่ถูกมันพัดพาไป<br/>เป็นทักษะที่ฝึกได้ และคุณเพิ่งฝึกมันแล้ว</div>
+        <button class="tool-done-close" onclick="closeReframe()">← กลับ</button>
+        <a href="${p.bridgeUrl}" onclick="closeReframe()" style="display:block;text-align:center;margin-top:10px;font-size:12px;font-weight:300;color:var(--soft);text-decoration:none;padding:6px;">
+          อยากเข้าใจเพิ่ม? → <span style="color:var(--rose);">${p.bridge}</span>
+        </a>
+        <div class="still-strip" style="margin-top:20px;">
+          <div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div>
+          <div class="still-btns">
+            <button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button>
+            <button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button>
+          </div>
+          <div class="still-heavy"></div>
+        </div>
+      </div>`;
+  }
+}
+
+function reframePick(i) { _reframePattern=REFRAME_PATTERNS[i]; _reframeStep=1; renderReframe(); }
+function reframeNext()  { _reframeStep++; renderReframe(); }
+
+// ══════════════════════════════════════════════
+// WORRY UNTANGLER
+// ══════════════════════════════════════════════
+let _worryText = '';
+let _worryBranch = ''; // 'action' | 'park'
+let _worryStep = 0;    // 0=write, 1=fork, 2a=action, 2b=park, 3=done
+
+function openWorry() { _worryStep=0; _worryText=''; _worryBranch=''; openModal('worry-modal'); renderWorry(); }
+function closeWorry() { closeModal('worry-modal'); }
+
+function renderWorry() {
+  const el = document.getElementById('worry-inner');
+  if (_worryStep === 0) {
+    el.innerHTML = `
+      <div class="mstep-eyebrow" style="color:var(--blue);">คลายกังวล</div>
+      <div class="mstep-q">ตอนนี้กังวลเรื่องอะไรอยู่?</div>
+      <div class="mstep-sub">เขียนออกมาก่อน — ไม่ต้องจัดระเบียบ ไม่มีใครอ่าน</div>
+      <textarea class="mstep-ta" id="worry-ta" placeholder="เขียนทุกอย่างที่ค้างอยู่ในหัว..." style="border-color:var(--blue-border);"></textarea>
+      <button class="mstep-next" onclick="worryNext0()" style="background:var(--blue);">ถัดไป →</button>`;
+    setTimeout(() => { const ta = document.getElementById('worry-ta'); if(ta) ta.focus(); }, 320);
+  } else if (_worryStep === 1) {
+    el.innerHTML = `
+      <div class="mstep-progress">${[0,1].map(i=>`<div class="mstep-dot ${i<1?'done':i===1?'active':''}"></div>`).join('')}</div>
+      <div class="mstep-eyebrow" style="color:var(--blue);">แยกประเภทความกังวล</div>
+      <div class="mstep-q">มีบางอย่างที่ทำได้ตอนนี้ไหม?</div>
+      <div class="mstep-sub">ไม่ต้องแก้ทุกอย่าง — แค่มีอะไรเล็กๆ ที่พอจะทำได้วันนี้บ้างไหม</div>
+      <div class="worry-fork">
+        <button class="worry-fork-btn" onclick="worryFork('action')" style="border-color:var(--green-border);">
+          <div class="worry-fork-icon">✅</div>
+          <div class="worry-fork-label">มี</div>
+          <div class="worry-fork-sub">มีสิ่งที่ทำได้<br/>อยู่ในมือฉัน</div>
+        </button>
+        <button class="worry-fork-btn" onclick="worryFork('park')" style="border-color:var(--blue-border);">
+          <div class="worry-fork-icon">☁️</div>
+          <div class="worry-fork-label">ยังไม่มี</div>
+          <div class="worry-fork-sub">ยังควบคุมไม่ได้<br/>หรือไม่แน่ใจ</div>
+        </button>
+      </div>`;
+  } else if (_worryStep === 2 && _worryBranch === 'action') {
+    el.innerHTML = `
+      <div class="mstep-progress">${[0,1,2].map(i=>`<div class="mstep-dot ${i<2?'done':i===2?'active':''}"></div>`).join('')}</div>
+      <div class="mstep-eyebrow" style="color:var(--green);">แผนเล็กๆ</div>
+      <div class="mstep-q">อะไรคือสิ่งเล็กที่สุดที่ทำได้วันนี้?</div>
+      <div class="mstep-sub">ไม่ต้องแก้ปัญหาทั้งหมด — แค่ก้าวหนึ่งก้าวที่ทำได้จริงๆ</div>
+      <textarea class="mstep-ta" id="action-ta" placeholder="เช่น ส่งข้อความถามครูหนึ่งคำถาม / เปิดหนังสือ 15 นาที..." style="border-color:var(--green-border);min-height:80px;"></textarea>
+      <button class="mstep-next" onclick="worryNext2()" style="background:var(--green);">บันทึกแผน ✓</button>`;
+    setTimeout(() => { const ta = document.getElementById('action-ta'); if(ta) ta.focus(); }, 320);
+  } else if (_worryStep === 2 && _worryBranch === 'park') {
+    el.innerHTML = `
+      <div class="mstep-progress">${[0,1,2].map(i=>`<div class="mstep-dot ${i<2?'done':i===2?'active':''}"></div>`).join('')}</div>
+      <div class="mstep-eyebrow" style="color:var(--blue);">จอดความกังวลไว้ก่อน</div>
+      <div class="mstep-q">บอกตัวเองสักประโยค</div>
+      <div class="mstep-sub">ความกังวลที่ยังแก้ไม่ได้ต้องการการรับรู้ ไม่ใช่การแก้ปัญหา — ลองบอกตัวเองว่า:</div>
+      <div class="reframe-permission" style="border-color:var(--blue-border);background:var(--blue-soft);">
+        <div class="reframe-permission-label" style="color:var(--blue);">Worry Parking</div>
+        <div class="reframe-permission-text" style="font-size:15px;">"ฉันรับรู้ความกังวลนี้แล้ว<br/>ตอนนี้ขอวางไว้ก่อนนะ<br/>แล้วจะกลับมาดูอีกทีเมื่อพร้อม"</div>
+      </div>
+      <div class="mini-breath" style="background:var(--blue-soft);border-color:var(--blue-border);">
+        <div class="mini-breath-label" style="color:var(--blue);">หายใจปล่อยออกมาพร้อมกัน</div>
+        <div class="mini-breath-circle" style="background:radial-gradient(circle,rgba(46,95,163,0.5),rgba(46,95,163,0.2));">☁️</div>
+        <div class="mini-breath-hint" style="color:var(--blue);">หายใจเข้า 4 · ออก 6 วินาที · ทำ 3 รอบ</div>
+      </div>
+      <button class="mstep-next" onclick="worryNext2()" style="background:var(--blue);">วางไว้แล้ว ✓</button>`;
+  } else {
+    const isAction = _worryBranch === 'action';
+    const actionText = document.getElementById('action-ta')?.value.trim() || '';
+    el.innerHTML = `
+      <div class="tool-done fade-up">
+        <div class="tool-done-icon">${isAction ? '🌿' : '☁️'}</div>
+        <div class="tool-done-title">${isAction ? 'แผนพร้อมแล้ว' : 'วางไว้ดีแล้ว'}</div>
+        <div class="tool-done-sub">${isAction
+          ? 'ก้าวเล็กๆ หนึ่งก้าวดีกว่าไม่มีก้าวเลย<br/>เมื่อทำแผนนี้เสร็จแล้ว ค่อยดูขั้นต่อไป'
+          : 'ไม่ใช่ทุกความกังวลต้องการการแก้ปัญหาตอนนี้<br/>การรับรู้และวางไว้ก็เป็นการดูแลตัวเองอย่างหนึ่ง'}</div>
+        ${isAction && actionText ? `<div style="background:var(--green-soft);border:1px solid var(--green-border);border-radius:12px;padding:12px 14px;margin-bottom:20px;font-size:13px;font-weight:300;color:var(--green);text-align:left;">📝 ${actionText}</div>` : ''}
+        <button class="tool-done-close" onclick="closeWorry()">← กลับ</button>
+        <div class="still-strip" style="margin-top:20px;">
+          <div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div>
+          <div class="still-btns">
+            <button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button>
+            <button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button>
+          </div>
+          <div class="still-heavy"></div>
+        </div>
+      </div>`;
+    if (isAction && actionText) {
+      saveEntry({ id:Date.now(), type:'worry', ts:new Date().toISOString(), text:'แผน: '+actionText, worryText:_worryText });
+    }
+  }
+}
+
+function worryNext0() {
+  const ta = document.getElementById('worry-ta');
+  _worryText = ta ? ta.value.trim() : '';
+  _worryStep = 1; renderWorry();
+}
+function worryFork(branch) { _worryBranch = branch; _worryStep = 2; renderWorry(); }
+function worryNext2() { _worryStep = 3; renderWorry(); }
+
+// ══════════════════════════════════════════════
+// CLARITY FINDER — values clarification
+// ══════════════════════════════════════════════
+const CLARITY_QUESTIONS = [
+  {
+    label:'เวลา',
+    q:'เมื่อเร็วๆ นี้ มีอะไรที่ทำแล้วลืมเวลาบ้าง?',
+    sub:'ไม่ต้องเป็นเรื่องโรงเรียน — อะไรก็ได้ที่ดูดความสนใจได้โดยไม่รู้สึกฝืน',
+    ph:'เช่น วาดรูป ฟังเพลง คุยกับเพื่อน อ่านอะไรบางอย่าง...',
+  },
+  {
+    label:'ตัวเอง',
+    q:'ถ้าไม่มีใครดูอยู่ คุณจะเลือกทำอะไร?',
+    sub:'ไม่มีการตัดสิน ไม่มีความคาดหวัง — แค่คุณกับสิ่งที่อยากทำจริงๆ',
+    ph:'เช่น เรียนอะไรบางอย่าง ไปที่ไหนสักที่ ทำโปรเจคบางอย่าง...',
+  },
+  {
+    label:'อยากมี',
+    q:'มีอะไรในคนอื่นที่คุณอยากมีบ้าง?',
+    sub:'สิ่งที่อิจฉาคนอื่นมักบอกอะไรบางอย่างเกี่ยวกับสิ่งที่เราเองต้องการ',
+    ph:'เช่น ความมั่นใจ เวลาว่าง ความชัดเจน เพื่อน ความสามารถบางอย่าง...',
+  },
+];
+
+let _clarityStep = 0;
+let _clarityAnswers = ['','',''];
+
+function openClarity() { _clarityStep=0; _clarityAnswers=['','','']; openModal('clarity-modal'); renderClarity(); }
+function closeClarity() { closeModal('clarity-modal'); }
+
+function renderClarity() {
+  const el = document.getElementById('clarity-inner');
+  if (_clarityStep < CLARITY_QUESTIONS.length) {
+    const q = CLARITY_QUESTIONS[_clarityStep];
+    const dots = CLARITY_QUESTIONS.map((_,i) =>
+      `<div class="mstep-dot ${i<_clarityStep?'done':i===_clarityStep?'active':''}"></div>`).join('');
+    el.innerHTML = `
+      <div class="mstep-progress">${dots}</div>
+      <div class="mstep-eyebrow fade-up" style="color:var(--gold);">${q.label}</div>
+      <div class="mstep-q fade-up">${q.q}</div>
+      <div class="mstep-sub fade-up">${q.sub}</div>
+      <textarea class="mstep-ta fade-up" id="clarity-ta" placeholder="${q.ph}" style="border-color:var(--gold-border);">${_clarityAnswers[_clarityStep]}</textarea>
+      <button class="mstep-next" onclick="clarityNext()" style="background:var(--dark);">${_clarityStep < CLARITY_QUESTIONS.length-1 ? 'ถัดไป →' : 'ดูผลลัพธ์ →'}</button>
+      ${_clarityStep > 0 ? `<button class="mstep-back" onclick="clarityBack()">← ย้อนกลับ</button>` : ''}`;
+    setTimeout(() => { const ta = document.getElementById('clarity-ta'); if(ta) ta.focus(); }, 320);
+  } else {
+    // Mirror answers back in student's own words
+    const filled = _clarityAnswers.map((a,i) => ({ label: CLARITY_QUESTIONS[i].label, text: a.trim() })).filter(a => a.text);
+    const mirrorLines = filled.map(a =>
+      `<div class="cm-line">จากเรื่อง<strong>${a.label}</strong> — คุณพูดถึง <strong>${a.text.slice(0,60)}${a.text.length>60?'...':''}</strong></div>`
+    ).join('');
+    const themes = filled.map(a => a.text.slice(0,20)).join(' · ');
+    el.innerHTML = `
+      <div class="mstep-eyebrow" style="color:var(--gold);">สิ่งที่คุณบอก</div>
+      <div class="mstep-q" style="margin-bottom:16px;">นี่คือกระจกสะท้อนตัวคุณ</div>
+      <div class="clarity-mirror">
+        <div class="cm-label">จากที่คุณเล่า</div>
+        ${mirrorLines}
+        ${filled.length > 0 ? `<div class="cm-line" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--gold-border);">สิ่งที่ดูเหมือนจะสำคัญกับคุณคือ <strong>${themes}</strong></div>` : ''}
+      </div>
+      <div class="mstep-sub">นี่ไม่ใช่คำตอบสำเร็จรูป — เป็นแค่เสียงของคุณเองที่สะท้อนกลับมา<br/>ลองนั่งกับมันสักครู่ก่อนตัดสินใจอะไร</div>
+      <div class="tool-done" style="padding:0;">
+        <button class="tool-done-close" onclick="closeClarity()" style="margin-top:8px;">← กลับ</button>
+        <a href="peer.html" onclick="closeClarity()" style="display:block;text-align:center;margin-top:10px;font-size:12px;font-weight:300;color:var(--soft);text-decoration:none;padding:6px;">
+          อยากคุยกับคนจริงๆ? → <span style="color:var(--gold);">นัดกับ PR</span>
+        </a>
+        <div class="still-strip" style="margin-top:16px;">
+          <div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div>
+          <div class="still-btns">
+            <button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button>
+            <button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button>
+          </div>
+          <div class="still-heavy"></div>
+        </div>
+      </div>`;
+  }
+}
+
+function clarityNext() {
+  const ta = document.getElementById('clarity-ta');
+  if (ta) _clarityAnswers[_clarityStep] = ta.value.trim();
+  _clarityStep++;
+  renderClarity();
+}
+function clarityBack() {
+  const ta = document.getElementById('clarity-ta');
+  if (ta) _clarityAnswers[_clarityStep] = ta.value.trim();
+  _clarityStep--;
+  renderClarity();
+}
+
+// ══════════════════════════════════════════════
 renderEntries();
 startIdleTimer();
 if(window.location.hash==='#journal'){openJournal();}
 if(window.location.hash==='#breathe'){openBreathe();}
+if(window.location.hash==='#reframe'){openReframe();}
+if(window.location.hash==='#worry'){openWorry();}
+if(window.location.hash==='#clarity'){openClarity();}
 </script>
 </body>
 </html>
