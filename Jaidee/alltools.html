@@ -6,9 +6,6 @@
   <title>เครื่องมือดูแลใจ — ใจดี TU</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    /* ══════════════════════════════════════════════
-       ROOT TOKENS — original + new signature tokens
-    ══════════════════════════════════════════════ */
     :root {
       --cream:#FDFBF7; --cream-warm:#FFF8EE; --cream-border:#EDE9E0;
       --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
@@ -19,178 +16,38 @@
       --rose:#E11D48; --rose-soft:#FFF1F2; --rose-border:#FECDD3;
       --blue:#2E5FA3; --blue-soft:#EEF3FB; --blue-border:#C5D8F5;
       --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card:#FFFFFF;
-      /* ── Signature palette ── */
-      --night:#0B1F3A;
-      --night-mid:#0C3D30;
-      --hero-glow-teal:rgba(13,148,136,0.35);
-      --hero-glow-navy:rgba(11,31,58,0.9);
-      --shadow-sm:0 2px 12px rgba(0,0,0,0.07);
-      --shadow-md:0 6px 24px rgba(0,0,0,0.11);
-      --shadow-lg:0 12px 40px rgba(0,0,0,0.16);
-      --radius-card:20px;
     }
-
-    /* ══════════════════════════════════════════════
-       BASE
-    ══════════════════════════════════════════════ */
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    html{scroll-behavior:smooth;}
-    body{
-      font-family:'Mitr',sans-serif;
-      background:var(--cream);
-      color:var(--dark);
-      min-height:100vh;
-      padding-bottom:80px;
-      overflow-x:hidden;
-    }
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;overflow-x:hidden;}
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:16px 20px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+    .hero{padding:12px 24px 24px;}
+    .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
+    .hero-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;color:var(--dark);line-height:1.2;}
+    .hero-sub{font-size:13px;font-weight:300;color:var(--soft);margin-top:6px;line-height:1.65;}
 
-    /* ══════════════════════════════════════════════
-       BACK BUTTON — floats over hero
-    ══════════════════════════════════════════════ */
-    .back-btn{
-      display:inline-flex;align-items:center;gap:6px;
-      padding:20px 20px 0;
-      font-size:13px;color:rgba(255,255,255,0.5);
-      cursor:pointer;background:none;border:none;
-      font-family:'Mitr',sans-serif;
-      position:relative;z-index:10;
-      transition:color 0.2s;
-    }
-    .back-btn:hover{color:rgba(255,255,255,0.9);}
-
-    /* ══════════════════════════════════════════════
-       HERO — signature midnight-to-dawn gradient
-    ══════════════════════════════════════════════ */
-    .hero{
-      position:relative;
-      padding:0 24px 56px;
-      overflow:hidden;
-      background:linear-gradient(160deg, var(--night) 0%, var(--night-mid) 55%, transparent 100%);
-    }
-    /* ambient glow blobs */
-    .hero-blob{
-      position:absolute;border-radius:50%;
-      pointer-events:none;
-    }
-    .hero-blob-1{
-      width:280px;height:280px;
-      top:-80px;right:-60px;
-      background:radial-gradient(circle, rgba(13,148,136,0.22) 0%, transparent 70%);
-      animation:blobDrift1 12s ease-in-out infinite;
-    }
-    .hero-blob-2{
-      width:200px;height:200px;
-      bottom:20px;left:-40px;
-      background:radial-gradient(circle, rgba(232,150,12,0.14) 0%, transparent 70%);
-      animation:blobDrift2 16s ease-in-out infinite;
-    }
-    .hero-blob-3{
-      width:160px;height:160px;
-      top:40px;left:40%;
-      background:radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
-      animation:blobDrift3 20s ease-in-out infinite;
-    }
-    @keyframes blobDrift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,20px) scale(1.1)}}
-    @keyframes blobDrift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(16px,-12px) scale(1.08)}}
-    @keyframes blobDrift3{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-14px,10px) scale(1.05)}66%{transform:translate(10px,-8px) scale(0.95)}}
-
-    /* star dots */
-    .hero-stars{
-      position:absolute;inset:0;pointer-events:none;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.55) 1px, transparent 1px),
-        radial-gradient(circle, rgba(255,255,255,0.35) 1px, transparent 1px),
-        radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px);
-      background-size:180px 180px, 130px 130px, 90px 90px;
-      background-position:20px 30px, 60px 80px, 10px 10px;
-      animation:starTwinkle 8s ease-in-out infinite;
-      opacity:0.5;
-    }
-    @keyframes starTwinkle{0%,100%{opacity:0.45}50%{opacity:0.7}}
-
-    .hero-content{position:relative;z-index:2;padding-top:8px;}
-    .hero-greeting{
-      font-size:11px;font-weight:400;
-      letter-spacing:2px;
-      color:rgba(255,255,255,0.45);
-      text-transform:uppercase;
-      margin-bottom:10px;
-    }
-    .hero-eyebrow{
-      display:inline-flex;align-items:center;gap:6px;
-      font-size:10px;font-weight:500;letter-spacing:2.5px;
-      color:var(--teal);text-transform:uppercase;
-      background:rgba(13,148,136,0.15);
-      border:1px solid rgba(13,148,136,0.3);
-      padding:4px 10px;border-radius:20px;
-      margin-bottom:14px;
-    }
-    .hero-title{
-      font-family:'Noto Serif Thai',serif;
-      font-size:30px;font-weight:700;
-      color:#FDFBF7;
-      line-height:1.15;
-      letter-spacing:-0.3px;
-      margin-bottom:10px;
-    }
-    .hero-sub{
-      font-size:13.5px;font-weight:300;
-      color:rgba(255,255,255,0.5);
-      line-height:1.8;
-    }
-    /* fade-out bottom edge of hero into cream */
-    .hero::after{
-      content:'';
-      position:absolute;bottom:0;left:0;right:0;
-      height:80px;
-      background:linear-gradient(to bottom, transparent, var(--cream));
-      pointer-events:none;
-    }
-
-    /* ══════════════════════════════════════════════
-       SECTION WRAPPER
-    ══════════════════════════════════════════════ */
-    .page-body{padding:0 16px;}
-
-    /* ══════════════════════════════════════════════
-       ENTRIES SECTION
-    ══════════════════════════════════════════════ */
-    #entries-section{margin-bottom:32px;}
-    .entries-header{
-      display:flex;align-items:center;gap:10px;margin-bottom:14px;
-    }
-    .entries-header-text{
-      font-size:10px;font-weight:500;color:var(--soft);
-      letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap;
-    }
+    /* ── ENTRIES SECTION ── */
+    #entries-section{padding:0 16px;margin-bottom:28px;}
+    .entries-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+    .entries-header-text{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap;}
     .entries-header-line{flex:1;height:1px;background:var(--cream-border);}
-    .entries-header-clear{
-      font-size:10px;font-weight:400;color:var(--soft);
-      background:none;border:none;font-family:'Mitr',sans-serif;
-      cursor:pointer;white-space:nowrap;padding:2px 0;opacity:0.7;
-    }
+    .entries-header-clear{font-size:10px;font-weight:400;color:var(--soft);background:none;border:none;font-family:'Mitr',sans-serif;cursor:pointer;white-space:nowrap;padding:2px 0;opacity:0.7;}
     .entries-list{display:flex;flex-direction:column;gap:8px;}
+
     .entry-card{
-      background:var(--card);
-      border:1px solid var(--cream-border);
+      background:var(--card);border:1px solid var(--cream-border);
       border-radius:14px;padding:12px 14px;
       cursor:pointer;position:relative;overflow:hidden;
-      box-shadow:var(--shadow-sm);
-      transition:box-shadow 0.2s;
     }
-    .entry-card:active{box-shadow:var(--shadow-md);}
     .entry-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
     .entry-card.journal::before{background:var(--purple);}
-    .entry-card.worry::before{background:var(--indigo);}
+    .entry-card.worry::before  {background:var(--indigo);}
+
     .entry-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-    .entry-badge{
-      display:inline-flex;align-items:center;gap:5px;
-      font-size:10px;font-weight:500;letter-spacing:0.5px;
-      padding:2px 8px;border-radius:20px;
-    }
+    .entry-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;letter-spacing:0.5px;padding:2px 8px;border-radius:20px;}
     .entry-card.journal .entry-badge{background:var(--purple-soft);color:var(--purple);border:1px solid var(--purple-border);}
     .entry-card.worry   .entry-badge{background:var(--indigo-soft);color:var(--indigo);border:1px solid var(--indigo-border);}
     .entry-date{font-size:11px;font-weight:300;color:var(--soft);}
+
     .entry-preview{
       font-size:13px;font-weight:300;color:var(--mid);line-height:1.6;
       display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
@@ -202,267 +59,68 @@
     .entry-q:first-child{margin-top:0;}
     .entry-a{font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;}
     .entry-a.empty{color:var(--soft);font-style:italic;}
-    .entries-more{
-      display:block;width:100%;margin-top:8px;
-      background:none;border:1px solid var(--cream-border);
-      border-radius:12px;padding:10px;
-      font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;
-      color:var(--soft);cursor:pointer;text-align:center;
-      transition:border-color 0.15s,color 0.15s;
-    }
+
+    .entries-more{display:block;width:100%;margin-top:8px;background:none;border:1px solid var(--cream-border);border-radius:12px;padding:10px;font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--soft);cursor:pointer;text-align:center;transition:border-color 0.15s;}
     .entries-more:active{border-color:var(--dark);color:var(--dark);}
 
-    /* ══════════════════════════════════════════════
-       ZONE HEADERS
-    ══════════════════════════════════════════════ */
-    .zone-header{
-      display:flex;align-items:flex-start;gap:14px;
-      margin-bottom:18px;padding:0 2px;
-    }
-    .zone-stripe{
-      width:3px;min-height:40px;border-radius:2px;
-      flex-shrink:0;margin-top:3px;
-    }
-    .zone-label{font-size:14px;font-weight:500;color:var(--dark);letter-spacing:0.2px;margin-bottom:3px;}
-    .zone-sub{font-size:11.5px;font-weight:300;color:var(--soft);line-height:1.6;}
+    /* ── SECTION LABEL ── */
+    .section-label{display:flex;align-items:center;gap:10px;padding:0;margin-bottom:14px;}
+    .section-label-text{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap;}
+    .section-label-line{flex:1;height:1px;background:var(--cream-border);}
 
-    /* ══════════════════════════════════════════════
-       TOOL GRID
-    ══════════════════════════════════════════════ */
+    /* ── TOOL GRID ── */
+    .tools-section{padding:0 16px;}
     .tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    .grid-mb{margin-bottom:36px;}
-
-    .tool-card{
-      background:var(--card);
-      border:1.5px solid var(--cream-border);
-      border-radius:var(--radius-card);
-      padding:20px 16px 18px;
-      cursor:pointer;
-      position:relative;overflow:hidden;
-      box-shadow:var(--shadow-sm);
-      transition:transform 0.2s ease, box-shadow 0.2s ease;
-      /* entrance animation set per card via inline style */
-      animation:cardReveal 0.5s ease both;
-    }
-    @keyframes cardReveal{
-      from{opacity:0;transform:translateY(18px);}
-      to{opacity:1;transform:translateY(0);}
-    }
-    .tool-card::before{
-      content:'';position:absolute;top:0;left:0;right:0;height:3px;
-      border-radius:2px 2px 0 0;
-    }
-    /* lift on active */
-    .tool-card:not(.coming):active{transform:translateY(-2px) scale(0.985);box-shadow:var(--shadow-md);}
-    .tool-card.coming{opacity:0.48;cursor:default;pointer-events:none;}
-
-    /* colored top bars */
-    .tool-card.breathe::before   {background:linear-gradient(90deg,var(--teal),rgba(13,148,136,0.4));}
-    .tool-card.reframe::before   {background:linear-gradient(90deg,var(--rose),rgba(225,29,72,0.4));}
-    .tool-card.journal::before   {background:linear-gradient(90deg,var(--purple),rgba(124,58,237,0.4));}
-    .tool-card.worry-tool::before{background:linear-gradient(90deg,var(--blue),rgba(46,95,163,0.4));}
-    .tool-card.clarity::before   {background:linear-gradient(90deg,var(--gold),rgba(232,150,12,0.4));}
-    .tool-card.sleep::before     {background:linear-gradient(90deg,#818CF8,rgba(129,140,248,0.4));}
-    .tool-card.play::before      {background:linear-gradient(90deg,var(--green),rgba(58,125,68,0.4));}
-    .tool-card.learn::before     {background:linear-gradient(90deg,var(--green),rgba(58,125,68,0.4));}
-    .tool-card.listen::before    {background:linear-gradient(90deg,var(--indigo),rgba(67,56,202,0.4));}
-
-    /* icon wrapper */
-    .tool-icon{
-      width:46px;height:46px;border-radius:14px;
-      display:flex;align-items:center;justify-content:center;
-      font-size:22px;margin-bottom:13px;
-    }
-    .tool-card.breathe    .tool-icon{background:linear-gradient(135deg,var(--teal-soft),#CCFBF1);}
-    .tool-card.journal    .tool-icon{background:linear-gradient(135deg,var(--purple-soft),#EDE9FE);}
-    .tool-card.sleep      .tool-icon{background:linear-gradient(135deg,#EEF0FF,#E0E7FF);}
-    .tool-card.reframe    .tool-icon{background:linear-gradient(135deg,var(--rose-soft),#FFE4E6);}
-    .tool-card.worry-tool .tool-icon{background:linear-gradient(135deg,var(--blue-soft),#DBEAFE);}
-    .tool-card.clarity    .tool-icon{background:linear-gradient(135deg,var(--gold-soft),#FEF3C7);}
-    .tool-card.play       .tool-icon{background:linear-gradient(135deg,var(--gold-soft),var(--green-soft));}
-    .tool-card.learn      .tool-icon{background:linear-gradient(135deg,var(--green-soft),#DCFCE7);}
-    .tool-card.listen     .tool-icon{background:linear-gradient(135deg,var(--indigo-soft),#E0E7FF);}
-
-    .tool-name{
-      font-family:'Noto Serif Thai',serif;
-      font-size:16px;font-weight:600;
-      color:var(--dark);margin-bottom:5px;
-    }
-    .tool-desc{font-size:11.5px;font-weight:300;color:var(--soft);line-height:1.6;}
-    .tool-badge{
-      display:inline-block;margin-top:11px;
-      font-size:9px;font-weight:500;letter-spacing:1px;
-      text-transform:uppercase;padding:3px 9px;border-radius:20px;
-    }
+    .tool-card{background:var(--card);border:1.5px solid var(--cream-border);border-radius:20px;padding:20px 16px 18px;cursor:pointer;position:relative;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s;}
+    .tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .tool-card:active{transform:scale(0.96);}
+    .tool-card.coming{opacity:0.5;cursor:default;pointer-events:none;}
+    .tool-card.breathe::before{background:var(--teal);}
+    .tool-card.reframe::before{background:var(--rose);}
+    .tool-card.journal::before{background:var(--purple);}
+    .tool-card.worry-tool::before{background:var(--blue);}
+    .tool-card.clarity::before{background:var(--gold);}
+    .tool-card.sleep::before{background:#818CF8;}
+    .tool-card.play::before{background:var(--green);}
+    .tool-card.learn::before{background:var(--green);}
+    .tool-card.listen::before{background:var(--indigo);}
+    .tool-icon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px;}
+    .tool-card.breathe .tool-icon{background:var(--teal-soft);}
+    .tool-card.play    .tool-icon{background:var(--gold-soft);}
+    .tool-card.journal .tool-icon{background:var(--purple-soft);}
+    .tool-card.learn   .tool-icon{background:var(--green-soft);}
+    .tool-card.listen  .tool-icon{background:var(--indigo-soft);}
+    .tool-card.sleep   .tool-icon{background:#EEF0FF;}
+    .tool-name{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);margin-bottom:4px;}
+    .tool-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.55;}
+    .tool-badge{display:inline-block;margin-top:10px;font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:20px;}
     .badge-ready{background:var(--green-soft);color:var(--green);border:1px solid var(--green-border);}
     .badge-soon{background:var(--cream);color:var(--soft);border:1px solid var(--cream-border);}
 
-    /* full-width card variant */
-    .tool-card.wide{
-      display:flex;align-items:center;
-      gap:14px;padding:16px 18px;
-    }
-    .tool-card.wide .tool-icon{margin-bottom:0;flex-shrink:0;}
-    .tool-card.wide .tool-info{flex:1;}
-    .tool-card.wide .tool-badge{margin-top:0;flex-shrink:0;}
-
-    /* ══════════════════════════════════════════════
-       PEEK CAROUSEL
-    ══════════════════════════════════════════════ */
-    .card-carousel{
-      position:relative;
-      overflow:hidden;
-      margin-bottom:12px;
-    }
-    .carousel-track{
-      display:flex;
-      gap:12px;
-      transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);
-      will-change:transform;
-    }
-    /* each card in carousel fills most of viewport, letting next card peek */
-    .carousel-track .tool-card{
-      flex-shrink:0;
-      width:calc(100% - 56px); /* 56px peek space */
-      margin-bottom:0;
-      transition:opacity 0.35s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    /* peeking (non-active) card is faded and non-interactive */
-    .carousel-track .tool-card.card-peek{
-      opacity:0.32;
-      pointer-events:none;
-    }
-    /* right-edge gradient fade to hint at more content */
-    .carousel-edge-fade{
-      position:absolute;
-      top:0;right:0;bottom:0;
-      width:72px;
-      background:linear-gradient(to right, transparent, var(--cream) 85%);
-      pointer-events:none;
-      z-index:2;
-      transition:opacity 0.3s;
-    }
-    .carousel-edge-fade.hidden{opacity:0;}
-    /* nav arrow pill */
-    .carousel-arrow{
-      position:absolute;
-      right:4px;top:50%;
-      transform:translateY(-50%);
-      z-index:3;
-      width:30px;height:30px;
-      border-radius:50%;
-      background:var(--card);
-      border:1.5px solid var(--cream-border);
-      box-shadow:var(--shadow-md);
-      display:flex;align-items:center;justify-content:center;
-      font-size:15px;cursor:pointer;
-      color:var(--mid);
-      transition:all 0.18s;
-      line-height:1;
-      padding:0;font-family:'Mitr',sans-serif;
-    }
-    .carousel-arrow:active{transform:translateY(-50%) scale(0.88);}
-    .carousel-arrow.hidden{opacity:0;pointer-events:none;}
-    /* wide card after carousel, full width */
-    .wide-card-row{margin-bottom:36px;}
-
-    /* ══════════════════════════════════════════════
-       PASSIVE EXIT RAMP
-    ══════════════════════════════════════════════ */
-    .exit-ramp{
-      text-align:center;padding:24px 24px 10px;
-    }
-    .exit-ramp-inner{
-      display:inline-flex;align-items:center;gap:6px;
-      background:var(--card);border:1px solid var(--cream-border);
-      border-radius:20px;padding:10px 18px;
-      box-shadow:var(--shadow-sm);
-    }
-    .exit-ramp-text{font-size:12px;font-weight:300;color:var(--mid);}
-    .exit-ramp a{color:var(--dark);font-weight:500;text-decoration:none;}
-    .exit-ramp-sep{color:var(--cream-border);margin:0 4px;}
-
-    /* ══════════════════════════════════════════════
-       IDLE NUDGE
-    ══════════════════════════════════════════════ */
-    #idle-nudge{
-      display:none;margin:0 16px 16px;
-      background:var(--cream-warm);border:1px solid var(--gold-border);
-      border-radius:16px;padding:16px;
-      opacity:0;transition:opacity 0.5s;
-      box-shadow:var(--shadow-sm);
-    }
-
-    /* ══════════════════════════════════════════════
-       MODAL BASE
-    ══════════════════════════════════════════════ */
-    .modal-overlay{
-      position:fixed;inset:0;background:rgba(0,0,0,0);
-      z-index:200;display:none;align-items:flex-end;justify-content:center;
-      pointer-events:none;transition:background 0.3s;
-    }
-    .modal-overlay.active{background:rgba(0,0,0,0.6);pointer-events:all;}
-    .modal-sheet{
-      background:var(--cream);
-      border-radius:28px 28px 0 0;
-      width:100%;max-width:480px;
-      transform:translateY(100%);
-      transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);
-      max-height:92vh;overflow-y:auto;
-      padding-bottom:env(safe-area-inset-bottom,16px);
-      box-shadow:0 -8px 40px rgba(0,0,0,0.2);
-    }
+    /* ── MODAL ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;display:none;align-items:flex-end;justify-content:center;pointer-events:none;transition:background 0.3s;}
+    .modal-overlay.active{background:rgba(0,0,0,0.55);pointer-events:all;}
+    .modal-sheet{background:var(--cream);border-radius:28px 28px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);max-height:92vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,16px);}
     .modal-overlay.active .modal-sheet{transform:translateY(0);}
-    .modal-handle{
-      width:36px;height:4px;
-      background:var(--cream-border);border-radius:2px;
-      margin:14px auto 0;
-    }
+    .modal-handle{width:40px;height:4px;background:var(--cream-border);border-radius:2px;margin:14px auto 0;}
 
-    /* ══════════════════════════════════════════════
-       BREATHE MODAL
-    ══════════════════════════════════════════════ */
+    /* ── BREATHE ── */
     #breathe-modal .modal-sheet{background:#07111F;}
     .breathe-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between;}
     .breathe-title{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:#FDFBF7;}
-    .breathe-close{
-      background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
-      border-radius:50%;width:32px;height:32px;
-      display:flex;align-items:center;justify-content:center;
-      color:rgba(255,255,255,0.6);font-size:14px;cursor:pointer;
-      font-family:'Mitr',sans-serif;transition:background 0.15s;
-    }
-    .breathe-close:hover{background:rgba(255,255,255,0.15);}
+    .breathe-close{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-size:14px;cursor:pointer;font-family:'Mitr',sans-serif;}
     .dur-row{display:flex;gap:8px;padding:20px 24px 0;}
-    .dur-btn{
-      flex:1;padding:10px 0;border-radius:12px;
-      border:1px solid rgba(255,255,255,0.1);
-      background:rgba(255,255,255,0.04);
-      font-family:'Mitr',sans-serif;font-size:13px;font-weight:300;
-      color:rgba(255,255,255,0.45);cursor:pointer;transition:all 0.18s;
-    }
-    .dur-btn.sel{background:rgba(13,148,136,0.22);border-color:rgba(13,148,136,0.55);color:#FDFBF7;}
+    .dur-btn{flex:1;padding:10px 0;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);font-family:'Mitr',sans-serif;font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);cursor:pointer;transition:all 0.18s;}
+    .dur-btn.sel{background:rgba(13,148,136,0.25);border-color:rgba(13,148,136,0.6);color:#FDFBF7;}
     .pattern-row{display:flex;gap:8px;padding:12px 24px 0;}
-    .pat-btn{
-      flex:1;padding:9px 0;border-radius:10px;
-      border:1px solid rgba(255,255,255,0.07);
-      background:rgba(255,255,255,0.03);
-      font-family:'Mitr',sans-serif;font-size:11px;font-weight:300;
-      color:rgba(255,255,255,0.35);cursor:pointer;transition:all 0.18s;text-align:center;line-height:1.4;
-    }
-    .pat-btn.sel{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.18);color:rgba(255,255,255,0.85);}
+    .pat-btn{flex:1;padding:9px 0;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);font-family:'Mitr',sans-serif;font-size:11px;font-weight:300;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.18s;text-align:center;line-height:1.4;}
+    .pat-btn.sel{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);}
     .pat-name{display:block;font-weight:500;font-size:12px;}
-    .pat-counts{display:block;font-size:10px;opacity:0.55;margin-top:2px;}
+    .pat-counts{display:block;font-size:10px;opacity:0.6;margin-top:2px;}
     .breathe-stage{display:flex;flex-direction:column;align-items:center;padding:28px 24px 8px;}
     .circle-wrap{position:relative;width:180px;height:180px;margin-bottom:24px;}
     .c-ring{position:absolute;inset:-12px;border-radius:50%;border:1px solid rgba(13,148,136,0.15);transition:all 0.5s ease-in-out;}
-    .c-main{
-      position:absolute;inset:0;border-radius:50%;
-      background:radial-gradient(circle at 40% 35%,rgba(20,184,166,0.85),rgba(13,148,136,0.5));
-      display:flex;align-items:center;justify-content:center;flex-direction:column;
-      box-shadow:0 0 48px rgba(13,148,136,0.25);
-      transition:transform 1s ease-in-out,box-shadow 1s ease-in-out;
-    }
+    .c-main{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(20,184,166,0.85),rgba(13,148,136,0.5));display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 0 48px rgba(13,148,136,0.25);transition:transform 1s ease-in-out,box-shadow 1s ease-in-out;}
     .c-main.expand{transform:scale(1.28);box-shadow:0 0 72px rgba(13,148,136,0.45);}
     .c-main.hold-in{transform:scale(1.28);box-shadow:0 0 72px rgba(13,148,136,0.35);}
     .c-main.contract{transform:scale(0.72);box-shadow:0 0 24px rgba(13,148,136,0.15);}
@@ -470,42 +128,50 @@
     .c-count{font-family:'Noto Serif Thai',serif;font-size:36px;font-weight:600;color:#FDFBF7;line-height:1;}
     .c-phase-sub{font-size:10px;font-weight:300;color:rgba(255,255,255,0.5);margin-top:4px;letter-spacing:1px;}
     .b-phase-label{font-size:14px;font-weight:300;color:rgba(255,255,255,0.65);letter-spacing:1px;margin-bottom:6px;min-height:22px;text-align:center;}
-    .b-timer{font-size:12px;color:rgba(255,255,255,0.22);text-align:center;margin-bottom:4px;min-height:18px;}
-    .breathe-cta{
-      margin:20px 24px 28px;background:var(--teal);color:#fff;
-      border:none;border-radius:28px;padding:16px;
-      width:calc(100% - 48px);font-family:'Mitr',sans-serif;
-      font-size:14px;font-weight:500;cursor:pointer;
-      transition:transform 0.15s,opacity 0.15s,box-shadow 0.15s;
-      box-shadow:0 4px 20px rgba(13,148,136,0.35);
-    }
+    .b-timer{font-size:12px;color:rgba(255,255,255,0.25);text-align:center;margin-bottom:4px;min-height:18px;}
+    .breathe-cta{margin:20px 24px 28px;background:var(--teal);color:#fff;border:none;border-radius:28px;padding:16px;width:calc(100% - 48px);font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:transform 0.15s,opacity 0.15s;}
     .breathe-cta:active{transform:scale(0.97);}
-    .breathe-cta.stop{
-      background:rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.12);
-      color:rgba(255,255,255,0.5);
-      box-shadow:none;
-    }
+    .breathe-cta.stop{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);}
     .b-done{text-align:center;padding:28px 24px 40px;}
     .b-done-icon{font-size:48px;margin-bottom:16px;}
     .b-done-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:#FDFBF7;margin-bottom:8px;}
     .b-done-sub{font-size:13px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.75;margin-bottom:28px;}
-    .b-done-again{
-      background:rgba(255,255,255,0.07);
-      border:1px solid rgba(255,255,255,0.13);
-      color:rgba(255,255,255,0.7);border-radius:14px;
-      padding:12px 24px;font-family:'Mitr',sans-serif;
-      font-size:13px;cursor:pointer;margin-bottom:10px;display:block;width:100%;
-      transition:background 0.15s;
-    }
-    .b-done-again:hover{background:rgba(255,255,255,0.12);}
-    .b-done-close{background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:rgba(255,255,255,0.22);cursor:pointer;margin-top:4px;}
+    .b-done-again{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);border-radius:14px;padding:12px 24px;font-family:'Mitr',sans-serif;font-size:13px;cursor:pointer;margin-bottom:10px;display:block;width:100%;}
+    .b-done-close{background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:rgba(255,255,255,0.25);cursor:pointer;margin-top:4px;}
 
-    /* ══════════════════════════════════════════════
-       STILL HEAVY STRIP
-    ══════════════════════════════════════════════ */
-    .still-strip{margin-top:20px;border-top:1px solid var(--cream-border);padding-top:16px;}
-    .still-q{font-size:12px;font-weight:400;color:var(--soft);margin-bottom:10px;text-align:center;}
+    /* ── JOURNAL ── */
+    .journal-inner{padding:24px 24px 40px;}
+    .j-progress{display:flex;gap:6px;margin-bottom:28px;}
+    .j-dot{flex:1;height:3px;border-radius:2px;background:var(--cream-border);transition:background 0.3s;}
+    .j-dot.done{background:var(--purple);}
+    .j-dot.active{background:rgba(124,58,237,0.4);}
+    .j-label{font-size:10px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;font-weight:500;margin-bottom:10px;}
+    .j-q{font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:6px;}
+    .j-sub{font-size:13px;font-weight:300;color:var(--soft);margin-bottom:20px;line-height:1.65;}
+    .j-ta{width:100%;min-height:130px;background:var(--cream);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:300;color:var(--dark);resize:none;outline:none;line-height:1.75;transition:border-color 0.2s;}
+    .j-ta:focus{border-color:var(--purple);}
+    .j-ta::placeholder{color:var(--soft);}
+    .j-next{width:100%;margin-top:14px;background:var(--dark);color:var(--cream);border:none;border-radius:28px;padding:15px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:transform 0.15s;}
+    .j-next:active{transform:scale(0.97);}
+    .j-skip{width:100%;margin-top:8px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:8px;}
+    .j-done{text-align:center;padding:12px 0 20px;}
+    .j-done-icon{font-size:48px;margin-bottom:16px;}
+    .j-done-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);margin-bottom:8px;}
+    .j-done-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:28px;max-width:280px;margin-left:auto;margin-right:auto;}
+    .j-done-close{background:none;border:1.5px solid var(--cream-border);border-radius:14px;padding:12px 28px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .fade-up{animation:fadeUp 0.28s ease forwards;}
+
+    /* STILL HEAVY STRIP — shared by breathe done + journal done */
+    .still-strip{
+      margin-top:20px;border-top:1px solid var(--cream-border);
+      padding-top:16px;
+    }
+    .still-q{
+      font-size:12px;font-weight:400;color:var(--soft);
+      margin-bottom:10px;text-align:center;
+    }
     .still-btns{display:flex;gap:8px;}
     .still-ok{
       flex:1;background:var(--green-soft);
@@ -523,9 +189,15 @@
       cursor:pointer;transition:all 0.18s;
     }
     .still-no:active{border-color:var(--dark);color:var(--dark);}
-    .still-heavy{display:none;margin-top:12px;background:var(--dark);border-radius:14px;padding:14px;}
+    .still-heavy{
+      display:none;margin-top:12px;
+      background:var(--dark);border-radius:14px;padding:14px;
+    }
     .still-heavy.show{display:block;}
-    .still-heavy-note{font-size:12px;font-weight:300;color:rgba(253,251,247,0.55);line-height:1.75;margin-bottom:12px;}
+    .still-heavy-note{
+      font-size:12px;font-weight:300;
+      color:rgba(253,251,247,0.55);line-height:1.75;margin-bottom:12px;
+    }
     .still-heavy-note strong{font-weight:500;color:rgba(253,251,247,0.85);}
     .still-heavy-links{display:flex;flex-direction:column;gap:7px;}
     .still-link{
@@ -542,334 +214,279 @@
     .still-link-name{font-size:13px;font-weight:500;color:#FDFBF7;display:block;}
     .still-link-desc{font-size:10px;font-weight:300;color:rgba(253,251,247,0.4);display:block;margin-top:1px;}
     .still-link-arrow{font-size:12px;color:rgba(255,255,255,0.2);flex-shrink:0;}
-    .still-1323{margin-top:10px;text-align:center;font-size:11px;font-weight:300;color:rgba(253,251,247,0.28);line-height:1.7;}
-
-    /* ══════════════════════════════════════════════
-       JOURNAL MODAL
-    ══════════════════════════════════════════════ */
-    .journal-inner{padding:24px 24px 40px;}
-    .j-progress{display:flex;gap:6px;margin-bottom:28px;}
-    .j-dot{flex:1;height:3px;border-radius:2px;background:var(--cream-border);transition:background 0.3s;}
-    .j-dot.done{background:var(--purple);}
-    .j-dot.active{background:rgba(124,58,237,0.35);}
-    .j-label{font-size:10px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;font-weight:500;margin-bottom:10px;}
-    .j-q{font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:6px;}
-    .j-sub{font-size:13px;font-weight:300;color:var(--soft);margin-bottom:20px;line-height:1.65;}
-    .j-ta{
-      width:100%;min-height:130px;
-      background:var(--cream);border:1.5px solid var(--cream-border);
-      border-radius:14px;padding:14px;
-      font-family:'Mitr',sans-serif;font-size:14px;font-weight:300;
-      color:var(--dark);resize:none;outline:none;line-height:1.75;
-      transition:border-color 0.2s,box-shadow 0.2s;
+    .still-1323{
+      margin-top:10px;text-align:center;
+      font-size:11px;font-weight:300;color:rgba(253,251,247,0.28);line-height:1.7;
     }
-    .j-ta:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,0.08);}
-    .j-ta::placeholder{color:var(--soft);}
-    .j-next{
-      width:100%;margin-top:14px;background:var(--dark);color:var(--cream);
-      border:none;border-radius:28px;padding:15px;
-      font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;
-      transition:transform 0.15s,box-shadow 0.15s;
-      box-shadow:0 4px 16px rgba(28,25,23,0.18);
-    }
-    .j-next:active{transform:scale(0.97);}
-    .j-skip{width:100%;margin-top:8px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:8px;}
-    .j-done{text-align:center;padding:12px 0 20px;}
-    .j-done-icon{font-size:48px;margin-bottom:16px;}
-    .j-done-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);margin-bottom:8px;}
-    .j-done-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:28px;max-width:280px;margin-left:auto;margin-right:auto;}
-    .j-done-close{background:none;border:1.5px solid var(--cream-border);border-radius:14px;padding:12px 28px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;}
+    .tool-card.reframe    .tool-icon{background:var(--rose-soft);}
+    .tool-card.worry-tool .tool-icon{background:var(--blue-soft);}
+    .tool-card.clarity    .tool-icon{background:var(--gold-soft);}
 
-    /* ══════════════════════════════════════════════
-       SHARED MULTI-STEP (reframe, worry, clarity)
-    ══════════════════════════════════════════════ */
+    /* ── SHARED MULTI-STEP MODAL STYLES ── */
     .mstep-inner{padding:24px 24px 40px;}
     .mstep-progress{display:flex;gap:6px;margin-bottom:24px;}
     .mstep-dot{flex:1;height:3px;border-radius:2px;background:var(--cream-border);transition:background 0.3s;}
     .mstep-dot.done{background:var(--dark);}
-    .mstep-dot.active{background:rgba(28,25,23,0.3);}
+    .mstep-dot.active{background:rgba(28,25,23,0.35);}
     .mstep-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;margin-bottom:8px;}
     .mstep-q{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:6px;}
     .mstep-sub{font-size:13px;font-weight:300;color:var(--soft);margin-bottom:20px;line-height:1.65;}
     .mstep-choices{display:flex;flex-direction:column;gap:10px;margin-bottom:4px;}
-    .mstep-choice{
-      background:var(--card);border:1.5px solid var(--cream-border);
-      border-radius:14px;padding:14px 16px;cursor:pointer;
-      transition:border-color 0.18s,background 0.18s,transform 0.15s;
-      text-align:left;font-family:'Mitr',sans-serif;
-      box-shadow:var(--shadow-sm);
-    }
-    .mstep-choice:active{transform:scale(0.98);border-color:var(--dark);}
+    .mstep-choice{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:border-color 0.18s,background 0.18s;text-align:left;font-family:'Mitr',sans-serif;}
+    .mstep-choice:active{transform:scale(0.98);}
     .mstep-choice-title{font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;}
     .mstep-choice-sub{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
-    .mstep-ta{
-      width:100%;min-height:110px;
-      background:var(--cream);border:1.5px solid var(--cream-border);
-      border-radius:14px;padding:14px;
-      font-family:'Mitr',sans-serif;font-size:14px;font-weight:300;
-      color:var(--dark);resize:none;outline:none;line-height:1.75;
-      transition:border-color 0.2s,box-shadow 0.2s;
-    }
-    .mstep-ta:focus{border-color:var(--dark);box-shadow:0 0 0 3px rgba(28,25,23,0.06);}
+    .mstep-ta{width:100%;min-height:110px;background:var(--cream);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:300;color:var(--dark);resize:none;outline:none;line-height:1.75;transition:border-color 0.2s;}
+    .mstep-ta:focus{border-color:var(--dark);}
     .mstep-ta::placeholder{color:var(--soft);}
-    .mstep-next{
-      width:100%;margin-top:14px;background:var(--dark);color:var(--cream);
-      border:none;border-radius:28px;padding:15px;
-      font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;
-      transition:transform 0.15s,box-shadow 0.15s;
-      box-shadow:0 4px 16px rgba(28,25,23,0.18);
-    }
+    .mstep-next{width:100%;margin-top:14px;background:var(--dark);color:var(--cream);border:none;border-radius:28px;padding:15px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:transform 0.15s;}
     .mstep-next:active{transform:scale(0.97);}
     .mstep-back{width:100%;margin-top:8px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:8px;}
 
-    /* reframe */
-    .reframe-phrase{background:var(--rose-soft);border:1.5px solid var(--rose-border);border-radius:16px;padding:18px;margin-bottom:20px;}
+    /* reframe specific */
+    .reframe-phrase{
+      background:var(--rose-soft);border:1.5px solid var(--rose-border);
+      border-radius:16px;padding:18px;margin-bottom:20px;
+    }
     .reframe-prefix{font-size:11px;font-weight:400;color:var(--rose);margin-bottom:6px;letter-spacing:0.5px;}
     .reframe-thought{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:#7F1D1D;line-height:1.45;}
-    .reframe-permission{background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:14px;padding:16px;margin-bottom:20px;}
+    .reframe-permission{
+      background:var(--cream-warm);border:1px solid var(--gold-border);
+      border-radius:14px;padding:16px;margin-bottom:20px;
+    }
     .reframe-permission-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:8px;}
     .reframe-permission-text{font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:400;color:var(--dark);line-height:1.6;}
-    .mini-breath{background:var(--teal-soft);border:1px solid var(--teal-border);border-radius:14px;padding:16px;text-align:center;margin-bottom:16px;}
+
+    /* breath moment inside reframe */
+    .mini-breath{
+      background:var(--teal-soft);border:1px solid var(--teal-border);
+      border-radius:14px;padding:16px;text-align:center;margin-bottom:16px;
+    }
     .mini-breath-label{font-size:11px;color:var(--teal);font-weight:500;margin-bottom:10px;letter-spacing:0.5px;}
-    .mini-breath-circle{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,0.6),rgba(13,148,136,0.25));margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:22px;animation:breathePulse 4s ease-in-out infinite;}
+    .mini-breath-circle{
+      width:64px;height:64px;border-radius:50%;
+      background:radial-gradient(circle,rgba(13,148,136,0.6),rgba(13,148,136,0.25));
+      margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
+      font-size:22px;
+      animation:breathePulse 4s ease-in-out infinite;
+    }
     @keyframes breathePulse{0%,100%{transform:scale(0.85);opacity:0.6}50%{transform:scale(1.15);opacity:1}}
     .mini-breath-hint{font-size:11px;font-weight:300;color:var(--teal);opacity:0.75;}
 
-    /* worry */
+    /* worry fork */
     .worry-fork{display:flex;gap:10px;margin-bottom:4px;}
-    .worry-fork-btn{flex:1;padding:16px 12px;border-radius:16px;border:1.5px solid var(--cream-border);background:var(--card);cursor:pointer;font-family:'Mitr',sans-serif;text-align:center;transition:all 0.18s;box-shadow:var(--shadow-sm);}
+    .worry-fork-btn{
+      flex:1;padding:16px 12px;border-radius:16px;
+      border:1.5px solid var(--cream-border);background:var(--card);
+      cursor:pointer;font-family:'Mitr',sans-serif;
+      text-align:center;transition:all 0.18s;
+    }
     .worry-fork-btn:active{transform:scale(0.97);}
     .worry-fork-icon{font-size:22px;margin-bottom:6px;}
     .worry-fork-label{font-size:13px;font-weight:500;color:var(--dark);}
     .worry-fork-sub{font-size:10px;font-weight:300;color:var(--soft);margin-top:2px;line-height:1.4;}
 
-    /* clarity */
-    .clarity-mirror{background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:16px;padding:18px;margin-bottom:20px;}
+    /* clarity mirror */
+    .clarity-mirror{
+      background:var(--cream-warm);border:1px solid var(--gold-border);
+      border-radius:16px;padding:18px;margin-bottom:20px;
+    }
     .cm-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:10px;}
     .cm-line{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:6px;}
     .cm-line strong{font-weight:500;color:var(--dark);}
 
-    /* done screen */
+    /* done screen shared */
     .tool-done{text-align:center;padding:12px 0 20px;}
     .tool-done-icon{font-size:48px;margin-bottom:16px;}
     .tool-done-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);margin-bottom:8px;}
     .tool-done-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:24px;max-width:280px;margin-left:auto;margin-right:auto;}
     .tool-done-close{background:none;border:1.5px solid var(--cream-border);border-radius:14px;padding:12px 28px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;}
-
-    /* ══════════════════════════════════════════════
-       UTILITY
-    ══════════════════════════════════════════════ */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .fade-up{animation:fadeUp 0.28s ease forwards;}
-
-    /* Coming-soon zone subtle tint */
-    .zone-coming .tool-card.coming{
-      background:linear-gradient(135deg,#FDFBF7,#F7F5F0);
-    }
   </style>
 </head>
 <body>
 
-<!-- ══ HERO ══════════════════════════════════ -->
+<button class="back-btn" onclick="history.back()">← กลับ</button>
+
 <div class="hero">
-  <div class="hero-stars"></div>
-  <div class="hero-blob hero-blob-1"></div>
-  <div class="hero-blob hero-blob-2"></div>
-  <div class="hero-blob hero-blob-3"></div>
-  <button class="back-btn" onclick="history.back()">← กลับ</button>
-  <div class="hero-content">
-    <div class="hero-greeting" id="hero-greeting"></div>
-    <div class="hero-eyebrow">✦ ใจดี TU</div>
-    <div class="hero-title">เครื่องมือ<br/>ดูแลใจ</div>
-    <div class="hero-sub">เลือกตามที่อยากทำตอนนี้<br/>ไม่ต้องรู้สึกพร้อมก่อน</div>
-  </div>
+  <div class="hero-eyebrow">ใจดี TU</div>
+  <div class="hero-title">เครื่องมือดูแลใจ</div>
+  <div class="hero-sub">เลือกตามที่อยากทำตอนนี้<br/>ไม่ต้องรู้สึกพร้อมก่อน</div>
 </div>
 
-<!-- ══ PAGE BODY ══════════════════════════════ -->
-<div class="page-body">
-
-  <!-- ENTRIES SECTION -->
-  <div id="entries-section" style="display:none;padding-top:8px;">
-    <div class="entries-header">
-      <span class="entries-header-text">บันทึกของคุณ</span>
-      <div class="entries-header-line"></div>
-      <button class="entries-header-clear" onclick="confirmClear()">ลบทั้งหมด</button>
-    </div>
-    <div class="entries-list" id="entries-list"></div>
-    <button class="entries-more" id="entries-more" style="display:none;" onclick="toggleAllEntries()"></button>
+<!-- ENTRIES SECTION — hidden until there's data -->
+<div id="entries-section" style="display:none;">
+  <div class="entries-header">
+    <span class="entries-header-text">บันทึกของคุณ</span>
+    <div class="entries-header-line"></div>
+    <button class="entries-header-clear" onclick="confirmClear()">ลบทั้งหมด</button>
   </div>
+  <div class="entries-list" id="entries-list"></div>
+  <button class="entries-more" id="entries-more" style="display:none;" onclick="toggleAllEntries()"></button>
+</div>
+
+<!-- TOOLS -->
+<div class="tools-section">
 
   <!-- ── Zone 1: ทั่วไป ── -->
-  <div style="padding-top:8px;"></div>
-  <div class="zone-header">
-    <div class="zone-stripe" style="background:linear-gradient(to bottom,var(--teal),rgba(13,148,136,0.3));"></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <div style="width:4px;height:36px;border-radius:2px;background:var(--teal);flex-shrink:0;"></div>
     <div>
-      <div class="zone-label">โซนทั่วไป</div>
-      <div class="zone-sub">ไม่ต้องรู้ว่ารู้สึกอะไร · เริ่มจากนี้ได้เลย</div>
+      <div style="font-size:13px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">โซนทั่วไป</div>
+      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">ไม่ต้องรู้ว่ารู้สึกอะไร · เริ่มจากนี้ได้เลย</div>
     </div>
   </div>
-  <!-- Carousel: หายใจ + บันทึก -->
-  <div class="card-carousel" id="carousel-z1">
-    <div class="carousel-track" id="z1-track">
-      <div class="tool-card breathe" style="animation-delay:0.05s" onclick="markToolTapped();openBreathe()">
-        <div class="tool-icon">🌬️</div>
-        <div class="tool-name">หายใจ</div>
-        <div class="tool-desc">เมื่อรู้สึกอึดอัด</div>
-        <span class="tool-badge badge-ready">ใช้ได้เลย</span>
-      </div>
-      <div class="tool-card journal card-peek" style="animation-delay:0.1s" onclick="markToolTapped();openJournal()">
-        <div class="tool-icon">📓</div>
-        <div class="tool-name">บันทึก</div>
-        <div class="tool-desc">เขียนระบาย</div>
-        <span class="tool-badge badge-ready">ใช้ได้เลย</span>
-      </div>
-    </div>
-    <div class="carousel-edge-fade" id="z1-fade"></div>
-    <button class="carousel-arrow" id="z1-arrow" onclick="carouselNav('z1')">›</button>
-  </div>
-  <!-- Wide card -->
-  <div class="wide-card-row">
-    <div class="tool-card sleep wide" style="animation-delay:0.15s" onclick="markToolTapped();window.location.href='sleep.html'">
-      <div class="tool-icon">🌙</div>
-      <div class="tool-info">
-        <div class="tool-name">นอนหลับ</div>
-        <div class="tool-desc">เมื่อหัวไม่ยอมหยุด</div>
-      </div>
+  <div class="tools-grid" style="margin-bottom:36px;">
+    <div class="tool-card breathe" onclick="markToolTapped();openBreathe()">
+      <div class="tool-icon">🌬️</div>
+      <div class="tool-name">หายใจ</div>
+      <div class="tool-desc">เมื่อรู้สึกอึดอัด กดดัน หรืออยากรีเซ็ต</div>
       <span class="tool-badge badge-ready">ใช้ได้เลย</span>
+    </div>
+    <div class="tool-card journal" onclick="markToolTapped();openJournal()">
+      <div class="tool-icon">📓</div>
+      <div class="tool-name">บันทึก</div>
+      <div class="tool-desc">เขียนระบาย 3 คำถามง่ายๆ</div>
+      <span class="tool-badge badge-ready">ใช้ได้เลย</span>
+    </div>
+    <div class="tool-card sleep" onclick="markToolTapped();window.location.href='sleep.html'" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;">
+      <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🌙</div>
+      <div style="flex:1;">
+        <div class="tool-name">นอนหลับ</div>
+        <div class="tool-desc">เมื่อหัวไม่ยอมหยุดตอนกลางคืน</div>
+      </div>
+      <span class="tool-badge badge-ready" style="margin-top:0;flex-shrink:0;">ใช้ได้เลย</span>
     </div>
   </div>
 
   <!-- ── Zone 2: ปรับความคิด ── -->
-  <div class="zone-header">
-    <div class="zone-stripe" style="background:linear-gradient(to bottom,var(--rose),rgba(225,29,72,0.3));"></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <div style="width:4px;height:36px;border-radius:2px;background:var(--rose);flex-shrink:0;"></div>
     <div>
-      <div class="zone-label">ปรับความคิด</div>
-      <div class="zone-sub">เมื่อรู้แล้วว่ากำลังรู้สึกอะไร อยากทำงานกับมัน</div>
+      <div style="font-size:13px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">ปรับความคิด</div>
+      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">เมื่อรู้แล้วว่ากำลังรู้สึกอะไร อยากทำงานกับมัน</div>
     </div>
   </div>
-  <!-- Carousel: ปรับความคิด + คลายกังวล -->
-  <div class="card-carousel" id="carousel-z2">
-    <div class="carousel-track" id="z2-track">
-      <div class="tool-card reframe" style="animation-delay:0.2s" onclick="markToolTapped();openReframe()">
-        <div class="tool-icon">🔄</div>
-        <div class="tool-name">ปรับความคิด</div>
-        <div class="tool-desc">เมื่อความคิดวนซ้ำ</div>
-        <span class="tool-badge" style="background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-border);">ใช้ได้เลย</span>
-      </div>
-      <div class="tool-card worry-tool card-peek" style="animation-delay:0.25s" onclick="markToolTapped();openWorry()">
-        <div class="tool-icon">🌀</div>
-        <div class="tool-name">คลายกังวล</div>
-        <div class="tool-desc">เมื่อกังวลหาทางออกไม่เจอ</div>
-        <span class="tool-badge" style="background:var(--blue-soft);color:var(--blue);border:1px solid var(--blue-border);">ใช้ได้เลย</span>
-      </div>
+  <div class="tools-grid" style="margin-bottom:36px;">
+    <div class="tool-card reframe" onclick="markToolTapped();openReframe()">
+      <div class="tool-icon">🔄</div>
+      <div class="tool-name">ปรับความคิด</div>
+      <div class="tool-desc">เมื่อความคิดวนซ้ำหรือกดตัวเองมากเกินไป</div>
+      <span class="tool-badge badge-ready" style="background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-border);">ใช้ได้เลย</span>
     </div>
-    <div class="carousel-edge-fade" id="z2-fade"></div>
-    <button class="carousel-arrow" id="z2-arrow" onclick="carouselNav('z2')">›</button>
-  </div>
-  <!-- Wide card -->
-  <div class="wide-card-row">
-    <div class="tool-card clarity wide" style="animation-delay:0.3s" onclick="markToolTapped();openClarity()">
-      <div class="tool-icon">🧭</div>
-      <div class="tool-info">
+    <div class="tool-card worry-tool" onclick="markToolTapped();openWorry()">
+      <div class="tool-icon">🌀</div>
+      <div class="tool-name">คลายกังวล</div>
+      <div class="tool-desc">เมื่อความกังวลวนอยู่ในหัวและหาทางออกไม่เจอ</div>
+      <span class="tool-badge badge-ready" style="background:var(--blue-soft);color:var(--blue);border:1px solid var(--blue-border);">ใช้ได้เลย</span>
+    </div>
+    <div class="tool-card clarity" onclick="markToolTapped();openClarity()" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;">
+      <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🧭</div>
+      <div style="flex:1;">
         <div class="tool-name">หาความชัด</div>
-        <div class="tool-desc">เมื่อรู้สึกหลงทาง</div>
+        <div class="tool-desc">เมื่อรู้สึกหลงทางหรือไม่รู้ว่าตัวเองต้องการอะไร</div>
       </div>
-      <span class="tool-badge" style="background:var(--gold-soft);color:#7A5200;border:1px solid var(--gold-border);">ใช้ได้เลย</span>
+      <span class="tool-badge badge-ready" style="margin-top:0;flex-shrink:0;background:var(--gold-soft);color:#7A5200;border:1px solid var(--gold-border);">ใช้ได้เลย</span>
     </div>
   </div>
 
   <!-- ── Zone 3: เสริมความแข็งแกร่ง ── -->
-  <div class="zone-header">
-    <div class="zone-stripe" style="background:linear-gradient(to bottom,var(--green),rgba(58,125,68,0.3));"></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <div style="width:4px;height:36px;border-radius:2px;background:var(--green);flex-shrink:0;"></div>
     <div>
-      <div class="zone-label">เสริมความแข็งแกร่ง</div>
-      <div class="zone-sub">ฝึกทักษะที่ช่วยในระยะยาว · กำลังพัฒนา</div>
+      <div style="font-size:13px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">เสริมความแข็งแกร่ง</div>
+      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">ฝึกทักษะที่ช่วยในระยะยาว · กำลังพัฒนา</div>
     </div>
   </div>
-  <div class="tools-grid grid-mb zone-coming">
+  <div class="tools-grid" style="margin-bottom:36px;">
     <div class="tool-card coming" style="border-color:var(--green-border);">
-      <div class="tool-icon" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);">🤍</div>
+      <div class="tool-icon">🤍</div>
       <div class="tool-name">พักใจ</div>
+      <div class="tool-desc">Self-compassion · เมื่อตัวเองกดดันตัวเองหนักเกินไป</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
     <div class="tool-card coming" style="border-color:var(--green-border);">
-      <div class="tool-icon" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);">🌱</div>
+      <div class="tool-icon">🌱</div>
       <div class="tool-name">ลงมือทำ</div>
+      <div class="tool-desc">Behavioral activation · เริ่มจากก้าวเล็กๆ เพื่อทำลายวงจรเฉื่อย</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
     <div class="tool-card coming" style="border-color:var(--green-border);">
-      <div class="tool-icon" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);">✨</div>
+      <div class="tool-icon">✨</div>
       <div class="tool-name">อยู่กับสิ่งดี</div>
+      <div class="tool-desc">Savoring · ช้าลงและอยู่กับช่วงเวลาดีๆ อย่างตั้งใจ</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
     <div class="tool-card coming" style="border-color:var(--green-border);">
-      <div class="tool-icon" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);">🌊</div>
+      <div class="tool-icon">🌊</div>
       <div class="tool-name">อยู่กับมัน</div>
+      <div class="tool-desc">RAIN · ฝึกอยู่กับความรู้สึกโดยไม่หนีหรือจมกับมัน</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
-    <div class="tool-card coming wide" style="border-color:var(--green-border);">
-      <div class="tool-icon" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);margin-bottom:0;flex-shrink:0;">🎯</div>
-      <div class="tool-info">
+    <div class="tool-card coming" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;border-color:var(--green-border);">
+      <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🎯</div>
+      <div style="flex:1;">
         <div class="tool-name">เตรียมตัว</div>
+        <div class="tool-desc">Pre-performance grounding · ก่อนสอบ ก่อนพูด ก่อนเรื่องสำคัญ</div>
       </div>
-      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+      <span class="tool-badge badge-soon" style="margin-top:0;flex-shrink:0;">เร็วๆ นี้</span>
     </div>
   </div>
 
-  <!-- ── Zone 4: กำลังมา ── -->
-  <div class="zone-header">
-    <div class="zone-stripe" style="background:var(--cream-border);"></div>
+  <!-- ── Coming soon (misc) ── -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <div style="width:4px;height:36px;border-radius:2px;background:var(--cream-border);flex-shrink:0;"></div>
     <div>
-      <div class="zone-label" style="color:var(--soft);">กำลังมา</div>
-      <div class="zone-sub">เนื้อหาและเสียงที่กำลังสร้าง</div>
+      <div style="font-size:13px;font-weight:500;color:var(--soft);letter-spacing:0.3px;">กำลังมา</div>
+      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">เนื้อหาและเสียงที่กำลังสร้าง</div>
     </div>
   </div>
-  <div class="tools-grid zone-coming">
+  <div class="tools-grid">
     <div class="tool-card play coming">
       <div class="tool-icon">🎮</div>
       <div class="tool-name">เล่น</div>
+      <div class="tool-desc">เกมเบาๆ ช่วย ground ความคิด</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
     <div class="tool-card learn coming">
       <div class="tool-icon">📖</div>
       <div class="tool-name">เรียนรู้</div>
+      <div class="tool-desc">บทความสั้น เรื่องที่กำลังรู้สึกอยู่</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
-    <div class="tool-card listen wide coming">
+    <div class="tool-card listen coming" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;">
       <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🎧</div>
-      <div class="tool-info">
+      <div style="flex:1;">
         <div class="tool-name">ฟัง</div>
+        <div class="tool-desc">เสียงนำทาง body scan และอื่นๆ</div>
       </div>
-      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+      <span class="tool-badge badge-soon" style="margin-top:0;flex-shrink:0;">เร็วๆ นี้</span>
     </div>
   </div>
 
-  <!-- PASSIVE EXIT RAMP -->
-  <div class="exit-ramp">
-    <div class="exit-ramp-inner">
-      <span class="exit-ramp-text">
-        ยังไม่แน่ใจ?
-        <a href="reflection.html">🪞 Reflection</a>
-        <span class="exit-ramp-sep">·</span>
-        <a href="care.html">🌿 6 ชั้น</a>
-      </span>
-    </div>
+</div>
+
+<!-- PASSIVE EXIT RAMP — always visible below tools -->
+<div style="text-align:center;padding:20px 24px 8px;">
+  <div style="font-size:12px;font-weight:300;color:var(--soft);line-height:1.75;">
+    ไม่แน่ใจว่าจะเริ่มจากตรงไหน?<br/>
+    <a href="reflection.html" style="color:var(--dark);font-weight:400;text-decoration:none;">ลอง Reflection ก่อน</a>
+    <span style="color:var(--cream-border);margin:0 8px;">·</span>
+    <a href="care.html" style="color:var(--dark);font-weight:400;text-decoration:none;">วิธีดูแลตัวเองใน 6 ชั้น</a>
   </div>
+</div>
 
-  <!-- IDLE NUDGE -->
-  <div id="idle-nudge">
-    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:5px;">ยังหาจุดเริ่มต้นอยู่ไหม?</div>
-    <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;margin-bottom:10px;">บางทีการเข้าใจว่าเกิดอะไรขึ้น<br/>ช่วยได้มากกว่าการลองทำบางอย่าง</div>
-    <div style="display:flex;gap:8px;">
-      <a href="reflection.html" style="flex:1;display:block;text-align:center;background:var(--dark);color:var(--cream);border-radius:12px;padding:10px;font-size:12px;font-weight:500;text-decoration:none;">🪞 Reflection</a>
-      <a href="care.html" style="flex:1;display:block;text-align:center;background:var(--card);border:1px solid var(--cream-border);border-radius:12px;padding:10px;font-size:12px;font-weight:400;color:var(--dark);text-decoration:none;">🌿 6 ชั้น</a>
-    </div>
-    <button onclick="document.getElementById('idle-nudge').style.display='none'" style="display:block;width:100%;background:none;border:none;font-family:'Mitr',sans-serif;font-size:11px;color:var(--soft);cursor:pointer;margin-top:8px;padding:4px;">ปิด</button>
+<!-- IDLE NUDGE — fades in after 45s if no tool tapped -->
+<div id="idle-nudge" style="display:none;margin:0 16px 16px;background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:14px;padding:14px 16px;opacity:0;transition:opacity 0.5s;">
+  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:5px;">ยังหาจุดเริ่มต้นอยู่ไหม?</div>
+  <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;margin-bottom:10px;">บางทีการเข้าใจว่าเกิดอะไรขึ้น<br/>ช่วยได้มากกว่าการลองทำบางอย่าง</div>
+  <div style="display:flex;gap:8px;">
+    <a href="reflection.html" style="flex:1;display:block;text-align:center;background:var(--dark);color:var(--cream);border-radius:12px;padding:10px;font-size:12px;font-weight:500;text-decoration:none;">🪞 Reflection</a>
+    <a href="care.html" style="flex:1;display:block;text-align:center;background:var(--card);border:1px solid var(--cream-border);border-radius:12px;padding:10px;font-size:12px;font-weight:400;color:var(--dark);text-decoration:none;">🌿 6 ชั้น</a>
   </div>
+  <button onclick="document.getElementById('idle-nudge').style.display='none'" style="display:block;width:100%;background:none;border:none;font-family:'Mitr',sans-serif;font-size:11px;color:var(--soft);cursor:pointer;margin-top:8px;padding:4px;">ปิด</button>
+</div>
 
-</div><!-- /page-body -->
-
-<!-- ══ BREATHE MODAL ══════════════════════════ -->
+<!-- BREATHE MODAL -->
 <div class="modal-overlay" id="breathe-modal" onclick="handleOverlayClick(event,'breathe-modal',closeBreathe)">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -920,9 +537,11 @@
       <div class="b-done-sub">ระบบประสาทของคุณเพิ่งได้พัก<br/>สังเกตว่าตอนนี้รู้สึกต่างจากก่อนไหม</div>
       <button class="b-done-again" onclick="resetBreathe()">หายใจอีกรอบ</button>
       <button class="b-done-close" onclick="closeBreathe()">ปิด</button>
+      <!-- care bridge -->
       <a href="care.html?tab=body" onclick="closeBreathe()" style="display:block;text-align:center;margin-top:12px;font-size:12px;font-weight:300;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">
         อยากรู้ว่าทำไมมันช่วยได้? → <span style="color:rgba(94,234,212,0.6);">ชั้นร่างกาย</span>
       </a>
+      <!-- still heavy strip -->
       <div class="still-strip" style="margin:16px 0 0;">
         <div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div>
         <div class="still-btns">
@@ -935,7 +554,7 @@
   </div>
 </div>
 
-<!-- ══ JOURNAL MODAL ══════════════════════════ -->
+<!-- JOURNAL MODAL -->
 <div class="modal-overlay" id="journal-modal" onclick="handleOverlayClick(event,'journal-modal',closeJournal)">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle" style="margin-bottom:4px;"></div>
@@ -943,7 +562,7 @@
   </div>
 </div>
 
-<!-- ══ REFRAME MODAL ══════════════════════════ -->
+<!-- REFRAME MODAL -->
 <div class="modal-overlay" id="reframe-modal" onclick="handleOverlayClick(event,'reframe-modal',closeReframe)">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle" style="margin-bottom:4px;"></div>
@@ -951,7 +570,7 @@
   </div>
 </div>
 
-<!-- ══ WORRY MODAL ════════════════════════════ -->
+<!-- WORRY MODAL -->
 <div class="modal-overlay" id="worry-modal" onclick="handleOverlayClick(event,'worry-modal',closeWorry)">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle" style="margin-bottom:4px;"></div>
@@ -959,7 +578,7 @@
   </div>
 </div>
 
-<!-- ══ CLARITY MODAL ══════════════════════════ -->
+<!-- CLARITY MODAL -->
 <div class="modal-overlay" id="clarity-modal" onclick="handleOverlayClick(event,'clarity-modal',closeClarity)">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle" style="margin-bottom:4px;"></div>
@@ -968,26 +587,16 @@
 </div>
 
 <script>
-// ══ TIME-BASED GREETING ══
-(function(){
-  const h = new Date().getHours();
-  let g = '';
-  if (h >= 5  && h < 12) g = 'สวัสดีตอนเช้า';
-  else if (h >= 12 && h < 17) g = 'สวัสดีตอนบ่าย';
-  else if (h >= 17 && h < 21) g = 'สวัสดีตอนเย็น';
-  else g = 'สวัสดีตอนกลางคืน';
-  const el = document.getElementById('hero-greeting');
-  if (el) el.textContent = g;
-})();
-
 // ══════════════════════════════════════════════
 // STORAGE — shared key with sleep.html
 // ══════════════════════════════════════════════
 const STORAGE_KEY = 'jaidee_entries';
+
 function loadEntries() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
   catch(e) { return []; }
 }
+
 function saveEntry(entry) {
   try {
     const entries = loadEntries();
@@ -997,9 +606,11 @@ function saveEntry(entry) {
     renderEntries();
   } catch(e) {}
 }
+
 function deleteAllEntries() {
   try { localStorage.removeItem(STORAGE_KEY); renderEntries(); } catch(e) {}
 }
+
 function relativeTime(iso) {
   const then = new Date(iso), now = new Date();
   const mins = Math.floor((now - then) / 60000);
@@ -1013,16 +624,19 @@ function relativeTime(iso) {
   if (days  < 7)  return `${days} วันที่แล้ว`;
   return then.toLocaleDateString('th-TH', {day:'numeric', month:'short'});
 }
+
 const PROMPTS = [
   { label:'ขอบคุณ', q:'วันนี้มีอะไรที่รู้สึกขอบคุณบ้าง?',     sub:'ไม่ต้องเป็นเรื่องใหญ่ เรื่องเล็กๆ ก็นับ',  ph:'เช่น อากาศเย็นตอนเช้า เพื่อนที่ทักมา กาแฟที่อร่อย...' },
   { label:'ในหัว',  q:'อะไรที่วนเวียนอยู่ในหัวตอนนี้?',         sub:'เขียนออกมาได้เลย ไม่ต้องจัดระเบียบ',      ph:'ทุกอย่างที่ค้างอยู่ ยังไม่ได้แก้ หรือยังไม่ได้พูดถึง...' },
   { label:'ตัวเอง', q:'ตอนนี้ตัวเองต้องการอะไรมากที่สุด?',     sub:'ฟังตัวเองโดยไม่ตัดสิน',                   ph:'เช่น พัก ความเข้าใจ ทำอะไรสักอย่าง ไม่รู้เหมือนกัน...' },
 ];
+
 function previewText(entry) {
   if (entry.type === 'worry') return (entry.text || '(ไม่มีข้อความ)').slice(0, 100);
   const filled = (entry.answers || []).filter(a => a && a.trim());
   return filled.length ? filled[0].slice(0, 100) : '(ไม่มีข้อความ)';
 }
+
 function buildFullContent(entry) {
   if (entry.type === 'worry') {
     return `<div class="entry-q">ความกังวลที่เขียนไว้</div>
@@ -1034,17 +648,22 @@ function buildFullContent(entry) {
             <div class="entry-a ${a ? '' : 'empty'}">${a || 'ข้ามไป'}</div>`;
   }).join('');
 }
+
 let showingAll = false;
 const PREVIEW_COUNT = 3;
+
 function renderEntries() {
   const entries = loadEntries();
   const section = document.getElementById('entries-section');
   const list    = document.getElementById('entries-list');
   const moreBtn = document.getElementById('entries-more');
+
   if (!entries.length) { section.style.display = 'none'; return; }
   section.style.display = 'block';
+
   const toShow = showingAll ? entries : entries.slice(0, PREVIEW_COUNT);
   list.innerHTML = '';
+
   toShow.forEach(entry => {
     const card = document.createElement('div');
     card.className = `entry-card ${entry.type}`;
@@ -1052,6 +671,7 @@ function renderEntries() {
     const preview = previewText(entry);
     const full    = buildFullContent(entry);
     const time    = relativeTime(entry.ts);
+
     card.innerHTML = `
       <div class="entry-top">
         <span class="entry-badge">${badge}</span>
@@ -1059,9 +679,11 @@ function renderEntries() {
       </div>
       <div class="entry-preview">${preview}</div>
       <div class="entry-full">${full}</div>`;
+
     card.addEventListener('click', () => card.classList.toggle('expanded'));
     list.appendChild(card);
   });
+
   if (entries.length > PREVIEW_COUNT) {
     moreBtn.style.display = 'block';
     moreBtn.textContent = showingAll ? 'ย่อกลับ ↑' : `ดูทั้งหมด ${entries.length} รายการ →`;
@@ -1069,6 +691,7 @@ function renderEntries() {
     moreBtn.style.display = 'none';
   }
 }
+
 function toggleAllEntries() { showingAll = !showingAll; renderEntries(); }
 function confirmClear() { if (confirm('ลบบันทึกทั้งหมดใช่ไหม?')) deleteAllEntries(); }
 
@@ -1121,15 +744,18 @@ function showBreatheDone(){document.getElementById('b-session').style.display='n
 function resetBreathe(){document.getElementById('b-pick').style.display='block';document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='none';const c=document.getElementById('s-circle');if(c)c.className='c-main';}
 
 // ══════════════════════════════════════════════
-// JOURNAL
+// JOURNAL — saves to localStorage on completion
 // ══════════════════════════════════════════════
 let jStep=0;
 const jAnswers=['','',''];
+
 function openJournal(){jStep=0;jAnswers.fill('');openModal('journal-modal');renderJStep();}
 function closeJournal(){closeModal('journal-modal');}
+
 function renderJStep(){
   const inner=document.getElementById('journal-inner');
   if(jStep>=PROMPTS.length){
+    // Save to localStorage
     if(jAnswers.some(a=>a&&a.trim())){
       saveEntry({ id:Date.now(), type:'journal', ts:new Date().toISOString(), answers:[...jAnswers] });
     }
@@ -1139,9 +765,11 @@ function renderJStep(){
         <div class="j-done-title">ขอบคุณที่เขียนออกมา</div>
         <div class="j-done-sub">การเขียนช่วยเอาสิ่งที่อยู่ในหัว<br/>ออกมาอยู่ข้างนอกแทน<br/>หวังว่าจะเบาขึ้นบ้างนะ</div>
         <button class="j-done-close" onclick="closeJournal()">← กลับ</button>
+        <!-- care bridge -->
         <a href="care.html?tab=belief" onclick="closeJournal()" style="display:block;text-align:center;margin-top:10px;font-size:12px;font-weight:300;color:var(--soft);text-decoration:none;padding:6px;">
           อยากรู้ว่าทำไมการเขียนถึงช่วยได้? → <span style="color:var(--purple);">ชั้นความเชื่อ</span>
         </a>
+        <!-- still heavy strip -->
         <div class="still-strip">
           <div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div>
           <div class="still-btns">
@@ -1167,12 +795,13 @@ function renderJStep(){
     </div>`;
   setTimeout(()=>{const ta=document.getElementById('j-ta');if(ta)ta.focus();},320);
 }
+
 function jNext(){const ta=document.getElementById('j-ta');if(ta)jAnswers[jStep]=ta.value.trim();jStep++;renderJStep();}
 function jSkip(){jAnswers[jStep]='';jStep++;renderJStep();}
 
-// ══════════════════════════════════════════════
-// STILL HEAVY
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// STILL HEAVY — shared by breathe + journal done screens
+// ══════════════════════════════════════════════════════
 const STILL_HEAVY_HTML = `
   <div class="still-heavy-note">
     <strong>เครื่องมือไม่ได้ผลกับทุกคนในทุกวัน</strong><br>
@@ -1208,12 +837,14 @@ const STILL_HEAVY_HTML = `
     พูดคุยกับผู้เชี่ยวชาญได้เลย —
     <a href="tel:1323">1323</a> ฟรี ไม่ต้องนัด ไม่ต้องรอถึงวิกฤต
   </div>`;
+
 function stillOk(btn) {
   const strip = btn.closest('.still-strip');
   strip.innerHTML = `<div style="text-align:center;font-size:13px;font-weight:300;color:var(--green);padding:6px 0;">
     🌿 ดีใจที่ได้ยิน — ดูแลตัวเองต่อไปนะ
   </div>`;
 }
+
 function stillHeavy(btn) {
   const strip   = btn.closest('.still-strip');
   const heavy   = strip.querySelector('.still-heavy');
@@ -1227,10 +858,11 @@ function stillHeavy(btn) {
 }
 
 // ══════════════════════════════════════════════
-// IDLE NUDGE
+// IDLE NUDGE — 45s without tapping any tool
 // ══════════════════════════════════════════════
 let _idleTimer = null;
 let _toolTapped = false;
+
 function startIdleTimer() {
   _idleTimer = setTimeout(() => {
     if (_toolTapped) return;
@@ -1241,6 +873,7 @@ function startIdleTimer() {
     }
   }, 45000);
 }
+
 function markToolTapped() {
   _toolTapped = true;
   clearTimeout(_idleTimer);
@@ -1249,7 +882,7 @@ function markToolTapped() {
 }
 
 // ══════════════════════════════════════════════
-// REFRAME
+// REFRAME TOOL — cognitive defusion
 // ══════════════════════════════════════════════
 const REFRAME_PATTERNS = [
   {
@@ -1258,7 +891,8 @@ const REFRAME_PATTERNS = [
     sub:'ถ้าไม่ดีพอแสดงว่าฉันไม่เก่ง',
     thought:'ฉันต้องทำทุกอย่างให้สมบูรณ์แบบ',
     permission:'ฉันทำได้ดีพอ แม้ว่าจะไม่สมบูรณ์แบบ\nความผิดพลาดเป็นส่วนหนึ่งของการเรียนรู้ ไม่ใช่หลักฐานของความล้มเหลว',
-    bridge:'ชั้นความเชื่อ', bridgeUrl:'care.html?tab=belief',
+    bridge:'ชั้นความเชื่อ',
+    bridgeUrl:'care.html?tab=belief',
   },
   {
     id:'compare',
@@ -1266,7 +900,8 @@ const REFRAME_PATTERNS = [
     sub:'ฉันไม่เหมาะที่จะอยู่ที่นี่',
     thought:'ฉันด้อยกว่าคนรอบข้างทุกคน',
     permission:'ทุกคนที่นี่เคยเป็นคนเก่งที่สุดในห้องมาก่อน\nความรู้สึกนี้ไม่ได้หมายความว่าความจริงเป็นแบบนั้น',
-    bridge:'ชั้นความสัมพันธ์', bridgeUrl:'care.html?tab=relationship',
+    bridge:'ชั้นความสัมพันธ์',
+    bridgeUrl:'care.html?tab=relationship',
   },
   {
     id:'blame',
@@ -1274,7 +909,8 @@ const REFRAME_PATTERNS = [
     sub:'ฉันเป็นภาระให้คนอื่น',
     thought:'ฉันทำให้คนที่รักผิดหวังเสมอ',
     permission:'ฉันมีคุณค่าอยู่แล้ว โดยไม่ต้องพิสูจน์อะไร\nความรู้สึกผิดไม่ใช่ข้อเท็จจริง — มันคือสัญญาณว่าฉันใส่ใจ',
-    bridge:'ชั้นร่างกาย', bridgeUrl:'care.html?tab=body',
+    bridge:'ชั้นร่างกาย',
+    bridgeUrl:'care.html?tab=body',
   },
   {
     id:'helpless',
@@ -1282,13 +918,17 @@ const REFRAME_PATTERNS = [
     sub:'ฉันเปลี่ยนแปลงอะไรไม่ได้',
     thought:'ความพยายามของฉันไม่มีความหมาย',
     permission:'ฉันไม่จำเป็นต้องเปลี่ยนทุกอย่างในครั้งเดียว\nก้าวเล็กๆ หนึ่งก้าวก็นับ',
-    bridge:'แผนดูแลตัวเอง', bridgeUrl:'plans.html',
+    bridge:'แผนดูแลตัวเอง',
+    bridgeUrl:'plans.html',
   },
 ];
+
 let _reframePattern = null;
-let _reframeStep = 0;
+let _reframeStep = 0; // 0=pick, 1=defuse, 2=permission, 3=breath, 4=done
+
 function openReframe() { _reframeStep=0; _reframePattern=null; openModal('reframe-modal'); renderReframe(); }
 function closeReframe() { closeModal('reframe-modal'); }
+
 function renderReframe() {
   const el = document.getElementById('reframe-inner');
   if (_reframeStep === 0) {
@@ -1314,7 +954,7 @@ function renderReframe() {
         <div class="reframe-thought">${p.thought}</div>
       </div>
       <div class="mstep-sub">การเพิ่มคำว่า "ฉันกำลังมีความคิดว่า..." ช่วยสร้างระยะห่างระหว่างคุณกับความคิดนั้น — มันเป็นแค่ความคิด ไม่ใช่ความจริงทั้งหมด</div>
-      <button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);box-shadow:0 4px 16px rgba(225,29,72,0.25);">ถัดไป →</button>
+      <button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);">ถัดไป →</button>
       <button class="mstep-back" onclick="_reframeStep=0;renderReframe()">← เปลี่ยนความคิด</button>`;
   } else if (_reframeStep === 2) {
     const p = _reframePattern;
@@ -1327,7 +967,7 @@ function renderReframe() {
         <div class="reframe-permission-text">${p.permission.replace(/\n/g,'<br/>')}</div>
       </div>
       <div class="mstep-sub">ไม่ต้องเชื่อ 100% ตอนนี้ก็ได้ — แค่เปิดพื้นที่ให้ความเป็นไปได้นี้อยู่ร่วมกับความคิดเดิม</div>
-      <button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);box-shadow:0 4px 16px rgba(225,29,72,0.25);">ถัดไป →</button>`;
+      <button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);">ถัดไป →</button>`;
   } else if (_reframeStep === 3) {
     el.innerHTML = `
       <div class="mstep-progress">${[0,1,2,3].map(i=>`<div class="mstep-dot ${i<3?'done':i===3?'active':''}"></div>`).join('')}</div>
@@ -1339,7 +979,7 @@ function renderReframe() {
         <div class="mini-breath-hint">หายใจเข้า 4 วินาที · หายใจออก 4 วินาที</div>
       </div>
       <div class="mstep-sub" style="text-align:center;">ทำสัก 3–4 รอบ แล้วกดถัดไป</div>
-      <button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);box-shadow:0 4px 16px rgba(225,29,72,0.25);margin-top:16px;">เสร็จแล้ว ✓</button>`;
+      <button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);margin-top:16px;">เสร็จแล้ว ✓</button>`;
   } else {
     const p = _reframePattern;
     el.innerHTML = `
@@ -1362,17 +1002,20 @@ function renderReframe() {
       </div>`;
   }
 }
+
 function reframePick(i) { _reframePattern=REFRAME_PATTERNS[i]; _reframeStep=1; renderReframe(); }
 function reframeNext()  { _reframeStep++; renderReframe(); }
 
 // ══════════════════════════════════════════════
-// WORRY
+// WORRY UNTANGLER
 // ══════════════════════════════════════════════
 let _worryText = '';
-let _worryBranch = '';
-let _worryStep = 0;
+let _worryBranch = ''; // 'action' | 'park'
+let _worryStep = 0;    // 0=write, 1=fork, 2a=action, 2b=park, 3=done
+
 function openWorry() { _worryStep=0; _worryText=''; _worryBranch=''; openModal('worry-modal'); renderWorry(); }
 function closeWorry() { closeModal('worry-modal'); }
+
 function renderWorry() {
   const el = document.getElementById('worry-inner');
   if (_worryStep === 0) {
@@ -1381,7 +1024,7 @@ function renderWorry() {
       <div class="mstep-q">ตอนนี้กังวลเรื่องอะไรอยู่?</div>
       <div class="mstep-sub">เขียนออกมาก่อน — ไม่ต้องจัดระเบียบ ไม่มีใครอ่าน</div>
       <textarea class="mstep-ta" id="worry-ta" placeholder="เขียนทุกอย่างที่ค้างอยู่ในหัว..." style="border-color:var(--blue-border);"></textarea>
-      <button class="mstep-next" onclick="worryNext0()" style="background:var(--blue);box-shadow:0 4px 16px rgba(46,95,163,0.25);">ถัดไป →</button>`;
+      <button class="mstep-next" onclick="worryNext0()" style="background:var(--blue);">ถัดไป →</button>`;
     setTimeout(() => { const ta = document.getElementById('worry-ta'); if(ta) ta.focus(); }, 320);
   } else if (_worryStep === 1) {
     el.innerHTML = `
@@ -1408,14 +1051,14 @@ function renderWorry() {
       <div class="mstep-q">อะไรคือสิ่งเล็กที่สุดที่ทำได้วันนี้?</div>
       <div class="mstep-sub">ไม่ต้องแก้ปัญหาทั้งหมด — แค่ก้าวหนึ่งก้าวที่ทำได้จริงๆ</div>
       <textarea class="mstep-ta" id="action-ta" placeholder="เช่น ส่งข้อความถามครูหนึ่งคำถาม / เปิดหนังสือ 15 นาที..." style="border-color:var(--green-border);min-height:80px;"></textarea>
-      <button class="mstep-next" onclick="worryNext2()" style="background:var(--green);box-shadow:0 4px 16px rgba(58,125,68,0.25);">บันทึกแผน ✓</button>`;
+      <button class="mstep-next" onclick="worryNext2()" style="background:var(--green);">บันทึกแผน ✓</button>`;
     setTimeout(() => { const ta = document.getElementById('action-ta'); if(ta) ta.focus(); }, 320);
   } else if (_worryStep === 2 && _worryBranch === 'park') {
     el.innerHTML = `
       <div class="mstep-progress">${[0,1,2].map(i=>`<div class="mstep-dot ${i<2?'done':i===2?'active':''}"></div>`).join('')}</div>
       <div class="mstep-eyebrow" style="color:var(--blue);">จอดความกังวลไว้ก่อน</div>
       <div class="mstep-q">บอกตัวเองสักประโยค</div>
-      <div class="mstep-sub">ความกังวลที่ยังแก้ไม่ได้ต้องการการรับรู้ ไม่ใช่การแก้ปัญหา</div>
+      <div class="mstep-sub">ความกังวลที่ยังแก้ไม่ได้ต้องการการรับรู้ ไม่ใช่การแก้ปัญหา — ลองบอกตัวเองว่า:</div>
       <div class="reframe-permission" style="border-color:var(--blue-border);background:var(--blue-soft);">
         <div class="reframe-permission-label" style="color:var(--blue);">Worry Parking</div>
         <div class="reframe-permission-text" style="font-size:15px;">"ฉันรับรู้ความกังวลนี้แล้ว<br/>ตอนนี้ขอวางไว้ก่อนนะ<br/>แล้วจะกลับมาดูอีกทีเมื่อพร้อม"</div>
@@ -1425,7 +1068,7 @@ function renderWorry() {
         <div class="mini-breath-circle" style="background:radial-gradient(circle,rgba(46,95,163,0.5),rgba(46,95,163,0.2));">☁️</div>
         <div class="mini-breath-hint" style="color:var(--blue);">หายใจเข้า 4 · ออก 6 วินาที · ทำ 3 รอบ</div>
       </div>
-      <button class="mstep-next" onclick="worryNext2()" style="background:var(--blue);box-shadow:0 4px 16px rgba(46,95,163,0.25);">วางไว้แล้ว ✓</button>`;
+      <button class="mstep-next" onclick="worryNext2()" style="background:var(--blue);">วางไว้แล้ว ✓</button>`;
   } else {
     const isAction = _worryBranch === 'action';
     const actionText = document.getElementById('action-ta')?.value.trim() || '';
@@ -1452,6 +1095,7 @@ function renderWorry() {
     }
   }
 }
+
 function worryNext0() {
   const ta = document.getElementById('worry-ta');
   _worryText = ta ? ta.value.trim() : '';
@@ -1461,7 +1105,7 @@ function worryFork(branch) { _worryBranch = branch; _worryStep = 2; renderWorry(
 function worryNext2() { _worryStep = 3; renderWorry(); }
 
 // ══════════════════════════════════════════════
-// CLARITY
+// CLARITY FINDER — values clarification
 // ══════════════════════════════════════════════
 const CLARITY_QUESTIONS = [
   {
@@ -1483,10 +1127,13 @@ const CLARITY_QUESTIONS = [
     ph:'เช่น ความมั่นใจ เวลาว่าง ความชัดเจน เพื่อน ความสามารถบางอย่าง...',
   },
 ];
+
 let _clarityStep = 0;
 let _clarityAnswers = ['','',''];
+
 function openClarity() { _clarityStep=0; _clarityAnswers=['','','']; openModal('clarity-modal'); renderClarity(); }
 function closeClarity() { closeModal('clarity-modal'); }
+
 function renderClarity() {
   const el = document.getElementById('clarity-inner');
   if (_clarityStep < CLARITY_QUESTIONS.length) {
@@ -1503,6 +1150,7 @@ function renderClarity() {
       ${_clarityStep > 0 ? `<button class="mstep-back" onclick="clarityBack()">← ย้อนกลับ</button>` : ''}`;
     setTimeout(() => { const ta = document.getElementById('clarity-ta'); if(ta) ta.focus(); }, 320);
   } else {
+    // Mirror answers back in student's own words
     const filled = _clarityAnswers.map((a,i) => ({ label: CLARITY_QUESTIONS[i].label, text: a.trim() })).filter(a => a.text);
     const mirrorLines = filled.map(a =>
       `<div class="cm-line">จากเรื่อง<strong>${a.label}</strong> — คุณพูดถึง <strong>${a.text.slice(0,60)}${a.text.length>60?'...':''}</strong></div>`
@@ -1533,6 +1181,7 @@ function renderClarity() {
       </div>`;
   }
 }
+
 function clarityNext() {
   const ta = document.getElementById('clarity-ta');
   if (ta) _clarityAnswers[_clarityStep] = ta.value.trim();
@@ -1546,49 +1195,6 @@ function clarityBack() {
   renderClarity();
 }
 
-// ══════════════════════════════════════════════
-// PEEK CAROUSEL
-// ══════════════════════════════════════════════
-const _carouselState = {}; // id → current index (0 or 1)
-
-function carouselNav(id) {
-  if (_carouselState[id] === undefined) _carouselState[id] = 0;
-  const track  = document.getElementById(id + '-track');
-  const arrow  = document.getElementById(id + '-arrow');
-  const fade   = document.getElementById(id + '-fade');
-  const cards  = Array.from(track.querySelectorAll('.tool-card'));
-  const total  = cards.length;
-
-  // toggle between 0 and 1 (only 2 cards per zone)
-  _carouselState[id] = (_carouselState[id] + 1) % total;
-  const idx = _carouselState[id];
-
-  // slide track
-  const cardW = cards[0].offsetWidth;
-  const gap   = 12;
-  track.style.transform = `translateX(-${idx * (cardW + gap)}px)`;
-
-  // update peek opacity
-  cards.forEach((c, i) => {
-    if (i === idx) {
-      c.classList.remove('card-peek');
-    } else {
-      c.classList.add('card-peek');
-    }
-  });
-
-  // update arrow direction & edge fade
-  if (idx === total - 1) {
-    arrow.textContent = '‹';
-    if (fade) fade.classList.add('hidden');
-  } else {
-    arrow.textContent = '›';
-    if (fade) fade.classList.remove('hidden');
-  }
-}
-
-// ══════════════════════════════════════════════
-// INIT
 // ══════════════════════════════════════════════
 renderEntries();
 startIdleTimer();
