@@ -324,32 +324,54 @@
   <button class="entries-more" id="entries-more" style="display:none;" onclick="toggleAllEntries()"></button>
 </div>
 
-<!-- TOOLS GRID -->
+<!-- TOOLS -->
 <div class="tools-section">
-  <div class="section-label">
-    <div class="section-label-text">เครื่องมือ</div>
-    <div class="section-label-line"></div>
+
+  <!-- ── Zone 1: ทั่วไป ── -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <div style="width:4px;height:36px;border-radius:2px;background:var(--teal);flex-shrink:0;"></div>
+    <div>
+      <div style="font-size:13px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">โซนทั่วไป</div>
+      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">ไม่ต้องรู้ว่ารู้สึกอะไร · เริ่มจากนี้ได้เลย</div>
+    </div>
   </div>
-  <div class="tools-grid">
-    <!-- Row 1 -->
+  <div class="tools-grid" style="margin-bottom:36px;">
     <div class="tool-card breathe" onclick="markToolTapped();openBreathe()">
       <div class="tool-icon">🌬️</div>
       <div class="tool-name">หายใจ</div>
       <div class="tool-desc">เมื่อรู้สึกอึดอัด กดดัน หรืออยากรีเซ็ต</div>
       <span class="tool-badge badge-ready">ใช้ได้เลย</span>
     </div>
-    <div class="tool-card reframe" onclick="markToolTapped();openReframe()">
-      <div class="tool-icon">🔄</div>
-      <div class="tool-name">ปรับความคิด</div>
-      <div class="tool-desc">เมื่อความคิดวนซ้ำหรือกดตัวเองมากเกินไป</div>
-      <span class="tool-badge badge-ready" style="background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-border);">ใช้ได้เลย</span>
-    </div>
-    <!-- Row 2 -->
     <div class="tool-card journal" onclick="markToolTapped();openJournal()">
       <div class="tool-icon">📓</div>
       <div class="tool-name">บันทึก</div>
       <div class="tool-desc">เขียนระบาย 3 คำถามง่ายๆ</div>
       <span class="tool-badge badge-ready">ใช้ได้เลย</span>
+    </div>
+    <div class="tool-card sleep" onclick="markToolTapped();window.location.href='sleep.html'" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;">
+      <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🌙</div>
+      <div style="flex:1;">
+        <div class="tool-name">นอนหลับ</div>
+        <div class="tool-desc">เมื่อหัวไม่ยอมหยุดตอนกลางคืน</div>
+      </div>
+      <span class="tool-badge badge-ready" style="margin-top:0;flex-shrink:0;">ใช้ได้เลย</span>
+    </div>
+  </div>
+
+  <!-- ── Zone 2: ปรับความคิด ── -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <div style="width:4px;height:36px;border-radius:2px;background:var(--rose);flex-shrink:0;"></div>
+    <div>
+      <div style="font-size:13px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">ปรับความคิด</div>
+      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">เมื่อรู้แล้วว่ากำลังรู้สึกอะไร อยากทำงานกับมัน</div>
+    </div>
+  </div>
+  <div class="tools-grid" style="margin-bottom:36px;">
+    <div class="tool-card reframe" onclick="markToolTapped();openReframe()">
+      <div class="tool-icon">🔄</div>
+      <div class="tool-name">ปรับความคิด</div>
+      <div class="tool-desc">เมื่อความคิดวนซ้ำหรือกดตัวเองมากเกินไป</div>
+      <span class="tool-badge badge-ready" style="background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-border);">ใช้ได้เลย</span>
     </div>
     <div class="tool-card worry-tool" onclick="markToolTapped();openWorry()">
       <div class="tool-icon">🌀</div>
@@ -357,20 +379,68 @@
       <div class="tool-desc">เมื่อความกังวลวนอยู่ในหัวและหาทางออกไม่เจอ</div>
       <span class="tool-badge badge-ready" style="background:var(--blue-soft);color:var(--blue);border:1px solid var(--blue-border);">ใช้ได้เลย</span>
     </div>
-    <!-- Row 3 -->
-    <div class="tool-card clarity" onclick="markToolTapped();openClarity()">
-      <div class="tool-icon">🧭</div>
-      <div class="tool-name">หาความชัด</div>
-      <div class="tool-desc">เมื่อรู้สึกหลงทางหรือไม่รู้ว่าตัวเองต้องการอะไร</div>
-      <span class="tool-badge badge-ready" style="background:var(--gold-soft);color:#7A5200;border:1px solid var(--gold-border);">ใช้ได้เลย</span>
+    <div class="tool-card clarity" onclick="markToolTapped();openClarity()" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;">
+      <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🧭</div>
+      <div style="flex:1;">
+        <div class="tool-name">หาความชัด</div>
+        <div class="tool-desc">เมื่อรู้สึกหลงทางหรือไม่รู้ว่าตัวเองต้องการอะไร</div>
+      </div>
+      <span class="tool-badge badge-ready" style="margin-top:0;flex-shrink:0;background:var(--gold-soft);color:#7A5200;border:1px solid var(--gold-border);">ใช้ได้เลย</span>
     </div>
-    <div class="tool-card sleep" onclick="markToolTapped();window.location.href='sleep.html'">
-      <div class="tool-icon">🌙</div>
-      <div class="tool-name">นอนหลับ</div>
-      <div class="tool-desc">เมื่อหัวไม่ยอมหยุดตอนกลางคืน</div>
-      <span class="tool-badge badge-ready">ใช้ได้เลย</span>
+  </div>
+
+  <!-- ── Zone 3: เสริมความแข็งแกร่ง ── -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <div style="width:4px;height:36px;border-radius:2px;background:var(--green);flex-shrink:0;"></div>
+    <div>
+      <div style="font-size:13px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">เสริมความแข็งแกร่ง</div>
+      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">ฝึกทักษะที่ช่วยในระยะยาว · กำลังพัฒนา</div>
     </div>
-    <!-- Coming soon -->
+  </div>
+  <div class="tools-grid" style="margin-bottom:36px;">
+    <div class="tool-card coming" style="border-color:var(--green-border);">
+      <div class="tool-icon">🤍</div>
+      <div class="tool-name">พักใจ</div>
+      <div class="tool-desc">Self-compassion · เมื่อตัวเองกดดันตัวเองหนักเกินไป</div>
+      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+    </div>
+    <div class="tool-card coming" style="border-color:var(--green-border);">
+      <div class="tool-icon">🌱</div>
+      <div class="tool-name">ลงมือทำ</div>
+      <div class="tool-desc">Behavioral activation · เริ่มจากก้าวเล็กๆ เพื่อทำลายวงจรเฉื่อย</div>
+      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+    </div>
+    <div class="tool-card coming" style="border-color:var(--green-border);">
+      <div class="tool-icon">✨</div>
+      <div class="tool-name">อยู่กับสิ่งดี</div>
+      <div class="tool-desc">Savoring · ช้าลงและอยู่กับช่วงเวลาดีๆ อย่างตั้งใจ</div>
+      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+    </div>
+    <div class="tool-card coming" style="border-color:var(--green-border);">
+      <div class="tool-icon">🌊</div>
+      <div class="tool-name">อยู่กับมัน</div>
+      <div class="tool-desc">RAIN · ฝึกอยู่กับความรู้สึกโดยไม่หนีหรือจมกับมัน</div>
+      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+    </div>
+    <div class="tool-card coming" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;border-color:var(--green-border);">
+      <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🎯</div>
+      <div style="flex:1;">
+        <div class="tool-name">เตรียมตัว</div>
+        <div class="tool-desc">Pre-performance grounding · ก่อนสอบ ก่อนพูด ก่อนเรื่องสำคัญ</div>
+      </div>
+      <span class="tool-badge badge-soon" style="margin-top:0;flex-shrink:0;">เร็วๆ นี้</span>
+    </div>
+  </div>
+
+  <!-- ── Coming soon (misc) ── -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <div style="width:4px;height:36px;border-radius:2px;background:var(--cream-border);flex-shrink:0;"></div>
+    <div>
+      <div style="font-size:13px;font-weight:500;color:var(--soft);letter-spacing:0.3px;">กำลังมา</div>
+      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">เนื้อหาและเสียงที่กำลังสร้าง</div>
+    </div>
+  </div>
+  <div class="tools-grid">
     <div class="tool-card play coming">
       <div class="tool-icon">🎮</div>
       <div class="tool-name">เล่น</div>
@@ -383,17 +453,16 @@
       <div class="tool-desc">บทความสั้น เรื่องที่กำลังรู้สึกอยู่</div>
       <span class="tool-badge badge-soon">เร็วๆ นี้</span>
     </div>
-    <div class="tool-card listen coming" style="grid-column:1/-1;">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div class="tool-icon">🎧</div>
-        <div>
-          <div class="tool-name">ฟัง</div>
-          <div class="tool-desc">เสียงนำทาง body scan และอื่นๆ</div>
-          <span class="tool-badge badge-soon">เร็วๆ นี้</span>
-        </div>
+    <div class="tool-card listen coming" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;">
+      <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🎧</div>
+      <div style="flex:1;">
+        <div class="tool-name">ฟัง</div>
+        <div class="tool-desc">เสียงนำทาง body scan และอื่นๆ</div>
       </div>
+      <span class="tool-badge badge-soon" style="margin-top:0;flex-shrink:0;">เร็วๆ นี้</span>
     </div>
   </div>
+
 </div>
 
 <!-- PASSIVE EXIT RAMP — always visible below tools -->
