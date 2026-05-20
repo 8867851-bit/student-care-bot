@@ -331,7 +331,7 @@
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
     <div style="width:4px;height:36px;border-radius:2px;background:var(--teal);flex-shrink:0;"></div>
     <div>
-      <div style="font-size:13px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">โซนทั่วไป</div>
+      <div style="font-size:25px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">โซนทั่วไป</div>
       <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">ไม่ต้องรู้ว่ารู้สึกอะไร · เริ่มจากนี้ได้เลย</div>
     </div>
   </div>
@@ -362,7 +362,7 @@
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
     <div style="width:4px;height:36px;border-radius:2px;background:var(--rose);flex-shrink:0;"></div>
     <div>
-      <div style="font-size:13px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">ปรับความคิด</div>
+      <div style="font-size:25px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">ปรับความคิด</div>
       <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">เมื่อรู้แล้วว่ากำลังรู้สึกอะไร อยากทำงานกับมัน</div>
     </div>
   </div>
@@ -382,18 +382,48 @@
     <div class="tool-card clarity" onclick="markToolTapped();openClarity()" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;">
       <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🧭</div>
       <div style="flex:1;">
-        <div class="tool-name">หาความชัด</div>
+        <div class="tool-name">หาความชัดเจน</div>
         <div class="tool-desc">เมื่อรู้สึกหลงทางหรือไม่รู้ว่าตัวเองต้องการอะไร</div>
       </div>
       <span class="tool-badge badge-ready" style="margin-top:0;flex-shrink:0;background:var(--gold-soft);color:#7A5200;border:1px solid var(--gold-border);">ใช้ได้เลย</span>
     </div>
   </div>
-
+  <!-- ── Coming soon (misc) ── -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <div style="width:4px;height:36px;border-radius:2px;background:var(--cream-border);flex-shrink:0;"></div>
+    <div>
+      <div style="font-size:25px;font-weight:500;color:var(--soft);letter-spacing:0.3px;">กำลังมา</div>
+      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">เนื้อหาและเสียงที่กำลังสร้าง</div>
+    </div>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card play coming">
+      <div class="tool-icon">🎮</div>
+      <div class="tool-name">เล่น</div>
+      <div class="tool-desc">เกมเบาๆ ช่วย ground ความคิด</div>
+      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+    </div>
+    <div class="tool-card learn coming">
+      <div class="tool-icon">📖</div>
+      <div class="tool-name">เรียนรู้</div>
+      <div class="tool-desc">บทความสั้น เรื่องที่กำลังรู้สึกอยู่</div>
+      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
+    </div>
+    <div class="tool-card listen coming" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;">
+      <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🎧</div>
+      <div style="flex:1;">
+        <div class="tool-name">ฟัง</div>
+        <div class="tool-desc">เสียงนำทาง body scan และอื่นๆ</div>
+      </div>
+      <span class="tool-badge badge-soon" style="margin-top:0;flex-shrink:0;">เร็วๆ นี้</span>
+    </div>
+  </div>
+  
   <!-- ── Zone 3: เสริมความแข็งแกร่ง ── -->
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
     <div style="width:4px;height:36px;border-radius:2px;background:var(--green);flex-shrink:0;"></div>
     <div>
-      <div style="font-size:13px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">เสริมความแข็งแกร่ง</div>
+      <div style="font-size:25px;font-weight:500;color:var(--dark);letter-spacing:0.3px;">เสริมความแข็งแกร่ง</div>
       <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">ฝึกทักษะที่ช่วยในระยะยาว · กำลังพัฒนา</div>
     </div>
   </div>
@@ -427,37 +457,6 @@
       <div style="flex:1;">
         <div class="tool-name">เตรียมตัว</div>
         <div class="tool-desc">Pre-performance grounding · ก่อนสอบ ก่อนพูด ก่อนเรื่องสำคัญ</div>
-      </div>
-      <span class="tool-badge badge-soon" style="margin-top:0;flex-shrink:0;">เร็วๆ นี้</span>
-    </div>
-  </div>
-
-  <!-- ── Coming soon (misc) ── -->
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-    <div style="width:4px;height:36px;border-radius:2px;background:var(--cream-border);flex-shrink:0;"></div>
-    <div>
-      <div style="font-size:13px;font-weight:500;color:var(--soft);letter-spacing:0.3px;">กำลังมา</div>
-      <div style="font-size:11px;font-weight:300;color:var(--soft);margin-top:2px;">เนื้อหาและเสียงที่กำลังสร้าง</div>
-    </div>
-  </div>
-  <div class="tools-grid">
-    <div class="tool-card play coming">
-      <div class="tool-icon">🎮</div>
-      <div class="tool-name">เล่น</div>
-      <div class="tool-desc">เกมเบาๆ ช่วย ground ความคิด</div>
-      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
-    </div>
-    <div class="tool-card learn coming">
-      <div class="tool-icon">📖</div>
-      <div class="tool-name">เรียนรู้</div>
-      <div class="tool-desc">บทความสั้น เรื่องที่กำลังรู้สึกอยู่</div>
-      <span class="tool-badge badge-soon">เร็วๆ นี้</span>
-    </div>
-    <div class="tool-card listen coming" style="grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 18px;">
-      <div class="tool-icon" style="margin-bottom:0;flex-shrink:0;">🎧</div>
-      <div style="flex:1;">
-        <div class="tool-name">ฟัง</div>
-        <div class="tool-desc">เสียงนำทาง body scan และอื่นๆ</div>
       </div>
       <span class="tool-badge badge-soon" style="margin-top:0;flex-shrink:0;">เร็วๆ นี้</span>
     </div>
