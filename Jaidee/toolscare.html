@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ดูแลใจ — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+/* ────────────────────────────
+   TOP 2-TAB SWITCHER
+──────────────────────────── */
+:root {
+  --top-h: 48px;
+  --sub-h: 46px;
+}
+.top-bar {
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  background:#1C1917;display:flex;height:var(--top-h);
+  padding-top:env(safe-area-inset-top,0px);
+}
+.top-btn {
+  flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+  background:none;border:none;border-bottom:2.5px solid transparent;
+  font-family:'Sarabun',sans-serif;font-size:14px;font-weight:400;
+  color:rgba(253,251,247,0.4);cursor:pointer;transition:color 0.2s,border-color 0.2s;
+}
+.top-btn.active {color:#FDFBF7;font-weight:600;border-bottom-color:#FDFBF7;}
+.main-panel {display:none;padding-top:var(--top-h);}
+.main-panel.active {display:block;}
+
+/* tools sub-bar */
+#tools-sub-bar {
+  position:fixed;top:var(--top-h);left:0;right:0;z-index:290;
+  background:#FFFFFF;border-bottom:1px solid #EDE9E0;
+  display:flex;height:var(--sub-h);
+}
+.tools-tab {
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  background:none;border:none;border-bottom:2.5px solid transparent;
+  font-family:'Sarabun',sans-serif;font-size:11px;font-weight:400;color:#A8A099;
+  cursor:pointer;transition:color 0.2s,border-color 0.2s;
+}
+.tools-tab-icon{font-size:15px;line-height:1;}
+.tools-tab.active{color:#1C1917;font-weight:600;}
+.tools-tab.t1.active{border-bottom-color:#0D9488;}
+.tools-tab.t2.active{border-bottom-color:#E11D48;}
+.tools-tab.t3.active{border-bottom-color:#3A7D44;}
+.tools-panel{display:none;padding-top:var(--sub-h);}
+.tools-panel.active{display:block;}
+
+/* care sub-bar */
+#care-sub-bar {
+  position:fixed;top:var(--top-h);left:0;right:0;z-index:290;
+  background:#FFFFFF;border-bottom:1px solid #EDE9E0;
+  display:none;height:var(--sub-h);overflow-x:auto;scrollbar-width:none;padding:0 8px;
+}
+#care-sub-bar::-webkit-scrollbar{display:none;}
+#main-care .tab-btn {
+  flex-shrink:0;display:inline-flex;align-items:center;gap:4px;
+  padding:8px 12px;border-radius:20px;border:none;background:none;
+  font-size:12px;font-weight:400;color:#A8A099;cursor:pointer;
+  white-space:nowrap;font-family:'Sarabun',sans-serif;transition:all 0.18s;
+}
+#main-care .tab-btn.active{background:#1C1917;color:#FDFBF7;border-radius:20px;}
+#main-care .tab-panel{display:none;padding-top:calc(var(--sub-h) + 20px);animation:fadePanel 0.22s ease;}
+#main-care .tab-panel.active{display:block;}
+@keyframes fadePanel{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ────────────────────────────
+   TOOLS CSS
+──────────────────────────── */
+/* Sarabun — Thai + Latin, clean, highly readable, less decorative than Mitr */
+    :root {
+      --cream:#FDFBF7; --cream-warm:#FFF8EE; --cream-border:#EDE9E0;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --green:#3A7D44; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+      --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#5EEAD4;
+      --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
+      --indigo:#4338CA; --indigo-soft:#EEF2FF; --indigo-border:#C7D2FE;
+      --rose:#E11D48; --rose-soft:#FFF1F2; --rose-border:#FECDD3;
+      --blue:#2E5FA3; --blue-soft:#EEF3FB; --blue-border:#C5D8F5;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card:#FFFFFF;
+      --tab-h:52px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;overflow-x:hidden;}
+
+    /* ── FIXED TAB BAR ── */
+    .tab-bar{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      background:var(--card);border-bottom:1px solid var(--cream-border);
+      display:flex;padding:0;
+      padding-top:env(safe-area-inset-top,0px);
+    }
+    .tab-btn{
+      flex:1;height:var(--tab-h);display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:2px;background:none;border:none;border-bottom:2.5px solid transparent;
+      font-family:'Sarabun',sans-serif;font-size:12px;font-weight:400;color:var(--soft);
+      cursor:pointer;transition:color 0.2s,border-color 0.2s;padding:0 4px;
+    }
+    .tab-btn-icon{font-size:16px;line-height:1;}
+    .tab-btn.active{color:var(--dark);font-weight:600;}
+    .tab-btn.t1.active{border-bottom-color:var(--teal);}
+    .tab-btn.t2.active{border-bottom-color:var(--rose);}
+    .tab-btn.t3.active{border-bottom-color:var(--green);}
+
+    /* ── PANELS ── */
+    .panel{display:none;padding-top:calc(var(--tab-h) + 16px);}
+    .panel.active{display:block;}
+
+    /* ── PANEL HEADER ── */
+    .panel-header{padding:0 20px 20px;}
+    .ph-zone{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:6px;}
+    .ph-zone.teal{color:var(--teal);}
+    .ph-zone.rose{color:var(--rose);}
+    .ph-zone.green{color:var(--green);}
+    .ph-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:var(--dark);line-height:1.25;margin-bottom:4px;}
+    .ph-sub{font-size:14px;font-weight:300;color:var(--soft);line-height:1.6;}
+
+    /* ── IMAGE CARDS GRID ── */
+    .cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px;margin-bottom:24px;}
+    .cards-grid.single-col{grid-template-columns:1fr;}
+
+    /* THE CARD — image background style */
+    .tool-img-card{
+      border-radius:18px;overflow:hidden;cursor:pointer;
+      position:relative;aspect-ratio:4/3;
+      background:var(--dark);
+      transition:transform 0.15s;
+      border:none;width:100%;text-align:left;display:block;
+      text-decoration:none;
+    }
+    .tool-img-card.wide{aspect-ratio:16/7;}
+    .tool-img-card:active{transform:scale(0.97);}
+    .tool-img-card.coming{opacity:0.55;cursor:default;pointer-events:none;}
+
+    /* background image */
+    .card-bg{
+      position:absolute;inset:0;
+      background-size:cover;background-position:center;
+      transition:transform 0.3s;
+    }
+    .tool-img-card:active .card-bg{transform:scale(1.03);}
+
+    /* dark gradient overlay */
+    .card-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to top, rgba(15,10,5,0.82) 0%, rgba(15,10,5,0.3) 55%, transparent 100%);
+    }
+
+    /* text content */
+    .card-content{
+      position:absolute;bottom:0;left:0;right:0;
+      padding:14px 14px 14px;
+    }
+    .card-badge{
+      display:inline-block;
+      background:rgba(255,255,255,0.15);
+      border:1px solid rgba(255,255,255,0.2);
+      border-radius:20px;padding:2px 8px;
+      font-size:10px;font-weight:500;color:rgba(255,255,255,0.85);
+      letter-spacing:0.5px;margin-bottom:5px;backdrop-filter:blur(4px);
+    }
+    .card-badge.soon{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);}
+    .card-title{
+      font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:700;
+      color:#FFFFFF;line-height:1.25;margin-bottom:3px;
+    }
+    .tool-img-card.wide .card-title{font-size:18px;}
+    .card-sub{
+      font-size:12px;font-weight:300;color:rgba(255,255,255,0.65);
+      line-height:1.45;
+    }
+
+    /* action button on card */
+    .card-btn{
+      display:inline-flex;align-items:center;gap:6px;
+      margin-top:10px;padding:8px 14px;
+      border-radius:20px;border:none;
+      font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;
+      cursor:pointer;transition:transform 0.15s;color:#fff;
+    }
+    .card-btn.teal{background:var(--teal);}
+    .card-btn.rose{background:var(--rose);}
+    .card-btn.green{background:var(--green);}
+    .card-btn.gold{background:var(--gold);}
+    .card-btn.dark{background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);}
+    .card-btn:active{transform:scale(0.95);}
+
+    /* placeholder image bg colors when no photo yet */
+    .bg-teal{background:linear-gradient(135deg,#134E4A,#0D9488);}
+    .bg-purple{background:linear-gradient(135deg,#2E1065,#7C3AED);}
+    .bg-dark{background:linear-gradient(135deg,#1C1917,#44403C);}
+    .bg-blue{background:linear-gradient(135deg,#1E3A5F,#2E5FA3);}
+    .bg-rose{background:linear-gradient(135deg,#4C0519,#E11D48);}
+    .bg-gold{background:linear-gradient(135deg,#451A03,#E8960C);}
+    .bg-green{background:linear-gradient(135deg,#052E16,#3A7D44);}
+    .bg-indigo{background:linear-gradient(135deg,#1E1B4B,#4338CA);}
+    .bg-slate{background:linear-gradient(135deg,#0F172A,#475569);}
+
+    /* placeholder emoji */
+    .card-placeholder{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      font-size:44px;opacity:0.25;
+    }
+    .tool-img-card.wide .card-placeholder{font-size:56px;}
+
+    /* ── ENTRIES (journal/worry history) ── */
+    .entries-wrap{padding:0 16px;margin-bottom:24px;}
+    .entries-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+    .entries-hdr-text{font-size:10px;font-weight:600;color:var(--soft);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+    .entries-hdr-line{flex:1;height:1px;background:var(--cream-border);}
+    .entries-hdr-clear{font-size:11px;color:var(--soft);background:none;border:none;font-family:'Sarabun',sans-serif;cursor:pointer;padding:2px 0;}
+    .entries-list{display:flex;flex-direction:column;gap:8px;}
+    .entry-card{background:var(--card);border:1px solid var(--cream-border);border-radius:14px;padding:12px 14px;cursor:pointer;position:relative;overflow:hidden;}
+    .entry-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+    .entry-card.journal::before{background:var(--purple);}
+    .entry-card.worry::before{background:var(--indigo);}
+    .entry-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+    .entry-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;}
+    .entry-card.journal .entry-badge{background:var(--purple-soft);color:var(--purple);border:1px solid var(--purple-border);}
+    .entry-card.worry   .entry-badge{background:var(--indigo-soft);color:var(--indigo);border:1px solid var(--indigo-border);}
+    .entry-date{font-size:11px;font-weight:300;color:var(--soft);}
+    .entry-preview{font-size:13px;font-weight:300;color:var(--mid);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .entry-card.expanded .entry-preview{-webkit-line-clamp:unset;display:block;}
+    .entry-full{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--cream-border);}
+    .entry-card.expanded .entry-full{display:block;}
+    .entry-q{font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:3px;margin-top:8px;}
+    .entry-q:first-child{margin-top:0;}
+    .entry-a{font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;}
+    .entry-a.empty{color:var(--soft);font-style:italic;}
+    .entries-more{display:block;width:100%;margin-top:8px;background:none;border:1px solid var(--cream-border);border-radius:12px;padding:10px;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:400;color:var(--soft);cursor:pointer;text-align:center;}
+
+    /* ── IDLE NUDGE ── */
+    #idle-nudge{display:none;margin:0 16px 16px;background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:14px;padding:14px 16px;opacity:0;transition:opacity 0.5s;}
+    .idle-nudge-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:5px;}
+    .idle-nudge-text{font-size:14px;font-weight:300;color:var(--mid);line-height:1.65;margin-bottom:10px;}
+    .idle-nudge-btns{display:flex;gap:8px;}
+    .idle-nudge-btns a{flex:1;display:block;text-align:center;border-radius:12px;padding:10px;font-size:13px;font-weight:500;text-decoration:none;}
+    .idle-nudge-btns .a-dark{background:var(--dark);color:var(--cream);}
+    .idle-nudge-btns .a-light{background:var(--card);border:1px solid var(--cream-border);color:var(--dark);}
+
+    /* ── SECTION DIVIDER ── */
+    .sec-div{display:flex;align-items:center;gap:8px;padding:0 16px;margin:0 0 12px;}
+    .sec-div-text{font-size:10px;font-weight:600;color:var(--soft);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+    .sec-div-line{flex:1;height:1px;background:var(--cream-border);}
+
+    /* ── MODALS ── same as before ── */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;align-items:flex-end;justify-content:center;transition:background 0.3s;}
+    .modal-overlay.active{display:flex;}
+    .modal-sheet{background:#1C1917;border-radius:24px 24px 0 0;width:100%;max-width:540px;max-height:88vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,24px);}
+    .modal-handle{width:36px;height:3px;background:rgba(255,255,255,0.18);border-radius:99px;margin:14px auto 0;}
+
+    /* breathe */
+    .breathe-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px;}
+    .breathe-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:#FDFBF7;}
+    .breathe-close{background:none;border:none;color:rgba(255,255,255,0.45);font-size:20px;cursor:pointer;padding:4px;}
+    .dur-row,.pattern-row{display:flex;gap:8px;padding:0 20px;margin-bottom:12px;}
+    .dur-btn,.pat-btn{flex:1;padding:10px 4px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.12);background:transparent;font-family:'Sarabun',sans-serif;font-size:12px;color:rgba(255,255,255,0.55);cursor:pointer;transition:all 0.18s;}
+    .dur-btn.sel,.pat-btn.sel{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.3);color:#FDFBF7;}
+    .pat-btn{display:flex;flex-direction:column;align-items:center;gap:2px;}
+    .pat-name{font-size:12px;font-weight:500;}
+    .pat-counts{font-size:10px;opacity:0.55;}
+    .breathe-stage{display:flex;flex-direction:column;align-items:center;padding:8px 20px 16px;}
+    .circle-wrap{width:180px;height:180px;position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+    .c-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(13,148,136,0.3);}
+    .c-main{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,0.8),rgba(13,148,136,0.3));display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 2s ease-in-out;}
+    .c-main.expand{transform:scale(1.35);}
+    .c-main.contract{transform:scale(0.75);}
+    .c-main.hold-in{transform:scale(1.35);}
+    .c-main.hold-out{transform:scale(0.75);}
+    .c-count{font-family:'Sarabun',sans-serif;font-size:32px;font-weight:300;color:#FDFBF7;line-height:1;}
+    .c-phase-sub{font-size:10px;color:rgba(253,251,247,0.5);margin-top:2px;}
+    .b-phase-label{font-size:16px;font-weight:500;color:#FDFBF7;text-align:center;margin-bottom:6px;}
+    .b-timer{font-size:13px;color:rgba(253,251,247,0.4);text-align:center;}
+    .breathe-cta{display:block;width:calc(100% - 40px);margin:0 20px 8px;padding:15px;background:var(--teal);border:none;border-radius:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;color:#fff;cursor:pointer;text-align:center;transition:transform 0.15s;}
+    .breathe-cta:active{transform:scale(0.97);}
+    .breathe-cta.stop{background:rgba(255,255,255,0.08);color:rgba(253,251,247,0.6);}
+    .b-done{padding:24px 20px;text-align:center;}
+    .b-done-icon{font-size:48px;margin-bottom:12px;}
+    .b-done-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:#FDFBF7;margin-bottom:6px;}
+    .b-done-sub{font-size:14px;font-weight:300;color:rgba(253,251,247,0.55);line-height:1.7;margin-bottom:20px;}
+    .b-done-again{display:block;width:100%;margin-bottom:8px;padding:13px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:14px;font-family:'Sarabun',sans-serif;font-size:14px;color:rgba(253,251,247,0.6);cursor:pointer;}
+    .b-done-close{display:block;width:100%;padding:13px;background:var(--teal);border:none;border-radius:14px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;color:#fff;cursor:pointer;}
+
+    /* journal/step modals */
+    .journal-inner,.mstep-inner{padding:4px 0 0;}
+    .j-progress,.mstep-progress{display:flex;gap:5px;justify-content:center;padding:12px 0 0;}
+    .j-dot,.mstep-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.25s;}
+    .j-dot.active,.mstep-dot.active{background:#FDFBF7;width:18px;border-radius:3px;}
+    .j-dot.done,.mstep-dot.done{background:var(--teal);}
+    .j-label,.mstep-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;padding:16px 20px 0;color:rgba(253,251,247,0.45);}
+    .j-q,.mstep-q{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:700;color:#FDFBF7;padding:8px 20px 0;line-height:1.35;}
+    .j-sub,.mstep-sub{font-size:13px;font-weight:300;color:rgba(253,251,247,0.45);padding:6px 20px 0;line-height:1.65;}
+    .j-ta,.mstep-ta{display:block;width:calc(100% - 40px);margin:14px 20px 0;padding:14px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:300;color:#FDFBF7;resize:none;line-height:1.65;}
+    .j-ta::placeholder,.mstep-ta::placeholder{color:rgba(253,251,247,0.25);}
+    .j-next,.mstep-next{display:block;width:calc(100% - 40px);margin:14px 20px 0;padding:15px;border:none;border-radius:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;color:#fff;cursor:pointer;text-align:center;transition:transform 0.15s;}
+    .j-next:active,.mstep-next:active{transform:scale(0.97);}
+    .j-skip,.mstep-back{display:block;width:calc(100% - 40px);margin:8px 20px 16px;padding:12px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:rgba(253,251,247,0.35);cursor:pointer;text-align:center;}
+    .j-done{padding:24px 20px;text-align:center;}
+    .j-done-icon{font-size:44px;margin-bottom:12px;}
+    .j-done-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:#FDFBF7;margin-bottom:6px;}
+    .j-done-sub{font-size:14px;font-weight:300;color:rgba(253,251,247,0.55);line-height:1.7;margin-bottom:20px;}
+    .j-done-close,.tool-done-close{display:block;width:100%;padding:13px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:14px;font-family:'Sarabun',sans-serif;font-size:14px;color:rgba(253,251,247,0.6);cursor:pointer;}
+    .mstep-choices{padding:12px 20px;display:flex;flex-direction:column;gap:8px;}
+    .mstep-choice{background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:14px;padding:14px 16px;text-align:left;cursor:pointer;font-family:'Sarabun',sans-serif;transition:border-color 0.18s;}
+    .mstep-choice:active{border-color:rgba(255,255,255,0.4);}
+    .mstep-choice-title{font-size:14px;font-weight:600;color:#FDFBF7;margin-bottom:3px;}
+    .mstep-choice-sub{font-size:12px;font-weight:300;color:rgba(253,251,247,0.45);}
+    .reframe-phrase,.reframe-permission{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px 18px;margin:14px 20px 0;}
+    .reframe-prefix{font-size:11px;color:rgba(253,251,247,0.4);margin-bottom:6px;}
+    .reframe-thought{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:#FDFBF7;line-height:1.4;}
+    .reframe-permission-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:8px;}
+    .reframe-permission-text{font-size:15px;font-weight:300;color:#FDFBF7;line-height:1.75;}
+    .mini-breath{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px;margin:14px 20px 0;text-align:center;}
+    .mini-breath-label{font-size:12px;color:var(--teal);font-weight:500;margin-bottom:10px;}
+    .mini-breath-circle{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,0.5),rgba(13,148,136,0.2));display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 8px;animation:breathePulse 4s ease-in-out infinite;}
+    @keyframes breathePulse{0%,100%{transform:scale(1);}50%{transform:scale(1.25);}}
+    .mini-breath-hint{font-size:11px;color:rgba(253,251,247,0.4);}
+    .tool-done{padding:16px 20px 24px;text-align:center;}
+    .tool-done-icon{font-size:44px;margin-bottom:12px;}
+    .tool-done-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:#FDFBF7;margin-bottom:6px;}
+    .tool-done-sub{font-size:14px;font-weight:300;color:rgba(253,251,247,0.55);line-height:1.7;margin-bottom:20px;}
+    .worry-fork{display:flex;gap:10px;padding:12px 20px 0;}
+    .worry-fork-btn{flex:1;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px 12px;text-align:center;cursor:pointer;font-family:'Sarabun',sans-serif;transition:border-color 0.18s;}
+    .worry-fork-btn:active{border-color:rgba(255,255,255,0.4);}
+    .worry-fork-icon{font-size:28px;margin-bottom:6px;}
+    .worry-fork-label{font-size:15px;font-weight:600;color:#FDFBF7;margin-bottom:4px;}
+    .worry-fork-sub{font-size:11px;font-weight:300;color:rgba(253,251,247,0.45);line-height:1.5;}
+    .clarity-mirror{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px 18px;margin:0 20px 14px;}
+    .cm-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px;}
+    .cm-line{font-size:13px;font-weight:300;color:rgba(253,251,247,0.7);line-height:1.65;margin-bottom:8px;}
+    .cm-line strong{color:#FDFBF7;font-weight:500;}
+    .still-strip{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin:16px 20px 0;}
+    .still-q{font-size:13px;font-weight:400;color:rgba(253,251,247,0.55);margin-bottom:10px;text-align:center;}
+    .still-btns{display:flex;gap:8px;}
+    .still-ok{flex:1;background:rgba(58,125,68,0.2);border:1px solid rgba(58,125,68,0.3);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:500;color:var(--teal);cursor:pointer;transition:transform 0.15s;}
+    .still-ok:active{transform:scale(0.96);}
+    .still-no{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:400;color:rgba(253,251,247,0.55);cursor:pointer;transition:all 0.18s;}
+    .still-heavy{display:none;margin-top:10px;}
+    .still-heavy.show{display:block;}
+    .still-heavy-note{font-size:13px;font-weight:300;color:rgba(253,251,247,0.5);line-height:1.7;margin-bottom:12px;}
+    .still-heavy-note strong{color:rgba(253,251,247,0.8);font-weight:500;}
+    .still-heavy-links{display:flex;flex-direction:column;gap:6px;}
+    .still-link{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);text-decoration:none;transition:background 0.15s;}
+    .still-link:active{background:rgba(255,255,255,0.09);}
+    .still-link-icon{font-size:15px;flex-shrink:0;}
+    .still-link-body{flex:1;}
+    .still-link-name{font-size:13px;font-weight:500;color:#FDFBF7;}
+    .still-link-desc{font-size:11px;font-weight:300;color:rgba(253,251,247,0.4);}
+    .still-link-arrow{font-size:12px;color:rgba(255,255,255,0.2);}
+    .still-1323{margin-top:12px;text-align:center;font-size:11px;font-weight:300;color:rgba(253,251,247,0.3);line-height:1.7;}
+    .still-1323 a{color:rgba(232,150,12,0.7);text-decoration:none;}
+    .fade-up{animation:fadeUp 0.32s ease forwards;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .back-link{display:block;text-align:center;padding:8px 0 0;font-size:13px;color:var(--soft);text-decoration:none;}
+
+/* ────────────────────────────
+   CARE CSS  
+──────────────────────────── */
+:root {
+      --cream:#FDFBF7; --cream-warm:#FFF8EE; --cream-border:#EDE9E0;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --green:#3A7D44; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+      --blue:#2563EB; --blue-soft:#EFF6FF; --blue-border:#BFDBFE;
+      --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
+      --amber:#D97706; --amber-soft:#FFFBEB; --amber-border:#FDE68A;
+      --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#99F6E4;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card-bg:#FFFFFF;
+      --radius:18px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;}
+
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:16px 20px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+    .back-btn:active{opacity:0.6;}
+
+    .hero{padding:12px 24px 24px;position:relative;overflow:hidden;}
+    .hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(58,125,68,0.07) 0%,transparent 70%);border-radius:50%;pointer-events:none;}
+    .hero-eyebrow{font-size:10px;font-weight:400;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;margin-bottom:8px;}
+    .hero-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;color:var(--dark);line-height:1.2;}
+    .hero-sub{font-size:13px;font-weight:300;color:var(--soft);margin-top:6px;line-height:1.65;}
+
+    /* ── TAB NAV ── */
+    .tab-bar{display:flex;gap:0;padding:0 16px 16px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--cream-border);margin-bottom:0;}
+    .tab-bar::-webkit-scrollbar{display:none;}
+    .tab-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:20px;border:none;background:none;font-size:12px;font-weight:400;color:var(--soft);cursor:pointer;white-space:nowrap;font-family:'Mitr',sans-serif;transition:all 0.18s;position:relative;}
+    .tab-btn.active{background:var(--dark);color:#FDFBF7;border-radius:20px;}
+    .tab-btn:active{opacity:0.7;}
+
+    /* ── TAB PANELS ── */
+    .tab-panel{display:none;padding-top:20px;animation:fadeTab 0.22s ease;}
+    .tab-panel.active{display:block;}
+    @keyframes fadeTab{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── FLOATING BUTTON ── */
+    .feel-fab{position:fixed;bottom:28px;right:20px;z-index:100;
+      display:flex;align-items:center;gap:8px;
+      background:var(--dark);color:#FDFBF7;
+      border:none;border-radius:28px;
+      padding:12px 18px 12px 14px;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;
+      cursor:pointer;
+      box-shadow:0 4px 20px rgba(0,0,0,0.22);
+      transition:transform 0.15s,box-shadow 0.15s;}
+    .feel-fab:active{transform:scale(0.96);box-shadow:0 2px 10px rgba(0,0,0,0.18);}
+    .feel-fab-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+
+    /* ── FEELING MODAL ── */
+    .feel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;
+      display:flex;align-items:center;justify-content:center;
+      padding:24px;pointer-events:none;
+      transition:background 0.25s ease;}
+    .feel-overlay.active{background:rgba(0,0,0,0.52);pointer-events:all;}
+    .feel-modal{background:var(--dark);border-radius:24px;width:100%;max-width:380px;
+      padding:22px 20px 18px;
+      transform:scale(0.9) translateY(16px);opacity:0;
+      transition:transform 0.3s cubic-bezier(0.34,1.4,0.64,1),opacity 0.22s ease;
+      pointer-events:none;}
+    .feel-overlay.active .feel-modal{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+    .feel-modal-label{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:500;margin-bottom:10px;}
+    .feel-modal-title{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:#FDFBF7;margin-bottom:16px;line-height:1.4;}
+    .feel-opts{display:flex;flex-direction:column;gap:8px;}
+    .feel-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;
+      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px;cursor:pointer;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:300;
+      color:rgba(253,251,247,0.85);text-align:left;width:100%;
+      transition:background 0.15s,border-color 0.15s;}
+    .feel-opt:active,.feel-opt.selected{background:rgba(232,150,12,0.18);border-color:rgba(232,150,12,0.5);color:#FDFBF7;}
+    .feel-opt-icon{font-size:16px;flex-shrink:0;}
+    .feel-modal-close{margin-top:12px;width:100%;background:none;border:none;
+      font-family:'Mitr',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);
+      cursor:pointer;padding:8px;text-align:center;}
+
+    /* Layer section */
+    .layer-section{margin-bottom:36px;scroll-margin-top:16px;}
+    .layer-header{padding:0 20px 14px;}
+    .layer-number{font-family:'Noto Serif Thai',serif;font-size:11px;font-weight:300;font-style:italic;color:var(--soft);margin-bottom:4px;letter-spacing:0;}
+    .layer-title-row{display:flex;align-items:baseline;gap:10px;margin-bottom:4px;}
+    .layer-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);}
+    .layer-emoji{font-size:18px;}
+    .layer-tagline{font-size:12px;font-weight:300;color:var(--soft);line-height:1.6;}
+
+    /* ── PARK CAROUSEL ── */
+    .park-carousel-wrap{position:relative;margin-bottom:20px;}
+    .park-carousel{display:flex;gap:12px;padding:0 16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+    .park-carousel::-webkit-scrollbar{display:none;}
+    .park-card{flex-shrink:0;width:200px;height:260px;border-radius:20px;overflow:hidden;position:relative;cursor:pointer;scroll-snap-align:start;box-shadow:0 2px 12px rgba(0,0,0,0.10);}
+    .park-card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s ease;}
+    .park-card-grad{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to top,rgba(0,0,0,0.72),transparent);border-radius:0 0 20px 20px;}
+    .park-card-body{position:absolute;bottom:0;left:0;right:0;padding:14px;}
+    .park-card-name{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:#fff;line-height:1.3;margin-bottom:3px;}
+    .park-card-loc{font-size:11px;font-weight:300;color:rgba(255,255,255,0.72);}
+    .park-card-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;}
+    .park-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;pointer-events:none;transition:background 0.3s ease;}
+    .park-overlay.active{background:rgba(0,0,0,0.55);pointer-events:all;}
+    .park-modal{background:var(--card-bg);border-radius:24px;width:100%;max-width:380px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,0.25);transform:scale(0.88) translateY(20px);opacity:0;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s ease;pointer-events:none;}
+    .park-overlay.active .park-modal{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+    .park-modal-img{width:100%;height:160px;object-fit:cover;border-radius:16px;margin-bottom:16px;background:var(--green-soft);display:flex;align-items:center;justify-content:center;font-size:40px;}
+    .park-modal-name{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:var(--dark);margin-bottom:4px;}
+    .park-modal-desc{font-size:13px;font-weight:300;color:var(--mid);line-height:1.7;margin-bottom:14px;}
+    .park-modal-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+    .park-modal-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:300;color:var(--mid);background:var(--cream);border:1px solid var(--cream-border);border-radius:20px;padding:4px 10px;}
+    .park-modal-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;}
+    .park-modal-close{width:100%;padding:10px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;margin-top:6px;}
+
+    /* ── SIGNAL CARDS ── */
+    .signal-row{display:flex;flex-direction:column;gap:12px;padding:0 16px;margin-bottom:20px;}
+    .signal-card{background:var(--card-bg);border:1px solid var(--cream-border);border-radius:var(--radius);overflow:hidden;cursor:pointer;}
+    .signal-card-head{display:flex;align-items:center;gap:12px;padding:15px 16px;}
+    .signal-icon{font-size:22px;flex-shrink:0;}
+    .signal-head-text{flex:1;}
+    .signal-title{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);margin-bottom:2px;}
+    .signal-teaser{font-size:12px;font-weight:300;color:var(--soft);line-height:1.5;}
+    .signal-chevron{font-size:16px;color:var(--soft);transition:transform 0.25s;flex-shrink:0;}
+    .signal-card.open .signal-chevron{transform:rotate(180deg);}
+    .signal-body{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1);}
+    .signal-card.open .signal-body{max-height:1400px;}
+    .signal-body-inner{padding:0 16px 18px;}
+    .signal-mechanism{font-size:13px;font-weight:300;color:var(--mid);line-height:1.8;margin-bottom:14px;border-top:1px solid var(--cream-border);padding-top:14px;}
+    .signal-insight{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:500;color:var(--dark);background:var(--green-soft);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:10px 12px;margin-bottom:14px;line-height:1.6;}
+    .signal-actions{display:flex;flex-direction:column;gap:8px;}
+    .signal-action{background:var(--cream);border-radius:12px;padding:12px 14px;}
+    .signal-action-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;margin-bottom:5px;}
+    .signal-action-label.now{color:var(--green);}
+    .signal-action-label.habit{color:var(--blue);}
+    .signal-action-text{font-size:12px;font-weight:300;color:var(--dark);line-height:1.7;}
+
+    /* Signal bridge link */
+    .signal-bridge{display:flex;align-items:center;gap:8px;margin-top:10px;padding:10px 12px;border-radius:10px;text-decoration:none;font-size:12px;font-weight:400;transition:opacity 0.15s;}
+    .signal-bridge:active{opacity:0.7;}
+
+    /* ── BODY ARTICLES ── */
+    .body-articles{margin-bottom:20px;}
+    .body-articles-scroll{display:flex;gap:10px;padding:0 16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+    .body-articles-scroll::-webkit-scrollbar{display:none;}
+    .body-art-card{flex-shrink:0;width:200px;background:var(--card-bg);border:1px solid var(--cream-border);border-radius:16px;padding:14px;cursor:pointer;scroll-snap-align:start;transition:box-shadow 0.15s;}
+    .body-art-card:active{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+    .body-art-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--green);margin-bottom:6px;}
+    .body-art-title{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:8px;}
+    .body-art-meta{display:flex;align-items:center;gap:6px;}
+    .body-art-level{font-size:10px;color:var(--soft);}
+    .body-art-time{font-size:10px;color:var(--soft);}
+
+    /* Subsection */
+    .subsection{margin-bottom:20px;}
+    .subsection-header{display:flex;align-items:center;gap:10px;padding:0 20px;margin-bottom:10px;}
+    .subsection-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+    .subsection-title{font-size:13px;font-weight:500;color:var(--mid);}
+    .subsection-line{flex:1;height:1px;background:var(--cream-border);}
+
+    /* Environment tags */
+    .env-groups{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px;}
+    .env-tag{font-size:11px;font-weight:400;color:var(--amber);background:var(--amber-soft);border:1px solid var(--amber-border);border-radius:20px;padding:4px 10px;}
+
+    /* Reframe card */
+    .reframe-card{margin:0 16px 10px;background:linear-gradient(135deg,var(--amber-soft),#FFFBF0);border:1px solid var(--amber-border);border-radius:var(--radius);padding:14px 16px;}
+    .rf-label{font-size:9px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:6px;font-weight:500;}
+    .rf-text{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:500;color:var(--dark);line-height:1.6;}
+    .rf-sub{font-size:12px;font-weight:300;color:var(--mid);margin-top:6px;line-height:1.6;}
+    .rf-link{display:inline-block;margin-top:10px;font-size:12px;color:var(--amber);font-weight:500;text-decoration:none;}
+
+    /* Belief card */
+    .belief-card{margin:0 16px 10px;background:linear-gradient(135deg,var(--purple-soft),#FAF8FF);border:1px solid var(--purple-border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;}
+    .bc-label{font-size:9px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;margin-bottom:6px;font-weight:500;}
+    .bc-q{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px;}
+    .bc-sub{font-size:12px;font-weight:300;color:var(--mid);line-height:1.6;}
+    .bc-cta{margin-top:10px;font-size:12px;color:var(--purple);font-weight:500;}
+
+    /* Expression links */
+    .expression-links{display:flex;gap:8px;padding:0 16px 14px;flex-wrap:wrap;}
+    .exp-link{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:var(--card-bg);border:1px solid var(--cream-border);border-radius:12px;font-size:12px;font-weight:400;color:var(--dark);text-decoration:none;transition:border-color 0.15s;}
+    .exp-link:active{border-color:var(--dark);}
+
+    /* Pro escalation */
+    .pro-escalation{margin:0 16px 14px;background:var(--card-bg);border:1px solid var(--cream-border);border-radius:var(--radius);padding:14px 16px;}
+    .pro-label{font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:12px;font-weight:500;}
+    .pro-step{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--cream-border);cursor:pointer;text-decoration:none;color:inherit;}
+    .pro-step:last-child{border-bottom:none;padding-bottom:0;}
+    .pro-step:first-child{padding-top:0;}
+    .pro-step-num{width:24px;height:24px;border-radius:50%;background:var(--cream);border:1px solid var(--cream-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--mid);flex-shrink:0;margin-top:1px;}
+    .pro-step-body{flex:1;}
+    .pro-step-name{font-size:13px;font-weight:500;color:var(--dark);margin-bottom:2px;}
+    .pro-step-desc{font-size:12px;font-weight:300;color:var(--soft);line-height:1.5;}
+    .pro-step-arrow{color:var(--soft);font-size:14px;margin-top:3px;}
+
+    /* Care card */
+    .care-cards{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+    .care-card{background:var(--card-bg);border:1px solid var(--cream-border);border-radius:var(--radius);padding:16px;cursor:pointer;opacity:0;transform:translateY(8px);text-decoration:none;display:block;color:inherit;}
+    .care-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s;}
+    .care-card:active{transform:scale(0.98);}
+    .care-card.school-card{border-color:var(--purple-border);background:linear-gradient(135deg,var(--purple-soft),#FDFBF7);}
+    .care-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .care-card-left{flex:1;}
+    .care-card-name{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:3px;}
+    .care-card-desc{font-size:12px;font-weight:300;color:var(--mid);line-height:1.5;}
+    .care-card-badge{flex-shrink:0;font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;white-space:nowrap;letter-spacing:0.5px;}
+    .badge-free{background:var(--green-soft);color:var(--green);border:1px solid var(--green-border);}
+    .badge-online{background:var(--blue-soft);color:var(--blue);border:1px solid var(--blue-border);}
+    .badge-clinic{background:var(--cream-warm);color:#8B5E00;border:1px solid var(--gold-border);}
+    .badge-school{background:var(--purple-soft);color:var(--purple);border:1px solid var(--purple-border);}
+    .badge-park{background:var(--green-soft);color:var(--green);border:1px solid var(--green-border);}
+    .care-card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+    .meta-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:300;color:var(--soft);background:var(--cream);border:1px solid var(--cream-border);border-radius:20px;padding:3px 8px;}
+    .meta-pill.price{color:var(--green);background:var(--green-soft);border-color:var(--green-border);font-weight:500;}
+    .care-card-cta{margin-top:12px;padding-top:12px;border-top:1px solid var(--cream-border);display:flex;align-items:center;justify-content:space-between;}
+    .cta-contact{font-size:12px;font-weight:400;color:var(--mid);}
+    .cta-arrow{font-size:14px;color:var(--soft);}
+
+    .skeleton{background:linear-gradient(90deg,#F0ECE4 25%,#EDE8DF 50%,#F0ECE4 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius);height:100px;margin:0 16px 10px;}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    .layer-divider{height:1px;background:var(--cream-border);margin:4px 20px 32px;}
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <button class="top-btn active" id="top-btn-tools" onclick="switchMain('tools')">
+    <span>🌬️</span><span>เครื่องมือ</span>
+  </button>
+  <button class="top-btn" id="top-btn-care" onclick="switchMain('care')">
+    <span>🌿</span><span>พื้นที่ใจ</span>
+  </button>
+</div>
+
+<!-- TOOLS SUB BAR -->
+<div id="tools-sub-bar">
+  <button class="tools-tab t1 active" onclick="switchToolsTab(1)"><span class="tools-tab-icon">🌿</span><span>ทั่วไป</span></button>
+  <button class="tools-tab t2" onclick="switchToolsTab(2)"><span class="tools-tab-icon">🔄</span><span>ปรับความคิด</span></button>
+  <button class="tools-tab t3" onclick="switchToolsTab(3)"><span class="tools-tab-icon">✨</span><span>เสริมพลัง</span></button>
+</div>
+
+<!-- CARE SUB BAR -->
+<div id="care-sub-bar">
+  
+
+<div class="hero">
+  <div class="hero-eyebrow">พื้นที่ใจ</div>
+  <div class="hero-title">ไม่ต้องแบกคนเดียว</div>
+  <div class="hero-sub">วิธีดูแลตัวเองใน 6 ชั้น<br/>วิทยาศาสตร์ที่อยู่เบื้องหลัง</div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar" id="tab-bar">
+  <button class="tab-btn active" data-tab="body"         onclick="switchCareTab('body')">🏃 ร่างกาย</button>
+  <button class="tab-btn"        data-tab="connection"   onclick="switchCareTab('connection')">🫂 ความสัมพันธ์</button>
+  <button class="tab-btn"        data-tab="expression"   onclick="switchCareTab('expression')">🎨 การแสดงออก</button>
+  <button class="tab-btn"        data-tab="environment"  onclick="switchCareTab('environment')">🌍 สิ่งแวดล้อม</button>
+  <button class="tab-btn"        data-tab="belief"       onclick="switchCareTab('belief')">🪞 ความเชื่อ</button>
+  <button class="tab-btn"        data-tab="professional" onclick="switchCareTab('professional')">🏥 ผู้เชี่ยวชาญ</button>
+</div>
+
+
+</div>
+
+<!-- MAIN: TOOLS -->
+<div class="main-panel active" id="main-tools">
+
+</div>
+
+<!-- MAIN: CARE -->
+<div class="main-panel" id="main-care">
+
+
+<div class="hero">
+  <div class="hero-eyebrow">พื้นที่ใจ</div>
+  <div class="hero-title">ไม่ต้องแบกคนเดียว</div>
+  <div class="hero-sub">วิธีดูแลตัวเองใน 6 ชั้น<br/>วิทยาศาสตร์ที่อยู่เบื้องหลัง</div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar" id="tab-bar">
+  <button class="tab-btn active" data-tab="body"         onclick="switchCareTab('body')">🏃 ร่างกาย</button>
+  <button class="tab-btn"        data-tab="connection"   onclick="switchCareTab('connection')">🫂 ความสัมพันธ์</button>
+  <button class="tab-btn"        data-tab="expression"   onclick="switchCareTab('expression')">🎨 การแสดงออก</button>
+  <button class="tab-btn"        data-tab="environment"  onclick="switchCareTab('environment')">🌍 สิ่งแวดล้อม</button>
+  <button class="tab-btn"        data-tab="belief"       onclick="switchCareTab('belief')">🪞 ความเชื่อ</button>
+  <button class="tab-btn"        data-tab="professional" onclick="switchCareTab('professional')">🏥 ผู้เชี่ยวชาญ</button>
+</div>
+
+<!-- FLOATING BUTTON -->
+<button class="feel-fab" onclick="openFeelModal()">
+  <span class="feel-fab-dot"></span>
+  ตอนนี้รู้สึกยังไง?
+</button>
+
+<!-- FEELING MODAL -->
+<div class="feel-overlay" id="feel-overlay" onclick="handleFeelOverlayClick(event)">
+  <div class="feel-modal" id="feel-modal">
+    <div class="feel-modal-label">เริ่มจากตรงนี้</div>
+    <div class="feel-modal-title">ตอนนี้คุณรู้สึกยังไงอยู่?</div>
+    <div class="feel-opts">
+      <button class="feel-opt" onclick="routeCareLayer('body','layer-body')">
+        <span class="feel-opt-icon">🏃</span><span>รู้สึกล้า เครียดสะสม นอนไม่หลับ หรืออยากรีเซ็ตร่างกาย</span>
+      </button>
+      <button class="feel-opt" onclick="routeCareLayer('connection','layer-connection')">
+        <span class="feel-opt-icon">🫂</span><span>เหงา อยากมีคนรับฟัง หรือรู้สึกโดดเดี่ยว</span>
+      </button>
+      <button class="feel-opt" onclick="routeCareLayer('expression','layer-expression')">
+        <span class="feel-opt-icon">🎨</span><span>อยากระบาย อยากทำอะไรที่เป็นตัวเอง</span>
+      </button>
+      <button class="feel-opt" onclick="routeCareLayer('environment','layer-environment')">
+        <span class="feel-opt-icon">📚</span><span>โดนกดดันจากโรงเรียน บ้าน เพื่อน หรือสังคมรอบข้าง</span>
+      </button>
+      <button class="feel-opt" onclick="routeCareLayer('belief','layer-belief')">
+        <span class="feel-opt-icon">🪞</span><span>สงสัยในตัวเอง ความเชื่อ หรือความหมายของสิ่งที่ทำอยู่</span>
+      </button>
+      <button class="feel-opt" onclick="routeCareLayer('professional','layer-professional')">
+        <span class="feel-opt-icon">🏥</span><span>อยากคุยกับผู้เชี่ยวชาญ หรือไม่รู้จะเริ่มจากตรงไหน</span>
+      </button>
+    </div>
+    <button class="feel-modal-close" onclick="closeFeelModal()">ปิด ✕</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 1: ร่างกาย
+═══════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-body">
+<div class="layer-section" id="layer-body">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--green);">ชั้นที่หนึ่ง</div>
+    <div class="layer-title-row"><span class="layer-emoji">🏃</span><span class="layer-title">ร่างกาย</span></div>
+    <div class="layer-tagline">การออกกำลัง การนอน ฮอร์โมน และสัญญาณจากร่างกาย<br/>ร่างกายและจิตใจไม่เคยแยกจากกัน</div>
+  </div>
+
+  <!-- ── A: SIGNAL CARDS (moved to top) ── -->
+  <div class="subsection-header" style="padding:0 20px;margin:0 0 12px;">
+    <div class="subsection-dot" style="background:var(--blue)"></div>
+    <div class="subsection-title">🔬 สัญญาณที่ร่างกายส่งมา — และจะตอบยังไง</div>
+    <div class="subsection-line"></div>
+  </div>
+
+  <div class="signal-row">
+
+    <!-- Signal 1: Sleep -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">😴</span>
+        <div class="signal-head-text">
+          <div class="signal-title">การนอนและสมอง</div>
+          <div class="signal-teaser">ทำไมอารมณ์พังหลังนอนน้อย — ไม่ใช่ความอ่อนแอ</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            ระหว่างนอน ระบบ glymphatic ของสมองจะเปิดทำงานและชำระล้างของเสียทางเมตาบอลิก รวมถึงผลพลอยได้จาก cortisol ที่สะสมตลอดวัน การนอนช่วง REM โดยเฉพาะมีหน้าที่ประมวลผลความทรงจำทางอารมณ์ — สิ่งที่รู้สึกเหมือนหายนะตอนห้าทุ่มมักดูต่างออกไปในเช้าวันรุ่งขึ้น เพราะสมองทำงานกับมันขณะที่เราหลับ<br/><br/>
+            การนอนไม่ถึง 7 ชั่วโมงหนึ่งคืนเพิ่ม amygdala reactivity ประมาณ 60% — หมายความว่าสมองส่วนอารมณ์ตอบสนองราวกับว่าภัยคุกคามใหญ่กว่าความเป็นจริง สิ่งที่ปกติรับได้กลายเป็นสิ่งที่ทนไม่ไหว ไม่ใช่เพราะชีวิตเลวร้ายลง แต่เพราะตัวกรองของสมองอ่อนแอลง
+          </div>
+          <div class="signal-insight">อารมณ์ที่พังหลังนอนน้อยไม่ใช่ความอ่อนแอ — สมองกำลังทำงานในโหมดป้องกันภัยโดยไม่มีเหตุผลเพียงพอ</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">ถ้านอนไม่หลับอยู่ตอนนี้ — ลืมตาในห้องมืด หายใจออกให้ยาวกว่าหายใจเข้า: หายใจเข้า 4 วินาที, ค้าง 1 วินาที, หายใจออก 6 วินาที ทำ 5 รอบ ระบบประสาทพาราซิมพาเทติกจะเริ่มทำงานและลด arousal ลง</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">ตื่นให้ตรงเวลาทุกวัน รวมถึงวันหยุด — นาฬิกาชีวิตตั้งค่าตัวเองจากเวลาตื่น ไม่ใช่เวลานอน การนอนดึกแล้วตื่นสายวันหยุดรีเซ็ตนาฬิกาและทำให้วันจันทร์รู้สึกหนักกว่าเดิม</div>
+            </div>
+          </div>
+          <a href="alltools.html#breathe" class="signal-bridge" style="background:var(--teal-soft);border:1px solid var(--teal-border);color:var(--teal);">
+            🌬️ ลองหายใจตอนนี้เลย →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 2: Somatic -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">🫀</span>
+        <div class="signal-head-text">
+          <div class="signal-title">สัญญาณจากร่างกาย</div>
+          <div class="signal-teaser">หน้าอกแน่น ปวดท้องก่อนสอบ — ร่างกายไม่ได้โกหก</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Polyvagal Theory (Porges, 2011) อธิบายว่าระบบประสาทสแกนสภาพแวดล้อมเพื่อหาสัญญาณความปลอดภัยตลอดเวลา — ก่อนที่จิตสำนึกจะรู้ตัว เมื่อมันตรวจพบภัยคุกคาม ไม่ว่าจะเป็นข้อสอบ บรรยากาศตึงเครียดในบ้าน หรือแม้แต่การนึกถึงสิ่งที่กังวล ร่างกายจะเตรียมพร้อม: หัวใจเต้นเร็วขึ้น กล้ามเนื้อเกร็ง ระบบย่อยอาหารชะลอลง<br/><br/>
+            อาการหน้าอกแน่นก่อนสอบ ปวดท้องทุกวันอาทิตย์ คอและไหล่ที่ไม่ยอมคลาย — ไม่ใช่เรื่องในหัว ร่างกายกำลังเก็บบัญชีความเครียดที่จิตสำนึกยังไม่ได้รับรู้ และมันพูดออกมาเป็นอาการทางกาย
+          </div>
+          <div class="signal-insight">ร่างกายไม่ได้โกหก มันแค่พูดภาษาที่เราไม่ได้ถูกสอนให้ฟัง</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">ล้างหน้าด้วยน้ำเย็น หรือกดน้ำเย็นที่หน้าผาก 30 วินาที วิธีนี้กระตุ้น dive reflex ซึ่งลด heart rate ได้เร็วและตรงกว่าเทคนิคการหายใจในสถานการณ์ที่ตื่นเต้นมาก ถ้าไม่มีน้ำเย็น — วางฝ่ามือบนหน้าอก รู้สึกหัวใจเต้น แล้วพูดเบาๆ ว่า "ปลอดภัย" สามครั้ง ระบบประสาทตอบสนองต่อการสัมผัสและเสียงของตัวเอง</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">Body scan ก่อนนอน 3 นาที — ไล่จากเท้าขึ้นมาถึงหัว สังเกตว่าส่วนไหนตึงหรือหนัก ไม่ต้องพยายามแก้ไข แค่รู้ว่ามีอยู่ การรับรู้เพียงอย่างเดียวกระตุ้น parasympathetic response และลด cortisol ได้โดยไม่ต้องทำอะไรเพิ่ม</div>
+            </div>
+          </div>
+          <a href="alltools.html#breathe" class="signal-bridge" style="background:var(--teal-soft);border:1px solid var(--teal-border);color:var(--teal);">
+            🌬️ ลองหายใจตอนนี้เลย →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 3: Hormones -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">🌊</span>
+        <div class="signal-head-text">
+          <div class="signal-title">ฮอร์โมนและอารมณ์</div>
+          <div class="signal-teaser">อารมณ์ที่เปลี่ยนโดยไม่มีเหตุผล — มักมีเหตุผลทางชีววิทยา</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Cortisol พุ่งสูงสุดใน 30–45 นาทีแรกหลังตื่นนอน (Cortisol Awakening Response) — นี่คือเหตุผลที่เช้าวันจันทร์รู้สึกหนักที่สุด ไม่ใช่เพราะคุณอ่อนแอ แต่เพราะ cortisol กำลังทำงานอยู่<br/><br/>
+            Estrogen ปรับความไวของ receptor ของ serotonin และ dopamine — ทำให้อารมณ์สามารถเปลี่ยนตาม cycle รายเดือนโดยไม่มีเหตุการณ์ภายนอกใดๆ กระตุ้น Testosterone มีผลต่อ motivation และ energy floor ไม่ใช่แค่ลักษณะทางร่างกาย ทั้งสองฮอร์โมนนี้มีอยู่ในทุกคน แต่ระดับและช่วงเวลาต่างกัน<br/><br/>
+            Thyroid hormones (T3/T4) ควบคุมอัตราเมตาบอลิกและส่งผลโดยตรงต่อวิธีที่สมองประมวลผลอารมณ์ ภาวะ subclinical thyroid dysfunction พบบ่อยในวัยรุ่นและมักแสดงออกเป็น low mood เรื้อรังหรือ brain fog ก่อนที่จะมีอาการอื่น
+          </div>
+          <div class="signal-insight">อารมณ์ที่เปลี่ยนแปลงโดยไม่มีเหตุผลชัดเจนมักมีเหตุผลทางชีววิทยาที่ยังไม่ได้รับการอธิบาย — ไม่ใช่ความไม่มั่นคง</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">เปิด Notes แล้วจดแค่สามอย่าง: วันนี้รู้สึกยังไง, นอนกี่ชั่วโมง, กินอะไรล่าสุด ทำแค่ 7 วัน pattern จะเริ่มปรากฏชัดว่าอารมณ์ตกมักเกิดช่วงไหน หลังนอนน้อยหรือหลังกาแฟ</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">ลด caffeine หลัง 14:00 — caffeine ปิดกั้น adenosine receptor และยืดช่วงที่ cortisol สูง ส่งผลต่อ sleep architecture แม้จะไม่รู้สึกว่ากาแฟทำให้ตื่น สำหรับ thyroid: ถ้ามี low mood + brain fog + เหนื่อยง่ายเรื้อรังแม้นอนพอ ควรตรวจเลือดกับแพทย์ — ไม่ใช่เพราะป่วย แต่เพราะตรวจง่ายและรักษาได้</div>
+            </div>
+          </div>
+          <a href="alltools.html#journal" class="signal-bridge" style="background:var(--purple-soft);border:1px solid var(--purple-border);color:var(--purple);">
+            📓 บันทึกสังเกตอารมณ์ →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 4: Movement -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">⚡</span>
+        <div class="signal-head-text">
+          <div class="signal-title">การเคลื่อนไหว</div>
+          <div class="signal-teaser">ไม่ต้องมีสวน ไม่ต้องมีชุด สมองไม่สนใจว่าคุณวิ่งที่ไหน</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            BDNF (Brain-Derived Neurotrophic Factor) คือโปรตีนที่กระตุ้นการสร้างและเชื่อมต่อของเซลล์สมอง มันเพิ่มขึ้นหลังออกกำลังกายแบบ aerobic 20+ นาทีที่ระดับ 60–70% ของ max heart rate แต่แม้แค่ 10 นาทีก็มีผลต่อ mood ผ่าน endorphin และ dopamine<br/><br/>
+            สิ่งสำคัญ: ผลเกิดจากการยกระดับ heart rate ไม่ใช่จากสถานที่หรืออุปกรณ์ การกระโดดตบในห้องน้ำโรงเรียน 3 นาทีก่อนสอบมีผลต่อสมองเหมือนกับการวิ่งในสวนสาธารณะ
+          </div>
+          <div class="signal-insight">ไม่ต้องมีสวนสาธารณะ ไม่ต้องมีชุดออกกำลังกาย สมองไม่สนใจว่าคุณเคลื่อนไหวที่ไหน</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">Movement snack — กระโดดตบ 30 ครั้ง หรือขึ้น-ลงบันได 3 ชั้น Heart rate จะขึ้น dopamine จะตาม ใช้เวลา 3 นาที เหมาะสำหรับช่วงพักระหว่างอ่านหนังสือที่รู้สึกว่าสมองหยุดทำงาน</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">เพิ่ม incidental movement — เดินไปโรงอาหารทางที่ไกลกว่า ยืนระหว่างอ่านหนังสือ ออกกำลังกาย 20 นาที 3 ครั้งต่อสัปดาห์คือ threshold ที่งานวิจัยยืนยันว่าเห็นผลต่อ depression และ anxiety — ต่ำกว่าที่คนส่วนใหญ่คิด</div>
+            </div>
+          </div>
+          <a href="alltools.html#breathe" class="signal-bridge" style="background:var(--teal-soft);border:1px solid var(--teal-border);color:var(--teal);">
+            🌬️ เปิดเครื่องมือทำตอนนี้เลย →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 5: Sunlight -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">☀️</span>
+        <div class="signal-head-text">
+          <div class="signal-title">แสงแดดและนาฬิกาชีวิต</div>
+          <div class="signal-teaser">10 นาทีข้างนอกตอนเช้าส่งผลต่อสมองทั้งวัน</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Suprachiasmatic nucleus (SCN) ใน hypothalamus คือนาฬิกาชีวิตกลางของร่างกาย มันตั้งเวลาจากแสงที่เข้าตาใน 30–60 นาทีแรกหลังตื่น แสงนั้นกระตุ้น serotonin synthesis, ตั้ง cortisol curve ให้ถูกจังหวะ และกำหนดเวลาที่ melatonin จะหลั่งในคืนนั้น<br/><br/>
+            นักเรียนที่อยู่ใต้แสงฟลูออเรสเซนต์ตลอดวันโดยไม่ได้รับแสงธรรมชาติเลย วงจรนี้เริ่มหลุด ส่งผลต่อ mood, energy และ sleep quality พร้อมกัน ไม่ใช่เพราะขี้เกียจหรืออ่อนแอ แต่เพราะร่างกายขาดข้อมูลที่ต้องการในการตั้งนาฬิกา
+          </div>
+          <div class="signal-insight">10 นาทีข้างนอกตอนเช้าไม่ใช่แค่การพักผ่อน — มันคือข้อมูลที่สมองต้องการเพื่อทำงานได้ตลอดทั้งวัน</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">ออกไปข้างนอกหรือเปิดหน้าต่างรับแสงธรรมชาติภายใน 1 ชั่วโมงหลังตื่น ไม่ต้องทำอะไร แค่ให้แสงเข้าตา 10 นาที ไม่ต้องเจอแดดโดยตรง แสงจากท้องฟ้าก็เพียงพอ</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">จับคู่กับกิจวัตรที่มีอยู่แล้ว — กินข้าวเช้าข้างนอก รอรถที่นอกอาคารแทนในอาคาร เดินไปโรงเรียนแทนนั่งรถ Habit stacking ทำให้ไม่ต้องใช้ willpower เพิ่ม เพราะมันเกาะติดกับสิ่งที่ทำอยู่แล้ว</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HAPPY HORMONES GROUP HEADER ── -->
+    <div class="subsection-header" style="padding:0 4px;margin:8px 0 4px;">
+      <div class="subsection-dot" style="background:#8B5CF6"></div>
+      <div class="subsection-title" style="color:var(--mid);">เพิ่มได้เอง · Happy Hormones</div>
+      <div class="subsection-line"></div>
+    </div>
+
+    <!-- Signal 6: Dopamine -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">⚡</span>
+        <div class="signal-head-text">
+          <div class="signal-title">Dopamine — ระบบรางวัลในสมอง</div>
+          <div class="signal-teaser">ทำไมหลังเลื่อน TikTok แล้วยิ่งรู้สึกว่าง — ไม่ใช่ความอ่อนแอ</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Dopamine ไม่ใช่ "ฮอร์โมนแห่งความสุข" — มันคือฮอร์โมนแห่ง <strong>การคาดหวัง</strong> สมองหลั่ง dopamine ก่อนที่จะได้รางวัล ไม่ใช่ตอนที่ได้แล้ว<br/><br/>
+            Social media ออกแบบมาให้ trigger dopamine ทุก 3–5 วินาที ผ่าน infinite scroll, notification, และ variable reward (บางทีได้ไลก์มาก บางทีไม่ได้เลย — ความไม่แน่นอนนี้คือหัวใจของ addiction loop)<br/><br/>
+            เมื่อสมองถูกกระตุ้นสูงซ้ำๆ มัน downregulate receptor — ต้องการสิ่งกระตุ้นมากขึ้นเรื่อยๆ เพื่อให้รู้สึกเท่าเดิม และสิ่งที่เคยทำให้มีความสุข (อ่านหนังสือ คุยกับเพื่อน เดินเล่น) เริ่มรู้สึกน่าเบื่อ — ไม่ใช่เพราะคุณเปลี่ยน แต่เพราะ baseline สูงขึ้น
+          </div>
+          <div class="signal-insight">ความรู้สึกว่าชีวิตปกติน่าเบื่อหลังจากใช้หน้าจอเยอะ ไม่ใช่ความขี้เกียจหรือนิสัยไม่ดี — มันคือสมองที่ถูก rewire ให้ต้องการ dopamine spike สูงกว่าที่ชีวิตจริงให้ได้</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">Movement snack 5 นาที — กระโดดตบ ขึ้นบันได หรือเดินเร็ว dopamine จาก movement เป็น natural spike ที่ไม่ทำให้ baseline สูงขึ้น หรือลองทำงาน/อ่านหนังสือเสร็จ 1 ชิ้นเล็กๆ แล้วหยุดพัก — dopamine จาก completion ต่างจาก dopamine จากการเลื่อนหน้าจอ เพราะมันมาพร้อมกับความรู้สึกว่าทำอะไรบางอย่างสำเร็จ</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">สร้าง "Dopamine Menu" — รายการกิจกรรมที่ให้ dopamine แบบ natural เช่น เดิน ฟังเพลงชอบ คุยกับเพื่อน ทำอาหาร เล่นดนตรี เวลารู้สึกอยากหยิบโทรศัพท์โดยไม่มีเหตุผล ให้เลือกจาก menu แทน ไม่ต้องทำทั้งหมด แค่หนึ่งอย่าง และสังเกตว่ารู้สึกยังไง</div>
+            </div>
+          </div>
+          <a href="plans.html" class="signal-bridge" style="background:var(--purple-soft);border:1px solid var(--purple-border);color:var(--purple);">
+            🗺️ ถ้าสังเกตว่าต้องการสิ่งกระตุ้นมากขึ้นเรื่อยๆ → แผน Dopamine Reset
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 7: Oxytocin -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">🤝</span>
+        <div class="signal-head-text">
+          <div class="signal-title">Oxytocin — ฮอร์โมนแห่งความผูกพัน</div>
+          <div class="signal-teaser">ทำไมการถูกปฏิเสธถึงเจ็บจริงๆ ทางร่างกาย</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Oxytocin หลั่งจากการสัมผัส การมองตา การรู้สึกว่ามีคนรับฟัง และการทำสิ่งดีเพื่อคนอื่น มันลด cortisol โดยตรง และเพิ่มความรู้สึกปลอดภัยในสภาพแวดล้อมทางสังคม<br/><br/>
+            แต่ที่น่าสนใจกว่านั้นคือฝั่งตรงข้าม: เมื่อสมองตรวจพบ social exclusion หรือการถูกปฏิเสธ มันกระตุ้น anterior cingulate cortex — พื้นที่เดียวกับที่ประมวลผลความเจ็บปวดทางกาย นั่นคือเหตุผลที่การถูกเพื่อนทิ้งหรือถูก ignore เจ็บแบบเดียวกับการโดนตี ไม่ใช่แค่ความรู้สึก<br/><br/>
+            Text message และ social media มอบ oxytocin ได้น้อยกว่าการเจอหน้ากันมาก เพราะสัญญาณที่ trigger การหลั่ง oxytocin ส่วนใหญ่ต้องการ physical presence — เสียง สายตา และการสัมผัส
+          </div>
+          <div class="signal-insight">ความเจ็บปวดจากการถูกปฏิเสธหรือโดดเดี่ยวไม่ใช่ความอ่อนแอ และไม่ใช่เรื่องที่ "ไม่ควรเอามาคิด" — มันคือระบบประสาทที่ทำงานถูกต้อง เพราะมนุษย์วิวัฒนาการมาเพื่ออยู่ร่วมกัน</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">กอดใครซักคน หรือสัมผัสสัตว์เลี้ยงถ้ามี — oxytocin หลั่งจากการสัมผัส ไม่ต้องพูดอะไร แค่อยู่ด้วยกันก็พอ ถ้าอยู่คนเดียว: โทรหาคนที่ไว้ใจได้และ<strong>พูดคุยจริงๆ</strong> (ไม่ใช่แค่ส่งสติกเกอร์) แค่ 10 นาทีที่มีคนรับฟังเปลี่ยน cortisol ได้จริง</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">คุยกับคนหน้าต่อหน้าอย่างน้อยวันละ 1 ครั้งโดยวางโทรศัพท์ ไม่ต้องเป็นเรื่องสำคัญ แค่ presence ที่แท้จริง งานวิจัยพบว่า eye contact ระหว่างคุยช่วยซิงค์ brainwave และสร้าง oxytocin ในทั้งสองคน ไม่ใช่แค่คนที่ได้รับการสนใจ</div>
+            </div>
+          </div>
+          <a href="peer.html" class="signal-bridge" style="background:var(--gold-soft);border:1px solid var(--gold-border);color:#7A5C00;">
+            💛 คุยกับ PR — oxytocin เพิ่มขึ้นจริงๆ เมื่อมีคนรับฟัง
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 8: Endorphin -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">😄</span>
+        <div class="signal-head-text">
+          <div class="signal-title">Endorphin — ยาแก้ปวดธรรมชาติ</div>
+          <div class="signal-teaser">ไม่ต้องวิ่งมาราธอน — หัวเราะก็ได้เหมือนกัน</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Endorphin เป็น opioid peptide ที่สมองผลิตเองเพื่อบรรเทาความเจ็บปวดและสร้างความรู้สึก euphoria ชั่วคราว คนส่วนใหญ่รู้จักมันในชื่อ "runner's high" แต่ threshold ต่ำกว่าที่คิดมาก<br/><br/>
+            สิ่งที่ trigger endorphin ได้นอกจากการออกกำลังกาย: การหัวเราะ (จริงๆ ไม่ใช่แค่ยิ้ม), การร้องไห้ (endorphin หลั่งเพื่อบรรเทาความเจ็บปวดทางอารมณ์), การกินอาหารรสเผ็ด (capsaicin กระตุ้นตัวรับความเจ็บปวด สมองหลั่ง endorphin เพื่อตอบสนอง), และดนตรีที่ทำให้ขนลุก<br/><br/>
+            20 นาทีที่ระดับ 60–70% ของ max heart rate เพียงพอให้เห็นผลต่ออารมณ์ ไม่จำเป็นต้อง "เจ็บจึงจะได้ผล" — ความเชื่อนั้นมาจากวัฒนธรรม "no pain no gain" ไม่ใช่จากวิทยาศาสตร์
+          </div>
+          <div class="signal-insight">การร้องไห้แล้วรู้สึกดีขึ้นหลังจากนั้นไม่ใช่ความบังเอิญ — มันคือ endorphin ที่หลั่งเพื่อบรรเทาความเจ็บปวดทางอารมณ์ ร่างกายดูแลตัวเองด้วยวิธีที่เราไม่รู้ตัว</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">เปิดคลิปหรือซีรีส์ที่ทำให้หัวเราะได้จริงๆ แค่ 10 นาที หรือเดินเร็ว 20 นาที ไม่ต้องวิ่ง ไม่ต้องมีอุปกรณ์ ถ้ารู้สึกอยากร้องไห้และหยุดไม่ได้ — อนุญาตให้ตัวเองร้องได้ มันเป็นกลไกที่ร่างกายใช้ระบาย ไม่ใช่สัญญาณว่าอ่อนแอ</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">3 ครั้งต่อสัปดาห์ที่ heart rate ขึ้น 20 นาทีขึ้นไป — เลือกกิจกรรมที่ enjoy จริงๆ ไม่ใช่แค่ที่คิดว่า "ควรทำ" เพราะ endorphin จาก enjoyable activity มีผลต่อ mood มากกว่า endorphin จากการฝืนทำสิ่งที่ไม่ชอบในระยะยาว</div>
+            </div>
+          </div>
+          <a href="alltools.html#breathe" class="signal-bridge" style="background:var(--teal-soft);border:1px solid var(--teal-border);color:var(--teal);">
+            🌬️ เริ่มจากหายใจก็ได้ → เปิดเครื่องมือ
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal 9: Serotonin -->
+    <div class="signal-card" onclick="toggleSignal(this)">
+      <div class="signal-card-head">
+        <span class="signal-icon">🌤</span>
+        <div class="signal-head-text">
+          <div class="signal-title">Serotonin — ฮอร์โมนแห่งความมั่นคง</div>
+          <div class="signal-teaser">ความรู้สึกหนักๆ เฉื่อยๆ อาจไม่ใช่นิสัย</div>
+        </div>
+        <span class="signal-chevron">↓</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-body-inner">
+          <div class="signal-mechanism">
+            Serotonin ทำงานต่างจาก dopamine โดยสิ้นเชิง — มันไม่ได้ให้ความสุขแบบ spike แต่รักษาระดับ mood ให้มั่นคง คนที่มี serotonin เพียงพอจะรู้สึก "โอเค" กับชีวิตปกติ ไม่ต้องการสิ่งกระตุ้นพิเศษเพื่อให้รู้สึกดี<br/><br/>
+            Serotonin สังเคราะห์จาก tryptophan (กรดอะมิโนในอาหาร) โดยมี 3 ปัจจัยที่ช่วย: แสงแดด, การออกกำลังกาย, และ tryptophan จากอาหาร เช่น ไข่ ถั่ว กล้วย นม<br/><br/>
+            ที่น่าสนใจ: serotonin 90% ผลิตในลำไส้ ไม่ใช่สมอง ความสัมพันธ์ระหว่าง gut และ brain ทำงานสองทาง — ความเครียดทำให้ระบบย่อยอาหารแย่ลง และระบบย่อยที่ไม่ดีทำให้ mood ไม่ดีด้วย<br/><br/>
+            ตอนกลางคืน serotonin แปลงเป็น melatonin — นี่คือเหตุผลที่การนอนและ serotonin เชื่อมกันโดยตรง คนที่ serotonin ต่ำมักนอนหลับยากและตื่นมาไม่รู้สึกสดชื่น
+          </div>
+          <div class="signal-insight">ความรู้สึกหนัก เฉื่อย ไม่อยากทำอะไร แม้จะพักผ่อนพอแล้ว อาจไม่ใช่นิสัยหรือความขี้เกียจ — อาจเป็น serotonin ที่ต่ำจากการขาดแสงแดด การไม่ได้ขยับร่างกาย หรือการกินอาหารที่ขาด tryptophan ซึ่งทั้งหมดนี้แก้ได้โดยไม่ต้องมียา</div>
+          <div class="signal-actions">
+            <div class="signal-action">
+              <div class="signal-action-label now">ทำได้ตอนนี้เลย</div>
+              <div class="signal-action-text">ออกไปรับแสงแดดภายนอก 10 นาทีตอนเช้า ถ้าไม่มีแดด แค่อยู่ข้างนอกก็ช่วยได้ แสงธรรมชาติ (แม้วันที่ท้องฟ้าครึ้ม) มีความเข้มแสงสูงกว่าในอาคาร 10–50 เท่า และนั่นเพียงพอให้ serotonin เริ่มสังเคราะห์</div>
+            </div>
+            <div class="signal-action">
+              <div class="signal-action-label habit">สร้างเป็นนิสัย</div>
+              <div class="signal-action-text">Morning triple stack — แสงแดด + โปรตีนมื้อเช้า + เคลื่อนไหว ทำสามอย่างนี้พร้อมกันในชั่วโมงแรกหลังตื่น แต่ละอย่างมีผลต่อ serotonin แยกกัน แต่เมื่อทำร่วมกัน ผลรวมมากกว่าผลบวก — และทุกอย่างทำใช้เวลาไม่เกิน 30 นาที ลำไส้ก็สำคัญ: ลองลดอาหารแปรรูปและน้ำตาลสูงดูสัปดาห์หนึ่ง แล้วสังเกตว่า mood เปลี่ยนไหม</div>
+            </div>
+          </div>
+          <a href="alltools.html" class="signal-bridge" style="background:var(--green-soft);border:1px solid var(--green-border);color:var(--green);">
+            ⚡ ดูเครื่องมือทั้งหมด →
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end signal-row -->
+
+  <!-- ── B: BODY ARTICLES (moved to second) ── -->
+  <div class="subsection-header" style="padding:0 20px;margin:0 0 12px;">
+    <div class="subsection-dot" style="background:var(--gold)"></div>
+    <div class="subsection-title">📖 บทความจากทีม</div>
+    <div class="subsection-line"></div>
+  </div>
+  <div class="body-articles">
+    <div class="body-articles-scroll" id="body-articles-scroll">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- Sheet-driven extra body cards -->
+  <div class="care-cards" id="cards-ร่างกาย" style="margin-top:8px;"></div>
+
+  <!-- ── C: PARK CAROUSEL (moved to bottom) ── -->
+  <div class="subsection-header" style="padding:0 20px;margin:20px 0 12px;">
+    <div class="subsection-dot" style="background:var(--green)"></div>
+    <div class="subsection-title">🌿 ออกไปเดิน — รีเซ็ตสมอง</div>
+    <div class="subsection-line"></div>
+  </div>
+  <div class="park-carousel-wrap">
+    <div class="park-carousel" id="park-carousel">
+      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
+      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
+      <div class="skeleton" style="width:200px;height:260px;flex-shrink:0;margin:0;border-radius:20px;"></div>
+    </div>
+  </div>
+
+  <!-- Park modal -->
+  <div class="park-overlay" id="park-overlay" onclick="closeParkModal(event)">
+    <div class="park-modal" id="park-modal">
+      <div id="park-modal-img-wrap"></div>
+      <div class="park-modal-name" id="park-modal-name"></div>
+      <div class="park-modal-desc" id="park-modal-desc"></div>
+      <div class="park-modal-pills" id="park-modal-pills"></div>
+      <a class="park-modal-btn" id="park-modal-btn" href="#" target="_blank" rel="noopener">🗺️ เปิด Google Maps</a>
+      <button class="park-modal-close" onclick="closeParkModal()">ปิด ✕</button>
+    </div>
+  </div>
+
+</div><!-- end layer-body -->
+</div><!-- end tab-body -->
+
+<!-- ═══════════════════════════════════════════
+     TAB 2: ความสัมพันธ์
+═══════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-connection">
+<div class="layer-section" id="layer-connection">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--blue);">ชั้นที่สอง</div>
+    <div class="layer-title-row"><span class="layer-emoji">🫂</span><span class="layer-title">ความสัมพันธ์</span></div>
+    <div class="layer-tagline">เพื่อน ครอบครัว กลุ่มสนับสนุน<br/>Oxytocin จากการมีคนรับฟังเปลี่ยน cortisol ได้จริงๆ</div>
+  </div>
+  <div class="care-cards" style="margin-bottom:14px;">
+    <a class="care-card visible" href="peer.html" style="border-color:var(--blue-border);background:linear-gradient(135deg,var(--blue-soft),#FDFBF7);">
+      <div class="care-card-top">
+        <div class="care-card-left">
+          <div class="care-card-name">ระบบ Peer Buddy</div>
+          <div class="care-card-desc">คุยกับรุ่นพี่ที่เป็นเพื่อน ไม่มีการตัดสิน ไม่ต้องนัดหมายล่วงหน้า</div>
+        </div>
+        <span class="care-card-badge badge-free">ฟรี</span>
+      </div>
+      <div class="care-card-cta"><span class="cta-contact">ใจดี TU Peer Support</span><span class="cta-arrow">→</span></div>
+    </a>
+  </div>
+  <a href="alltools.html#journal" style="display:flex;align-items:center;gap:8px;margin:0 16px 14px;padding:12px 14px;background:var(--purple-soft);border:1px solid var(--purple-border);border-radius:14px;text-decoration:none;font-size:12px;font-weight:400;color:var(--purple);">
+    📓 ระบายก่อนคุยกับคนอื่นก็ได้ →
+  </a>
+  <div class="care-cards" id="cards-ความสัมพันธ์"></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 3: การแสดงออก
+═══════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-expression">
+<div class="layer-section" id="layer-expression">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--teal);">ชั้นที่สาม</div>
+    <div class="layer-title-row"><span class="layer-emoji">🎨</span><span class="layer-title">การแสดงออก</span></div>
+    <div class="layer-tagline">งานอดิเรก ความคิดสร้างสรรค์ การเขียนระบาย<br/>สิ่งที่ทำให้คุณยังเป็นตัวเอง</div>
+  </div>
+  <div class="expression-links">
+    <a class="exp-link" href="reflection.html">📓 บันทึกความคิด</a>
+    <a class="exp-link" href="puzzle.html">🧩 บทความจิตวิทยา</a>
+  </div>
+  <a href="alltools.html#journal" style="display:flex;align-items:center;gap:8px;margin:0 16px 14px;padding:12px 14px;background:var(--purple-soft);border:1px solid var(--purple-border);border-radius:14px;text-decoration:none;font-size:12px;font-weight:400;color:var(--purple);">
+    📓 เปิดบันทึกเลย →
+  </a>
+  <div class="care-cards" id="cards-การแสดงออก"></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 4: สิ่งแวดล้อม
+═══════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-environment">
+<div class="layer-section" id="layer-environment">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--amber);">ชั้นที่สี่</div>
+    <div class="layer-title-row"><span class="layer-emoji">🌍</span><span class="layer-title">สิ่งแวดล้อม</span></div>
+    <div class="layer-tagline">ความกดดันไม่ได้มาจากแค่ที่เดียว</div>
+  </div>
+  <div class="env-groups">
+    <span class="env-tag">📊 GPA &amp; การเรียน</span>
+    <span class="env-tag">🎯 TCAS &amp; Admission</span>
+    <span class="env-tag">👨‍👩‍👧 ความคาดหวังจากครอบครัว</span>
+    <span class="env-tag">👥 ความสัมพันธ์เพื่อน</span>
+    <span class="env-tag">📋 กิจกรรมที่หนักเกินไป</span>
+    <span class="env-tag">💰 ปัญหาการเงิน</span>
+    <span class="env-tag">🪪 ความรู้สึกไม่เข้าพวก</span>
+  </div>
+  <div class="reframe-card">
+    <div class="rf-label">Reframe</div>
+    <div class="rf-text">ความเครียดที่รู้สึกอยู่ไม่ใช่ความอ่อนแอ — มันคือ signal<br/>ว่าบางอย่างในสิ่งแวดล้อมรอบตัวต้องการความใส่ใจ</div>
+    <div class="rf-sub">นักเรียนเตรียมฯ แต่ละคนเจอ pressure คนละแบบ ไม่มีใครผิดที่รู้สึกหนัก</div>
+    <a href="programs.html" class="rf-link">ดู workshops &amp; programs →</a>
+  </div>
+  <div class="care-cards" id="cards-สิ่งแวดล้อม"></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 5: ความเชื่อ
+═══════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-belief">
+<div class="layer-section" id="layer-belief">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--purple);">ชั้นที่ห้า</div>
+    <div class="layer-title-row"><span class="layer-emoji">🪞</span><span class="layer-title">ความเชื่อ</span></div>
+    <div class="layer-tagline">Stigma การมองตัวเอง และความหมายของสิ่งที่ทำอยู่<br/>สิ่งที่เชื่อเกี่ยวกับตัวเองมีผลต่อทุกอย่าง</div>
+  </div>
+  <div class="belief-card" onclick="window.location.href='puzzle.html'">
+    <div class="bc-label">🧩 จากบทความในใจดี TU</div>
+    <div class="bc-q">เชื่อว่าต้องสู้คนเดียว?</div>
+    <div class="bc-sub">ความเชื่อที่ฝังอยู่ข้างในมักมาจากสิ่งแวดล้อม ไม่ใช่ความจริงตายตัว — อ่านบทความจิตวิทยาที่ช่วยตั้งคำถามกับความเชื่อพวกนั้น</div>
+    <div class="bc-cta">ไปที่บทความ →</div>
+  </div>
+  <a href="reflection.html" style="display:flex;align-items:center;gap:8px;margin:0 16px 10px;padding:12px 14px;background:var(--dark);border-radius:14px;text-decoration:none;font-size:12px;font-weight:500;color:#FDFBF7;">
+    🪞 ลอง Reflection — ช่วยตั้งคำถามกับความเชื่อ →
+  </a>
+  <div class="care-cards" id="cards-ความเชื่อ"></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 6: ผู้เชี่ยวชาญ
+═══════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-professional">
+<div class="layer-section" id="layer-professional">
+  <div class="layer-header">
+    <div class="layer-number" style="color:var(--mid);">ชั้นที่หก</div>
+    <div class="layer-title-row"><span class="layer-emoji">🏥</span><span class="layer-title">ผู้เชี่ยวชาญ</span></div>
+    <div class="layer-tagline">บางครั้งก็ต้องการคนที่เชี่ยวชาญจริงๆ — และนั่นก็โอเคมาก<br/>เริ่มจาก peer แล้วค่อยๆ ไปตามที่ต้องการ</div>
+  </div>
+  <div class="pro-escalation">
+    <div class="pro-label">เส้นทางการขอความช่วยเหลือ</div>
+    <a class="pro-step" href="peer.html">
+      <div class="pro-step-num">1</div>
+      <div class="pro-step-body"><div class="pro-step-name">Peer Support — ใจดี TU</div><div class="pro-step-desc">รุ่นพี่ที่ผ่านการฝึก พร้อมรับฟังโดยไม่ตัดสิน</div></div>
+      <span class="pro-step-arrow">→</span>
+    </a>
+    <a class="pro-step" href="therapist.html">
+      <div class="pro-step-num">2</div>
+      <div class="pro-step-body"><div class="pro-step-name">นักจิตวิทยาโรงเรียน</div><div class="pro-step-desc">ฟรี อยู่ในโรงเรียน ไม่ต้องเดินทาง</div></div>
+      <span class="pro-step-arrow">→</span>
+    </a>
+    <a class="pro-step" href="guidance.html">
+      <div class="pro-step-num">3</div>
+      <div class="pro-step-body"><div class="pro-step-name">ครูแนะแนว</div><div class="pro-step-desc">ปรึกษาได้ทั้งเรื่องเรียน ชีวิต และ admission</div></div>
+      <span class="pro-step-arrow">→</span>
+    </a>
+    <div class="pro-step" style="cursor:default;">
+      <div class="pro-step-num">4</div>
+      <div class="pro-step-body"><div class="pro-step-name">คลินิก &amp; โรงพยาบาล กทม.</div><div class="pro-step-desc">เมื่อต้องการผู้เชี่ยวชาญด้านจิตเวชโดยตรง</div></div>
+    </div>
+  </div>
+  <div id="professional-cards">
+    <div class="skeleton"></div><div class="skeleton" style="height:80px"></div><div class="skeleton"></div>
+  </div>
+</div>
+</div>
+
+<div style="margin:8px 16px 0;background:#FFF8EE;border-radius:18px;padding:16px 18px;border:1.5px solid #FFE0A0;">
+  <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:#B07D10;margin-bottom:5px;">พร้อมให้ตลอดวัน</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:#5C3D00;margin-bottom:3px;">คุยกับคนได้เลยตอนนี้</div>
+  <div style="font-size:12px;font-weight:300;color:#8B6914;margin-bottom:12px;">ไม่ต้องรอถึงวิกฤต</div>
+  <div style="display:flex;gap:8px;">
+    <a href="peer.html" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 12px;background:#E8960C;border-radius:12px;text-decoration:none;font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;color:#fff;">
+      💛 นัดคุยกับ PR
+    </a>
+    <a href="tel:1323" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 12px;background:#FFF3DC;border:1px solid #FFE0A0;border-radius:12px;text-decoration:none;font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;color:#7A5C00;">
+      📞 1323 ฟรี
+    </a>
+  </div>
+</div>
+
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const LIFF_ID  = "2009806939-H06mwKgI";
+
+// ─────────────────────────────────────────────
+// SIGNAL CARDS
+// ─────────────────────────────────────────────
+function toggleSignal(card) {
+  const isOpen = card.classList.contains("open");
+  document.querySelectorAll(".signal-card.open").forEach(c => c.classList.remove("open"));
+  if (!isOpen) card.classList.add("open");
+}
+
+// ─────────────────────────────────────────────
+// PARK CAROUSEL
+// ─────────────────────────────────────────────
+const PARK_GRADIENTS = [
+  "linear-gradient(135deg,#4A7C59,#2D5A40)",
+  "linear-gradient(135deg,#3A7D44,#1E5B2A)",
+  "linear-gradient(135deg,#5A8A6A,#3A6B4A)",
+  "linear-gradient(135deg,#2D6A4F,#1B4332)",
+  "linear-gradient(135deg,#52796F,#354F52)",
+];
+let parkData = [];
+
+function renderParks(items) {
+  const carousel = document.getElementById("park-carousel");
+  carousel.innerHTML = "";
+  parkData = items;
+  items.forEach((park, idx) => {
+    const card = document.createElement("div");
+    card.className = "park-card";
+    card.onclick = () => openParkModal(idx);
+    const hasPhoto = park.photo_url && park.photo_url.trim();
+    const grad = PARK_GRADIENTS[idx % PARK_GRADIENTS.length];
+    card.innerHTML = `
+      ${hasPhoto
+        ? `<img class="park-card-img" src="${park.photo_url}" alt="${park.name}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+           <div class="park-card-fallback" style="display:none;background:${grad};position:absolute;inset:0;border-radius:20px;">🌳</div>`
+        : `<div class="park-card-fallback" style="background:${grad};position:absolute;inset:0;border-radius:20px;">🌳</div>`}
+      <div class="park-card-grad"></div>
+      <div class="park-card-body">
+        <div class="park-card-name">${park.name}</div>
+        <div class="park-card-loc">📍 ${park.location || ""}</div>
+      </div>`;
+    carousel.appendChild(card);
+  });
+}
+
+function openParkModal(idx) {
+  const park = parkData[idx];
+  if (!park) return;
+  const grad = PARK_GRADIENTS[idx % PARK_GRADIENTS.length];
+  const hasPhoto = park.photo_url && park.photo_url.trim();
+  document.getElementById("park-modal-img-wrap").innerHTML = hasPhoto
+    ? `<img style="width:100%;height:160px;object-fit:cover;border-radius:16px;margin-bottom:16px;display:block;" src="${park.photo_url}" alt="${park.name}"/>`
+    : `<div style="width:100%;height:160px;border-radius:16px;margin-bottom:16px;background:${grad};display:flex;align-items:center;justify-content:center;font-size:48px;">🌳</div>`;
+  document.getElementById("park-modal-name").textContent = park.name;
+  document.getElementById("park-modal-desc").textContent = park.desc || "";
+  const pills = [];
+  if (park.price_range) pills.push(`<span class="park-modal-pill">฿ ${park.price_range}</span>`);
+  if (park.location)    pills.push(`<span class="park-modal-pill">📍 ${park.location}</span>`);
+  if (park.bts_mrt)     pills.push(`<span class="park-modal-pill">🚇 ${park.bts_mrt}</span>`);
+  document.getElementById("park-modal-pills").innerHTML = pills.join("");
+  const btn = document.getElementById("park-modal-btn");
+  btn.href = park.url || "#";
+  btn.style.display = park.url ? "flex" : "none";
+  const overlay = document.getElementById("park-overlay");
+  overlay.style.display = "flex";
+  requestAnimationFrame(() => overlay.classList.add("active"));
+  document.body.style.overflow = "hidden";
+}
+
+function closeParkModal(e) {
+  if (e && e.target !== document.getElementById("park-overlay") &&
+      !e.target.classList.contains("park-modal-close")) return;
+  const overlay = document.getElementById("park-overlay");
+  overlay.classList.remove("active");
+  setTimeout(() => { overlay.style.display = "none"; document.body.style.overflow = ""; }, 300);
+}
+
+// ─────────────────────────────────────────────
+// BODY ARTICLES
+// ─────────────────────────────────────────────
+const BODY_ARTICLE_FALLBACK = [{
+  id:"science", title:"ร่างกายและจิตใจไม่เคยแยกจากกัน",
+  tag:"Neuroscience", level:"🟡 กลาง", readTime:"15 นาที",
+  url:"science.html", isStatic:true,
+}];
+
+function renderBodyArticles(articles) {
+  const scroll = document.getElementById("body-articles-scroll");
+  scroll.innerHTML = "";
+  articles.forEach(art => {
+    const card = document.createElement("div");
+    card.className = "body-art-card";
+    card.innerHTML = `
+      <div class="body-art-tag">${art.tag || "Body"}</div>
+      <div class="body-art-title">${art.title}</div>
+      <div class="body-art-meta">
+        <span class="body-art-level">${art.level || ""}</span>
+        ${art.level && art.readTime ? `<span style="color:var(--cream-border);">·</span>` : ""}
+        <span class="body-art-time">${art.readTime || ""}</span>
+      </div>`;
+    card.onclick = art.isStatic && art.url
+      ? () => window.location.href = art.url
+      : () => { try { sessionStorage.setItem("bodyArticle", JSON.stringify(art)); } catch(e){} window.location.href = "puzzle.html?bodyArticle=1"; };
+    scroll.appendChild(card);
+  });
+}
+
+async function loadBodyArticles() {
+  try {
+    const res = await fetch(API_URL + "?action=getContent&world=body");
+    const d = await res.json();
+    const extra = (d.status === "OK" && d.items && d.items.length) ? d.items : [];
+    renderBodyArticles([...BODY_ARTICLE_FALLBACK, ...extra]);
+  } catch(e) { renderBodyArticles(BODY_ARTICLE_FALLBACK); }
+}
+
+// ─────────────────────────────────────────────
+// CARE DATA
+// ─────────────────────────────────────────────
+const FALLBACK = [
+  {category:"ออกไปเดิน",name:"สวนลุมพินี",desc:"สวนกลางกรุง วิ่งได้รอบทะเลสาบ มีเส้นทางเดินชัดเจน",price_range:"ฟรี",location:"ปทุมวัน",bts_mrt:"MRT สีลม / BTS ราชดำริ",contact:"",url:"https://maps.app.goo.gl/LumpiniPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนจตุจักร",desc:"สวนขนาดใหญ่ ร่มรื่น มีทางเดิน-วิ่ง เหมาะกับคนแถวเหนือ กทม.",price_range:"ฟรี",location:"จตุจักร",bts_mrt:"MRT กำแพงเพชร",contact:"",url:"https://maps.app.goo.gl/ChatuchakPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนเบญจกิติ",desc:"ริมน้ำ ทันสมัย มีทางจักรยาน-วิ่งแยกชัดเจน แถวอโศก-สุขุมวิท",price_range:"ฟรี",location:"คลองเตย",bts_mrt:"MRT สุขุมวิท / BTS อโศก",contact:"",url:"https://maps.app.goo.gl/BenjakitiPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนสาธารณะรัชดาภิเษก",desc:"แถวรัชดา ใกล้ MRT เปิดเช้าตรู่ นักวิ่งเยอะ บรรยากาศดี",price_range:"ฟรี",location:"ห้วยขวาง",bts_mrt:"MRT ห้วยขวาง",contact:"",url:"https://maps.app.goo.gl/RatchadaPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนหลวง ร.9",desc:"สวนขนาดใหญ่ทางฝั่งตะวันออก เหมาะคนแถว อ่อนนุช ประเวศ",price_range:"ฟรี",location:"ประเวศ",bts_mrt:"BTS อ่อนนุช + รถ/แกร็บ",contact:"",url:"https://maps.app.goo.gl/SuanLuangR9",online:false},
+  {category:"ในโรงเรียน",name:"School Therapist",desc:"คุยได้ทุกเรื่องในใจ ไม่มีการตัดสิน",price_range:"ฟรี",location:"ห้องแนะแนว",bts_mrt:"",contact:"ติดต่อผ่านครูแนะแนว",url:"",online:false},
+  {category:"ในโรงเรียน",name:"Guidance Counselor",desc:"ปรึกษาเรื่อง admission เส้นทางการศึกษา และชีวิตหลังโรงเรียน",price_range:"ฟรี",location:"ห้องแนะแนว",bts_mrt:"",contact:"ติดต่อผ่านครูแนะแนว",url:"",online:false},
+  {category:"ฟรี",name:"กำแพงพักใจ",desc:"ปรึกษาจิตแพทย์/นักจิตวิทยาฟรี 4 ครั้ง สำหรับวัยรุ่น กทม. — ผ่าน OOCA",price_range:"ฟรี 4 ครั้ง",location:"Online",bts_mrt:"",contact:"ooca.co/how-to-use-wall-of-sharing-nhso",url:"https://ooca.co/how-to-use-wall-of-sharing-nhso",online:true},
+  {category:"ฟรี",name:"รามาธิบดี จิตเวช",desc:"โรงพยาบาลรัฐ — รอนานแต่ราคาถูกที่สุด มีจิตแพทย์เด็กและวัยรุ่น",price_range:"~500–1,000 บาท",location:"พระราม 6 ราชเทวี",bts_mrt:"MRT พระราม 9",contact:"02-201-1000",url:"https://www.rama.mahidol.ac.th",online:false},
+  {category:"ออนไลน์",name:"OOCA อูก้า",desc:"Video call กับจิตแพทย์/นักจิตวิทยา จากบ้านได้เลย ไม่ต้องเดินทาง",price_range:"นักจิตวิทยา 450 บ./30 นาที · จิตแพทย์ 1,000 บ./30 นาที",location:"Online",bts_mrt:"",contact:"ooca.co",url:"https://ooca.co",online:true},
+  {category:"ออนไลน์",name:"iSTRONG",desc:"นักจิตวิทยาผ่านการฝึกกว่า 5,000 ชั่วโมง รับทั้ง TH/EN",price_range:"สอบถาม LINE @istrong",location:"Online",bts_mrt:"",contact:"@istrong",url:"https://www.istrong.co",online:true},
+  {category:"คลินิก",name:"Morning Mind Clinic",desc:"9 สาขาทั่ว กทม. ปิ่นเกล้า สีลม ศรีนครินทร์ เอกมัย — อยู่ในห้างฯ เดินทางสะดวก",price_range:"~1,000 บาท/ครั้ง",location:"9 สาขา กทม.",bts_mrt:"ครอบคลุมทุกโซน",contact:"095-995-3216 | LINE: morningmindclinic",url:"https://morningmindclinic.co",online:false},
+  {category:"คลินิก",name:"Happy Me Clinic",desc:"เน้นราคาเข้าถึงได้ เปิดทุกวัน ไม่ต้องรอนาน",price_range:"สอบถาม 099-179-2416",location:"จตุจักร + พระโขนง",bts_mrt:"BTS ปุณณวิถี",contact:"099-179-2416",url:"https://happymeclinic.com",online:false},
+  {category:"คลินิก",name:"Relax Mind Clinic",desc:"คลินิกจิตเวชเฉพาะทาง รับอายุ 18 ปีขึ้นไป",price_range:"สอบถาม 065-587-9293",location:"สุขุมวิท พระโขนงเหนือ",bts_mrt:"BTS พระโขนง",contact:"065-587-9293",url:"https://www.relaxmindclinic.com",online:false},
+  {category:"คลินิก",name:"Mind D Clinic",desc:"คลินิกสุขภาพจิตครบวงจร ใจกลาง กทม.",price_range:"สอบถาม",location:"ใจกลาง กทม.",bts_mrt:"",contact:"minddclinic.com",url:"https://minddclinic.com",online:false},
+  {category:"คลินิก",name:"The Oasis",desc:"จิตเวช จิตบำบัด โยคะบำบัด กิจกรรมส่งเสริมสุขภาพจิต",price_range:"สอบถาม",location:"กรุงเทพฯ",bts_mrt:"",contact:"theoasiscare.com",url:"https://en.theoasiscare.com",online:false},
+];
+
+const LAYER_MAP = {
+  "ร่างกาย":     "cards-ร่างกาย",
+  "ความสัมพันธ์": "cards-ความสัมพันธ์",
+  "การแสดงออก":  "cards-การแสดงออก",
+  "สิ่งแวดล้อม": "cards-สิ่งแวดล้อม",
+  "ความเชื่อ":   "cards-ความเชื่อ",
+  "ในโรงเรียน":  "pro-ในโรงเรียน",
+  "ฟรี":         "pro-ฟรี",
+  "ออนไลน์":    "pro-ออนไลน์",
+  "คลินิก":     "pro-คลินิก",
+};
+
+const PRO_CATEGORIES = [
+  {cat:"ในโรงเรียน", dot:"#7C3AED", label:"🏫 ในโรงเรียน"},
+  {cat:"ฟรี",        dot:"#3A7D44", label:"🆓 ฟรี / ต้นทุนต่ำ"},
+  {cat:"ออนไลน์",   dot:"#2563EB", label:"💻 Online"},
+  {cat:"คลินิก",    dot:"#E8960C", label:"🏥 คลินิก กทม."},
+];
+
+let cardIdx = 0;
+
+function makeCareCard(item, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const isSch = item.category === "ในโรงเรียน";
+  const el = document.createElement(item.url ? "a" : "div");
+  el.className = "care-card" + (isSch ? " school-card" : "");
+  if (item.url) { el.href = item.url; el.target = "_blank"; el.rel = "noopener"; }
+  const badge = item.price_range && item.price_range.includes("ฟรี") ? "badge-free"
+              : item.online ? "badge-online"
+              : isSch ? "badge-school"
+              : item.category === "ออกไปเดิน" ? "badge-park"
+              : "badge-clinic";
+  const badgeText = item.price_range && item.price_range.includes("ฟรี") ? "ฟรี"
+                  : item.online ? "Online"
+                  : item.category === "ออกไปเดิน" ? "ฟรี"
+                  : isSch ? "โรงเรียน" : "คลินิก";
+  const pills = [];
+  if (item.price_range) pills.push(`<span class="meta-pill price">฿ ${item.price_range}</span>`);
+  if (item.location) pills.push(`<span class="meta-pill">📍 ${item.location}</span>`);
+  if (item.bts_mrt) pills.push(`<span class="meta-pill">🚇 ${item.bts_mrt}</span>`);
+  el.innerHTML = `
+    <div class="care-card-top">
+      <div class="care-card-left">
+        <div class="care-card-name">${item.name}</div>
+        <div class="care-card-desc">${item.desc}</div>
+      </div>
+      <span class="care-card-badge ${badge}">${badgeText}</span>
+    </div>
+    ${pills.length ? `<div class="care-card-meta">${pills.join("")}</div>` : ""}
+    ${item.contact ? `<div class="care-card-cta"><span class="cta-contact">${item.contact}</span>${item.url ? `<span class="cta-arrow">→</span>` : ""}</div>` : ""}
+  `;
+  container.appendChild(el);
+  const i = cardIdx++;
+  setTimeout(() => el.classList.add("visible"), i * 45);
+}
+
+function buildProContainers() {
+  const wrapper = document.getElementById("professional-cards");
+  wrapper.innerHTML = "";
+  PRO_CATEGORIES.forEach(({cat, dot, label}) => {
+    const sec = document.createElement("div");
+    sec.className = "subsection";
+    sec.innerHTML = `
+      <div class="subsection-header">
+        <div class="subsection-dot" style="background:${dot}"></div>
+        <div class="subsection-title">${label}</div>
+        <div class="subsection-line"></div>
+      </div>
+      <div class="care-cards" id="pro-${cat}"></div>
+    `;
+    wrapper.appendChild(sec);
+  });
+}
+
+function renderCare(items) {
+  buildProContainers();
+  const parks = items.filter(i => (i.category||"").trim() === "ออกไปเดิน");
+  const rest  = items.filter(i => (i.category||"").trim() !== "ออกไปเดิน");
+  if (parks.length) renderParks(parks);
+  else renderParks(FALLBACK.filter(i => i.category === "ออกไปเดิน"));
+  if (!rest || !rest.length) return;
+  rest.forEach(item => {
+    const id = LAYER_MAP[(item.category || "").trim()];
+    if (id) makeCareCard(item, id);
+  });
+  PRO_CATEGORIES.forEach(({cat}) => {
+    const el = document.getElementById(`pro-${cat}`);
+    if (el && el.children.length === 0) {
+      const subsec = el.closest(".subsection");
+      if (subsec) subsec.style.display = "none";
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// TAB SYSTEM
+// ─────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  const panel = document.getElementById("tab-" + tab);
+  if (panel) {
+    panel.classList.add("active");
+    window.scrollTo({top: 0, behavior: "smooth"});
+  }
+}
+
+// ─────────────────────────────────────────────
+// FEELING MODAL
+// ─────────────────────────────────────────────
+function openFeelModal() {
+  const ov = document.getElementById("feel-overlay");
+  ov.style.display = "flex";
+  requestAnimationFrame(() => ov.classList.add("active"));
+  document.body.style.overflow = "hidden";
+}
+
+function closeFeelModal() {
+  const ov = document.getElementById("feel-overlay");
+  ov.classList.remove("active");
+  document.querySelectorAll(".feel-opt").forEach(b => b.classList.remove("selected"));
+  setTimeout(() => { ov.style.display = "none"; document.body.style.overflow = ""; }, 280);
+}
+
+function handleFeelOverlayClick(e) {
+  if (e.target === document.getElementById("feel-overlay")) closeFeelModal();
+}
+
+function routeToLayer(tab, scrollTargetId) {
+  document.querySelectorAll(".feel-opt").forEach(b => b.classList.remove("selected"));
+  event.currentTarget.classList.add("selected");
+  setTimeout(() => {
+    closeFeelModal();
+    switchTab(tab);
+    if (scrollTargetId) {
+      setTimeout(() => {
+        const el = document.getElementById(scrollTargetId);
+        if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
+      }, 280);
+    }
+  }, 240);
+}
+
+// ─────────────────────────────────────────────
+// ARTICLE SUGGESTIONS PER LAYER
+// ─────────────────────────────────────────────
+async function loadCareArticleSuggestions() {
+  const LAYER_CONTAINERS = {
+    "ร่างกาย":      "cards-ร่างกาย",
+    "ความสัมพันธ์":  "cards-ความสัมพันธ์",
+    "การแสดงออก":   "cards-การแสดงออก",
+    "สิ่งแวดล้อม":  "cards-สิ่งแวดล้อม",
+    "ความเชื่อ":    "cards-ความเชื่อ",
+  };
+  try {
+    const res = await fetch(API_URL + "?action=getContent&world=puzzle");
+    const d = await res.json();
+    const articles = (d.status === "OK" && d.items) ? d.items : [];
+    const tagged = articles.filter(a => a.careLayer && LAYER_CONTAINERS[a.careLayer]);
+    tagged.forEach(art => {
+      const containerId = LAYER_CONTAINERS[art.careLayer];
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!container.dataset.hasSuggestions) {
+        container.dataset.hasSuggestions = "1";
+        const header = document.createElement("div");
+        header.style.cssText = "font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--soft);padding:8px 0 4px;margin:4px 0;";
+        header.textContent = "📖 บทความแนะนำจากทีม";
+        container.appendChild(header);
+      }
+      const card = document.createElement("div");
+      card.style.cssText = "background:var(--card-bg);border:1px solid var(--cream-border);border-radius:14px;padding:14px;cursor:pointer;margin-bottom:8px;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;";
+      card.innerHTML = `
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--green);margin-bottom:6px;">${art.tag||"บทความ"}</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.4;">${art.title}</div>
+        <div style="font-size:12px;font-weight:300;color:var(--mid);line-height:1.6;">${art.desc||""}</div>
+        <div style="font-size:11px;color:var(--soft);margin-top:8px;">${art.level||""} · ⏱ ${art.readTime||""}</div>`;
+      card.onclick = () => {
+        try { sessionStorage.setItem("bodyArticle", JSON.stringify(art)); } catch(e) {}
+        window.location.href = "puzzle.html?bodyArticle=1";
+      };
+      container.appendChild(card);
+      setTimeout(() => { card.style.opacity = "1"; card.style.transform = "translateY(0)"; }, 50);
+    });
+  } catch(e) {}
+}
+
+async function loadCare() {
+  loadBodyArticles();
+  loadCareArticleSuggestions();
+  try {
+    const res = await fetch(API_URL + "?action=getCare");
+    const d = await res.json();
+    renderCare((d.status === "OK" && d.items && d.items.length) ? d.items : FALLBACK);
+  } catch(e) { renderCare(FALLBACK); }
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+const isPreview = new URLSearchParams(window.location.search).get("preview") === "1";
+if (isPreview) {
+  loadCare();
+} else {
+  liff.init({liffId: LIFF_ID})
+    .then(() => { if (!liff.isLoggedIn()) { liff.login(); return; } loadCare(); })
+    .catch(() => loadCare());
+}
+
+// ?tab= deep-link param
+(function applyTabParam() {
+  const TAB_ALIASES = {
+    body:'body', connection:'connection', expression:'expression',
+    environment:'environment', belief:'belief', professional:'professional',
+    '0':'body','1':'connection','2':'expression',
+    '3':'environment','4':'belief','5':'professional',
+  };
+  const param = new URLSearchParams(window.location.search).get('tab');
+  if (param && TAB_ALIASES[param]) {
+    const target = TAB_ALIASES[param];
+    const trySwitch = () => {
+      const panel = document.getElementById('tab-' + target);
+      if (panel) {
+        switchTab(target);
+        setTimeout(() => window.scrollTo({ top: 120, behavior: 'smooth' }), 100);
+      } else {
+        setTimeout(trySwitch, 80);
+      }
+    };
+    trySwitch();
+  }
+})();
+
+// First-visit: auto-open feeling modal
+(function() {
+  const KEY = 'jaidee_care_visited';
+  if (!localStorage.getItem(KEY)) {
+    localStorage.setItem(KEY, '1');
+    setTimeout(openFeelModal, 600);
+  }
+})();
+</script>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+// ── TOP-LEVEL SWITCH ──
+let careLoaded = false;
+function switchMain(which) {
+  document.querySelectorAll('.main-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('main-' + which).classList.add('active');
+  document.getElementById('top-btn-tools').classList.toggle('active', which==='tools');
+  document.getElementById('top-btn-care').classList.toggle('active', which==='care');
+  document.getElementById('tools-sub-bar').style.display = which==='tools' ? 'flex' : 'none';
+  document.getElementById('care-sub-bar').style.display  = which==='care'  ? 'flex' : 'none';
+  const fab = document.querySelector('.feel-fab');
+  if (fab) fab.style.display = which==='care' ? 'flex' : 'none';
+  window.scrollTo(0,0);
+  if (which==='care' && !careLoaded) { loadCare(); careLoaded=true; }
+}
+
+// ── TOOLS SUB-TAB ──
+
+
+// ── CARE TAB / FEEL MODAL ──
+const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const LIFF_ID  = "2009806939-H06mwKgI";
+
+// ─────────────────────────────────────────────
+// SIGNAL CARDS
+// ─────────────────────────────────────────────
+function toggleSignal(card) {
+  const isOpen = card.classList.contains("open");
+  document.querySelectorAll(".signal-card.open").forEach(c => c.classList.remove("open"));
+  if (!isOpen) card.classList.add("open");
+}
+
+// ─────────────────────────────────────────────
+// PARK CAROUSEL
+// ─────────────────────────────────────────────
+const PARK_GRADIENTS = [
+  "linear-gradient(135deg,#4A7C59,#2D5A40)",
+  "linear-gradient(135deg,#3A7D44,#1E5B2A)",
+  "linear-gradient(135deg,#5A8A6A,#3A6B4A)",
+  "linear-gradient(135deg,#2D6A4F,#1B4332)",
+  "linear-gradient(135deg,#52796F,#354F52)",
+];
+let parkData = [];
+
+function renderParks(items) {
+  const carousel = document.getElementById("park-carousel");
+  carousel.innerHTML = "";
+  parkData = items;
+  items.forEach((park, idx) => {
+    const card = document.createElement("div");
+    card.className = "park-card";
+    card.onclick = () => openParkModal(idx);
+    const hasPhoto = park.photo_url && park.photo_url.trim();
+    const grad = PARK_GRADIENTS[idx % PARK_GRADIENTS.length];
+    card.innerHTML = `
+      ${hasPhoto
+        ? `<img class="park-card-img" src="${park.photo_url}" alt="${park.name}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+           <div class="park-card-fallback" style="display:none;background:${grad};position:absolute;inset:0;border-radius:20px;">🌳</div>`
+        : `<div class="park-card-fallback" style="background:${grad};position:absolute;inset:0;border-radius:20px;">🌳</div>`}
+      <div class="park-card-grad"></div>
+      <div class="park-card-body">
+        <div class="park-card-name">${park.name}</div>
+        <div class="park-card-loc">📍 ${park.location || ""}</div>
+      </div>`;
+    carousel.appendChild(card);
+  });
+}
+
+function openParkModal(idx) {
+  const park = parkData[idx];
+  if (!park) return;
+  const grad = PARK_GRADIENTS[idx % PARK_GRADIENTS.length];
+  const hasPhoto = park.photo_url && park.photo_url.trim();
+  document.getElementById("park-modal-img-wrap").innerHTML = hasPhoto
+    ? `<img style="width:100%;height:160px;object-fit:cover;border-radius:16px;margin-bottom:16px;display:block;" src="${park.photo_url}" alt="${park.name}"/>`
+    : `<div style="width:100%;height:160px;border-radius:16px;margin-bottom:16px;background:${grad};display:flex;align-items:center;justify-content:center;font-size:48px;">🌳</div>`;
+  document.getElementById("park-modal-name").textContent = park.name;
+  document.getElementById("park-modal-desc").textContent = park.desc || "";
+  const pills = [];
+  if (park.price_range) pills.push(`<span class="park-modal-pill">฿ ${park.price_range}</span>`);
+  if (park.location)    pills.push(`<span class="park-modal-pill">📍 ${park.location}</span>`);
+  if (park.bts_mrt)     pills.push(`<span class="park-modal-pill">🚇 ${park.bts_mrt}</span>`);
+  document.getElementById("park-modal-pills").innerHTML = pills.join("");
+  const btn = document.getElementById("park-modal-btn");
+  btn.href = park.url || "#";
+  btn.style.display = park.url ? "flex" : "none";
+  const overlay = document.getElementById("park-overlay");
+  overlay.style.display = "flex";
+  requestAnimationFrame(() => overlay.classList.add("active"));
+  document.body.style.overflow = "hidden";
+}
+
+function closeParkModal(e) {
+  if (e && e.target !== document.getElementById("park-overlay") &&
+      !e.target.classList.contains("park-modal-close")) return;
+  const overlay = document.getElementById("park-overlay");
+  overlay.classList.remove("active");
+  setTimeout(() => { overlay.style.display = "none"; document.body.style.overflow = ""; }, 300);
+}
+
+// ─────────────────────────────────────────────
+// BODY ARTICLES
+// ─────────────────────────────────────────────
+const BODY_ARTICLE_FALLBACK = [{
+  id:"science", title:"ร่างกายและจิตใจไม่เคยแยกจากกัน",
+  tag:"Neuroscience", level:"🟡 กลาง", readTime:"15 นาที",
+  url:"science.html", isStatic:true,
+}];
+
+function renderBodyArticles(articles) {
+  const scroll = document.getElementById("body-articles-scroll");
+  scroll.innerHTML = "";
+  articles.forEach(art => {
+    const card = document.createElement("div");
+    card.className = "body-art-card";
+    card.innerHTML = `
+      <div class="body-art-tag">${art.tag || "Body"}</div>
+      <div class="body-art-title">${art.title}</div>
+      <div class="body-art-meta">
+        <span class="body-art-level">${art.level || ""}</span>
+        ${art.level && art.readTime ? `<span style="color:var(--cream-border);">·</span>` : ""}
+        <span class="body-art-time">${art.readTime || ""}</span>
+      </div>`;
+    card.onclick = art.isStatic && art.url
+      ? () => window.location.href = art.url
+      : () => { try { sessionStorage.setItem("bodyArticle", JSON.stringify(art)); } catch(e){} window.location.href = "puzzle.html?bodyArticle=1"; };
+    scroll.appendChild(card);
+  });
+}
+
+async function loadBodyArticles() {
+  try {
+    const res = await fetch(API_URL + "?action=getContent&world=body");
+    const d = await res.json();
+    const extra = (d.status === "OK" && d.items && d.items.length) ? d.items : [];
+    renderBodyArticles([...BODY_ARTICLE_FALLBACK, ...extra]);
+  } catch(e) { renderBodyArticles(BODY_ARTICLE_FALLBACK); }
+}
+
+// ─────────────────────────────────────────────
+// CARE DATA
+// ─────────────────────────────────────────────
+const FALLBACK = [
+  {category:"ออกไปเดิน",name:"สวนลุมพินี",desc:"สวนกลางกรุง วิ่งได้รอบทะเลสาบ มีเส้นทางเดินชัดเจน",price_range:"ฟรี",location:"ปทุมวัน",bts_mrt:"MRT สีลม / BTS ราชดำริ",contact:"",url:"https://maps.app.goo.gl/LumpiniPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนจตุจักร",desc:"สวนขนาดใหญ่ ร่มรื่น มีทางเดิน-วิ่ง เหมาะกับคนแถวเหนือ กทม.",price_range:"ฟรี",location:"จตุจักร",bts_mrt:"MRT กำแพงเพชร",contact:"",url:"https://maps.app.goo.gl/ChatuchakPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนเบญจกิติ",desc:"ริมน้ำ ทันสมัย มีทางจักรยาน-วิ่งแยกชัดเจน แถวอโศก-สุขุมวิท",price_range:"ฟรี",location:"คลองเตย",bts_mrt:"MRT สุขุมวิท / BTS อโศก",contact:"",url:"https://maps.app.goo.gl/BenjakitiPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนสาธารณะรัชดาภิเษก",desc:"แถวรัชดา ใกล้ MRT เปิดเช้าตรู่ นักวิ่งเยอะ บรรยากาศดี",price_range:"ฟรี",location:"ห้วยขวาง",bts_mrt:"MRT ห้วยขวาง",contact:"",url:"https://maps.app.goo.gl/RatchadaPark",online:false},
+  {category:"ออกไปเดิน",name:"สวนหลวง ร.9",desc:"สวนขนาดใหญ่ทางฝั่งตะวันออก เหมาะคนแถว อ่อนนุช ประเวศ",price_range:"ฟรี",location:"ประเวศ",bts_mrt:"BTS อ่อนนุช + รถ/แกร็บ",contact:"",url:"https://maps.app.goo.gl/SuanLuangR9",online:false},
+  {category:"ในโรงเรียน",name:"School Therapist",desc:"คุยได้ทุกเรื่องในใจ ไม่มีการตัดสิน",price_range:"ฟรี",location:"ห้องแนะแนว",bts_mrt:"",contact:"ติดต่อผ่านครูแนะแนว",url:"",online:false},
+  {category:"ในโรงเรียน",name:"Guidance Counselor",desc:"ปรึกษาเรื่อง admission เส้นทางการศึกษา และชีวิตหลังโรงเรียน",price_range:"ฟรี",location:"ห้องแนะแนว",bts_mrt:"",contact:"ติดต่อผ่านครูแนะแนว",url:"",online:false},
+  {category:"ฟรี",name:"กำแพงพักใจ",desc:"ปรึกษาจิตแพทย์/นักจิตวิทยาฟรี 4 ครั้ง สำหรับวัยรุ่น กทม. — ผ่าน OOCA",price_range:"ฟรี 4 ครั้ง",location:"Online",bts_mrt:"",contact:"ooca.co/how-to-use-wall-of-sharing-nhso",url:"https://ooca.co/how-to-use-wall-of-sharing-nhso",online:true},
+  {category:"ฟรี",name:"รามาธิบดี จิตเวช",desc:"โรงพยาบาลรัฐ — รอนานแต่ราคาถูกที่สุด มีจิตแพทย์เด็กและวัยรุ่น",price_range:"~500–1,000 บาท",location:"พระราม 6 ราชเทวี",bts_mrt:"MRT พระราม 9",contact:"02-201-1000",url:"https://www.rama.mahidol.ac.th",online:false},
+  {category:"ออนไลน์",name:"OOCA อูก้า",desc:"Video call กับจิตแพทย์/นักจิตวิทยา จากบ้านได้เลย ไม่ต้องเดินทาง",price_range:"นักจิตวิทยา 450 บ./30 นาที · จิตแพทย์ 1,000 บ./30 นาที",location:"Online",bts_mrt:"",contact:"ooca.co",url:"https://ooca.co",online:true},
+  {category:"ออนไลน์",name:"iSTRONG",desc:"นักจิตวิทยาผ่านการฝึกกว่า 5,000 ชั่วโมง รับทั้ง TH/EN",price_range:"สอบถาม LINE @istrong",location:"Online",bts_mrt:"",contact:"@istrong",url:"https://www.istrong.co",online:true},
+  {category:"คลินิก",name:"Morning Mind Clinic",desc:"9 สาขาทั่ว กทม. ปิ่นเกล้า สีลม ศรีนครินทร์ เอกมัย — อยู่ในห้างฯ เดินทางสะดวก",price_range:"~1,000 บาท/ครั้ง",location:"9 สาขา กทม.",bts_mrt:"ครอบคลุมทุกโซน",contact:"095-995-3216 | LINE: morningmindclinic",url:"https://morningmindclinic.co",online:false},
+  {category:"คลินิก",name:"Happy Me Clinic",desc:"เน้นราคาเข้าถึงได้ เปิดทุกวัน ไม่ต้องรอนาน",price_range:"สอบถาม 099-179-2416",location:"จตุจักร + พระโขนง",bts_mrt:"BTS ปุณณวิถี",contact:"099-179-2416",url:"https://happymeclinic.com",online:false},
+  {category:"คลินิก",name:"Relax Mind Clinic",desc:"คลินิกจิตเวชเฉพาะทาง รับอายุ 18 ปีขึ้นไป",price_range:"สอบถาม 065-587-9293",location:"สุขุมวิท พระโขนงเหนือ",bts_mrt:"BTS พระโขนง",contact:"065-587-9293",url:"https://www.relaxmindclinic.com",online:false},
+  {category:"คลินิก",name:"Mind D Clinic",desc:"คลินิกสุขภาพจิตครบวงจร ใจกลาง กทม.",price_range:"สอบถาม",location:"ใจกลาง กทม.",bts_mrt:"",contact:"minddclinic.com",url:"https://minddclinic.com",online:false},
+  {category:"คลินิก",name:"The Oasis",desc:"จิตเวช จิตบำบัด โยคะบำบัด กิจกรรมส่งเสริมสุขภาพจิต",price_range:"สอบถาม",location:"กรุงเทพฯ",bts_mrt:"",contact:"theoasiscare.com",url:"https://en.theoasiscare.com",online:false},
+];
+
+const LAYER_MAP = {
+  "ร่างกาย":     "cards-ร่างกาย",
+  "ความสัมพันธ์": "cards-ความสัมพันธ์",
+  "การแสดงออก":  "cards-การแสดงออก",
+  "สิ่งแวดล้อม": "cards-สิ่งแวดล้อม",
+  "ความเชื่อ":   "cards-ความเชื่อ",
+  "ในโรงเรียน":  "pro-ในโรงเรียน",
+  "ฟรี":         "pro-ฟรี",
+  "ออนไลน์":    "pro-ออนไลน์",
+  "คลินิก":     "pro-คลินิก",
+};
+
+const PRO_CATEGORIES = [
+  {cat:"ในโรงเรียน", dot:"#7C3AED", label:"🏫 ในโรงเรียน"},
+  {cat:"ฟรี",        dot:"#3A7D44", label:"🆓 ฟรี / ต้นทุนต่ำ"},
+  {cat:"ออนไลน์",   dot:"#2563EB", label:"💻 Online"},
+  {cat:"คลินิก",    dot:"#E8960C", label:"🏥 คลินิก กทม."},
+];
+
+let cardIdx = 0;
+
+function makeCareCard(item, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const isSch = item.category === "ในโรงเรียน";
+  const el = document.createElement(item.url ? "a" : "div");
+  el.className = "care-card" + (isSch ? " school-card" : "");
+  if (item.url) { el.href = item.url; el.target = "_blank"; el.rel = "noopener"; }
+  const badge = item.price_range && item.price_range.includes("ฟรี") ? "badge-free"
+              : item.online ? "badge-online"
+              : isSch ? "badge-school"
+              : item.category === "ออกไปเดิน" ? "badge-park"
+              : "badge-clinic";
+  const badgeText = item.price_range && item.price_range.includes("ฟรี") ? "ฟรี"
+                  : item.online ? "Online"
+                  : item.category === "ออกไปเดิน" ? "ฟรี"
+                  : isSch ? "โรงเรียน" : "คลินิก";
+  const pills = [];
+  if (item.price_range) pills.push(`<span class="meta-pill price">฿ ${item.price_range}</span>`);
+  if (item.location) pills.push(`<span class="meta-pill">📍 ${item.location}</span>`);
+  if (item.bts_mrt) pills.push(`<span class="meta-pill">🚇 ${item.bts_mrt}</span>`);
+  el.innerHTML = `
+    <div class="care-card-top">
+      <div class="care-card-left">
+        <div class="care-card-name">${item.name}</div>
+        <div class="care-card-desc">${item.desc}</div>
+      </div>
+      <span class="care-card-badge ${badge}">${badgeText}</span>
+    </div>
+    ${pills.length ? `<div class="care-card-meta">${pills.join("")}</div>` : ""}
+    ${item.contact ? `<div class="care-card-cta"><span class="cta-contact">${item.contact}</span>${item.url ? `<span class="cta-arrow">→</span>` : ""}</div>` : ""}
+  `;
+  container.appendChild(el);
+  const i = cardIdx++;
+  setTimeout(() => el.classList.add("visible"), i * 45);
+}
+
+function buildProContainers() {
+  const wrapper = document.getElementById("professional-cards");
+  wrapper.innerHTML = "";
+  PRO_CATEGORIES.forEach(({cat, dot, label}) => {
+    const sec = document.createElement("div");
+    sec.className = "subsection";
+    sec.innerHTML = `
+      <div class="subsection-header">
+        <div class="subsection-dot" style="background:${dot}"></div>
+        <div class="subsection-title">${label}</div>
+        <div class="subsection-line"></div>
+      </div>
+      <div class="care-cards" id="pro-${cat}"></div>
+    `;
+    wrapper.appendChild(sec);
+  });
+}
+
+function renderCare(items) {
+  buildProContainers();
+  const parks = items.filter(i => (i.category||"").trim() === "ออกไปเดิน");
+  const rest  = items.filter(i => (i.category||"").trim() !== "ออกไปเดิน");
+  if (parks.length) renderParks(parks);
+  else renderParks(FALLBACK.filter(i => i.category === "ออกไปเดิน"));
+  if (!rest || !rest.length) return;
+  rest.forEach(item => {
+    const id = LAYER_MAP[(item.category || "").trim()];
+    if (id) makeCareCard(item, id);
+  });
+  PRO_CATEGORIES.forEach(({cat}) => {
+    const el = document.getElementById(`pro-${cat}`);
+    if (el && el.children.length === 0) {
+      const subsec = el.closest(".subsection");
+      if (subsec) subsec.style.display = "none";
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// TAB SYSTEM
+// ─────────────────────────────────────────────
+function switchCareTab(tab) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  const panel = document.getElementById("tab-" + tab);
+  if (panel) {
+    panel.classList.add("active");
+    window.scrollTo({top: 0, behavior: "smooth"});
+  }
+}
+
+// ─────────────────────────────────────────────
+// FEELING MODAL
+// ─────────────────────────────────────────────
+function openFeelModal() {
+  const ov = document.getElementById("feel-overlay");
+  ov.style.display = "flex";
+  requestAnimationFrame(() => ov.classList.add("active"));
+  document.body.style.overflow = "hidden";
+}
+
+function closeFeelModal() {
+  const ov = document.getElementById("feel-overlay");
+  ov.classList.remove("active");
+  document.querySelectorAll(".feel-opt").forEach(b => b.classList.remove("selected"));
+  setTimeout(() => { ov.style.display = "none"; document.body.style.overflow = ""; }, 280);
+}
+
+function handleFeelOverlayClick(e) {
+  if (e.target === document.getElementById("feel-overlay")) closeFeelModal();
+}
+
+function routeCareLayer(tab, scrollTargetId) {
+  document.querySelectorAll(".feel-opt").forEach(b => b.classList.remove("selected"));
+  event.currentTarget.classList.add("selected");
+  setTimeout(() => {
+    closeFeelModal();
+    switchTab(tab);
+    if (scrollTargetId) {
+      setTimeout(() => {
+        const el = document.getElementById(scrollTargetId);
+        if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
+      }, 280);
+    }
+  }, 240);
+}
+
+// ─────────────────────────────────────────────
+// ARTICLE SUGGESTIONS PER LAYER
+// ─────────────────────────────────────────────
+async function loadCareArticleSuggestions() {
+  const LAYER_CONTAINERS = {
+    "ร่างกาย":      "cards-ร่างกาย",
+    "ความสัมพันธ์":  "cards-ความสัมพันธ์",
+    "การแสดงออก":   "cards-การแสดงออก",
+    "สิ่งแวดล้อม":  "cards-สิ่งแวดล้อม",
+    "ความเชื่อ":    "cards-ความเชื่อ",
+  };
+  try {
+    const res = await fetch(API_URL + "?action=getContent&world=puzzle");
+    const d = await res.json();
+    const articles = (d.status === "OK" && d.items) ? d.items : [];
+    const tagged = articles.filter(a => a.careLayer && LAYER_CONTAINERS[a.careLayer]);
+    tagged.forEach(art => {
+      const containerId = LAYER_CONTAINERS[art.careLayer];
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!container.dataset.hasSuggestions) {
+        container.dataset.hasSuggestions = "1";
+        const header = document.createElement("div");
+        header.style.cssText = "font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--soft);padding:8px 0 4px;margin:4px 0;";
+        header.textContent = "📖 บทความแนะนำจากทีม";
+        container.appendChild(header);
+      }
+      const card = document.createElement("div");
+      card.style.cssText = "background:var(--card-bg);border:1px solid var(--cream-border);border-radius:14px;padding:14px;cursor:pointer;margin-bottom:8px;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;";
+      card.innerHTML = `
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:var(--green);margin-bottom:6px;">${art.tag||"บทความ"}</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.4;">${art.title}</div>
+        <div style="font-size:12px;font-weight:300;color:var(--mid);line-height:1.6;">${art.desc||""}</div>
+        <div style="font-size:11px;color:var(--soft);margin-top:8px;">${art.level||""} · ⏱ ${art.readTime||""}</div>`;
+      card.onclick = () => {
+        try { sessionStorage.setItem("bodyArticle", JSON.stringify(art)); } catch(e) {}
+        window.location.href = "puzzle.html?bodyArticle=1";
+      };
+      container.appendChild(card);
+      setTimeout(() => { card.style.opacity = "1"; card.style.transform = "translateY(0)"; }, 50);
+    });
+  } catch(e) {}
+}
+
+async function loadCare() {
+  loadBodyArticles();
+  loadCareArticleSuggestions();
+  try {
+    const res = await fetch(API_URL + "?action=getCare");
+    const d = await res.json();
+    renderCare((d.status === "OK" && d.items && d.items.length) ? d.items : FALLBACK);
+  } catch(e) { renderCare(FALLBACK); }
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+
+// ── INIT ──
+renderEntries();
+startIdleTimer();
+const _fab = document.querySelector('.feel-fab');
+if (_fab) _fab.style.display = 'none';
+const _h = window.location.hash;
+const _p = new URLSearchParams(window.location.search).get('tab');
+if (_p) { switchMain('care'); switchTab(_p); }
+else if (_h === '#care') { switchMain('care'); }
+else if (_h === '#breathe') { switchToolsTab(1); openBreathe(); }
+else if (_h === '#journal') { switchToolsTab(1); openJournal(); }
+else if (_h === '#reframe') { switchToolsTab(2); openReframe(); }
+else if (_h === '#worry') { switchToolsTab(2); openWorry(); }
+else if (_h === '#clarity') { switchToolsTab(2); openClarity(); }
+
+// LIFF init
+const isPreview = new URLSearchParams(window.location.search).get("preview") === "1";
+if (isPreview) { if (careLoaded === false) { /* lazy */ } } else {
+  liff.init({liffId: "2009806939-H06mwKgI"})
+    .then(() => { if (!liff.isLoggedIn()) { liff.login(); return; } })
+    .catch(() => {});
+}
+</script>
+</body>
+</html>
