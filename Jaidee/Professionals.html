@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — ผู้เชี่ยวชาญในโรงเรียน</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#FDFCF9; --dark:#1A1A1A; --mid:#555; --soft:#999;
+      --border:#EEEBE4; --white:#FFFFFF;
+      --gold:#E8960C; --gold-soft:#FFF5E0; --gold-border:#FFE4A0;
+      --blue:#2E5FA3; --blue-soft:#EFF6FF; --blue-border:#BFDBFE;
+      --green:#3A7D55; --green-soft:#F0FFF4; --green-border:#B2DFCC;
+      --radius:20px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:60px;}
+
+    /* ── FIXED TAB BAR ── */
+    .tab-bar{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      background:var(--white);
+      border-bottom:1px solid var(--border);
+      display:flex;
+      padding:0 16px;
+      padding-top:env(safe-area-inset-top, 0px);
+    }
+    .tab-btn{
+      flex:1;padding:14px 8px;
+      background:none;border:none;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;
+      color:var(--soft);cursor:pointer;
+      border-bottom:2px solid transparent;
+      transition:color 0.2s,border-color 0.2s;
+      white-space:nowrap;
+    }
+    .tab-btn.active{
+      font-weight:500;
+      color:var(--dark);
+    }
+    .tab-btn.active.guidance{ border-bottom-color:var(--blue); color:var(--blue); }
+    .tab-btn.active.therapist{ border-bottom-color:var(--green); color:var(--green); }
+
+    /* ── CONTENT PANELS ── */
+    .panel{ display:none; padding-top:52px; }
+    .panel.active{ display:block; }
+
+    /* ── PAGE HEADER ── */
+    .page-header{ padding:28px 24px 20px; }
+    .eyebrow{ font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px; }
+    .eyebrow.blue{ color:var(--blue); }
+    .eyebrow.green{ color:var(--green); }
+    .headline{ font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:700;line-height:1.25;color:var(--dark); }
+    .headline em{ font-style:normal;color:var(--gold); }
+    .page-sub{ font-size:13px;font-weight:300;color:var(--mid);line-height:1.7;margin-top:8px; }
+
+    /* ── CALLOUT NOTES ── */
+    .callout{
+      margin:0 16px 16px;border-radius:14px;padding:14px 16px;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .callout.blue{ background:var(--blue-soft);border:1px solid var(--blue-border); }
+    .callout.gold{ background:var(--gold-soft);border:1px solid var(--gold-border); }
+    .callout-icon{ font-size:14px;flex-shrink:0;margin-top:2px; }
+    .callout-text{ font-size:12px;font-weight:300;line-height:1.7; }
+    .callout.blue .callout-text{ color:var(--blue); }
+    .callout.gold .callout-text{ color:#7A5C00; }
+    .callout-text strong{ font-weight:500; }
+
+    /* ── BRIDGE TO PEER ── */
+    .peer-bridge{
+      margin:0 16px 20px;background:var(--white);
+      border:1px solid var(--border);border-radius:16px;
+      padding:16px 18px;display:flex;flex-direction:column;gap:10px;
+    }
+    .peer-bridge-text{ font-size:13px;font-weight:300;color:var(--mid);line-height:1.65; }
+    .peer-bridge-btn{
+      background:var(--gold);color:white;border:none;border-radius:12px;
+      padding:12px;font-size:13px;font-family:'Mitr',sans-serif;font-weight:500;
+      cursor:pointer;width:100%;
+    }
+
+    /* ── LIST WRAP ── */
+    .list-wrap{ padding:0 16px;display:flex;flex-direction:column;gap:16px; }
+
+    /* ── TEACHER CARD ── */
+    .teacher-card{
+      background:var(--white);border-radius:var(--radius);
+      border:1px solid var(--border);overflow:hidden;
+      box-shadow:0 2px 12px rgba(0,0,0,0.04);
+    }
+    .profile-section{ padding:20px;display:flex;gap:14px;align-items:flex-start; }
+    .profile-photo{ width:68px;height:68px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--border); }
+    .profile-placeholder{
+      width:68px;height:68px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:26px;flex-shrink:0;border:2px solid;
+    }
+    .profile-placeholder.blue{ background:var(--blue-soft);border-color:var(--blue-border); }
+    .profile-placeholder.green{ background:var(--green-soft);border-color:var(--green-border); }
+    .profile-info{ flex:1; }
+    .teacher-name{ font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600; }
+    .teacher-nickname{ font-size:11px;font-weight:300;color:var(--soft);margin-top:2px; }
+    .teacher-role{
+      font-size:10px;font-weight:600;letter-spacing:1px;
+      text-transform:uppercase;margin-top:6px;
+    }
+    .teacher-role.blue{ color:var(--blue); }
+    .teacher-role.green{ color:var(--green); }
+
+    .spec-tags{ display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 14px; }
+    .spec-tag{
+      border-radius:99px;padding:4px 12px;
+      font-size:11px;font-weight:500;
+    }
+    .spec-tag.blue{ background:var(--blue-soft);color:var(--blue); }
+    .spec-tag.green{ background:var(--green-soft);color:var(--green); }
+
+    .personal-msg{
+      margin:0 20px 14px;padding:13px 14px;
+      background:var(--cream);border-radius:12px;
+      border-left:3px solid var(--gold);
+    }
+    .personal-msg-label{
+      font-size:10px;font-weight:600;letter-spacing:1px;
+      text-transform:uppercase;color:var(--soft);margin-bottom:5px;
+    }
+    .personal-msg-text{
+      font-size:12px;font-weight:300;color:var(--mid);
+      line-height:1.75;font-style:italic;
+    }
+
+    /* gallery */
+    .gallery-section{ padding:0 20px 14px;border-top:1px solid var(--border);padding-top:14px; }
+    .gallery-label{ font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--soft);margin-bottom:8px; }
+    .gallery-grid{ display:grid;grid-template-columns:repeat(3,1fr);gap:5px; }
+    .gallery-img{ width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;cursor:pointer;border:1px solid var(--border); }
+
+    /* contact */
+    .contact-section{ padding:14px 20px 18px;border-top:1px solid var(--border); }
+    .contact-note{ font-size:12px;font-weight:300;color:var(--soft);line-height:1.6;margin-bottom:10px; }
+    .line-btn{
+      background:var(--dark);color:white;border:none;border-radius:12px;
+      padding:12px 16px;font-size:13px;font-family:'Mitr',sans-serif;font-weight:500;
+      cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+    }
+    .line-id-row{
+      display:flex;align-items:center;gap:8px;
+      background:var(--cream);border-radius:9px;padding:9px 13px;
+      border:1px solid var(--border);margin-top:7px;
+    }
+    .line-id-text{ font-size:13px;font-weight:500;flex:1; }
+    .copy-btn{
+      background:none;border:none;color:var(--gold);
+      font-size:12px;font-family:'Mitr',sans-serif;font-weight:600;cursor:pointer;
+    }
+    .phone-row{
+      display:flex;align-items:center;gap:8px;
+      background:var(--cream);border-radius:9px;padding:9px 13px;
+      border:1px solid var(--border);margin-top:7px;text-decoration:none;
+    }
+    .phone-text{ font-size:13px;font-weight:500;color:var(--dark);flex:1; }
+
+    /* ── BACK ── */
+    .back-btn{
+      background:none;border:none;color:var(--soft);
+      font-size:13px;font-family:'Mitr',sans-serif;
+      cursor:pointer;padding:20px 24px;display:block;
+    }
+
+    /* ── LIGHTBOX ── */
+    .lightbox{ display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.88);align-items:center;justify-content:center; }
+    .lightbox.open{ display:flex; }
+    .lightbox img{ max-width:92vw;max-height:85vh;border-radius:12px;object-fit:contain; }
+    .lightbox-close{ position:absolute;top:20px;right:20px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;padding:8px; }
+
+    /* ── SKELETON ── */
+    .skeleton{
+      background:linear-gradient(90deg,#F0ECE4 25%,#EDE8DF 50%,#F0ECE4 75%);
+      background-size:200% 100%;animation:shimmer 1.4s infinite;
+      border-radius:var(--radius);height:220px;
+    }
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  </style>
+</head>
+<body>
+
+<!-- FIXED TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn guidance active" onclick="switchTab('guidance')">👩‍🏫 ครูแนะแนว</button>
+  <button class="tab-btn therapist" onclick="switchTab('therapist')">🧠 นักจิตวิทยา</button>
+</div>
+
+<!-- ════════════════════════════
+     PANEL 1: GUIDANCE
+════════════════════════════ -->
+<div class="panel active" id="panel-guidance">
+
+  <div class="page-header">
+    <div class="eyebrow blue">ใจดี TU · Guidance</div>
+    <div class="headline">ครู<em>แนะแนว</em></div>
+    <div class="page-sub">ปรึกษาเรื่องการเรียน TCAS admission การวางแผนอนาคต และเรื่องที่ต้องการคำแนะนำจากผู้เชี่ยวชาญ</div>
+  </div>
+
+  <div class="callout blue">
+    <span class="callout-icon">💡</span>
+    <div class="callout-text">ครูแนะแนวช่วยเรื่อง <strong>admission · portfolio · recommendation letter · การจัดการความเครียด</strong> และการส่งต่อผู้เชี่ยวชาญภายนอก ทักได้เลย ไม่ต้องรอนาน</div>
+  </div>
+
+  <div class="list-wrap" id="guidance-list">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+
+  <button class="back-btn" onclick="window.history.back()">← กลับ</button>
+</div>
+
+<!-- ════════════════════════════
+     PANEL 2: THERAPIST
+════════════════════════════ -->
+<div class="panel" id="panel-therapist">
+
+  <div class="page-header">
+    <div class="eyebrow green">ใจดี TU · School Professionals</div>
+    <div class="headline">นักจิตวิทยา<em>โรงเรียน</em></div>
+    <div class="page-sub">ผู้เชี่ยวชาญด้านสุขภาพจิตของโรงเรียน พร้อมให้คำปรึกษาเชิงลึก</div>
+  </div>
+
+  <div class="callout gold">
+    <span class="callout-icon">⏳</span>
+    <div class="callout-text"><strong>Queue อาจยาวนะ</strong> — นักจิตวิทยาโรงเรียนมีความต้องการสูงมาก บางครั้งต้องรอนานกว่า 2 เดือน ถ้าต้องการความช่วยเหลือเร็วกว่านั้น PR ของเราพร้อมรับฟังก่อนได้เลย 💛</div>
+  </div>
+
+  <div class="peer-bridge">
+    <div class="peer-bridge-text">ในระหว่างรอ คุยกับ PR ก่อนได้นะ ไม่ต้องรอ ไม่มีค่าใช้จ่าย</div>
+    <button class="peer-bridge-btn" onclick="window.location.href='peer.html'">💛 คุยกับ PR ก่อนได้เลย</button>
+  </div>
+
+  <div class="list-wrap" id="therapist-list">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+
+  <button class="back-btn" onclick="window.history.back()">← กลับ</button>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const LIFF_ID  = "2009806939-H06mwKgI";
+
+const FALLBACK_GUIDANCE = [{
+  id:"G001", name:"ครูใจดี สุขสม", nickname:"ครูใจดี",
+  role:"ครูแนะแนว", photo_url:"",
+  specializations:["TCAS","Portfolio","การจัดการเวลา","ความเครียด","Rec Letter"],
+  personal_message:"มาคุยได้เลยนะ ไม่ว่าจะเรื่องเรียน เรื่องอนาคต หรือแค่อยากระบาย ครูอยู่ตรงนี้เสมอ",
+  line_id:"@guidance_jai", phone:"", photos:[], active:true
+}];
+
+const FALLBACK_THERAPIST = [{
+  id:"TH001", name:"อาจารย์นภา ใจดี", nickname:"อ.นภา",
+  role:"นักจิตวิทยาโรงเรียน", photo_url:"",
+  specializations:["Anxiety","Depression","Self-esteem","Family Issues","School Stress"],
+  personal_message:"ห้องนี้ปลอดภัยสำหรับคุณ ไม่มีการตัดสิน มีแค่การรับฟัง อาจารย์พร้อมอยู่ตรงนี้เสมอ",
+  line_id:"@therapist_napa", phone:"", photos:[], active:true
+}];
+
+// ── TAB SWITCH ────────────────────────────────
+let loaded = { guidance: false, therapist: false };
+
+function switchTab(tab) {
+  // panels
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  // buttons
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.tab-btn.' + tab).classList.add('active');
+  // lazy load
+  if (!loaded[tab]) { tab === 'guidance' ? loadGuidance() : loadTherapist(); }
+  window.scrollTo(0, 0);
+}
+
+// ── SHARED RENDER ─────────────────────────────
+function renderCards(people, containerId, colorClass, placeholderEmoji) {
+  const wrap = document.getElementById(containerId);
+  wrap.innerHTML = '';
+  const active = people.filter(p => p.active !== false);
+  if (!active.length) {
+    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;font-size:13px;">ยังไม่มีข้อมูล</div>';
+    return;
+  }
+  active.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'teacher-card';
+
+    const photoHTML = t.photo_url
+      ? `<img class="profile-photo" src="${t.photo_url}" alt="${t.name}"/>`
+      : `<div class="profile-placeholder ${colorClass}">${placeholderEmoji}</div>`;
+
+    const specs = Array.isArray(t.specializations)
+      ? t.specializations
+      : (t.specializations || '').split(',').map(s => s.trim()).filter(Boolean);
+
+    const photos = Array.isArray(t.photos)
+      ? t.photos
+      : (t.photos || '').split(',').map(s => s.trim()).filter(Boolean);
+
+    const galleryHTML = photos.length
+      ? `<div class="gallery-section">
+          <div class="gallery-label">📸 ห้องและบรรยากาศ</div>
+          <div class="gallery-grid">
+            ${photos.map(url =>
+              `<img class="gallery-img" src="${url}" loading="lazy" onclick="openLightbox('${url}')"/>`
+            ).join('')}
+          </div>
+        </div>` : '';
+
+    const lineHTML = t.line_id
+      ? `<button class="line-btn" onclick="openLine('${t.line_id}')">
+           <span>💬</span> ทัก LINE เพื่อนัดหมาย
+         </button>
+         <div class="line-id-row">
+           <span class="line-id-text">LINE: ${t.line_id}</span>
+           <button class="copy-btn" onclick="copyId('${t.line_id}',this)">copy</button>
+         </div>` : '';
+
+    const phoneHTML = t.phone
+      ? `<a class="phone-row" href="tel:${t.phone}">
+           <span>📞</span>
+           <span class="phone-text">${t.phone}</span>
+           <span style="font-size:11px;color:var(--soft);">โทร</span>
+         </a>` : '';
+
+    card.innerHTML = `
+      <div class="profile-section">
+        ${photoHTML}
+        <div class="profile-info">
+          <div class="teacher-name">${t.name}</div>
+          ${t.nickname ? `<div class="teacher-nickname">${t.nickname}</div>` : ''}
+          <div class="teacher-role ${colorClass}">${t.role}</div>
+        </div>
+      </div>
+      ${specs.length ? `<div class="spec-tags">${specs.map(s => `<span class="spec-tag ${colorClass}">${s}</span>`).join('')}</div>` : ''}
+      ${t.personal_message ? `
+        <div class="personal-msg">
+          <div class="personal-msg-label">ข้อความจาก${t.role}</div>
+          <div class="personal-msg-text">${t.personal_message}</div>
+        </div>` : ''}
+      ${galleryHTML}
+      <div class="contact-section">
+        <div class="contact-note">ทักมาได้เลยนะ จะตอบกลับและนัดเวลาที่สะดวก 💛</div>
+        ${lineHTML}${phoneHTML}
+      </div>`;
+    wrap.appendChild(card);
+  });
+}
+
+// ── LOAD GUIDANCE ─────────────────────────────
+async function loadGuidance() {
+  try {
+    const res  = await fetch(API_URL + '?action=getGuidance');
+    const data = await res.json();
+    const list = data.status === 'OK' && data.people?.length ? data.people : FALLBACK_GUIDANCE;
+    renderCards(list, 'guidance-list', 'blue', '👩‍🏫');
+  } catch(e) {
+    renderCards(FALLBACK_GUIDANCE, 'guidance-list', 'blue', '👩‍🏫');
+  }
+  loaded.guidance = true;
+}
+
+// ── LOAD THERAPIST ────────────────────────────
+async function loadTherapist() {
+  try {
+    const res  = await fetch(API_URL + '?action=getTherapists');
+    const data = await res.json();
+    const list = data.status === 'OK' && data.people?.length ? data.people : FALLBACK_THERAPIST;
+    renderCards(list, 'therapist-list', 'green', '🧠');
+  } catch(e) {
+    renderCards(FALLBACK_THERAPIST, 'therapist-list', 'green', '🧠');
+  }
+  loaded.therapist = true;
+}
+
+// ── UTILS ─────────────────────────────────────
+function openLine(id) { window.open('https://line.me/ti/p/' + id, '_blank'); }
+function copyId(id, btn) {
+  navigator.clipboard?.writeText(id);
+  btn.textContent = 'copied!';
+  setTimeout(() => btn.textContent = 'copy', 2000);
+}
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── CHECK URL HASH FOR DEEP LINK ─────────────
+function checkHash() {
+  if (window.location.hash === '#therapist') switchTab('therapist');
+}
+
+// ── INIT ──────────────────────────────────────
+liff.init({ liffId: LIFF_ID })
+  .then(() => { loadGuidance(); checkHash(); })
+  .catch(() => { loadGuidance(); checkHash(); });
+</script>
+</body>
+</html>
