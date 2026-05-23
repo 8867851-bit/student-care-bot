@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8"/> 
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ใจดี TU</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
@@ -55,70 +55,73 @@
     .m4-new-tag{display:inline-block;background:var(--m4);color:#fff;font-size:8px;font-weight:500;letter-spacing:1px;text-transform:uppercase;border-radius:6px;padding:2px 6px;margin-bottom:8px;}
 
     .worlds-wrap{display:flex;flex-direction:column;gap:10px;padding:0 16px;}
-    .world-row{display:flex;flex-direction:column;gap:10px;}
-
-    /* ── VERTICAL CARD — 2 per row ── */
     .world-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+    /* ── CARD: circle top, title italic, 2 buttons ── */
     .world-card{
       background:var(--card-bg);
-      border-radius:16px;
-      padding:16px 12px 14px;
+      border-radius:18px;
+      padding:18px 12px 14px;
       border:1px solid var(--card-border);
       box-shadow:0 1px 8px rgba(0,0,0,0.05);
       opacity:0;transform:translateY(8px);
       display:flex;flex-direction:column;align-items:center;
-      text-align:center;
+      text-align:center;gap:0;
     }
     .world-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease;}
     .world-card:active{transform:scale(0.97);}
-    .world-card.full{flex-direction:row;text-align:left;align-items:center;gap:12px;padding:14px 16px;}
     .world-card.locked{opacity:0.38!important;cursor:default;pointer-events:none;filter:grayscale(0.4);}
 
-    /* Circle — top center, big */
+    /* Circle logo — big, full bleed */
     .world-icon{
-      width:80px;height:80px;border-radius:50%;
+      width:88px;height:88px;border-radius:50%;
       overflow:hidden;
       border:1.5px solid var(--cream-border);
       background:var(--cream);
       display:flex;align-items:center;justify-content:center;
-      font-size:32px;
-      margin-bottom:10px;
+      font-size:36px;
+      margin-bottom:12px;
       flex-shrink:0;
     }
-    .world-icon img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .world-icon img{
+      width:100%;height:100%;
+      object-fit:cover;object-position:center;
+      display:block;
+    }
 
-    /* Text */
-    .wc-right{width:100%;}
-    .world-card.full .wc-right{text-align:left;}
+    /* Name — Playfair italic bold, colored */
     .world-name{
       font-family:"Playfair Display",serif;
       font-style:italic;font-weight:700;
-      font-size:13px;line-height:1.25;
+      font-size:13px;line-height:1.3;
       margin-bottom:3px;
+      word-break:break-word;
     }
+    /* Stats line */
     .wc-stats{
       font-size:9.5px;font-weight:300;color:var(--soft);
-      margin-bottom:10px;line-height:1.5;
+      margin-bottom:12px;line-height:1.55;
     }
+    .wc-right{width:100%;}
+    .world-desc{display:none;}
 
-    /* Buttons — stacked for narrow cards */
-    .wc-btns{display:flex;flex-direction:column;gap:6px;width:100%;}
+    /* Two buttons stacked */
+    .wc-btns{display:flex;flex-direction:column;gap:7px;width:100%;}
     .wc-btn-open{
-      background:#1E3A6E;color:#fff;border:none;
-      border-radius:20px;padding:7px 10px;
+      background:#1C1917;color:#FDFBF7;border:none;
+      border-radius:20px;padding:8px 10px;
       font-family:"Mitr",sans-serif;font-size:11px;font-weight:500;
       cursor:pointer;width:100%;transition:opacity 0.15s;
     }
-    .wc-btn-open:active{opacity:0.8;}
+    .wc-btn-open:active{opacity:0.75;}
     .wc-btn-community{
       background:none;color:var(--dark);
-      border:1px solid var(--card-border);border-radius:20px;
+      border:1.5px solid var(--cream-border);border-radius:20px;
       padding:7px 10px;font-family:"Mitr",sans-serif;font-size:11px;font-weight:400;
-      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
       text-decoration:none;width:100%;transition:background 0.15s;
     }
     .wc-btn-community:active{background:var(--cream);}
-    .world-desc{display:none;}
 
     .divider-locked{margin:4px 0;padding:0 4px;display:flex;align-items:center;gap:8px;}
     .divider-locked-line{flex:1;height:1px;background:var(--cream-border);}
@@ -202,14 +205,14 @@
 
   <div class="sig-wrap">
     <div class="section-label" style="margin-bottom:12px;">
-      <div class="section-label-text">-</div>
+      <div class="section-label-text">ดูแลตัวเอง 24/7</div>
       <div class="section-label-line"></div>
     </div>
     <div class="sig-card reflection" onclick="openCareSheet()" style="background:linear-gradient(145deg,#1C1917 0%,#2C2520 100%);border-color:#3A332D;display:flex;align-items:center;gap:16px;padding:18px 20px;">
       <div style="flex:1;">
-        <div class="sig-label" style="color:rgba(232,150,12,0.8);margin-bottom:6px;"></div>
-        <div class="sig-name" style="color:#FDFBF7;font-size:25px;margin-bottom:4px;">ตอนนี้อยู่ตรงไหน?</div>
-        <div class="sig-hint" style="color:rgba(253,251,247,0.45);"></div>
+        <div class="sig-label" style="color:rgba(232,150,12,0.8);margin-bottom:6px;">ดูแลตัวเอง 24/7</div>
+        <div class="sig-name" style="color:#FDFBF7;font-size:16px;margin-bottom:4px;">ตอนนี้อยู่ตรงไหน?</div>
+        <div class="sig-hint" style="color:rgba(253,251,247,0.45);">reflection · พื้นที่ใจ · เครื่องมือ</div>
       </div>
       <div style="font-size:22px;opacity:0.5;">→</div>
     </div>
@@ -293,27 +296,79 @@ const isPreview = new URLSearchParams(window.location.search).get("preview") ===
 
 // ═══ LAYOUT CONFIG ═══════════════════════════════════════
 const WORLDS_TOP = [
-  { name:"แผนดูแลตัวเอง", stats:"แผน · กิจกรรมรายสัปดาห์", url:"plans.html", emoji:"🗺️" },
-  { name:"Puzzle Piece",   stats:"บทความ · วิดีโอ · จิตวิทยา", url:"puzzle.html", emoji:"🧩" },
-  { name:"People",         stats:"มุมมอง · เรื่องราว · ห่างบ้าน", url:"people.html", emoji:"👥", newBadge:"ใหม่" },
-  { name:"Programs",       stats:"Workshop · กิจกรรมเดือนนี้", url:"programs.html", emoji:"🌱" },
-  { name:"ใจดี TU คืออะไร?", stats:"ทีม · แนวคิด · ผลงาน", url:"founder.html", emoji:"📜" },
-  { name:"Roadmap กสพท 75+", stats:"วิธีเตรียมตัวรุ่นพี่เตรียมอุดม", url:"programs.html", emoji:"⭐" },
-  { name:"ระบบจิตใจ 6 ชั้น", stats:"วิทยาศาสตร์เบื้องหลังความรู้สึก", url:"care.html", emoji:"🧠" },
+  { name:"ระบบจิตใจ 6 ชั้น",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"🧠", color:"#0D9488",
+    stats:"วิทยาศาสตร์ · จิตวิทยา · ดูแลตัวเอง",
+    url:"care.html" },
+
+  { name:"Roadmap กสพท 75+",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"⭐", color:"#E11D48",
+    stats:"วิธีเตรียมตัวรุ่นพี่เตรียมอุดม",
+    url:"programs.html" },
+
+  { name:"Puzzle Piece",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"🧩", color:"#4B5BD6",
+    stats:"บทความ · วิดีโอ · จิตวิทยา",
+    url:"puzzle.html" },
+
+  { name:"People",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"👥", color:"#2E5FA3",
+    stats:"มุมมอง · เรื่องราว · ห่างบ้าน",
+    url:"people.html", newBadge:"ใหม่" },
+
+  { name:"Programs",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"🌱", color:"#7C3AED",
+    stats:"Workshop · กิจกรรมเดือนนี้",
+    url:"programs.html" },
+
+  { name:"แผนดูแลตัวเอง",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"🗺️", color:"#3A7D44",
+    stats:"แผน · กิจกรรมรายสัปดาห์",
+    url:"plans.html" },
+
+  { name:"ใจดี TU คืออะไร?",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"📜", color:"#1C1917",
+    stats:"ทีม · แนวคิด · ผลงาน",
+    url:"founder.html" },
 ];
 
 const M4_CARDS = [
-  { name:"School Support", stats:"ข้อมูลโรงเรียน · ครู · ทรัพยากร", url:"school.html", emoji:"🏫", isNew:false },
-  { name:"PAT SAK", stats:"สรุปกิจกรรม 2 วัน", url:"patsak.html", emoji:"⭐", isNew:true },
+  { name:"รู้จักเตรียมฯ",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"🏫", color:"#5B6A7A",
+    stats:"ข้อมูลโรงเรียน · ครู · ทรัพยากร",
+    url:"school.html" },
+
+  { name:"PAT SAK",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"⭐", color:"#C47B0A",
+    stats:"สรุปกิจกรรม 2 วัน",
+    url:"patsak.html", newBadge:"ใหม่" },
 ];
 
 const UNLOCK_DATE = "2028-07-12";
 
 const WORLDS_LOCKED_GRID = [
-  { name:"Academic Support", stats:"เร็วๆ นี้", url:"academic.html", emoji:"📚" },
+  { name:"Academic Support",
+    icon_url: "", // ← วาง Cloudinary URL ที่นี่
+    emoji:"📚", color:"#6B6560",
+    stats:"เร็วๆ นี้", url:"academic.html" },
 ];
 
-const WORLD_8 = { name:"Career Support", stats:"วางแผนอนาคต · เร็วๆ นี้", url:"career.html", emoji:"🎯" };
+const WORLD_8 = {
+  name:"Career Support",
+  icon_url: "", // ← วาง Cloudinary URL ที่นี่
+  emoji:"🎯", color:"#6B6560",
+  stats:"วางแผนอนาคต · เร็วๆ นี้",
+  url:"career.html"
+};
 
 const COMING_SOON = [
   { name:"Drama & Arts",   emoji:"🎭", desc:"ชมรมละคร time management + passion" },
@@ -340,26 +395,27 @@ function startCountdown() {
   _timer = setInterval(tick, 60000);
 }
 
-// ═══ WORLD CARD — horizontal card matching screenshot ══════════════════════
+// ═══ WORLD CARD ═══════════════════════════════════════════════════
 const LINE_OPENCHAT = "https://line.me/ti/g2/FAKE_OPENCHAT_ID";
 
 function makeCard(w, full, locked, delay) {
   const el = document.createElement("div");
-  el.className = "world-card" + (full?" full":"") + (locked?" locked":"");
+  el.className = "world-card" + (locked ? " locked" : "");
 
   const nameColor = w.color || "var(--dark)";
   const stats = w.stats || w.desc || "";
   const badge = w.newBadge
-    ? `<span style="background:#4A1A25;color:#FDF5F5;font-size:9px;border-radius:4px;padding:1px 6px;margin-left:6px;font-style:normal;">${w.newBadge}</span>`
+    ? `<span style="display:inline-block;background:#4A1A25;color:#FDF5F5;font-size:8px;border-radius:4px;padding:1px 5px;margin-left:4px;font-style:normal;vertical-align:middle;">${w.newBadge}</span>`
     : "";
 
-  // Circle: show logo img if available, else emoji
-  const iconInner = w.icon_url
-    ? `<img src="${w.icon_url}" alt="${w.name}" onerror="this.outerHTML='${w.emoji||"🌐"}'"/>`
-    : (w.emoji || "🌐");
+  // Logo: image if icon_url provided, otherwise emoji
+  const logoHtml = w.icon_url
+    ? `<img src="${w.icon_url}" alt="${w.name}"
+          onerror="this.replaceWith(document.createTextNode('${w.emoji||"🌐"}'))"/>`
+    : `<span>${w.emoji || "🌐"}</span>`;
 
   el.innerHTML = `
-    <div class="world-icon">${iconInner}</div>
+    <div class="world-icon">${logoHtml}</div>
     <div class="wc-right">
       <div class="world-name" style="color:${nameColor};">${w.name}${badge}</div>
       <div class="wc-stats">${stats}</div>
@@ -372,7 +428,7 @@ function makeCard(w, full, locked, delay) {
           <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
             <path d="M8 1C4.13 1 1 3.69 1 7c0 1.77.87 3.36 2.27 4.47L2.5 15l3.73-1.55C7.08 13.8 7.54 14 8 14c3.87 0 7-2.69 7-6s-3.13-6-7-6z" fill="currentColor"/>
           </svg>
-          💬 Community
+          Community
         </a>
       </div>
     </div>`;
