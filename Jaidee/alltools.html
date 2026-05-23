@@ -24,28 +24,32 @@
 
     /* ── FIXED TAB BAR ── */
     .tab-bar{
-      position:fixed;top:0;left:0;right:0;z-index:100;
-      background:var(--card);border-bottom:1px solid var(--cream-border);
-      display:flex;padding:0;
-      padding-top:env(safe-area-inset-top,0px);
+      position:sticky;top:0;z-index:100;
+      background:var(--cream);border-bottom:1px solid var(--cream-border);
+      display:flex;gap:0;padding:10px 12px;
+      overflow-x:auto;scrollbar-width:none;
     }
+    .tab-bar::-webkit-scrollbar{display:none;}
     .tab-btn{
-      flex:1;height:var(--tab-h);display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:2px;background:none;border:none;border-bottom:2.5px solid transparent;
-      font-family:'Sarabun',sans-serif;font-size:12px;font-weight:400;color:var(--soft);
-      cursor:pointer;transition:color 0.2s,border-color 0.2s;padding:0 4px;
+      flex-shrink:0;display:inline-flex;align-items:center;gap:5px;
+      padding:8px 14px;border-radius:20px;border:none;background:none;
+      font-family:'Sarabun',sans-serif;font-size:13px;font-weight:400;
+      color:var(--soft);cursor:pointer;white-space:nowrap;transition:all 0.18s;
     }
-    .tab-btn-icon{font-size:16px;line-height:1;}
-    .tab-btn.active{color:var(--dark);font-weight:600;}
-    .tab-btn.t1.active{border-bottom-color:var(--teal);}
-    .tab-btn.t2.active{border-bottom-color:var(--rose);}
-    .tab-btn.t3.active{border-bottom-color:var(--green);}
+    .tab-btn.active{background:var(--dark);color:#FDFBF7;}
+    .tab-btn-icon{font-size:14px;}
+    .care-link{
+      flex-shrink:0;display:inline-flex;align-items:center;gap:5px;
+      padding:8px 14px;border-radius:20px;
+      background:var(--green-soft);border:1px solid var(--green-border);
+      font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;
+      color:var(--green);cursor:pointer;white-space:nowrap;
+      text-decoration:none;margin-left:4px;
+    }
 
     /* ── PANELS ── */
-    .panel{display:none;padding-top:calc(var(--tab-h) + 16px);}
+    .panel{display:none;padding-top:16px;}
     .panel.active{display:block;}
-
-    /* ── PANEL HEADER ── */
     .panel-header{padding:0 20px 20px;}
     .ph-zone{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:6px;}
     .ph-zone.teal{color:var(--teal);}
@@ -61,13 +65,13 @@
     /* THE CARD — image background style */
     .tool-img-card{
       border-radius:18px;overflow:hidden;cursor:pointer;
-      position:relative;aspect-ratio:4/3;
+      position:relative;aspect-ratio:3/2;
       background:var(--dark);
       transition:transform 0.15s;
       border:none;width:100%;text-align:left;display:block;
       text-decoration:none;
     }
-    .tool-img-card.wide{aspect-ratio:16/7;}
+    .tool-img-card.wide{aspect-ratio:16/5;}
     .tool-img-card:active{transform:scale(0.97);}
     .tool-img-card.coming{opacity:0.55;cursor:default;pointer-events:none;}
 
@@ -295,20 +299,12 @@
 </head>
 <body>
 
-<!-- ── FIXED TAB BAR ── -->
-<div class="tab-bar">
-  <button class="tab-btn t1 active" onclick="switchTab(1)">
-    <span class="tab-btn-icon">🌿</span>
-    <span>โซนทั่วไป</span>
-  </button>
-  <button class="tab-btn t2" onclick="switchTab(2)">
-    <span class="tab-btn-icon">🔄</span>
-    <span>ปรับความคิด</span>
-  </button>
-  <button class="tab-btn t3" onclick="switchTab(3)">
-    <span class="tab-btn-icon">✨</span>
-    <span>เสริมพลัง</span>
-  </button>
+<!-- ── PILL TAB BAR ── -->
+<div class="tab-bar" id="tab-bar">
+  <button class="tab-btn active" data-panel="1" onclick="switchToolsTab(1)">🌿 โซนทั่วไป</button>
+  <button class="tab-btn" data-panel="2" onclick="switchToolsTab(2)">🔄 ปรับความคิด</button>
+  <button class="tab-btn" data-panel="3" onclick="switchToolsTab(3)">✨ เสริมพลัง</button>
+  <a class="care-link" href="care.html">🧠 ระบบจิตใจ 6 ชั้น</a>
 </div>
 
 <!-- ══════════════════════════════
@@ -620,82 +616,93 @@
 </div>
 
 <script>
-// ── TAB SWITCH ────────────────────────────────
-function switchTab(n) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('panel-' + n).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-btn')[n-1].classList.add('active');
+function switchToolsTab(n){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+n).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.panel==n));
   window.scrollTo(0,0);
 }
 
-// ── BACKGROUND IMAGES (add Cloudinary URLs here) ──
-// Once you have images, set them like:
-// document.getElementById('bg-breathe').style.backgroundImage = 'url(YOUR_URL)';
-// Until then the gradient backgrounds show
-
-// ── STORAGE ───────────────────────────────────
-const STORAGE_KEY = 'jaidee_entries';
+const STORAGE_KEY='jaidee_entries';
 function loadEntries(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch(e){return[];}}
-function saveEntry(entry){try{const e=loadEntries();e.unshift(entry);if(e.length>50)e.splice(50);localStorage.setItem(STORAGE_KEY,JSON.stringify(e));renderEntries();}catch(e){}}
+function saveEntry(e){try{const a=loadEntries();a.unshift(e);if(a.length>50)a.splice(50);localStorage.setItem(STORAGE_KEY,JSON.stringify(a));renderEntries();}catch(x){}}
 function deleteAllEntries(){try{localStorage.removeItem(STORAGE_KEY);renderEntries();}catch(e){}}
-function relativeTime(iso){const t=new Date(iso),n=new Date();const mins=Math.floor((n-t)/60000),hrs=Math.floor((n-t)/3600000),days=Math.floor((n-t)/86400000);const hhmm=t.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});if(mins<2)return'เมื่อกี้';if(hrs<1)return`${mins} นาทีที่แล้ว`;if(days===0)return`วันนี้ ${hhmm}`;if(days===1)return`เมื่อวาน ${hhmm}`;if(days<7)return`${days} วันที่แล้ว`;return t.toLocaleDateString('th-TH',{day:'numeric',month:'short'});}
-const PROMPTS=[{label:'ขอบคุณ',q:'วันนี้มีอะไรที่รู้สึกขอบคุณบ้าง?',sub:'ไม่ต้องเป็นเรื่องใหญ่ เรื่องเล็กๆ ก็นับ',ph:'เช่น อากาศเย็นตอนเช้า เพื่อนที่ทักมา กาแฟที่อร่อย...'},{label:'ในหัว',q:'อะไรที่วนเวียนอยู่ในหัวตอนนี้?',sub:'เขียนออกมาได้เลย ไม่ต้องจัดระเบียบ',ph:'ทุกอย่างที่ค้างอยู่ ยังไม่ได้แก้ หรือยังไม่ได้พูดถึง...'},{label:'ตัวเอง',q:'ตอนนี้ตัวเองต้องการอะไรมากที่สุด?',sub:'ฟังตัวเองโดยไม่ตัดสิน',ph:'เช่น พัก ความเข้าใจ ทำอะไรสักอย่าง ไม่รู้เหมือนกัน...'}];
-function previewText(e){if(e.type==='worry')return(e.text||'(ไม่มีข้อความ)').slice(0,100);const f=(e.answers||[]).filter(a=>a&&a.trim());return f.length?f[0].slice(0,100):'(ไม่มีข้อความ)';}
-function buildFullContent(e){if(e.type==='worry')return`<div class="entry-q">ความกังวลที่เขียนไว้</div><div class="entry-a">${e.text||'<em class="entry-a empty">ไม่มีข้อความ</em>'}</div>`;return PROMPTS.map((p,i)=>{const a=(e.answers||[])[i];return`<div class="entry-q">${p.label}</div><div class="entry-a ${a?'':'empty'}">${a||'ข้ามไป'}</div>`;}).join('');}
-let showingAll=false;const PREVIEW_COUNT=3;
-function renderEntries(){const entries=loadEntries();const section=document.getElementById('entries-section');const list=document.getElementById('entries-list');const moreBtn=document.getElementById('entries-more');if(!entries.length){section.style.display='none';return;}section.style.display='block';const toShow=showingAll?entries:entries.slice(0,PREVIEW_COUNT);list.innerHTML='';toShow.forEach(entry=>{const card=document.createElement('div');card.className=`entry-card ${entry.type}`;const badge=entry.type==='journal'?'📓 บันทึก':'🔒 ความกังวล';card.innerHTML=`<div class="entry-top"><span class="entry-badge">${badge}</span><span class="entry-date">${relativeTime(entry.ts)}</span></div><div class="entry-preview">${previewText(entry)}</div><div class="entry-full">${buildFullContent(entry)}</div>`;card.addEventListener('click',()=>card.classList.toggle('expanded'));list.appendChild(card);});if(entries.length>PREVIEW_COUNT){moreBtn.style.display='block';moreBtn.textContent=showingAll?'ย่อกลับ ↑':`ดูทั้งหมด ${entries.length} รายการ →`;}else{moreBtn.style.display='none';}}
-function toggleAllEntries(){showingAll=!showingAll;renderEntries();}
+function relativeTime(iso){const t=new Date(iso),n=new Date();const m=Math.floor((n-t)/60000),h=Math.floor((n-t)/3600000),d=Math.floor((n-t)/86400000);const hm=t.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});if(m<2)return'เมื่อกี้';if(h<1)return m+' นาทีที่แล้ว';if(d===0)return'วันนี้ '+hm;if(d===1)return'เมื่อวาน '+hm;if(d<7)return d+' วันที่แล้ว';return t.toLocaleDateString('th-TH',{day:'numeric',month:'short'});}
+const PROMPTS=[{label:'ขอบคุณ',q:'วันนี้มีอะไรที่รู้สึกขอบคุณบ้าง?',sub:'ไม่ต้องเป็นเรื่องใหญ่',ph:'เช่น อากาศเย็นตอนเช้า...'},{label:'ในหัว',q:'อะไรที่วนเวียนอยู่ในหัวตอนนี้?',sub:'เขียนออกมาได้เลย',ph:'ทุกอย่างที่ค้างอยู่...'},{label:'ตัวเอง',q:'ตอนนี้ตัวเองต้องการอะไรมากที่สุด?',sub:'ฟังตัวเองโดยไม่ตัดสิน',ph:'เช่น พัก ความเข้าใจ...'}];
+function previewText(e){if(e.type==='worry')return(e.text||'').slice(0,100);const f=(e.answers||[]).filter(a=>a&&a.trim());return f.length?f[0].slice(0,100):'(ไม่มีข้อความ)';}
+function buildFull(e){if(e.type==='worry')return'<div class="entry-q">ความกังวล</div><div class="entry-a">'+(e.text||'')+'</div>';return PROMPTS.map((p,i)=>{const a=(e.answers||[])[i];return'<div class="entry-q">'+p.label+'</div><div class="entry-a '+(a?'':'empty')+'">'+(a||'ข้ามไป')+'</div>';}).join('');}
+let showAll=false;
+function renderEntries(){const entries=loadEntries();const sec=document.getElementById('entries-section');const list=document.getElementById('entries-list');const more=document.getElementById('entries-more');if(!entries.length){sec.style.display='none';return;}sec.style.display='block';const show=showAll?entries:entries.slice(0,3);list.innerHTML='';show.forEach(e=>{const c=document.createElement('div');c.className='entry-card '+e.type;const badge=e.type==='journal'?'📓 บันทึก':'🔒 ความกังวล';c.innerHTML='<div class="entry-top"><span class="entry-badge">'+badge+'</span><span class="entry-date">'+relativeTime(e.ts)+'</span></div><div class="entry-preview">'+previewText(e)+'</div><div class="entry-full">'+buildFull(e)+'</div>';c.onclick=()=>c.classList.toggle('expanded');list.appendChild(c);});if(entries.length>3){more.style.display='block';more.textContent=showAll?'ย่อกลับ ↑':'ดูทั้งหมด '+entries.length+' รายการ →';}else more.style.display='none';}
+function toggleAllEntries(){showAll=!showAll;renderEntries();}
 function confirmClear(){if(confirm('ลบบันทึกทั้งหมดใช่ไหม?'))deleteAllEntries();}
 
-// ── MODAL UTILS ───────────────────────────────
-function openModal(id){const ov=document.getElementById(id);ov.style.display='flex';requestAnimationFrame(()=>ov.classList.add('active'));document.body.style.overflow='hidden';}
-function closeModal(id,cb){const ov=document.getElementById(id);ov.classList.remove('active');setTimeout(()=>{ov.style.display='none';document.body.style.overflow='';if(cb)cb();},360);}
+function openModal(id){const o=document.getElementById(id);o.style.display='flex';requestAnimationFrame(()=>o.classList.add('active'));document.body.style.overflow='hidden';}
+function closeModal(id,cb){const o=document.getElementById(id);o.classList.remove('active');setTimeout(()=>{o.style.display='none';document.body.style.overflow='';if(cb)cb();},360);}
 function handleOverlayClick(e,id,fn){if(e.target===document.getElementById(id))fn();}
 
-// ── BREATHE ───────────────────────────────────
-const PATTERNS={box:{phases:[{l:'หายใจเข้า',c:4,cls:'expand'},{l:'ค้าง',c:4,cls:'hold-in'},{l:'หายใจออก',c:4,cls:'contract'},{l:'ค้าง',c:4,cls:'hold-out'}],label:'Box Breathing',sub:'ผ่อนคลาย ตั้งสติ สม่ำเสมอ'},'478':{phases:[{l:'หายใจเข้า',c:4,cls:'expand'},{l:'ค้าง',c:7,cls:'hold-in'},{l:'หายใจออก',c:8,cls:'contract'}],label:'4-7-8',sub:'ลด anxiety ช่วยนอนหลับ'},calm:{phases:[{l:'หายใจเข้า',c:5,cls:'expand'},{l:'หายใจออก',c:7,cls:'contract'}],label:'ผ่อนคลาย',sub:'เรียบง่าย เบาที่สุด'}};
-let bDur=3,bPat='box',bTimer=null,bCountInterval=null,bRemaining=0,bPhaseIdx=0,bCount=0;
-function setDur(btn,min){bDur=min;document.querySelectorAll('.dur-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');}
-function setPat(btn,pat){bPat=pat;document.querySelectorAll('.pat-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');const p=PATTERNS[pat];document.getElementById('preview-label').textContent=p.label;document.getElementById('preview-sub').textContent=p.sub;}
+const PATTERNS={box:{phases:[{l:'หายใจเข้า',c:4,cls:'expand'},{l:'ค้าง',c:4,cls:'hold-in'},{l:'หายใจออก',c:4,cls:'contract'},{l:'ค้าง',c:4,cls:'hold-out'}],label:'Box',sub:'ผ่อนคลาย ตั้งสติ'},478:{phases:[{l:'หายใจเข้า',c:4,cls:'expand'},{l:'ค้าง',c:7,cls:'hold-in'},{l:'หายใจออก',c:8,cls:'contract'}],label:'4-7-8',sub:'ลด anxiety'},calm:{phases:[{l:'หายใจเข้า',c:5,cls:'expand'},{l:'หายใจออก',c:7,cls:'contract'}],label:'ผ่อนคลาย',sub:'เรียบง่าย'}};
+let bDur=3,bPat='box',bTimer=null,bCI=null,bRem=0,bPi=0,bCnt=0;
+function setDur(b,m){bDur=m;document.querySelectorAll('.dur-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}
+function setPat(b,p){bPat=p;document.querySelectorAll('.pat-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const pt=PATTERNS[p];document.getElementById('preview-label').textContent=pt.label;document.getElementById('preview-sub').textContent=pt.sub;}
 function openBreathe(){openModal('breathe-modal');}
-function closeBreathe(){stopSession(true);closeModal('breathe-modal',()=>setTimeout(resetBreathe,50));}
-function startBreathe(){document.getElementById('b-pick').style.display='none';document.getElementById('b-session').style.display='block';document.getElementById('b-done').style.display='none';bRemaining=bDur*60;bPhaseIdx=0;updateTimer();runPhase();bTimer=setInterval(()=>{bRemaining--;updateTimer();if(bRemaining<=0){stopSession(true);showBreatheDone();}},1000);}
-function updateTimer(){const m=Math.floor(bRemaining/60),s=bRemaining%60;const el=document.getElementById('s-timer');if(el)el.textContent=m+':'+String(s).padStart(2,'0')+' เหลืออยู่';}
-function runPhase(){clearInterval(bCountInterval);const phase=PATTERNS[bPat].phases[bPhaseIdx%PATTERNS[bPat].phases.length];const circle=document.getElementById('s-circle'),label=document.getElementById('s-phase-label'),countEl=document.getElementById('s-count');circle.className='c-main '+phase.cls;label.textContent=phase.l;bCount=phase.c;countEl.textContent=bCount;bCountInterval=setInterval(()=>{bCount--;if(bCount<=0){clearInterval(bCountInterval);bPhaseIdx++;runPhase();}else{if(countEl)countEl.textContent=bCount;}},1000);}
-function stopSession(silent){clearInterval(bTimer);clearInterval(bCountInterval);bTimer=null;bCountInterval=null;if(!silent){document.getElementById('b-session').style.display='none';document.getElementById('b-pick').style.display='block';}}
-function showBreatheDone(){document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='block';}
-function resetBreathe(){document.getElementById('b-pick').style.display='block';document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='none';const c=document.getElementById('s-circle');if(c)c.className='c-main';}
+function closeBreathe(){if(bTimer)clearInterval(bTimer);if(bCI)clearInterval(bCI);bTimer=null;bCI=null;closeModal('breathe-modal',()=>setTimeout(()=>{document.getElementById('b-pick').style.display='block';document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='none';},50));}
+function startBreathe(){document.getElementById('b-pick').style.display='none';document.getElementById('b-session').style.display='block';document.getElementById('b-done').style.display='none';bRem=bDur*60;bPi=0;updateTimer();runPhase();bTimer=setInterval(()=>{bRem--;updateTimer();if(bRem<=0){clearInterval(bTimer);clearInterval(bCI);document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='block';}},1000);}
+function updateTimer(){const m=Math.floor(bRem/60),s=bRem%60;const el=document.getElementById('s-timer');if(el)el.textContent=m+':'+String(s).padStart(2,'0')+' เหลืออยู่';}
+function runPhase(){clearInterval(bCI);const ph=PATTERNS[bPat].phases[bPi%PATTERNS[bPat].phases.length];const c=document.getElementById('s-circle'),l=document.getElementById('s-phase-label'),n=document.getElementById('s-count');c.className='c-main '+ph.cls;l.textContent=ph.l;bCnt=ph.c;n.textContent=bCnt;bCI=setInterval(()=>{bCnt--;if(bCnt<=0){clearInterval(bCI);bPi++;runPhase();}else if(n)n.textContent=bCnt;},1000);}
+function resetBreathe(){document.getElementById('b-pick').style.display='block';document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='none';}
 
-// ── JOURNAL ───────────────────────────────────
-let jStep=0;const jAnswers=['','',''];
-function openJournal(){jStep=0;jAnswers.fill('');openModal('journal-modal');renderJStep();}
+let jStep=0;const jAns=['','',''];
+function openJournal(){jStep=0;jAns.fill('');openModal('journal-modal');renderJ();}
 function closeJournal(){closeModal('journal-modal');}
-function renderJStep(){const inner=document.getElementById('journal-inner');if(jStep>=PROMPTS.length){if(jAnswers.some(a=>a&&a.trim()))saveEntry({id:Date.now(),type:'journal',ts:new Date().toISOString(),answers:[...jAnswers]});inner.innerHTML=`<div class="j-done fade-up"><div class="j-done-icon">🌿</div><div class="j-done-title">ขอบคุณที่เขียนออกมา</div><div class="j-done-sub">การเขียนช่วยเอาสิ่งที่อยู่ในหัวออกมาอยู่ข้างนอกแทน<br/>หวังว่าจะเบาขึ้นบ้างนะ</div><button class="j-done-close" onclick="closeJournal()">← กลับ</button><a href="care.html?tab=belief" onclick="closeJournal()" style="display:block;text-align:center;margin-top:10px;font-size:12px;font-weight:300;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">อยากรู้ว่าทำไมการเขียนถึงช่วยได้? → <span style="color:var(--purple);">ชั้นความเชื่อ</span></a><div class="still-strip" style="margin:16px 20px 0;"><div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div><div class="still-btns"><button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button><button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button></div><div class="still-heavy" id="j-still-heavy"></div></div></div>`;return;}const p=PROMPTS[jStep];const dots=PROMPTS.map((_,i)=>`<div class="j-dot ${i<jStep?'done':i===jStep?'active':''}"></div>`).join('');inner.innerHTML=`<div class="j-progress">${dots}</div><div class="fade-up"><div class="j-label">${p.label}</div><div class="j-q">${p.q}</div><div class="j-sub">${p.sub}</div><textarea class="j-ta" id="j-ta" placeholder="${p.ph}" rows="5">${jAnswers[jStep]}</textarea><button class="j-next" onclick="jNext()" style="background:var(--purple);">${jStep<PROMPTS.length-1?'ถัดไป →':'เสร็จแล้ว ✓'}</button><button class="j-skip" onclick="jSkip()">ข้ามคำถามนี้</button></div>`;setTimeout(()=>{const ta=document.getElementById('j-ta');if(ta)ta.focus();},320);}
-function jNext(){const ta=document.getElementById('j-ta');if(ta)jAnswers[jStep]=ta.value.trim();jStep++;renderJStep();}
-function jSkip(){jAnswers[jStep]='';jStep++;renderJStep();}
+function renderJ(){const el=document.getElementById('journal-inner');if(jStep>=PROMPTS.length){if(jAns.some(a=>a&&a.trim()))saveEntry({id:Date.now(),type:'journal',ts:new Date().toISOString(),answers:[...jAns]});el.innerHTML='<div class="j-done fade-up"><div class="j-done-icon">🌿</div><div class="j-done-title">ขอบคุณที่เขียนออกมา</div><div class="j-done-sub">หวังว่าจะเบาขึ้นบ้างนะ</div><button class="j-done-close" onclick="closeJournal()">← กลับ</button></div>';return;}const p=PROMPTS[jStep];const dots=PROMPTS.map((_,i)=>'<div class="j-dot '+(i<jStep?'done':i===jStep?'active':'')+'"></div>').join('');el.innerHTML='<div class="j-progress">'+dots+'</div><div class="fade-up"><div class="j-label">'+p.label+'</div><div class="j-q">'+p.q+'</div><div class="j-sub">'+p.sub+'</div><textarea class="j-ta" id="j-ta" placeholder="'+p.ph+'" rows="5">'+jAns[jStep]+'</textarea><button class="j-next" onclick="jNext()" style="background:var(--purple);">'+(jStep<PROMPTS.length-1?'ถัดไป →':'เสร็จแล้ว ✓')+'</button><button class="j-skip" onclick="jSkip()">ข้ามคำถามนี้</button></div>';setTimeout(()=>{const t=document.getElementById('j-ta');if(t)t.focus();},320);}
+function jNext(){const t=document.getElementById('j-ta');if(t)jAns[jStep]=t.value.trim();jStep++;renderJ();}
+function jSkip(){jAns[jStep]='';jStep++;renderJ();}
 
-// ── STILL HEAVY ───────────────────────────────
-const STILL_HEAVY_HTML=`<div class="still-heavy-note"><strong>เครื่องมือไม่ได้ผลกับทุกคนในทุกวัน</strong><br>นั่นไม่ใช่ความล้มเหลวของคุณ — มันหมายความว่าตอนนี้คุณอาจต้องการการสนับสนุนที่ต่างออกไป</div><div class="still-heavy-links"><a class="still-link" href="tel:1323"><span class="still-link-icon">📞</span><span class="still-link-body"><span class="still-link-name">โทร 1323</span><span class="still-link-desc">ฟรี ตลอด 24 ชั่วโมง · ไม่ต้องรอถึงวิกฤต</span></span><span class="still-link-arrow">→</span></a><a class="still-link" href="peer.html"><span class="still-link-icon">💛</span><span class="still-link-body"><span class="still-link-name">คุยกับ PR</span><span class="still-link-desc">บางทีแค่มีคนรับฟังก็เบาขึ้นได้เยอะ</span></span><span class="still-link-arrow">→</span></a></div><div class="still-1323">พูดคุยกับผู้เชี่ยวชาญได้เลย — <a href="tel:1323">1323</a> ฟรี ไม่ต้องนัด</div>`;
-function stillOk(btn){const s=btn.closest('.still-strip');s.innerHTML=`<div style="text-align:center;font-size:13px;font-weight:300;color:var(--teal);padding:6px 0;">🌿 ดีใจที่ได้ยิน — ดูแลตัวเองต่อไปนะ</div>`;}
-function stillHeavy(btn){const strip=btn.closest('.still-strip');const heavy=strip.querySelector('.still-heavy');const bd=strip.querySelector('.still-btns');const qd=strip.querySelector('.still-q');heavy.innerHTML=STILL_HEAVY_HTML;heavy.classList.add('show');if(bd)bd.style.display='none';if(qd)qd.style.display='none';setTimeout(()=>heavy.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}
+const STILL='<div class="still-heavy-note"><strong>เครื่องมือไม่ได้ผลกับทุกคนในทุกวัน</strong><br>นั่นไม่ใช่ความล้มเหลวของคุณ</div><div class="still-heavy-links"><a class="still-link" href="tel:1323"><span class="still-link-icon">📞</span><span class="still-link-body"><span class="still-link-name">โทร 1323</span><span class="still-link-desc">ฟรี 24 ชั่วโมง</span></span><span class="still-link-arrow">→</span></a><a class="still-link" href="peer.html"><span class="still-link-icon">💛</span><span class="still-link-body"><span class="still-link-name">คุยกับ PR</span><span class="still-link-desc">บางทีแค่มีคนรับฟัง</span></span><span class="still-link-arrow">→</span></a></div>';
+function stillOk(b){b.closest('.still-strip').innerHTML='<div style="text-align:center;font-size:13px;color:var(--teal);padding:6px;">🌿 ดีใจที่ได้ยิน</div>';}
+function stillHeavy(b){const s=b.closest('.still-strip'),h=s.querySelector('.still-heavy');h.innerHTML=STILL;h.classList.add('show');s.querySelector('.still-btns').style.display='none';s.querySelector('.still-q').style.display='none';setTimeout(()=>h.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}
 
-// ── IDLE NUDGE ────────────────────────────────
-let _idleTimer=null,_toolTapped=false;
-function startIdleTimer(){_idleTimer=setTimeout(()=>{if(_toolTapped)return;const n=document.getElementById('idle-nudge');if(n){n.style.display='block';requestAnimationFrame(()=>n.style.opacity='1');}},45000);}
-function markToolTapped(){_toolTapped=true;clearTimeout(_idleTimer);const n=document.getElementById('idle-nudge');if(n)n.style.display='none';}
+let _it=null,_tt=false;
+function startIdleTimer(){_it=setTimeout(()=>{if(_tt)return;const n=document.getElementById('idle-nudge');if(n){n.style.display='block';requestAnimationFrame(()=>n.style.opacity='1');}},45000);}
+function markToolTapped(){_tt=true;clearTimeout(_it);const n=document.getElementById('idle-nudge');if(n)n.style.display='none';}
 
-// ── REFRAME ───────────────────────────────────
-const REFRAME_PATTERNS=[{id:'perfect',title:'ต้องทำให้สมบูรณ์แบบ',sub:'ถ้าไม่ดีพอแสดงว่าฉันไม่เก่ง',thought:'ฉันต้องทำทุกอย่างให้สมบูรณ์แบบ',permission:'ฉันทำได้ดีพอ แม้ว่าจะไม่สมบูรณ์แบบ\nความผิดพลาดเป็นส่วนหนึ่งของการเรียนรู้ ไม่ใช่หลักฐานของความล้มเหลว',bridge:'ชั้นความเชื่อ',bridgeUrl:'care.html?tab=belief'},{id:'compare',title:'ทุกคนเก่งกว่าฉัน',sub:'ฉันไม่เหมาะที่จะอยู่ที่นี่',thought:'ฉันด้อยกว่าคนรอบข้างทุกคน',permission:'ทุกคนที่นี่เคยเป็นคนเก่งที่สุดในห้องมาก่อน\nความรู้สึกนี้ไม่ได้หมายความว่าความจริงเป็นแบบนั้น',bridge:'ชั้นความสัมพันธ์',bridgeUrl:'care.html?tab=relationship'},{id:'blame',title:'ฉันทำให้ทุกคนผิดหวัง',sub:'ฉันเป็นภาระให้คนอื่น',thought:'ฉันทำให้คนที่รักผิดหวังเสมอ',permission:'ฉันมีคุณค่าอยู่แล้ว โดยไม่ต้องพิสูจน์อะไร\nความรู้สึกผิดไม่ใช่ข้อเท็จจริง — มันคือสัญญาณว่าฉันใส่ใจ',bridge:'ชั้นร่างกาย',bridgeUrl:'care.html?tab=body'},{id:'helpless',title:'ไม่ว่าจะทำอะไรก็ไม่ดีขึ้น',sub:'ฉันเปลี่ยนแปลงอะไรไม่ได้',thought:'ความพยายามของฉันไม่มีความหมาย',permission:'ฉันไม่จำเป็นต้องเปลี่ยนทุกอย่างในครั้งเดียว\nก้าวเล็กๆ หนึ่งก้าวก็นับ',bridge:'แผนดูแลตัวเอง',bridgeUrl:'plans.html'}];
-let _reframePattern=null,_reframeStep=0;
-function openReframe(){_reframeStep=0;_reframePattern=null;openModal('reframe-modal');renderReframe();}
+const RP=[{id:'perfect',title:'ต้องทำให้สมบูรณ์แบบ',sub:'ถ้าไม่ดีพอแสดงว่าฉันไม่เก่ง',thought:'ฉันต้องทำทุกอย่างให้สมบูรณ์แบบ',permission:'ฉันทำได้ดีพอ แม้ว่าจะไม่สมบูรณ์แบบ
+ความผิดพลาดเป็นส่วนหนึ่งของการเรียนรู้',bridge:'ชั้นความเชื่อ',url:'care.html?tab=belief'},{id:'compare',title:'ทุกคนเก่งกว่าฉัน',sub:'ฉันไม่เหมาะที่จะอยู่ที่นี่',thought:'ฉันด้อยกว่าคนรอบข้างทุกคน',permission:'ทุกคนที่นี่เคยเป็นคนเก่งที่สุดในห้องมาก่อน
+ความรู้สึกนี้ไม่ได้หมายความว่าความจริงเป็นแบบนั้น',bridge:'ชั้นความสัมพันธ์',url:'care.html?tab=connection'},{id:'blame',title:'ฉันทำให้ทุกคนผิดหวัง',sub:'ฉันเป็นภาระให้คนอื่น',thought:'ฉันทำให้คนที่รักผิดหวังเสมอ',permission:'ฉันมีคุณค่าอยู่แล้ว โดยไม่ต้องพิสูจน์อะไร
+ความรู้สึกผิดไม่ใช่ข้อเท็จจริง',bridge:'ชั้นร่างกาย',url:'care.html?tab=body'},{id:'helpless',title:'ไม่ว่าจะทำอะไรก็ไม่ดีขึ้น',sub:'ฉันเปลี่ยนแปลงอะไรไม่ได้',thought:'ความพยายามของฉันไม่มีความหมาย',permission:'ฉันไม่จำเป็นต้องเปลี่ยนทุกอย่างในครั้งเดียว
+ก้าวเล็กๆ หนึ่งก้าวก็นับ',bridge:'แผนดูแล',url:'plans.html'}];
+let rPat=null,rStep=0;
+function openReframe(){rStep=0;rPat=null;openModal('reframe-modal');renderR();}
 function closeReframe(){closeModal('reframe-modal');}
-function renderReframe(){const el=document.getElementById('reframe-inner');if(_reframeStep===0){el.innerHTML=`<div class="mstep-eyebrow" style="color:var(--rose);">ปรับความคิด</div><div class="mstep-q">ตอนนี้มีความคิดแบบไหนอยู่?</div><div class="mstep-sub">เลือกอันที่ใกล้เคียงที่สุด — ไม่ต้องตรงทุกคำ</div><div class="mstep-choices">${REFRAME_PATTERNS.map((p,i)=>`<button class="mstep-choice" onclick="reframePick(${i})"><div class="mstep-choice-title">${p.title}</div><div class="mstep-choice-sub">${p.sub}</div></button>`).join('')}</div>`;}else if(_reframeStep===1){const p=_reframePattern;el.innerHTML=`<div class="mstep-progress">${[0,1,2,3].map(i=>`<div class="mstep-dot ${i<1?'done':i===1?'active':''}"></div>`).join('')}</div><div class="mstep-eyebrow" style="color:var(--rose);">ถือความคิดไว้ห่างๆ</div><div class="mstep-q" style="margin-bottom:16px;">ลองอ่านประโยคนี้ดู</div><div class="reframe-phrase"><div class="reframe-prefix">ฉันกำลังมีความคิดว่า...</div><div class="reframe-thought">${p.thought}</div></div><div class="mstep-sub">การเพิ่มคำว่า "ฉันกำลังมีความคิดว่า..." ช่วยสร้างระยะห่างระหว่างคุณกับความคิดนั้น — มันเป็นแค่ความคิด ไม่ใช่ความจริงทั้งหมด</div><button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);">ถัดไป →</button><button class="mstep-back" onclick="_reframeStep=0;renderReframe()">← เปลี่ยนความคิด</button>`;}else if(_reframeStep===2){const p=_reframePattern;el.innerHTML=`<div class="mstep-progress">${[0,1,2,3].map(i=>`<div class="mstep-dot ${i<2?'done':i===2?'active':''}"></div>`).join('')}</div><div class="mstep-eyebrow" style="color:var(--rose);">สิ่งที่อนุญาตให้ตัวเอง</div><div class="mstep-q" style="margin-bottom:16px;">อ่านช้าๆ สักรอบ</div><div class="reframe-permission"><div class="reframe-permission-label">Permission</div><div class="reframe-permission-text">${p.permission.replace(/\n/g,'<br/>')}</div></div><div class="mstep-sub">ไม่ต้องเชื่อ 100% ตอนนี้ก็ได้ — แค่เปิดพื้นที่ให้ความเป็นไปได้นี้อยู่ร่วมกับความคิดเดิม</div><button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);">ถัดไป →</button>`;}else if(_reframeStep===3){el.innerHTML=`<div class="mstep-progress">${[0,1,2,3].map(i=>`<div class="mstep-dot ${i<3?'done':i===3?'active':''}"></div>`).join('')}</div><div class="mstep-eyebrow" style="color:var(--teal);">หายใจ</div><div class="mstep-q" style="margin-bottom:16px;">สักครู่หนึ่ง</div><div class="mini-breath"><div class="mini-breath-label">ดูวงกลม — หายใจตามจังหวะ</div><div class="mini-breath-circle">🌬️</div><div class="mini-breath-hint">หายใจเข้า 4 วินาที · หายใจออก 4 วินาที</div></div><div class="mstep-sub" style="text-align:center;">ทำสัก 3–4 รอบ แล้วกดถัดไป</div><button class="mstep-next" onclick="reframeNext()" style="background:var(--rose);margin-top:16px;">เสร็จแล้ว ✓</button>`;}else{const p=_reframePattern;el.innerHTML=`<div class="tool-done fade-up"><div class="tool-done-icon">🌸</div><div class="tool-done-title">ดีมากเลย</div><div class="tool-done-sub">การสังเกตความคิดโดยไม่ถูกมันพัดพาไป<br/>เป็นทักษะที่ฝึกได้ และคุณเพิ่งฝึกมันแล้ว</div><button class="tool-done-close" onclick="closeReframe()">← กลับ</button><a href="${p.bridgeUrl}" onclick="closeReframe()" style="display:block;text-align:center;margin-top:10px;font-size:12px;font-weight:300;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">อยากเข้าใจเพิ่ม? → <span style="color:var(--rose);">${p.bridge}</span></a><div class="still-strip" style="margin:16px 20px 0;"><div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div><div class="still-btns"><button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button><button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button></div><div class="still-heavy"></div></div></div>`;}}
-function reframePick(i){_reframePattern=REFRAME_PATTERNS[i];_reframeStep=1;renderReframe();}
-function reframeNext(){_reframeStep++;renderReframe();}
+function renderR(){const el=document.getElementById('reframe-inner');const dots=n=>([0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join(''));if(rStep===0){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--rose);">ปรับความคิด</div><div class="mstep-q">ตอนนี้มีความคิดแบบไหนอยู่?</div><div class="mstep-sub">เลือกอันที่ใกล้เคียงที่สุด</div><div class="mstep-choices">'+RP.map((p,i)=>'<button class="mstep-choice" onclick="rPick('+i+')"><div class="mstep-choice-title">'+p.title+'</div><div class="mstep-choice-sub">'+p.sub+'</div></button>').join('')+'</div>';}else if(rStep===1){el.innerHTML='<div class="mstep-progress">'+dots(1)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">ถือความคิดไว้ห่างๆ</div><div class="mstep-q">ลองอ่านประโยคนี้ดู</div><div class="reframe-phrase"><div class="reframe-prefix">ฉันกำลังมีความคิดว่า...</div><div class="reframe-thought">'+rPat.thought+'</div></div><div class="mstep-sub">มันเป็นแค่ความคิด ไม่ใช่ความจริงทั้งหมด</div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);">ถัดไป →</button><button class="mstep-back" onclick="rStep=0;renderR()">← เปลี่ยน</button>';}else if(rStep===2){el.innerHTML='<div class="mstep-progress">'+dots(2)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">Permission</div><div class="mstep-q">อ่านช้าๆ</div><div class="reframe-permission"><div class="reframe-permission-label">Permission</div><div class="reframe-permission-text">'+rPat.permission.replace(/
+/g,'<br>')+'</div></div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);">ถัดไป →</button>';}else if(rStep===3){el.innerHTML='<div class="mstep-progress">'+dots(3)+'</div><div class="mstep-eyebrow" style="color:var(--teal);">หายใจ</div><div class="mstep-q">สักครู่หนึ่ง</div><div class="mini-breath"><div class="mini-breath-label">หายใจตามจังหวะ</div><div class="mini-breath-circle">🌬️</div><div class="mini-breath-hint">เข้า 4 · ออก 4 วินาที</div></div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);margin-top:16px;">เสร็จแล้ว ✓</button>';}else{el.innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">🌸</div><div class="tool-done-title">ดีมากเลย</div><div class="tool-done-sub">การสังเกตความคิดโดยไม่ถูกมันพัดพาไป เป็นทักษะที่ฝึกได้</div><button class="tool-done-close" onclick="closeReframe()">← กลับ</button><a href="'+rPat.url+'" onclick="closeReframe()" style="display:block;text-align:center;margin-top:10px;font-size:12px;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">อยากเข้าใจเพิ่ม? → <span style="color:var(--rose);">'+rPat.bridge+'</span></a><div class="still-strip" style="margin:16px 20px 0;"><div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div><div class="still-btns"><button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button><button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button></div><div class="still-heavy"></div></div></div>';}}
+function rPick(i){rPat=RP[i];rStep=1;renderR();}
+function rNext(){rStep++;renderR();}
 
-// ── WORRY ─────────────────────────────────────
-let _worryText='',_worryBranch='',_worryStep=0;
-function openWorry(){_worryStep=0;_worryText='';_worryBranch='';openModal('worry-modal');renderWorry();}
+let wText='',wBranch='',wStep=0;
+function openWorry(){wStep=0;wText='';wBranch='';openModal('worry-modal');renderW();}
 function closeWorry(){closeModal('worry-modal');}
-function renderWorry(){const el=document.getElementById('worry-inner');if(_worryStep===0){el.innerHTML=`<div class="mstep-eyebrow" style="color:var(--blue);">คลายกังวล</div><div class="mstep-q">ตอนนี้กังวลเรื่องอะไรอยู่?</div><div class="mstep-sub">เขียนออกมาก่อน — ไม่ต้องจัดระเบียบ ไม่มีใครอ่าน</div><textarea class="mstep-ta" id="worry-ta" placeholder="เขียนทุกอย่างที่ค้างอยู่ในหัว..." style="border-color:var(--blue-border);"></textarea><button class="mstep-next" onclick="worryNext0()" style="background:var(--blue);">ถัดไป →</button>`;setTimeout(()=>{const ta=document.getElementById('worry-ta');if(ta)ta.focus();},320);}else if(_worryStep===1){el.innerHTML=`<div class="mstep-progress">${[0,1].map(i=>`<div class="mstep-dot ${i<1?'done':i===1?'active':''}"></div>`).join('')}</div><div class="mstep-eyebrow" style="color:var(--blue);">แยกประเภทความกังวล</div><div class="mstep-q">มีบางอย่างที่ทำได้ตอนนี้ไหม?</div><div class="mstep-sub">ไม่ต้องแก้ทุกอย่าง — แค่มีอะไรเล็กๆ ที่พอจะทำได้วันนี้บ้างไหม</div><div class="worry-fork"><button class="worry-fork-btn" onclick="worryFork('action')" style="border-color:var(--green-border);"><div class="worry-fork-icon">✅</div><div class="worry-fork-label">มี</div><div class="worry-fork-sub">มีสิ่งที่ทำได้<br/>อยู่ในมือฉัน</div></button><button class="worry-fork-btn" onclick="worryFork('park')" style="border-color:var(--blue-border);"><div class="worry-fork-icon">☁️</div><div class="worry-fork-label">ยังไม่มี</div><div class="worry-fork-sub">ยังควบคุมไม่ได้<br/>หรือไม่แน่ใจ</div></button></div>`;}else if(_worryStep===2&&_worryBranch==='action'){el.innerHTML=`<div class="mstep-progress">${[0,1,2].map(i=>`<div class="mstep-dot ${i<2?'done':i===2?'active':''}"></div>`).join('')}</div><div class="mstep-eyebrow" style="color:var(--green);">ก้าวเล็กๆ</div><div class="mstep-q">สิ่งเล็กที่สุดที่ทำได้วันนี้คืออะไร?</div><div class="mstep-sub">ไม่ต้องแก้ทั้งหมด — แค่หนึ่งก้าวที่ทำได้จริงๆ</div><textarea class="mstep-ta" id="action-ta" placeholder="เช่น ส่ง email ถาม, อ่านแค่ 20 นาที, โทรหา..." style="border-color:var(--green-border);"></textarea><button class="mstep-next" onclick="worryNext2()" style="background:var(--green);">บันทึกแผน ✓</button>`;}else if(_worryStep===2&&_worryBranch==='park'){el.innerHTML=`<div class="mstep-progress">${[0,1].map(i=>`<div class="mstep-dot done"></div>`).join('')}<div class="mstep-dot active"></div></div><div class="mstep-eyebrow" style="color:var(--blue);">จอดความกังวลไว้ก่อน</div><div class="mstep-q">บอกตัวเองสักประโยค</div><div class="mstep-sub">ความกังวลที่ยังแก้ไม่ได้ต้องการการรับรู้ ไม่ใช่การแก้ปัญหา — ลองบอกตัวเองว่า:</div><div class="reframe-permission" style="border-color:var(--blue-border);background:rgba(46,95,163,0.1);"><div class="reframe-permission-label" style="color:var(--blue);">Worry Parking</div><div class="reframe-permission-text" style="font-size:15px;">"ฉันรับรู้ความกังวลนี้แล้ว<br/>ตอนนี้ขอวางไว้ก่อนนะ<br/>แล้วจะกลับมาดูอีกทีเมื่อพร้อม"</div></div><div class="mini-breath" style="background:rgba(46,95,163,0.1);border-color:var(--blue-border);"><div class="mini-breath-label" style="color:var(--blue);">หายใจปล่อยออกมาพร้อมกัน</div><div class="mini-breath-circle" style="background:radial-gradient(circle,rgba(46,95,163,0.5),rgba(46,95,163,0.2));">☁️</div><div class="mini-breath-hint" style="color:rgba(46,95,163,0.
+function renderW(){const el=document.getElementById('worry-inner');if(wStep===0){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--blue);">คลายกังวล</div><div class="mstep-q">ตอนนี้กังวลเรื่องอะไรอยู่?</div><div class="mstep-sub">เขียนออกมาก่อน</div><textarea class="mstep-ta" id="w-ta" placeholder="เขียนทุกอย่างที่ค้างอยู่ในหัว..." style="border-color:var(--blue-border);"></textarea><button class="mstep-next" onclick="wN0()" style="background:var(--blue);">ถัดไป →</button>';setTimeout(()=>{const t=document.getElementById("w-ta");if(t)t.focus();},320);}else if(wStep===1){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--blue);">แยกประเภท</div><div class="mstep-q">มีบางอย่างที่ทำได้ตอนนี้ไหม?</div><div class="worry-fork"><button class="worry-fork-btn" onclick="wFork('action')" style="border-color:var(--green-border);"><div class="worry-fork-icon">✅</div><div class="worry-fork-label">มี</div><div class="worry-fork-sub">อยู่ในมือฉัน</div></button><button class="worry-fork-btn" onclick="wFork('park')" style="border-color:var(--blue-border);"><div class="worry-fork-icon">☁️</div><div class="worry-fork-label">ยังไม่มี</div><div class="worry-fork-sub">ยังควบคุมไม่ได้</div></button></div>';}else if(wStep===2&&wBranch==='action'){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--green);">ก้าวเล็กๆ</div><div class="mstep-q">สิ่งเล็กที่สุดที่ทำได้วันนี้?</div><textarea class="mstep-ta" id="a-ta" placeholder="เช่น ส่ง email ถาม..." style="border-color:var(--green-border);"></textarea><button class="mstep-next" onclick="wN2()" style="background:var(--green);">บันทึกแผน ✓</button>';}else if(wStep===2&&wBranch==='park'){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--blue);">จอดความกังวล</div><div class="mstep-q">บอกตัวเองสักประโยค</div><div class="reframe-permission" style="border-color:var(--blue-border);background:rgba(46,95,163,0.1);"><div class="reframe-permission-label" style="color:var(--blue);">Worry Parking</div><div class="reframe-permission-text">"ฉันรับรู้ความกังวลนี้แล้ว<br>ตอนนี้ขอวางไว้ก่อนนะ"</div></div><button class="mstep-next" onclick="wN2()" style="background:var(--blue);margin-top:14px;">วางไว้แล้ว ✓</button>';}else{const act=wBranch==='action',at=document.getElementById('a-ta')?.value.trim()||'';el.innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">'+(act?'🌿':'☁️')+'</div><div class="tool-done-title">'+(act?'แผนพร้อมแล้ว':'วางไว้ดีแล้ว')+'</div><div class="tool-done-sub">'+(act?'ก้าวเล็กๆ หนึ่งก้าว ดีกว่าไม่มีก้าวเลย':'ความกังวลนี้รับรู้แล้ว')+'</div>'+(act&&at?'<div style="background:rgba(58,125,68,0.15);border:1px solid rgba(58,125,68,0.3);border-radius:12px;padding:12px;margin-bottom:20px;font-size:13px;color:var(--teal);">📝 '+at+'</div>':'')+'<button class="tool-done-close" onclick="closeWorry()">← กลับ</button></div>';if(act&&at)saveEntry({id:Date.now(),type:'worry',ts:new Date().toISOString(),text:'แผน: '+at});}}
+function wN0(){const t=document.getElementById('w-ta');wText=t?t.value.trim():'';wStep=1;renderW();}
+function wFork(b){wBranch=b;wStep=2;renderW();}
+function wN2(){wStep=3;renderW();}
+
+const CQ=[{label:'เวลา',q:'มีอะไรที่ทำแล้วลืมเวลาบ้าง?',sub:'ไม่ต้องเป็นเรื่องโรงเรียน',ph:'เช่น วาดรูป ฟังเพลง...'},{label:'ตัวเอง',q:'ถ้าไม่มีใครดูอยู่ คุณจะเลือกทำอะไร?',sub:'ไม่มีการตัดสิน',ph:'เช่น เรียนอะไรบางอย่าง...'},{label:'อยากมี',q:'มีอะไรในคนอื่นที่คุณอยากมีบ้าง?',sub:'สิ่งที่อิจฉาบอกอะไรเกี่ยวกับเรา',ph:'เช่น ความมั่นใจ เวลาว่าง...'}];
+let cStep=0,cAns=['','',''];
+function openClarity(){cStep=0;cAns=['','',''];openModal('clarity-modal');renderC();}
+function closeClarity(){closeModal('clarity-modal');}
+function renderC(){const el=document.getElementById('clarity-inner');if(cStep<CQ.length){const q=CQ[cStep];const dots=CQ.map((_,i)=>'<div class="mstep-dot '+(i<cStep?'done':i===cStep?'active':'')+'"></div>').join('');el.innerHTML='<div class="mstep-progress">'+dots+'</div><div class="mstep-eyebrow fade-up" style="color:var(--gold);">'+q.label+'</div><div class="mstep-q fade-up">'+q.q+'</div><div class="mstep-sub fade-up">'+q.sub+'</div><textarea class="mstep-ta fade-up" id="c-ta" placeholder="'+q.ph+'" style="border-color:var(--gold-border);">'+cAns[cStep]+'</textarea><button class="mstep-next" onclick="cNext()" style="background:var(--dark);">'+(cStep<CQ.length-1?'ถัดไป →':'ดูผลลัพธ์ →')+'</button>'+(cStep>0?'<button class="mstep-back" onclick="cBack()">← ย้อนกลับ</button>':'');setTimeout(()=>{const t=document.getElementById('c-ta');if(t)t.focus();},320);}else{const f=cAns.map((a,i)=>({l:CQ[i].label,t:a.trim()})).filter(x=>x.t);el.innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">สิ่งที่คุณบอก</div><div class="mstep-q" style="margin-bottom:16px;">กระจกสะท้อนตัวคุณ</div><div class="clarity-mirror"><div class="cm-label">จากที่คุณเล่า</div>'+f.map(x=>'<div class="cm-line">จากเรื่อง<strong>'+x.l+'</strong> — <strong>'+x.t.slice(0,60)+'</strong></div>').join('')+(f.length?'<div class="cm-line" style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(232,150,12,0.2);">สิ่งที่ดูสำคัญ: <strong>'+f.map(x=>x.t.slice(0,20)).join(' · ')+'</strong></div>':'')+'</div><div class="mstep-sub">เสียงของคุณเองที่สะท้อนกลับมา</div><button class="tool-done-close" onclick="closeClarity()" style="margin:8px 20px;">← กลับ</button>';}}
+function cNext(){const t=document.getElementById('c-ta');if(t)cAns[cStep]=t.value.trim();cStep++;renderC();}
+function cBack(){const t=document.getElementById('c-ta');if(t)cAns[cStep]=t.value.trim();cStep--;renderC();}
+
+renderEntries();
+startIdleTimer();
+const _h=window.location.hash;
+if(_h==='#breathe'){switchToolsTab(1);openBreathe();}
+else if(_h==='#journal'){switchToolsTab(1);openJournal();}
+else if(_h==='#reframe'){switchToolsTab(2);openReframe();}
+else if(_h==='#worry'){switchToolsTab(2);openWorry();}
+else if(_h==='#clarity'){switchToolsTab(2);openClarity();}
+</script>
+</body>
+</html>
