@@ -4,244 +4,371 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <title>Jaidee TU — yt channel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Noto+Serif+Thai:wght@400;600;700&family=Satisfy&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Fredoka+One&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body{font-family:"Sarabun",sans-serif;background:#fff;color:#111;min-height:100vh;overflow-x:hidden;}
+    html,body{width:100%;height:100%;font-family:"Sarabun",sans-serif;background:#fff;color:#111;}
+    /* scroll only when needed */
+    body{overflow-x:hidden;}
 
-    /* PAGE SYSTEM */
-    .page{position:fixed;inset:0;background:#fff;overflow-y:auto;
-          transition:transform 0.38s cubic-bezier(0.4,0,0.2,1),opacity 0.3s ease;}
-    .page.hidden-right{transform:translateX(100%);opacity:0;pointer-events:none;}
-    .page.hidden-left {transform:translateX(-30%);opacity:0;pointer-events:none;}
-    .page.visible{transform:translateX(0);opacity:1;}
-
-    /* ── PAGE 1: LANDING ── */
-    .channel-hero{width:100%;aspect-ratio:16/7;overflow:hidden;background:#1A0A2E;position:relative;}
-    .channel-hero img{width:100%;height:100%;object-fit:cover;display:block;}
-    .hero-fallback{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      height:100%;
-      font-family:"Noto Serif Thai",serif;
+    /* ── PAGE SYSTEM ── */
+    .page{
+      position:fixed;inset:0;background:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;
+      transition:transform 0.38s cubic-bezier(0.4,0,0.2,1),opacity 0.28s ease;
     }
-    .hf-small{font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:4px;}
-    .hf-big{font-size:42px;font-weight:700;color:#7C3AED;line-height:1;}
-    .hf-italic{font-family:"Satisfy",cursive;font-size:16px;color:rgba(255,255,255,0.45);margin-top:8px;}
+    .page.off-r{transform:translateX(100%);opacity:0;pointer-events:none;}
+    .page.off-l{transform:translateX(-28%);opacity:0;pointer-events:none;}
+    .page.on{transform:translateX(0);opacity:1;}
 
-    .series-landing{padding:28px 20px 40px;}
-    .series-landing-label{font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#999;text-align:center;margin-bottom:20px;}
-    .series-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+    /* ══════════════════════════════
+       PAGE 1 — LANDING
+    ══════════════════════════════ */
+    .land{
+      max-width:520px;margin:0 auto;
+      padding:44px 24px 52px;
+      text-align:center;
+    }
 
-    .series-box{cursor:pointer;text-align:center;}
-    .series-box:active .series-frame{transform:scale(0.95);}
-    .series-frame{
-      width:100%;aspect-ratio:3/4;
-      border:2px solid;
-      border-image:linear-gradient(145deg,#E8C97A,#C9A84C,#F5E196,#C9A84C) 1;
-      background:#fff;
-      margin-bottom:8px;
-      position:relative;
-      overflow:hidden;
-      transition:transform 0.15s;
+    /* "Jaidee TU" — clean upright serif */
+    .t-jaidee{
+      font-family:"Playfair Display",serif;
+      font-size:26px;font-weight:400;
+      color:#1A1A1A;letter-spacing:0.5px;
+      margin-bottom:-6px;
     }
-    /* gold shimmer border using box-shadow trick */
-    .series-frame{
-      border:none;
-      box-shadow:0 0 0 2px #C9A84C, 0 0 0 3px rgba(245,225,150,0.4);
-      border-radius:2px;
-    }
-    .series-frame img{width:100%;height:100%;object-fit:cover;display:block;}
-    .series-frame-placeholder{
-      width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-      background:#FAFAF8;font-size:28px;opacity:0.3;
-    }
-    .series-num{font-family:"Satisfy",cursive;font-size:13px;color:#C9A84C;margin-bottom:3px;}
-    .series-name-text{font-size:10px;color:#555;line-height:1.4;}
 
-    /* ── PAGE 2: EPISODES GRID ── */
-    .ep-header{
-      display:flex;align-items:center;gap:12px;
-      padding:14px 16px;
-      border-bottom:1px solid #F0EDE8;
-      position:sticky;top:0;background:#fff;z-index:10;
+    /* "yt channel" — chunky bold purple (Fredoka One) */
+    .t-yt{
+      font-family:"Fredoka One",cursive;
+      font-size:58px;color:#7C3AED;
+      line-height:1;margin-bottom:8px;
+      letter-spacing:-0.5px;
     }
-    .ep-back{background:none;border:none;font-size:22px;cursor:pointer;color:#333;padding:4px;line-height:1;}
-    .ep-header-info{flex:1;}
-    .ep-header-series{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#C9A84C;}
-    .ep-header-title{font-family:"Noto Serif Thai",serif;font-size:15px;font-weight:600;color:#111;}
 
-    .ep-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;padding:16px 12px 40px;}
-    .ep-cell{padding:6px;}
-    .ep-cell:active .ep-frame{transform:scale(0.94);}
-
-    .ep-label{
-      font-family:"Satisfy",cursive;font-size:16px;color:#F5C842;
-      text-align:center;margin-bottom:4px;
-      text-shadow:0 1px 3px rgba(0,0,0,0.15);
+    /* "Introduction Time" */
+    .t-intro{
+      margin-bottom:36px;
+      display:flex;align-items:baseline;justify-content:center;gap:7px;
     }
-    .ep-frame{
+    /* "Introduction" — italic calligraphic serif, gold */
+    .t-intro-script{
+      font-family:"Cormorant Garamond",serif;
+      font-style:italic;font-weight:600;
+      font-size:24px;color:#C9A84C;
+      letter-spacing:0.5px;
+    }
+    /* "Time" — upright, near-black */
+    .t-intro-time{
+      font-family:"Playfair Display",serif;
+      font-size:22px;font-weight:400;
+      color:#333;
+    }
+
+    /* ── SERIES GRID ── */
+    .series-row{
+      display:grid;grid-template-columns:1fr 1fr 1fr;
+      gap:16px;margin-bottom:10px;
+    }
+    .s-item{cursor:pointer;text-align:center;}
+    .s-item:active .s-frame{transform:scale(0.96);}
+
+    /* Gold gradient border frame */
+    .s-frame{
       width:100%;aspect-ratio:4/3;
-      box-shadow:0 0 0 2px #C9A84C, 0 0 0 3px rgba(245,225,150,0.35);
-      border-radius:2px;
-      background:#F9F6F0;
+      /* gradient border via background + padding trick */
+      background:linear-gradient(
+        135deg,
+        #F0D070 0%,
+        #C9A030 25%,
+        #E8C060 50%,
+        #906820 75%,
+        #D4A840 100%
+      );
+      padding:2.5px;
+      margin-bottom:10px;
+      transition:transform 0.15s;
+      /* NO border-radius — sharp corners like screenshot */
+    }
+    .s-inner{
+      width:100%;height:100%;
+      background:#fff;
       overflow:hidden;
-      margin-bottom:6px;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .s-inner img{width:100%;height:100%;object-fit:cover;display:block;}
+
+    /* "SERIES 1" label — bold italic, blue-purple */
+    .s-label{
+      font-family:"Playfair Display",serif;
+      font-style:italic;font-weight:700;
+      font-size:15px;color:#4B5BD6;
+      margin-bottom:4px;letter-spacing:0.3px;
+    }
+    .s-desc{
+      font-size:9.5px;color:#666;
+      line-height:1.45;
+    }
+
+    /* ── BOTTOM SECTION ── */
+    .land-hr{
+      width:55%;margin:28px auto 16px;
+      border:none;border-top:1px solid #E0DBD2;
+    }
+    .yt-link-line{margin-bottom:5px;}
+    .yt-link{
+      font-size:12px;color:#444;
+      text-decoration:underline;
+      text-underline-offset:2px;
+    }
+    .yt-sub{
+      font-size:11px;color:#999;
+      margin-bottom:20px;
+    }
+
+    /* Circles — thin outline, blank inside waiting for logos */
+    .circles-row{
+      display:flex;gap:12px;justify-content:center;
+      flex-wrap:wrap;padding:0 8px;
+    }
+    .circle{
+      width:72px;height:72px;border-radius:50%;
+      border:1.5px solid #CCCCCC;
+      background:#fff;
+      overflow:hidden;
       cursor:pointer;
       transition:transform 0.15s;
-      position:relative;
+      flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
     }
-    .ep-frame img{width:100%;height:100%;object-fit:cover;display:block;}
-    .ep-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:22px;opacity:0.25;}
-    .ep-title{font-size:10px;color:#333;text-align:center;line-height:1.4;padding:0 2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .circle:active{transform:scale(0.93);}
+    /* Once you have logo images, replace the empty <div> with:
+       <img src="YOUR_LOGO_URL" alt="name" style="width:100%;height:100%;object-fit:cover;"/> */
+
+    /* ══════════════════════════════
+       PAGE 2 — EPISODE GRID
+    ══════════════════════════════ */
+    .ep-hdr{
+      position:sticky;top:0;background:#fff;z-index:10;
+      display:flex;align-items:center;gap:10px;
+      padding:12px 16px;border-bottom:1px solid #F0EDE8;
+    }
+    .ep-back-btn{
+      background:none;border:none;cursor:pointer;
+      font-family:"Playfair Display",serif;
+      font-size:28px;color:#555;line-height:1;padding:2px 8px;
+    }
+    .ep-hdr-s{
+      font-family:"Playfair Display",serif;
+      font-style:italic;font-weight:700;
+      font-size:11px;color:#4B5BD6;
+    }
+    .ep-hdr-t{
+      font-family:"Playfair Display",serif;
+      font-size:14px;font-weight:700;color:#111;
+    }
+
+    /* 3-column grid */
+    .ep-grid{
+      display:grid;grid-template-columns:1fr 1fr 1fr;
+      padding:14px 10px 52px;
+    }
+    .ep-cell{padding:6px 5px;text-align:center;}
+    .ep-cell:active .ep-frame{transform:scale(0.94);}
+
+    /* "Ep. 1" above frame — Cormorant italic gold */
+    .ep-num-lbl{
+      font-family:"Cormorant Garamond",serif;
+      font-style:italic;font-weight:600;
+      font-size:17px;color:#D4A030;
+      margin-bottom:4px;
+      text-shadow:0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    /* Gold frame — same gradient as series */
+    .ep-frame{
+      width:100%;aspect-ratio:4/3;
+      background:linear-gradient(
+        135deg,
+        #F0D070 0%,
+        #C9A030 25%,
+        #E8C060 50%,
+        #906820 75%,
+        #D4A840 100%
+      );
+      padding:2px;
+      margin-bottom:5px;
+      cursor:pointer;
+      transition:transform 0.15s;
+    }
+    .ep-frame-inner{
+      width:100%;height:100%;
+      background:#FAFAF8;
+      overflow:hidden;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .ep-frame-inner img{width:100%;height:100%;object-fit:cover;display:block;}
+    .ep-ph{font-size:16px;opacity:0.2;}
+
+    .ep-title{
+      font-size:9px;color:#333;line-height:1.4;
+      padding:0 2px;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    }
   </style>
 </head>
 <body>
 
-<!-- ══ PAGE 1: CHANNEL LANDING ══ -->
-<div class="page visible" id="page-landing">
+<!-- ══ PAGE 1 ══ -->
+<div class="page on" id="pg1">
+<div class="land">
 
-  <!-- Channel art — replace src with your Cloudinary URL -->
-  <div class="channel-hero">
-    <img src="PASTE_YOUR_CLOUDINARY_URL_HERE"
-         onerror="this.style.display='none';document.getElementById('hfb').style.display='flex';"
-         alt="Jaidee TU yt channel"/>
-    <div class="hero-fallback" id="hfb" style="display:none;">
-      <div class="hf-small">Jaidee TU</div>
-      <div class="hf-big">yt channel</div>
-      <div class="hf-italic">Introduction Time</div>
-    </div>
+  <div class="t-jaidee">Jaidee TU</div>
+  <div class="t-yt">yt channel</div>
+  <div class="t-intro">
+    <span class="t-intro-script">Introduction</span>
+    <span class="t-intro-time">Time</span>
   </div>
 
-  <div class="series-landing">
-    <div class="series-landing-label">เลือก series</div>
-    <div class="series-row">
+  <div class="series-row">
 
-      <div class="series-box" onclick="openSeries(1)">
-        <div class="series-frame">
-          <!-- ใส่รูป cover ของแต่ละ series ได้ที่นี่ -->
-          <div class="series-frame-placeholder">🔬</div>
+    <div class="s-item" onclick="go(1)">
+      <div class="s-frame">
+        <div class="s-inner">
+          <!--
+            วิธีใส่รูป Series 1:
+            1. Upload รูปขึ้น Cloudinary
+            2. แทนบรรทัดนี้ด้วย:
+            <img src="https://res.cloudinary.com/.../series1.jpg" alt="Series 1"/>
+          -->
         </div>
-        <div class="series-num">Series 1</div>
-        <div class="series-name-text">วิทยาศาสตร์ที่ไม่ได้สอนในห้อง</div>
       </div>
-
-      <div class="series-box" onclick="openSeries(2)">
-        <div class="series-frame">
-          <div class="series-frame-placeholder">🚪</div>
-        </div>
-        <div class="series-num">Series 2</div>
-        <div class="series-name-text">เข้าไปแล้วเป็นยังไง</div>
-      </div>
-
-      <div class="series-box" onclick="openSeries(3)">
-        <div class="series-frame">
-          <div class="series-frame-placeholder">🫂</div>
-        </div>
-        <div class="series-num">Series 3</div>
-        <div class="series-name-text">คนจริง เรื่องจริง</div>
-      </div>
-
+      <div class="s-label">SERIES 1</div>
+      <div class="s-desc">วิทยาศาสตร์ที่ ไม่ได้สอนในห้อง</div>
     </div>
+
+    <div class="s-item" onclick="go(2)">
+      <div class="s-frame">
+        <div class="s-inner">
+          <!-- <img src="YOUR_URL" alt="Series 2"/> -->
+        </div>
+      </div>
+      <div class="s-label">SERIES 2</div>
+      <div class="s-desc">เข้าไปแล้วเป็นยังไง</div>
+    </div>
+
+    <div class="s-item" onclick="go(3)">
+      <div class="s-frame">
+        <div class="s-inner">
+          <!-- <img src="YOUR_URL" alt="Series 3"/> -->
+        </div>
+      </div>
+      <div class="s-label">SERIES 3</div>
+      <div class="s-desc">คนจริง เรื่องจริง</div>
+    </div>
+
   </div>
+
+  <hr class="land-hr"/>
+
+  <div class="yt-link-line">
+    <!-- เปลี่ยน href เป็น YouTube URL จริงเมื่อสร้างช่องแล้ว -->
+    <a class="yt-link" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">
+      ติดตามผ่าน : yotubechanneljaideeTU
+    </a>
+  </div>
+  <div class="yt-sub">รวมรวมวิดีโอจากหมวดหมู่ต่างๆ</div>
+
+  <div class="circles-row">
+    <!--
+      วิธีใส่โลโก้ใน circle:
+      แทน <div class="circle" ...> ด้วย:
+      <div class="circle" onclick="location.href='programs.html'">
+        <img src="YOUR_LOGO_URL" alt="Alevel 75+" style="width:100%;height:100%;object-fit:cover;"/>
+      </div>
+    -->
+    <div class="circle" onclick="location.href='programs.html'"></div>
+    <div class="circle" onclick="location.href='care.html'"></div>
+    <div class="circle" onclick="location.href='programs.html'"></div>
+    <div class="circle" onclick="location.href='school.html'"></div>
+    <div class="circle" onclick="location.href='people.html'"></div>
+  </div>
+
+</div>
 </div>
 
-<!-- ══ PAGE 2: EPISODE GRID ══ -->
-<div class="page hidden-right" id="page-episodes">
+<!-- ══ PAGE 2 ══ -->
+<div class="page off-r" id="pg2">
 
-  <div class="ep-header">
-    <button class="ep-back" onclick="goBack()">‹</button>
-    <div class="ep-header-info">
-      <div class="ep-header-series" id="ep-series-num">SERIES 1</div>
-      <div class="ep-header-title" id="ep-series-title">วิทยาศาสตร์ที่ไม่ได้สอนในห้อง</div>
+  <div class="ep-hdr">
+    <button class="ep-back-btn" onclick="back()">‹</button>
+    <div>
+      <div class="ep-hdr-s" id="hn"></div>
+      <div class="ep-hdr-t" id="ht"></div>
     </div>
   </div>
 
-  <div class="ep-grid" id="ep-grid"></div>
+  <div class="ep-grid" id="eg"></div>
 
 </div>
 
 <script>
-// ── SERIES DATA ──────────────────────────────────────────────
-// ytUrl: ใส่ YouTube URL จริงเมื่อมีวิดีโอ
-// thumb: ใส่ thumbnail URL จาก YouTube หรือ Cloudinary
-// เพิ่ม episode ได้เรื่อยๆ — max 6 ต่อ series
-const SERIES = {
-  1: {
-    num: "SERIES 1",
-    title: "วิทยาศาสตร์ที่ไม่ได้สอนในห้อง",
-    episodes: [
-      { ep:1, title:"ทำไมสอบแล้วหัวว่าง ทั้งที่อ่านมาตลอด", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-      { ep:2, title:"นอน 6 กับ 8 ชั่วโมง ต่างกันยังไงในสมอง", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-      { ep:3, title:"หายใจออกยาว 6 วินาทีเปลี่ยนระบบประสาทได้จริงไหม", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-      { ep:4, title:"ทำไมการขอความช่วยเหลือถึงฉลาดกว่าการไม่ขอ", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-    ]
-  },
-  2: {
-    num: "SERIES 2",
-    title: "เข้าไปแล้วเป็นยังไง",
-    episodes: [
-      { ep:1, title:"เซสชัน PR จริงๆ เป็นยังไง — รุ่นพี่เล่าให้ฟัง", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-      { ep:2, title:"นักจิตวิทยาโรงเรียนทำอะไร — ไม่ใช่แค่คุยปัญหา", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-      { ep:3, title:"โทร 1323 ครั้งแรก — เขารับสายแล้วพูดอะไร", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-    ]
-  },
-  3: {
-    num: "SERIES 3",
-    title: "คนจริง เรื่องจริง",
-    episodes: [
-      { ep:1, title:"ฉันแอดวิศวะจุฬาฯ ตอนม.6 ฉันไปหานักจิตฯ", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-      { ep:2, title:"ครูแนะแนวเห็นนักเรียนยังไง — พูดตรงๆ", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-      { ep:3, title:"หมดไฟตอนม.5 — แล้วกลับมาได้ยังไง", thumb:"", ytUrl:"https://youtube.com/@JaideeTU" },
-    ]
-  }
+// ══ DATA ══════════════════════════════════════════════════════
+// วิธีเพิ่มวิดีโอ:
+//   yt: "https://youtube.com/watch?v=VIDEO_ID"  → thumbnail โหลดอัตโนมัติ
+//   thumb: "URL"  → ถ้าอยากใช้รูปเอง
+const S = {
+  1:{n:"SERIES 1", t:"วิทยาศาสตร์ที่ไม่ได้สอนในห้อง",
+     e:[
+      {n:1,t:"ทำไมสอบแล้วหัวว่าง ทั้งที่อ่านมาตลอด",        thumb:"",yt:"https://youtube.com/@JaideeTU"},
+      {n:2,t:"นอน 6 กับ 8 ชั่วโมง ต่างกันยังไงในสมอง",      thumb:"",yt:"https://youtube.com/@JaideeTU"},
+      {n:3,t:"หายใจออกยาว 6 วินาทีเปลี่ยนระบบประสาทได้จริงไหม",thumb:"",yt:"https://youtube.com/@JaideeTU"},
+      {n:4,t:"ทำไมการขอความช่วยเหลือถึงฉลาดกว่าการไม่ขอ",   thumb:"",yt:"https://youtube.com/@JaideeTU"},
+     ]},
+  2:{n:"SERIES 2", t:"เข้าไปแล้วเป็นยังไง",
+     e:[
+      {n:1,t:"เซสชัน PR จริงๆ เป็นยังไง — รุ่นพี่เล่าให้ฟัง",  thumb:"",yt:"https://youtube.com/@JaideeTU"},
+      {n:2,t:"นักจิตวิทยาโรงเรียนทำอะไร",                      thumb:"",yt:"https://youtube.com/@JaideeTU"},
+      {n:3,t:"โทร 1323 ครั้งแรก — เขารับสายแล้วพูดอะไร",      thumb:"",yt:"https://youtube.com/@JaideeTU"},
+     ]},
+  3:{n:"SERIES 3", t:"คนจริง เรื่องจริง",
+     e:[
+      {n:1,t:"ฉันแอดวิศวะจุฬาฯ ตอนม.6 ฉันไปหานักจิตฯ",      thumb:"",yt:"https://youtube.com/@JaideeTU"},
+      {n:2,t:"ครูแนะแนวเห็นนักเรียนยังไง — พูดตรงๆ",          thumb:"",yt:"https://youtube.com/@JaideeTU"},
+      {n:3,t:"หมดไฟตอนม.5 — แล้วกลับมาได้ยังไง",              thumb:"",yt:"https://youtube.com/@JaideeTU"},
+     ]},
 };
 
-// ── NAVIGATION ───────────────────────────────────────────────
-function openSeries(n) {
-  const s = SERIES[n];
-  document.getElementById("ep-series-num").textContent   = s.num;
-  document.getElementById("ep-series-title").textContent = s.title;
-  buildGrid(s.episodes);
-
-  document.getElementById("page-landing").className  = "page hidden-left";
-  document.getElementById("page-episodes").className = "page visible";
-  document.getElementById("page-episodes").scrollTop = 0;
-}
-
-function goBack() {
-  document.getElementById("page-landing").className  = "page visible";
-  document.getElementById("page-episodes").className = "page hidden-right";
-}
-
-// ── BUILD EPISODE GRID ───────────────────────────────────────
-function buildGrid(episodes) {
-  const grid = document.getElementById("ep-grid");
-  grid.innerHTML = "";
-  episodes.forEach(ep => {
-    const cell = document.createElement("div");
-    cell.className = "ep-cell";
-
-    // YouTube thumbnail auto-fetch from video ID if available
-    const ytId = ep.ytUrl && ep.ytUrl.includes("watch?v=")
-      ? ep.ytUrl.split("watch?v=")[1].split("&")[0]
-      : null;
-    const thumbSrc = ep.thumb || (ytId ? "https://img.youtube.com/vi/"+ytId+"/mqdefault.jpg" : "");
-
-    cell.innerHTML =
-      "<div class=\"ep-label\">Ep. " + ep.ep + "</div>" +
-      "<div class=\"ep-frame\" onclick=\"openYT(\'" + ep.ytUrl + "\')\">" +
-        (thumbSrc
-          ? "<img src=\"" + thumbSrc + "\" loading=\"lazy\" onerror=\"this.style.display=\'none\'\"/>"
-          : "<div class=\"ep-placeholder\">▶</div>") +
-      "</div>" +
-      "<div class=\"ep-title\">" + ep.title + "</div>";
-
-    grid.appendChild(cell);
+function go(n){
+  var s=S[n];
+  document.getElementById("hn").textContent=s.n;
+  document.getElementById("ht").textContent=s.t;
+  var g=document.getElementById("eg");
+  g.innerHTML="";
+  s.e.forEach(function(ep){
+    var ytId=ep.yt&&ep.yt.includes("watch?v=")
+      ?ep.yt.split("watch?v=")[1].split("&")[0]:null;
+    var src=ep.thumb||(ytId?"https://img.youtube.com/vi/"+ytId+"/mqdefault.jpg":"");
+    var c=document.createElement("div");
+    c.className="ep-cell";
+    c.innerHTML=
+      "<div class=\"ep-num-lbl\">Ep. "+ep.n+"</div>"+
+      "<div class=\"ep-frame\" onclick=\"window.open('"+ep.yt+"','_blank','noopener')\">"+
+        "<div class=\"ep-frame-inner\">"+
+          (src?"<img src=\""+src+"\" loading=\"lazy\" onerror=\"this.style.display=\'none\'\"/>":
+               "<div class=\"ep-ph\">▶</div>")+
+        "</div>"+
+      "</div>"+
+      "<div class=\"ep-title\">"+ep.t+"</div>";
+    g.appendChild(c);
   });
+  document.getElementById("pg1").className="page off-l";
+  document.getElementById("pg2").className="page on";
+  document.getElementById("pg2").scrollTop=0;
 }
 
-function openYT(url) {
-  window.open(url, "_blank", "noopener");
+function back(){
+  document.getElementById("pg1").className="page on";
+  document.getElementById("pg2").className="page off-r";
 }
 </script>
 </body>
