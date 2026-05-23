@@ -228,7 +228,7 @@
 
 <div class="hero">
   <div class="hero-eyebrow">พื้นที่ใจ</div>
-  <div class="hero-title">อยากเข้าใจตัวเองมากขึ้น</div>
+  <div class="hero-title">ไม่ต้องแบกคนเดียว</div>
   <div class="hero-sub">วิธีดูแลตัวเองใน 6 ชั้น<br/>วิทยาศาสตร์ที่อยู่เบื้องหลัง</div>
 </div>
 
@@ -242,40 +242,7 @@
   <button class="tab-btn"        data-tab="professional" onclick="switchTab('professional')">🏥 ผู้เชี่ยวชาญ</button>
 </div>
 
-<!-- FLOATING BUTTON -->
-<button class="feel-fab" onclick="openFeelModal()">
-  <span class="feel-fab-dot"></span>
-  ตอนนี้รู้สึกยังไง?
-</button>
 
-<!-- FEELING MODAL -->
-<div class="feel-overlay" id="feel-overlay" onclick="handleFeelOverlayClick(event)">
-  <div class="feel-modal" id="feel-modal">
-    <div class="feel-modal-label">เริ่มจากตรงนี้</div>
-    <div class="feel-modal-title">ตอนนี้คุณรู้สึกยังไงอยู่?</div>
-    <div class="feel-opts">
-      <button class="feel-opt" onclick="routeToLayer('body','layer-body')">
-        <span class="feel-opt-icon">🏃</span><span>รู้สึกล้า เครียดสะสม นอนไม่หลับ หรืออยากรีเซ็ตร่างกาย</span>
-      </button>
-      <button class="feel-opt" onclick="routeToLayer('connection','layer-connection')">
-        <span class="feel-opt-icon">🫂</span><span>เหงา อยากมีคนรับฟัง หรือรู้สึกโดดเดี่ยว</span>
-      </button>
-      <button class="feel-opt" onclick="routeToLayer('expression','layer-expression')">
-        <span class="feel-opt-icon">🎨</span><span>อยากระบาย อยากทำอะไรที่เป็นตัวเอง</span>
-      </button>
-      <button class="feel-opt" onclick="routeToLayer('environment','layer-environment')">
-        <span class="feel-opt-icon">📚</span><span>โดนกดดันจากโรงเรียน บ้าน เพื่อน หรือสังคมรอบข้าง</span>
-      </button>
-      <button class="feel-opt" onclick="routeToLayer('belief','layer-belief')">
-        <span class="feel-opt-icon">🪞</span><span>สงสัยในตัวเอง ความเชื่อ หรือความหมายของสิ่งที่ทำอยู่</span>
-      </button>
-      <button class="feel-opt" onclick="routeToLayer('professional','layer-professional')">
-        <span class="feel-opt-icon">🏥</span><span>อยากคุยกับผู้เชี่ยวชาญ หรือไม่รู้จะเริ่มจากตรงไหน</span>
-      </button>
-    </div>
-    <button class="feel-modal-close" onclick="closeFeelModal()">ปิด ✕</button>
-  </div>
-</div>
 
 <!-- ═══════════════════════════════════════════
      TAB 1: ร่างกาย
@@ -1163,7 +1130,7 @@ if (isPreview) {
   loadCare();
 } else {
   liff.init({liffId: LIFF_ID})
-    .then(() => { if (!liff.isLoggedIn()) { liff.login(); return; } loadCare(); })
+    .then(() => { loadCare(); })
     .catch(() => loadCare());
 }
 
@@ -1191,14 +1158,7 @@ if (isPreview) {
   }
 })();
 
-// First-visit: auto-open feeling modal
-(function() {
-  const KEY = 'jaidee_care_visited';
-  if (!localStorage.getItem(KEY)) {
-    localStorage.setItem(KEY, '1');
-    setTimeout(openFeelModal, 600);
-  }
-})();
+// First-visit modal removed
 </script>
 </body>
 </html>
