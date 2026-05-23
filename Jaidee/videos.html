@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Jaidee TU — yt channel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Noto+Serif+Thai:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --cream:#FDFBF7;--dark:#1C1917;--mid:#6B6560;--soft:#A8A099;
+      --border:#EDE9E0;--card:#FFFFFF;
+      --gold:#C9A84C;--gold-bright:#F5C842;
+      --purple:#7C3AED;--green:#3A7D44;--teal:#0D9488;
+      --blue:#2E5FA3;--rose:#E11D48;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:"Sarabun",sans-serif;background:#0F0F0F;color:#F1F1F1;min-height:100vh;padding-bottom:60px;}
+
+    /* ── CHANNEL HERO ── */
+    .channel-hero{position:relative;width:100%;aspect-ratio:16/5;overflow:hidden;background:#1A1A2E;}
+    .channel-hero-img{width:100%;height:100%;object-fit:cover;display:block;}
+    .channel-hero-placeholder{
+      width:100%;height:100%;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      background:linear-gradient(135deg,#1A1A2E,#2D1B69);
+    }
+    .ch-title-small{font-family:"Playfair Display",serif;font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:2px;}
+    .ch-title-big{font-family:"Playfair Display",serif;font-size:36px;font-weight:700;color:var(--purple);line-height:1;}
+    .ch-title-sub{font-family:"Playfair Display",serif;font-size:12px;font-style:italic;color:rgba(255,255,255,0.5);margin-top:6px;}
+
+    /* ── TAB BAR ── */
+    .tab-bar{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #272727;background:#0F0F0F;position:sticky;top:0;z-index:50;}
+    .tab-bar::-webkit-scrollbar{display:none;}
+    .tab-btn{flex-shrink:0;padding:14px 18px;font-size:13px;font-weight:500;color:#AAAAAA;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:"Sarabun",sans-serif;white-space:nowrap;transition:all 0.18s;}
+    .tab-btn.active{color:#F1F1F1;border-bottom-color:#F1F1F1;}
+
+    /* ── HOME — all series grid ── */
+    .section{padding:16px 12px 0;}
+    .section-label{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#AAAAAA;margin-bottom:12px;}
+
+    /* YouTube-style vertical feed cards */
+    .feed{display:flex;flex-direction:column;gap:20px;}
+    .feed-card{cursor:pointer;text-decoration:none;display:block;}
+    .feed-card:active{opacity:0.85;}
+
+    /* Thumbnail with gold border + Ep label */
+    .thumb-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#272727;border:2px solid var(--gold);}
+    .thumb-img{width:100%;height:100%;object-fit:cover;display:block;}
+    .thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1A1A1A,#2A2A2A);}
+    .thumb-emoji{font-size:40px;opacity:0.35;}
+    .thumb-duration{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.85);color:#F1F1F1;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;}
+    .ep-label{
+      position:absolute;top:-4px;left:10px;
+      font-family:"Playfair Display",serif;font-style:italic;font-weight:700;
+      font-size:22px;color:var(--gold-bright);
+      text-shadow:0 0 12px rgba(245,200,66,0.6),1px 1px 0 rgba(0,0,0,0.8);
+      line-height:1;
+    }
+
+    /* Metadata below thumb */
+    .feed-meta{display:flex;gap:10px;padding:10px 0 0;}
+    .feed-series-dot{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:2px;}
+    .feed-body{flex:1;}
+    .feed-title{font-size:14px;font-weight:500;color:#F1F1F1;line-height:1.35;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .feed-sub{font-size:12px;color:#AAAAAA;}
+    .feed-hook{font-size:11px;color:#888888;font-style:italic;margin-top:3px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+    /* ── SERIES PANEL — YouTube recommendation feed ── */
+    .series-panel{display:none;padding:0;}
+    .series-panel.active{display:block;}
+
+    /* Series hero at top when inside panel */
+    .series-hero{background:#181818;padding:14px 16px;border-bottom:1px solid #272727;}
+    .series-hero-num{font-family:"Playfair Display",serif;font-style:italic;font-weight:700;font-size:13px;color:var(--gold-bright);margin-bottom:2px;}
+    .series-hero-title{font-size:16px;font-weight:600;color:#F1F1F1;margin-bottom:2px;}
+    .series-hero-desc{font-size:12px;color:#AAAAAA;line-height:1.5;}
+
+    /* Episodes — YouTube recommendation row style */
+    .rec-list{padding:12px 12px;display:flex;flex-direction:column;gap:12px;}
+    .rec-card{display:flex;gap:10px;cursor:pointer;background:#181818;border-radius:10px;overflow:hidden;border:1px solid #272727;transition:border-color 0.15s;}
+    .rec-card.open{border-color:#555;}
+    .rec-card:active{opacity:0.85;}
+
+    .rec-thumb{width:120px;flex-shrink:0;position:relative;aspect-ratio:16/9;background:#272727;border-right:2px solid var(--gold);}
+    .rec-thumb-img{width:100%;height:100%;object-fit:cover;display:block;}
+    .rec-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:24px;opacity:0.3;}
+    .rec-ep-label{position:absolute;top:-2px;left:6px;font-family:"Playfair Display",serif;font-style:italic;font-weight:700;font-size:16px;color:var(--gold-bright);text-shadow:0 0 8px rgba(245,200,66,0.5),1px 1px 0 rgba(0,0,0,0.9);}
+    .rec-duration{position:absolute;bottom:5px;right:5px;background:rgba(0,0,0,0.85);color:#F1F1F1;font-size:10px;padding:1px 4px;border-radius:3px;}
+
+    .rec-body{flex:1;padding:10px 10px 10px 0;}
+    .rec-title{font-size:12px;font-weight:500;color:#F1F1F1;line-height:1.35;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .rec-hook{font-size:11px;color:#888888;font-style:italic;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+    /* Expanded bridge section */
+    .rec-bridges{display:none;padding:10px 12px 12px;border-top:1px solid #272727;background:#1A1A1A;}
+    .rec-card.open .rec-bridges{display:block;}
+    .bridge-label{font-size:9px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#666;margin-bottom:7px;}
+    .bridge-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:6px;}
+    .bridge-row:last-of-type{margin-bottom:8px;}
+    .bridge-cue{font-size:11px;color:#888888;font-style:italic;flex:0 0 auto;max-width:150px;line-height:1.45;}
+    .bridge-chips{display:flex;flex-wrap:wrap;gap:4px;}
+    .chip{font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;text-decoration:none;white-space:nowrap;}
+    .chip-g{background:#1A2E1C;color:#6FCF97;border:1px solid #2D5035;}
+    .chip-b{background:#1A1F2E;color:#7EB3F5;border:1px solid #2D3F5A;}
+    .chip-y{background:#2E2210;color:#F5C842;border:1px solid #5A4020;}
+    .chip-p{background:#1E1A2E;color:#B794F4;border:1px solid #3D3060;}
+    .chip-r{background:#2E1A1A;color:#FC8181;border:1px solid #5A2D2D;}
+    .yt-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;background:#CC0000;color:#fff;border:none;border-radius:8px;font-family:"Sarabun",sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;margin-top:4px;}
+    .yt-btn:active{opacity:0.85;}
+
+    /* ── BACK BTN ── */
+    .back-bar{display:flex;align-items:center;gap:8px;padding:12px 14px;background:#0F0F0F;border-bottom:1px solid #272727;cursor:pointer;}
+    .back-bar span{font-size:13px;color:#AAAAAA;}
+  </style>
+</head>
+<body>
+
+<!-- ── CHANNEL HERO ── -->
+<!-- Replace src below with your Cloudinary URL of the channel art image -->
+<div class="channel-hero">
+  <img class="channel-hero-img"
+    src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779543472/Screenshot_2026-05-23_191716_klh20p.png"
+    onerror="this.style.display='none';document.getElementById('hero-placeholder').style.display='flex';"
+    alt="Jaidee TU yt channel"/>
+  <div class="channel-hero-placeholder" id="hero-placeholder" style="display:none;">
+    <div class="ch-title-small">Jaidee TU</div>
+    <div class="ch-title-big">yt channel</div>
+    <div class="ch-title-sub">Introduction Time</div>
+  </div>
+</div>
+
+<!-- ── TAB BAR ── -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showHome()">หน้าแรก</button>
+  <button class="tab-btn" onclick="showSeries(1)" id="tab-s1">Series 1</button>
+  <button class="tab-btn" onclick="showSeries(2)" id="tab-s2">Series 2</button>
+  <button class="tab-btn" onclick="showSeries(3)" id="tab-s3">Series 3</button>
+</div>
+
+<!-- ════════════════════ HOME ════════════════════ -->
+<div id="view-home">
+  <div class="section">
+    <div class="section-label">ทั้งหมด — 10 ตอน</div>
+    <div class="feed">
+
+      <!-- S1 EP1 -->
+      <div class="feed-card" onclick="showSeries(1)">
+        <div class="thumb-wrap">
+          <div class="thumb-placeholder"><span class="thumb-emoji">🧠</span></div>
+          <div class="ep-label">Ep. 1</div>
+          <div class="thumb-duration">3:00</div>
+        </div>
+        <div class="feed-meta">
+          <div class="feed-series-dot" style="background:#1A2E1C;color:#6FCF97;font-size:10px;font-weight:600;">S1</div>
+          <div class="feed-body">
+            <div class="feed-title">ทำไมสอบแล้วหัวว่าง ทั้งที่อ่านมาตลอด</div>
+            <div class="feed-sub">Series 1 · วิทยาศาสตร์ที่ไม่ได้สอนในห้อง</div>
+            <div class="feed-hook">"cortisol สูงเกินทำให้ prefrontal cortex ล็อค — ไม่ใช่คุณลืม"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S1 EP2 -->
+      <div class="feed-card" onclick="showSeries(1)">
+        <div class="thumb-wrap">
+          <div class="thumb-placeholder"><span class="thumb-emoji">🌙</span></div>
+          <div class="ep-label">Ep. 2</div>
+          <div class="thumb-duration">3:00</div>
+        </div>
+        <div class="feed-meta">
+          <div class="feed-series-dot" style="background:#1A2E1C;color:#6FCF97;font-size:10px;font-weight:600;">S1</div>
+          <div class="feed-body">
+            <div class="feed-title">นอน 6 กับ 8 ชั่วโมง ต่างกันยังไงในสมอง</div>
+            <div class="feed-sub">Series 1 · วิทยาศาสตร์ที่ไม่ได้สอนในห้อง</div>
+            <div class="feed-hook">"ระบบ glymphatic ล้างสมองตอนนอน — นอนน้อยล้างไม่หมด"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2 EP1 -->
+      <div class="feed-card" onclick="showSeries(2)">
+        <div class="thumb-wrap">
+          <div class="thumb-placeholder"><span class="thumb-emoji">💛</span></div>
+          <div class="ep-label">Ep. 1</div>
+          <div class="thumb-duration">4:00</div>
+        </div>
+        <div class="feed-meta">
+          <div class="feed-series-dot" style="background:#2E2210;color:#F5C842;font-size:10px;font-weight:600;">S2</div>
+          <div class="feed-body">
+            <div class="feed-title">เซสชัน PR จริงๆ เป็นยังไง — รุ่นพี่เล่าให้ฟัง</div>
+            <div class="feed-sub">Series 2 · เข้าไปแล้วเป็นยังไง</div>
+            <div class="feed-hook">"แค่มีคนนั่งอยู่กับเรา — ไม่ใช่การให้คำแนะนำ"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 EP1 -->
+      <div class="feed-card" onclick="showSeries(3)">
+        <div class="thumb-wrap">
+          <div class="thumb-placeholder"><span class="thumb-emoji">🎓</span></div>
+          <div class="ep-label">Ep. 1</div>
+          <div class="thumb-duration">4:00</div>
+        </div>
+        <div class="feed-meta">
+          <div class="feed-series-dot" style="background:#1E1A2E;color:#B794F4;font-size:10px;font-weight:600;">S3</div>
+          <div class="feed-body">
+            <div class="feed-title">"ฉันแอดวิศวะจุฬาฯ ตอนม.6 ฉันไปหานักจิตฯ"</div>
+            <div class="feed-sub">Series 3 · คนจริง เรื่องจริง</div>
+            <div class="feed-hook">คนที่ฉลาดพอรู้ว่าตัวเองต้องการอะไร</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ SERIES 1 ════════════════════ -->
+<div class="series-panel" id="view-s1">
+  <div class="series-hero">
+    <div class="series-hero-num">SERIES 1</div>
+    <div class="series-hero-title">วิทยาศาสตร์ที่ไม่ได้สอนในห้อง</div>
+    <div class="series-hero-desc">biology ของ stress · การนอน · vagus nerve · การขอความช่วยเหลือ</div>
+  </div>
+  <div class="rec-list">
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb">
+        <div class="rec-thumb-placeholder">🧠</div>
+        <div class="rec-ep-label">Ep.1</div>
+        <div class="rec-duration">3:00</div>
+      </div>
+      <div class="rec-body">
+        <div class="rec-title">ทำไมสอบแล้วหัวว่าง ทั้งที่อ่านมาตลอด</div>
+        <div class="rec-hook">"cortisol ล็อค prefrontal cortex — ไม่ใช่คุณลืม"</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">สนใจ biology ของ stress →</span><div class="bridge-chips"><a class="chip chip-g" href="care.html?tab=body">ชั้นร่างกาย</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">จัดการความคิดตอนกดดัน →</span><div class="bridge-chips"><a class="chip chip-p" href="alltools.html#reframe">ปรับความคิด</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb">
+        <div class="rec-thumb-placeholder">🌙</div>
+        <div class="rec-ep-label">Ep.2</div>
+        <div class="rec-duration">3:00</div>
+      </div>
+      <div class="rec-body">
+        <div class="rec-title">นอน 6 กับ 8 ชั่วโมง ต่างกันยังไงในสมอง</div>
+        <div class="rec-hook">"glymphatic ล้างสมองตอนนอน — นอนน้อยล้างไม่หมด"</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">ชอบ content แบบนี้ →</span><div class="bridge-chips"><a class="chip chip-g" href="care.html?tab=body">ชั้นร่างกาย</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">คืนนี้นอนไม่หลับ →</span><div class="bridge-chips"><a class="chip chip-b" href="sleep.html">นอนหลับ</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb">
+        <div class="rec-thumb-placeholder">🌬️</div>
+        <div class="rec-ep-label">Ep.3</div>
+        <div class="rec-duration">2:30</div>
+      </div>
+      <div class="rec-body">
+        <div class="rec-title">หายใจออกยาว 6 วินาทีเปลี่ยนระบบประสาทได้จริงไหม</div>
+        <div class="rec-hook">"vagus nerve · HRV · polyvagal — นี่ไม่ใช่ mysticism"</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">ลองหายใจตอนนี้เลย →</span><div class="bridge-chips"><a class="chip chip-b" href="alltools.html#breathe">หายใจ</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">body กับใจเชื่อมยังไง →</span><div class="bridge-chips"><a class="chip chip-g" href="care.html?tab=body">ชั้นร่างกาย</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb">
+        <div class="rec-thumb-placeholder">🤝</div>
+        <div class="rec-ep-label">Ep.4</div>
+        <div class="rec-duration">3:00</div>
+      </div>
+      <div class="rec-body">
+        <div class="rec-title">ทำไมการขอความช่วยเหลือถึงฉลาดกว่าการไม่ขอ</div>
+        <div class="rec-hook">"evolutionary cost of chronic stress — คณิตศาสตร์ชัด"</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">ดูว่ามีทางไหนบ้าง →</span><div class="bridge-chips"><a class="chip chip-y" href="talk.html">บันได 6 ขั้น</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">ลองเครื่องมือก่อน →</span><div class="bridge-chips"><a class="chip chip-p" href="alltools.html">โซนทั่วไป</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════ SERIES 2 ════════════════════ -->
+<div class="series-panel" id="view-s2">
+  <div class="series-hero">
+    <div class="series-hero-num">SERIES 2</div>
+    <div class="series-hero-title">เข้าไปแล้วเป็นยังไง</div>
+    <div class="series-hero-desc">PR · นักจิตวิทยา · 1323 — เบื้องหลังที่ไม่เคยเห็น</div>
+  </div>
+  <div class="rec-list">
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb"><div class="rec-thumb-placeholder">💛</div><div class="rec-ep-label">Ep.1</div><div class="rec-duration">4:00</div></div>
+      <div class="rec-body">
+        <div class="rec-title">เซสชัน PR จริงๆ เป็นยังไง — รุ่นพี่เล่าให้ฟัง</div>
+        <div class="rec-hook">"แค่มีคนนั่งอยู่กับเรา"</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">อยากลองนัดคุยดู →</span><div class="bridge-chips"><a class="chip chip-y" href="peer.html">นัดกับ PR</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">ดูตัวเลือกอื่นก่อน →</span><div class="bridge-chips"><a class="chip chip-y" href="talk.html">ขั้นที่ 0</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb"><div class="rec-thumb-placeholder">🧠</div><div class="rec-ep-label">Ep.2</div><div class="rec-duration">3:30</div></div>
+      <div class="rec-body">
+        <div class="rec-title">นักจิตวิทยาโรงเรียนทำอะไร — ไม่ใช่แค่ "คุยปัญหา"</div>
+        <div class="rec-hook">"CBT · assessment — มีเครื่องมือ specific มาก"</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">ดูนักจิตฯ ที่โรงเรียน →</span><div class="bridge-chips"><a class="chip chip-g" href="professionals.html">นักจิตวิทยา</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">รู้ว่าตัวเองอยู่ขั้นไหน →</span><div class="bridge-chips"><a class="chip chip-y" href="talk.html">บันได 6 ขั้น</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb"><div class="rec-thumb-placeholder">📞</div><div class="rec-ep-label">Ep.3</div><div class="rec-duration">2:30</div></div>
+      <div class="rec-body">
+        <div class="rec-title">โทร 1323 ครั้งแรก — เขารับสายแล้วพูดอะไร</div>
+        <div class="rec-hook">"สายนี้รับฟังทุกระดับ ไม่ใช่แค่ emergency"</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">คุยกับ AI ก่อนโทร →</span><div class="bridge-chips"><a class="chip chip-b" href="talk.html#now">ขั้นที่ 0</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">เตรียมตัวก่อนโทร →</span><div class="bridge-chips"><a class="chip chip-r" href="crisis.html">สายด่วน</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════ SERIES 3 ════════════════════ -->
+<div class="series-panel" id="view-s3">
+  <div class="series-hero">
+    <div class="series-hero-num">SERIES 3</div>
+    <div class="series-hero-title">คนจริง เรื่องจริง</div>
+    <div class="series-hero-desc">รุ่นพี่ที่เคยสั่น · ครูที่รอให้เราทัก · คนที่เคยหมดไฟ</div>
+  </div>
+  <div class="rec-list">
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb"><div class="rec-thumb-placeholder">🎓</div><div class="rec-ep-label">Ep.1</div><div class="rec-duration">4:00</div></div>
+      <div class="rec-body">
+        <div class="rec-title">"ฉันแอดวิศวะจุฬาฯ ตอนม.6 ฉันไปหานักจิตฯ"</div>
+        <div class="rec-hook">คนที่ฉลาดพอรู้ว่าตัวเองต้องการอะไร</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">ลองคุยกับคน →</span><div class="bridge-chips"><a class="chip chip-y" href="talk.html">บันไดทั้งหมด</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">เข้าใจตัวเองก่อน →</span><div class="bridge-chips"><a class="chip chip-p" href="care.html">ระบบจิตใจ 6 ชั้น</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb"><div class="rec-thumb-placeholder">👩‍🏫</div><div class="rec-ep-label">Ep.2</div><div class="rec-duration">3:30</div></div>
+      <div class="rec-body">
+        <div class="rec-title">ครูแนะแนวเห็นนักเรียนยังไง — พูดตรงๆ</div>
+        <div class="rec-hook">"ครูรอให้นักเรียนทักมาก่อน"</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">ดูว่าครูเป็นใคร →</span><div class="bridge-chips"><a class="chip chip-g" href="professionals.html">ครูแนะแนว</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">เตรียมจะคุยกับครู →</span><div class="bridge-chips"><a class="chip chip-b" href="alltools.html#clarity">หาความชัด</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+    <div class="rec-card" onclick="toggleRec(this)">
+      <div class="rec-thumb"><div class="rec-thumb-placeholder">🪫</div><div class="rec-ep-label">Ep.3</div><div class="rec-duration">4:00</div></div>
+      <div class="rec-body">
+        <div class="rec-title">หมดไฟตอนม.5 — แล้วกลับมาได้ยังไง</div>
+        <div class="rec-hook">มีขั้นตอนที่ทำได้จริง — ไม่ใช่แค่ "คิดบวก"</div>
+      </div>
+      <div class="rec-bridges">
+        <div class="bridge-label">เปิดแอปต่อ</div>
+        <div class="bridge-row"><span class="bridge-cue">กำลังหมดไฟอยู่ →</span><div class="bridge-chips"><a class="chip chip-p" href="resources.html">จะทำยังไงถ้าหมดไฟ</a></div></div>
+        <div class="bridge-row"><span class="bridge-cue">หากลับมาว่าต้องการอะไร →</span><div class="bridge-chips"><a class="chip chip-b" href="alltools.html#clarity">หาความชัด</a><a class="chip chip-g" href="care.html?tab=belief">ชั้นความเชื่อ</a></div></div>
+        <a class="yt-btn" href="https://youtube.com/@JaideeTU" target="_blank" rel="noopener">▶ ดูบน YouTube</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const VIEWS = ["home","s1","s2","s3"];
+
+function showHome(){
+  VIEWS.forEach(v => {
+    const el = document.getElementById("view-"+v);
+    if(el) el.style.display = v==="home" ? "block" : "none";
+  });
+  document.querySelectorAll(".tab-btn").forEach((b,i) => b.classList.toggle("active", i===0));
+  window.scrollTo(0,0);
+}
+
+function showSeries(n){
+  VIEWS.forEach(v => {
+    const el = document.getElementById("view-"+v);
+    if(el) el.style.display = v==="s"+n ? "block" : "none";
+  });
+  document.querySelectorAll(".tab-btn").forEach((b,i) => b.classList.toggle("active", i===n));
+  window.scrollTo(0,0);
+}
+
+function toggleRec(card){
+  const isOpen = card.classList.contains("open");
+  card.closest(".rec-list").querySelectorAll(".rec-card.open").forEach(c=>c.classList.remove("open"));
+  if(!isOpen) card.classList.add("open");
+}
+
+showHome();
+</script>
+</body>
+</html>
