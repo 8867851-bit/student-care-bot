@@ -102,23 +102,18 @@
       50%{text-shadow:0 0 12px rgba(232,150,12,0.9),0 0 30px rgba(232,150,12,0.5),0 0 50px rgba(232,150,12,0.2);}
     }
 
-    /* ── GREEN GLOW BUTTON — same weight as .call-btn ── */
+    /* ── GREEN SOLID BUTTON — same weight as .call-btn ── */
     .situation-btn{
       display:flex;align-items:center;justify-content:center;gap:14px;
       margin:16px 16px 0;width:calc(100% - 32px);padding:22px 24px;
-      background:rgba(58,125,68,0.15);color:#FDFBF7;
-      border:1px solid rgba(58,125,68,0.4);border-radius:var(--radius);
+      background:#3A7D44;color:#fff;
+      border:none;border-radius:var(--radius);
       font-family:'Mitr',sans-serif;font-size:20px;font-weight:600;
       cursor:pointer;text-decoration:none;
-      box-shadow:0 0 32px rgba(58,125,68,0.2);
-      animation:greenPulse 4s ease-in-out infinite;
-      transition:transform 0.15s;
+      box-shadow:0 8px 32px rgba(58,125,68,0.4);
+      transition:transform 0.15s,box-shadow 0.15s;
     }
-    .situation-btn:active{transform:scale(0.97);}
-    @keyframes greenPulse{
-      0%,100%{box-shadow:0 0 32px rgba(58,125,68,0.2);}
-      50%{box-shadow:0 0 48px rgba(58,125,68,0.35);}
-    }
+    .situation-btn:active{transform:scale(0.97);box-shadow:0 4px 16px rgba(58,125,68,0.3);}
     .situation-icon{font-size:24px;}
       display:block;margin:20px 16px 0;
       text-align:center;padding:14px;
@@ -136,9 +131,9 @@
 <button class="back-btn" onclick="history.back()">← กลับ</button>
 
 <div class="hero">
-  <div class="hero-eyebrow">ใจดี TU · สําหรับทุกคน</div>
-  <div class="hero-title">ตอนนี้ไม่ปลอดภัย<br>หรือรู้สึกไม่ไหวแล้ว?</div>
-  <div class="hero-sub">กดปุ่มด้านล่างได้เลย<br>ไม่ต้องรอ ไม่ต้องพร้อม ไม่ต้องอธิบายทุกอย่าง</div>
+  <div class="hero-eyebrow">ใจดี TU · ช่วยเหลือ</div>
+  <div class="hero-title">มาถูกที่แล้ว</div>
+  <div class="hero-sub">ไม่ว่าจะเป็นห่วงตัวเอง เป็นห่วงเพื่อน<br>หรือแค่อยากรู้ว่ามีอะไรบ้าง — มีคำตอบอยู่ที่นี่</div>
 </div>
 
 <!-- 1323 — big, red, impossible to miss -->
@@ -154,7 +149,7 @@
 </div>
 
 <!-- Grounding — 3 steps, short -->
-<div class="section-label">ถ้าตอนนี้รู้สึกท่วมท้น — ทำสิ่งนี้ก่อน</div>
+<div class="section-label">รู้สึกท่วมท้นอยู่ตอนนี้ — ลองทำสิ่งนี้ก่อน</div>
 
 <div class="ground-card">
   <div class="ground-num">1</div>
@@ -181,7 +176,7 @@
 </div>
 
 <!-- Other hotlines — 3 only -->
-<div class="section-label">สายด่วนอื่น</div>
+<div class="section-label">สายด่วนอื่น — โทรได้เลย ฟรี</div>
 
 <a class="hotline-card" href="tel:02-713-6793">
   <span class="hotline-icon">💙</span>
@@ -215,8 +210,12 @@
   <span class="situation-icon">🌿</span>
   <span>
     จะทำยังไงถ้า...
-    <span class="call-sub">คู่มือสถานการณ์ทุกแบบ</span>
+    <span class="call-sub">เป็นห่วงเพื่อน · ไม่รู้จะเริ่มยังไง</span>
   </span>
+</a>
+
+<a href="talk.html" style="display:block;text-align:center;margin:14px 16px 0;padding:10px;font-family:'Mitr',sans-serif;font-size:12px;font-weight:300;color:rgba(253,251,247,0.3);text-decoration:none;">
+  แค่อยากรู้ว่ามีบริการอะไรบ้าง →
 </a>
 
 </body>
