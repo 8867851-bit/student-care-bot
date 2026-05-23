@@ -57,21 +57,29 @@
     .worlds-wrap{display:flex;flex-direction:column;gap:10px;padding:0 16px;}
     .world-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-    .world-card{background:var(--card-bg);border-radius:var(--radius-card);padding:18px 16px 16px;cursor:pointer;border:1px solid var(--card-border);box-shadow:0 1px 4px rgba(0,0,0,0.04);position:relative;overflow:hidden;opacity:0;transform:translateY(10px);}
-    .world-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s ease;}
-    .world-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(232,150,12,0.18),transparent);opacity:0;transition:opacity 0.2s;}
-    .world-card:hover::before{opacity:1;}
+    /* ── SECRET SAUCE STYLE CARDS ── */
+    .world-card{background:var(--card-bg);border-radius:var(--radius-card);padding:16px;cursor:pointer;border:1px solid var(--card-border);box-shadow:0 1px 4px rgba(0,0,0,0.04);position:relative;overflow:hidden;opacity:0;transform:translateY(10px);}
+    .world-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease;}
     .world-card:active{transform:scale(0.97)!important;}
-    .world-card.full{display:flex;align-items:center;gap:16px;padding:16px 18px;}
-    .world-card.full .world-icon{margin-bottom:0;flex-shrink:0;}
-    .world-card.full .world-body{flex:1;}
-    .world-card.full .world-name{font-size:15px;}
-    .world-card.full::after{content:'›';font-size:20px;color:var(--soft);flex-shrink:0;}
+    .world-card.full{padding:14px 16px;}
     .world-card.locked{opacity:0.38!important;cursor:default;pointer-events:none;filter:grayscale(0.4);}
-    .world-icon{width:40px;height:40px;border-radius:12px;background:var(--cream);border:1px solid var(--cream-border);display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:20px;overflow:hidden;}
-    .world-icon img{width:100%;height:100%;object-fit:cover;border-radius:11px;}
-    .world-name{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.3;}
-    .world-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
+
+    /* top row: circle logo + name + stats */
+    .wc-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+    .world-icon{width:48px;height:48px;border-radius:50%;background:var(--cream);border:1px solid var(--cream-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;overflow:hidden;}
+    .world-icon img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .wc-info{flex:1;min-width:0;}
+    .world-name{font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:var(--dark);line-height:1.3;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .wc-stats{font-size:10px;font-weight:300;color:var(--soft);line-height:1.4;}
+
+    /* button row */
+    .wc-btns{display:flex;gap:7px;}
+    .wc-btn-open{flex:1;background:var(--dark);color:#FDFBF7;border:none;border-radius:20px;padding:8px 10px;font-family:'Mitr',sans-serif;font-size:12px;font-weight:500;cursor:pointer;text-align:center;transition:opacity 0.15s;}
+    .wc-btn-open:active{opacity:0.8;}
+    .wc-btn-community{flex:1;background:none;color:var(--dark);border:1px solid var(--cream-border);border-radius:20px;padding:8px 10px;font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;text-decoration:none;transition:background 0.15s;}
+    .wc-btn-community:active{background:var(--cream);}
+
+    .world-desc{display:none;}
 
     .divider-locked{margin:4px 0;padding:0 4px;display:flex;align-items:center;gap:8px;}
     .divider-locked-line{flex:1;height:1px;background:var(--cream-border);}
@@ -132,6 +140,9 @@
     .library-progress-track{height:3px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;}
     .library-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(226,192,96,0.6),rgba(176,125,16,0.9));transition:width 1s ease;}
   </style>
+  <!-- GoatCounter visitor tracking -->
+  <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -157,8 +168,8 @@
     </div>
     <div class="sig-card reflection" onclick="openCareSheet()" style="background:linear-gradient(145deg,#1C1917 0%,#2C2520 100%);border-color:#3A332D;display:flex;align-items:center;gap:16px;padding:18px 20px;">
       <div style="flex:1;">
-        <div class="sig-label" style="color:rgba(232,150,12,0.8);margin-bottom:6px;"></div>
-        <div class="sig-name" style="color:#FDFBF7;font-size:22px;margin-bottom:4px;">ตอนนี้อยู่ตรงไหน?</div>
+        <div class="sig-label" style="color:rgba(232,150,12,0.8);margin-bottom:6px;">ดูแลตัวเอง 24/7</div>
+        <div class="sig-name" style="color:#FDFBF7;font-size:16px;margin-bottom:4px;">ตอนนี้อยู่ตรงไหน?</div>
         <div class="sig-hint" style="color:rgba(253,251,247,0.45);">reflection · พื้นที่ใจ · เครื่องมือ</div>
       </div>
       <div style="font-size:22px;opacity:0.5;">→</div>
@@ -243,25 +254,25 @@ const isPreview = new URLSearchParams(window.location.search).get("preview") ===
 
 // ═══ LAYOUT CONFIG ═══════════════════════════════════════
 const WORLDS_TOP = [
-  { name:"แผนดูแลตัวเอง", desc:"รู้แล้วว่าอยากทำงานกับอะไร พร้อมทำทีละนิดเป็นเวลาหลายสัปดาห์", url:"plans.html", emoji:"🗺️" },
-  { name:"Puzzle Piece",   desc:"คลังความรู้จิตวิทยาที่เข้าใจง่าย", url:"puzzle.html", emoji:"🧩" },
-  { name:"People",         desc:"มุมมองของผู้คนที่หลากหลาย", url:"people.html", emoji:"👥", newBadge:"🏠 ห่างบ้าน" },
-  { name:"Programs",       desc:"Workshop และ กิจกรรมเดือนนี้", url:"programs.html", emoji:"🌱" },
-  { name:"ใจดี TU คืออะไร?", desc:"โครงสร้างระบบ แนวคิด ผลงานทีม", url:"founder.html", emoji:"📜" },
+  { name:"แผนดูแลตัวเอง", stats:"แผน · กิจกรรมรายสัปดาห์", url:"plans.html", emoji:"🗺️" },
+  { name:"Puzzle Piece",   stats:"บทความ · วิดีโอ · จิตวิทยา", url:"puzzle.html", emoji:"🧩" },
+  { name:"People",         stats:"มุมมอง · เรื่องราว · ห่างบ้าน", url:"people.html", emoji:"👥", newBadge:"ใหม่" },
+  { name:"Programs",       stats:"Workshop · กิจกรรมเดือนนี้", url:"programs.html", emoji:"🌱" },
+  { name:"ใจดี TU คืออะไร?", stats:"ทีม · แนวคิด · ผลงาน", url:"founder.html", emoji:"📜" },
 ];
 
 const M4_CARDS = [
-  { name:"School Support", desc:"สิ่งที่โรงเรียนลืมบอก", url:"school.html", emoji:"🏫", isNew:false },
-  { name:"PAT SAK", thName:"โครงการพัฒนาศักยภาพการดํารงตน", desc:"สรุปทุกอย่างจาก 2 วันที่ผ่านมา ให้อยู่ที่เดียว", url:"patsak.html", emoji:"⭐", isNew:true },
+  { name:"School Support", stats:"ข้อมูลโรงเรียน · ครู · ทรัพยากร", url:"school.html", emoji:"🏫", isNew:false },
+  { name:"PAT SAK", stats:"สรุปกิจกรรม 2 วัน", url:"patsak.html", emoji:"⭐", isNew:true },
 ];
 
 const UNLOCK_DATE = "2028-07-12";
 
 const WORLDS_LOCKED_GRID = [
-  { name:"Academic Support", desc:"เรียนให้ดีขึ้นในแบบที่ใช่", url:"academic.html", emoji:"📚" },
+  { name:"Academic Support", stats:"เร็วๆ นี้", url:"academic.html", emoji:"📚" },
 ];
 
-const WORLD_8 = { name:"Career Support", desc:"วางแผนอนาคต เริ่มได้เลย", url:"career.html", emoji:"🎯" };
+const WORLD_8 = { name:"Career Support", stats:"วางแผนอนาคต · เร็วๆ นี้", url:"career.html", emoji:"🎯" };
 
 const COMING_SOON = [
   { name:"Drama & Arts",   emoji:"🎭", desc:"ชมรมละคร time management + passion" },
@@ -288,25 +299,35 @@ function startCountdown() {
   _timer = setInterval(tick, 60000);
 }
 
-// ═══ WORLD CARD ════════════════════════════════════════════
+// ═══ WORLD CARD — Secret Sauce style ══════════════════════
+const LINE_OPENCHAT = "https://line.me/ti/g2/FAKE_OPENCHAT_ID"; // เปลี่ยนเป็น URL จริง
+
 function makeCard(w, full, locked, delay) {
   const el = document.createElement("div");
   el.className = "world-card" + (full?" full":"") + (locked?" locked":"");
-  if (!locked) el.onclick = () => window.location.href = w.url;
 
   const icon = w.icon_url
     ? `<img src="${w.icon_url}" alt="${w.name}" onerror="this.parentElement.innerText='${w.emoji||"🌐"}'"/>`
     : (w.emoji || "🌐");
 
-  if (full) {
-    el.innerHTML = `<div class="world-icon">${icon}</div><div class="world-body"><div class="world-name">${w.name}</div><div class="world-desc">${w.desc}</div></div>`;
-  } else {
-    el.innerHTML = `
+  const stats = w.stats || w.desc || "";
+  const badge = w.newBadge ? `<span style="background:#4A1A25;color:#FDF5F5;font-size:9px;border-radius:4px;padding:1px 6px;margin-left:4px;">${w.newBadge}</span>` : "";
+
+  el.innerHTML = `
+    <div class="wc-top">
       <div class="world-icon">${icon}</div>
-      <div class="world-name">${w.name}</div>
-      <div class="world-desc">${w.desc}</div>
-      ${w.newBadge ? `<div style="display:inline-flex;align-items:center;margin-top:8px;background:#4A1A25;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:500;color:#FDF5F5;letter-spacing:0.5px;">${w.newBadge}</div>` : ''}`;
-  }
+      <div class="wc-info">
+        <div class="world-name">${w.name}${badge}</div>
+        <div class="wc-stats">${stats}</div>
+      </div>
+    </div>
+    <div class="wc-btns">
+      <button class="wc-btn-open" onclick="event.stopPropagation();window.location.href='${w.url}'">เปิด</button>
+      <a class="wc-btn-community" href="${LINE_OPENCHAT}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1C4.13 1 1 3.69 1 7c0 1.77.87 3.36 2.27 4.47L2.5 15l3.73-1.55C7.08 13.8 7.54 14 8 14c3.87 0 7-2.69 7-6s-3.13-6-7-6z" fill="currentColor"/></svg>
+        Community
+      </a>
+    </div>`;
 
   setTimeout(() => el.classList.add("visible"), delay);
   return el;
@@ -401,68 +422,42 @@ function renderAll() {
   wrap.appendChild(ds);
 
   // 2-col row: library + community
-const surpriseRow = document.createElement('div');
-surpriseRow.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:500px;';
-wrap.appendChild(surpriseRow);
-  
+  const surpriseRow = document.createElement('div');
+  surpriseRow.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:10px;';
+  wrap.appendChild(surpriseRow);
+
   // Community card — mini photo wall preview
-const comCard = document.createElement('div');
-comCard.onclick = () => window.location.href = 'communitywork.html';
-comCard.style.cssText = 'background:#EEF7EF;border-radius:20px;overflow:hidden;cursor:pointer;border:1px solid #B8E0BC;opacity:0;transform:translateY(10px);display:flex;flex-direction:column;transition:transform 0.15s;';
-comCard.addEventListener('touchstart', () => comCard.style.transform='scale(0.97)', {passive:true});
-comCard.addEventListener('touchend', () => comCard.style.transform='', {passive:true});
+  const comCard = document.createElement('div');
+  comCard.onclick = () => window.location.href = 'community.html';
+  comCard.style.cssText = 'background:#1C1917;border-radius:20px;overflow:hidden;cursor:pointer;border:1px solid rgba(76,175,80,0.2);opacity:0;transform:translateY(10px);display:flex;flex-direction:column;transition:transform 0.15s;';
+  comCard.addEventListener('touchstart', () => comCard.style.transform='scale(0.97)', {passive:true});
+  comCard.addEventListener('touchend', () => comCard.style.transform='', {passive:true});
 
-comCard.innerHTML = `
-  <div style="height:115px;display:flex;align-items:center;justify-content:center;padding:0 14px;">
-    <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;color:#1B3A1D;text-align:center;">ทำจิตอาสา</div>
-  </div>
-  <div style="height:1px;background:#B8E0BC;margin:0 14px;opacity:0.7;"></div>
-  <svg width="100%" height="130" viewBox="0 0 160 130" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="comSky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#C8E6AA"/>
-        <stop offset="100%" stop-color="#E8F5D0"/>
-      </linearGradient>
-    </defs>
-    <rect x="0" y="0" width="160" height="130" fill="url(#comSky)"/>
-    <circle cx="128" cy="22" r="14" fill="#FFE17A" opacity="0.9"/>
-    <circle cx="128" cy="22" r="20" fill="#FFE17A" opacity="0.2"/>
-    <ellipse cx="30" cy="78" rx="18" ry="11" fill="#A8D5A2" opacity="0.55"/>
-    <ellipse cx="130" cy="72" rx="14" ry="9" fill="#A8D5A2" opacity="0.45"/>
-    <ellipse cx="75" cy="68" rx="12" ry="8" fill="#C2E0BC" opacity="0.4"/>
-    <rect x="14" y="66" width="3" height="34" rx="1.5" fill="#4A8050"/>
-    <ellipse cx="15.5" cy="63" rx="8" ry="7" fill="#5EA865" opacity="0.8"/>
-    <rect x="143" y="74" width="2.5" height="26" rx="1.2" fill="#4A8050"/>
-    <ellipse cx="144" cy="72" rx="6" ry="5.5" fill="#5EA865" opacity="0.7"/>
-    <rect x="0" y="110" width="160" height="20" fill="#6AAF6E"/>
-    <ellipse cx="80" cy="110" rx="90" ry="10" fill="#7ABF7E"/>
-    <rect x="0" y="118" width="160" height="12" fill="#4E9455"/>
-    <g transform="translate(62, 62)">
-      <ellipse cx="0" cy="0" rx="6" ry="6" fill="#2A4A2C"/>
-      <rect x="-5.5" y="6" width="11" height="24" rx="3" fill="#2A4A2C"/>
-      <path d="M-5.5 10 Q-14 9 -15 16 Q-10 18 -5.5 15Z" fill="#2A4A2C"/>
-      <path d="M5.5 10 Q14 9 15 16 Q10 18 5.5 15Z" fill="#2A4A2C"/>
-      <rect x="-4" y="30" width="4" height="12" rx="2" fill="#2A4A2C"/>
-      <rect x="0" y="30" width="4" height="12" rx="2" fill="#2A4A2C"/>
-    </g>
-    <g transform="translate(90, 72)">
-      <ellipse cx="0" cy="0" rx="4.5" ry="4.5" fill="#2A4A2C"/>
-      <rect x="-4" y="5" width="8" height="18" rx="2.5" fill="#2A4A2C"/>
-      <path d="M-4 8 Q-11 7 -12 13 Q-8 15 -4 12Z" fill="#2A4A2C"/>
-      <path d="M4 8 Q11 7 12 13 Q8 15 4 12Z" fill="#2A4A2C"/>
-      <rect x="-3" y="23" width="3" height="10" rx="1.5" fill="#2A4A2C"/>
-      <rect x="0" y="23" width="3" height="10" rx="1.5" fill="#2A4A2C"/>
-    </g>
-    <path d="M71 77 L82 82" stroke="#2A4A2C" stroke-width="3.5" stroke-linecap="round"/>
-  </svg>`;
+  // Mini photo wall — 6 slots in 3×2
+  const slotColors = ['#2D4A2E','#1A3A20','#2E4A1A','#1A3020','#3A3A1A','#1E2E3A'];
+  const slotIcons  = ['🌿','','🤝','','🛕',''];
+  let slotsHtml = '';
+  slotColors.forEach((c, i) => {
+    slotsHtml += `<div style="aspect-ratio:1;border-radius:5px;background:${c};display:flex;align-items:center;justify-content:center;font-size:12px;opacity:${slotIcons[i]?'0.7':'0.3'};">${slotIcons[i] || '📷'}</div>`;
+  });
 
-surpriseRow.appendChild(comCard);
-setTimeout(() => {
-  comCard.style.opacity = '1';
-  comCard.style.transform = 'translateY(0)';
-  comCard.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-}, d + 100);
-  
+  comCard.innerHTML = `
+    <div style="background:#1A2E1A;padding:12px 11px 0;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:5px;">
+        ${slotsHtml}
+      </div>
+      <div style="height:10px;margin-top:4px;border-radius:2px;background:linear-gradient(180deg,rgba(76,175,80,0.4) 0%,rgba(46,125,50,0.6) 100%);box-shadow:0 3px 6px rgba(0,0,0,0.2);position:relative;">
+        <div style="position:absolute;top:1px;left:0;right:0;height:2px;background:rgba(255,255,255,0.1);border-radius:2px 2px 0 0;"></div>
+      </div>
+    </div>
+    <div style="padding:11px 13px 13px;flex:1;display:flex;flex-direction:column;gap:4px;">
+      <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:rgba(76,175,80,0.85);">ใหม่ · เพิ่งเปิดตัว</div>
+      <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:600;color:#FDFBF7;line-height:1.3;">Community Wall</div>
+      <div style="font-size:10px;font-weight:300;color:rgba(253,251,247,0.38);line-height:1.55;margin-top:1px;">ทำแล้ว แชร์รูปให้เพื่อน</div>
+    </div>`;
+  surpriseRow.appendChild(comCard);
+  setTimeout(() => { comCard.style.opacity='1'; comCard.style.transform='translateY(0)'; comCard.style.transition='opacity 0.4s ease,transform 0.4s ease'; }, d + 100);
+
   // Library card
   const libCard = document.createElement('div');
   libCard.className = 'library-card';
@@ -493,7 +488,7 @@ setTimeout(() => {
     <div class="library-body">
       <div class="library-badge">ใหม่ · เพิ่งเปิดตัว</div>
       <div class="library-name">ชั้นหนังสือของชาวเตรียม</div>
-      <div class="library-desc">อ่านแล้ว บอกต่อ สร้างร่วมกัน<br/>โดย....ชมรมห้องสมุด</div>
+      <div class="library-desc">อ่านแล้ว บอกต่อ สร้างร่วมกัน<br/>โดย...ชมรมห้องสมุด</div>
       <div class="library-progress">
         <div class="library-progress-top">
           <span class="library-progress-label">ชั้นที่ 1</span>
