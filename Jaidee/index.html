@@ -57,58 +57,65 @@
     .worlds-wrap{display:flex;flex-direction:column;gap:10px;padding:0 16px;}
     .world-row{display:flex;flex-direction:column;gap:10px;}
 
-    /* ── HORIZONTAL CARD — matches screenshot ── */
+    /* ── VERTICAL CARD — 2 per row ── */
+    .world-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
     .world-card{
       background:var(--card-bg);
       border-radius:16px;
-      padding:14px 16px;
+      padding:16px 12px 14px;
       border:1px solid var(--card-border);
       box-shadow:0 1px 8px rgba(0,0,0,0.05);
       opacity:0;transform:translateY(8px);
-      display:flex;align-items:center;gap:14px;
+      display:flex;flex-direction:column;align-items:center;
+      text-align:center;
     }
     .world-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease;}
-    .world-card:active{transform:scale(0.98);}
-    .world-card.full{padding:14px 16px;}
+    .world-card:active{transform:scale(0.97);}
+    .world-card.full{flex-direction:row;text-align:left;align-items:center;gap:12px;padding:14px 16px;}
     .world-card.locked{opacity:0.38!important;cursor:default;pointer-events:none;filter:grayscale(0.4);}
 
-    /* Circle logo — left */
+    /* Circle — top center, big */
     .world-icon{
-      width:68px;height:68px;border-radius:50%;
-      flex-shrink:0;overflow:hidden;
+      width:80px;height:80px;border-radius:50%;
+      overflow:hidden;
       border:1.5px solid var(--cream-border);
       background:var(--cream);
       display:flex;align-items:center;justify-content:center;
-      font-size:28px;
+      font-size:32px;
+      margin-bottom:10px;
+      flex-shrink:0;
     }
-    .world-icon img{width:100%;height:100%;object-fit:cover;}
+    .world-icon img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 
-    /* Right content */
-    .wc-right{flex:1;min-width:0;}
+    /* Text */
+    .wc-right{width:100%;}
+    .world-card.full .wc-right{text-align:left;}
     .world-name{
       font-family:"Playfair Display",serif;
       font-style:italic;font-weight:700;
-      font-size:16px;line-height:1.2;
+      font-size:13px;line-height:1.25;
       margin-bottom:3px;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
-    .wc-stats{font-size:11px;font-weight:300;color:var(--soft);margin-bottom:10px;line-height:1.4;}
+    .wc-stats{
+      font-size:9.5px;font-weight:300;color:var(--soft);
+      margin-bottom:10px;line-height:1.5;
+    }
 
-    /* Buttons */
-    .wc-btns{display:flex;gap:8px;}
+    /* Buttons — stacked for narrow cards */
+    .wc-btns{display:flex;flex-direction:column;gap:6px;width:100%;}
     .wc-btn-open{
       background:#1E3A6E;color:#fff;border:none;
-      border-radius:20px;padding:7px 18px;
-      font-family:"Mitr",sans-serif;font-size:12px;font-weight:500;
-      cursor:pointer;white-space:nowrap;transition:opacity 0.15s;
+      border-radius:20px;padding:7px 10px;
+      font-family:"Mitr",sans-serif;font-size:11px;font-weight:500;
+      cursor:pointer;width:100%;transition:opacity 0.15s;
     }
     .wc-btn-open:active{opacity:0.8;}
     .wc-btn-community{
       background:none;color:var(--dark);
       border:1px solid var(--card-border);border-radius:20px;
-      padding:7px 14px;font-family:"Mitr",sans-serif;font-size:12px;font-weight:400;
-      cursor:pointer;display:flex;align-items:center;gap:5px;
-      text-decoration:none;white-space:nowrap;transition:background 0.15s;
+      padding:7px 10px;font-family:"Mitr",sans-serif;font-size:11px;font-weight:400;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;
+      text-decoration:none;width:100%;transition:background 0.15s;
     }
     .wc-btn-community:active{background:var(--cream);}
     .world-desc{display:none;}
@@ -195,13 +202,13 @@
 
   <div class="sig-wrap">
     <div class="section-label" style="margin-bottom:12px;">
-      <div class="section-label-text">/div>
+      <div class="section-label-text">ดูแลตัวเอง 24/7</div>
       <div class="section-label-line"></div>
     </div>
     <div class="sig-card reflection" onclick="openCareSheet()" style="background:linear-gradient(145deg,#1C1917 0%,#2C2520 100%);border-color:#3A332D;display:flex;align-items:center;gap:16px;padding:18px 20px;">
       <div style="flex:1;">
-        <div class="sig-label" style="color:rgba(232,150,12,0.8);margin-bottom:6px;"></div>
-        <div class="sig-name" style="color:#FDFBF7;font-size:22px;margin-bottom:4px;">ตอนนี้อยู่ตรงไหน?</div>
+        <div class="sig-label" style="color:rgba(232,150,12,0.8);margin-bottom:6px;">ดูแลตัวเอง 24/7</div>
+        <div class="sig-name" style="color:#FDFBF7;font-size:16px;margin-bottom:4px;">ตอนนี้อยู่ตรงไหน?</div>
         <div class="sig-hint" style="color:rgba(253,251,247,0.45);">reflection · พื้นที่ใจ · เครื่องมือ</div>
       </div>
       <div style="font-size:22px;opacity:0.5;">→</div>
@@ -365,7 +372,7 @@ function makeCard(w, full, locked, delay) {
           <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
             <path d="M8 1C4.13 1 1 3.69 1 7c0 1.77.87 3.36 2.27 4.47L2.5 15l3.73-1.55C7.08 13.8 7.54 14 8 14c3.87 0 7-2.69 7-6s-3.13-6-7-6z" fill="currentColor"/>
           </svg>
-          Community
+          💬 Community
         </a>
       </div>
     </div>`;
@@ -427,10 +434,13 @@ function renderAll() {
   lbl.innerHTML = `<div class="section-label-text">สำรวจ</div><div class="section-label-line"></div>`;
   wrap.appendChild(lbl);
 
-  WORLDS_TOP.forEach(w => {
-    wrap.appendChild(makeCard(w, false, false, d));
-    d += S;
-  });
+  for (let i = 0; i < WORLDS_TOP.length; i += 2) {
+    const row = document.createElement("div");
+    row.className = "world-row";
+    row.appendChild(makeCard(WORLDS_TOP[i], false, false, d)); d += S;
+    if (WORLDS_TOP[i+1]) { row.appendChild(makeCard(WORLDS_TOP[i+1], false, false, d)); d += S; }
+    wrap.appendChild(row);
+  }
 
   if (!isOpen) {
     const div = document.createElement("div");
