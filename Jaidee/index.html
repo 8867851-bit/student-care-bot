@@ -77,7 +77,7 @@
       width:88px;height:88px;border-radius:50%;
       overflow:hidden;
       border:1.5px solid var(--cream-border);
-      background:var(--cream);
+      background:transparent;
       display:flex;align-items:center;justify-content:center;
       font-size:36px;
       margin-bottom:12px;
@@ -299,7 +299,7 @@ const SCHOOL_SUPPORT_URL = BASE_URL + "/school.html";
 // ═══ LAYOUT CONFIG ═══════════════════════════════════════
 const WORLDS_TOP = [
   { name:"ระบบจิตใจ 6 ชั้น",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779592833/Screenshot_2026-05-24_102000_oapv3i.png",
+    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779591839/Screenshot_2026-05-24_100323_t7ok5w.png",
     emoji:"🧠", color:"#0D9488",
     stats:"วิทยาศาสตร์ · จิตวิทยา · ดูแลตัวเอง",
     url:"care.html" },
@@ -394,8 +394,8 @@ function makeCard(w, full, locked, delay) {
     ? `<span style="background:#4A1A25;color:#FDF5F5;font-size:9px;border-radius:4px;padding:1px 6px;margin-left:6px;font-style:normal;">${w.newBadge}</span>`
     : "";
   const iconInner = w.icon_url
-    ? `<img src="${w.icon_url}" alt="${w.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`
-    : (w.emoji || "🌐");
+    ? `<img src="${w.icon_url}" alt="${w.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none';this.nextSibling&&(this.nextSibling.style.display='')"/ ><span style="display:none;font-size:28px;">${w.emoji||"🌐"}</span>`
+    : `<span style="font-size:28px;">${w.emoji||"🌐"}</span>`;
 
   el.innerHTML = `
     <div class="world-icon">${iconInner}</div>
@@ -408,9 +408,6 @@ function makeCard(w, full, locked, delay) {
         <a class="wc-btn-community"
           href="${LINE_OPENCHAT}" target="_blank" rel="noopener"
           onclick="event.stopPropagation();">
-          <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
-            <path d="M8 1C4.13 1 1 3.69 1 7c0 1.77.87 3.36 2.27 4.47L2.5 15l3.73-1.55C7.08 13.8 7.54 14 8 14c3.87 0 7-2.69 7-6s-3.13-6-7-6z" fill="currentColor"/>
-          </svg>
           💬 Community
         </a>
       </div>
@@ -556,7 +553,7 @@ function renderAll() {
       <!--
         วิธีใส่รูป Community:
         แทน src="" ด้านล่างด้วย Cloudinary URL เช่น:
-        src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779591352/Screenshot_2026-05-24_095520_cny0ly.png"
+        src="https://res.cloudinary.com/dlixucdqx/image/upload/v.../community.jpg"
       -->
       <img
         src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779591352/Screenshot_2026-05-24_095520_cny0ly.png"
