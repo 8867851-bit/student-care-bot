@@ -148,7 +148,7 @@
     .sig-wrap{padding:0 16px;margin-bottom:8px;}
     .sig-card{border-radius:20px;padding:20px 16px 18px;cursor:pointer;position:relative;overflow:hidden;border:1px solid transparent;transition:transform 0.15s,box-shadow 0.15s;}
     .sig-card:active{transform:scale(0.97);}
-    .sig-card.reflection{background:linear-gradient(145deg,#1C1917 0%,#2C2520 100%);border-color:#3A332D;}
+    .sig-card.reflection{background:linear-gradient(145deg,#0D4A44 0%,#0A3D38 100%);border-color:#0D9488;}
     .sig-card::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(145deg,rgba(255,255,255,0.04),transparent);pointer-events:none;}
     .sig-label{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
     .sig-name{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;line-height:1.3;margin-bottom:6px;}
@@ -205,12 +205,12 @@
 
   <div class="sig-wrap">
     <div class="sig-card reflection" onclick="openCareSheet()"
-      style="background:linear-gradient(145deg,#1C1917 0%,#2C2520 100%);
-             border-color:#3A332D;
+      style="background:linear-gradient(145deg,#0D4A44 0%,#0A3D38 100%);
+             border-color:#0D9488;
              display:flex;align-items:center;justify-content:space-between;
              padding:22px 24px;border-radius:20px;border:1px solid #3A332D;cursor:pointer;">
       <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:#FDFBF7;">
-        ตอนนี้อยู่ตรงไหน?
+        แบบทดสอบค้นพบตัวเอง
       </div>
       <div style="font-size:24px;color:rgba(232,150,12,0.7);">→</div>
     </div>
@@ -290,138 +290,26 @@
 
   <div id="m4-section-root"></div>
   <div class="worlds-wrap" id="worlds-wrap"></div>
-<div class="crisis-strip-text">ถ้าตอนนี้รู้สึกไม่ไหวแล้ว/ตกอยู่ในอันตราย<br/>กดปุ่มนี้</div>
-    </div>
-    <button class="crisis-strip-btn">ขอความช่วยเหลือ</button>
-  </div>
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-const API_URL  = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
-const LIFF_ID  = "2009806939-H06mwKgI";
-const isPreview = new URLSearchParams(window.location.search).get("preview") === "student";
 
-// ═══ LAYOUT CONFIG ═══════════════════════════════════════
-const WORLDS_TOP = [
-  { name:"ระบบจิตใจ 6 ชั้น",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779592833/Screenshot_2026-05-24_102000_oapv3i.png", // ← วาง  URL ที่นี่
-    emoji:"🧠", color:"#0D9488",
-    stats:"วิทยาศาสตร์ · จิตวิทยา · ดูแลตัวเอง",
-    url:"care.html" },
-
-  { name:"Roadmap กสพท 75+",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779550823/Screenshot_2026-05-23_212130_meb6fg.png", // ← วาง Cloudinary URL ที่นี่
-    emoji:"⭐", color:"#E11D48",
-    stats:"วิธีเตรียมตัวรุ่นพี่เตรียมอุดม",
-    url:"programs.html" },
-
-  { name:"Puzzle Piece",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779550817/Screenshot_2026-05-23_212006_e7hdrc.png", // ← วาง Cloudinary URL ที่นี่
-    emoji:"🧩", color:"#4B5BD6",
-    stats:"บทความ · วิดีโอ · จิตวิทยา",
-    url:"puzzle.html" },
-
-  { name:"People",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779550830/Screenshot_2026-05-23_210804_hfmb5a.png", // ← วาง Cloudinary URL ที่นี่
-    emoji:"👥", color:"#2E5FA3",
-    stats:"มุมมอง · เรื่องราว · ห่างบ้าน",
-    url:"people.html", newBadge:"ใหม่" },
-
-  { name:"Programs",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779550837/Screenshot_2026-05-23_211552_ieblkt.png", // ← วาง Cloudinary URL ที่นี่
-    emoji:"🌱", color:"#7C3AED",
-    stats:"Workshop · กิจกรรมเดือนนี้",
-    url:"programs.html" },
-
-  { name:"แผนดูแลตัวเอง",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779592983/Screenshot_2026-05-24_095848_opkqft.png", // ← วาง Cloudinary URL ที่นี่
-    emoji:"🗺️", color:"#3A7D44",
-    stats:"แผน · กิจกรรมรายสัปดาห์",
-    url:"plans.html" },
-
-  { name:"ใจดี TU คืออะไร?",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779593019/Screenshot_2026-05-20_215453_vnjpnx.png", // ← วาง Cloudinary URL ที่นี่
-    emoji:"📜", color:"#1C1917",
-    stats:"ทีม · แนวคิด · ผลงาน",
-    url:"founder.html" },
-];
-
-const M4_CARDS = [
-  { name:"รู้จักเตรียมฯ",
-    icon_url: "", // ← วาง Cloudinary URL ที่นี่
-    emoji:"🏫", color:"#5B6A7A",
-    stats:"ข้อมูลโรงเรียน · ครู · ทรัพยากร",
-    url:"school.html" },
-
-  { name:"PAT SAK",
-    icon_url: "", // ← วาง Cloudinary URL ที่นี่
-    emoji:"⭐", color:"#C47B0A",
-    stats:"สรุปกิจกรรม 2 วัน",
-    url:"patsak.html", newBadge:"ใหม่" },
-];
-
-const UNLOCK_DATE = "2028-07-12";
-
-const WORLDS_LOCKED_GRID = [
-  { name:"Academic Support",
-    icon_url: "", // ← วาง Cloudinary URL ที่นี่
-    emoji:"📚", color:"#6B6560",
-    stats:"เร็วๆ นี้", url:"academic.html" },
-];
-
-const WORLD_8 = {
-  name:"Career Support",
-  icon_url: "", // ← วาง Cloudinary URL ที่นี่
-  emoji:"🎯", color:"#6B6560",
-  stats:"วางแผนอนาคต · เร็วๆ นี้",
-  url:"career.html"
-};
-
-const COMING_SOON = [
-  { name:"Drama & Arts",   emoji:"🎭", desc:"ชมรมละคร time management + passion" },
-  { name:"POSN Corner",    emoji:"🔬", desc:"พื้นที่สายโอลิมปิก" },
-  { name:"Gym & Movement", emoji:"🏋️", desc:"Peer สายออกกำลังกาย" },
-  { name:"Music & Sound",  emoji:"🎵", desc:"ดนตรีกับสุขภาพจิต" },
-  { name:"Community Work", emoji:"🤝", desc:"จิตอาสา ค่าย กิจกรรม" },
-];
-
-// ═══ COUNTDOWN ════════════════════════════════════════════
-let _timer = null;
-function startCountdown() {
-  const el = document.getElementById("countdown-display");
-  if (!el) return;
-  function tick() {
-    const diff = new Date(UNLOCK_DATE) - new Date();
-    if (diff <= 0) { el.textContent = "เปิดแล้ว!"; clearInterval(_timer); return; }
-    const d = Math.floor(diff/86400000);
-    const h = Math.floor((diff%86400000)/3600000);
-    const m = Math.floor((diff%3600000)/60000);
-    el.textContent = d>0 ? `เปิดใน ${d} วัน ${h} ชม.` : h>0 ? `เปิดใน ${h} ชม. ${m} นาที` : `เปิดใน ${m} นาที`;
-  }
-  tick();
-  _timer = setInterval(tick, 60000);
-}
-
-// ═══ WORLD CARD ═══════════════════════════════════════════════════
+// ═══ WORLD CARD ══════════════════════════════════════════════
 const LINE_OPENCHAT = "https://line.me/ti/g2/FAKE_OPENCHAT_ID";
 
 function makeCard(w, full, locked, delay) {
   const el = document.createElement("div");
-  el.className = "world-card" + (locked ? " locked" : "");
+  el.className = "world-card" + (full?" full":"") + (locked?" locked":"");
 
   const nameColor = w.color || "var(--dark)";
   const stats = w.stats || w.desc || "";
   const badge = w.newBadge
-    ? `<span style="display:inline-block;background:#4A1A25;color:#FDF5F5;font-size:8px;border-radius:4px;padding:1px 5px;margin-left:4px;font-style:normal;vertical-align:middle;">${w.newBadge}</span>`
+    ? `<span style="background:#4A1A25;color:#FDF5F5;font-size:9px;border-radius:4px;padding:1px 6px;margin-left:6px;font-style:normal;">${w.newBadge}</span>`
     : "";
-
-  // Logo: image if icon_url provided, otherwise emoji
-  const logoHtml = w.icon_url
-    ? `<img src="${w.icon_url}" alt="${w.name}"
-          onerror="this.replaceWith(document.createTextNode('${w.emoji||"🌐"}'))"/>`
-    : `<span>${w.emoji || "🌐"}</span>`;
+  const iconInner = w.icon_url
+    ? `<img src="${w.icon_url}" alt="${w.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`
+    : (w.emoji || "🌐");
 
   el.innerHTML = `
-    <div class="world-icon">${logoHtml}</div>
+    <div class="world-icon">${iconInner}</div>
     <div class="wc-right">
       <div class="world-name" style="color:${nameColor};">${w.name}${badge}</div>
       <div class="wc-stats">${stats}</div>
@@ -434,7 +322,7 @@ function makeCard(w, full, locked, delay) {
           <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
             <path d="M8 1C4.13 1 1 3.69 1 7c0 1.77.87 3.36 2.27 4.47L2.5 15l3.73-1.55C7.08 13.8 7.54 14 8 14c3.87 0 7-2.69 7-6s-3.13-6-7-6z" fill="currentColor"/>
           </svg>
-          Community
+          💬 Community
         </a>
       </div>
     </div>`;
@@ -442,6 +330,7 @@ function makeCard(w, full, locked, delay) {
   setTimeout(() => el.classList.add("visible"), delay);
   return el;
 }
+
 
 // ═══ M4 CARD ═══════════════════════════════════════════════
 function makeM4Card(w, delay) {
@@ -557,23 +446,32 @@ function renderAll() {
   comCard.onclick = () => window.location.href = 'community.html';
   comCard.innerHTML = `
     <div style="width:100%;height:100%;position:relative;min-height:200px;overflow:hidden;border-radius:20px;cursor:pointer;">
+      <!--
+        วิธีใส่รูป Community:
+        แทน src="" ด้านล่างด้วย Cloudinary URL เช่น:
+        src="https://res.cloudinary.com/dlixucdqx/image/upload/v.../community.jpg"
+      -->
       <img
         src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779591352/Screenshot_2026-05-24_095520_cny0ly.png"
         data-community-img
         alt="Community"
         style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;"
-        onerror="this.style.display='none'"
       />
-      <div id="com-placeholder" style="width:100%;height:100%;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:#1C1917;">
-        <div style="font-size:28px;opacity:0.15;">📷</div>
-        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.15);">Community</div>
+      <div id="com-placeholder" style="width:100%;height:100%;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:#1A2A1A;">
+        <div style="font-size:32px;opacity:0.25;">🌿</div>
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Community</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.15);">รอรูปภาพ</div>
       </div>
     </div>`;
-  // When image src is set, hide placeholder
+  // Auto-hide placeholder when image loads
   const comImg = comCard.querySelector('[data-community-img]');
-  if (comImg && comImg.src && comImg.src !== window.location.href) {
-    const ph = comCard.querySelector('#com-placeholder');
-    if (ph) ph.style.display = 'none';
+  if (comImg) {
+    if (comImg.getAttribute('src') && comImg.getAttribute('src') !== '') {
+      comImg.onload = () => {
+        const ph = document.getElementById('com-placeholder');
+        if (ph) ph.style.display = 'none';
+      };
+    }
   }
   surpriseRow.appendChild(comCard);
   setTimeout(() => { comCard.style.opacity='1'; comCard.style.transform='translateY(0)'; comCard.style.transition='opacity 0.4s ease,transform 0.4s ease'; }, d + 100);
@@ -623,7 +521,7 @@ function renderAll() {
   surpriseRow.appendChild(libCard);
   setTimeout(() => {
     libCard.classList.add('visible');
-    const lc=document.getElementById('lib-count'); if(lc)lc.textContent=real+' / '+shelfCap+' เล่ม'; const fill=document.getElementById('lib-fill');
+    const fill=document.getElementById('lib-fill');
     if (fill) setTimeout(() => fill.style.width = pct + '%', 100);
   }, d + 100);
 
@@ -655,6 +553,7 @@ function renderAll() {
 }
 
 // ═══ INIT ════════════════════════════════════════════════════
+const isPreview = new URLSearchParams(window.location.search).get("preview") === "1";
 if (isPreview) {
   document.getElementById("greeting-name").innerText = "สวัสดี 🤍";
   renderAll();
