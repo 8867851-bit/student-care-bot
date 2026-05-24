@@ -121,23 +121,23 @@
       font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;
       cursor:pointer;transition:transform 0.15s;color:#fff;
     }
-    .card-btn.teal{background:var(--teal);}
+    .card-btn.teal{background:var(--teal);color:#fff;}
     .card-btn.rose{background:var(--rose);}
     .card-btn.green{background:var(--green);}
     .card-btn.gold{background:var(--gold);}
-    .card-btn.dark{background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);}
+    .card-btn.dark{background:rgba(0,0,0,0.1);}
     .card-btn:active{transform:scale(0.95);}
 
     /* placeholder image bg colors when no photo yet */
-    .bg-teal{background:linear-gradient(135deg,#134E4A,#0D9488);}
-    .bg-purple{background:linear-gradient(135deg,#2E1065,#7C3AED);}
-    .bg-dark{background:linear-gradient(135deg,#1C1917,#44403C);}
-    .bg-blue{background:linear-gradient(135deg,#1E3A5F,#2E5FA3);}
-    .bg-rose{background:linear-gradient(135deg,#4C0519,#E11D48);}
-    .bg-gold{background:linear-gradient(135deg,#451A03,#E8960C);}
-    .bg-green{background:linear-gradient(135deg,#052E16,#3A7D44);}
-    .bg-indigo{background:linear-gradient(135deg,#1E1B4B,#4338CA);}
-    .bg-slate{background:linear-gradient(135deg,#0F172A,#475569);}
+    .bg-teal{background:linear-gradient(135deg,#E8F5F0,#C8EBE2);}
+    .bg-purple{background:linear-gradient(135deg,#F0EDFF,#DDD6FE);}
+    .bg-dark{background:linear-gradient(135deg,#EEF0F8,#D8DCF0);}
+    .bg-blue{background:linear-gradient(135deg,#E8F0FB,#C5D8F8);}
+    .bg-rose{background:linear-gradient(135deg,#FDE8EE,#FBBFD0);}
+    .bg-gold{background:linear-gradient(135deg,#FFF8E1,#FFE9A0);}
+    .bg-green{background:linear-gradient(135deg,#EEF6EF,#C8E6CB);}
+    .bg-indigo{background:linear-gradient(135deg,#EEF2FF,#C7D2FE);}
+    .bg-slate{background:linear-gradient(135deg,#F1F5F9,#CBD5E1);}
 
     /* placeholder emoji */
     .card-placeholder{
@@ -666,16 +666,187 @@ let _it=null,_tt=false;
 function startIdleTimer(){_it=setTimeout(()=>{if(_tt)return;const n=document.getElementById('idle-nudge');if(n){n.style.display='block';requestAnimationFrame(()=>n.style.opacity='1');}},45000);}
 function markToolTapped(){_tt=true;clearTimeout(_it);const n=document.getElementById('idle-nudge');if(n)n.style.display='none';}
 
-const RP=[{id:'perfect',title:'ต้องทำให้สมบูรณ์แบบ',sub:'ถ้าไม่ดีพอแสดงว่าฉันไม่เก่ง',thought:'ฉันต้องทำทุกอย่างให้สมบูรณ์แบบ',permission:'ฉันทำได้ดีพอ แม้ว่าจะไม่สมบูรณ์แบบ\nความผิดพลาดเป็นส่วนหนึ่งของการเรียนรู้',bridge:'ชั้นความเชื่อ',url:'care.html?tab=belief'},{id:'compare',title:'ทุกคนเก่งกว่าฉัน',sub:'ฉันไม่เหมาะที่จะอยู่ที่นี่',thought:'ฉันด้อยกว่าคนรอบข้างทุกคน',permission:'ทุกคนที่นี่เคยเป็นคนเก่งที่สุดในห้องมาก่อน\nความรู้สึกนี้ไม่ได้หมายความว่าความจริงเป็นแบบนั้น',bridge:'ชั้นความสัมพันธ์',url:'care.html?tab=connection'},{id:'blame',title:'ฉันทำให้ทุกคนผิดหวัง',sub:'ฉันเป็นภาระให้คนอื่น',thought:'ฉันทำให้คนที่รักผิดหวังเสมอ',permission:'ฉันมีคุณค่าอยู่แล้ว โดยไม่ต้องพิสูจน์อะไร\nความรู้สึกผิดไม่ใช่ข้อเท็จจริง',bridge:'ชั้นร่างกาย',url:'care.html?tab=body'},{id:'helpless',title:'ไม่ว่าจะทำอะไรก็ไม่ดีขึ้น',sub:'ฉันเปลี่ยนแปลงอะไรไม่ได้',thought:'ความพยายามของฉันไม่มีความหมาย',permission:'ฉันไม่จำเป็นต้องเปลี่ยนทุกอย่างในครั้งเดียว\nก้าวเล็กๆ หนึ่งก้าวก็นับ',bridge:'แผนดูแล',url:'plans.html'}];
-let rPat=null,rStep=0;
-function openReframe(){rStep=0;rPat=null;openModal('reframe-modal');renderR();}
+const RP=[
+{id:'perfect',
+ title:'ต้องทำให้สมบูรณ์แบบ',
+ sub:'ถ้าไม่ดีพอแสดงว่าฉันไม่เก่ง',
+ thought:'ฉันต้องทำทุกอย่างให้สมบูรณ์แบบ',
+ bridge:'ชั้นความเชื่อ',url:'care.html?tab=belief',
+ permissions:[
+  'ฉันทำได้ดีพอแล้ว — แม้จะยังไม่สมบูรณ์',
+  'ความผิดพลาดไม่ได้หมายความว่าฉันล้มเหลว มันหมายความว่าฉันกำลังพยายาม',
+  'ไม่มีใครทำอะไรได้สมบูรณ์แบบตั้งแต่ครั้งแรก — ไม่มีสักคน',
+  'สมองที่เหนื่อยล้ามักตั้งมาตรฐานที่สูงกว่าความเป็นจริง',
+  'ฉันอนุญาตให้ตัวเองทำได้แค่นี้ในวันนี้',
+  'งานที่เสร็จ 80% ส่งได้ ดีกว่างานที่สมบูรณ์ 100% แต่ไม่เคยเสร็จ',
+  'ฉันไม่ได้ต้องเอาชนะทุกคน ฉันแค่ต้องทำให้ดีที่สุดในสภาพที่เป็นอยู่',
+  'ความรู้สึกว่าไม่พอนั้น ไม่ใช่ข้อเท็จจริง — มันคือเสียงที่เรียนรู้มาจากที่ไหนสักที่',
+  'ฉันสามารถพัก และกลับมาทำต่อได้ — นั่นไม่ใช่การล้มเลิก',
+  'สิ่งที่ฉันเรียกว่า "ไม่พอ" อาจเป็น "มากพอ" ในสายตาคนอื่น',
+  'Cortisol สูงทำให้มาตรฐานในหัวพุ่งขึ้น — ร่างกายกำลังโกหกฉันอยู่',
+  'ฉันไม่จำเป็นต้องพิสูจน์คุณค่าตัวเองผ่านผลงาน',
+  'ความอ่อนแอในบางด้านไม่ได้ลบความสำเร็จในด้านอื่น',
+  'ฉันให้อภัยตัวเองได้ — เหมือนที่จะให้อภัยเพื่อน',
+  'วันนี้พอแค่นี้ก็พอ',
+  'ฉันได้ทำในสิ่งที่ทำได้ ด้วยสิ่งที่มีอยู่ ในเวลาที่เป็นอยู่',
+  'ความสมบูรณ์แบบไม่ใช่เป้าหมาย — ความก้าวหน้าต่างหากที่สำคัญ',
+  'ฉันไม่จำเป็นต้องรู้สึกดีเสมอ เพื่อที่จะเป็นคนดี',
+  'ฉันได้พยายามแล้ว และนั่นสำคัญ',
+  'ร่างกายและหัวใจต้องการพักบ้าง — นั่นไม่ใช่ความอ่อนแอ'
+ ]
+},
+{id:'compare',
+ title:'ทุกคนเก่งกว่าฉัน',
+ sub:'ฉันไม่เหมาะที่จะอยู่ที่นี่',
+ thought:'ฉันด้อยกว่าคนรอบข้างทุกคน',
+ bridge:'ชั้นความสัมพันธ์',url:'care.html?tab=connection',
+ permissions:[
+  'ทุกคนที่นี่เคยเป็นมือใหม่มาก่อน — รวมถึงคนที่ดูเก่งที่สุด',
+  'สิ่งที่ฉันเห็นในคนอื่นคือ highlight ของเขา ไม่ใช่ทั้งชีวิต',
+  'การเปรียบตัวเองกับคนอื่นทำให้สมองหลั่ง cortisol — ไม่ใช่ข้อมูลที่ถูกต้อง',
+  'ฉันมีจุดแข็งที่คนอื่นไม่มี แม้ฉันยังมองไม่เห็นมันตอนนี้',
+  'Impostor syndrome เกิดกับคนเก่งมากกว่าคนธรรมดา — งานวิจัยพิสูจน์แล้ว',
+  'ฉันไม่ได้แข่งกับใคร ฉันแค่กำลังเติบโตในแบบของตัวเอง',
+  'ความรู้สึกนี้ไม่ได้หมายความว่าฉันไม่เหมาะ มันหมายความว่าฉันใส่ใจ',
+  'คนที่ดูมั่นใจที่สุดในห้องมักเป็นคนที่กลัวที่สุดด้วย',
+  'ฉันอยู่ที่นี่ด้วยเหตุผล แม้ตอนนี้ฉันจะจำมันไม่ได้',
+  'ทักษะสร้างได้ แต่ความกล้าที่จะเริ่มนั้นหายาก — และฉันมีมันอยู่',
+  'ฉันไม่จำเป็นต้องเก่งที่สุด ฉันแค่ต้องเป็นตัวเองที่ดีขึ้นกว่าเมื่อวาน',
+  'ทุกคนที่เก่งตอนนี้เคยไม่เก่งเมื่อก่อน',
+  'ฉันมีมุมมองที่ไม่มีใครมีเหมือนกัน — นั่นคือคุณค่า',
+  'การเห็นว่าคนอื่นเก่งแปลว่าฉันมีตาที่มองเห็นคุณภาพ — นั่นเป็นสัญญาณดี',
+  'ฉันไม่ต้องพิสูจน์ให้ใครเห็น นอกจากตัวฉันเอง',
+  'สังคมสอนให้เปรียบตัวเอง แต่ฉันไม่จำเป็นต้องเล่นเกมนั้น',
+  'ความก้าวหน้าของฉันนับ แม้จะช้ากว่าคนอื่น',
+  'ฉันอยู่ในเส้นทางของตัวเอง ไม่ได้แข่งในเส้นทางของคนอื่น',
+  'คุณค่าของฉันไม่ได้ถูกกำหนดโดยการเปรียบเทียบ',
+  'วันนี้ฉันแค่ต้องเป็นฉัน — แค่นั้นก็พอ'
+ ]
+},
+{id:'blame',
+ title:'ฉันทำให้ทุกคนผิดหวัง',
+ sub:'ฉันเป็นภาระให้คนอื่น',
+ thought:'ฉันทำให้คนที่รักผิดหวังเสมอ',
+ bridge:'ชั้นความเชื่อ',url:'care.html?tab=belief',
+ permissions:[
+  'ฉันมีคุณค่าอยู่แล้ว — โดยไม่ต้องพิสูจน์อะไร',
+  'ความรู้สึกผิดไม่ใช่ข้อเท็จจริง มันคือสัญญาณว่าฉันใส่ใจคนอื่น',
+  'คนที่รักฉันจริงๆ ไม่ได้รักฉันเพราะสิ่งที่ฉันทำ แต่เพราะฉันเป็นใคร',
+  'ฉันไม่สามารถรับผิดชอบความรู้สึกของทุกคนได้',
+  'การที่ฉันรู้สึกเป็นภาระ ไม่ได้แปลว่าฉันเป็นภาระ',
+  'สมองในภาวะเครียดมักตีความว่าคนอื่นผิดหวัง แม้จะไม่เป็นความจริง',
+  'ฉันไม่จำเป็นต้องสมบูรณ์แบบเพื่อให้คนรักฉัน',
+  'ฉันอนุญาตให้ตัวเองผิดพลาดได้ เหมือนที่คนอื่นก็ผิดพลาดได้',
+  'ความรู้สึกผิดที่ไม่มีเหตุผลชัดเจน มักมาจากภายใน ไม่ใช่จากภายนอก',
+  'ฉันทำดีที่สุดเท่าที่ทำได้ ในช่วงเวลาที่ผ่านมา',
+  'ฉันไม่ต้องรับผิดชอบความคาดหวังที่ไม่มีใครบอกฉัน',
+  'การขอโทษและก้าวต่อ ดีกว่าการทรมานตัวเองอยู่กับอดีต',
+  'ฉันสมควรได้รับความเมตตาจากตัวเอง เหมือนที่ฉันให้กับคนอื่น',
+  'ความรักที่แท้จริงไม่มีเงื่อนไขที่ว่า "ต้องไม่ทำให้ผิดหวังเลย"',
+  'ฉันเป็นมนุษย์ และมนุษย์ทำให้คนอื่นผิดหวังบ้างเป็นเรื่องปกติ',
+  'ฉันไม่ใช่ศูนย์กลางของความรู้สึกทุกคน',
+  'Guilt ที่มากเกินไปคือ sign ว่าฉันต้องการดูแลตัวเองมากขึ้น',
+  'ฉันทำดีกว่าที่ตัวเองคิดเสมอ',
+  'ฉันอนุญาตให้ตัวเองก้าวหน้าโดยไม่ต้องลงโทษตัวเองก่อน',
+  'ฉันมีคุณค่า — แม้วันนี้จะรู้สึกไม่ใช่แบบนั้น'
+ ]
+},
+{id:'helpless',
+ title:'ไม่ว่าจะทำอะไรก็ไม่ดีขึ้น',
+ sub:'ฉันเปลี่ยนแปลงอะไรไม่ได้',
+ thought:'ความพยายามของฉันไม่มีความหมาย',
+ bridge:'แผนดูแล',url:'plans.html',
+ permissions:[
+  'ฉันไม่จำเป็นต้องเปลี่ยนทุกอย่างในครั้งเดียว — ก้าวเล็กๆ ก็นับ',
+  'ความรู้สึกว่าไม่มีอะไรดีขึ้น ไม่ใช่ข้อเท็จจริงเกี่ยวกับอนาคต',
+  'สมองที่อ่อนล้ามองไม่เห็นความก้าวหน้าเล็กๆ ที่เกิดขึ้นทุกวัน',
+  'ฉันเคยผ่านวันที่หนักกว่านี้มาได้ — ซึ่งแปลว่าฉันแข็งแกร่งกว่าที่คิด',
+  'Learned helplessness เป็นภาวะที่สมองสร้างขึ้น ไม่ใช่ความจริง',
+  'ฉันไม่จำเป็นต้องรู้สึกว่าจะดีขึ้น เพื่อที่จะทำอะไรเล็กๆ ได้',
+  'ความพยายามที่ไม่มีใครเห็น ยังคงมีความหมายอยู่ดี',
+  'การที่ฉันยังอยู่ที่นี่ ยังพยายาม — นั่นคือหลักฐาน',
+  'บางครั้งความก้าวหน้าเกิดขึ้นข้างในก่อน แล้วค่อยเห็นข้างนอกทีหลัง',
+  'ฉันไม่ต้องรู้สึก motivated เพื่อที่จะเริ่มต้น — action มาก่อน feeling',
+  'สิ่งที่ดูใหญ่เกินจะเปลี่ยน มักกลายเป็นเล็กลงเมื่อเวลาผ่านไป',
+  'ฉันไม่ต้องเห็นเส้นชัยเพื่อที่จะก้าวต่อไปได้',
+  'วันนี้แค่หายใจต่อไปได้ก็นับแล้ว',
+  'ความหวังไม่จำเป็นต้องมาก่อน การกระทำ',
+  'ฉันได้รับอนุญาตให้พักโดยไม่รู้สึกผิด',
+  'ช่วงเวลาที่มืดที่สุดมักเกิดขึ้นก่อนที่อะไรจะเปลี่ยน',
+  'ฉันไม่ต้องเห็นทางออกทั้งหมด แค่เห็นก้าวถัดไปก็พอ',
+  'สิ่งที่ฉันทำมาทั้งหมดไม่ได้สูญเปล่า — มันสร้างตัวฉันในวันนี้',
+  'ฉันขอความช่วยเหลือได้ — นั่นไม่ใช่การยอมแพ้',
+  'วันพรุ่งนี้อาจไม่เหมือนวันนี้ และนั่นก็เพียงพอแล้ว'
+ ]
+}];
+let rPat=null,rStep=0,rPermIdx=0;
+function openReframe(){rStep=0;rPat=null;rPermIdx=0;openModal('reframe-modal');renderR();}
 function closeReframe(){closeModal('reframe-modal');}
-function renderR(){const el=document.getElementById('reframe-inner');const dots=n=>([0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join(''));if(rStep===0){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--rose);">ปรับความคิด</div><div class="mstep-q">ตอนนี้มีความคิดแบบไหนอยู่?</div><div class="mstep-sub">เลือกอันที่ใกล้เคียงที่สุด</div><div class="mstep-choices">'+RP.map((p,i)=>'<button class="mstep-choice" onclick="rPick('+i+')"><div class="mstep-choice-title">'+p.title+'</div><div class="mstep-choice-sub">'+p.sub+'</div></button>').join('')+'</div>';}else if(rStep===1){el.innerHTML='<div class="mstep-progress">'+dots(1)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">ถือความคิดไว้ห่างๆ</div><div class="mstep-q">ลองอ่านประโยคนี้ดู</div><div class="reframe-phrase"><div class="reframe-prefix">ฉันกำลังมีความคิดว่า...</div><div class="reframe-thought">'+rPat.thought+'</div></div><div class="mstep-sub">มันเป็นแค่ความคิด ไม่ใช่ความจริงทั้งหมด</div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);">ถัดไป →</button><button class="mstep-back" onclick="rStep=0;renderR()">← เปลี่ยน</button>';}else if(rStep===2){el.innerHTML='<div class="mstep-progress">'+dots(2)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">Permission</div><div class="mstep-q">อ่านช้าๆ</div><div class="reframe-permission"><div class="reframe-permission-label">Permission</div><div class="reframe-permission-text">'+rPat.permission.replace(/\\n/g,'<br>')+'</div></div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);">ถัดไป →</button>';}else if(rStep===3){el.innerHTML='<div class="mstep-progress">'+dots(3)+'</div><div class="mstep-eyebrow" style="color:var(--teal);">หายใจ</div><div class="mstep-q">สักครู่หนึ่ง</div><div class="mini-breath"><div class="mini-breath-label">หายใจตามจังหวะ</div><div class="mini-breath-circle">🌬️</div><div class="mini-breath-hint">เข้า 4 · ออก 4 วินาที</div></div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);margin-top:16px;">เสร็จแล้ว ✓</button>';}else{el.innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">🌸</div><div class="tool-done-title">ดีมากเลย</div><div class="tool-done-sub">การสังเกตความคิดโดยไม่ถูกมันพัดพาไป เป็นทักษะที่ฝึกได้</div><button class="tool-done-close" onclick="closeReframe()">← กลับ</button><a href="'+rPat.url+'" onclick="closeReframe()" style="display:block;text-align:center;margin-top:10px;font-size:12px;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">อยากเข้าใจเพิ่ม? → <span style="color:var(--rose);">'+rPat.bridge+'</span></a><div class="still-strip" style="margin:16px 20px 0;"><div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div><div class="still-btns"><button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button><button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button></div><div class="still-heavy"></div></div></div>';}}
-function rPick(i){rPat=RP[i];rStep=1;renderR();}
+function renderR(){
+  const el=document.getElementById('reframe-inner');
+  const dots=n=>([0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join(''));
+  if(rStep===0){
+    el.innerHTML='<div class="mstep-eyebrow" style="color:var(--rose);">ปรับความคิด</div><div class="mstep-q">ตอนนี้มีความคิดแบบไหนอยู่?</div><div class="mstep-sub">เลือกอันที่ใกล้เคียงที่สุด</div><div class="mstep-choices">'+RP.map((p,i)=>'<button class="mstep-choice" onclick="rPick('+i+')"><div class="mstep-choice-title">'+p.title+'</div><div class="mstep-choice-sub">'+p.sub+'</div></button>').join('')+'</div>';
+  } else if(rStep===1){
+    el.innerHTML='<div class="mstep-progress">'+dots(1)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">ถือความคิดไว้ห่างๆ</div><div class="mstep-q">ลองอ่านประโยคนี้ดู</div><div class="reframe-phrase"><div class="reframe-prefix">ฉันกำลังมีความคิดว่า...</div><div class="reframe-thought">'+rPat.thought+'</div></div><div class="mstep-sub">มันเป็นแค่ความคิด ไม่ใช่ความจริงทั้งหมด</div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);">ถัดไป →</button><button class="mstep-back" onclick="rStep=0;renderR()">← เปลี่ยน</button>';
+  } else if(rStep===2){
+    rPermIdx=0;
+    renderPermDeck(el,dots);
+  } else if(rStep===3){
+    el.innerHTML='<div class="mstep-progress">'+dots(3)+'</div><div class="mstep-eyebrow" style="color:var(--teal);">หายใจ</div><div class="mstep-q">สักครู่หนึ่ง</div><div class="mini-breath"><div class="mini-breath-label">หายใจตามจังหวะ</div><div class="mini-breath-circle">🌬️</div><div class="mini-breath-hint">เข้า 4 · ออก 4 วินาที</div></div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);margin-top:16px;">เสร็จแล้ว ✓</button>';
+  } else {
+    el.innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">🌸</div><div class="tool-done-title">ดีมากเลย</div><div class="tool-done-sub">การสังเกตความคิดโดยไม่ถูกมันพัดพาไป เป็นทักษะที่ฝึกได้</div><button class="tool-done-close" onclick="closeReframe()">← กลับ</button><a href="'+rPat.url+'" onclick="closeReframe()" style="display:block;text-align:center;margin-top:10px;font-size:12px;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">อยากเข้าใจเพิ่ม? → <span style="color:var(--rose);">'+rPat.bridge+'</span></a><div class="still-strip" style="margin:16px 20px 0;"><div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div><div class="still-btns"><button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button><button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button></div><div class="still-heavy"></div></div></div>';
+  }
+}
+
+function renderPermDeck(el,dots){
+  var perms=rPat.permissions;
+  var total=perms.length;
+  var perm=perms[rPermIdx];
+  var isLast=rPermIdx===total-1;
+  el.innerHTML=
+    '<div class="mstep-progress">'+dots(2)+'</div>'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 4px;">'+
+      '<div class="mstep-eyebrow" style="color:var(--rose);">Permission</div>'+
+      '<button onclick="rNext()" style="background:none;border:none;font-size:11px;color:rgba(253,251,247,0.4);cursor:pointer;font-family:var(--font-sans,sans-serif);">พอแล้ว → ถัดไป</button>'+
+    '</div>'+
+    '<div class="mstep-q" style="margin-bottom:16px;">อ่านช้าๆ</div>'+
+    '<div class="reframe-permission" onclick="nextPerm()" style="cursor:pointer;min-height:120px;display:flex;flex-direction:column;justify-content:center;">'+
+      '<div class="reframe-permission-label">Permission</div>'+
+      '<div class="reframe-permission-text">'+perm+'</div>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;margin:14px 20px 0;">'+
+      (rPermIdx>0 ? '<button class="mstep-back" style="flex:1;" onclick="prevPerm()">← ก่อนหน้า</button>' : '<div style="flex:1;"></div>')+
+      (isLast
+        ? '<button class="mstep-next" style="flex:2;background:var(--rose);" onclick="rNext()">ต่อไป →</button>'
+        : '<button class="mstep-next" style="flex:2;background:var(--rose);" onclick="nextPerm()">ถัดไป →</button>'
+      )+
+    '</div>';
+}
+function nextPerm(){
+  const total=rPat.permissions.length;
+  if(rPermIdx<total-1){
+    rPermIdx++;
+    const el=document.getElementById('reframe-inner');
+    const dots=n=>([0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join(''));
+    renderPermDeck(el,dots);
+  } else {
+    rNext();
+  }
+}
+function prevPerm(){
+  if(rPermIdx>0){
+    rPermIdx--;
+    const el=document.getElementById('reframe-inner');
+    const dots=n=>([0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join(''));
+    renderPermDeck(el,dots);
+  }
+}
+function rPick(i){rPat=RP[i];rStep=1;rPermIdx=0;renderR();}
 function rNext(){rStep++;renderR();}
 
-let wText='',wBranch='',wStep=0;
-function openWorry(){wStep=0;wText='';wBranch='';openModal('worry-modal');renderW();}
+let wText='',wBranch=0,wStep=0;
+function openWorry(){wStep=0;wText='';wBranch=0;openModal('worry-modal');renderW();}
 function closeWorry(){closeModal('worry-modal');}
 function renderW(){const el=document.getElementById('worry-inner');if(wStep===0){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--blue);">คลายกังวล</div><div class="mstep-q">ตอนนี้กังวลเรื่องอะไรอยู่?</div><div class="mstep-sub">เขียนออกมาก่อน</div><textarea class="mstep-ta" id="w-ta" placeholder="เขียนทุกอย่างที่ค้างอยู่ในหัว..." style="border-color:var(--blue-border);"></textarea><button class="mstep-next" onclick="wN0()" style="background:var(--blue);">ถัดไป →</button>';setTimeout(()=>{const t=document.getElementById("w-ta");if(t)t.focus();},320);}else if(wStep===1){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--blue);">แยกประเภท</div><div class="mstep-q">มีบางอย่างที่ทำได้ตอนนี้ไหม?</div><div class="worry-fork"><button class="worry-fork-btn" onclick="wFork(1)" style="border-color:var(--green-border);"><div class="worry-fork-icon">✅</div><div class="worry-fork-label">มี</div><div class="worry-fork-sub">อยู่ในมือฉัน</div></button><button class="worry-fork-btn" onclick="wFork(2)" style="border-color:var(--blue-border);"><div class="worry-fork-icon">☁️</div><div class="worry-fork-label">ยังไม่มี</div><div class="worry-fork-sub">ยังควบคุมไม่ได้</div></button></div>';}else if(wStep===2&&wBranch===1){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--green);">ก้าวเล็กๆ</div><div class="mstep-q">สิ่งเล็กที่สุดที่ทำได้วันนี้?</div><textarea class="mstep-ta" id="a-ta" placeholder="เช่น ส่ง email ถาม..." style="border-color:var(--green-border);"></textarea><button class="mstep-next" onclick="wN2()" style="background:var(--green);">บันทึกแผน ✓</button>';}else if(wStep===2&&wBranch===2){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--blue);">จอดความกังวล</div><div class="mstep-q">บอกตัวเองสักประโยค</div><div class="reframe-permission" style="border-color:var(--blue-border);background:rgba(46,95,163,0.1);"><div class="reframe-permission-label" style="color:var(--blue);">Worry Parking</div><div class="reframe-permission-text">"ฉันรับรู้ความกังวลนี้แล้ว<br>ตอนนี้ขอวางไว้ก่อนนะ"</div></div><button class="mstep-next" onclick="wN2()" style="background:var(--blue);margin-top:14px;">วางไว้แล้ว ✓</button>';}else{const act=wBranch===1,at=document.getElementById('a-ta')?.value.trim()||'';el.innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">'+(act?'🌿':'☁️')+'</div><div class="tool-done-title">'+(act?'แผนพร้อมแล้ว':'วางไว้ดีแล้ว')+'</div><div class="tool-done-sub">'+(act?'ก้าวเล็กๆ หนึ่งก้าว ดีกว่าไม่มีก้าวเลย':'ความกังวลนี้รับรู้แล้ว')+'</div>'+(act&&at?'<div style="background:rgba(58,125,68,0.15);border:1px solid rgba(58,125,68,0.3);border-radius:12px;padding:12px;margin-bottom:20px;font-size:13px;color:var(--teal);">📝 '+at+'</div>':'')+'<button class="tool-done-close" onclick="closeWorry()">← กลับ</button></div>';if(act&&at)saveEntry({id:Date.now(),type:'worry',ts:new Date().toISOString(),text:'แผน: '+at});}}
 function wN0(){const t=document.getElementById('w-ta');wText=t?t.value.trim():'';wStep=1;renderW();}
