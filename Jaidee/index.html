@@ -162,7 +162,7 @@
     .crisis-strip-btn:active{background:rgba(232,150,12,0.25);}
 
     /* Library card */
-    .library-card{background:#1C1917;border-radius:20px;overflow:hidden;cursor:pointer;margin:0 auto;max-width:260px;border:1px solid rgba(255,255,255,0.08);opacity:0;transform:translateY(10px);}
+    .library-card{background:#1C1917;border-radius:20px;overflow:hidden;cursor:pointer;width:100%;border:1px solid rgba(255,255,255,0.08);opacity:0;transform:translateY(10px);}
     .library-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.4s ease,transform 0.4s ease;}
     .library-shelf-preview{background:#F0E8DC;padding:14px 12px 0;position:relative;}
     .library-books-row{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:4px;}
@@ -291,6 +291,11 @@
   <div id="m4-section-root"></div>
   <div class="worlds-wrap" id="worlds-wrap"></div>
 <script>
+const API_URL   = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const LIFF_ID   = "2009806939-H06mwKgI";
+const BASE_URL  = "https://jaidee-tu.vercel.app";
+const SCHOOL_SUPPORT_URL = BASE_URL + "/school.html";
+
 // ═══ LAYOUT CONFIG ═══════════════════════════════════════
 const WORLDS_TOP = [
   { name:"ระบบจิตใจ 6 ชั้น",
@@ -454,6 +459,24 @@ function renderM4Section(baseDelay) {
   return d;
 }
 
+
+// ═══ COUNTDOWN ════════════════════════════════════════════
+let _timer = null;
+function startCountdown() {
+  const el = document.getElementById("countdown-display");
+  if (!el) return;
+  function tick() {
+    const diff = new Date(UNLOCK_DATE) - new Date();
+    if (diff <= 0) { el.textContent = "เปิดแล้ว!"; clearInterval(_timer); return; }
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    el.textContent = d>0 ? `เปิดใน ${d} วัน ${h} ชม.` : h>0 ? `เปิดใน ${h} ชม. ${m} นาที` : `เปิดใน ${m} นาที`;
+  }
+  tick();
+  _timer = setInterval(tick, 60000);
+}
+
 // ═══ RENDER ALL ══════════════════════════════════════════════
 function renderAll() {
   const wrap = document.getElementById("worlds-wrap");
@@ -511,7 +534,7 @@ function renderAll() {
 
   // Community card — mini photo wall preview
   const comCard = document.createElement('div');
-  comCard.className = 'library-card';  // use exact same class as library — identical width/border-radius
+  comCard.className = 'library-card'; comCard.style.flex = '1'; comCard.style.minWidth = '0';
   comCard.addEventListener('touchstart', () => comCard.style.transform='scale(0.97)', {passive:true});
   comCard.addEventListener('touchend', () => comCard.style.transform='', {passive:true});
 
@@ -533,7 +556,7 @@ function renderAll() {
       <!--
         วิธีใส่รูป Community:
         แทน src="" ด้านล่างด้วย Cloudinary URL เช่น:
-        src="https://res.cloudinary.com/dlixucdqx/image/upload/v.../community.jpg"
+        src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779591352/Screenshot_2026-05-24_095520_cny0ly.png"
       -->
       <img
         src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779591352/Screenshot_2026-05-24_095520_cny0ly.png"
