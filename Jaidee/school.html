@@ -98,6 +98,31 @@
     .lnk-purple{background:var(--purple-soft);border:1px solid var(--purple-border);color:var(--purple);}
     .lnk-green{background:var(--green-soft);border:1px solid var(--green-border);color:var(--green);}
 
+
+    /* ── CHECKLIST COLLAPSE ── */
+    .checklist-wrap{position:relative;}
+    .checklist-collapsed .check-group:nth-child(n+3){display:none;}
+    .checklist-fade{
+      position:absolute;bottom:0;left:0;right:0;height:120px;
+      background:linear-gradient(to bottom,transparent,var(--cream) 85%);
+      pointer-events:none;
+      transition:opacity 0.3s;
+    }
+    .checklist-collapsed .checklist-fade{opacity:1;}
+    .checklist-wrap:not(.checklist-collapsed) .checklist-fade{opacity:0;pointer-events:none;}
+    .checklist-toggle-btn{
+      display:flex;align-items:center;justify-content:center;gap:6px;
+      width:calc(100% - 32px);margin:0 16px 10px;
+      padding:12px;
+      background:var(--card);border:1px solid var(--card-border);
+      border-radius:12px;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;
+      color:var(--mid);cursor:pointer;transition:background 0.15s;
+    }
+    .checklist-toggle-btn:active{background:var(--cream-warm);}
+    .checklist-toggle-btn .arrow{transition:transform 0.3s;}
+    .checklist-wrap:not(.checklist-collapsed) .checklist-toggle-btn .arrow{transform:rotate(180deg);}
+
     /* ── CALLOUT ── */
     .callout{margin:0 16px 10px;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
     .callout.warn{background:var(--red-soft);border:1px solid var(--red-border);}
@@ -227,8 +252,7 @@
 </div>
 
 <a class="link-card" href="#" target="_blank" rel="noopener">
-  <img class="logo-img" src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779338267/samakorn2_ri80qv.webp"
-       onerror="this.src='https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64'" alt="สมาคม"/>
+  <img class="logo-img" src="https://res.cloudinary.com/YOUR_CLOUD/image/upload/samakorn1.png" alt="สมาคม"/>
   <div class="link-card-body">
     <div class="link-card-label" style="color:var(--blue);">สมาคม</div>
     <div class="link-card-name">สมาคมนักเรียนเก่าเตรียมอุดมศึกษา</div>
@@ -238,8 +262,7 @@
 </a>
 
 <a class="link-card" href="#" target="_blank" rel="noopener">
-  <img class="logo-img" src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779338249/samakorn1_yfkops.jpg"
-       onerror="this.style.display='none'" alt="สมาคม"/>
+  <img class="logo-img" src="https://res.cloudinary.com/YOUR_CLOUD/image/upload/samakorn2.png" alt="สมาคม"/>
   <div class="link-card-body">
     <div class="link-card-label" style="color:var(--blue);">สมาคม</div>
     <div class="link-card-name">สมาคมที่ 2 <span class="tbd">TBD</span></div>
@@ -257,7 +280,7 @@
 
 <div style="margin:0 16px 10px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;">
   <a class="channel-row" href="https://triamudom.ac.th" target="_blank" rel="noopener">
-    <img class="logo-img sm" src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779338602/school-logo_rtqmtf.png"/>
+    <img class="logo-img sm" src="https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64" alt="เว็บโรงเรียน"/>
     <div class="channel-body">
       <div class="channel-name">เว็บโรงเรียนเตรียมอุดมศึกษา</div>
       <div class="channel-url">triamudom.ac.th</div>
@@ -273,8 +296,7 @@
     <span class="channel-arrow">→</span>
   </a>
   <a class="channel-row" href="#" target="_blank" rel="noopener">
-    <img class="logo-img sm" src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779338339/Screenshot_2026-05-17_214604_pewm89.png"
-         onerror="this.src='https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64'" alt="TU Pro"/>
+    <img class="logo-img sm" src="https://res.cloudinary.com/YOUR_CLOUD/image/upload/tupro.png" alt="TU Pro"/>
     <div class="channel-body">
       <div class="channel-name">TU Pro</div>
       <div class="channel-url">portfolio · กิจกรรม · คุณสมบัติ</div>
@@ -282,8 +304,7 @@
     <span class="channel-arrow">→</span>
   </a>
   <a class="channel-row" href="#" target="_blank" rel="noopener" style="border-bottom:none;">
-    <img class="logo-img sm" src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779338287/korchor_pzaunw.jpg"
-         onerror="this.src='https://www.google.com/s2/favicons?domain=triamudom.ac.th&sz=64'" alt="กช."/>
+    <img class="logo-img sm" src="https://res.cloudinary.com/YOUR_CLOUD/image/upload/korchor.png" alt="กช."/>
     <div class="channel-body">
       <div class="channel-name" style="color:#DB2777;">กช. — ลงทะเบียนชมรม</div>
       <div class="channel-url">เปิดต้นภาค อย่ารอช้า</div>
@@ -292,7 +313,6 @@
   </a>
 </div>
 
-  
 <!-- CHECKLIST -->
 <div class="sec-div">
   <div class="sec-div-dot" style="background:var(--green)"></div>
@@ -308,6 +328,7 @@
   <div class="cp-bar"><div class="cp-fill" id="cp-fill" style="width:0%"></div></div>
 </div>
 
+<div class="checklist-wrap checklist-collapsed" id="checklist-wrap">
 <!-- GROUP 1 -->
 <div class="check-group">
   <div class="cg-label">ระบบและแอป</div>
@@ -558,7 +579,15 @@
       <div class="check-detail-inner">ขั้นตอนการขอเอกสารทางการ + ระยะเวลาดำเนินการ <span class="tbd">TBD</span></div>
     </div>
   </div>
-</div>
+</div><!-- end last check-group -->
+
+  <div class="checklist-fade"></div>
+</div><!-- end checklist-wrap -->
+
+<button class="checklist-toggle-btn" onclick="toggleChecklist()" id="checklist-btn">
+  <span id="checklist-btn-text">ดูทั้งหมด</span>
+  <span class="arrow">↓</span>
+</button>
 
 <!-- ปรากฏการณ์ที่เจอบ่อย -->
 <div class="sec-div">
@@ -857,6 +886,16 @@ function initCarouselDots() {
     dotsWrap.querySelectorAll('.cdot').forEach((d,i) =>
       d.classList.toggle('on', i === idx));
   }, {passive:true});
+}
+
+
+// ── CHECKLIST COLLAPSE ────────────────────
+function toggleChecklist() {
+  const wrap = document.getElementById('checklist-wrap');
+  const btn  = document.getElementById('checklist-btn-text');
+  const isCollapsed = wrap.classList.contains('checklist-collapsed');
+  wrap.classList.toggle('checklist-collapsed');
+  btn.textContent = isCollapsed ? 'ย่อกลับ' : 'ดูทั้งหมด';
 }
 
 // ── INIT ───────────────────────────────────
