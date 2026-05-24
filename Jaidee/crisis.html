@@ -97,6 +97,23 @@
       text-shadow:0 0 8px rgba(232,150,12,0.6), 0 0 20px rgba(232,150,12,0.3);
       animation:neonPulse 3s ease-in-out infinite;
     }
+    /* ── PANIC FAB ── */
+    .panic-fab{
+      position:fixed;top:16px;right:16px;z-index:999;
+      width:56px;height:56px;border-radius:50%;
+      background:var(--red);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-decoration:none;border:none;cursor:pointer;
+      box-shadow:0 4px 16px rgba(220,38,38,0.5);
+      animation:panicPulse 2s ease-in-out infinite;
+      gap:1px;
+    }
+    .panic-fab-icon{font-size:18px;line-height:1;}
+    .panic-fab-text{font-family:'Mitr',sans-serif;font-size:7px;font-weight:600;color:#fff;line-height:1;}
+    @keyframes panicPulse{
+      0%,100%{box-shadow:0 4px 16px rgba(220,38,38,0.5);}
+      50%{box-shadow:0 4px 28px rgba(220,38,38,0.8),0 0 0 6px rgba(220,38,38,0.15);}
+    }
     @keyframes neonPulse{
       0%,100%{text-shadow:0 0 8px rgba(232,150,12,0.6),0 0 20px rgba(232,150,12,0.3);}
       50%{text-shadow:0 0 12px rgba(232,150,12,0.9),0 0 30px rgba(232,150,12,0.5),0 0 50px rgba(232,150,12,0.2);}
@@ -128,7 +145,9 @@
 </head>
 <body>
 
+<a class="panic-fab" href="tel:1323"><span class="panic-fab-icon">🆘</span><span class="panic-fab-text">แพนิค</span></a>
 <button class="back-btn" onclick="history.back()">← กลับ</button>
+
 
 <div class="hero">
   <div class="hero-eyebrow">ใจดี TU · ช่วยเหลือ</div>
