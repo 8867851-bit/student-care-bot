@@ -152,10 +152,40 @@
       font-weight:400;text-decoration:none;cursor:pointer;
       margin-bottom:8px;
     }
+  
+    .music-fab{
+      position:fixed;top:16px;right:16px;z-index:999;
+      width:52px;height:52px;border-radius:50%;
+      background:rgba(58,125,68,0.9);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      border:none;cursor:pointer;gap:1px;
+      box-shadow:0 4px 14px rgba(58,125,68,0.4);
+      transition:background 0.2s,box-shadow 0.2s;
+      backdrop-filter:blur(8px);
+    }
+    .music-fab.playing{
+      background:rgba(13,148,136,0.9);
+      box-shadow:0 4px 20px rgba(13,148,136,0.5),0 0 0 4px rgba(13,148,136,0.15);
+      animation:musicPulse 2s ease-in-out infinite;
+    }
+    @keyframes musicPulse{
+      0%,100%{box-shadow:0 4px 20px rgba(13,148,136,0.5),0 0 0 4px rgba(13,148,136,0.15);}
+      50%{box-shadow:0 4px 28px rgba(13,148,136,0.7),0 0 0 8px rgba(13,148,136,0.1);}
+    }
+    .music-fab-icon{font-size:20px;line-height:1;}
+    .music-fab-text{font-family:'Mitr',sans-serif;font-size:7px;font-weight:500;color:rgba(255,255,255,0.85);line-height:1;}
+    
   </style>
 </head>
 <body>
 
+<button class="music-fab" id="music-fab" onclick="toggleMusic()" aria-label="เพลง">
+  <span class="music-fab-icon" id="music-icon">🎵</span>
+  <span class="music-fab-text" id="music-text">เพลง</span>
+</button>
+<audio id="bg-music" loop>
+  <source src="https://res.cloudinary.com/dlixucdqx/video/upload/v1779331068/Lotus_Flower_wtyhmo.mp3" type="audio/mpeg"/>
+</audio>
 <button class="back-btn" onclick="history.back()">← กลับ</button>
 
 <div class="hero">
@@ -198,7 +228,7 @@
               </span>
               <span class="action-btn-arrow">→</span>
             </a>
-            <a class="action-btn secondary" href="https://capstone.chatbot.dmind.app/" target="_blank" rel="noopener">
+            <a class="action-btn secondary" href="https://www.prescreening.dmind.app" target="_blank" rel="noopener">
               <span class="action-btn-icon">🤖</span>
               <span class="action-btn-body">
                 <span class="action-btn-name">DMIND Chatbot</span>
@@ -440,6 +470,26 @@ else if (hash === '#therapist')  toggle('s3');
 else if (hash === '#external')   toggle('s4');
 else if (hash === '#crisis')     toggle('s5');
 else toggle('s0'); // default open step 0 — lowest barrier first
+
+// ── MUSIC ────────────────────────────────────────────────────
+let _musicPlaying = false;
+function toggleMusic() {
+  const audio = document.getElementById('bg-music');
+  const icon  = document.getElementById('music-icon');
+  const status = document.getElementById('music-status');
+  if (_musicPlaying) {
+    audio.pause();
+    icon.textContent  = '🎵';
+    status.textContent = 'ปิดอยู่';
+    _musicPlaying = false;
+  } else {
+    audio.play().catch(()=>{});
+    icon.textContent  = '🎶';
+    status.textContent = 'กำลังเล่น';
+    _musicPlaying = true;
+  }
+}
+
 </script>
 </body>
 </html>
