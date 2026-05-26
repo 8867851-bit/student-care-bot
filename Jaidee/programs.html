@@ -1,27 +1,26 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <title>ใจดี TU — Programs</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --forest:        #0E1A10;
-      --forest-mid:    #152018;
-      --forest-border: #1E3025;
-      --forest-lift:   #1C2B1E;
-      --cream:         #F4EFE3;
-      --cream-warm:    #FAF6EE;
-      --cream-border:  #E4DCCC;
-      --cream-mid:     #BEB5A0;
-      --cream-soft:    #857D6C;
-      --green:         #7DC67A;
-      --green-dim:     #4A7A47;
+      --forest:        #F5F1E8;
+      --forest-mid:    #EDE8DC;
+      --forest-border: #D8D0C0;
+      --forest-lift:   #EEEAE0;
+      --cream:         #2A3A28;
+      --cream-warm:    #FFFFFF;
+      --cream-border:  #D4CCBC;
+      --cream-mid:     #6A6050;
+      --cream-soft:    #8A8070;
+      --green:         #3A7A36;
+      --green-dim:     #5A8A56;
       --red-muted:     #B04840;
-      --red-bg:        rgba(176,72,64,0.09);
-      --red-border:    rgba(176,72,64,0.18);
+      --red-bg:        rgba(176,72,64,0.07);
+      --red-border:    rgba(176,72,64,0.15);
       --radius:        18px;
       --radius-sm:     11px;
     }
@@ -29,9 +28,9 @@
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
     body {
-      font-family: 'Mitr', sans-serif;
+      font-family: 'Sarabun', sans-serif;
       background: var(--forest);
-      color: var(--cream);
+      color: #1C2B1A;
       min-height: 100vh;
       padding-bottom: 80px;
     }
@@ -57,7 +56,7 @@
       content:'';
       position:absolute; top:50px; left:50%; transform:translateX(-50%);
       width:300px; height:200px;
-      background:radial-gradient(ellipse, rgba(200,150,10,0.15) 0%, transparent 68%);
+      background:radial-gradient(ellipse, rgba(160,120,10,0.10) 0%, transparent 68%);
       pointer-events:none; z-index:0;
     }
 
@@ -66,7 +65,7 @@
       display:inline-flex; align-items:center; gap:5px;
       font-size:12px; font-weight:300; color:var(--green-dim);
       margin-bottom:24px; cursor:pointer;
-      background:none; border:none; font-family:'Mitr',sans-serif;
+      background:none; border:none; font-family:'Sarabun',sans-serif;
       transition:color 0.15s; position:relative; z-index:1;
     }
     .hero-back:hover { color:var(--green); }
@@ -75,16 +74,15 @@
       font-family:'Instrument Serif',serif;
       font-size:42px; font-weight:400;
       /* pure white — fully readable on dark green */
-      color: #FAF6EE; line-height:1.05;
+      color: #1C2B1A; line-height:1.05;
       margin-bottom:10px;
       position:relative; z-index:1;
     }
-    /* italic "Workshop" also white — not green, no readability issue */
-    .hero-title em { font-style:italic; color: #FAF6EE; }
+    .hero-title em { font-style:italic; color: #A07820; }
 
     .hero-sub {
       font-size:13px; font-weight:300;
-      color:#7A9A76; line-height:1.85;
+      color:#5A7A56; line-height:1.85;
       max-width:280px; position:relative; z-index:1;
     }
 
@@ -118,15 +116,15 @@
     .chip {
       flex-shrink:0; padding:6px 16px; border-radius:99px;
       font-size:11px; border:1px solid var(--forest-border);
-      color:#6A8A66; background:transparent;
-      cursor:pointer; font-family:'Mitr',sans-serif;
+      color:#5A7A56; background:rgba(255,255,255,0.7);
+      cursor:pointer; font-family:'Sarabun',sans-serif;
       transition:all 0.18s ease; white-space:nowrap;
     }
     .chip:hover { border-color:var(--green-dim); color:var(--green); }
     .chip.active {
       background:var(--green); border-color:var(--green);
-      color:#091208; font-weight:600;
-      box-shadow:0 0 16px rgba(212,168,50,0.35);
+      color:#FFFFFF; font-weight:600;
+      box-shadow:0 0 16px rgba(58,122,54,0.25);
     }
 
     /* ── SECTION DIVIDER ── */
@@ -167,7 +165,7 @@
 
     .card-photo {
       width:100%; aspect-ratio:16/7;
-      background:linear-gradient(140deg,#243A28 0%,#172A1A 100%);
+      background:linear-gradient(140deg,#D4EAD0 0%,#BDD8B8 100%);
       display:flex; align-items:center; justify-content:center;
       font-size:44px; position:relative; overflow:hidden;
     }
@@ -215,11 +213,11 @@
     /* Two CTAs: detail + สมัคร */
     .card-cta-row { display:flex; gap:8px; }
     .card-cta {
-      flex:1; background:#1A2B1C; color:#FFFFFF;
-      border:1.5px solid rgba(255,255,255,0.15);
+      flex:1; background:#2A3A28; color:#FFFFFF;
+      border:1.5px solid rgba(42,58,40,0.15);
       border-radius:var(--radius-sm); padding:11px 10px;
       font-size:12px; font-weight:500;
-      font-family:'Mitr',sans-serif; cursor:pointer;
+      font-family:'Sarabun',sans-serif; cursor:pointer;
       transition:all 0.2s ease; text-align:center;
       /* white glow behind the text */
       text-shadow: 0 0 12px rgba(255,255,255,0.55), 0 0 4px rgba(255,255,255,0.3);
@@ -231,7 +229,7 @@
     }
     .card-cta:active { transform:scale(0.97); }
     .card-cta.primary {
-      flex:1.3; background:var(--green); color:#091208;
+      flex:1.3; background:var(--green); color:#FFFFFF;
       border-color:var(--green); font-weight:600;
     }
     .card-cta.primary:hover {
@@ -249,19 +247,19 @@
     }
     .past-scroll::-webkit-scrollbar { display:none; }
     .past-card {
-      flex:0 0 190px; background:var(--forest-lift);
+      flex:0 0 190px; background:#FFFFFF;
       border:1px solid var(--forest-border);
       border-radius:14px; padding:14px; opacity:0.65;
     }
     .past-cat { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--green-dim); margin-bottom:5px; }
-    .past-name { font-family:'Noto Serif Thai',serif; font-size:13px; font-weight:600; color:var(--cream-mid); line-height:1.4; margin-bottom:4px; }
+    .past-name { font-family:'Noto Serif Thai',serif; font-size:13px; font-weight:600; color:#2A3A28; line-height:1.4; margin-bottom:4px; }
     .past-date { font-size:10px; color:#6A8A66; }
 
     /* ── LOADING ── */
     .skeletons { display:flex; flex-direction:column; gap:14px; padding:0 16px; }
     .skel {
       border-radius:var(--radius);
-      background:linear-gradient(90deg,var(--forest-mid) 25%,var(--forest-lift) 50%,var(--forest-mid) 75%);
+      background:linear-gradient(90deg,#E8E3D8 25%,#F0EBE0 50%,#E8E3D8 75%);
       background-size:200% 100%; animation:shimmer 1.5s infinite;
     }
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
@@ -295,7 +293,7 @@
     .sheet-handle { width:36px; height:4px; border-radius:99px; background:#D8D0C2; margin:14px auto 0; }
     .sheet-photo {
       width:100%; aspect-ratio:16/8;
-      background:linear-gradient(140deg,#243A28,#172A1A);
+      background:linear-gradient(140deg,#D4EAD0,#BDD8B8);
       display:flex; align-items:center; justify-content:center;
       font-size:52px; margin-top:16px; overflow:hidden;
     }
@@ -315,68 +313,102 @@
     .sheet-deadline { margin-top:14px; background:var(--red-bg); border:1px solid var(--red-border); border-radius:12px; padding:11px 14px; font-size:12px; color:var(--red-muted); }
     .sheet-cta-row { display:flex; gap:10px; margin-top:20px; }
     .sheet-cta {
-      flex:1; background:#1A2B1C; color:var(--green);
-      border:1.5px solid rgba(125,198,122,0.22);
+      flex:1; background:#2A3A28; color:#FFFFFF;
+      border:1.5px solid rgba(42,58,40,0.20);
       border-radius:14px; padding:14px;
       font-size:14px; font-weight:500;
-      font-family:'Mitr',sans-serif; cursor:pointer; transition:all 0.2s;
+      font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.2s;
     }
     .sheet-cta:hover { background:var(--green); color:#091208; }
     .sheet-cta.primary {
-      flex:1.4; background:var(--green); color:#091208;
+      flex:1.4; background:var(--green); color:#FFFFFF;
       border-color:var(--green); font-weight:600;
     }
     .sheet-cta.primary:hover { box-shadow:0 0 24px rgba(125,198,122,0.28); }
     .sheet-cta.closed { background:#EDE7DC; color:#9A9080; border-color:transparent; cursor:default; flex:1; }
     .sheet-cta.closed:hover { background:#EDE7DC; box-shadow:none; }
+    /* ── SPLIT LAYOUT ── */
+    .split-wrap {
+      display:flex; gap:0; padding:0 0 0 0;
+      align-items:flex-start; min-height:60vh;
+    }
+    .split-col {
+      flex:1; display:flex; flex-direction:column;
+      gap:12px; padding:0 14px 32px;
+      min-width:0;
+    }
+    .split-divider {
+      width:1px; background:var(--forest-border);
+      align-self:stretch; flex-shrink:0;
+      margin-top:8px;
+    }
+    .split-header {
+      font-family:'Sarabun',sans-serif;
+      font-size:12px; font-weight:600;
+      letter-spacing:0.5px; color:#F5F1E8;
+      background:#2A3A28;
+      border:none;
+      border-radius:99px; padding:8px 16px;
+      text-align:center; white-space:nowrap;
+      box-shadow:0 2px 8px rgba(42,58,40,0.18);
+    }
+    /* make cards inside split cols slightly more compact */
+    .split-col .prog-card .card-photo { aspect-ratio:16/6; }
+    .split-col .cards { gap:10px; padding:0; }
+    .split-col .skeletons { padding:0; gap:10px; }
+    .split-col .empty-state { padding:32px 8px; }
   </style>
 </head>
 <body>
 
   <div class="hero">
     <button class="hero-back" onclick="history.back()">← กลับ</button>
+    <!-- Logo placeholder circle — replace inner img src when ready -->
+    <div style="
+      width:100px; height:100px; border-radius:50%;
+      background:#FFFFFF;
+      border:2px solid #D8D0C0;
+      box-shadow:0 4px 20px rgba(0,0,0,0.08);
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:20px; position:relative; z-index:1;
+      overflow:hidden;
+    ">
+      <span style="font-size:11px;color:#C0B8A8;letter-spacing:0.5px;text-align:center;line-height:1.4;">LOGO</span>
+    </div>
     <h1 class="hero-title">Programs &amp;<br/><em>Workshop</em></h1>
     <p class="hero-sub">กิจกรรมที่ออกแบบมาเพื่อนักเรียนเตรียมอุดมโดยเฉพาะ</p>
   </div>
 
-  <!-- Stats: light cards, dark readable text -->
-  <div class="stats-strip" id="stats-strip" style="display:none">
-    <div class="stat-card">
-      <span class="stat-num" id="stat-open">—</span>
-      <span class="stat-label">เปิดรับสมัคร</span>
+  <!-- Two-column split layout -->
+  <div class="split-wrap">
+    <!-- LEFT: Internal -->
+    <div class="split-col">
+      <div class="split-header">ชมรม / ทีมจัดขึ้น</div>
+      <div class="skeletons" id="skeletons-int">
+        <div class="skel" style="height:180px"></div>
+        <div class="skel" style="height:160px"></div>
+      </div>
+      <div class="cards" id="cards-int"></div>
+      <div class="empty-state" id="empty-int">
+        <div class="empty-icon">🌱</div>
+        <div class="empty-title" style="font-size:15px;">ยังไม่มีกิจกรรม</div>
+      </div>
     </div>
-    <div class="stat-card">
-      <span class="stat-num" id="stat-total">—</span>
-      <span class="stat-label">กิจกรรมทั้งหมด</span>
+    <!-- Divider -->
+    <div class="split-divider"></div>
+    <!-- RIGHT: External -->
+    <div class="split-col">
+      <div class="split-header">องค์กรภายนอก</div>
+      <div class="skeletons" id="skeletons-ext">
+        <div class="skel" style="height:180px"></div>
+        <div class="skel" style="height:160px"></div>
+      </div>
+      <div class="cards" id="cards-ext"></div>
+      <div class="empty-state" id="empty-ext">
+        <div class="empty-icon">🌿</div>
+        <div class="empty-title" style="font-size:15px;">ยังไม่มีกิจกรรม</div>
+      </div>
     </div>
-    <div class="stat-card">
-      <!-- counts clicks on สมัคร button (localStorage, resets per session is fine) -->
-      <span class="stat-num" id="stat-reg">—</span>
-      <span class="stat-label">ผู้สมัครรวม</span>
-    </div>
-  </div>
-
-  <div class="filter-row" id="filter-row">
-    <button class="chip active" data-cat="all" onclick="filterBy(this)">ทั้งหมด</button>
-  </div>
-
-  <div class="section-divider">
-    <span class="sd-text">กิจกรรมที่เปิดรับสมัคร</span>
-    <div class="sd-line"></div>
-  </div>
-
-  <div class="skeletons" id="skeletons">
-    <div class="skel" style="height:220px"></div>
-    <div class="skel" style="height:190px"></div>
-    <div class="skel" style="height:210px"></div>
-  </div>
-
-  <div class="cards" id="cards"></div>
-
-  <div class="empty-state" id="empty-state">
-    <div class="empty-icon">🌱</div>
-    <div class="empty-title">ยังไม่มีกิจกรรมตอนนี้</div>
-    <div class="empty-sub">ติดตาม ใจดี TU ทาง LINE เพื่อรับแจ้งเตือนก่อนใคร</div>
   </div>
 
   <div id="past-section" style="display:none; padding-top:32px">
@@ -390,7 +422,7 @@
   <div class="footer">
     <p>ต้องการความช่วยเหลือเพิ่มเติม?<br/>
     <a href="peer.html">คุยกับ PR →</a></p>
-    <p style="margin-top:16px;padding-top:16px;border-top:1px solid #1E3025">
+    <p style="margin-top:16px;padding-top:16px;border-top:1px solid #D8D0C0">
       <a href="add-program.html" style="font-size:11px;color:#4A7A47;letter-spacing:0.5px">
         ทีมงาน: เพิ่ม Program ใหม่ →
       </a>
@@ -423,19 +455,19 @@ const FALLBACK_ACTIVE = [
   { id:"p1", name:"Intentional Listening Lab",
     short_desc:"ฝึกฟังอย่างมีความตั้งใจ สำหรับนักเรียนที่อยากช่วยเพื่อนได้ดีขึ้น",
     full_desc:"Workshop ที่ออกแบบมาเพื่อพัฒนาทักษะการฟังอย่างลึกซึ้ง โดยอิงจาก Intentional Peer Support framework ที่ใจดี TU ใช้กับ PR ทุกคน เปิดสำหรับทุกคนที่อยากเป็นพื้นที่ปลอดภัยให้เพื่อน",
-    category:"Wellbeing", type:"Workshop", emoji:"🌿",
+    category:"Wellbeing", type:"Workshop", emoji:"🌿", source:"internal",
     start_date:"14 มิ.ย. 68", reg_deadline:"10 มิ.ย. 68",
     form_url:"https://forms.google.com/", photo_url:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80", status:"active" },
   { id:"p2", name:"Study Smarter: Neuroscience Edition",
     short_desc:"เรียนรู้ว่าสมองทำงานยังไงเวลาเรียน แล้วออกแบบวิธีเรียนให้เหมาะกับตัวเอง",
     full_desc:"Seminar โดยนักจิตวิทยาการศึกษา พาเจาะลึกเรื่อง spaced repetition, active recall และ cognitive load theory แบบที่เอาไปใช้ได้จริง ไม่ใช่แค่ทฤษฎี",
-    category:"Academic", type:"Seminar", emoji:"🧠",
+    category:"Academic", type:"Seminar", emoji:"🧠", source:"internal",
     start_date:"20 มิ.ย. 68", reg_deadline:"18 มิ.ย. 68",
     form_url:"https://forms.google.com/", photo_url:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80", status:"active" },
   { id:"p3", name:"จากเตรียมอุดมถึง Oxford",
     short_desc:"รุ่นพี่เล่าให้ฟัง เส้นทาง แรงจูงใจ และสิ่งที่อยากย้อนกลับไปบอกตัวเอง",
     full_desc:"Talk โดยรุ่นพี่ที่ผ่านช่วงเตรียมอุดมมาแล้ว เล่าตั้งแต่วันที่ยังไม่รู้จะเรียนอะไร จนถึงวันที่ได้รับจดหมายตอบรับ",
-    category:"Career", type:"Talk", emoji:"🎯",
+    category:"Career", type:"Talk", emoji:"🎯", source:"external",
     start_date:"26 มิ.ย. 68", reg_deadline:"24 มิ.ย. 68",
     form_url:"https://forms.google.com/", photo_url:"", status:"active" }
 ];
@@ -483,40 +515,38 @@ function buildChips() {
 }
 
 function renderCards() {
-  const container = document.getElementById("cards");
-  const empty = document.getElementById("empty-state");
-  container.innerHTML = "";
-  const list = filter === "all" ? active : active.filter(p => p.category === filter);
-  if (!list.length) { empty.classList.add("show"); return; }
-  empty.classList.remove("show");
+  const intContainer = document.getElementById("cards-int");
+  const extContainer = document.getElementById("cards-ext");
+  const emptyInt = document.getElementById("empty-int");
+  const emptyExt = document.getElementById("empty-ext");
+  intContainer.innerHTML = ""; extContainer.innerHTML = "";
 
-  list.forEach((p, i) => {
+  const list = filter === "all" ? active : active.filter(p => p.category === filter);
+  const internal = list.filter(p => p.source !== "external");
+  const external = list.filter(p => p.source === "external");
+
+  emptyInt.classList.toggle("show", !internal.length);
+  emptyExt.classList.toggle("show", !external.length);
+
+  function buildCard(p, i, container) {
     const isClosed = p.status === "closed" || p.status === "past";
     const color = cc(p.category);
     const emoji = p.emoji || "🌱";
     const hasForm = p.form_url && p.form_url !== "#" && p.form_url !== "";
-
     let photoInner = p.photo_url
       ? `<img src="${p.photo_url}" alt="" onerror="this.style.display='none'"/>`
       : `<span style="opacity:0.3">${emoji}</span>`;
-
-    // Build dual CTA row
     let ctaHtml = "";
     if (isClosed) {
-      ctaHtml = `<div class="card-cta-row">
-        <button class="card-cta closed">ปิดรับสมัครแล้ว</button>
-      </div>`;
+      ctaHtml = `<div class="card-cta-row"><button class="card-cta closed">ปิดรับสมัครแล้ว</button></div>`;
     } else if (hasForm) {
       ctaHtml = `<div class="card-cta-row">
         <button class="card-cta" onclick="openSheet('${p.id}');event.stopPropagation()">ดูรายละเอียด</button>
         <button class="card-cta primary" onclick="handleReg('${p.id}','${p.form_url}');event.stopPropagation()">สมัครเลย →</button>
       </div>`;
     } else {
-      ctaHtml = `<div class="card-cta-row">
-        <button class="card-cta" style="flex:1" onclick="openSheet('${p.id}');event.stopPropagation()">ดูรายละเอียด →</button>
-      </div>`;
+      ctaHtml = `<div class="card-cta-row"><button class="card-cta" style="flex:1" onclick="openSheet('${p.id}');event.stopPropagation()">ดูรายละเอียด →</button></div>`;
     }
-
     const card = document.createElement("div");
     card.className = "prog-card";
     card.onclick = () => openSheet(p.id);
@@ -537,12 +567,12 @@ function renderCards() {
         ${p.reg_deadline && !isClosed ? `<div class="card-deadline">⏰ ปิดรับสมัคร ${p.reg_deadline}</div>` : ""}
         ${ctaHtml}
       </div>`;
-
     container.appendChild(card);
     setTimeout(() => card.classList.add("visible"), i * 75);
-  });
+  }
 
-  // update reg count stat
+  internal.forEach((p, i) => buildCard(p, i, intContainer));
+  external.forEach((p, i) => buildCard(p, i, extContainer));
   document.getElementById("stat-reg").textContent = totalRegCount() || "—";
 }
 
@@ -645,8 +675,8 @@ async function init() {
     } else { active = FALLBACK_ACTIVE; past = FALLBACK_PAST; }
   } catch { active = FALLBACK_ACTIVE; past = FALLBACK_PAST; }
 
-  document.getElementById("skeletons").style.display = "none";
-  buildChips();
+  document.getElementById("skeletons-int").style.display = "none";
+  document.getElementById("skeletons-ext").style.display = "none";
   renderStats();
   renderCards();
   renderPast();
@@ -655,4 +685,3 @@ init();
 </script>
 </body>
 </html>
-
