@@ -563,12 +563,10 @@ function renderCards() {
 
   internal.forEach((p, i) => buildCard(p, i, intContainer));
   external.forEach((p, i) => buildCard(p, i, extContainer));
-  document.getElementById("stat-reg").textContent = totalRegCount() || "—";
 }
 
 function handleReg(id, url) {
   incRegCount(id);
-  document.getElementById("stat-reg").textContent = totalRegCount();
   window.open(url, "_blank");
 }
 
