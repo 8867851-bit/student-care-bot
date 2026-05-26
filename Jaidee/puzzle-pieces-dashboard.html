@@ -372,7 +372,22 @@
 
   <script>
     /* ════════════════════════════════════════════════════════
+       API CONFIG
+       Paste your deployed Apps Script URL below.
+       Find it in: Apps Script → Deploy → Manage deployments
+    ════════════════════════════════════════════════════════ */
+    const SCRIPT_URL = 'YOUR_SCRIPT_URL_HERE';
+    // e.g. 'https://script.google.com/macros/s/AKfycb.../exec'
+
+    async function apiCall(params) {
+      const url = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
+      const r   = await fetch(url);
+      return r.json();
+    }
+
+    /* ════════════════════════════════════════════════════════
        CONSTANTS
+       ↓ Change CATS to your real category names when ready
     ════════════════════════════════════════════════════════ */
     const CATS   = ['จิตวิทยา','ประสาทวิทยา','ชีววิทยา','งานวิจัย','บทความ','วิดีโอ','เกร็ดความรู้','คลังคำถาม'];
     const CICON  = {จิตวิทยา:'🧠',ประสาทวิทยา:'⚡',ชีววิทยา:'🧬',งานวิจัย:'🔬',บทความ:'📝',วิดีโอ:'🎬',เกร็ดความรู้:'💡',คลังคำถาม:'❓'};
@@ -381,36 +396,78 @@
     const TLABEL = {article:'บทความ',infographic:'อินโฟกราฟิก',video:'วิดีโอ'};
 
     /* ════════════════════════════════════════════════════════
-       DATA  (localStorage — swap apiCall() here when ready)
+       DATA LAYER  (in-memory cache backed by Apps Script)
+       Backend field mapping:
+         world    → category   (primary category)
+         heroUrl  → thumbnail
+         tag      → tags       (secondary / overlapping categories)
+         active   → status     (TRUE=published, FALSE=draft)
+         featured → featured   (col N — new)
     ════════════════════════════════════════════════════════ */
-    const load = ()  => { try { return JSON.parse(localStorage.getItem('pp_v1')||'[]'); } catch { return []; } };
-    const save_ = d  => { localStorage.setItem('pp_v1', JSON.stringify(d)); badge(); };
-    const uid   = () => Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+    let _cache = null;
+
+    function load() { return _cache || []; }
+
+    function mapFromAPI(item) {
+      return {
+        id:        item.id        || '',
+        type:      item.type      || 'article',
+        title:     item.title     || '',
+        thumbnail: item.heroUrl   || '',
+        category:  item.world     || '',
+        status:    (item.active===true||item.active==='TRUE') ? 'published' : 'draft',
+        featured:  item.featured===true || item.featured==='TRUE',
+        tags:      item.tag       || '',
+        ts:        item.createdAt ? new Date(item.createdAt).getTime() : Date.now(),
+        desc:      item.desc      || '',
+        level:     item.level     || '',
+        url:       item.url       || ''
+      };
+    }
+
+    async function refreshCache() {
+      try {
+        setLoading(true);
+        const d = await apiCall({action:'getContent'});
+        _cache  = (d.content||[]).map(mapFromAPI);
+        badge();
+      } catch(e) {
+        _cache = _cache || [];
+        toast('โหลดข้อมูลไม่ได้ — ตรวจสอบ SCRIPT_URL');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function setLoading(on) {
+      const t = document.querySelector('.header-title');
+      if(t) t.style.opacity = on ? '0.5' : '1';
+    }
 
     /* ════════════════════════════════════════════════════════
        INIT
     ════════════════════════════════════════════════════════ */
-    document.addEventListener('DOMContentLoaded', () => {
-      // populate all cat selects
+    document.addEventListener('DOMContentLoaded', async () => {
       const catOpts = '<option value="">ทุกหมวดหมู่</option>' + CATS.map(c=>`<option value="${c}">${CICON[c]} ${c}</option>`).join('');
       const addOpts = CATS.map(c=>`<option value="${c}">${CICON[c]} ${c}</option>`).join('');
       document.getElementById('f-cat').innerHTML = catOpts;
       ['a-cat','i-cat','v-cat'].forEach(id => {
         const el = document.getElementById(id); if(el) el.innerHTML = addOpts;
       });
+      await refreshCache();
       renderOverview();
-      badge();
     });
 
     /* ════════════════════════════════════════════════════════
        NAVIGATION
     ════════════════════════════════════════════════════════ */
-    function go(s) {
+    async function go(s) {
       ['overview','add','manage'].forEach(id => {
         document.getElementById('screen-'+id).classList.toggle('active', id===s);
         const n = document.getElementById('nav-'+id);
         if(n) n.classList.toggle('active', id===s);
       });
+      if(!_cache) await refreshCache();
       if(s==='overview') renderOverview();
       if(s==='manage')   renderManage();
       if(s==='add')      backToPick();
@@ -509,36 +566,38 @@
     }
 
     /* ════════════════════════════════════════════════════════
-       SAVE
+       SAVE  — sends to Apps Script addContent action
     ════════════════════════════════════════════════════════ */
-    function save(type, status) {
-      let title='', thumbnail='', category='', extra={};
+    async function save(type, status) {
+      let title='', thumbnail='', params={};
 
       if(type==='article') {
         title     = v('a-title'); thumbnail = v('a-img');
-        category  = v('a-cat');
-        extra.desc  = v('a-desc');
-        extra.level = v('a-level');
-        extra.url   = v('a-url');
+        params    = { action:'addContent', world:v('a-cat'), title, type,
+                      heroUrl:thumbnail, active:status==='published'?'TRUE':'FALSE',
+                      desc:v('a-desc'), level:v('a-level'), url:v('a-url') };
       } else if(type==='infographic') {
         title     = v('i-title'); thumbnail = v('i-img');
-        category  = v('i-cat');
+        params    = { action:'addContent', world:v('i-cat'), title, type,
+                      heroUrl:thumbnail, active:status==='published'?'TRUE':'FALSE' };
       } else if(type==='video') {
         title     = v('v-title');
-        extra.url = v('v-url');
-        category  = v('v-cat');
-        thumbnail = ytThumb(extra.url);
+        const url = v('v-url');
+        thumbnail = ytThumb(url);
+        params    = { action:'addContent', world:v('v-cat'), title, type,
+                      url, heroUrl:thumbnail, active:status==='published'?'TRUE':'FALSE' };
       }
 
       if(!title) { toast('กรุณาใส่ชื่อ'); return; }
 
-      const item = { id:uid(), type, title, thumbnail, category, status, featured:false, ts:Date.now(), ...extra };
-      const data = load();
-      data.unshift(item);
-      save_(data);
-      toast(status==='published' ? 'เผยแพร่แล้ว 🧩' : 'บันทึก draft แล้ว 💾');
-      clearForms(type);
-      backToPick();
+      try {
+        toast('กำลังบันทึก...');
+        await apiCall(params);
+        await refreshCache();
+        toast(status==='published' ? 'เผยแพร่แล้ว 🧩' : 'บันทึก draft แล้ว 💾');
+        clearForms(type);
+        backToPick();
+      } catch(e) { toast('เกิดข้อผิดพลาด ลองใหม่'); }
     }
 
     function clearForms(type) {
@@ -559,35 +618,47 @@
     }
 
     /* ════════════════════════════════════════════════════════
-       ACTIONS
+       ACTIONS  — optimistic updates + API sync
     ════════════════════════════════════════════════════════ */
-    function toggleFeat(id) {
-      const data = load();
-      const item = data.find(d=>d.id===id);
+    async function toggleFeat(id) {
+      const item = load().find(d=>d.id===id);
       if(!item) return;
-      const was = item.featured;
-      data.filter(d=>d.category===item.category).forEach(d=>d.featured=false);
-      if(!was) item.featured = true;
-      save_(data);
-      toast(item.featured ? '⭐ ตั้งเป็น featured แล้ว' : 'ยกเลิก featured แล้ว');
+      const newFeat = !item.featured;
+      load().filter(d=>d.category===item.category).forEach(d=>d.featured=false);
+      item.featured = newFeat;
       renderManage();
+      try {
+        await apiCall({action:'setFeatured', id, featured: newFeat?'true':'false'});
+        toast(newFeat ? '⭐ ตั้งเป็น featured แล้ว' : 'ยกเลิก featured แล้ว');
+      } catch(e) { await refreshCache(); renderManage(); toast('เกิดข้อผิดพลาด'); }
     }
 
-    function togglePub(id) {
-      const data = load();
-      const item = data.find(d=>d.id===id);
+    async function togglePub(id) {
+      const item = load().find(d=>d.id===id);
       if(!item) return;
-      item.status = item.status==='published' ? 'draft' : 'published';
-      save_(data);
-      toast(item.status==='published' ? 'เผยแพร่แล้ว 👁' : 'ซ่อนแล้ว 🙈');
-      renderManage();
+      const newStatus = item.status==='published' ? 'draft' : 'published';
+      item.status = newStatus;
+      renderManage(); badge();
+      try {
+        await apiCall({action:'updateContent', id, active:newStatus==='published'?'TRUE':'FALSE'});
+        toast(newStatus==='published' ? 'เผยแพร่แล้ว 👁' : 'ซ่อนแล้ว 🙈');
+      } catch(e) { await refreshCache(); renderManage(); toast('เกิดข้อผิดพลาด'); }
     }
 
-    function del(id) {
+    async function del(id) {
       if(!confirm('ลบเนื้อหานี้?')) return;
-      save_(load().filter(d=>d.id!==id));
-      renderManage();
-      toast('ลบแล้ว');
+      _cache = load().filter(d=>d.id!==id);
+      renderManage(); badge();
+      try {
+        await apiCall({action:'deleteContent', id});
+        toast('ลบแล้ว');
+      } catch(e) { await refreshCache(); renderManage(); toast('เกิดข้อผิดพลาด'); }
+    }
+
+    function badge() {
+      const n  = load().filter(d=>d.status==='draft').length;
+      const el = document.getElementById('draft-badge');
+      if(el){ el.textContent=n; el.style.display=n?'inline':'none'; }
     }
 
     /* ════════════════════════════════════════════════════════
