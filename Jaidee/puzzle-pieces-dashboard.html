@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Pieces — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Design tokens match ใจดี TU dashboard ────────────────── */
+    :root {
+      --bg:#F2F0EB; --surface:#FAFAF8; --surface2:#F0EDE8; --border:#E2DDD7;
+      --gold:#C8860A; --gold-soft:#FBF3E2; --gold-border:#F0D080;
+      --red:#C0392B; --red-soft:#FDEDED;
+      --green:#1E8449; --green-soft:#E8F8EF;
+      --text:#1A1714; --text-mid:#5A5550; --text-soft:#9A9590;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Sarabun', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    img  { display: block; max-width: 100%; }
+    a    { text-decoration: none; color: inherit; }
+
+    /* ── HEADER ── */
+    .header { height: 50px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: sticky; top: 0; z-index: 30; flex-shrink: 0; }
+    .header-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .site-link { font-size: 12px; color: var(--text-soft); background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 11px; cursor: pointer; transition: all .15s; }
+    .site-link:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── LAYOUT ── */
+    .app-body { display: flex; flex: 1; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { width: 200px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); padding: 14px 0; position: sticky; top: 50px; height: calc(100vh - 50px); overflow-y: auto; }
+    .sb-section { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-soft); padding: 0 16px; margin: 14px 0 5px; }
+    .sb-item { display: flex; align-items: center; gap: 9px; padding: 10px 16px; font-size: 13px; color: var(--text-mid); cursor: pointer; border-left: 2px solid transparent; transition: all .12s; white-space: nowrap; }
+    .sb-item:hover { background: var(--surface2); }
+    .sb-item.active { background: var(--gold-soft); color: var(--gold); font-weight: 600; border-left-color: var(--gold); }
+    .sb-badge { margin-left: auto; background: var(--red); color: #fff; font-size: 10px; font-weight: 700; border-radius: 99px; padding: 1px 7px; }
+    .sb-divider { height: 1px; background: var(--border); margin: 8px 14px; }
+
+    /* ── MAIN ── */
+    .main { flex: 1; padding: 22px 20px; max-width: 680px; }
+
+    /* ── COMMON ── */
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-soft); margin-bottom: 12px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+    .divider { height: 1px; background: var(--border); margin: 14px 0; }
+    .empty { text-align: center; padding: 30px 20px; color: var(--text-soft); font-size: 14px; line-height: 1.8; }
+
+    .btn { border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-family: 'Sarabun', sans-serif; font-weight: 600; cursor: pointer; transition: opacity .15s, transform .1s; }
+    .btn:active { transform: scale(0.98); opacity: .85; }
+    .btn-gold  { background: var(--gold); color: #fff; }
+    .btn-ghost { background: var(--surface2); color: var(--text-mid); border: 1px solid var(--border); }
+    .btn-full  { width: 100%; border-radius: 12px; padding: 13px; font-size: 14px; }
+
+    .input-group { display: flex; flex-direction: column; gap: 5px; }
+    .input-label { font-size: 12px; font-weight: 600; color: var(--text-mid); }
+    .input-field { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 13px; font-size: 14px; font-family: 'Sarabun', sans-serif; color: var(--text); width: 100%; }
+    .input-field:focus { outline: none; border-color: var(--gold); }
+
+    .pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+    .pill-pub   { background: var(--green-soft); color: var(--green); }
+    .pill-draft { background: var(--surface2); color: var(--text-soft); border: 1px solid var(--border); }
+    .pill-feat  { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-border); }
+
+    /* ── STATS STRIP ── */
+    .stats-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 18px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+    .stat-num { font-size: 30px; font-weight: 700; color: var(--gold); }
+    .stat-lbl { font-size: 11px; color: var(--text-mid); margin-top: 2px; }
+
+    /* ── CATEGORY GRID ── */
+    .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .cat-tile { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 13px; cursor: pointer; transition: all .15s; display: flex; flex-direction: column; gap: 7px; }
+    .cat-tile:hover { border-color: var(--gold); background: var(--gold-soft); }
+    .cat-tile-top { display: flex; align-items: center; justify-content: space-between; }
+    .cat-dot { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+    .cat-feat-yes { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-border); }
+    .cat-feat-no  { font-size: 10px; color: var(--text-soft); border: 1px dashed var(--border); padding: 2px 8px; border-radius: 99px; }
+    .cat-tile-name  { font-size: 13px; font-weight: 600; }
+    .cat-tile-count { font-size: 12px; color: var(--text-soft); }
+
+    /* ── TYPE PICKER ── */
+    .type-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 6px; }
+    .type-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px 10px; text-align: center; cursor: pointer; transition: all .15s; display: flex; flex-direction: column; align-items: center; gap: 7px; }
+    .type-card:hover { border-color: var(--gold); background: var(--gold-soft); }
+    .type-icon { font-size: 28px; }
+    .type-name { font-size: 13px; font-weight: 700; }
+    .type-desc { font-size: 11px; color: var(--text-soft); line-height: 1.5; }
+
+    /* ── CONTENT LIST ITEM ── */
+    .content-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 11px 13px; display: flex; gap: 11px; align-items: flex-start; margin-bottom: 8px; }
+    .c-thumb { width: 56px; height: 42px; border-radius: 8px; flex-shrink: 0; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 20px; overflow: hidden; }
+    .c-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .c-info { flex: 1; min-width: 0; }
+    .c-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+    .c-meta  { font-size: 11px; color: var(--text-soft); display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+    .c-actions { display: flex; gap: 5px; flex-shrink: 0; }
+    .icon-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; transition: all .12s; }
+    .icon-btn:hover { border-color: var(--gold); background: var(--gold-soft); }
+    .icon-btn.del:hover { border-color: var(--red); background: var(--red-soft); }
+
+    /* ── THUMB PREVIEW (form) ── */
+    .thumb-preview { margin-top: 8px; border-radius: 10px; overflow: hidden; background: var(--surface2); border: 1px solid var(--border); display: none; }
+    .thumb-preview img { width: 100%; height: 130px; object-fit: cover; display: block; }
+
+    /* ── CARD PREVIEW ── */
+    .preview-wrap { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+    .pv-thumb { height: 76px; border-radius: 8px; background: var(--border); margin-bottom: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--text-soft); }
+    .pv-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .pv-tag   { font-size: 10px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+    .pv-title { font-size: 13px; font-weight: 600; }
+    .pv-meta  { font-size: 11px; color: var(--text-soft); margin-top: 4px; }
+
+    /* ── UPLOAD DROP ZONE ── */
+    .drop-zone { background: var(--surface2); border: 1.5px dashed var(--border); border-radius: 10px; padding: 18px; text-align: center; cursor: pointer; transition: all .15s; }
+    .drop-zone:hover { border-color: var(--gold); background: var(--gold-soft); }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: #fff; padding: 9px 20px; border-radius: 99px; font-size: 13px; font-weight: 600; z-index: 999; transition: transform .25s ease; white-space: nowrap; pointer-events: none; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── SCREEN TOGGLE ── */
+    .screen { display: none; flex-direction: column; gap: 14px; }
+    .screen.active { display: flex; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 580px) {
+      .sidebar { display: none; }
+      .main { padding: 16px; max-width: 100%; }
+      .type-grid { grid-template-columns: 1fr 1fr; }
+      .stats-strip { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ── HEADER ────────────────────────────────────────── -->
+  <div class="header">
+    <div class="header-title">
+      <span>🧩</span> Puzzle Pieces — Dashboard
+    </div>
+    <a class="site-link" href="puzzle.html">← ไปหน้าเว็บ</a>
+  </div>
+
+  <div class="app-body">
+
+    <!-- ── SIDEBAR ───────────────────────────────────────── -->
+    <div class="sidebar">
+      <div class="sb-section">หน้าหลัก</div>
+      <div class="sb-item active" id="nav-overview" onclick="go('overview')">🏠 ภาพรวม</div>
+      <div class="sb-item"        id="nav-add"      onclick="go('add')">➕ เพิ่มเนื้อหา</div>
+      <div class="sb-item"        id="nav-manage"   onclick="go('manage')">
+        📋 จัดการทั้งหมด
+        <span class="sb-badge" id="draft-badge" style="display:none;"></span>
+      </div>
+
+      <div class="sb-divider"></div>
+      <div class="sb-section">หมวดหมู่</div>
+      <div class="sb-item" onclick="filterAndGo('จิตวิทยา')">🧠 จิตวิทยา</div>
+      <div class="sb-item" onclick="filterAndGo('ประสาทวิทยา')">⚡ ประสาทวิทยา</div>
+      <div class="sb-item" onclick="filterAndGo('ชีววิทยา')">🧬 ชีววิทยา</div>
+      <div class="sb-item" onclick="filterAndGo('งานวิจัย')">🔬 งานวิจัย</div>
+      <div class="sb-item" onclick="filterAndGo('บทความ')">📝 บทความ</div>
+      <div class="sb-item" onclick="filterAndGo('วิดีโอ')">🎬 วิดีโอ</div>
+      <div class="sb-item" onclick="filterAndGo('เกร็ดความรู้')">💡 เกร็ดความรู้</div>
+      <div class="sb-item" onclick="filterAndGo('คลังคำถาม')">❓ คลังคำถาม</div>
+    </div>
+
+    <!-- ── MAIN ──────────────────────────────────────────── -->
+    <div class="main">
+
+      <!-- ════ SCREEN: OVERVIEW ════ -->
+      <div class="screen active" id="screen-overview">
+
+        <div class="section-label">ภาพรวม</div>
+        <div class="stats-strip">
+          <div class="stat-card"><div class="stat-num" id="st-total">0</div><div class="stat-lbl">ทั้งหมด</div></div>
+          <div class="stat-card"><div class="stat-num" id="st-pub">0</div><div class="stat-lbl">เผยแพร่แล้ว</div></div>
+          <div class="stat-card"><div class="stat-num" id="st-draft">0</div><div class="stat-lbl">Draft</div></div>
+        </div>
+
+        <div class="section-label">หมวดหมู่</div>
+        <div class="cat-grid" id="cat-grid"></div>
+
+        <div class="section-label">เพิ่มล่าสุด</div>
+        <div id="recent-list"></div>
+
+      </div><!-- /overview -->
+
+
+      <!-- ════ SCREEN: ADD ════ -->
+      <div class="screen" id="screen-add">
+
+        <div class="section-label">เพิ่มเนื้อหาใหม่</div>
+
+        <!-- Step 1: pick type -->
+        <div id="add-pick">
+          <div class="type-grid">
+            <div class="type-card" onclick="pickType('article')">
+              <div class="type-icon">📝</div>
+              <div class="type-name">บทความ</div>
+              <div class="type-desc">เขียนเนื้อหา<br>ยาวพร้อมบล็อก</div>
+            </div>
+            <div class="type-card" onclick="pickType('infographic')">
+              <div class="type-icon">🖼️</div>
+              <div class="type-name">อินโฟกราฟิก</div>
+              <div class="type-desc">อัปโหลดรูป<br>พร้อมใน 2 นาที</div>
+            </div>
+            <div class="type-card" onclick="pickType('video')">
+              <div class="type-icon">▶️</div>
+              <div class="type-name">วิดีโอ</div>
+              <div class="type-desc">YouTube หรือ<br>Facebook</div>
+            </div>
+          </div>
+          <div class="empty">เลือกประเภทเนื้อหาด้านบน</div>
+        </div>
+
+        <!-- Step 2a: ARTICLE -->
+        <div id="form-article" style="display:none;flex-direction:column;gap:13px;">
+          <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:11px 15px;">
+            <span style="font-size:14px;font-weight:700;">📝 บทความ</span>
+            <button class="btn btn-ghost" onclick="backToPick()" style="font-size:12px;padding:5px 12px;">← เปลี่ยน</button>
+          </div>
+          <div class="input-group">
+            <div class="input-label">ชื่อบทความ *</div>
+            <input class="input-field" id="a-title" placeholder="เช่น ทำไมเราถึงลืมความฝัน?" oninput="pvArticle()"/>
+          </div>
+          <div class="input-group">
+            <div class="input-label">คำอธิบายสั้น (แสดงในการ์ด)</div>
+            <input class="input-field" id="a-desc"  placeholder="1-2 ประโยค"/>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="input-group">
+              <div class="input-label">หมวดหมู่</div>
+              <select class="input-field" id="a-cat" onchange="pvArticle()"></select>
+            </div>
+            <div class="input-group">
+              <div class="input-label">ความลึก</div>
+              <select class="input-field" id="a-level">
+                <option>🟢 เบา</option><option selected>🟡 กลาง</option><option>🔴 ลึก</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">รูปหน้าปก (URL หรืออัปโหลด)</div>
+            <div style="display:flex;gap:8px;">
+              <input class="input-field" id="a-img" placeholder="https://..." style="flex:1;" oninput="pvArticle()"/>
+              <button class="btn btn-ghost" onclick="document.getElementById('a-file').click()" style="flex-shrink:0;font-size:12px;padding:8px 12px;">📷</button>
+            </div>
+            <input type="file" id="a-file" accept="image/*" style="display:none;" onchange="localFile(this,'a-img','a-img-pv','a-img-prev',pvArticle)"/>
+            <div class="thumb-preview" id="a-img-prev"><img id="a-img-pv" src="" alt=""/></div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">URL บทความ (ถ้ามี)</div>
+            <input class="input-field" id="a-url" placeholder="https://..."/>
+          </div>
+          <div>
+            <div class="input-label" style="margin-bottom:7px;">Preview การ์ด</div>
+            <div class="preview-wrap">
+              <div class="pv-thumb" id="a-pv-thumb">🧠</div>
+              <div class="pv-tag"   id="a-pv-tag">จิตวิทยา</div>
+              <div class="pv-title" id="a-pv-title">ชื่อบทความ</div>
+              <div class="pv-meta">📝 บทความ</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <button class="btn btn-ghost btn-full" onclick="save('article','draft')">บันทึก Draft</button>
+            <button class="btn btn-gold  btn-full" onclick="save('article','published')">เผยแพร่ →</button>
+          </div>
+        </div>
+
+        <!-- Step 2b: INFOGRAPHIC -->
+        <div id="form-infographic" style="display:none;flex-direction:column;gap:13px;">
+          <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:11px 15px;">
+            <span style="font-size:14px;font-weight:700;">🖼️ อินโฟกราฟิก</span>
+            <button class="btn btn-ghost" onclick="backToPick()" style="font-size:12px;padding:5px 12px;">← เปลี่ยน</button>
+          </div>
+          <div class="input-group">
+            <div class="input-label">ชื่ออินโฟกราฟิก *</div>
+            <input class="input-field" id="i-title" placeholder="เช่น 5 สัญญาณ Burnout" oninput="pvInfographic()"/>
+          </div>
+          <div class="input-group">
+            <div class="input-label">หมวดหมู่</div>
+            <select class="input-field" id="i-cat" onchange="pvInfographic()"></select>
+          </div>
+          <div class="input-group">
+            <div class="input-label">รูปอินโฟกราฟิก * (URL หรืออัปโหลด)</div>
+            <input class="input-field" id="i-img" placeholder="https://..." oninput="pvInfImg()"/>
+            <div class="thumb-preview" id="i-img-prev"><img id="i-img-pv" src="" alt=""/></div>
+          </div>
+          <div class="drop-zone" onclick="document.getElementById('i-file').click()">
+            <div style="font-size:22px;margin-bottom:4px;">📷</div>
+            <div style="font-size:12px;color:var(--text-mid);">คลิกเพื่ออัปโหลดจากเครื่อง</div>
+            <div style="font-size:10px;color:var(--text-soft);margin-top:2px;">หรือวาง URL ด้านบน</div>
+          </div>
+          <input type="file" id="i-file" accept="image/*" style="display:none;" onchange="localFile(this,'i-img','i-img-pv','i-img-prev',pvInfImg)"/>
+          <div>
+            <div class="input-label" style="margin-bottom:7px;">Preview การ์ด</div>
+            <div class="preview-wrap">
+              <div class="pv-thumb" id="i-pv-thumb">🖼️</div>
+              <div class="pv-tag"   id="i-pv-tag">จิตวิทยา</div>
+              <div class="pv-title" id="i-pv-title">ชื่ออินโฟกราฟิก</div>
+              <div class="pv-meta">🖼️ อินโฟกราฟิก</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <button class="btn btn-ghost btn-full" onclick="save('infographic','draft')">บันทึก Draft</button>
+            <button class="btn btn-gold  btn-full" onclick="save('infographic','published')">เผยแพร่ →</button>
+          </div>
+        </div>
+
+        <!-- Step 2c: VIDEO -->
+        <div id="form-video" style="display:none;flex-direction:column;gap:13px;">
+          <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:11px 15px;">
+            <span style="font-size:14px;font-weight:700;">▶️ วิดีโอ</span>
+            <button class="btn btn-ghost" onclick="backToPick()" style="font-size:12px;padding:5px 12px;">← เปลี่ยน</button>
+          </div>
+          <div class="input-group">
+            <div class="input-label">ชื่อวิดีโอ *</div>
+            <input class="input-field" id="v-title" placeholder="เช่น Dopamine อธิบายใน 5 นาที"/>
+          </div>
+          <div class="input-group">
+            <div class="input-label">URL วิดีโอ * (YouTube หรือ Facebook)</div>
+            <input class="input-field" id="v-url" placeholder="https://youtube.com/watch?v=..." oninput="pvVideo()"/>
+            <div class="thumb-preview" id="v-thumb-prev"><img id="v-thumb-img" src="" alt=""/></div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">หมวดหมู่</div>
+            <select class="input-field" id="v-cat"></select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <button class="btn btn-ghost btn-full" onclick="save('video','draft')">บันทึก Draft</button>
+            <button class="btn btn-gold  btn-full" onclick="save('video','published')">เผยแพร่ →</button>
+          </div>
+        </div>
+
+      </div><!-- /add -->
+
+
+      <!-- ════ SCREEN: MANAGE ════ -->
+      <div class="screen" id="screen-manage">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="section-label" style="margin:0;">จัดการเนื้อหา</div>
+          <button class="btn btn-ghost" onclick="go('add')" style="font-size:12px;padding:6px 12px;">+ เพิ่มใหม่</button>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <select class="input-field" id="f-cat"    onchange="renderManage()" style="font-size:12px;padding:7px 10px;flex:1;min-width:110px;"></select>
+          <select class="input-field" id="f-type"   onchange="renderManage()" style="font-size:12px;padding:7px 10px;flex:1;min-width:100px;">
+            <option value="">ทุกประเภท</option>
+            <option value="article">📝 บทความ</option>
+            <option value="infographic">🖼️ อินโฟกราฟิก</option>
+            <option value="video">▶️ วิดีโอ</option>
+          </select>
+          <select class="input-field" id="f-status" onchange="renderManage()" style="font-size:12px;padding:7px 10px;flex:1;min-width:100px;">
+            <option value="">ทุก Status</option>
+            <option value="published">เผยแพร่แล้ว</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+
+        <div id="manage-list"></div>
+
+      </div><!-- /manage -->
+
+    </div><!-- /.main -->
+  </div><!-- /.app-body -->
+
+
+  <script>
+    /* ════════════════════════════════════════════════════════
+       CONSTANTS
+    ════════════════════════════════════════════════════════ */
+    const CATS   = ['จิตวิทยา','ประสาทวิทยา','ชีววิทยา','งานวิจัย','บทความ','วิดีโอ','เกร็ดความรู้','คลังคำถาม'];
+    const CICON  = {จิตวิทยา:'🧠',ประสาทวิทยา:'⚡',ชีววิทยา:'🧬',งานวิจัย:'🔬',บทความ:'📝',วิดีโอ:'🎬',เกร็ดความรู้:'💡',คลังคำถาม:'❓'};
+    const CCOLOR = {จิตวิทยา:'#FBE8F0',ประสาทวิทยา:'#E8F0FD',ชีววิทยา:'#DCEFDF',งานวิจัย:'#D8EAF8',บทความ:'#FAEEDA',วิดีโอ:'#EEEDFE',เกร็ดความรู้:'#FAECE7',คลังคำถาม:'#E1F5EE'};
+    const TICON  = {article:'📝',infographic:'🖼️',video:'▶️'};
+    const TLABEL = {article:'บทความ',infographic:'อินโฟกราฟิก',video:'วิดีโอ'};
+
+    /* ════════════════════════════════════════════════════════
+       DATA  (localStorage — swap apiCall() here when ready)
+    ════════════════════════════════════════════════════════ */
+    const load = ()  => { try { return JSON.parse(localStorage.getItem('pp_v1')||'[]'); } catch { return []; } };
+    const save_ = d  => { localStorage.setItem('pp_v1', JSON.stringify(d)); badge(); };
+    const uid   = () => Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+
+    /* ════════════════════════════════════════════════════════
+       INIT
+    ════════════════════════════════════════════════════════ */
+    document.addEventListener('DOMContentLoaded', () => {
+      // populate all cat selects
+      const catOpts = '<option value="">ทุกหมวดหมู่</option>' + CATS.map(c=>`<option value="${c}">${CICON[c]} ${c}</option>`).join('');
+      const addOpts = CATS.map(c=>`<option value="${c}">${CICON[c]} ${c}</option>`).join('');
+      document.getElementById('f-cat').innerHTML = catOpts;
+      ['a-cat','i-cat','v-cat'].forEach(id => {
+        const el = document.getElementById(id); if(el) el.innerHTML = addOpts;
+      });
+      renderOverview();
+      badge();
+    });
+
+    /* ════════════════════════════════════════════════════════
+       NAVIGATION
+    ════════════════════════════════════════════════════════ */
+    function go(s) {
+      ['overview','add','manage'].forEach(id => {
+        document.getElementById('screen-'+id).classList.toggle('active', id===s);
+        const n = document.getElementById('nav-'+id);
+        if(n) n.classList.toggle('active', id===s);
+      });
+      if(s==='overview') renderOverview();
+      if(s==='manage')   renderManage();
+      if(s==='add')      backToPick();
+    }
+
+    function filterAndGo(cat) {
+      go('manage');
+      document.getElementById('f-cat').value = cat;
+      renderManage();
+    }
+
+    /* ════════════════════════════════════════════════════════
+       OVERVIEW
+    ════════════════════════════════════════════════════════ */
+    function renderOverview() {
+      const data  = load();
+      const pub   = data.filter(d=>d.status==='published');
+      const draft = data.filter(d=>d.status==='draft');
+      document.getElementById('st-total').textContent = data.length;
+      document.getElementById('st-pub').textContent   = pub.length;
+      document.getElementById('st-draft').textContent = draft.length;
+
+      document.getElementById('cat-grid').innerHTML = CATS.map(cat => {
+        const items = pub.filter(d=>d.category===cat);
+        const feat  = items.find(d=>d.featured);
+        return `<div class="cat-tile" onclick="filterAndGo('${cat}')">
+          <div class="cat-tile-top">
+            <div class="cat-dot" style="background:${CCOLOR[cat]}">${CICON[cat]}</div>
+            ${feat ? `<span class="cat-feat-yes">⭐ มี featured</span>` : `<span class="cat-feat-no">ยังไม่มี featured</span>`}
+          </div>
+          <div class="cat-tile-name">${cat}</div>
+          <div class="cat-tile-count">${items.length} ชิ้น · เผยแพร่แล้ว</div>
+        </div>`;
+      }).join('');
+
+      const recent = [...data].sort((a,b)=>b.ts-a.ts).slice(0,3);
+      document.getElementById('recent-list').innerHTML = recent.length
+        ? recent.map(itemHTML).join('')
+        : '<div class="empty">ยังไม่มีเนื้อหา — กด "เพิ่มเนื้อหา" เพื่อเริ่ม 🧩</div>';
+    }
+
+    /* ════════════════════════════════════════════════════════
+       MANAGE
+    ════════════════════════════════════════════════════════ */
+    function renderManage() {
+      const catF    = document.getElementById('f-cat')?.value    || '';
+      const typeF   = document.getElementById('f-type')?.value   || '';
+      const statusF = document.getElementById('f-status')?.value || '';
+      let data = load();
+      if(catF)    data = data.filter(d=>d.category===catF);
+      if(typeF)   data = data.filter(d=>d.type===typeF);
+      if(statusF) data = data.filter(d=>d.status===statusF);
+      data.sort((a,b)=>b.ts-a.ts);
+      document.getElementById('manage-list').innerHTML = data.length
+        ? data.map(itemHTML).join('')
+        : '<div class="empty">ไม่มีเนื้อหาที่ตรงกับ filter</div>';
+    }
+
+    function itemHTML(d) {
+      const thumb = d.thumbnail
+        ? `<div class="c-thumb"><img src="${d.thumbnail}" alt="" onerror="this.parentElement.innerHTML='${TICON[d.type]}'"/></div>`
+        : `<div class="c-thumb">${TICON[d.type]}</div>`;
+      return `<div class="content-item">
+        ${thumb}
+        <div class="c-info">
+          <div class="c-title">${d.title||'(ไม่มีชื่อ)'}</div>
+          <div class="c-meta">
+            ${TICON[d.type]} ${TLABEL[d.type]} · ${d.category||'—'}
+            <span class="pill ${d.status==='published'?'pill-pub':'pill-draft'}">${d.status==='published'?'เผยแพร่':'draft'}</span>
+            ${d.featured ? '<span class="pill pill-feat">⭐ featured</span>' : ''}
+          </div>
+        </div>
+        <div class="c-actions">
+          <div class="icon-btn" title="Toggle featured" onclick="toggleFeat('${d.id}')">⭐</div>
+          <div class="icon-btn" title="${d.status==='published'?'ซ่อน':'เผยแพร่'}" onclick="togglePub('${d.id}')">${d.status==='published'?'🙈':'👁'}</div>
+          <div class="icon-btn del" title="ลบ" onclick="del('${d.id}')">🗑</div>
+        </div>
+      </div>`;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       ADD  — type picker
+    ════════════════════════════════════════════════════════ */
+    function pickType(t) {
+      document.getElementById('add-pick').style.display = 'none';
+      ['article','infographic','video'].forEach(tp => {
+        document.getElementById('form-'+tp).style.display = tp===t ? 'flex' : 'none';
+      });
+    }
+
+    function backToPick() {
+      document.getElementById('add-pick').style.display = 'block';
+      ['article','infographic','video'].forEach(tp => {
+        document.getElementById('form-'+tp).style.display = 'none';
+      });
+    }
+
+    /* ════════════════════════════════════════════════════════
+       SAVE
+    ════════════════════════════════════════════════════════ */
+    function save(type, status) {
+      let title='', thumbnail='', category='', extra={};
+
+      if(type==='article') {
+        title     = v('a-title'); thumbnail = v('a-img');
+        category  = v('a-cat');
+        extra.desc  = v('a-desc');
+        extra.level = v('a-level');
+        extra.url   = v('a-url');
+      } else if(type==='infographic') {
+        title     = v('i-title'); thumbnail = v('i-img');
+        category  = v('i-cat');
+      } else if(type==='video') {
+        title     = v('v-title');
+        extra.url = v('v-url');
+        category  = v('v-cat');
+        thumbnail = ytThumb(extra.url);
+      }
+
+      if(!title) { toast('กรุณาใส่ชื่อ'); return; }
+
+      const item = { id:uid(), type, title, thumbnail, category, status, featured:false, ts:Date.now(), ...extra };
+      const data = load();
+      data.unshift(item);
+      save_(data);
+      toast(status==='published' ? 'เผยแพร่แล้ว 🧩' : 'บันทึก draft แล้ว 💾');
+      clearForms(type);
+      backToPick();
+    }
+
+    function clearForms(type) {
+      if(type==='article') {
+        ['a-title','a-desc','a-img','a-url'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=''; });
+        document.getElementById('a-img-prev').style.display='none';
+        document.getElementById('a-pv-title').textContent='ชื่อบทความ';
+        document.getElementById('a-pv-thumb').innerHTML='🧠';
+      } else if(type==='infographic') {
+        ['i-title','i-img'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=''; });
+        document.getElementById('i-img-prev').style.display='none';
+        document.getElementById('i-pv-title').textContent='ชื่ออินโฟกราฟิก';
+        document.getElementById('i-pv-thumb').innerHTML='🖼️';
+      } else if(type==='video') {
+        ['v-title','v-url'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=''; });
+        document.getElementById('v-thumb-prev').style.display='none';
+      }
+    }
+
+    /* ════════════════════════════════════════════════════════
+       ACTIONS
+    ════════════════════════════════════════════════════════ */
+    function toggleFeat(id) {
+      const data = load();
+      const item = data.find(d=>d.id===id);
+      if(!item) return;
+      const was = item.featured;
+      data.filter(d=>d.category===item.category).forEach(d=>d.featured=false);
+      if(!was) item.featured = true;
+      save_(data);
+      toast(item.featured ? '⭐ ตั้งเป็น featured แล้ว' : 'ยกเลิก featured แล้ว');
+      renderManage();
+    }
+
+    function togglePub(id) {
+      const data = load();
+      const item = data.find(d=>d.id===id);
+      if(!item) return;
+      item.status = item.status==='published' ? 'draft' : 'published';
+      save_(data);
+      toast(item.status==='published' ? 'เผยแพร่แล้ว 👁' : 'ซ่อนแล้ว 🙈');
+      renderManage();
+    }
+
+    function del(id) {
+      if(!confirm('ลบเนื้อหานี้?')) return;
+      save_(load().filter(d=>d.id!==id));
+      renderManage();
+      toast('ลบแล้ว');
+    }
+
+    /* ════════════════════════════════════════════════════════
+       LIVE PREVIEWS
+    ════════════════════════════════════════════════════════ */
+    function pvArticle() {
+      const title = v('a-title')||'ชื่อบทความ';
+      const cat   = v('a-cat')  ||'จิตวิทยา';
+      const img   = v('a-img');
+      document.getElementById('a-pv-title').textContent = title;
+      document.getElementById('a-pv-tag').textContent   = cat;
+      const th = document.getElementById('a-pv-thumb');
+      th.innerHTML = img
+        ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" onerror="this.parentElement.innerHTML='${CICON[cat]||'📝'}'"/>`
+        : (CICON[cat]||'📝');
+      // inline URL preview
+      const prev = document.getElementById('a-img-prev');
+      const pimg = document.getElementById('a-img-pv');
+      if(img){ pimg.src=img; prev.style.display='block'; } else { prev.style.display='none'; }
+    }
+
+    function pvInfographic() {
+      document.getElementById('i-pv-title').textContent = v('i-title')||'ชื่ออินโฟกราฟิก';
+      document.getElementById('i-pv-tag').textContent   = v('i-cat')  ||'จิตวิทยา';
+    }
+
+    function pvInfImg() {
+      const url  = v('i-img');
+      const prev = document.getElementById('i-img-prev');
+      const pimg = document.getElementById('i-img-pv');
+      if(url){ pimg.src=url; prev.style.display='block'; document.getElementById('i-pv-thumb').innerHTML=`<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" onerror="this.parentElement.innerHTML='🖼️'"/>`; }
+      else   { prev.style.display='none'; document.getElementById('i-pv-thumb').innerHTML='🖼️'; }
+      pvInfographic();
+    }
+
+    function pvVideo() {
+      const url   = v('v-url');
+      const thumb = ytThumb(url);
+      const prev  = document.getElementById('v-thumb-prev');
+      const img   = document.getElementById('v-thumb-img');
+      if(thumb){ img.src=thumb; prev.style.display='block'; }
+      else     { prev.style.display='none'; }
+    }
+
+    /* ════════════════════════════════════════════════════════
+       HELPERS
+    ════════════════════════════════════════════════════════ */
+    function v(id) { return (document.getElementById(id)?.value||'').trim(); }
+
+    function ytThumb(url) {
+      const m = url.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+      return m ? `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg` : '';
+    }
+
+    function localFile(input, urlId, imgId, prevId, cb) {
+      const file = input.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const url = e.target.result;
+        document.getElementById(urlId).value = url;
+        document.getElementById(imgId).src   = url;
+        document.getElementById(prevId).style.display = 'block';
+        if(cb) cb();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function badge() {
+      const n = load().filter(d=>d.status==='draft').length;
+      const el = document.getElementById('draft-badge');
+      if(el){ el.textContent=n; el.style.display=n?'inline':'none'; }
+    }
+
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent=msg; el.classList.add('show');
+      setTimeout(()=>el.classList.remove('show'), 2200);
+    }
+  </script>
+</body>
+</html>
