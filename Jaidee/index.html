@@ -57,6 +57,34 @@
     .worlds-wrap{display:flex;flex-direction:column;gap:10px;padding:0 16px;}
     .world-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
+    /* Hero full-width explore card */
+    .world-hero-row{padding:0 16px;margin-bottom:0;}
+    .world-card-hero{
+      background:var(--card-bg);
+      border-radius:18px;
+      padding:18px 20px 16px;
+      border:1px solid var(--card-border);
+      box-shadow:0 1px 8px rgba(0,0,0,0.05);
+      opacity:0;transform:translateY(8px);
+      display:flex;align-items:center;gap:16px;
+      cursor:pointer;
+    }
+    .world-card-hero.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease;}
+    .world-card-hero:active{transform:scale(0.98);}
+    .world-card-hero .world-icon{margin-bottom:0;flex-shrink:0;}
+    .wch-body{flex:1;min-width:0;}
+    .wch-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+    .wch-m5-badge{display:inline-flex;align-items:center;gap:5px;background:#FFF3DC;border:1px solid #FFE0A0;border-radius:20px;padding:3px 10px;}
+    .wch-m5-dot{width:5px;height:5px;background:var(--gold);border-radius:50%;flex-shrink:0;}
+    .wch-m5-text{font-size:10px;font-weight:500;color:#8B6000;letter-spacing:0.3px;white-space:nowrap;}
+    .wch-name{font-family:"Playfair Display",serif;font-style:italic;font-weight:700;font-size:15px;line-height:1.3;color:#E11D48;margin-bottom:3px;}
+    .wch-stats{font-size:10px;font-weight:300;color:var(--soft);margin-bottom:12px;}
+    .wch-btns{display:flex;gap:8px;}
+    .wch-btn-open{background:#1C1917;color:#FDFBF7;border:none;border-radius:20px;padding:8px 18px;font-family:"Mitr",sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:opacity 0.15s;}
+    .wch-btn-open:active{opacity:0.75;}
+    .wch-btn-community{background:none;color:var(--dark);border:1.5px solid var(--cream-border);border-radius:20px;padding:7px 14px;font-family:"Mitr",sans-serif;font-size:11px;font-weight:400;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none;transition:background 0.15s;}
+    .wch-btn-community:active{background:var(--cream);}
+
     /* ── CARD: circle top, title italic, 2 buttons ── */
     .world-card{
       background:var(--card-bg);
@@ -297,18 +325,23 @@ const BASE_URL  = "https://jaidee-tu.vercel.app";
 const SCHOOL_SUPPORT_URL = BASE_URL + "/school.html";
 
 // ═══ LAYOUT CONFIG ═══════════════════════════════════════
+// First card in สำรวจ — full-width hero row
+const WORLDS_HERO = {
+  name:"Roadmap กสพท 75+",
+  icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779550823/Screenshot_2026-05-23_212130_meb6fg.png",
+  emoji:"⭐", color:"#E11D48",
+  stats:"วิธีเตรียมตัวรุ่นพี่เตรียมอุดม",
+  url:"programs.html",
+  m5Badge: true,
+};
+
+// Remaining 4 cards — 2 per row
 const WORLDS_TOP = [
   { name:"ระบบจิตใจ 6 ชั้น",
     icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779591839/Screenshot_2026-05-24_100323_t7ok5w.png",
     emoji:"🧠", color:"#0D9488",
     stats:"วิทยาศาสตร์ · จิตวิทยา · ดูแลตัวเอง",
     url:"care.html" },
-
-  { name:"Roadmap กสพท 75+",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779550823/Screenshot_2026-05-23_212130_meb6fg.png",
-    emoji:"⭐", color:"#E11D48",
-    stats:"วิธีเตรียมตัวรุ่นพี่เตรียมอุดม",
-    url:"programs.html" },
 
   { name:"Puzzle Piece",
     icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779550817/Screenshot_2026-05-23_212006_e7hdrc.png",
@@ -327,18 +360,6 @@ const WORLDS_TOP = [
     emoji:"🌱", color:"#7C3AED",
     stats:"Workshop · กิจกรรมเดือนนี้",
     url:"programs.html" },
-
-  { name:"แผนดูแลตัวเอง",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779592983/Screenshot_2026-05-24_095848_opkqft.png",
-    emoji:"🗺️", color:"#3A7D44",
-    stats:"แผน · กิจกรรมรายสัปดาห์",
-    url:"plans.html" },
-
-  { name:"ใจดี TU คืออะไร?",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779593019/Screenshot_2026-05-20_215453_vnjpnx.png",
-    emoji:"📜", color:"#1C1917",
-    stats:"ทีม · แนวคิด · ผลงาน",
-    url:"founder.html" },
 ];
 
 const M4_CARDS = [
@@ -362,15 +383,25 @@ const WORLDS_LOCKED_GRID = [
     icon_url: "",
     emoji:"📚", color:"#6B6560",
     stats:"เร็วๆ นี้", url:"academic.html" },
-];
 
-const WORLD_8 = {
-  name:"Career Support",
-  icon_url: "",
-  emoji:"🎯", color:"#6B6560",
-  stats:"วางแผนอนาคต · เร็วๆ นี้",
-  url:"career.html"
-};
+  { name:"Career Support",
+    icon_url: "",
+    emoji:"🎯", color:"#6B6560",
+    stats:"วางแผนอนาคต · เร็วๆ นี้",
+    url:"career.html" },
+
+  { name:"แผนดูแลตัวเอง",
+    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779592983/Screenshot_2026-05-24_095848_opkqft.png",
+    emoji:"🗺️", color:"#3A7D44",
+    stats:"แผน · กิจกรรมรายสัปดาห์",
+    url:"plans.html" },
+
+  { name:"ใจดี TU คืออะไร?",
+    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779593019/Screenshot_2026-05-20_215453_vnjpnx.png",
+    emoji:"📜", color:"#1C1917",
+    stats:"ทีม · แนวคิด · ผลงาน",
+    url:"founder.html" },
+];
 
 const COMING_SOON = [
   { name:"Drama & Arts",   emoji:"🎭", desc:"ชมรมละคร time management + passion" },
@@ -489,6 +520,33 @@ function renderAll() {
   lbl.innerHTML = `<div class="section-label-text">สำรวจ</div><div class="section-label-line"></div>`;
   wrap.appendChild(lbl);
 
+  // Hero full-width card (Roadmap — ม.5 recommended)
+  const heroRow = document.createElement("div");
+  heroRow.className = "world-hero-row";
+  const heroEl = document.createElement("div");
+  heroEl.className = "world-card-hero";
+  heroEl.onclick = () => window.location.href = WORLDS_HERO.url;
+  const heroIconInner = WORLDS_HERO.icon_url
+    ? `<img src="${WORLDS_HERO.icon_url}" alt="${WORLDS_HERO.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none'"/>`
+    : `<span style="font-size:28px;">${WORLDS_HERO.emoji}</span>`;
+  heroEl.innerHTML = `
+    <div class="world-icon" style="width:72px;height:72px;">${heroIconInner}</div>
+    <div class="wch-body">
+      <div class="wch-top">
+        <div class="wch-m5-badge"><div class="wch-m5-dot"></div><div class="wch-m5-text">แนะนำสำหรับน้อง ม.5</div></div>
+      </div>
+      <div class="wch-name">${WORLDS_HERO.name}</div>
+      <div class="wch-stats">${WORLDS_HERO.stats}</div>
+      <div class="wch-btns">
+        <button class="wch-btn-open" onclick="event.stopPropagation();window.location.href='${WORLDS_HERO.url}'">เปิด</button>
+        <a class="wch-btn-community" href="${LINE_OPENCHAT}" target="_blank" rel="noopener" onclick="event.stopPropagation();">💬 Community</a>
+      </div>
+    </div>`;
+  setTimeout(() => heroEl.classList.add("visible"), d); d += S;
+  heroRow.appendChild(heroEl);
+  wrap.appendChild(heroRow);
+
+  // Remaining 4 cards — 2 per row
   for (let i = 0; i < WORLDS_TOP.length; i += 2) {
     const row = document.createElement("div");
     row.className = "world-row";
@@ -508,15 +566,13 @@ function renderAll() {
     setTimeout(startCountdown, 0);
   }
 
-  const lockedRow = document.createElement("div");
-  lockedRow.className = "world-row";
-  WORLDS_LOCKED_GRID.forEach(w => { lockedRow.appendChild(makeCard(w, false, !isOpen, d)); d += S; });
-  wrap.appendChild(lockedRow);
-
-  const row8 = document.createElement("div");
-  row8.className = "world-row";
-  row8.appendChild(makeCard(WORLD_8, false, !isOpen, d)); d += S;
-  wrap.appendChild(row8);
+  for (let i = 0; i < WORLDS_LOCKED_GRID.length; i += 2) {
+    const lockedRow = document.createElement("div");
+    lockedRow.className = "world-row";
+    lockedRow.appendChild(makeCard(WORLDS_LOCKED_GRID[i], false, !isOpen, d)); d += S;
+    if (WORLDS_LOCKED_GRID[i+1]) { lockedRow.appendChild(makeCard(WORLDS_LOCKED_GRID[i+1], false, !isOpen, d)); d += S; }
+    wrap.appendChild(lockedRow);
+  }
 
   // Coming Soon divider
   const ds = document.createElement("div");
