@@ -1,1389 +1,812 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>ใจดี TU — Puzzle Piece</title>
-<style>
-/* System font stack — Thai-safe, no external requests */
-:root {
-  --bg:       #F5F0E8;
-  --warm:     #F0EAE0;
-  --card:     #FFFEF9;
-  --ink:      #211D18;
-  --ink2:     #5C5550;
-  --ink3:     #A09890;
-  --rule:     #E4DDD0;
-  --gold:     #B07D10;
-  --gold-lt:  #FBF3E2;
-  --gold-bd:  #E2C060;
-  --noir:     #141210;
-  --ease:     cubic-bezier(0.22,1,0.36,1);
-}
-*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html { font-size:16px; }
-body {
-  font-family: 'Sarabun', 'Helvetica Neue', Arial, sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  min-height: 100vh;
-  padding-bottom: 80px;
-  overflow-x: hidden;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Pieces — ชมรมจิตวิทยาเตรียมอุดม</title>
 
-/* ── MASTHEAD ─────────────────────────────── */
-.masthead { padding: 52px 22px 24px; }
-.masthead-top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-.masthead-eyebrow {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--ink3);
-}
-.masthead-date { font-size: 9px; color: var(--ink3); letter-spacing: .5px; }
-.masthead-title {
-  font-family: 'Noto Serif Thai', Georgia, 'Times New Roman', serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--ink);
-  margin-bottom: 8px;
-}
-.masthead-title em { font-style: italic; color: var(--gold); }
-.masthead-sub {
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--ink3);
-  border-left: 2px solid var(--rule);
-  padding-left: 10px;
-  line-height: 1.6;
-  margin-bottom: 0;
-}
-.masthead-rule { height: 1px; background: var(--rule); margin-top: 24px; }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-/* ── CHIPS ────────────────────────────────── */
-.chips {
-  display: flex;
-  gap: 7px;
-  padding: 16px 22px 20px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.chips::-webkit-scrollbar { display: none; }
-.chip {
-  flex-shrink: 0;
-  background: transparent;
-  border: 1.5px solid var(--rule);
-  border-radius: 99px;
-  padding: 7px 16px;
-  font-family: 'Sarabun', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--ink3);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all .2s;
-}
-.chip.active {
-  color: var(--gold);
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(176,125,16,0.1), 0 0 14px rgba(176,125,16,0.12);
-}
+  <!-- Icons (Tabler) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/dist/tabler-icons.min.css">
 
-/* ── VIDEO STRIP ──────────────────────────── */
-.vscroll {
-  display: flex;
-  gap: 12px;
-  padding: 0 22px 24px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.vscroll::-webkit-scrollbar { display: none; }
-.vcard {
-  flex-shrink: 0;
-  width: 186px;
-  background: var(--warm);
-  border-radius: 14px;
-  border: 1px solid var(--rule);
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.6), 0 0 18px 4px rgba(255,255,255,0.55);
-}
-.vthumb {
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: var(--noir);
-  position: relative;
-  overflow: hidden;
-}
-.vthumb img {
-  width: 100%; height: 100%;
-  object-fit: cover; display: block;
-  filter: saturate(0.75);
-}
-.vplay {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-}
-.vplay-btn {
-  width: 32px; height: 32px;
-  background: rgba(255,255,255,0.88);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; color: var(--ink);
-  padding-left: 2px;
-}
-.vsrc {
-  position: absolute; top: 8px; left: 8px;
-  background: rgba(255,255,255,0.9);
-  font-size: 8px; font-weight: 700;
-  padding: 2px 8px;
-  color: var(--ink);
-  border-radius: 3px;
-}
-.vbody { padding: 11px 13px 13px; }
-.vtag {
-  font-size: 8px; font-weight: 600;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 5px;
-}
-.vtitle {
-  font-size: 12px; font-weight: 600;
-  line-height: 1.45; color: var(--ink);
-  display: -webkit-box;
-  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-.vdur { font-size: 10px; color: var(--ink3); margin-top: 4px; }
+  <style>
+    /* ================================================
+       PUZZLE PIECES — HOMEPAGE
+       ================================================
+       QUICK GUIDE FOR CUSTOMIZING:
+       1. Hero background photo  → search "HERO PHOTO"
+       2. Logo images            → search "LOGO REPLACE"
+       3. Article thumbnails     → search "ARTICLE IMG"
+       4. Category tile photos   → search "CATEGORY IMG"
+       ================================================ */
 
-/* ── FEED DIVIDER ─────────────────────────── */
-.feed-divider {
-  display: flex; align-items: center;
-  padding: 4px 22px 16px;
-}
-.fd-line { flex: 1; height: 1px; background: var(--rule); }
-.fd-label {
-  font-size: 9px; font-weight: 600;
-  letter-spacing: 2.5px; text-transform: uppercase;
-  color: var(--ink3); padding: 0 12px;
-}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── ARTICLE ROWS ─────────────────────────── */
-.article-list { padding: 0 22px; }
+    :root {
+      /* Brand palette */
+      --navy:           #1B2038;
+      --cream:          #FDF8F5;
+      --pink:           #F4B8CE;
+      --pink-light:     #FBE8F0;
+      --pink-dark:      #C1607E;
+      --pink-text:      #7D2A45;
+      --green:          #4A7C3F;
+      --green-hover:    #3D6834;
+      --gold:           #B8900A;
 
-.article-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--rule);
-  cursor: pointer;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity .3s var(--ease), transform .3s var(--ease);
-}
-.article-row.visible { opacity: 1; transform: translateY(0); }
-.article-row:active { opacity: .7; }
+      /* Category tile accent backgrounds */
+      --c-psych:        #FBE8F0;
+      --c-neuro:        #E8F0FD;
+      --c-bio:          #DCEFDF;
+      --c-research:     #D8EAF8;
+      --c-article:      #FAEEDA;
+      --c-video:        #EEEDFE;
+      --c-tips:         #FAECE7;
+      --c-qa:           #E1F5EE;
 
-/* First article: hero treatment */
-.article-row.is-hero {
-  flex-direction: column;
-  gap: 0;
-  padding-bottom: 20px;
-}
-.hero-img {
-  width: 100%;
-  aspect-ratio: 2/1;
-  object-fit: cover;
-  display: block;
-  filter: saturate(0.82);
-  border-radius: 12px;
-  margin-bottom: 14px;
-}
+      /* Article tag colors */
+      --tag-psych-bg:   #FBE8F0;  --tag-psych-txt:   #7D2A45;
+      --tag-bio-bg:     #DCEFDF;  --tag-bio-txt:     #1A4D25;
+      --tag-research-bg:#D8EAF8;  --tag-research-txt:#0A3A6E;
 
-.ar-body { flex: 1; min-width: 0; }
-.ar-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
-.ar-tag {
-  font-size: 9px; font-weight: 600;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--gold);
-  background: var(--gold-lt);
-  border: 1px solid var(--gold-bd);
-  border-radius: 99px;
-  padding: 3px 10px;
-}
-.ar-level { font-size: 10px; color: var(--ink3); }
-.ar-lang {
-  font-size: 9px; font-weight: 600;
-  letter-spacing: .5px;
-  color: #6B21A8;
-  background: #F3E8FF;
-  border: 1px solid #D8B4FE;
-  border-radius: 99px;
-  padding: 2px 8px;
-}
-/* Language dots — feed card */
-.lang-dots { display:flex; align-items:center; gap:3px; }
-.lang-dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--rule);
-}
-.lang-dot.on { background: #7C3AED; }
-/* Language scale bar — inside article */
-.lang-scale {
-  padding: 14px 0 0;
-  border-top: 1px solid var(--rule);
-  margin-top: 14px;
-}
-.lang-scale-labels {
-  display: flex; justify-content: space-between;
-  font-size: 9px; color: var(--ink3);
-  letter-spacing: .5px;
-  margin-bottom: 8px;
-}
-.lang-scale-track {
-  position: relative; height: 3px;
-  background: var(--rule); border-radius: 99px;
-}
-.lang-scale-fill {
-  position: absolute; left: 0; top: 0; bottom: 0;
-  border-radius: 99px;
-  background: linear-gradient(90deg, #A78BFA, #6B21A8);
-}
-.lang-scale-dot {
-  position: absolute; top: 50%;
-  transform: translate(-50%, -50%);
-  width: 9px; height: 9px;
-  background: #6B21A8;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(107,33,168,.35);
-}
-.ar-title {
-  font-family: 'Noto Serif Thai', Georgia, 'Times New Roman', serif;
-  font-size: 16px; font-weight: 700;
-  line-height: 1.4; color: var(--ink);
-  margin-bottom: 5px;
-}
-.article-row.is-hero .ar-title { font-size: 20px; }
-.ar-desc {
-  font-size: 12px; font-weight: 300;
-  color: var(--ink2); line-height: 1.75;
-  margin-bottom: 8px;
-}
-.ar-foot {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-top: 8px;
-}
-.ar-rt { font-size: 10px; color: var(--ink3); }
-.ar-arr {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--warm); border: 1px solid var(--rule);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: var(--ink3);
-}
+      /* Sizing */
+      --navbar-h:     58px;
+      --r-sm:          8px;
+      --r-md:         12px;
+      --r-lg:         16px;
+      --r-pill:       999px;
+      --ease:         0.22s ease;
+    }
 
-/* Thumbnail for non-hero rows */
-.ar-thumb {
-  width: 76px; height: 64px;
-  border-radius: 8px; overflow: hidden; flex-shrink: 0;
-}
-.ar-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.75); }
+    html { scroll-behavior: smooth; }
 
-/* ── COLLAB SECTION ───────────────────────── */
-.collab-section { margin-top: 32px; }
+    body {
+      font-family: 'Sarabun', system-ui, 'Noto Sans Thai', sans-serif;
+      background: var(--cream);
+      color: var(--navy);
+      overflow-x: hidden;
+      line-height: 1.65;
+    }
+
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    a   { text-decoration: none; color: inherit; }
 
 
+    /* ─────────────────────────────────
+       NAVBAR
+    ───────────────────────────────── */
 
-.collab-card {
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: 12px;
-  background: var(--warm);
-  border-radius: 0;
-}
+    .navbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      height: var(--navbar-h);
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6%;
+      border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    }
 
-/* Collab header — tap to open bio */
-.collab-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 18px;
-  background: var(--card);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-/* gold left accent */
-.collab-header::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, var(--gold-bd), var(--gold));
-  border-radius: 0 2px 2px 0;
-  z-index: 1;
-}
-/* Photo panel — right side, fixed width, any image fits */
-.collab-photo {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: var(--warm);
-  position: relative;
-  overflow: hidden;
-  border: 2px solid var(--gold-bd);
-}
-.collab-photo img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.collab-photo-placeholder {
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 4px;
-  background: rgba(0,0,0,0.04);
-  border-left: 1px dashed var(--rule);
-}
-.collab-photo-placeholder span:first-child {
-  font-size: 22px;
-}
-.collab-photo-placeholder span:last-child {
-  font-size: 9px; color: var(--ink3);
-  letter-spacing: .5px; text-align: center;
-  line-height: 1.4;
-}
-.collab-text-area {
-  flex: 1; min-width: 0;
-}
-.collab-info { flex: 1; min-width: 0; }
-.collab-name {
-  font-family: 'Sarabun', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 15px; font-weight: 700;
-  color: var(--ink); margin-bottom: 2px;
-}
-.collab-role {
-  font-size: 11px; font-weight: 300;
-  color: var(--ink3); font-style: italic;
-  margin-bottom: 8px; line-height: 1.4;
-}
-.collab-counts { display: flex; gap: 6px; flex-wrap: wrap; }
-.collab-count {
-  font-size: 9px; color: var(--ink3);
-  border: 1px solid var(--rule);
-  border-radius: 99px; padding: 2px 9px;
-}
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
 
-/* Collab content — warm background */
-.collab-content { background: var(--warm); }
+    .nav-logo-box {
+      width: 30px; height: 30px;
+      border: 1.5px solid rgba(255,255,255,0.28);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+    }
 
-/* collab video strip */
-.collab-vscroll {
-  display: flex; gap: 10px;
-  padding: 14px 22px 0;
-  overflow-x: auto; scrollbar-width: none;
-}
-.collab-vscroll::-webkit-scrollbar { display: none; }
-.cvcard {
-  flex-shrink: 0; width: 150px;
-  background: var(--warm);
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.08);
-  overflow: hidden; cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.6), 0 0 18px 4px rgba(255,255,255,0.55);
-}
-.cvthumb {
-  width: 100%; aspect-ratio: 16/9;
-  background: var(--noir);
-  position: relative; overflow: hidden;
-}
-.cvthumb img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .85; }
-.cvfb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #141210; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: rgba(255,255,255,.3); }
-.cvplay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.cvplay-btn {
-  width: 26px; height: 26px;
-  border: 1.5px solid rgba(255,255,255,.7);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; color: #fff; padding-left: 2px;
-}
-.cvbody { padding: 8px 10px 10px; background: var(--warm); }
-.cvtitle {
-  font-size: 11px; font-weight: 600;
-  line-height: 1.4; color: var(--ink);
-  display: -webkit-box; -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical; overflow: hidden;
-}
-.cvmeta { font-size: 9px; color: var(--ink3); margin-top: 3px; }
+    .nav-logo-box i { font-size: 17px; color: rgba(255,255,255,0.55); }
 
-/* collab article rows */
-.collab-arts { padding: 12px 22px 0; background: var(--warm); }
-.ca-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 0;
-  border-top: 1px solid rgba(0,0,0,0.07);
-  cursor: pointer;
-}
-.ca-row:first-child { border-top: none; }
+    .nav-logo-text {
+      font-size: 13px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: 0.07em;
+    }
 
-.ca-body { flex: 1; min-width: 0; }
-.ca-title { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.4; margin-bottom: 2px; }
-.ca-meta { font-size: 10px; color: var(--ink3); }
-.ca-arr { font-size: 11px; color: var(--ink3); flex-shrink: 0; }
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
 
-.collab-bio-btn {
-  width: 100%; background: var(--warm); border: none;
-  border-top: 1px solid var(--rule);
-  padding: 12px 22px; margin-top: 12px;
-  font-family: 'Sarabun', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 10px; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--gold);
-  cursor: pointer; text-align: left; display: block;
-}
+    .nav-links a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.58);
+      font-weight: 500;
+      padding-bottom: 3px;
+      border-bottom: 2px solid transparent;
+      transition: color var(--ease), border-color var(--ease);
+    }
 
-/* ── SERIES / BIO PAGE ────────────────────── */
-.series-page {
-  display: none; position: fixed; inset: 0;
-  background: var(--bg); z-index: 300;
-  flex-direction: column; overflow: hidden;
-}
-.series-page.active {
-  display: flex;
-  animation: slideUp .28s var(--ease) both;
-}
-@keyframes slideUp {
-  from { transform: translateY(18px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-.series-topbar {
-  background: rgba(245,240,232,0.96);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--rule);
-  display: flex; align-items: center;
-  height: 46px; padding: 0 18px; gap: 12px; flex-shrink: 0;
-}
-.series-back {
-  background: none; border: none;
-  font-size: 20px; color: var(--ink3); cursor: pointer; line-height: 1;
-}
-.series-topbar-title {
-  font-size: 13px; font-weight: 600; flex: 1;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.series-body { flex: 1; overflow-y: auto; padding-bottom: 60px; }
+    .nav-links a:hover  { color: rgba(255,255,255,0.88); }
+    .nav-links a.active { color: white; font-weight: 700; border-bottom-color: white; }
 
-.series-hero {
-  background: var(--noir); padding: 36px 22px 30px;
-  text-align: center; position: relative; overflow: hidden;
-}
-.series-hero::after {
-  content: ''; position: absolute;
-  bottom: 0; left: 15%; right: 15%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(176,125,16,.3), transparent);
-}
-.series-portrait {
-  width: 110px; height: 110px; border-radius: 50%;
-  object-fit: cover; display: block;
-  border: 2px solid rgba(255,255,255,.1);
-  margin: 0 auto 18px;
-}
-.series-portrait-ph {
-  width: 110px; height: 110px; border-radius: 50%;
-  background: rgba(255,255,255,.06);
-  border: 2px solid rgba(255,255,255,.1);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 44px; margin: 0 auto 18px;
-}
-.series-x { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.25); margin-bottom: 8px; }
-.series-name { font-family: 'Sarabun', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 5px; line-height: 1.2; }
-.series-role { font-size: 12px; color: rgba(255,255,255,.35); margin-bottom: 18px; font-style: italic; }
-.series-bio { font-size: 13px; color: rgba(255,255,255,.48); line-height: 1.85; max-width: 300px; margin: 0 auto; }
-.series-content { padding: 24px 22px 0; }
-.series-eye {
-  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
-  text-transform: uppercase; color: var(--ink3);
-  margin-bottom: 14px; padding-bottom: 10px;
-  border-bottom: 1px solid var(--rule);
-}
-.series-item {
-  display: flex; align-items: center; gap: 13px;
-  padding: 14px 0; border-bottom: 1px solid var(--rule); cursor: pointer;
-}
-.si-icon {
-  width: 36px; height: 36px; border-radius: 8px;
-  background: var(--gold-lt); border: 1px solid var(--gold-bd);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; flex-shrink: 0;
-}
-.si-icon.video { background: #F5F0FF; border-color: #C4B5FD; }
-.si-title { font-size: 13px; font-weight: 600; line-height: 1.4; margin-bottom: 3px; }
-.si-meta { font-size: 10px; color: var(--ink3); }
-.si-arr { font-size: 12px; color: var(--ink3); flex-shrink: 0; }
+    .nav-burger {
+      display: none;
+      cursor: pointer;
+      padding: 5px;
+    }
 
-/* ── EMPTY & BACK ─────────────────────────── */
-.empty-state {
-  display: none; flex-direction: column;
-  align-items: center; padding: 64px 24px;
-  gap: 14px; text-align: center;
-}
-.empty-state.show { display: flex; }
-.back-btn {
-  background: none; border: none; color: var(--ink3);
-  font-family: 'Sarabun', 'Helvetica Neue', Arial, sans-serif; font-size: 13px;
-  padding: 24px 22px 0; display: block; cursor: pointer;
-}
-</style>
+    .nav-burger i { font-size: 22px; color: rgba(255,255,255,0.75); }
+
+    /* Mobile nav drawer */
+    .nav-links.is-open {
+      display: flex !important;
+      flex-direction: column;
+      position: fixed;
+      top: var(--navbar-h); left: 0; right: 0;
+      background: var(--navy);
+      padding: 6px 6% 22px;
+      gap: 0;
+      border-bottom: 0.5px solid rgba(255,255,255,0.08);
+      animation: slideDown 0.2s ease both;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .nav-links.is-open a {
+      padding: 13px 0;
+      font-size: 15px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.07);
+      border-radius: 0;
+    }
+
+
+    /* ─────────────────────────────────
+       HERO
+    ───────────────────────────────── */
+
+    .hero {
+      margin-top: var(--navbar-h);
+      min-height: calc(100vh - var(--navbar-h));
+
+      /* ═══ HERO PHOTO ═══════════════════════════════════════
+         Replace this gradient with your background photo:
+
+           background-image: url('hero-bg.jpg');
+           background-size: cover;
+           background-position: center;
+
+         Keep everything else as-is.
+         ═══════════════════════════════════════════════════ */
+      background: linear-gradient(155deg, #91CEEA 0%, #4E97CC 45%, #6BAD6A 85%);
+
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 5% 100px;
+    }
+
+    /* Photo legibility layer */
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.2);
+    }
+
+    /* Subtle dot texture */
+    .hero-texture {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.13) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 640px;
+      animation: fadeUp 0.9s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Two overlapping organisation circles */
+    .hero-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .hero-logo {
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.85);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+
+      /* ═══ LOGO REPLACE ════════════════════════════════════════
+         To swap in the real logo image, add inline style:
+           style="background-image:url('tu-psych.png');
+                  background-size:78%;
+                  background-repeat:no-repeat;
+                  background-position:center;"
+         Then hide the inner <i> and <span> with display:none.
+         ═══════════════════════════════════════════════════════ */
+    }
+
+    .hero-logo-left {
+      width: 104px; height: 104px;
+      background: white;
+      margin-right: -16px;
+      z-index: 2;
+    }
+
+    .hero-logo-left  i    { font-size: 34px; color: var(--pink-dark); }
+    .hero-logo-left  span { font-size: 8.5px; font-weight: 800; color: var(--pink-dark); margin-top: 3px; letter-spacing: .05em; }
+
+    .hero-logo-right {
+      width: 86px; height: 86px;
+      background: var(--pink);
+      border-color: rgba(255,255,255,0.65);
+    }
+
+    .hero-logo-right i    { font-size: 28px; color: var(--pink-text); }
+    .hero-logo-right span { font-size: 7.5px; font-weight: 700; color: var(--pink-text); margin-top: 2px; }
+
+    .hero-title {
+      font-size: clamp(34px, 7vw, 58px);
+      font-weight: 800;
+      color: white;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.22);
+      letter-spacing: -0.015em;
+    }
+
+    .hero-sub {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      border: 0.5px solid rgba(255,255,255,0.36);
+      border-radius: var(--r-pill);
+      padding: 5px 22px;
+      font-size: 15px;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 24px;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px 16px;
+      margin-bottom: 30px;
+    }
+
+    .hero-tags span {
+      font-size: 13px;
+      color: rgba(255,255,255,0.88);
+      font-weight: 500;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 14px 36px;
+      border-radius: var(--r-md);
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(74,124,63,0.48);
+      transition: background var(--ease), transform var(--ease), box-shadow var(--ease);
+    }
+
+    .hero-btn:hover {
+      background: var(--green-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(74,124,63,0.42);
+    }
+
+    .hero-btn i { font-size: 18px; }
+
+    /* Animated scroll indicator */
+    .hero-scroll {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      cursor: pointer;
+      animation: bounce 2.2s ease-in-out infinite;
+    }
+
+    .hero-scroll i { font-size: 22px; color: rgba(255,255,255,0.55); }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0);  }
+      50%       { transform: translateX(-50%) translateY(7px); }
+    }
+
+
+    /* ─────────────────────────────────
+       SHARED SECTION STYLES
+    ───────────────────────────────── */
+
+    .section {
+      padding: 64px 6%;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+
+
+    /* ─────────────────────────────────
+       POPULAR ARTICLES
+    ───────────────────────────────── */
+
+    .articles-section { background: var(--cream); }
+
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .article-card {
+      background: white;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 0.5px solid rgba(0,0,0,0.07);
+      cursor: pointer;
+      transition: transform var(--ease), box-shadow var(--ease);
+    }
+
+    .article-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.1);
+    }
+
+    .article-thumb {
+      height: 172px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /* ═══ ARTICLE IMG ════════════════════════════════════════
+         Replace placeholder with real image:
+           <img src="article1.jpg" alt="ชื่อบทความ">
+         inside this div.  Remove the <i> placeholder.
+         ═══════════════════════════════════════════════════════ */
+    }
+
+    .article-thumb i { font-size: 46px; color: rgba(0,0,0,0.16); }
+
+    .article-body { padding: 15px 17px 18px; }
+
+    .article-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--r-sm);
+      margin-bottom: 9px;
+    }
+
+    .article-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1.55;
+      margin-bottom: 11px;
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .article-meta span { display: flex; align-items: center; gap: 4px; }
+    .article-meta i { font-size: 13px; }
+
+
+    /* ─────────────────────────────────
+       CATEGORY GRID
+    ───────────────────────────────── */
+
+    .categories-section { background: white; }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .cat-tile {
+      display: block;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      cursor: pointer;
+      border: 0.5px solid rgba(0,0,0,0.07);
+      position: relative;
+      transition: transform var(--ease), box-shadow var(--ease);
+
+      /* ═══ CATEGORY IMG ═══════════════════════════════════════
+         To add a real photo, either:
+         A) Set background-image directly on this element:
+            style="background-image:url('cat-psych.jpg');
+                   background-size:cover;background-position:center;"
+            Then remove the .cat-ph div inside.
+
+         B) Put <img src="..." alt="..."> inside this element
+            and remove the .cat-ph div.
+         ════════════════════════════════════════════════════════ */
+    }
+
+    .cat-tile:hover {
+      transform: scale(1.04);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    /* Hover darkening overlay */
+    .cat-tile::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      transition: background var(--ease);
+    }
+
+    .cat-tile:hover::after { background: rgba(0,0,0,0.07); }
+
+    /* Photo placeholder — remove when real photo is added */
+    .cat-ph {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .cat-ph i { font-size: 38px; color: rgba(0,0,0,0.17); }
+
+
+    /* ─────────────────────────────────
+       REVEAL ANIMATIONS
+    ───────────────────────────────── */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.in { opacity: 1; transform: none; }
+
+    .reveal[data-delay="1"] { transition-delay: 0.10s; }
+    .reveal[data-delay="2"] { transition-delay: 0.20s; }
+    .reveal[data-delay="3"] { transition-delay: 0.30s; }
+    .reveal[data-delay="4"] { transition-delay: 0.40s; }
+
+
+    /* ─────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────── */
+
+    @media (max-width: 900px) {
+      .section { padding: 50px 5%; }
+      .articles-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .section { padding: 38px 4%; }
+
+      /* Hamburger nav */
+      .nav-links:not(.is-open) { display: none; }
+      .nav-burger              { display: block; }
+
+      /* Articles: single column */
+      .articles-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      /* Categories: 2 columns */
+      .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      /* Smaller hero circles */
+      .hero-logo-left  { width: 78px; height: 78px; }
+      .hero-logo-right { width: 66px; height: 66px; }
+      .hero-logo-left  i { font-size: 26px; }
+      .hero-logo-right i { font-size: 22px; }
+
+      .section-title { font-size: 18px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- HOME -->
-<div id="view-home">
+  <!-- ══════════════════════════════════
+       NAVBAR
+  ══════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="main navigation">
 
-  <div class="masthead">
-    <div class="masthead-top">
-      <div class="masthead-eyebrow">ใจดี TU · Puzzle Piece</div>
-      <div class="masthead-date" id="today-date"></div>
+    <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <div class="nav-logo-box">
+        <i class="ti ti-puzzle" aria-hidden="true"></i>
+      </div>
+      <span class="nav-logo-text">PUZZLE PIECES</span>
     </div>
-    <div class="masthead-title">เลือกชิ้นที่ใช่<br><em>ในแบบที่เป็นคุณ</em></div>
-    <div class="masthead-sub">ไม่มีสูตรสำเร็จ — มีแต่ชิ้นส่วนที่ใช่สำหรับคุณ</div>
-    <div class="masthead-rule"></div>
-  </div>
 
-  <div class="chips" id="chip-bar">
-    <button class="chip active" id="chip-all">ทั้งหมด</button>
-  </div>
+    <ul class="nav-links" id="navLinks" role="list">
+      <a href="#home"       class="active">หน้าหลัก</a>
+      <a href="#articles"              >เนื้อหา</a>
+      <a href="#about"                 >เกี่ยวกับเรา</a>
+    </ul>
 
-  <!-- Video strip — no label, just the cards -->
-  <div class="vscroll" id="vscroll"></div>
-
-  <!-- Articles -->
-  <div class="feed-divider">
-    <div class="fd-line"></div>
-    <div class="fd-label">บทความ</div>
-    <div class="fd-line"></div>
-  </div>
-
-  <div class="article-list" id="article-list"></div>
-
-  <div class="empty-state" id="empty-state">
-    <div style="font-size:40px">🧩</div>
-    <div style="font-family:'Noto Serif Thai',Georgia,serif;font-size:18px;font-weight:700">กำลังสร้าง</div>
-    <div style="font-size:13px;color:var(--ink3);line-height:1.7">ทีมกำลังเตรียมเนื้อหา ติดตามผ่าน LINE 💛</div>
-  </div>
-
-  <!-- Collab sections -->
-  <div id="collab-sections"></div>
-
-  <button class="back-btn" onclick="window.history.back()">← กลับ</button>
-</div>
-
-<!-- READER — inline preview with language scale bar -->
-<div id="reader" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;overflow:hidden;">
-  <div style="background:rgba(245,240,232,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);display:flex;align-items:center;height:46px;padding:0 18px;gap:12px;flex-shrink:0;position:sticky;top:0;">
-    <button id="reader-back" style="background:none;border:none;font-size:20px;color:var(--ink3);cursor:pointer;line-height:1;">←</button>
-    <div style="flex:1;height:2px;background:var(--rule);border-radius:99px;overflow:hidden;">
-      <div id="reader-prog" style="height:100%;width:0%;background:var(--gold);transition:width .2s;"></div>
+    <div class="nav-burger" id="burger"
+         onclick="toggleNav()"
+         aria-label="เปิดเมนู"
+         aria-expanded="false"
+         aria-controls="navLinks">
+      <i class="ti ti-menu-2" aria-hidden="true"></i>
     </div>
-  </div>
-  <div id="reader-body" style="flex:1;overflow-y:auto;padding-bottom:80px;max-width:640px;margin:0 auto;width:100%;padding-top:0;">
-    <div id="reader-content"></div>
-  </div>
-</div>
 
-<!-- SERIES / BIO PAGE -->
-<div class="series-page" id="series-page">
-  <div class="series-topbar">
-    <button class="series-back" id="btn-close-series">←</button>
-    <div class="series-topbar-title" id="series-topbar-title"></div>
-  </div>
-  <div class="series-body" id="series-body"></div>
-</div>
+  </nav>
 
-<script>
-// ── DATE ──────────────────────────────────────
-(function(){
-  var d = new Date();
-  var m = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
-           "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
-  document.getElementById("today-date").textContent =
-    d.getDate() + " " + m[d.getMonth()] + " " + (d.getFullYear() + 543);
-})();
 
-// ── DATA ──────────────────────────────────────
-var VIDEOS = [
-  { id:"V1", title:"Window of Tolerance คืออะไร", tag:"ระบบประสาท",
-    source:"YouTube", url:"https://youtube.com", youtube_id:"dQw4w9WgXcQ", duration:"8:42" },
-  { id:"V2", title:"จัดการความเครียดช่วงสอบ", tag:"ความเครียด",
-    source:"Facebook", url:"https://facebook.com", youtube_id:null, duration:"5:30" },
-  { id:"V3", title:"ทำไมนอนไม่หลับแม้เหนื่อยมาก", tag:"การนอน",
-    source:"YouTube", url:"https://youtube.com", youtube_id:"ZEYuSRHgmCg", duration:"11:04" }
-];
+  <!-- ══════════════════════════════════
+       HERO
+  ══════════════════════════════════ -->
+  <section class="hero" id="home" aria-label="หน้าแรก">
 
-// Always first — never removed
-var PINNED = {
-  id:"PERMANENT_001", tag:"แรงจูงใจ", level:"🟡 กลาง", readTime:"10 นาที", pinned:true,
-  title:"แรงจูงใจของเรามาจากไหนกันแน่?",
-  desc:"ทำไมบางวันเราทำได้ไม่หยุด บางวันแค่เปิดหนังสือก็ยังสู้ไม่ไหว — ไม่ใช่ความขี้เกียจ แต่เป็นเรื่องของแหล่งพลังงานภายใน",
-  heroUrl:"https://images.stockcake.com/public/b/d/3/bd3568b3-0e3f-4484-9671-e574e6e35d91_large/late-night-studying-stockcake.jpg"
-};
+    <div class="hero-vignette" aria-hidden="true"></div>
+    <div class="hero-texture"  aria-hidden="true"></div>
 
-var ARTICLES = [
-  { id:"A1", tag:"ความวิตกกังวล", level:"🟡 กลาง", readTime:"5 นาที", language:"ภาษาทั่วไป",
-    title:"ทำไมฉันถึงวิตกกังวลทั้งที่ไม่มีอะไรเกิดขึ้น",
-    desc:"ความวิตกกังวลไม่ต้องการเหตุผล — สมองสร้างมันขึ้นเองจากประสบการณ์ที่ผ่านมา",
-    heroUrl:"https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&q=80" },
-  { id:"A2", tag:"ความสัมพันธ์", level:"🟢 เบา", readTime:"8 นาที", language:"ภาษาทั่วไป",
-    title:"เพื่อนไม่ตอบ LINE — แล้วมันเจ็บขนาดนี้ได้ยังไง",
-    desc:"เมื่อสมองแปลความเงียบเป็นการปฏิเสธ",
-    heroUrl:"https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=600&q=80" },
-  { id:"A3", tag:"ความเครียด", level:"🟡 กลาง", readTime:"6 นาที", language:"ภาษาทั่วไป",
-    title:"ความเครียดทำให้ร่างกายเปลี่ยนแปลงอย่างไร",
-    desc:"เข้าใจ fight-or-flight และทำไมบางคนถึงรู้สึกเหนื่อยแบบไม่มีเหตุผล",
-    heroUrl:"" },
-  { id:"A4", tag:"การเรียนรู้", level:"🟢 เบา", readTime:"7 นาที", language:"ภาษาทั่วไป",
-    title:"Growth Mindset ไม่ใช่แค่คำพูดสวยๆ",
-    desc:"งานวิจัยของ Carol Dweck และสิ่งที่นักเรียนควรรู้จริงๆ",
-    heroUrl:"" },
-  { id:"A5", tag:"หนังสือ", level:"🟢 เบา", readTime:"8 นาที", language:"ภาษาทั่วไป",
-    title:"Atomic Habits — สรุปสิ่งที่ต้องรู้ใน 8 นาที",
-    desc:"James Clear เขียนหนังสือที่อาจเปลี่ยนวิธีที่คุณมองนิสัยตัวเองไปตลอดกาล",
-    heroUrl:"https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80" },
-  { id:"A6", tag:"งานวิจัย", level:"🟡 กลาง", readTime:"9 นาที", language:"กึ่งวิชาการ",
-    title:"งานวิจัยชี้ — การนอนน้อยเปลี่ยนสมองเราอย่างไร",
-    desc:"Matthew Walker นักประสาทวิทยาจาก UC Berkeley สรุปผลการศึกษาที่น่าตกใจ",
-    heroUrl:"" },
-  { id:"A7", tag:"การนอน", level:"🟢 เบา", readTime:"5 นาที", language:"ภาษาทั่วไป",
-    title:"นอนหลับกับการจดจำ — วิทยาศาสตร์เบื้องหลัง",
-    desc:"ทำไมการทบทวนก่อนนอนถึงช่วยให้จำได้ดีกว่าการอ่านตอนเช้า",
-    heroUrl:"" },
-  { id:"A8", tag:"ตัวตน", level:"🟡 กลาง", readTime:"7 นาที", language:"กึ่งวิชาการ",
-    title:"Self-compassion คืออะไร และทำไมมันสำคัญกว่า Self-esteem",
-    desc:"Kristin Neff อธิบายว่าการเมตตาตัวเองไม่ใช่ความอ่อนแอ แต่คือทักษะที่ฝึกได้",
-    heroUrl:"" }
-];
+    <div class="hero-content">
 
-var COLLABS = [
-  { id:"C1",
-    name:"ดร. สมใจ ใจดี",
-    role:"นักจิตวิทยาคลินิก · จุฬาลงกรณ์มหาวิทยาลัย",
-    description:"นักจิตวิทยาคลินิกผู้เชี่ยวชาญด้านความวิตกกังวลในวัยรุ่น ทำงานกับเด็กและวัยรุ่นมากกว่า 12 ปี เชื่อว่าการเข้าใจตัวเองเป็นก้าวแรกที่สำคัญที่สุด",
-    photo_url:"https://i.pravatar.cc/220?img=47",
-    active:true,
-    content:[
-      { type:"video", title:"Window of Tolerance — อธิบายแบบเข้าใจง่าย",
-        source:"YouTube", url:"https://youtube.com", youtube_id:"dQw4w9WgXcQ", duration:"8:42" },
-      { type:"video", title:"ทำไมการหายใจสงบระบบประสาทได้",
-        source:"YouTube", url:"https://youtube.com", youtube_id:"ZEYuSRHgmCg", duration:"5:18" },
-      { type:"video", title:"วิธีพูดคุยกับตัวเองเมื่อรู้สึกแย่",
-        source:"Facebook", url:"https://facebook.com", youtube_id:null, duration:"6:30" },
-      { type:"article", title:"Anxiety คืออะไรกันแน่", tag:"ความวิตกกังวล", readTime:"6 นาที" },
-      { type:"article", title:"Self-compassion ไม่ใช่การตามใจตัวเอง", tag:"ความเชื่อ", readTime:"7 นาที" }
-    ]
-  },
-  { id:"C2",
-    name:"อ. ณัฐ วิชัยดิษฐ",
-    role:"อาจารย์ด้านประสาทวิทยา · มหาวิทยาลัยมหิดล",
-    description:"ผู้เชี่ยวชาญด้านประสาทวิทยาและพฤติกรรมมนุษย์ สนใจการนำความรู้วิทยาศาสตร์มาใช้ในชีวิตประจำวันของนักเรียน",
-    photo_url:"https://i.pravatar.cc/220?img=12",
-    active:true,
-    content:[
-      { type:"article", title:"สมองทำงานอย่างไรเมื่อเราเครียด", tag:"ประสาทวิทยา", readTime:"9 นาที" },
-      { type:"video", title:"Neuroplasticity — สมองเปลี่ยนได้จริงไหม?",
-        source:"YouTube", url:"https://youtube.com", youtube_id:"dQw4w9WgXcQ", duration:"13:20" },
-      { type:"article", title:"นอนหลับกับการจำ — ทำไมถึงสำคัญ", tag:"การนอน", readTime:"8 นาที" }
-    ]
-  }
-];
+      <!-- Organisation logos -->
+      <div class="hero-logos">
 
-// ── LANGUAGE SCALE HELPERS ───────────────────
-var LANG_SCALE = {
-  'ทำให้เข้าใจง่าย': { pct: 8,  dots: 0 },
-  'ภาษาทั่วไป':       { pct: 30, dots: 1 },
-  'กึ่งวิชาการ':       { pct: 60, dots: 2 },
-  'วิชาการ':           { pct: 92, dots: 3 }
-};
-function langDots(lang) {
-  var info = LANG_SCALE[lang];
-  if (!info) return '';
-  var dots = '';
-  for (var i = 0; i < 3; i++) {
-    dots += '<div class="lang-dot' + (i < info.dots ? ' on' : '') + '"></div>';
-  }
-  return '<div class="lang-dots">' + dots + '</div>';
-}
-function langScaleBar(lang) {
-  var info = LANG_SCALE[lang];
-  if (!info) return '';
-  return '<div class="lang-scale">' +
-    '<div class="lang-scale-labels">' +
-      '<span>เข้าใจง่าย</span><span>กึ่งวิชาการ</span><span>วิชาการ</span>' +
-    '</div>' +
-    '<div class="lang-scale-track">' +
-      '<div class="lang-scale-fill" style="width:' + info.pct + '%;"></div>' +
-      '<div class="lang-scale-dot" style="left:' + info.pct + '%;"></div>' +
-    '</div>' +
-  '</div>';
-}
+        <div class="hero-logo hero-logo-left" title="TU PSYCH — ชมรมจิตวิทยา">
+          <!-- LOGO REPLACE: add style="background-image:url('tu-psych.png');..." and hide <i>/<span> -->
+          <i class="ti ti-brain" aria-hidden="true"></i>
+          <span>TU PSYCH</span>
+        </div>
 
-// ── STATE ─────────────────────────────────────
-var currentCollab = null;
+        <div class="hero-logo hero-logo-right" title="TUPCC">
+          <!-- LOGO REPLACE: same as above for TUPCC -->
+          <i class="ti ti-heart-handshake" aria-hidden="true"></i>
+          <span>TUPCC</span>
+        </div>
 
-// ── API ───────────────────────────────────────
-var API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+      </div>
 
-// ── INIT ──────────────────────────────────────
-// 1. Render mock data immediately — always visible, never blank
-buildChips();
-renderVideos(VIDEOS);
-renderArticles(ARTICLES, false);
-renderCollabs(COLLABS);
+      <h1 class="hero-title">Puzzle Pieces</h1>
+      <p class="hero-sub">ชมรมจิตวิทยาเตรียมอุดม</p>
 
-// 2. Fetch live data in background — replaces mock silently if successful
-// Only runs when served from a real origin (not Claude sandbox)
-if (window.location.origin !== "null" && window.location.protocol !== "blob:") {
-  loadLiveData();
-}
+      <div class="hero-tags" aria-label="หัวข้อเนื้อหา">
+        <span>• จิตวิทยา</span>
+        <span>• ประสาทวิทยา</span>
+        <span>• ชีววิทยา</span>
+        <span>• งานวิจัย</span>
+        <span>• บทความ/วิดีโอ</span>
+      </div>
 
-function loadLiveData() {
-  // Fetch articles and collaborators in parallel
-  var articlesReq = new XMLHttpRequest();
-  articlesReq.open("GET", API_URL + "?action=getContent&world=puzzle", true);
-  articlesReq.onload = function() {
-    try {
-      var d = JSON.parse(articlesReq.responseText);
-      if (d.status === "OK" && d.content && d.content.length) {
-        var parsed = [];
-        d.content.forEach(function(c) {
-          try {
-            parsed.push({
-              id: c.id,
-              title: c.title || "",
-              tag: c.tag || "จิตวิทยา",
-              desc: c.desc || "",
-              level: c.level || "🟢 เบา",
-              readTime: c.readTime || c.read_time || "5 นาที",
-              language: c.language || "",
-              heroUrl: c.heroUrl || c.hero_url || "",
-              body: c.body || ""    // preserve raw body for reader to parse
-            });
-          } catch(e) {}
-        });
-        if (parsed.length) {
-          ARTICLES = parsed;
-          // Rebuild chips with real tags, re-render
-          var bar = document.getElementById("chip-bar");
-          bar.innerHTML = '<button class="chip active" id="chip-all">ทั้งหมด</button>';
-          buildChips();
-          renderArticles(ARTICLES, false);
-        }
-      }
-    } catch(e) {}
-  };
-  articlesReq.onerror = function() {};
-  articlesReq.send();
+      <button class="hero-btn"
+              onclick="document.getElementById('articles').scrollIntoView({behavior:'smooth'})"
+              aria-label="สำรวจเนื้อหาทั้งหมด">
+        สำรวจเนื้อหาทั้งหมด
+        <i class="ti ti-arrow-down" aria-hidden="true"></i>
+      </button>
 
-  var collabReq = new XMLHttpRequest();
-  collabReq.open("GET", API_URL + "?action=getCollaborators", true);
-  collabReq.onload = function() {
-    try {
-      var d = JSON.parse(collabReq.responseText);
-      if (d.status === "OK" && d.collaborators && d.collaborators.length) {
-        var active = d.collaborators.filter(function(c) {
-          return c.active !== "FALSE" && c.active !== false;
-        }).map(function(c) {
-          // Normalise field names from Sheets → puzzle format
-          return {
-            id: c.id,
-            name: c.name || "",
-            role: c.role || "",
-            description: c.description || c.bio || "",
-            photo_url: c.photo_url || c.photo || "",
-            active: true,
-            content: typeof c.content === "string" ? (function(){ try{ return JSON.parse(c.content); } catch(e){ return []; } })() : (c.content || [])
-          };
-        });
-        if (active.length) {
-          COLLABS = active;
-          renderCollabs(COLLABS);
-        }
-      }
-    } catch(e) {}
-  };
-  collabReq.onerror = function() {};
-  collabReq.send();
-}
+    </div>
 
-// ── CHIPS ─────────────────────────────────────
-function buildChips() {
-  var bar = document.getElementById("chip-bar");
-  var ORDER = ["ความวิตกกังวล","ความเครียด","ความสัมพันธ์","ตัวตน",
-               "แรงจูงใจ","การเรียนรู้","การนอน","หนังสือ","งานวิจัย"];
-  var existing = {};
-  [PINNED].concat(ARTICLES).forEach(function(a){ if(a.tag) existing[a.tag] = true; });
-  var tags = ORDER.filter(function(t){ return existing[t]; });
-  Object.keys(existing).forEach(function(t){ if(tags.indexOf(t)===-1) tags.push(t); });
+    <!-- Animated scroll hint -->
+    <div class="hero-scroll" aria-hidden="true"
+         onclick="document.getElementById('articles').scrollIntoView({behavior:'smooth'})">
+      <i class="ti ti-chevron-down"></i>
+    </div>
 
-  tags.forEach(function(tag){
-    var btn = document.createElement("button");
-    btn.className = "chip";
-    btn.textContent = tag;
-    btn.addEventListener("click", function(){
-      document.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("active"); });
-      btn.classList.add("active");
-      renderArticles(ARTICLES.filter(function(a){ return a.tag===tag; }), true);
-    });
-    bar.appendChild(btn);
-  });
+  </section>
 
-  document.getElementById("chip-all").addEventListener("click", function(){
-    document.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("active"); });
-    this.classList.add("active");
-    renderArticles(ARTICLES, false);
-  });
-}
 
-// ── VIDEOS ────────────────────────────────────
-function renderVideos(videos) {
-  var scroll = document.getElementById("vscroll");
-  if (!videos.length){ scroll.style.display="none"; return; }
-  videos.forEach(function(v){
-    var card = document.createElement("div");
-    card.className = "vcard";
-    var thumbHtml = v.youtube_id
-      ? '<img src="https://img.youtube.com/vi/'+v.youtube_id+'/hqdefault.jpg" onerror="this.style.display=\'none\'"/>'
-      : '<div class="cvfb">'+(v.source||'')+'</div>';
-    card.innerHTML =
-      '<div class="vthumb">'+thumbHtml+
-        '<div class="vplay"><div class="vplay-btn">▶</div></div>'+
-        '<div class="vsrc">'+(v.source||"YouTube")+'</div>'+
-      '</div>'+
-      '<div class="vbody">'+
-        '<div class="vtag">'+(v.tag||"")+'</div>'+
-        '<div class="vtitle">'+v.title+'</div>'+
-        '<div class="vdur">▶ '+(v.duration||"")+'</div>'+
-      '</div>';
-    card.addEventListener("click", function(){ if(v.url) window.open(v.url,"_blank"); });
-    scroll.appendChild(card);
-  });
-}
+  <!-- ══════════════════════════════════
+       POPULAR ARTICLES
+  ══════════════════════════════════ -->
+  <section class="section articles-section" id="articles" aria-label="บทความยอดนิยม">
 
-// ── ARTICLES ──────────────────────────────────
-function renderArticles(list, filterMode) {
-  var container = document.getElementById("article-list");
-  container.innerHTML = "";
-  var empty = document.getElementById("empty-state");
+    <h2 class="section-title" style="color: var(--navy);">บทความยอดนิยม</h2>
 
-  // In filter mode don't show pinned; in all mode pinned is always first
-  var feed = filterMode
-    ? list
-    : [PINNED].concat(list.filter(function(a){ return a.id !== PINNED.id; }));
+    <div class="articles-grid">
 
-  if (!feed.length){ empty.classList.add("show"); return; }
-  empty.classList.remove("show");
+      <!-- ── CARD 1 ── -->
+      <!-- ARTICLE IMG: replace .article-thumb contents with <img src="..." alt="..."> -->
+      <article class="article-card reveal" data-delay="0">
+        <div class="article-thumb" style="background: var(--c-psych);">
+          <i class="ti ti-brain" aria-hidden="true"></i>
+        </div>
+        <div class="article-body">
+          <span class="article-tag"
+                style="background:var(--tag-psych-bg); color:var(--tag-psych-txt);">จิตวิทยา</span>
+          <p class="article-title">ทำไมเราถึงลืมความฝัน ทันทีที่ตื่นนอน?</p>
+          <div class="article-meta">
+            <span><i class="ti ti-calendar" aria-hidden="true"></i>15 พ.ค. 2569</span>
+            <span><i class="ti ti-eye"      aria-hidden="true"></i>2,134</span>
+          </div>
+        </div>
+      </article>
 
-  feed.forEach(function(a, i){
-    var row = document.createElement("div");
-    row.className = "article-row" + (i===0 && !filterMode ? " is-hero" : "");
+      <!-- ── CARD 2 ── -->
+      <article class="article-card reveal" data-delay="1">
+        <div class="article-thumb" style="background: var(--c-bio);">
+          <i class="ti ti-dna" aria-hidden="true"></i>
+        </div>
+        <div class="article-body">
+          <span class="article-tag"
+                style="background:var(--tag-bio-bg); color:var(--tag-bio-txt);">ชีววิทยา</span>
+          <p class="article-title">Dopamine กับการติดโซเชียลมีเดีย</p>
+          <div class="article-meta">
+            <span><i class="ti ti-calendar" aria-hidden="true"></i>12 พ.ค. 2569</span>
+            <span><i class="ti ti-eye"      aria-hidden="true"></i>1,832</span>
+          </div>
+        </div>
+      </article>
 
-    if (i===0 && !filterMode && a.heroUrl) {
-      // Hero: image on top, full desc
-      row.innerHTML =
-        '<img class="hero-img" src="'+a.heroUrl+'" onerror="this.style.display=\'none\'"/>'+
-        '<div class="ar-body">'+
-          '<div class="ar-meta"><div class="ar-tag">'+(a.tag||"")+'</div>'+
-          (a.language ? langDots(a.language) : '')+
-        '</div>'+
-          '<div class="ar-title">'+a.title+'</div>'+
-          '<div class="ar-desc">'+(a.desc||"")+'</div>'+
-          '<div class="ar-foot"><div class="ar-rt">⏱ '+(a.readTime||"5 นาที")+'</div><div class="ar-arr">→</div></div>'+
-        '</div>';
-    } else {
-      // Plain row: text left, small thumb right if exists
-      var thumbHtml = a.heroUrl
-        ? '<div class="ar-thumb"><img src="'+a.heroUrl+'" onerror="this.parentElement.style.display=\'none\'"/></div>'
-        : '';
-      row.innerHTML =
-        '<div class="ar-body">'+
-          '<div class="ar-meta"><div class="ar-tag">'+(a.tag||"")+'</div>'+
-          (a.language ? langDots(a.language) : '')+
-        '</div>'+
-          '<div class="ar-title">'+a.title+'</div>'+
-          '<div class="ar-foot"><div class="ar-rt">⏱ '+(a.readTime||"5 นาที")+'</div><div class="ar-arr">→</div></div>'+
-        '</div>'+
-        thumbHtml;
+      <!-- ── CARD 3 ── -->
+      <article class="article-card reveal" data-delay="2">
+        <div class="article-thumb" style="background: var(--c-research);">
+          <i class="ti ti-microscope" aria-hidden="true"></i>
+        </div>
+        <div class="article-body">
+          <span class="article-tag"
+                style="background:var(--tag-research-bg); color:var(--tag-research-txt);">งานวิจัย</span>
+          <p class="article-title">งานวิจัยล่าสุดเรื่อง Sleep Deprivation</p>
+          <div class="article-meta">
+            <span><i class="ti ti-calendar" aria-hidden="true"></i>10 พ.ค. 2569</span>
+            <span><i class="ti ti-eye"      aria-hidden="true"></i>1,421</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       CATEGORY GRID
+  ══════════════════════════════════ -->
+  <section class="section categories-section" id="categories" aria-label="หมวดหมู่เนื้อหา">
+
+    <h2 class="section-title" style="color: var(--gold);">เลือกหมวดหมู่ที่คุณสนใจ</h2>
+
+    <div class="categories-grid">
+
+      <!-- ── TILE 1 · จิตวิทยา ── -->
+      <!-- CATEGORY IMG: set background-image on .cat-tile OR put <img> inside and remove .cat-ph -->
+      <a href="#" class="cat-tile reveal" data-delay="0" aria-label="จิตวิทยา">
+        <div class="cat-ph" style="background: var(--c-psych);">
+          <i class="ti ti-brain" aria-hidden="true"></i>
+        </div>
+      </a>
+
+      <!-- ── TILE 2 · ประสาทวิทยา ── -->
+      <a href="#" class="cat-tile reveal" data-delay="1" aria-label="ประสาทวิทยา">
+        <div class="cat-ph" style="background: var(--c-neuro);">
+          <i class="ti ti-activity" aria-hidden="true"></i>
+        </div>
+      </a>
+
+      <!-- ── TILE 3 · ชีววิทยา ── -->
+      <a href="#" class="cat-tile reveal" data-delay="2" aria-label="ชีววิทยา">
+        <div class="cat-ph" style="background: var(--c-bio);">
+          <i class="ti ti-dna" aria-hidden="true"></i>
+        </div>
+      </a>
+
+      <!-- ── TILE 4 · งานวิจัย ── -->
+      <a href="#" class="cat-tile reveal" data-delay="3" aria-label="งานวิจัย">
+        <div class="cat-ph" style="background: var(--c-research);">
+          <i class="ti ti-microscope" aria-hidden="true"></i>
+        </div>
+      </a>
+
+      <!-- ── TILE 5 · บทความ ── -->
+      <a href="#" class="cat-tile reveal" data-delay="1" aria-label="บทความ">
+        <div class="cat-ph" style="background: var(--c-article);">
+          <i class="ti ti-article" aria-hidden="true"></i>
+        </div>
+      </a>
+
+      <!-- ── TILE 6 · วิดีโอ ── -->
+      <a href="#" class="cat-tile reveal" data-delay="2" aria-label="วิดีโอ">
+        <div class="cat-ph" style="background: var(--c-video);">
+          <i class="ti ti-video" aria-hidden="true"></i>
+        </div>
+      </a>
+
+      <!-- ── TILE 7 · เกร็ดความรู้ ── -->
+      <a href="#" class="cat-tile reveal" data-delay="3" aria-label="เกร็ดความรู้">
+        <div class="cat-ph" style="background: var(--c-tips);">
+          <i class="ti ti-bulb" aria-hidden="true"></i>
+        </div>
+      </a>
+
+      <!-- ── TILE 8 · คลังคำถาม ── -->
+      <a href="#" class="cat-tile reveal" data-delay="4" aria-label="คลังคำถาม">
+        <div class="cat-ph" style="background: var(--c-qa);">
+          <i class="ti ti-help" aria-hidden="true"></i>
+        </div>
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════ -->
+  <script>
+    /* Mobile nav toggle */
+    function toggleNav() {
+      var links  = document.getElementById('navLinks');
+      var burger = document.getElementById('burger');
+      var open   = links.classList.toggle('is-open');
+      burger.setAttribute('aria-expanded', open);
     }
 
-    (function(article){ row.addEventListener("click", function(){ openReader(article); }); })(a);
-    container.appendChild(row);
-    setTimeout(function(){ row.classList.add("visible"); }, i * 60);
-  });
-}
-
-// ── COLLABS ───────────────────────────────────
-function renderCollabs(collabs) {
-  var container = document.getElementById("collab-sections");
-  container.innerHTML = "";
-  var active = collabs.filter(function(c){ return c.active; });
-  if (!active.length) return;
-
-
-
-  active.forEach(function(c, i){
-    container.appendChild(makeCollabCard(c, i));
-  });
-}
-
-function makeCollabCard(c, idx) {
-  var videos   = (c.content||[]).filter(function(x){ return x.type==="video"; });
-  var articles = (c.content||[]).filter(function(x){ return x.type==="article"; });
-
-  var counts = "";
-  if (videos.length)   counts += '<span class="collab-count">▶ '+videos.length+' วิดีโอ</span>';
-  if (articles.length) counts += '<span class="collab-count">📝 '+articles.length+' บทความ</span>';
-
-  var wrap = document.createElement("div");
-  wrap.className = "collab-card";
-
-  // Header
-  var header = document.createElement("div");
-  header.className = "collab-header";
-  var photoHtml = c.photo_url
-    ? '<div class="collab-photo"><img src="'+c.photo_url+'" onerror="this.parentElement.innerHTML=\'<div class=collab-photo-placeholder><span>📷</span><span>ใส่รูปผ่าน<br>dashboard</span></div>\'"/></div>'
-    : '<div class="collab-photo"><div class="collab-photo-placeholder"><span>📷</span><span>ใส่รูปผ่าน<br>dashboard</span></div></div>';
-  header.innerHTML =
-    '<div class="collab-text-area">'+
-      '<div class="collab-info">'+
-        '<div class="collab-name">'+(c.name||"")+'</div>'+
-        '<div class="collab-role">'+(c.role||"")+'</div>'+
-        '<div class="collab-counts">'+counts+'</div>'+
-      '</div>'+
-      /* no arrow */
-    '</div>'+
-    photoHtml;
-  header.addEventListener("click", function(){ openSeries(c); });
-
-  // Content
-  var content = document.createElement("div");
-  content.className = "collab-content";
-
-  // Videos
-  if (videos.length) {
-    var vstrip = document.createElement("div");
-    vstrip.className = "collab-vscroll";
-    videos.forEach(function(v){
-      var vc = document.createElement("div");
-      vc.className = "cvcard";
-      var th = v.youtube_id
-        ? '<img src="https://img.youtube.com/vi/'+v.youtube_id+'/hqdefault.jpg" onerror="this.style.display=\'none\'"/>'
-        : '<div class="cvfb">'+(v.source||'')+'</div>';
-      vc.innerHTML =
-        '<div class="cvthumb">'+th+
-          '<div class="cvplay"><div class="cvplay-btn">▶</div></div>'+
-        '</div>'+
-        '<div class="cvbody">'+
-          '<div class="cvtitle">'+v.title+'</div>'+
-          '<div class="cvmeta">▶ '+(v.duration||"")+' · '+(v.source||"YouTube")+'</div>'+
-        '</div>';
-      vc.addEventListener("click", function(){ if(v.url) window.open(v.url,"_blank"); });
-      vstrip.appendChild(vc);
-    });
-    content.appendChild(vstrip);
-  }
-
-  // Articles
-  if (articles.length) {
-    var alist = document.createElement("div");
-    alist.className = "collab-arts";
-    articles.forEach(function(a){
-      var row = document.createElement("div");
-      row.className = "ca-row";
-      row.innerHTML =
-        '<div class="ca-body">'+
-          '<div class="ca-title">'+a.title+'</div>'+
-          '<div class="ca-meta">📖 '+(a.readTime||"5 นาที")+' · '+(a.tag||"")+'</div>'+
-        '</div>'+
-        '<div class="ca-arr">→</div>';
-      alist.appendChild(row);
-    });
-    content.appendChild(alist);
-  }
-
-  // Bio button
-  var bioBtn = document.createElement("button");
-  bioBtn.className = "collab-bio-btn";
-  bioBtn.textContent = "ดูโปรไฟล์ทั้งหมด →";
-  bioBtn.addEventListener("click", function(){ openSeries(c); });
-  content.appendChild(bioBtn);
-
-  wrap.appendChild(header);
-  wrap.appendChild(content);
-
-  // Animate in
-  wrap.style.opacity = "0";
-  wrap.style.transform = "translateY(8px)";
-  wrap.style.transition = "opacity .4s var(--ease), transform .4s var(--ease)";
-  setTimeout(function(){
-    wrap.style.opacity = "1";
-    wrap.style.transform = "translateY(0)";
-  }, 150 + idx * 100);
-
-  return wrap;
-}
-
-// ── SERIES PAGE ───────────────────────────────
-function openSeries(c) {
-  currentCollab = c;
-  document.getElementById("series-topbar-title").textContent = "ใจดี TU × " + (c.name||"");
-
-  var portrait = c.photo_url
-    ? '<img class="series-portrait" src="'+c.photo_url+'" onerror="this.outerHTML=\'<div class=series-portrait-ph>🤝</div>\'">'
-    : '<div class="series-portrait-ph">🤝</div>';
-
-  var items = (c.content||[]).map(function(item, i){
-    var isV = item.type==="video";
-    return '<div class="series-item" data-idx="'+i+'">'+
-      '<div class="si-icon'+(isV?" video":"")+'">'+( isV?"▶":"📝")+'</div>'+
-      '<div style="flex:1;min-width:0;">'+
-        '<div class="si-title">'+(item.title||"")+'</div>'+
-        '<div class="si-meta">'+(isV?"▶ "+(item.duration||"")+" · "+(item.source||"YouTube"):"📖 "+(item.readTime||"5 นาที")+" · "+(item.tag||""))+'</div>'+
-      '</div>'+
-      '<div class="si-arr">→</div>'+
-      '</div>';
-  }).join("");
-
-  document.getElementById("series-body").innerHTML =
-    '<div class="series-hero">'+
-      '<div class="series-x">ใจดี TU ×</div>'+
-      portrait+
-      '<div class="series-name">'+(c.name||"")+'</div>'+
-      '<div class="series-role">'+(c.role||"")+'</div>'+
-      (c.description?'<div class="series-bio">'+c.description+'</div>':"")+
-    '</div>'+
-    '<div class="series-content">'+
-      '<div class="series-eye">เนื้อหาทั้งหมด · '+(c.content||[]).length+' รายการ</div>'+
-      items+
-    '</div>';
-
-  document.querySelectorAll(".series-item").forEach(function(el){
-    el.addEventListener("click", function(){
-      var item = currentCollab.content[parseInt(this.dataset.idx)];
-      if (item && item.type==="video" && item.url) window.open(item.url,"_blank");
-    });
-  });
-
-  document.getElementById("series-page").classList.add("active");
-  document.body.style.overflow = "hidden";
-  document.getElementById("series-body").scrollTop = 0;
-}
-
-// ── READER ───────────────────────────────────────
-function openReader(a) {
-  var body = document.getElementById("reader-body");
-  var prog = document.getElementById("reader-prog");
-  prog.style.width = "0%";
-
-  var lang = a.language || "";
-  var scaleHtml = langScaleBar(lang);
-
-  // ── Parse body JSON ──────────────────────────────────────
-  var bodyData = null;
-  if (a.body) {
-    try { bodyData = typeof a.body === "string" ? JSON.parse(a.body) : a.body; } catch(e) {}
-  }
-
-  // ── Header ───────────────────────────────────────────────
-  var html =
-    (a.heroUrl ? '<img src="'+a.heroUrl+'" style="width:100%;aspect-ratio:2/1;object-fit:cover;display:block;filter:saturate(.82);" onerror="this.style.display=\'none\'"/>' : '') +
-    '<div style="padding:28px 22px 22px;border-bottom:1px solid var(--rule);text-align:center;">' +
-      '<div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">'+(a.tag||"")+'</div>' +
-      '<div style="font-size:24px;font-weight:700;line-height:1.3;margin-bottom:12px;font-family:\'Noto Serif Thai\',Georgia,serif;">'+a.title+'</div>' +
-      '<div style="font-size:13px;color:var(--ink2);line-height:1.8;margin-bottom:14px;">'+(a.desc||"")+'</div>' +
-      '<div style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;color:var(--ink3);">' +
-        '<span>ใจดี TU</span><span style="color:var(--rule);">·</span>' +
-        '<span>'+(a.level||"🟢 เบา")+'</span><span style="color:var(--rule);">·</span>' +
-        '<span>⏱ '+(a.readTime||"5 นาที")+'</span>' +
-      '</div>' +
-      scaleHtml +
-    '</div>';
-
-  // ── Block renderer ────────────────────────────────────────
-  if (bodyData && bodyData.sections && bodyData.sections.length) {
-    html += '<div style="padding:0 22px 40px;">';
-    bodyData.sections.forEach(function(block, bi) {
-      html += renderBlock(block, bi);
-    });
-
-    // Completion screen
-    var doneTitle = (bodyData.completionTitle || "ได้ชิ้นส่วนใหม่แล้ว 🧩");
-    var doneSub   = (bodyData.completionSub   || "");
-    html +=
-      '<div style="margin-top:32px;padding:24px;background:var(--gold-lt);border:1.5px solid var(--gold-bd);border-radius:16px;text-align:center;">' +
-        '<div style="font-size:28px;margin-bottom:8px;">🧩</div>' +
-        '<div style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px;">'+doneTitle+'</div>' +
-        (doneSub ? '<div style="font-size:13px;color:var(--ink2);line-height:1.75;">'+doneSub+'</div>' : '') +
-      '</div>';
-    html += '</div>';
-
-  } else {
-    // No body yet — show desc as article
-    html +=
-      '<div style="padding:24px 22px 0;">' +
-        '<p style="font-size:15px;font-weight:300;color:var(--ink2);line-height:2.1;margin-bottom:24px;">'+(a.desc||"")+'</p>' +
-        '<div style="border:1.5px dashed var(--rule);border-radius:12px;padding:24px;text-align:center;color:var(--ink3);">' +
-          '<div style="font-size:24px;margin-bottom:8px;">🧩</div>' +
-          '<div style="font-size:13px;font-weight:600;margin-bottom:4px;">เนื้อหาเต็มจะปรากฏที่นี่</div>' +
-          '<div style="font-size:12px;line-height:1.7;">ทีมกำลังเพิ่มเนื้อหาผ่าน Puzzle Builder ในแดชบอร์ด</div>' +
-        '</div>' +
-      '</div>';
-  }
-
-  document.getElementById("reader-content").innerHTML = html;
-
-  // Wire up interactive blocks after render
-  wireInteractions();
-
-  var reader = document.getElementById("reader");
-  reader.style.display = "flex";
-  document.body.style.overflow = "hidden";
-  body.scrollTop = 0;
-
-  body.onscroll = function() {
-    var max = body.scrollHeight - body.clientHeight;
-    if (!max) return;
-    prog.style.width = Math.min(Math.round((body.scrollTop / max) * 100), 100) + "%";
-  };
-}
-
-// ══════════════════════════════════════════════════════════════
-// INLINE FORMATTING HELPER
-// Converts **bold** → <strong>, *italic* → <em>, \n → <br/>
-// ══════════════════════════════════════════════════════════════
-function renderInline(text) {
-  if (!text) return '';
-  return String(text)
-    .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
-    .replace(/\n/g, '<br/>');
-}
-
-// ── Block renderers ───────────────────────────────────────────
-function renderBlock(block, idx) {
-  var type = block.type || "";
-
-  if (type === "text") {
-    return (block.heading
-      ? '<h3 style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:18px;font-weight:700;color:var(--ink);margin:28px 0 10px;line-height:1.35;">'+block.heading+'</h3>'
-      : '') +
-      '<p style="font-size:15px;font-weight:300;color:var(--ink2);line-height:2.05;margin-bottom:20px;">'+
-        renderInline(block.content||"")+'</p>';
-  }
-
-  if (type === "heading") {
-    return '<h2 style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:20px;font-weight:700;color:var(--ink);margin:32px 0 12px;border-left:3px solid var(--gold);padding-left:12px;line-height:1.3;">'+(block.text||"")+'</h2>';
-  }
-
-  if (type === "callout") {
-    return '<div style="margin:20px 0;background:var(--gold-lt);border:1.5px solid var(--gold-bd);border-radius:12px;padding:16px 18px;">' +
-      '<div style="font-size:14px;font-weight:600;color:var(--ink);line-height:1.75;">💡 '+renderInline(block.content||"")+'</div>' +
-    '</div>';
-  }
-
-  if (type === "pullquote") {
-    // accept both block.attribution (new) and block.attr (legacy)
-    var attribution = block.attribution || block.attr || "";
-    return '<div style="margin:24px -4px;padding:20px 20px 20px 24px;border-left:3px solid var(--gold);background:var(--warm);border-radius:0 12px 12px 0;">' +
-      '<div style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:17px;font-style:italic;color:var(--ink);line-height:1.7;margin-bottom:8px;">❝ '+renderInline(block.text||"")+'</div>' +
-      (attribution ? '<div style="font-size:11px;color:var(--ink3);letter-spacing:.5px;">— '+attribution+'</div>' : '') +
-    '</div>';
-  }
-
-  if (type === "image") {
-    return '<figure style="margin:20px 0;">' +
-      '<img src="'+(block.url||"")+'" style="width:100%;border-radius:12px;display:block;" onerror="this.style.display=\'none\'"/>' +
-      (block.caption ? '<figcaption style="font-size:11px;color:var(--ink3);text-align:center;margin-top:8px;">'+block.caption+'</figcaption>' : '') +
-    '</figure>';
-  }
-
-  if (type === "bleedimage") {
-    return '<figure style="margin:20px -22px;">' +
-      '<img src="'+(block.url||"")+'" style="width:100%;display:block;max-height:280px;object-fit:cover;" onerror="this.style.display=\'none\'"/>' +
-      (block.caption ? '<figcaption style="font-size:11px;color:var(--ink3);text-align:center;margin-top:8px;padding:0 22px;">'+block.caption+'</figcaption>' : '') +
-    '</figure>';
-  }
-
-  if (type === "video") {
-    var ytMatch = (block.url||"").match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    var ytId = ytMatch ? ytMatch[1] : null;
-    var inner = ytId
-      ? '<iframe src="https://www.youtube.com/embed/'+ytId+'?rel=0" style="width:100%;aspect-ratio:16/9;border:none;border-radius:12px;display:block;" allowfullscreen></iframe>'
-      : '<a href="'+(block.url||"")+'\" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--noir);border-radius:12px;padding:20px;color:rgba(255,255,255,.7);font-size:14px;text-decoration:none;">▶ ดูวิดีโอ</a>';
-    return '<div style="margin:20px 0;">' + inner +
-      (block.caption ? '<div style="font-size:11px;color:var(--ink3);text-align:center;margin-top:8px;">'+block.caption+'</div>' : '') +
-    '</div>';
-  }
-
-  if (type === "table") {
-    // accept both new format (headers:array, rows:2D array) and legacy (string)
-    var headers = Array.isArray(block.headers)
-      ? block.headers
-      : (block.headers||"").split("|").map(function(h){return h.trim();});
-    var rows = Array.isArray(block.rows)
-      ? block.rows
-      : (block.rows||"").split("\n")
-          .filter(function(r){return r.trim();})
-          .map(function(r){return r.split("|").map(function(c){return c.trim();});});
-
-    var theadCells = headers.map(function(h){ return '<th style="padding:8px 12px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--ink2);border-bottom:2px solid var(--rule);">'+h+'</th>'; }).join("");
-    var tbodyRows = rows.map(function(row, ri){
-      return '<tr style="background:'+(ri%2?"var(--warm)":"transparent")+';">' +
-        row.map(function(c){ return '<td style="padding:8px 12px;font-size:13px;color:var(--ink2);border-bottom:1px solid var(--rule);">'+renderInline(c)+'</td>'; }).join("") +
-      '</tr>';
-    }).join("");
-    return '<div style="margin:20px 0;overflow-x:auto;border-radius:12px;border:1px solid var(--rule);">' +
-      '<table style="width:100%;border-collapse:collapse;font-family:\'Sarabun\',sans-serif;">' +
-        '<thead><tr>'+theadCells+'</tr></thead>' +
-        '<tbody>'+tbodyRows+'</tbody>' +
-      '</table>' +
-    '</div>';
-  }
-
-  if (type === "definition") {
-    // term — short label like "EM"
-    // english — full English name like "Extrinsic Motivation"
-    // meaning — explanation (supports markdown inline formatting)
-    return '<div style="margin:24px 0;background:var(--gold-lt);border-left:4px solid var(--gold);border-radius:0 12px 12px 0;padding:18px 20px;">' +
-      '<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px;">' +
-        '<span style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:22px;font-weight:700;color:#5C3A00;">'+(block.term||"")+'</span>' +
-        (block.english ? '<span style="font-size:13px;font-style:italic;color:#7A5200;font-weight:300;">'+block.english+'</span>' : '') +
-      '</div>' +
-      '<div style="font-size:14px;color:var(--ink);line-height:1.8;">'+renderInline(block.meaning||"")+'</div>' +
-    '</div>';
-  }
-
-  if (type === "list") {
-    var items = block.items || [];
-    var tag = block.style === "number" ? "ol" : "ul";
-    var itemHtml = items.map(function(it){
-      return '<li style="font-size:14px;color:var(--ink2);line-height:1.85;margin-bottom:6px;padding-left:4px;">'+renderInline(it)+'</li>';
-    }).join("");
-    return '<div style="margin:22px 0;">' +
-      (block.title ? '<div style="font-family:\'Noto Serif Thai\',Georgia,serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:10px;">'+block.title+'</div>' : '') +
-      '<'+tag+' style="padding-left:24px;color:var(--gold);">'+itemHtml+'</'+tag+'>' +
-    '</div>';
-  }
-
-  if (type === "divider") {
-    var style = block.style || "line";
-    if (style === "line") {
-      return '<div style="height:1px;background:var(--rule);margin:32px auto;width:60%;"></div>';
-    }
-    var symbols = { dots: "• • •", star: "✦", wave: "〜〜〜" };
-    var sym = symbols[style] || "〜";
-    return '<div style="text-align:center;margin:32px 0;font-size:18px;color:var(--ink3);letter-spacing:8px;">'+sym+'</div>';
-  }
-
-  if (type === "interaction" || type === "quiz") {
-    var choices = block.choices || [];
-    var choiceHtml = choices.map(function(c, ci){
-      return '<button class="pz-choice-btn" data-block="'+idx+'" data-choice="'+ci+'" data-feedback="'+encodeURIComponent(c.feedback||"")+'" ' +
-        'style="width:100%;text-align:left;background:var(--warm);border:1.5px solid var(--rule);border-radius:10px;padding:11px 14px;font-size:13px;font-family:\'Sarabun\',sans-serif;color:var(--ink2);cursor:pointer;margin-bottom:8px;transition:all .18s;">' +
-        (c.text||"") +
-      '</button>';
-    }).join("");
-    return '<div class="pz-interaction" data-block="'+idx+'" style="margin:20px 0;background:var(--card);border:1.5px solid var(--rule);border-radius:14px;padding:18px;">' +
-      '<div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">💭 คำถาม</div>' +
-      '<div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:16px;line-height:1.5;">'+(block.question||"")+'</div>' +
-      choiceHtml +
-      '<div id="pz-feedback-'+idx+'" style="display:none;margin-top:8px;background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink);line-height:1.7;"></div>' +
-    '</div>';
-  }
-
-  if (type === "reflection") {
-    var opts = block.options || [];
-    var optHtml = opts.map(function(o, oi){
-      return '<button class="pz-reflect-btn" data-block="'+idx+'" data-opt="'+oi+'" ' +
-        'style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--warm);border:1.5px solid var(--rule);border-radius:10px;padding:10px 14px;font-size:13px;font-family:\'Sarabun\',sans-serif;color:var(--ink2);cursor:pointer;margin-bottom:8px;transition:all .18s;">' +
-        '<span style="font-size:18px;flex-shrink:0;">'+(o.icon||"💭")+'</span>' +
-        '<span>'+(o.text||"")+'</span>' +
-      '</button>';
-    }).join("");
-    return '<div class="pz-reflection" data-block="'+idx+'" style="margin:20px 0;background:var(--card);border:1.5px solid var(--rule);border-radius:14px;padding:18px;">' +
-      '<div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">🪞 สะท้อนตัวเอง</div>' +
-      '<div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:16px;line-height:1.5;">'+(block.prompt||"")+'</div>' +
-      optHtml +
-      '<div id="pz-reflect-result-'+idx+'" style="display:none;margin-top:8px;background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink);line-height:1.7;"></div>' +
-    '</div>';
-  }
-
-  return ""; // unknown block type — skip
-}
-
-// ── Wire interactive blocks after DOM render ──────────────────
-function wireInteractions() {
-  // Quiz choices
-  document.querySelectorAll(".pz-choice-btn").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var blockIdx = this.dataset.block;
-      var feedback  = decodeURIComponent(this.dataset.feedback || "");
-      // Highlight selected
-      document.querySelectorAll('.pz-choice-btn[data-block="'+blockIdx+'"]').forEach(function(b){
-        b.style.background = "var(--warm)";
-        b.style.borderColor = "var(--rule)";
-        b.style.color = "var(--ink2)";
+    /* Close drawer when a link is tapped */
+    document.querySelectorAll('.nav-links a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        document.getElementById('navLinks').classList.remove('is-open');
+        document.getElementById('burger').setAttribute('aria-expanded', false);
       });
-      this.style.background = "var(--gold-lt)";
-      this.style.borderColor = "var(--gold-bd)";
-      this.style.color = "var(--ink)";
-      this.style.fontWeight = "600";
-      // Show feedback
-      var fbEl = document.getElementById("pz-feedback-"+blockIdx);
-      if (fbEl && feedback) { fbEl.style.display = "block"; fbEl.textContent = feedback; }
     });
-  });
 
-  // Reflection options
-  document.querySelectorAll(".pz-reflect-btn").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var blockIdx = this.dataset.block;
-      var optIdx   = this.dataset.opt;
-      // Highlight
-      document.querySelectorAll('.pz-reflect-btn[data-block="'+blockIdx+'"]').forEach(function(b){
-        b.style.background = "var(--warm)";
-        b.style.borderColor = "var(--rule)";
-        b.style.color = "var(--ink2)";
+    /* Scroll reveal */
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
       });
-      this.style.background = "var(--gold-lt)";
-      this.style.borderColor = "var(--gold-bd)";
-      this.style.color = "var(--ink)";
-      // Show result
-      var resEl = document.getElementById("pz-reflect-result-"+blockIdx);
-      if (resEl) {
-        resEl.style.display = "block";
-        resEl.textContent = "ขอบคุณที่แบ่งปันนะ 🤍 ไม่มีคำตอบถูกหรือผิด — แค่ฟังตัวเองให้ชัดขึ้นเรื่อยๆ";
-      }
-    });
-  });
-}
+    }, { threshold: 0.12 });
 
-function closeReader() {
-  document.getElementById("reader").style.display = "none";
-  document.body.style.overflow = "";
-}
+    document.querySelectorAll('.reveal').forEach(function(el) { io.observe(el); });
+  </script>
 
-function closeSeries(){
-  document.getElementById("series-page").classList.remove("active");
-  document.body.style.overflow = "";
-}
-document.getElementById("btn-close-series").addEventListener("click", closeSeries);
-document.getElementById("reader-back").addEventListener("click", closeReader);
-</script>
 </body>
 </html>
