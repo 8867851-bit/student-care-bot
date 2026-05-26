@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>จิตวิทยา — Puzzle Pieces</title>
+
+  <!-- Fonts & Icons (same as homepage) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/dist/tabler-icons.min.css">
+
+  <style>
+    /* ================================================
+       PUZZLE PIECES — CATEGORY DETAIL PAGE
+       ================================================
+       QUICK GUIDE:
+       1. Featured article image  → search "FEATURED IMG"
+       2. Small card images       → search "SMALL IMG"
+       3. Link href="#" values    → replace with real URLs
+       4. Duplicate this file for each category,
+          swap the colour variable and content.
+       ================================================ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:         #1B2038;
+      --cream:        #FDF8F5;
+      --pink:         #F4B8CE;
+      --pink-light:   #FBE8F0;
+      --pink-dark:    #C1607E;
+      --pink-text:    #7D2A45;
+      --green:        #4A7C3F;
+      --gold:         #B8900A;
+
+      /* ─ Change these two lines when duplicating for another category ─ */
+      --cat-bg:       #FBE8F0;   /* thumbnail tint for this category      */
+      --cat-icon-col: rgba(193,96,126,0.22); /* icon colour inside thumbs  */
+
+      --navbar-h:     58px;
+      --r-md:         12px;
+      --r-lg:         16px;
+      --ease:         0.22s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Sarabun', system-ui, 'Noto Sans Thai', sans-serif;
+      background: var(--cream);
+      color: var(--navy);
+      overflow-x: hidden;
+      line-height: 1.65;
+    }
+
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    a   { text-decoration: none; color: inherit; }
+
+
+    /* ─────────────────────────────────
+       NAVBAR  (identical to homepage)
+    ───────────────────────────────── */
+
+    .navbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      height: var(--navbar-h);
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6%;
+      border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; user-select: none;
+    }
+
+    .nav-logo-box {
+      width: 30px; height: 30px;
+      border: 1.5px solid rgba(255,255,255,0.28);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .nav-logo-box i    { font-size: 17px; color: rgba(255,255,255,0.55); }
+    .nav-logo-text     { font-size: 13px; font-weight: 800; color: white; letter-spacing: 0.07em; }
+
+    .nav-links { display: flex; gap: 30px; list-style: none; }
+
+    .nav-links a {
+      font-size: 14px; color: rgba(255,255,255,0.58); font-weight: 500;
+      padding-bottom: 3px; border-bottom: 2px solid transparent;
+      transition: color var(--ease), border-color var(--ease);
+    }
+
+    .nav-links a:hover  { color: rgba(255,255,255,0.88); }
+    .nav-links a.active { color: white; font-weight: 700; border-bottom-color: white; }
+
+    .nav-burger { display: none; cursor: pointer; padding: 5px; }
+    .nav-burger i { font-size: 22px; color: rgba(255,255,255,0.75); }
+
+    .nav-links.is-open {
+      display: flex !important; flex-direction: column;
+      position: fixed; top: var(--navbar-h); left: 0; right: 0;
+      background: var(--navy); padding: 6px 6% 22px; gap: 0;
+      border-bottom: 0.5px solid rgba(255,255,255,0.08);
+      animation: slideDown .2s ease both;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .nav-links.is-open a {
+      padding: 13px 0; font-size: 15px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.07); border-radius: 0;
+    }
+
+
+    /* ─────────────────────────────────
+       PAGE HEADER
+    ───────────────────────────────── */
+
+    .cat-header {
+      margin-top: var(--navbar-h);
+      padding: 36px 6% 0;
+      background: var(--cream);
+    }
+
+    .breadcrumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: #aaa; margin-bottom: 10px;
+    }
+
+    .breadcrumb a   { color: #aaa; transition: color var(--ease); }
+    .breadcrumb a:hover { color: var(--navy); }
+    .breadcrumb i   { font-size: 12px; }
+    .breadcrumb span{ color: var(--gold); font-weight: 600; }
+
+    .cat-header h1 {
+      font-size: 26px; font-weight: 700; color: var(--gold);
+      margin-top: 4px;
+    }
+
+
+    /* ─────────────────────────────────
+       MAIN CONTENT SECTION
+    ───────────────────────────────── */
+
+    .cat-section { padding: 24px 6% 68px; background: var(--cream); }
+
+    /* Asymmetric two-column grid */
+    .cat-layout {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+
+    /* ─────────────────────────────────
+       FEATURED CARD  (big left card)
+    ───────────────────────────────── */
+
+    .featured-card {
+      display: block;
+      background: white;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 0.5px solid rgba(0,0,0,0.07);
+      cursor: pointer;
+      transition: transform var(--ease), box-shadow var(--ease);
+    }
+
+    .featured-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+    }
+
+    .featured-thumb {
+      height: 260px;
+      background: var(--cat-bg);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /* ═══ FEATURED IMG ═══════════════════════════════════════════════
+         Replace this div's background + remove the <i> inside when
+         adding a real photo.  Two options:
+
+         A) CSS background (simplest):
+            style="background-image:url('article-main.jpg');
+                   background-size:cover; background-position:center;"
+
+         B) <img> tag inside this div:
+            <img src="article-main.jpg" alt="ชื่อบทความ">
+            (remove the <i> placeholder below)
+         ═══════════════════════════════════════════════════════════════ */
+    }
+
+    .featured-thumb i { font-size: 64px; color: var(--cat-icon-col); }
+
+    .featured-badge {
+      position: absolute;
+      bottom: 12px; left: 12px;
+      background: #F9D342;
+      color: var(--navy);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .featured-body { padding: 18px 20px 22px; }
+
+    .featured-cat-tag {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px; border-radius: 6px;
+      margin-bottom: 10px;
+      background: var(--pink-light);
+      color: var(--pink-text);
+    }
+
+    .featured-title {
+      font-size: 17px; font-weight: 700;
+      color: var(--navy); line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .meta {
+      display: flex; align-items: center; gap: 14px;
+      font-size: 12px; color: #aaa;
+    }
+
+    .meta span { display: flex; align-items: center; gap: 4px; }
+    .meta i { font-size: 13px; }
+
+
+    /* ─────────────────────────────────
+       ARTICLES SIDE  (right 3 × 2 grid)
+    ───────────────────────────────── */
+
+    /* wrapper needed for the mobile fade-out mask */
+    .articles-side-wrap { position: relative; }
+
+    .articles-side {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 12px;
+    }
+
+
+    /* ── Small card ── */
+
+    .small-card {
+      display: block;
+      background: white;
+      border-radius: var(--r-md);
+      overflow: hidden;
+      border: 0.5px solid rgba(0,0,0,0.07);
+      cursor: pointer;
+      transition: transform var(--ease), box-shadow var(--ease);
+    }
+
+    .small-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    .small-thumb {
+      height: 96px;
+      background: var(--cat-bg);
+      display: flex; align-items: center; justify-content: center;
+
+      /* ═══ SMALL IMG ══════════════════════════════════════════════════
+         Same as FEATURED IMG above — use background-image or <img>.
+         ═══════════════════════════════════════════════════════════════ */
+    }
+
+    .small-thumb i { font-size: 28px; color: var(--cat-icon-col); }
+
+    .small-body { padding: 8px 10px 11px; }
+
+    .small-title {
+      font-size: 11.5px; font-weight: 600; color: var(--navy);
+      line-height: 1.45; margin-bottom: 5px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .small-meta {
+      display: flex; gap: 8px;
+      font-size: 10px; color: #bbb; align-items: center;
+    }
+
+    .small-meta i { font-size: 11px; }
+
+
+    /* ── See-all tile (6th grid slot, desktop only) ── */
+
+    .see-all-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #EEE8DE;
+      border-radius: var(--r-md);
+      border: 0.5px solid rgba(0,0,0,0.07);
+      cursor: pointer;
+      color: var(--navy);
+      min-height: 96px;
+      transition: background var(--ease), transform var(--ease);
+    }
+
+    .see-all-tile:hover {
+      background: #E0D9CE;
+      transform: translateY(-3px);
+    }
+
+    .see-all-tile span { font-size: 12px; font-weight: 800; }
+    .see-all-tile i    { font-size: 22px; color: #777; }
+
+
+    /* ── See-all button (mobile only, hidden on desktop) ── */
+
+    .see-all-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 16px;
+      background: white;
+      border: 0.5px solid rgba(0,0,0,0.1);
+      border-radius: var(--r-md);
+      padding: 14px;
+      font-size: 14px; font-weight: 700; color: var(--navy);
+      cursor: pointer;
+      transition: background var(--ease);
+    }
+
+    .see-all-btn:hover { background: #F0EAE1; }
+    .see-all-btn i { font-size: 18px; }
+
+
+    /* ─────────────────────────────────
+       REVEAL ANIMATIONS
+    ───────────────────────────────── */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .reveal.in { opacity: 1; transform: none; }
+
+    .reveal[data-delay="1"] { transition-delay: .08s; }
+    .reveal[data-delay="2"] { transition-delay: .16s; }
+    .reveal[data-delay="3"] { transition-delay: .24s; }
+    .reveal[data-delay="4"] { transition-delay: .32s; }
+    .reveal[data-delay="5"] { transition-delay: .40s; }
+
+
+    /* ─────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────── */
+
+    @media (max-width: 768px) {
+
+      /* Hamburger nav */
+      .nav-links:not(.is-open) { display: none; }
+      .nav-burger { display: block; }
+
+      /* Stack featured above the scroll row */
+      .cat-layout { grid-template-columns: 1fr; gap: 16px; }
+
+      .featured-thumb { height: 200px; }
+
+      /* Soft right-edge fade hints at horizontal scroll */
+      .articles-side-wrap::after {
+        content: '';
+        position: absolute;
+        right: 0; top: 0; bottom: 0;
+        width: 52px;
+        background: linear-gradient(to right, transparent, var(--cream));
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Horizontal scroll row */
+      .articles-side {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 10px;
+        padding-bottom: 4px;
+      }
+
+      .articles-side::-webkit-scrollbar { display: none; }
+
+      /* Each card snaps and shows ~2.4 at a time */
+      .small-card {
+        min-width: 148px;
+        scroll-snap-align: start;
+        flex-shrink: 0;
+      }
+
+      /* Hide tile; show full-width button instead */
+      .see-all-tile { display: none; }
+      .see-all-btn  { display: flex; }
+
+      .cat-header  { padding: 24px 4% 0; }
+      .cat-section { padding: 20px 4% 52px; }
+    }
+
+    @media (max-width: 480px) {
+      .small-card { min-width: 130px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════
+       NAVBAR
+  ══════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+
+    <div class="nav-logo" onclick="window.location.href='puzzle-pieces-homepage.html'">
+      <div class="nav-logo-box">
+        <i class="ti ti-puzzle" aria-hidden="true"></i>
+      </div>
+      <span class="nav-logo-text">PUZZLE PIECES</span>
+    </div>
+
+    <ul class="nav-links" id="navLinks" role="list">
+      <a href="puzzle-pieces-homepage.html">หน้าหลัก</a>
+      <a href="#" class="active">เนื้อหา</a>
+      <a href="#">เกี่ยวกับเรา</a>
+    </ul>
+
+    <div class="nav-burger" id="burger"
+         onclick="toggleNav()"
+         aria-label="เปิดเมนู"
+         aria-expanded="false"
+         aria-controls="navLinks">
+      <i class="ti ti-menu-2" aria-hidden="true"></i>
+    </div>
+
+  </nav>
+
+
+  <!-- ══════════════════════════════════
+       PAGE HEADER
+  ══════════════════════════════════ -->
+  <div class="cat-header">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="puzzle-pieces-homepage.html">หน้าหลัก</a>
+      <i class="ti ti-chevron-right" aria-hidden="true"></i>
+      <span>จิตวิทยา</span>
+    </nav>
+    <h1>จิตวิทยา</h1>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════ -->
+  <main class="cat-section">
+
+    <div class="cat-layout">
+
+      <!-- ── FEATURED CARD (big left / top on mobile) ── -->
+      <a href="#" class="featured-card reveal" data-delay="0" aria-label="ทำไมเราถึงลืมความฝัน">
+
+        <div class="featured-thumb">
+          <!-- FEATURED IMG: replace background + remove <i> when adding real photo -->
+          <i class="ti ti-brain" aria-hidden="true"></i>
+          <span class="featured-badge">บทความยอดนิยม</span>
+        </div>
+
+        <div class="featured-body">
+          <span class="featured-cat-tag">จิตวิทยา</span>
+          <h2 class="featured-title">ทำไมเราถึงลืมความฝัน ทันทีที่ตื่นนอน?</h2>
+          <div class="meta">
+            <span><i class="ti ti-calendar" aria-hidden="true"></i>18/03/2569</span>
+            <span><i class="ti ti-eye"      aria-hidden="true"></i>1,423</span>
+          </div>
+        </div>
+
+      </a>
+
+
+      <!-- ── RIGHT GRID: 5 cards + see-all tile ── -->
+      <div class="articles-side-wrap">
+        <div class="articles-side">
+
+          <!-- SMALL CARD 1 -->
+          <!-- SMALL IMG: replace .small-thumb background + remove <i> for real photo -->
+          <a href="#" class="small-card reveal" data-delay="1">
+            <div class="small-thumb">
+              <i class="ti ti-brain" aria-hidden="true"></i>
+            </div>
+            <div class="small-body">
+              <p class="small-title">การนอนหลับกับความจำระยะยาว</p>
+              <div class="small-meta">
+                <span><i class="ti ti-eye" aria-hidden="true"></i>890</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- SMALL CARD 2 -->
+          <a href="#" class="small-card reveal" data-delay="2">
+            <div class="small-thumb">
+              <i class="ti ti-brain" aria-hidden="true"></i>
+            </div>
+            <div class="small-body">
+              <p class="small-title">Cognitive Bias กับการตัดสินใจ</p>
+              <div class="small-meta">
+                <span><i class="ti ti-eye" aria-hidden="true"></i>742</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- SMALL CARD 3 -->
+          <a href="#" class="small-card reveal" data-delay="3">
+            <div class="small-thumb">
+              <i class="ti ti-brain" aria-hidden="true"></i>
+            </div>
+            <div class="small-body">
+              <p class="small-title">ทฤษฎีของ Maslow ในชีวิตประจำวัน</p>
+              <div class="small-meta">
+                <span><i class="ti ti-eye" aria-hidden="true"></i>618</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- SMALL CARD 4 -->
+          <a href="#" class="small-card reveal" data-delay="2">
+            <div class="small-thumb">
+              <i class="ti ti-brain" aria-hidden="true"></i>
+            </div>
+            <div class="small-body">
+              <p class="small-title">Attachment Theory คืออะไร?</p>
+              <div class="small-meta">
+                <span><i class="ti ti-eye" aria-hidden="true"></i>554</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- SMALL CARD 5 -->
+          <a href="#" class="small-card reveal" data-delay="3">
+            <div class="small-thumb">
+              <i class="ti ti-brain" aria-hidden="true"></i>
+            </div>
+            <div class="small-body">
+              <p class="small-title">จิตวิทยาสีกับอารมณ์ความรู้สึก</p>
+              <div class="small-meta">
+                <span><i class="ti ti-eye" aria-hidden="true"></i>501</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- SEE ALL TILE — desktop only (hidden on mobile) -->
+          <a href="#" class="see-all-tile reveal" data-delay="4" aria-label="ดูบทความทั้งหมด">
+            <span>ดูทั้งหมด</span>
+            <i class="ti ti-arrow-right" aria-hidden="true"></i>
+          </a>
+
+        </div><!-- /.articles-side -->
+      </div><!-- /.articles-side-wrap -->
+
+    </div><!-- /.cat-layout -->
+
+    <!-- SEE ALL BUTTON — mobile only (hidden on desktop) -->
+    <a href="#" class="see-all-btn" aria-label="ดูบทความจิตวิทยาทั้งหมด">
+      ดูทั้งหมด
+      <i class="ti ti-arrow-right" aria-hidden="true"></i>
+    </a>
+
+  </main>
+
+
+  <!-- ══════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════ -->
+  <script>
+    /* Mobile nav */
+    function toggleNav() {
+      var links  = document.getElementById('navLinks');
+      var burger = document.getElementById('burger');
+      var open   = links.classList.toggle('is-open');
+      burger.setAttribute('aria-expanded', open);
+    }
+
+    document.querySelectorAll('.nav-links a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        document.getElementById('navLinks').classList.remove('is-open');
+        document.getElementById('burger').setAttribute('aria-expanded', false);
+      });
+    });
+
+    /* Scroll reveal */
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(function(el) { io.observe(el); });
+  </script>
+
+</body>
+</html>
