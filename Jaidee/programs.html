@@ -452,30 +452,20 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
 
 const FALLBACK_ACTIVE = [
-  { id:"p1", name:"Intentional Listening Lab",
-    short_desc:"ฝึกฟังอย่างมีความตั้งใจ สำหรับนักเรียนที่อยากช่วยเพื่อนได้ดีขึ้น",
-    full_desc:"Workshop ที่ออกแบบมาเพื่อพัฒนาทักษะการฟังอย่างลึกซึ้ง โดยอิงจาก Intentional Peer Support framework ที่ใจดี TU ใช้กับ PR ทุกคน เปิดสำหรับทุกคนที่อยากเป็นพื้นที่ปลอดภัยให้เพื่อน",
-    category:"Wellbeing", type:"Workshop", emoji:"🌿", source:"internal",
-    start_date:"14 มิ.ย. 68", reg_deadline:"10 มิ.ย. 68",
-    form_url:"https://forms.google.com/", photo_url:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80", status:"active" },
-  { id:"p2", name:"Study Smarter: Neuroscience Edition",
-    short_desc:"เรียนรู้ว่าสมองทำงานยังไงเวลาเรียน แล้วออกแบบวิธีเรียนให้เหมาะกับตัวเอง",
-    full_desc:"Seminar โดยนักจิตวิทยาการศึกษา พาเจาะลึกเรื่อง spaced repetition, active recall และ cognitive load theory แบบที่เอาไปใช้ได้จริง ไม่ใช่แค่ทฤษฎี",
-    category:"Academic", type:"Seminar", emoji:"🧠", source:"internal",
-    start_date:"20 มิ.ย. 68", reg_deadline:"18 มิ.ย. 68",
-    form_url:"https://forms.google.com/", photo_url:"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80", status:"active" },
-  { id:"p3", name:"จากเตรียมอุดมถึง Oxford",
-    short_desc:"รุ่นพี่เล่าให้ฟัง เส้นทาง แรงจูงใจ และสิ่งที่อยากย้อนกลับไปบอกตัวเอง",
-    full_desc:"Talk โดยรุ่นพี่ที่ผ่านช่วงเตรียมอุดมมาแล้ว เล่าตั้งแต่วันที่ยังไม่รู้จะเรียนอะไร จนถึงวันที่ได้รับจดหมายตอบรับ",
-    category:"Career", type:"Talk", emoji:"🎯", source:"external",
-    start_date:"26 มิ.ย. 68", reg_deadline:"24 มิ.ย. 68",
-    form_url:"https://forms.google.com/", photo_url:"", status:"active" }
+  { id:"p1", name:"TU TourBuddy",
+    short_desc:"โปรแกรมพี่นำเที่ยวมหาวิทยาลัย ช่วยน้องใหม่ปรับตัวเข้ากับชีวิตในรั้วมหาวิทยาลัย",
+    full_desc:"TU TourBuddy คือโครงการที่รุ่นพี่จิตอาสาพาน้องใหม่ทำความรู้จักกับมหาวิทยาลัย ทั้งพื้นที่ ระบบ และวัฒนธรรม เพื่อให้น้องๆ รู้สึกไม่โดดเดี่ยวตั้งแต่วันแรก",
+    category:"Wellbeing", type:"โครงการ", emoji:"🎓", source:"internal",
+    start_date:"มิ.ย. 68", reg_deadline:"",
+    form_url:"#", photo_url:"", status:"active" },
+  { id:"p2", name:"Self Love Inside Out",
+    short_desc:"คอร์สออนไลน์ 22 บทเรียน โดย นพ.ณัฎฐชัย รำเพย (หมอวอป) จิตแพทย์ — เรียนรู้การรักตัวเองจากข้างใน ด้วยเครื่องมือจากห้องตรวจจริง",
+    full_desc:"คอร์สออนไลน์ที่จะพาคุณเข้าใจตัวเอง รักตัวเองจากข้างใน — 22 บทเรียน ~3 ชั่วโมง เรียนซ้ำได้ตลอดชีวิต พร้อม Workbook และ Ebook เส้นทาง 21 วัน ราคา ฿1,400 มี 30-Day Money-back Guarantee",
+    category:"Wellbeing", type:"คอร์สออนไลน์", emoji:"💛", source:"external",
+    start_date:"เรียนได้ทันที", reg_deadline:"",
+    form_url:"https://selflove.wlifepath.com/", photo_url:"", status:"active" }
 ];
-const FALLBACK_PAST = [
-  { name:"Journaling Workshop", category:"Wellbeing", start_date:"15 พ.ค. 68" },
-  { name:"Growth Mindset Seminar", category:"Academic", start_date:"2 พ.ค. 68" },
-  { name:"Career Compass", category:"Career", start_date:"18 เม.ย. 68" },
-];
+const FALLBACK_PAST = [];
 
 let active = [], past = [], filter = "all";
 // Track registration clicks in sessionStorage per program id
@@ -593,13 +583,7 @@ function renderPast() {
   });
 }
 
-function renderStats() {
-  if (!active.length) return;
-  document.getElementById("stats-strip").style.display = "flex";
-  document.getElementById("stat-open").textContent  = active.filter(p => p.status === "active").length;
-  document.getElementById("stat-total").textContent = active.length;
-  document.getElementById("stat-reg").textContent   = totalRegCount() || "—";
-}
+function renderStats() { /* removed */ }
 
 // ── DETAIL SHEET ──────────────────────────────────────────
 function openSheet(id) {
