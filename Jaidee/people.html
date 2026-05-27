@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ผู้คน</title>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600;700&family=Charm:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:#1C4F4F;min-height:100vh;}
+
+    /* ────────────────────────────
+       HERO
+    ──────────────────────────── */
+    .hero{
+      background:linear-gradient(160deg,#F8CE44 0%,#F3BF32 100%);
+      padding:16px 20px 0 20px;
+      position:relative;
+      overflow:hidden;
+      min-height:240px;
+    }
+    .hero-toprow{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:22px;
+    }
+    .back-btn{
+      background:none;border:none;
+      font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;
+      color:rgba(60,30,10,0.55);cursor:pointer;padding:0;letter-spacing:0.02em;
+    }
+    .yt-icon{
+      width:36px;height:26px;background:#FF0000;border-radius:6px;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 2px 6px rgba(200,0,0,0.35);
+    }
+    .yt-icon::after{content:'▶';color:#fff;font-size:11px;margin-left:2px;}
+
+    .hero-body{max-width:calc(100% - 128px);}
+    .hero-title{
+      font-size:26px;font-weight:700;color:#1C0A08;
+      line-height:1.25;margin-bottom:14px;
+      letter-spacing:-0.01em;
+    }
+    .hero-quote{
+      display:inline-block;
+      background:rgba(255,255,255,0.52);
+      border:1.5px solid rgba(200,140,20,0.25);
+      border-radius:10px;
+      padding:9px 15px;
+      font-size:13px;font-weight:400;
+      color:#5C3A08;line-height:1.45;
+      margin-bottom:14px;
+      box-shadow:0 2px 8px rgba(200,140,20,0.10);
+    }
+    .hero-tags{
+      display:flex;flex-wrap:wrap;gap:2px 0;
+      padding-bottom:24px;
+    }
+    .hero-tag{
+      font-size:11px;font-weight:300;
+      color:rgba(40,18,5,0.6);
+      white-space:nowrap;
+    }
+    .hero-tag::before{content:'•';margin:0 5px 0 0;color:rgba(40,18,5,0.35);}
+
+    /* mascot — drop transparent PNG as src */
+    .hero-mascot{
+      position:absolute;right:-2px;bottom:0;
+      width:128px;height:auto;pointer-events:none;
+      filter:drop-shadow(-4px 0 12px rgba(200,140,20,0.18));
+    }
+
+    /* ────────────────────────────
+       FEATURED STRIP
+    ──────────────────────────── */
+    .feat{
+      background:#1C4F4F;
+      padding:52px 0 0;
+    }
+    .feat-scroll{
+      display:flex;gap:14px;
+      padding:0 18px;
+      overflow-x:auto;scrollbar-width:none;
+      -webkit-overflow-scrolling:touch;
+    }
+    .feat-scroll::-webkit-scrollbar{display:none;}
+
+    .feat-card{
+      flex-shrink:0;width:160px;
+      background:#F7F2EC;
+      border-radius:14px;
+      padding:0 14px 16px;
+      position:relative;
+      margin-top:38px;
+      box-shadow:
+        0 6px 20px rgba(0,0,0,0.22),
+        0 1px 4px rgba(0,0,0,0.10);
+    }
+    /* photo circle — top-left, hanging above */
+    .feat-avatar{
+      width:74px;height:74px;border-radius:50%;
+      background:#D6CEC6;
+      border:3px solid #F7F2EC;
+      box-shadow:0 3px 10px rgba(0,0,0,0.18);
+      position:absolute;top:-38px;left:14px;
+      overflow:hidden;flex-shrink:0;
+    }
+    .feat-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+
+    .feat-space{height:44px;}
+    .feat-name{
+      font-size:12px;font-weight:700;
+      letter-spacing:0.08em;text-transform:uppercase;
+      color:#1C0A08;margin-bottom:6px;
+    }
+    .feat-bio{
+      font-size:11px;font-weight:300;
+      color:#7A6A60;line-height:1.55;
+    }
+
+    .feat-footer{
+      text-align:center;
+      padding:18px 0 16px;
+      font-size:13px;font-weight:400;
+      color:rgba(255,255,255,0.55);
+      cursor:pointer;letter-spacing:0.02em;
+    }
+
+    /* ────────────────────────────
+       CATEGORIES
+    ──────────────────────────── */
+    .cat{
+      background:#EEA0BC;
+      padding:24px 16px 36px;
+    }
+    .cat-title{
+      font-family:'Charm',cursive;
+      font-size:32px;font-weight:700;
+      color:#3A0E20;
+      text-align:center;
+      margin-bottom:18px;
+      letter-spacing:0.01em;
+      text-shadow:0 1px 0 rgba(255,255,255,0.25);
+    }
+    .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+    .cat-pill{
+      background:#FDFAF8;
+      border:none;border-radius:14px;
+      padding:10px 14px 10px 10px;
+      display:flex;align-items:center;gap:10px;
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;
+      color:#2A0F18;cursor:pointer;text-align:left;
+      box-shadow:
+        0 3px 10px rgba(180,60,100,0.14),
+        0 1px 3px rgba(0,0,0,0.06);
+      transition:transform 0.15s,box-shadow 0.15s;
+    }
+    .cat-pill:active{
+      transform:scale(0.96);
+      box-shadow:0 1px 4px rgba(180,60,100,0.10);
+    }
+    /* icon circle matches the pink bg */
+    .cat-icon{
+      width:42px;height:42px;border-radius:50%;
+      background:#EEA0BC;
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;flex-shrink:0;
+      box-shadow:inset 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .cat-label{flex:1;line-height:1.2;}
+
+    /* last pill (หนังสือ) has no icon */
+    .cat-pill-text-only{
+      justify-content:center;
+      font-weight:500;font-size:14px;color:#3A0E20;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-toprow">
+    <button class="back-btn" onclick="history.back()">← กลับ</button>
+    <div class="yt-icon"></div>
+  </div>
+
+  <div class="hero-body">
+    <div class="hero-title">ยินดีต้อนรับ สู่พื้นที่ที่ทุกคนมีเรื่องราว</div>
+    <div class="hero-quote">"ทุกการพบกัน เริ่มต้นบางสิ่งเสมอ"</div>
+    <div class="hero-tags">
+      <span class="hero-tag">ครู เตรียมอุดมฯ</span>
+      <span class="hero-tag">ชาวโกลบ้าน</span>
+      <span class="hero-tag">ประวัติศาสตร์</span>
+      <span class="hero-tag">เรื่องราว</span>
+      <span class="hero-tag">วีดิโอ</span>
+    </div>
+  </div>
+
+  <img class="hero-mascot" src="https://res.cloudinary.com/dlixucdqx/image/upload/v1779898166/Screenshot_2026-05-27_204430-removebg-preview_alzdfk.png" alt="" onerror="this.style.display='none'"/>
+</div>
+
+<!-- ══ FEATURED CARDS ══ -->
+<div class="feat">
+  <div class="feat-scroll">
+
+    <div class="feat-card">
+      <div class="feat-avatar"><img src="" alt=""/></div>
+      <div class="feat-space"></div>
+      <div class="feat-name">NAME 1</div>
+      <div class="feat-bio">the aspiring quote<br/>they had</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-avatar"><img src="" alt=""/></div>
+      <div class="feat-space"></div>
+      <div class="feat-name">NAME 2</div>
+      <div class="feat-bio">the aspiring quote<br/>they had</div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-avatar"><img src="" alt=""/></div>
+      <div class="feat-space"></div>
+      <div class="feat-name">NAME 3</div>
+      <div class="feat-bio">the aspiring quote<br/>they had</div>
+    </div>
+
+  </div>
+  <div class="feat-footer">ดูทั้งหมด ∨</div>
+</div>
+
+<!-- ══ CATEGORIES ══ -->
+<div class="cat">
+  <div class="cat-title">หมวดหมู่</div>
+  <div class="cat-grid">
+
+    <button class="cat-pill">
+      <div class="cat-icon">🧑</div>
+      <span class="cat-label">ครูเตรียมฯ ม.4</span>
+    </button>
+
+    <button class="cat-pill">
+      <div class="cat-icon">👧</div>
+      <span class="cat-label">ห่างบ้าน</span>
+    </button>
+
+    <button class="cat-pill">
+      <div class="cat-icon">🧒</div>
+      <span class="cat-label">ครูเตรียมฯ ม.5</span>
+    </button>
+
+    <button class="cat-pill">
+      <div class="cat-icon">👦</div>
+      <span class="cat-label">ประวัติศาสตร์</span>
+    </button>
+
+    <button class="cat-pill">
+      <div class="cat-icon">👩</div>
+      <span class="cat-label">ครูเตรียมฯ ม.5</span>
+    </button>
+
+    <button class="cat-pill cat-pill-text-only">
+      <span class="cat-label" style="text-align:center;">หนังสือ &gt;</span>
+    </button>
+
+  </div>
+</div>
+
+</body>
+</html>
