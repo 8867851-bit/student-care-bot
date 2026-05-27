@@ -220,16 +220,142 @@
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
     .layer-divider{height:1px;background:var(--cream-border);margin:4px 20px 32px;}
+
+    /* ═══════════════════════════════════════════
+       NEW HERO CARD — 6-layer landing
+       ═══════════════════════════════════════════ */
+    .hero-card{
+      position:relative;
+      background:#8FCC4A;
+      background-image:radial-gradient(ellipse at top right, #A2D45A 0%, #8FCC4A 55%, #7EBE3C 100%);
+      padding:14px 20px 28px;
+      overflow:hidden;
+      min-height:380px;
+    }
+    .hero-card .back-btn{
+      color:rgba(255,255,255,0.95);
+      padding:6px 0 4px;
+      font-weight:400;
+      text-shadow:0 1px 2px rgba(0,0,0,0.12);
+    }
+    .hero-card-title{
+      font-family:'Mitr','Noto Serif Thai',sans-serif;
+      font-size:38px;
+      font-weight:600;
+      color:#ffffff;
+      text-align:center;
+      line-height:1.1;
+      margin:14px 0 6px;
+      letter-spacing:0.5px;
+      text-shadow:0 2px 3px rgba(0,0,0,0.14);
+      position:relative;
+      z-index:2;
+    }
+    .hero-card-sub{
+      font-family:'Mitr',sans-serif;
+      font-size:12px;
+      font-weight:300;
+      color:rgba(255,255,255,0.92);
+      text-align:center;
+      margin-bottom:26px;
+      letter-spacing:0.3px;
+      position:relative;
+      z-index:2;
+    }
+    .hero-circles{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      max-width:360px;
+      margin:0 auto;
+      position:relative;
+      z-index:2;
+    }
+    .hero-circle{
+      position:relative;
+      aspect-ratio:1/1;
+      border-radius:50%;
+      border:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:4px;
+      font-family:'Mitr',sans-serif;
+      font-size:13px;
+      font-weight:500;
+      color:#ffffff;
+      line-height:1.15;
+      text-align:center;
+      background-size:cover;
+      background-position:center;
+      box-shadow:0 3px 10px rgba(0,0,0,0.14), inset 0 -3px 0 rgba(0,0,0,0.08);
+      transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .hero-circle:active{transform:scale(0.92);box-shadow:0 2px 5px rgba(0,0,0,0.14), inset 0 -2px 0 rgba(0,0,0,0.08);}
+    .hero-circle:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(0,0,0,0.18), inset 0 -3px 0 rgba(0,0,0,0.08);}
+
+    /* Colors — matched from screenshot */
+    .circle-body         { background-color:#4DB8C0; }
+    .circle-connection   { background-color:#ED7B3D; }
+    .circle-expression   { background-color:#7595C5; }
+    .circle-environment  { background-color:#ED7B3D; }
+    .circle-belief       { background-color:#2C7B3C; }
+    .circle-professional { background-color:#4FC3D2; }
+
+    /* Mascot — drop a transparent PNG at this src */
+    .hero-mascot{
+      position:absolute;
+      right:-8px;
+      bottom:0;
+      width:140px;
+      height:auto;
+      pointer-events:none;
+      z-index:1;
+      filter:drop-shadow(0 4px 8px rgba(0,0,0,0.10));
+    }
+
+    /* Wider screens: title left, mascot right, like the screenshot */
+    @media (min-width:640px){
+      .hero-card{padding:20px 32px 28px;min-height:460px;}
+      .hero-card-title{font-size:54px;text-align:left;padding-left:4px;}
+      .hero-card-sub{text-align:left;padding-left:6px;font-size:13px;}
+      .hero-circles{max-width:440px;margin:0;gap:18px;}
+      .hero-mascot{width:260px;right:24px;}
+    }
+
+    /* Very narrow phones */
+    @media (max-width:360px){
+      .hero-card-title{font-size:30px;}
+      .hero-circle{font-size:12px;}
+      .hero-mascot{width:110px;opacity:0.9;}
+    }
   </style>
 </head>
 <body>
 
-<button class="back-btn" onclick="history.back()">← กลับ</button>
+<!-- ═══════════════════════════════════════════
+     HERO CARD — 6-layer landing
+═══════════════════════════════════════════ -->
+<div class="hero-card">
+  <button class="back-btn" onclick="history.back()">← กลับ</button>
 
-<div class="hero">
-  <div class="hero-eyebrow">พื้นที่ใจ</div>
-  <div class="hero-title">ไม่ต้องแบกคนเดียว</div>
-  <div class="hero-sub">วิธีดูแลตัวเองใน 6 ชั้น<br/>วิทยาศาสตร์ที่อยู่เบื้องหลัง</div>
+  <h1 class="hero-card-title">ระบบจิตใจ 6 ชั้น</h1>
+  <div class="hero-card-sub">เรียบเรียงโดย ชมรมจิตวิทยา</div>
+
+  <div class="hero-circles">
+    <button class="hero-circle circle-body"         onclick="selectLayer('body')">ร่างกาย</button>
+    <button class="hero-circle circle-connection"   onclick="selectLayer('connection')">ความสัมพันธ์</button>
+    <button class="hero-circle circle-expression"   onclick="selectLayer('expression')">การแสดงออก</button>
+    <button class="hero-circle circle-environment"  onclick="selectLayer('environment')">สิ่งแวดล้อม</button>
+    <button class="hero-circle circle-belief"       onclick="selectLayer('belief')">ความเชื่อ</button>
+    <button class="hero-circle circle-professional" onclick="selectLayer('professional')">ผู้เชี่ยวชาญ</button>
+  </div>
+
+  <!-- 👇 MASCOT: replace src with your transparent-PNG character.
+       If the file is missing the image hides itself automatically. -->
+  <img class="hero-mascot" src="mascot.png" alt="" onerror="this.style.display='none'"/>
 </div>
 
 <!-- TAB BAR -->
@@ -1030,6 +1156,18 @@ function switchTab(tab) {
     panel.classList.add("active");
     window.scrollTo({top: 0, behavior: "smooth"});
   }
+}
+
+// Called by the 6 hero circles — switch tab + scroll to content
+function selectLayer(tab) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  const panel = document.getElementById("tab-" + tab);
+  if (panel) panel.classList.add("active");
+  setTimeout(() => {
+    const target = document.getElementById("tab-bar");
+    if (target) target.scrollIntoView({behavior:"smooth", block:"start"});
+  }, 60);
 }
 
 // ─────────────────────────────────────────────
