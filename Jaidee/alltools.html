@@ -71,6 +71,8 @@
       border:none;width:100%;text-align:left;display:block;
       text-decoration:none;
     }
+    /* wide no longer stretches full width — same size as all other cards */
+    .tool-img-card.wide{aspect-ratio:3/2;grid-column:auto;}
     .bg-green-move{background:linear-gradient(135deg,#1a5c2a 0%,#2d8a45 50%,#3aaa58 100%);}
     .card-btn.green{background:var(--green);color:#fff;}
     .tool-img-card:active{transform:scale(0.97);}
@@ -108,7 +110,6 @@
       font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:700;
       color:#FFFFFF;line-height:1.25;margin-bottom:3px;
     }
-    .tool-img-card.wide .card-title{font-size:18px;}
     .card-sub{
       font-size:12px;font-weight:300;color:rgba(255,255,255,0.65);
       line-height:1.45;
@@ -145,7 +146,6 @@
       position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
       font-size:44px;opacity:0.25;
     }
-    .tool-img-card.wide .card-placeholder{font-size:56px;}
 
     /* ── ENTRIES (journal/worry history) ── */
     .entries-wrap{padding:0 16px;margin-bottom:24px;}
@@ -369,7 +369,7 @@
     </button>
 
     <!-- นอนหลับ — wide -->
-    <button class="tool-img-card wide" style="grid-column:1/-1;" onclick="markToolTapped();window.location.href='sleep.html'">
+    <button class="tool-img-card wide" onclick="markToolTapped();window.location.href='sleep.html'">
       <div class="card-bg bg-dark"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🌙</div>
@@ -382,7 +382,7 @@
     </button>
 
     <!-- เคลื่อนไหว — wide -->
-    <button class="tool-img-card wide" style="grid-column:1/-1;" onclick="markToolTapped();openMove()" id="card-move">
+    <button class="tool-img-card wide" onclick="markToolTapped();openMove()" id="card-move">
       <div class="card-bg bg-green-move"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🏃</div>
@@ -470,7 +470,7 @@
     </button>
 
     <!-- หาความชัด — wide -->
-    <button class="tool-img-card wide" style="grid-column:1/-1;" onclick="markToolTapped();openClarity()">
+    <button class="tool-img-card wide" onclick="markToolTapped();openClarity()">
       <div class="card-bg bg-gold"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🧭</div>
@@ -543,7 +543,7 @@
       </div>
     </button>
 
-    <button class="tool-img-card wide" style="grid-column:1/-1;" onclick="markToolTapped();openGrounding()">
+    <button class="tool-img-card wide" onclick="markToolTapped();openGrounding()">
       <div class="card-bg bg-indigo"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🎯</div>
