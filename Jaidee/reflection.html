@@ -1064,7 +1064,7 @@ function buildNaming() {
   });
   const container = document.getElementById('name-cards');
   container.innerHTML = '';
-  data.opts.forEach(opt => {
+  raw.opts.forEach(opt => {
     const d = document.createElement('div');
     d.className = 'n-card';
     d.innerHTML = `<div class="n-word">${opt.w}</div><div class="n-desc">${opt.d}</div>`;
