@@ -161,7 +161,7 @@
 <!-- SHARED AUDIO ELEMENT — one instance, controlled globally -->
 <!-- 🎵 Replace src with your chosen track — royalty-free, no Thai lyrics -->
 <!-- Recommended: drop file at audio/peer-ambient.mp3 -->
-<audio id="peer-audio" src="https://res.cloudinary.com/dlixucdqx/video/upload/v1779331068/Lotus_Flower_wtyhmo.mp3" loop preload="auto"></audio>
+<audio id="peer-audio" src="https://res.cloudinary.com/dlixucdqx/video/upload/v1779331068/Lotus_Flower_wtyhmo.mp3" loop preload="none"></audio>
 
 <!-- PR INFO OVERLAY -->
 <div class="overlay" id="overlay-pr" onclick="closePRInfo(event)">
@@ -309,6 +309,18 @@
 </div>
 
 <!-- BRANCH B/C: NO SLOTS -->
+<!-- NO SLOTS YET — honest: peers haven't posted schedules -->
+<div class="screen branch-screen" id="screen-truly-empty">
+  <div class="branch-icon">💛</div>
+  <div class="branch-title">ยังไม่มีตาราง<br>ในตอนนี้นะ</div>
+  <div class="branch-body">PR ยังไม่ได้ลงเวลาสำหรับสัปดาห์นี้<br><br>โดยปกติ PR จะลงตารางก่อนวันอาทิตย์ 20:00 น.<br>กด "แจ้งเตือน" แล้วเราจะ LINE หาคุณทันทีที่มีเวลาเปิด</div>
+  <div class="branch-actions">
+    <button class="btn-primary" onclick="saveAndNotify()">แจ้งเตือนฉันเมื่อ PR ลงตาราง 💛</button>
+    <button class="btn-ghost" onclick="show('screen-external')">ดูตัวเลือกอื่น ๆ</button>
+  </div>
+</div>
+
+<!-- NO MATCHING SLOT — user's schedule doesn't fit -->
 <div class="screen branch-screen" id="screen-no-slots">
   <div class="branch-icon">🌙</div>
   <div class="branch-title">ไม่มีเวลาที่<br>สะดวกใช่ไหม?</div>
@@ -640,12 +652,15 @@ async function submitAndRoute(){
 async function loadSlots(){
   document.getElementById("booking-week-badge").innerHTML=`<span class="week-badge">📅 ${getWeekRange()}</span>`;
   let slots;
-  try{const res=await fetch(API_URL+"?action=getSlots");const j=await res.json();if(j.status==="OK"&&j.slots?.length)slots=j.slots;else throw new Error("empty");}
+  try{const res=await fetch(API_URL+"?action=getSlots");const j=await res.json();if(j.status==="OK"&&j.slots?.length)slots=j.slots;else slots=[];}
   catch{slots=[];}
+  // No slots at all — peers haven't filled in yet, say so honestly
+  if(!slots.length){show("screen-truly-empty");return;}
   const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
   const todayIdx=dayOrder.indexOf(getTodayDayName());
   const todayTime=getCurrentTime();
   const active=slots.filter(s=>{const slotDay=s.slot.split(" ")[0];const idx=dayOrder.indexOf(slotDay);if(idx<todayIdx)return false;if(idx===todayIdx){const slotStart=s.slot.split(" ")[1].split("–")[0];const[h,m]=slotStart.split(":").map(Number);return h*60+m>todayTime;}return true;});
+  // Slots exist but all have passed this week — schedule mismatch
   if(!active.length){show("screen-no-slots");buildSpecialSlots();return;}
   renderSlots(active); buildSpecialSlots();
 }
