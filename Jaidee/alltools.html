@@ -71,7 +71,8 @@
       border:none;width:100%;text-align:left;display:block;
       text-decoration:none;
     }
-    .tool-img-card.wide{aspect-ratio:16/5;}
+    .bg-green-move{background:linear-gradient(135deg,#1a5c2a 0%,#2d8a45 50%,#3aaa58 100%);}
+    .card-btn.green{background:var(--green);color:#fff;}
     .tool-img-card:active{transform:scale(0.97);}
     .tool-img-card.coming{opacity:0.55;cursor:default;pointer-events:none;}
 
@@ -370,19 +371,33 @@
       </div>
     </button>
 
-    <!-- เล่น — coming soon -->
-    <div class="tool-img-card coming">
+    <!-- เคลื่อนไหว — wide -->
+    <button class="tool-img-card wide" style="grid-column:1/-1;" onclick="markToolTapped();openMove()" id="card-move">
+      <div class="card-bg bg-green-move"></div>
+      <div class="card-overlay"></div>
+      <div class="card-placeholder">🏃</div>
+      <div class="card-content">
+        <div class="card-badge">เพิ่มพลังงาน</div>
+        <div class="card-title">เคลื่อนไหว</div>
+        <div class="card-sub">เมื่อรู้สึกชา เฉื่อย หรืออยากเปลี่ยนอารมณ์</div>
+        <div class="card-btn green">เริ่ม →</div>
+      </div>
+    </button>
+
+    <!-- เล่น -->
+    <button class="tool-img-card" onclick="markToolTapped();openPlay()" id="card-play">
       <div class="card-bg bg-blue"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🎮</div>
       <div class="card-content">
-        <div class="card-badge soon">เร็วๆ นี้</div>
+        <div class="card-badge">ใช้ได้เลย</div>
         <div class="card-title">เล่น</div>
         <div class="card-sub">เกมเบาๆ ช่วย ground ความคิด</div>
+        <div class="card-btn" style="background:var(--blue);color:#fff;">เริ่ม →</div>
       </div>
-    </div>
+    </button>
 
-    <!-- ฟัง — coming soon -->
+    <!-- ฟัง — ยังรอ audio asset -->
     <div class="tool-img-card coming">
       <div class="card-bg bg-slate"></div>
       <div class="card-overlay"></div>
@@ -466,64 +481,69 @@
   <div class="panel-header">
     <div class="ph-zone green">เสริมความแข็งแกร่ง</div>
     <div class="ph-title">ฝึกทักษะระยะยาว</div>
-    <div class="ph-sub">กำลังพัฒนา — จะพร้อมเร็วๆ นี้</div>
+    <div class="ph-sub">ใช้ได้เลย — เลือกตามสิ่งที่ต้องการ</div>
   </div>
 
   <div class="cards-grid">
-    <div class="tool-img-card coming">
+    <button class="tool-img-card" onclick="markToolTapped();openRest()">
       <div class="card-bg bg-teal"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🤍</div>
       <div class="card-content">
-        <div class="card-badge soon">เร็วๆ นี้</div>
+        <div class="card-badge">ใช้ได้เลย</div>
         <div class="card-title">พักใจ</div>
-        <div class="card-sub">Self-compassion เมื่อกดดันตัวเองมากเกิน</div>
+        <div class="card-sub">เมื่อกดดันตัวเองมากเกิน</div>
+        <div class="card-btn teal">เริ่ม →</div>
       </div>
-    </div>
+    </button>
 
-    <div class="tool-img-card coming">
+    <button class="tool-img-card" onclick="markToolTapped();openAct()">
       <div class="card-bg bg-green"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🌱</div>
       <div class="card-content">
-        <div class="card-badge soon">เร็วๆ นี้</div>
+        <div class="card-badge">ใช้ได้เลย</div>
         <div class="card-title">ลงมือทำ</div>
-        <div class="card-sub">Behavioral activation ทำลายวงจรเฉื่อย</div>
+        <div class="card-sub">ทำลายวงจรเฉื่อยทีละก้าว</div>
+        <div class="card-btn" style="background:var(--green);color:#fff;">เริ่ม →</div>
       </div>
-    </div>
+    </button>
 
-    <div class="tool-img-card coming">
+    <button class="tool-img-card" onclick="markToolTapped();openSavor()">
       <div class="card-bg bg-gold"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">✨</div>
       <div class="card-content">
-        <div class="card-badge soon">เร็วๆ นี้</div>
+        <div class="card-badge">ใช้ได้เลย</div>
         <div class="card-title">อยู่กับสิ่งดี</div>
-        <div class="card-sub">Savoring ช้าลงกับช่วงเวลาดีๆ</div>
+        <div class="card-sub">ช้าลงกับช่วงเวลาดีๆ</div>
+        <div class="card-btn gold">เริ่ม →</div>
       </div>
-    </div>
+    </button>
 
-    <div class="tool-img-card coming">
+    <button class="tool-img-card" onclick="markToolTapped();openRain()">
       <div class="card-bg bg-blue"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🌊</div>
       <div class="card-content">
-        <div class="card-badge soon">เร็วๆ นี้</div>
+        <div class="card-badge">ใช้ได้เลย</div>
         <div class="card-title">อยู่กับมัน</div>
-        <div class="card-sub">RAIN อยู่กับความรู้สึกโดยไม่จมกับมัน</div>
+        <div class="card-sub">RAIN อยู่กับความรู้สึกโดยไม่จม</div>
+        <div class="card-btn dark">เริ่ม →</div>
       </div>
-    </div>
+    </button>
 
-    <div class="tool-img-card wide coming" style="grid-column:1/-1;">
+    <button class="tool-img-card wide" style="grid-column:1/-1;" onclick="markToolTapped();openGrounding()">
       <div class="card-bg bg-indigo"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🎯</div>
       <div class="card-content">
-        <div class="card-badge soon">เร็วๆ นี้</div>
+        <div class="card-badge">ใช้ได้เลย</div>
         <div class="card-title">เตรียมตัว</div>
         <div class="card-sub">Pre-performance grounding ก่อนสอบ ก่อนพูด ก่อนเรื่องสำคัญ</div>
+        <div class="card-btn" style="background:var(--indigo);color:#fff;">เริ่ม →</div>
       </div>
-    </div>
+    </button>
   </div>
 </div>
 
@@ -869,6 +889,270 @@ else if(_h==='#journal'){switchToolsTab(1);openJournal();}
 else if(_h==='#reframe'){switchToolsTab(2);openReframe();}
 else if(_h==='#worry'){switchToolsTab(2);openWorry();}
 else if(_h==='#clarity'){switchToolsTab(2);openClarity();}
+else if(_h==='#move'){switchToolsTab(1);openMove();}
+
+// ══ MOVE ══════════════════════════════════════════════════
+let _moveTimer=null, _lastLevel='mid';
+const MOVE_DATA={
+  low:{
+    emoji:'🌿', title:'ลุกแล้วเดิน',
+    sub:'ออกจากห้องสักครู่ หรือแค่เดินวนในที่ก็ได้\nไม่ต้องเป็นอะไรมาก แค่ขยับ',
+    secs:180, music:'เพลงเบาๆ เพื่อเป็นเพื่อนระหว่างเดิน',
+    color:'var(--green)'
+  },
+  mid:{
+    emoji:'⚡', title:'เดินเร็ว 5 นาที',
+    sub:'เดินเร็วจนรู้สึกหัวใจเต้นขึ้นนิดหน่อย\nออกไปข้างนอกได้ยิ่งดี',
+    secs:300, music:'เปิดเพลง upbeat แล้วเดินตามจังหวะ',
+    color:'var(--gold)'
+  },
+  high:{
+    emoji:'🔥', title:'ระบายออกทางร่างกาย',
+    sub:'กระโดด วิ่งอยู่กับที่ หรือยกของหนักๆ\nร่างกายต้องการ discharge ตอนนี้',
+    secs:240, music:'เปิดเพลงดัง — ปล่อยออกมาเลย',
+    color:'var(--rose)'
+  }
+};
+
+function openMove(){
+  document.getElementById('move-pick').style.display='block';
+  document.getElementById('move-active').style.display='none';
+  document.getElementById('move-done').style.display='none';
+  const ov=document.getElementById('move-overlay');
+  const sh=document.getElementById('move-sheet');
+  ov.style.display='block';
+  requestAnimationFrame(()=>{
+    ov.style.background='rgba(0,0,0,0.45)';
+    sh.style.transform='translateY(0)';
+  });
+}
+function closeMove(){
+  clearInterval(_moveTimer);
+  const ov=document.getElementById('move-overlay');
+  const sh=document.getElementById('move-sheet');
+  ov.style.background='rgba(0,0,0,0)';
+  sh.style.transform='translateY(100%)';
+  setTimeout(()=>{ ov.style.display='none'; },360);
+}
+function startMove(level){
+  _lastLevel=level;
+  const d=MOVE_DATA[level];
+  document.getElementById('move-pick').style.display='none';
+  document.getElementById('move-done').style.display='none';
+  const act=document.getElementById('move-active');
+  act.style.display='block';
+  document.getElementById('move-emoji').textContent=d.emoji;
+  document.getElementById('move-action-title').textContent=d.title;
+  document.getElementById('move-action-sub').textContent=d.sub;
+  document.getElementById('move-music-note').textContent='🎵 '+d.music;
+  document.getElementById('move-ring').style.stroke=d.color;
+  document.getElementById('move-done-btn').style.display='none';
+  clearInterval(_moveTimer);
+  let remaining=d.secs;
+  const total=d.secs;
+  const circ=377;
+  const updateDisplay=()=>{
+    const m=Math.floor(remaining/60);
+    const s=remaining%60;
+    document.getElementById('move-timer-display').textContent=m+':'+(s<10?'0':'')+s;
+    const offset=circ*(1-(remaining/total));
+    document.getElementById('move-ring').style.strokeDashoffset=offset;
+  };
+  updateDisplay();
+  _moveTimer=setInterval(()=>{
+    remaining--;
+    updateDisplay();
+    if(remaining<=0){
+      clearInterval(_moveTimer);
+      document.getElementById('move-done-btn').style.display='block';
+    }
+  },1000);
+}
+function moveDone(){
+  clearInterval(_moveTimer);
+  document.getElementById('move-active').style.display='none';
+  document.getElementById('move-done').style.display='block';
+}
+
+// ── hash routing for new tools ──
+if(window.location.hash==='#play'){switchToolsTab(1);openPlay();}
+else if(window.location.hash==='#rest'){switchToolsTab(3);openRest();}
+else if(window.location.hash==='#act'){switchToolsTab(3);openAct();}
+else if(window.location.hash==='#savor'){switchToolsTab(3);openSavor();}
+else if(window.location.hash==='#rain'){switchToolsTab(3);openRain();}
+else if(window.location.hash==='#grounding'){switchToolsTab(3);openGrounding();}
+
+// ══ PLAY ══════════════════════════════════════════
+let _playInterval=null,_playScore=0,_playStreak=0,_playTarget=null,_playActive=false;
+const PLAY_COLORS=['#0D9488','#7C3AED','#E8960C','#E11D48'];
+const PLAY_EMOJIS=['🌿','⭐','🌊','🔥'];
+function openPlay(){_playScore=0;_playStreak=0;_playActive=false;clearInterval(_playInterval);document.getElementById('play-score-row').style.display='none';document.getElementById('play-start-btn').style.display='block';document.getElementById('play-grid').innerHTML='';openModal('play-modal');}
+function closePlay(){clearInterval(_playInterval);closeModal('play-modal');}
+function startPlay(){document.getElementById('play-start-btn').style.display='none';document.getElementById('play-score-row').style.display='block';_playScore=0;_playStreak=0;_playActive=true;renderPlayGrid();scheduleNext();}
+function renderPlayGrid(){const g=document.getElementById('play-grid');g.innerHTML='';for(let i=0;i<4;i++){const btn=document.createElement('button');btn.id='play-btn-'+i;btn.style.cssText=`aspect-ratio:1;border-radius:20px;border:none;background:${PLAY_COLORS[i]}22;font-size:32px;cursor:pointer;transition:transform 0.1s,background 0.15s;`;btn.textContent=PLAY_EMOJIS[i];btn.onclick=()=>handleTap(i);g.appendChild(btn);}}
+function scheduleNext(){if(!_playActive)return;const delay=600+Math.random()*900;_playInterval=setTimeout(()=>{const idx=Math.floor(Math.random()*4);_playTarget=idx;const btn=document.getElementById('play-btn-'+idx);if(btn){btn.style.background=PLAY_COLORS[idx];btn.style.transform='scale(1.1)';}setTimeout(()=>{if(_playTarget===idx){if(btn){btn.style.background=PLAY_COLORS[idx]+'22';btn.style.transform='';}  _playStreak=0;_playTarget=null;scheduleNext();}},900);},delay);}
+function handleTap(idx){if(!_playActive)return;const btn=document.getElementById('play-btn-'+idx);if(_playTarget===idx){_playScore++;_playStreak++;clearTimeout(_playInterval);if(btn){btn.style.background='#22c55e';btn.style.transform='scale(0.95)';}setTimeout(()=>{if(btn){btn.style.background=PLAY_COLORS[idx]+'22';btn.style.transform='';}},200);_playTarget=null;document.getElementById('play-score').textContent=_playScore;document.getElementById('play-streak').textContent=_playStreak>2?'🔥 Streak '+_playStreak:'';if(_playScore>=15){_playActive=false;document.getElementById('play-score').textContent='🎉';document.getElementById('play-streak').textContent='ทำได้ '+_playScore+' คะแนน เยี่ยม!';return;}scheduleNext();}else{if(btn){btn.style.background='#ef444422';}setTimeout(()=>{if(btn)btn.style.background=PLAY_COLORS[idx]+'22';},200);_playStreak=0;}}
+
+// ══ REST (พักใจ / Self-compassion) ════════════════
+const REST_STEPS=[{icon:'🤍',title:'สิ่งที่คุณรู้สึกอยู่ตอนนี้...',body:'ไม่ว่ามันจะเป็นอะไร — เจ็บ กลัว ล้า หรือแค่ไม่โอเค\nทั้งหมดนั้นล้วนเป็นส่วนหนึ่งของการเป็นมนุษย์'},{icon:'🌍',title:'คุณไม่ได้เผชิญมันคนเดียว',body:'มีคนนับล้านในโลกตอนนี้\nที่กำลังรู้สึกบางอย่างที่คล้ายกับที่คุณรู้สึกอยู่'},{icon:'🫶',title:'พูดกับตัวเองเหมือนพูดกับเพื่อน',body:'ถ้าเพื่อนคนสนิทมาบอกคุณว่ารู้สึกแบบนี้\nคุณจะพูดกับเขายังไง?\n\nพูดกับตัวเองแบบนั้นบ้าง'},{icon:'🌿',title:'วางมือบนหน้าอก',body:'รู้สึกถึงความอบอุ่นของมือ\nและบอกตัวเองเบาๆ ว่า\n\n"ตอนนี้ฉันกำลังทุกข์ใจอยู่\nและนั่นก็โอเค"'}];
+let _restStep=0;
+function openRest(){_restStep=0;renderRest();openModal('rest-modal');}
+function closeRest(){closeModal('rest-modal');}
+function renderRest(){const s=REST_STEPS[_restStep];const isLast=_restStep===REST_STEPS.length-1;document.getElementById('rest-body').innerHTML=`<div style="text-align:center;padding:8px 0 20px;"><div style="font-size:52px;margin-bottom:16px;">${s.icon}</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:12px;">${s.title}</div><div style="font-size:14px;color:var(--mid);line-height:1.8;white-space:pre-line;margin-bottom:28px;">${s.body}</div><div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px;">${REST_STEPS.map((_,i)=>`<div style="width:${i===_restStep?16:6}px;height:6px;border-radius:3px;background:${i===_restStep?'var(--teal)':'var(--cream-border)'};transition:all 0.3s;"></div>`).join('')}</div></div><button onclick="${isLast?'closeRest()':'nextRest()'}" style="width:100%;background:var(--teal);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">${isLast?'เสร็จแล้ว 🤍':'ถัดไป →'}</button>`;}
+function nextRest(){if(_restStep<REST_STEPS.length-1){_restStep++;renderRest();}}
+
+// ══ ACT (ลงมือทำ) ══════════════════════════════
+const ACT_CHALLENGES=[{time:'2 นาที',icon:'💧',task:'ลุกไปเติมน้ำหนึ่งแก้ว'},{time:'3 นาที',icon:'🪟',task:'เปิดหน้าต่างหรือออกไปรับอากาศ'},{time:'2 นาที',icon:'🧹',task:'เก็บของชิ้นเดียวที่อยู่ไม่ถูกที่'},{time:'5 นาที',icon:'📱',task:'ส่งข้อความหาคนที่นึกถึง'},{time:'3 นาที',icon:'🎵',task:'เปิดเพลงที่ชอบหนึ่งเพลง'},{time:'2 นาที',icon:'🌿',task:'ยืดตัวเบาๆ ขยับไหล่ หมุนคอ'},{time:'5 นาที',icon:'📓',task:'เขียนสิ่งที่อยากทำวันนี้สักอย่าง'},{time:'2 นาที',icon:'😮‍💨',task:'หายใจเข้า 4 วินาที ออก 6 วินาที 3 รอบ'}];
+let _actPick=null,_actDone=false;
+function openAct(){_actPick=ACT_CHALLENGES[Math.floor(Math.random()*ACT_CHALLENGES.length)];_actDone=false;renderAct();openModal('act-modal');}
+function closeAct(){closeModal('act-modal');}
+function renderAct(){const c=_actPick;document.getElementById('act-body').innerHTML=`<div style="font-size:10px;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;font-weight:600;margin-bottom:12px;">ลงมือทำ</div><div style="background:var(--green-soft);border:1.5px solid var(--green-border);border-radius:20px;padding:24px;text-align:center;margin:8px 0 20px;"><div style="font-size:48px;margin-bottom:10px;">${c.icon}</div><div style="font-size:11px;color:var(--green);font-weight:600;letter-spacing:1px;margin-bottom:8px;">${c.time}</div><div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:700;color:var(--dark);line-height:1.35;">${c.task}</div></div>${_actDone?`<div style="text-align:center;padding:8px 0 16px;"><div style="font-size:32px;">🌱</div><div style="font-size:14px;font-weight:600;margin-top:8px;">ทำได้แล้ว — ขั้นแรกสำคัญที่สุด</div></div><button onclick="openAct()" style="width:100%;background:var(--green-soft);border:1.5px solid var(--green-border);color:var(--green);border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;">ทำอีกอันหนึ่ง</button>`:`<button onclick="_actDone=true;renderAct()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;">ทำเสร็จแล้ว ✓</button><button onclick="openAct()" style="width:100%;background:none;border:1.5px solid var(--cream-border);border-radius:28px;padding:12px;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;">เปลี่ยนเป็นอันอื่น</button>`}`;}
+
+// ══ SAVOR (อยู่กับสิ่งดี) ═══════════════════════
+const SAVOR_PROMPTS=['มีอะไรในวันนี้ที่ทำให้รู้สึกดีขึ้นแม้เพียงเล็กน้อย?','ตอนนี้มีอะไรที่รู้สึกขอบคุณได้บ้าง — ไม่ว่าจะเล็กแค่ไหน?','ช่วงสัปดาห์นี้มีช่วงไหนที่รู้สึกเบาหรือดีบ้างไหม?','ถ้าต้องเก็บความรู้สึกดีๆ จากวันนี้ไว้หนึ่งอย่าง มันจะเป็นอะไร?'];
+let _savorStep=0,_savorText='';
+function openSavor(){_savorStep=0;_savorText='';renderSavor();openModal('savor-modal');}
+function closeSavor(){closeModal('savor-modal');}
+function renderSavor(){const prompt=SAVOR_PROMPTS[Math.floor(Math.random()*SAVOR_PROMPTS.length)];if(_savorStep===0){document.getElementById('savor-body').innerHTML=`<div style="text-align:center;margin-bottom:20px;"><div style="font-size:48px;margin-bottom:12px;">✨</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:8px;">ช้าลงกับสิ่งดีๆ</div><div style="font-size:13px;color:var(--soft);line-height:1.7;">สมองเราจดจำสิ่งไม่ดีได้ดีกว่าสิ่งดี<br>การหยุดกับความรู้สึกดีนาน 20-30 วินาที<br>ช่วยให้มันฝังลึกกว่าแค่ผ่านไป</div></div><div style="background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:16px;padding:18px;margin-bottom:20px;"><div style="font-size:12px;color:var(--gold);font-weight:600;letter-spacing:0.5px;margin-bottom:8px;">คำถาม</div><div style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;line-height:1.5;">${prompt}</div></div><textarea id="savor-input" placeholder="เขียนอะไรก็ได้ — ยาวหรือสั้นก็โอเค" oninput="document.getElementById('savor-next').style.opacity=this.value.trim()?'1':'0.4'" style="width:100%;background:var(--cream);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-size:14px;font-family:'Sarabun',sans-serif;min-height:90px;resize:none;color:var(--dark);margin-bottom:14px;"></textarea><button id="savor-next" onclick="if(document.getElementById('savor-input').value.trim()){_savorText=document.getElementById('savor-input').value.trim();_savorStep=1;renderSavor();}" style="width:100%;background:var(--gold);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;opacity:0.4;transition:opacity 0.2s;">อยู่กับมันสักครู่ →</button>`;}else{document.getElementById('savor-body').innerHTML=`<div style="text-align:center;padding:16px 0 20px;"><div style="font-size:40px;margin-bottom:12px;">☀️</div><div style="font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;margin-bottom:16px;">ที่คุณเขียนไว้</div><div style="background:var(--gold-soft);border-radius:16px;padding:18px;font-size:15px;line-height:1.7;color:var(--dark);text-align:left;margin-bottom:16px;">${_savorText}</div><div style="font-size:13px;color:var(--soft);line-height:1.7;margin-bottom:24px;">ลองหลับตาและอยู่กับความรู้สึกนี้<br>สัก 20 วินาที ก่อนปิด</div><button onclick="closeSavor()" style="width:100%;background:var(--gold);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">เก็บไว้ในใจแล้ว ✨</button></div>`;}}
+
+// ══ RAIN (อยู่กับมัน) ════════════════════════════
+const RAIN_STEPS=[{letter:'R',word:'Recognize',icon:'👁',title:'สังเกต',body:'มีความรู้สึกอะไรกำลังเกิดขึ้นอยู่ตอนนี้?\nไม่ต้องตั้งชื่อให้ถูก แค่รับรู้ว่ามีอะไรบางอย่างอยู่'},{letter:'A',word:'Allow',icon:'🤲',title:'ปล่อยให้มันอยู่',body:'ไม่ต้องแก้ ไม่ต้องผลัก ไม่ต้องหนี\nแค่บอกตัวเองว่า "โอเค ความรู้สึกนี้อยู่ที่นี่ได้"'},{letter:'I',word:'Investigate',icon:'🔍',title:'สำรวจเบาๆ',body:'มันอยู่ที่ไหนในร่างกาย?\nหน้าอก ไหล่ กระเพาะ หรือที่อื่น?\nรู้สึกหนัก แน่น หรือตึงแบบไหน?'},{letter:'N',word:'Nurture',icon:'🌿',title:'ดูแลตัวเอง',body:'วางมือบนจุดที่รู้สึกนั้น\nและบอกตัวเองเบาๆ ว่า\n\n"ฉันเห็นเธอ และฉันอยู่กับเธอ"'}];
+let _rainStep=0;
+function openRain(){_rainStep=0;renderRain();openModal('rain-modal');}
+function closeRain(){closeModal('rain-modal');}
+function renderRain(){const s=RAIN_STEPS[_rainStep];const isLast=_rainStep===RAIN_STEPS.length-1;document.getElementById('rain-body').innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">${RAIN_STEPS.map((r,i)=>`<div style="flex:1;text-align:center;padding:10px 4px;border-radius:12px;background:${i===_rainStep?'var(--blue-soft)':'transparent'};border:${i===_rainStep?'1.5px solid var(--blue-border)':'1.5px solid transparent'};transition:all 0.3s;"><div style="font-size:16px;font-weight:700;color:${i===_rainStep?'var(--blue)':i<_rainStep?'var(--green)':'var(--soft)'};">${r.letter}</div><div style="font-size:9px;color:var(--soft);">${r.word}</div></div>`).join('')}</div><div style="text-align:center;margin-bottom:20px;"><div style="font-size:48px;margin-bottom:12px;">${s.icon}</div><div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;margin-bottom:10px;">${s.title}</div><div style="font-size:14px;color:var(--mid);line-height:1.8;white-space:pre-line;">${s.body}</div></div><button onclick="${isLast?'closeRain()':'nextRain()'}" style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">${isLast?'เสร็จแล้ว 🌊':'ถัดไป →'}</button>`;}
+function nextRain(){if(_rainStep<RAIN_STEPS.length-1){_rainStep++;renderRain();}}
+
+// ══ GROUNDING (เตรียมตัว) ═══════════════════════
+const GROUNDING_STEPS=[{icon:'🧭',title:'ก่อนอะไรสักอย่างสำคัญ...',body:'ระบบประสาทจะเตรียมตัวก่อนทุกครั้ง\nบางทีมันเตรียมแบบที่เราไม่ต้องการ\nเราช่วยนำมันได้'},{icon:'🦶',title:'5-4-3-2-1 Grounding',body:'มองรอบๆ แล้วนับ:\n\n5 สิ่งที่มองเห็น\n4 สิ่งที่สัมผัสได้\n3 เสียงที่ได้ยิน\n2 สิ่งที่ได้กลิ่น\n1 สิ่งที่ลิ้มรส'},{icon:'🌬️',title:'หายใจ Box Breathing',body:'หายใจเข้า 4 วินาที\nกลั้น 4 วินาที\nหายใจออก 4 วินาที\nกลั้น 4 วินาที\n\nทำ 3 รอบ'},{icon:'💪',title:'บอกตัวเองหนึ่งประโยค',body:'ไม่ต้องบอกว่า "ฉันทำได้แน่ๆ"\nแค่บอกว่า\n\n"ฉันพร้อมแล้วสำหรับตอนนี้"\n"ฉันได้เตรียมมาแล้วเท่าที่ทำได้"'}];
+let _groundStep=0;
+function openGrounding(){_groundStep=0;renderGrounding();openModal('grounding-modal');}
+function closeGrounding(){closeModal('grounding-modal');}
+function renderGrounding(){const s=GROUNDING_STEPS[_groundStep];const isLast=_groundStep===GROUNDING_STEPS.length-1;document.getElementById('grounding-body').innerHTML=`<div style="text-align:center;margin-bottom:20px;"><div style="font-size:52px;margin-bottom:14px;">${s.icon}</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:12px;">${s.title}</div><div style="font-size:14px;color:var(--mid);line-height:1.9;white-space:pre-line;margin-bottom:24px;">${s.body}</div><div style="display:flex;gap:6px;justify-content:center;margin-bottom:4px;">${GROUNDING_STEPS.map((_,i)=>`<div style="width:${i===_groundStep?16:6}px;height:6px;border-radius:3px;background:${i===_groundStep?'var(--indigo)':'var(--cream-border)'};transition:all 0.3s;"></div>`).join('')}</div></div><button onclick="${isLast?'closeGrounding()':'nextGrounding()'}" style="width:100%;background:var(--indigo);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">${isLast?'พร้อมแล้ว 🎯':'ถัดไป →'}</button>`;}
+function nextGrounding(){if(_groundStep<GROUNDING_STEPS.length-1){_groundStep++;renderGrounding();}}
 </script>
+<!-- ══ PLAY MODAL ══ -->
+<div class="modal-overlay" id="play-modal" onclick="handleOverlayClick(event,'play-modal',closePlay)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+  <div class="modal-handle"></div>
+  <div id="play-screen-pick">
+    <div class="modal-eyebrow blue">เล่น</div>
+    <div class="modal-title">แตะให้ตรงจังหวะ</div>
+    <div class="modal-sub">ไม่ต้องคิดอะไร แค่ฟังและแตะ<br>สมองจะ ground เองโดยอัตโนมัติ</div>
+    <div id="play-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0;"></div>
+    <div id="play-score-row" style="display:none;text-align:center;margin-bottom:20px;">
+      <div style="font-size:13px;color:var(--soft);margin-bottom:4px;">คะแนน</div>
+      <div id="play-score" style="font-family:'Noto Serif Thai',serif;font-size:36px;font-weight:700;color:var(--blue);">0</div>
+      <div id="play-streak" style="font-size:12px;color:var(--soft);margin-top:2px;"></div>
+    </div>
+    <button onclick="startPlay()" id="play-start-btn" style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">เริ่มเลย →</button>
+    <button onclick="closePlay()" style="width:100%;margin-top:10px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
+  </div>
+</div></div>
+
+<!-- ══ REST (พักใจ) MODAL ══ -->
+<div class="modal-overlay" id="rest-modal" onclick="handleOverlayClick(event,'rest-modal',closeRest)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+  <div class="modal-handle"></div>
+  <div id="rest-body"></div>
+  <button onclick="closeRest()" style="width:100%;margin-top:8px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
+</div></div>
+
+<!-- ══ ACT (ลงมือทำ) MODAL ══ -->
+<div class="modal-overlay" id="act-modal" onclick="handleOverlayClick(event,'act-modal',closeAct)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+  <div class="modal-handle"></div>
+  <div id="act-body"></div>
+  <button onclick="closeAct()" style="width:100%;margin-top:8px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
+</div></div>
+
+<!-- ══ SAVOR (อยู่กับสิ่งดี) MODAL ══ -->
+<div class="modal-overlay" id="savor-modal" onclick="handleOverlayClick(event,'savor-modal',closeSavor)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+  <div class="modal-handle"></div>
+  <div id="savor-body"></div>
+  <button onclick="closeSavor()" style="width:100%;margin-top:8px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
+</div></div>
+
+<!-- ══ RAIN (อยู่กับมัน) MODAL ══ -->
+<div class="modal-overlay" id="rain-modal" onclick="handleOverlayClick(event,'rain-modal',closeRain)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+  <div class="modal-handle"></div>
+  <div id="rain-body"></div>
+  <button onclick="closeRain()" style="width:100%;margin-top:8px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
+</div></div>
+
+<!-- ══ GROUNDING (เตรียมตัว) MODAL ══ -->
+<div class="modal-overlay" id="grounding-modal" onclick="handleOverlayClick(event,'grounding-modal',closeGrounding)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+  <div class="modal-handle"></div>
+  <div id="grounding-body"></div>
+  <button onclick="closeGrounding()" style="width:100%;margin-top:8px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
+</div></div>
+
+</body>
+<div id="move-overlay" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0);transition:background 0.3s;" onclick="closeMove()"></div>
+<div id="move-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:301;background:#FDFBF7;border-radius:28px 28px 0 0;padding:28px 24px 48px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.1,0.64,1);max-height:92vh;overflow-y:auto;">
+  <div style="width:36px;height:4px;background:#EDE9E0;border-radius:2px;margin:0 auto 24px;"></div>
+
+  <!-- PICK screen -->
+  <div id="move-pick">
+    <div style="font-size:10px;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;font-weight:600;margin-bottom:8px;">เคลื่อนไหว</div>
+    <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;line-height:1.3;margin-bottom:6px;">ตอนนี้พลังงาน<br>อยู่ระดับไหน?</div>
+    <div style="font-size:13px;color:var(--soft);margin-bottom:24px;line-height:1.6;">เลือกได้ตามใจ ไม่มีถูกผิด</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button class="move-opt" onclick="startMove('low')" style="background:var(--green-soft);border:1.5px solid var(--green-border);border-radius:16px;padding:16px 18px;text-align:left;cursor:pointer;font-family:'Sarabun',sans-serif;">
+        <div style="font-size:24px;margin-bottom:4px;">🌿</div>
+        <div style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:2px;">แทบไม่มีแรงเลย</div>
+        <div style="font-size:12px;color:var(--soft);">เดินเบาๆ · ยืดตัว · ลุกออกจากที่</div>
+      </button>
+      <button class="move-opt" onclick="startMove('mid')" style="background:#FFF8EE;border:1.5px solid var(--gold-border);border-radius:16px;padding:16px 18px;text-align:left;cursor:pointer;font-family:'Sarabun',sans-serif;">
+        <div style="font-size:24px;margin-bottom:4px;">⚡</div>
+        <div style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:2px;">พอมีบ้าง</div>
+        <div style="font-size:12px;color:var(--soft);">เดินเร็ว · เต้น · ขึ้นบันได</div>
+      </button>
+      <button class="move-opt" onclick="startMove('high')" style="background:var(--rose-soft);border:1.5px solid var(--rose-border);border-radius:16px;padding:16px 18px;text-align:left;cursor:pointer;font-family:'Sarabun',sans-serif;">
+        <div style="font-size:24px;margin-bottom:4px;">🔥</div>
+        <div style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:2px;">มีพลังอยู่แต่ตึงเครียด</div>
+        <div style="font-size:12px;color:var(--soft);">ยกน้ำหนัก · วิ่ง · ต่อยลม</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ACTIVE screen -->
+  <div id="move-active" style="display:none;text-align:center;">
+    <div id="move-emoji" style="font-size:64px;margin-bottom:16px;"></div>
+    <div id="move-action-title" style="font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:700;margin-bottom:6px;"></div>
+    <div id="move-action-sub" style="font-size:13px;color:var(--soft);margin-bottom:28px;line-height:1.6;"></div>
+
+    <!-- Timer ring -->
+    <div style="position:relative;width:140px;height:140px;margin:0 auto 28px;">
+      <svg width="140" height="140" style="transform:rotate(-90deg);">
+        <circle cx="70" cy="70" r="60" fill="none" stroke="#EDE9E0" stroke-width="8"/>
+        <circle id="move-ring" cx="70" cy="70" r="60" fill="none" stroke="var(--green)" stroke-width="8"
+          stroke-dasharray="377" stroke-dashoffset="0" style="transition:stroke-dashoffset 1s linear;"/>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+        <div id="move-timer-display" style="font-family:'Noto Serif Thai',serif;font-size:36px;font-weight:700;color:var(--dark);"></div>
+      </div>
+    </div>
+
+    <div id="move-music-note" style="font-size:12px;color:var(--soft);margin-bottom:20px;"></div>
+    <button id="move-done-btn" onclick="moveDone()" style="display:none;width:100%;background:var(--green);color:#fff;border:none;border-radius:28px;padding:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;cursor:pointer;">ทำเสร็จแล้ว ✓</button>
+    <button onclick="closeMove()" style="margin-top:10px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;width:100%;">ยังไม่พร้อม ← กลับ</button>
+  </div>
+
+  <!-- DONE screen -->
+  <div id="move-done" style="display:none;text-align:center;padding:12px 0;">
+    <div style="font-size:56px;margin-bottom:16px;">✨</div>
+    <div style="font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:700;margin-bottom:8px;">เยี่ยมมากเลย</div>
+    <div style="font-size:14px;color:var(--soft);line-height:1.7;margin-bottom:28px;">ร่างกายเพิ่งปล่อย endorphin ออกมา<br>รู้สึกต่างจากก่อนหน้านี้ไหม?</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button onclick="closeMove()" style="background:var(--green);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">เสร็จแล้ว 🌿</button>
+      <button onclick="startMove(_lastLevel)" style="background:none;border:1.5px solid var(--cream-border);border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;color:var(--mid);cursor:pointer;">ทำรอบอีกครั้ง</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
