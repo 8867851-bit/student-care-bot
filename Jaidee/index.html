@@ -43,13 +43,13 @@
     .m4-badge-dot{width:6px;height:6px;background:var(--m4);border-radius:50%;flex-shrink:0;}
     .m4-badge-text{font-size:11px;font-weight:500;color:var(--m4);letter-spacing:0.5px;white-space:nowrap;}
     .m4-header-line{flex:1;height:1px;background:var(--cream-border);}
-    .m4-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-
-    .m4-card{background:var(--card-bg);border-radius:var(--radius-card);padding:0;cursor:pointer;border:1px solid var(--m4-border);box-shadow:0 1px 8px rgba(46,95,163,0.06);position:relative;overflow:hidden;opacity:0;transform:translateY(10px);}
+    .m4-row{display:flex;gap:10px;}
+    .m4-card{background:var(--card-bg);border-radius:var(--radius-card);padding:0;cursor:pointer;border:1px solid var(--m4-border);box-shadow:0 1px 8px rgba(46,95,163,0.06);position:relative;overflow:hidden;opacity:0;transform:translateY(10px);width:140px;flex-shrink:0;}
     .m4-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s ease;}
     .m4-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(46,95,163,0.3),transparent);z-index:1;}
     .m4-card:active{transform:scale(0.97)!important;}
-    .m4-card-img{width:100%;height:110px;background:var(--m4-soft);overflow:hidden;display:block;border-radius:var(--radius-card);}
+    .m4-card-img{width:140px;height:110px;background:var(--m4-soft);overflow:hidden;display:block;border-radius:var(--radius-card);}
+    .m4-card-img img{width:100%;height:100%;object-fit:cover;display:block;}
 
     /* M5 section — same grid as M4, gold badge */
     .m5-section{margin:0 16px 8px;}
@@ -57,7 +57,7 @@
     .m5-badge{display:inline-flex;align-items:center;gap:6px;background:#FFF3DC;border:1px solid #FFE0A0;border-radius:20px;padding:5px 12px 5px 10px;}
     .m5-badge-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;flex-shrink:0;}
     .m5-badge-text{font-size:11px;font-weight:500;color:#8B6000;letter-spacing:0.5px;white-space:nowrap;}
-    .m5-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .m5-row{display:flex;gap:10px;}
 
     .worlds-wrap{display:flex;flex-direction:column;gap:10px;padding:0 16px;}
     .world-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -370,13 +370,13 @@ const WORLDS_TOP = [
 
 const M4_CARDS = [
   { name:"รู้จักเตรียมฯ",
-    icon_url: "",
+    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779942338/Screenshot_2026-05-28_112229_zmowxs.png",
     emoji:"🏫", color:"#5B6A7A",
     stats:"ข้อมูลโรงเรียน · ครู · ทรัพยากร",
     url:"school.html" },
 
   { name:"PAT SAK",
-    icon_url: "",
+    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779942905/Screenshot_2026-05-28_112619_j1x5db.png",
     emoji:"⭐", color:"#C47B0A",
     stats:"สรุปกิจกรรม 2 วัน",
     url:"patsak.html", newBadge:"ใหม่" },
@@ -460,7 +460,10 @@ function makeM4Card(w, delay) {
   const el = document.createElement("div");
   el.className = "m4-card";
   el.onclick = () => window.location.href = w.url;
-  el.innerHTML = `<div class="m4-card-img"></div>`;
+  const imgInner = w.icon_url
+    ? `<img src="${w.icon_url}" alt="${w.name}" onerror="this.style.display='none'"/>`
+    : '';
+  el.innerHTML = `<div class="m4-card-img">${imgInner}</div>`;
   setTimeout(() => el.classList.add("visible"), delay);
   return el;
 }
@@ -509,7 +512,7 @@ function startCountdown() {
 
 const M5_CARDS = [
   { name:"Roadmap กสพท 75+",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779550823/Screenshot_2026-05-23_212130_meb6fg.png",
+    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779942916/Screenshot_2026-05-28_112626_kpqwhu.png",
     emoji:"⭐", color:"#E11D48",
     stats:"วิธีเตรียมตัวรุ่นพี่เตรียมอุดม",
     url:"programs.html" },
@@ -727,17 +730,17 @@ if (isPreview) {
   document.getElementById("greeting-name").innerText = "สวัสดี 🤍";
   renderAll();
 } else {
+  renderAll(); // render immediately — don't block on LIFF
   try {
     liff.init({ liffId: LIFF_ID })
       .then(() => {
         if (!liff.isLoggedIn()) { liff.login(); return; }
         liff.getProfile().then(p => {
           document.getElementById("greeting-name").innerText = "สวัสดี " + p.displayName.split(" ")[0] + " 🤍";
-        });
-        renderAll();
+        }).catch(()=>{});
       })
-      .catch(() => renderAll());
-  } catch(e) { renderAll(); }
+      .catch(() => {});
+  } catch(e) {}
 }
 
 // ═══ CARE SHEET ══════════════════════════════════════════════
