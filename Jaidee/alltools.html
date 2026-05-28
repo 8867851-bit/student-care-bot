@@ -893,13 +893,7 @@ function cBack(){const t=document.getElementById('c-ta');if(t)cAns[cStep]=t.valu
 
 renderEntries();
 startIdleTimer();
-const _h=window.location.hash;
-if(_h==='#breathe'){switchToolsTab(1);openBreathe();}
-else if(_h==='#journal'){switchToolsTab(1);openJournal();}
-else if(_h==='#reframe'){switchToolsTab(2);openReframe();}
-else if(_h==='#worry'){switchToolsTab(2);openWorry();}
-else if(_h==='#clarity'){switchToolsTab(2);openClarity();}
-else if(_h==='#move'){switchToolsTab(1);openMove();}
+
 
 // ══ MOVE ══════════════════════════════════════════════════
 let _moveTimer=null, _lastLevel='mid';
@@ -995,14 +989,6 @@ function moveDone(){
   document.getElementById('move-done').style.display='block';
 }
 
-// ── hash routing for new tools ──
-if(window.location.hash==='#play'){switchToolsTab(1);openPlay();}
-else if(window.location.hash==='#rest'){switchToolsTab(3);openRest();}
-else if(window.location.hash==='#act'){switchToolsTab(3);openAct();}
-else if(window.location.hash==='#savor'){switchToolsTab(3);openSavor();}
-else if(window.location.hash==='#rain'){switchToolsTab(3);openRain();}
-else if(window.location.hash==='#grounding'){switchToolsTab(3);openGrounding();}
-
 // ══ PLAY ══════════════════════════════════════════
 let _playInterval=null,_playScore=0,_playStreak=0,_playTarget=null,_playActive=false;
 const PLAY_COLORS=['#0D9488','#7C3AED','#E8960C','#E11D48'];
@@ -1051,6 +1037,23 @@ function openGrounding(){_groundStep=0;renderGrounding();openModal('grounding-mo
 function closeGrounding(){closeModal('grounding-modal');}
 function renderGrounding(){const s=GROUNDING_STEPS[_groundStep];const isLast=_groundStep===GROUNDING_STEPS.length-1;document.getElementById('grounding-body').innerHTML=`<div style="text-align:center;margin-bottom:20px;"><div style="font-size:52px;margin-bottom:14px;">${s.icon}</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:12px;">${s.title}</div><div style="font-size:14px;color:var(--mid);line-height:1.9;white-space:pre-line;margin-bottom:24px;">${s.body}</div><div style="display:flex;gap:6px;justify-content:center;margin-bottom:4px;">${GROUNDING_STEPS.map((_,i)=>`<div style="width:${i===_groundStep?16:6}px;height:6px;border-radius:3px;background:${i===_groundStep?'var(--indigo)':'var(--cream-border)'};transition:all 0.3s;"></div>`).join('')}</div></div><button onclick="${isLast?'closeGrounding()':'nextGrounding()'}" style="width:100%;background:var(--indigo);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">${isLast?'พร้อมแล้ว 🎯':'ถัดไป →'}</button>`;}
 function nextGrounding(){if(_groundStep<GROUNDING_STEPS.length-1){_groundStep++;renderGrounding();}}
+
+// ── hash routing — after all declarations ──
+(function(){
+  const h=window.location.hash;
+  if(h==='#breathe'){switchToolsTab(1);openBreathe();}
+  else if(h==='#journal'){switchToolsTab(1);openJournal();}
+  else if(h==='#reframe'){switchToolsTab(2);openReframe();}
+  else if(h==='#worry'){switchToolsTab(2);openWorry();}
+  else if(h==='#clarity'){switchToolsTab(2);openClarity();}
+  else if(h==='#move'){switchToolsTab(1);openMove();}
+  else if(h==='#play'){switchToolsTab(1);openPlay();}
+  else if(h==='#rest'){switchToolsTab(3);openRest();}
+  else if(h==='#act'){switchToolsTab(3);openAct();}
+  else if(h==='#savor'){switchToolsTab(3);openSavor();}
+  else if(h==='#rain'){switchToolsTab(3);openRain();}
+  else if(h==='#grounding'){switchToolsTab(3);openGrounding();}
+})();
 </script>
 <!-- ══ PLAY MODAL ══ -->
 <div class="modal-overlay" id="play-modal" onclick="handleOverlayClick(event,'play-modal',closePlay)">
