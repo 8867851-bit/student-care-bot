@@ -161,7 +161,7 @@
 <!-- SHARED AUDIO ELEMENT — one instance, controlled globally -->
 <!-- 🎵 Replace src with your chosen track — royalty-free, no Thai lyrics -->
 <!-- Recommended: drop file at audio/peer-ambient.mp3 -->
-<audio id="peer-audio" src="https://res.cloudinary.com/dlixucdqx/video/upload/v1779331068/Lotus_Flower_wtyhmo.mp3" loop preload="none"></audio>
+<audio id="peer-audio" src="https://res.cloudinary.com/dlixucdqx/video/upload/v1779331068/Lotus_Flower_wtyhmo.mp3" loop preload="auto"></audio>
 
 <!-- PR INFO OVERLAY -->
 <div class="overlay" id="overlay-pr" onclick="closePRInfo(event)">
@@ -621,7 +621,7 @@ function selectAnswer(btn,answer){
   const holdMs=0;
   setTimeout(()=>{
     currentQ++;
-    if(currentQ<questions.length){showQuestion();}
+    if(currentQ<questions.length){renderQuestion();}
     else{submitAndRoute();}
   },holdMs);
 }
