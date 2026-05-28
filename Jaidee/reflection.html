@@ -430,6 +430,7 @@ const TOOL_CONFIG = {
   reframe: { icon:'🔄', color:'rose',   name:'ปรับความคิดก่อนเลย',  hash:'#reframe' },
   worry:   { icon:'🌀', color:'blue',   name:'คลายกังวลก่อนเลย',    hash:'#worry'   },
   clarity: { icon:'🧭', color:'gold',   name:'หาความชัดก่อนเลย',    hash:'#clarity' },
+  move:    { icon:'🏃', color:'green',  name:'เคลื่อนไหวก่อนเลย',   hash:'#move'    },
 };
 
 // ─── DATABASE — all 9 cells, 5 emotions each ────────────────────
@@ -453,7 +454,7 @@ const DB = {
     stateDesc:'ร่างกายตื่นตัวมาก จิตใจกำลังประมวลผลอะไรบางอย่าง',
     secondary: [
       { icon:'🔄', name:'ปรับความคิด', desc:'ถ้ารู้สึกว่าความคิดกำลังกดตัวเองอยู่', url:'alltools.html#reframe' },
-      { icon:'🌬️', name:'หายใจก่อน',   desc:'ถ้าร่างกายตึงเกินไปจนทำอะไรไม่ได้',  url:'alltools.html#breathe' },
+      { icon:'🎯', name:'เตรียมตัว',   desc:'ถ้าตึงเพราะมีอะไรสำคัญรออยู่',         url:'alltools.html#grounding' },
     ],
   },
 
@@ -496,7 +497,7 @@ const DB = {
     stateIcon:'🌑', stateName:'หนักเหนื่อย · พลังงานต่ำ',
     stateDesc:'ร่างกายและใจต้องการการดูแลเป็นพิเศษตอนนี้',
     secondary: [
-      { icon:'🌬️', name:'หายใจ', desc:'เริ่มเล็กๆ ที่ร่างกายก่อน',                  url:'alltools.html#breathe' },
+      { icon:'🏃', name:'เคลื่อนไหว',   desc:'ขยับเล็กน้อย บางทีร่างกายนำใจได้',  url:'alltools.html#move' },
       { icon:'🏃', name:'พื้นที่ใจ · ร่างกาย', desc:'อ่านและทำความเข้าใจ',          url:'care.html?tab=body' },
     ],
   },
@@ -518,8 +519,8 @@ const DB = {
     stateIcon:'⚡', stateName:'ตื่นตัว · เฉยๆ',
     stateDesc:'มีพลังงานอยู่ แต่ยังไม่ชัดว่าจะไปทางไหน',
     secondary: [
-      { icon:'🌬️', name:'หายใจก่อน',      desc:'ถ้าร่างกายตึงเกินไปจนทำอะไรไม่ได้', url:'alltools.html#breathe' },
-      { icon:'🎨', name:'พื้นที่ใจ · การแสดงออก', desc:'อ่านและทำความเข้าใจ',        url:'care.html?tab=expression' },
+      { icon:'🎯', name:'เตรียมตัว',   desc:'ถ้าประหม่าหรือลุ้นก่อนอะไรสำคัญ',     url:'alltools.html#grounding' },
+      { icon:'🌬️', name:'หายใจก่อน', desc:'ถ้าร่างกายตึงเกินไปจนทำอะไรไม่ได้',   url:'alltools.html#breathe' },
     ],
   },
 
@@ -541,7 +542,7 @@ const DB = {
     stateDesc:'ไม่ได้ดีไม่ได้แย่ แต่มีบางอย่างที่ยังไม่ชัด',
     secondary: [
       { icon:'📓', name:'เขียนระบาย', desc:'บางทีการเขียนช่วยให้ความชัดลอยขึ้นมาเอง', url:'alltools.html#journal' },
-      { icon:'🪞', name:'พื้นที่ใจ · ความเชื่อ', desc:'อ่านและทำความเข้าใจ',          url:'care.html?tab=belief' },
+      { icon:'🎮', name:'เล่น',        desc:'ถ้าเบื่อและอยากเปลี่ยนอารมณ์ก่อน',        url:'alltools.html#play' },
     ],
   },
 
@@ -555,15 +556,15 @@ const DB = {
       { w:'เหนื่อยล้า',      d:'สะสมความเหนื่อยมานาน ทั้งร่างกายและจิตใจ' },
     ],
     q:{ t:'ความรู้สึกนี้ต้องการอะไรมากกว่า?', o:['ต้องการพัก','ต้องการแรงบันดาลใจ','ต้องการใครซักคน','ยังไม่รู้'] },
-    primaryTool: 'clarity',
-    primaryWhy: 'ความรู้สึกชาหรือหมดไฟมักหมายความว่า\nหลุดออกจากสิ่งที่สำคัญกับตัวเอง — ลองหาความชัดดู',
+    primaryTool: 'move',
+    primaryWhy: 'ตอนที่ระบบประสาทอยู่ต่ำแบบนี้\nการขยับร่างกายเพียงเล็กน้อยช่วย activate พลังงานได้เร็วกว่าการคิด',
     layer: 'body',
     bs: 'ร่างกายและระบบประสาทอาจต้องการการดูแลก่อน\nพื้นที่ใจชั้นร่างกายเริ่มจากสิ่งเล็กๆ ที่ทำได้ตอนนี้',
     stateIcon:'🌑', stateName:'เฉื่อย · พลังงานต่ำ',
     stateDesc:'ร่างกายต้องการพัก การ "ไม่ทำอะไร" ก็เป็นการดูแลตัวเองเหมือนกัน',
     secondary: [
-      { icon:'🏃', name:'พื้นที่ใจ · ร่างกาย', desc:'อ่านและทำความเข้าใจ',     url:'care.html?tab=body' },
-      { icon:'💛', name:'คุยกับ PR',             desc:'บางทีแค่มีคนรับฟัง ก็เบาขึ้น', url:'peer.html' },
+      { icon:'🏃', name:'เคลื่อนไหว',   desc:'ขยับเบาๆ เพื่อ activate ร่างกายก่อน', url:'alltools.html#move' },
+      { icon:'💛', name:'คุยกับ PR',     desc:'บางทีแค่มีคนรับฟัง ก็เบาขึ้น',       url:'peer.html' },
     ],
   },
 
@@ -584,8 +585,8 @@ const DB = {
     stateIcon:'🔥', stateName:'มีพลัง · รู้สึกดี',
     stateDesc:'พลังงานกำลังดี ดีที่ต่อยอดมันตอนนี้เลย',
     secondary: [
-      { icon:'📓', name:'เขียนระบาย', desc:'จดความรู้สึกดีนี้ไว้ก่อนมันผ่านไป',     url:'alltools.html#journal' },
-      { icon:'💛', name:'คุยกับ PR',   desc:'แบ่งปันความรู้สึกดีให้คนอื่นได้ยิน',   url:'peer.html' },
+      { icon:'✨', name:'อยู่กับสิ่งดี', desc:'เก็บความรู้สึกดีนี้ไว้ให้นานขึ้น',     url:'alltools.html#savor' },
+      { icon:'📓', name:'เขียนระบาย',   desc:'จดความรู้สึกดีนี้ไว้ก่อนมันผ่านไป',   url:'alltools.html#journal' },
     ],
   },
 
@@ -606,8 +607,8 @@ const DB = {
     stateIcon:'☀️', stateName:'สงบ · รู้สึกดี',
     stateDesc:'วันนี้ดีมาก ใช้โอกาสนี้เสริมความแข็งแรงให้ตัวเอง',
     secondary: [
-      { icon:'📓', name:'เขียนระบาย',           desc:'จดความรู้สึกนี้ไว้ก่อนมันผ่านไป',   url:'alltools.html#journal' },
-      { icon:'💛', name:'คุยกับ PR',             desc:'แบ่งปันให้คนอื่นได้ยิน',            url:'peer.html' },
+      { icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#savor' },
+      { icon:'💛', name:'คุยกับ PR',     desc:'แบ่งปันให้คนอื่นได้ยิน',              url:'peer.html' },
     ],
   },
 
@@ -628,8 +629,8 @@ const DB = {
     stateIcon:'🌿', stateName:'ผ่อนคลาย · รู้สึกดี',
     stateDesc:'ร่างกายสงบ ใจเบา ช่วงเวลาดีๆ ที่ควรอยู่กับมัน',
     secondary: [
-      { icon:'📓', name:'เขียนระบาย',           desc:'จดความรู้สึกนี้ไว้ก่อนมันผ่านไป',   url:'alltools.html#journal' },
-      { icon:'💛', name:'คุยกับ PR',             desc:'แบ่งปันให้คนอื่นได้ยิน',            url:'peer.html' },
+      { icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#savor' },
+      { icon:'📓', name:'เขียนระบาย',   desc:'จดความรู้สึกนี้ไว้ก่อนมันผ่านไป',     url:'alltools.html#journal' },
     ],
   },
 };
