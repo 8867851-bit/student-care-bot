@@ -730,17 +730,16 @@ if (isPreview) {
   document.getElementById("greeting-name").innerText = "สวัสดี 🤍";
   renderAll();
 } else {
-  renderAll(); // render immediately — don't block on LIFF
-  try {
-    liff.init({ liffId: LIFF_ID })
-      .then(() => {
-        if (!liff.isLoggedIn()) { liff.login(); return; }
-        liff.getProfile().then(p => {
-          document.getElementById("greeting-name").innerText = "สวัสดี " + p.displayName.split(" ")[0] + " 🤍";
-        }).catch(()=>{});
-      })
-      .catch(() => {});
-  } catch(e) {}
+  renderAll();
+  (async () => {
+    try {
+      await liff.init({ liffId: LIFF_ID });
+      if (!liff.isLoggedIn()) { liff.login(); return; }
+      const p = await liff.getProfile();
+      const first = p.displayName.split(/\s+/)[0];
+      document.getElementById("greeting-name").innerText = "สวัสดี " + first + " 🤍";
+    } catch(e) { /* stay with default สวัสดี 🤍 */ }
+  })();
 }
 
 // ═══ CARE SHEET ══════════════════════════════════════════════
