@@ -190,7 +190,17 @@
     /* ── MODALS ── same as before ── */
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;align-items:flex-end;justify-content:center;transition:background 0.3s;}
     .modal-overlay.active{display:flex;}
-    .modal-sheet{background:#1C1917;border-radius:24px 24px 0 0;width:100%;max-width:540px;max-height:88vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,24px);}
+    .modal-sheet{background:#1C1917;border-radius:24px 24px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,24px);}
+    @media(min-width:600px){
+      .modal-overlay{align-items:center;}
+      .modal-sheet{border-radius:24px;margin:0 auto;max-height:76vh;max-width:420px;width:420px;}
+      #move-sheet{max-width:420px;width:420px;left:50% !important;right:auto !important;transform:translateX(-50%) translateY(100%);border-radius:24px;}
+      #move-sheet.open-move{transform:translateX(-50%) translateY(0) !important;}
+    }
+    @media(min-width:900px){
+      .modal-sheet{max-width:400px;width:400px;max-height:70vh;}
+      #move-sheet{max-width:400px;width:400px;}
+    }
     .modal-handle{width:36px;height:3px;background:rgba(255,255,255,0.18);border-radius:99px;margin:14px auto 0;}
 
     /* breathe */
@@ -920,10 +930,21 @@ function openMove(){
   document.getElementById('move-done').style.display='none';
   const ov=document.getElementById('move-overlay');
   const sh=document.getElementById('move-sheet');
+  const isTablet=window.innerWidth>=600;
   ov.style.display='block';
+  if(isTablet){
+    sh.style.top='50%'; sh.style.bottom='auto';
+    sh.style.transform='translateX(-50%) translateY(calc(-50% - 20px))';
+    sh.style.borderRadius='24px'; sh.style.maxHeight='70vh';
+  } else {
+    sh.style.top='auto'; sh.style.bottom='0';
+    sh.style.transform='translateX(-50%) translateY(100%)';
+    sh.style.borderRadius='28px 28px 0 0'; sh.style.maxHeight='88vh';
+  }
   requestAnimationFrame(()=>{
     ov.style.background='rgba(0,0,0,0.45)';
-    sh.style.transform='translateY(0)';
+    if(isTablet) sh.style.transform='translateX(-50%) translateY(-50%)';
+    else sh.style.transform='translateX(-50%) translateY(0)';
   });
 }
 function closeMove(){
@@ -931,7 +952,7 @@ function closeMove(){
   const ov=document.getElementById('move-overlay');
   const sh=document.getElementById('move-sheet');
   ov.style.background='rgba(0,0,0,0)';
-  sh.style.transform='translateY(100%)';
+  sh.style.transform='translateX(-50%) translateY(100%)';
   setTimeout(()=>{ ov.style.display='none'; },360);
 }
 function startMove(level){
@@ -1092,7 +1113,7 @@ function nextGrounding(){if(_groundStep<GROUNDING_STEPS.length-1){_groundStep++;
 
 </body>
 <div id="move-overlay" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0);transition:background 0.3s;" onclick="closeMove()"></div>
-<div id="move-sheet" style="position:fixed;bottom:0;left:0;right:0;z-index:301;background:#FDFBF7;border-radius:28px 28px 0 0;padding:28px 24px 48px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.1,0.64,1);max-height:92vh;overflow-y:auto;">
+<div id="move-sheet" style="position:fixed;bottom:0;left:50%;right:auto;transform:translateX(-50%) translateY(100%);z-index:301;background:#FDFBF7;border-radius:28px 28px 0 0;padding:28px 24px 48px;transition:transform 0.35s cubic-bezier(0.34,1.1,0.64,1);max-height:88vh;overflow-y:auto;width:100%;max-width:420px;">
   <div style="width:36px;height:4px;background:#EDE9E0;border-radius:2px;margin:0 auto 24px;"></div>
 
   <!-- PICK screen -->
