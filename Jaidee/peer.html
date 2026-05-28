@@ -619,7 +619,11 @@ function selectAnswer(btn,answer){
   btn.classList.add("pressed");
   answers.push(answer);
   const holdMs=0;
-setTimeout(()=>{currentQ++;
+  setTimeout(()=>{
+    currentQ++;
+    if(currentQ<questions.length){showQuestion();}
+    else{submitAndRoute();}
+  },holdMs);
 }
 
 async function submitAndRoute(){
