@@ -323,9 +323,10 @@
 
   <div id="m4-section-root"></div>
   <div id="m5-section-root"></div>
+  <div id="other-section-root"></div>
   <div class="worlds-wrap" id="worlds-wrap"></div>
 <script>
-const API_URL   = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const API_URL   = "https://script.google.com/macros/s/AKfycbztMREOYjHbq1TkfMplela4FBQmGjooLbRoV2HmccSdK-ZLzNk7NpkDL0ksPw-bPdgF/exec";
 const LIFF_ID   = "2009806939-H06mwKgI";
 const BASE_URL  = "https://jaidee-tu.vercel.app";
 const SCHOOL_SUPPORT_URL = BASE_URL + "/school.html";
@@ -368,191 +369,74 @@ const WORLDS_TOP = [
     url:"programs.html" },
 ];
 
-const M4_CARDS = [
-  { name:"รู้จักเตรียมฯ",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779942338/Screenshot_2026-05-28_112229_zmowxs.png",
-    emoji:"🏫", color:"#5B6A7A",
-    stats:"ข้อมูลโรงเรียน · ครู · ทรัพยากร",
-    url:"school.html" },
-
-  { name:"PAT SAK",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779942905/Screenshot_2026-05-28_112619_j1x5db.png",
-    emoji:"⭐", color:"#C47B0A",
-    stats:"สรุปกิจกรรม 2 วัน",
-    url:"patsak.html", newBadge:"ใหม่" },
+// ═══ YEAR ROWS CONFIG ══════════════════════════════════════
+// ม.4 row — 4 image buttons (URLs to be filled in later)
+const M4_IMGS = [
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780395080/Screenshot_2026-06-02_170941_ujcfy0.png",  url: "#" },
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780395078/Screenshot_2026-06-02_170935_j1i1nv.png",  url: "#" },
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780395018/Screenshot_2026-06-02_170902_rerexn.png",  url: "#" },
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780395078/Screenshot_2026-06-02_170935_j1i1nv.png",  url: "#" },
 ];
 
-const UNLOCK_DATE = "2028-07-12";
-
-const WORLDS_LOCKED_GRID = [
-  { name:"Academic Support",
-    icon_url: "",
-    emoji:"📚", color:"#6B6560",
-    stats:"เร็วๆ นี้", url:"academic.html" },
-
-  { name:"Career Support",
-    icon_url: "",
-    emoji:"🎯", color:"#6B6560",
-    stats:"วางแผนอนาคต · เร็วๆ นี้",
-    url:"career.html" },
-
-  { name:"แผนดูแลตัวเอง",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779592983/Screenshot_2026-05-24_095848_opkqft.png",
-    emoji:"🗺️", color:"#3A7D44",
-    stats:"แผน · กิจกรรมรายสัปดาห์",
-    url:"plans.html" },
-
-  { name:"ใจดี TU คืออะไร?",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779593019/Screenshot_2026-05-20_215453_vnjpnx.png",
-    emoji:"📜", color:"#1C1917",
-    stats:"ทีม · แนวคิด · ผลงาน",
-    url:"founder.html" },
+// ม.5 row — 2 image buttons
+const M5_IMGS = [
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780395078/Screenshot_2026-06-02_170935_j1i1nv.png",  url: "#" },
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780395068/Screenshot_2026-06-02_170922_yaysoy.png",  url: "#" },
 ];
 
-const COMING_SOON = [
-  { name:"Drama & Arts",   emoji:"🎭", desc:"ชมรมละคร time management + passion" },
-  { name:"POSN Corner",    emoji:"🔬", desc:"พื้นที่สายโอลิมปิก" },
-  { name:"Gym & Movement", emoji:"🏋️", desc:"Peer สายออกกำลังกาย" },
-  { name:"Music & Sound",  emoji:"🎵", desc:"ดนตรีกับสุขภาพจิต" },
-  { name:"Community Work", emoji:"🤝", desc:"จิตอาสา ค่าย กิจกรรม" },
+// อื่นๆ row — 1 image button
+const OTHER_IMGS = [
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780395074/Screenshot_2026-06-02_170928_gu6lx8.png",  url: "#" },
 ];
 
-
-// ═══ WORLD CARD ══════════════════════════════════════════════
-const LINE_OPENCHAT = "https://line.me/ti/g2/FAKE_OPENCHAT_ID";
-
-function makeCard(w, full, locked, delay) {
-  const el = document.createElement("div");
-  el.className = "world-card" + (full?" full":"") + (locked?" locked":"");
-
-  const nameColor = w.color || "var(--dark)";
-  const stats = w.stats || w.desc || "";
-  const badge = w.newBadge
-    ? `<span style="background:#4A1A25;color:#FDF5F5;font-size:9px;border-radius:4px;padding:1px 6px;margin-left:6px;font-style:normal;">${w.newBadge}</span>`
-    : "";
-  const iconInner = w.icon_url
-    ? `<img src="${w.icon_url}" alt="${w.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none';this.nextSibling&&(this.nextSibling.style.display='')"/ ><span style="display:none;font-size:28px;">${w.emoji||"🌐"}</span>`
-    : `<span style="font-size:28px;">${w.emoji||"🌐"}</span>`;
-
-  el.innerHTML = `
-    <div class="world-icon">${iconInner}</div>
-    <div class="wc-right">
-      <div class="world-name" style="color:${nameColor};">${w.name}${badge}</div>
-      <div class="wc-stats">${stats}</div>
-      <div class="wc-btns">
-        <button class="wc-btn-open"
-          onclick="event.stopPropagation();window.location.href='${w.url}'">เปิด</button>
-        <a class="wc-btn-community"
-          href="${LINE_OPENCHAT}" target="_blank" rel="noopener"
-          onclick="event.stopPropagation();">
-          💬 Community
-        </a>
-      </div>
-    </div>`;
-
-  setTimeout(() => el.classList.add("visible"), delay);
-  return el;
-}
-
-
-// ═══ M4 CARD ═══════════════════════════════════════════════
-function makeM4Card(w, delay) {
-  const el = document.createElement("div");
-  el.className = "m4-card";
-  el.onclick = () => window.location.href = w.url;
-  const imgInner = w.icon_url
-    ? `<img src="${w.icon_url}" alt="${w.name}" onerror="this.style.display='none'"/>`
-    : '';
-  el.innerHTML = `<div class="m4-card-img">${imgInner}</div>`;
-  setTimeout(() => el.classList.add("visible"), delay);
-  return el;
-}
-
-// ═══ RENDER M4 ══════════════════════════════════════════════
-function renderM4Section(baseDelay) {
-  const root = document.getElementById("m4-section-root");
+// ═══ RENDER YEAR ROW ════════════════════════════════════════
+function renderYearRow(containerId, label, badgeColor, imgList, baseDelay) {
+  const root = document.getElementById(containerId);
   root.innerHTML = "";
+
   const section = document.createElement("div");
-  section.className = "m4-section";
+  section.style.cssText = "margin:0 16px 20px;";
+
+  // Header badge
   const header = document.createElement("div");
-  header.className = "m4-header";
+  header.style.cssText = "display:flex;align-items:center;gap:10px;margin-bottom:12px;";
   header.innerHTML = `
-    <div class="m4-badge">
-      <div class="m4-badge-dot"></div>
-      <div class="m4-badge-text">แนะนำสำหรับน้อง ม.4</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:${badgeColor}15;border:1px solid ${badgeColor}40;border-radius:20px;padding:5px 12px 5px 10px;">
+      <div style="width:6px;height:6px;background:${badgeColor};border-radius:50%;flex-shrink:0;"></div>
+      <div style="font-size:11px;font-weight:500;color:${badgeColor};letter-spacing:0.5px;white-space:nowrap;">${label}</div>
     </div>
-    <div class="m4-header-line"></div>`;
+    <div style="flex:1;height:1px;background:var(--cream-border);"></div>`;
   section.appendChild(header);
+
+  // Scrollable row of image buttons
   const row = document.createElement("div");
-  row.className = "m4-row";
-  let d = baseDelay;
-  M4_CARDS.forEach(w => { row.appendChild(makeM4Card(w, d)); d += 55; });
+  row.style.cssText = "display:flex;gap:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;";
+
+  imgList.forEach((item, i) => {
+    const btn = document.createElement("div");
+    btn.style.cssText = "flex-shrink:0;width:140px;height:110px;border-radius:16px;overflow:hidden;cursor:pointer;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;border:1px solid var(--cream-border);box-shadow:0 2px 10px rgba(0,0,0,0.08);";
+    btn.onclick = () => { if (item.url && item.url !== "#") window.location.href = item.url; };
+    btn.innerHTML = `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentNode.style.background='var(--cream-warm)'"/>`;
+    btn.addEventListener('touchstart', () => btn.style.transform='scale(0.96)', {passive:true});
+    btn.addEventListener('touchend', () => btn.style.transform='', {passive:true});
+    setTimeout(() => { btn.style.opacity='1'; btn.style.transform='translateY(0)'; }, baseDelay + i * 55);
+    row.appendChild(btn);
+  });
+
   section.appendChild(row);
   root.appendChild(section);
-  return d;
-}
-
-
-// ═══ COUNTDOWN ════════════════════════════════════════════
-let _timer = null;
-function startCountdown() {
-  const el = document.getElementById("countdown-display");
-  if (!el) return;
-  function tick() {
-    const diff = new Date(UNLOCK_DATE) - new Date();
-    if (diff <= 0) { el.textContent = "เปิดแล้ว!"; clearInterval(_timer); return; }
-    const d = Math.floor(diff/86400000);
-    const h = Math.floor((diff%86400000)/3600000);
-    const m = Math.floor((diff%3600000)/60000);
-    el.textContent = d>0 ? `เปิดใน ${d} วัน ${h} ชม.` : h>0 ? `เปิดใน ${h} ชม. ${m} นาที` : `เปิดใน ${m} นาที`;
-  }
-  tick();
-  _timer = setInterval(tick, 60000);
-}
-
-const M5_CARDS = [
-  { name:"Roadmap กสพท 75+",
-    icon_url: "https://res.cloudinary.com/dlixucdqx/image/upload/v1779942916/Screenshot_2026-05-28_112626_kpqwhu.png",
-    emoji:"⭐", color:"#E11D48",
-    stats:"วิธีเตรียมตัวรุ่นพี่เตรียมอุดม",
-    url:"programs.html" },
-];
-
-// ═══ RENDER M5 ══════════════════════════════════════════════
-function renderM5Section(baseDelay) {
-  const root = document.getElementById("m5-section-root");
-  root.innerHTML = "";
-  const section = document.createElement("div");
-  section.className = "m5-section";
-  const header = document.createElement("div");
-  header.className = "m5-header";
-  header.innerHTML = `
-    <div class="m5-badge">
-      <div class="m5-badge-dot"></div>
-      <div class="m5-badge-text">แนะนำสำหรับน้อง ม.5</div>
-    </div>
-    <div class="m4-header-line"></div>`;
-  section.appendChild(header);
-  const row = document.createElement("div");
-  row.className = "m5-row";
-  let d = baseDelay;
-  M5_CARDS.forEach(w => { row.appendChild(makeM4Card(w, d)); d += 55; });
-  section.appendChild(row);
-  root.appendChild(section);
-  return d;
+  return baseDelay + imgList.length * 55;
 }
 
 // ═══ RENDER ALL ══════════════════════════════════════════════
 function renderAll() {
   const wrap = document.getElementById("worlds-wrap");
   wrap.innerHTML = "";
-  let d = 0; const S = 55;
-  const isOpen = new Date(UNLOCK_DATE) <= new Date();
+  let d = 30;
 
-  d = renderM4Section(d + 30);
-  d = renderM5Section(d + 10);
-
-
+  d = renderYearRow("m4-section-root", "ม.4", "#2E5FA3", M4_IMGS, d);
+  d = renderYearRow("m5-section-root", "ม.5", "#E8960C", M5_IMGS, d + 10);
+  d = renderYearRow("other-section-root", "อื่นๆ", "#3A7D44", OTHER_IMGS, d + 10);
 }
 
 // ═══ INIT ════════════════════════════════════════════════════
