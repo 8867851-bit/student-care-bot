@@ -23,6 +23,8 @@
     .screen.active{display:flex;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
     .screen-enter{animation:fadeUp 0.32s ease forwards;}
+
+    .step-count{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:1px;text-align:right;margin-bottom:4px;}
     .progress{display:flex;gap:5px;padding:0 24px;margin-top:16px;}
     .dot{width:5px;height:5px;border-radius:50%;background:var(--cream-border);transition:all 0.3s;}
     .dot.active{background:var(--dark);width:16px;border-radius:3px;}
@@ -99,6 +101,11 @@
 
     /* BRIDGE */
     #s-bridge{padding:0 0 48px;}
+    /* ── สิ่งที่เราสังเกตเห็น ── */
+    .br-noticed{margin:0 24px 20px;padding:16px 18px;background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:16px;}
+    .br-noticed-label{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+    .br-noticed-text{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:500;color:var(--dark);line-height:1.6;margin-bottom:6px;}
+    .br-noticed-sub{font-size:12px;font-weight:300;color:var(--mid);line-height:1.65;}
   /* ── THREE-OPTION CLOSER ── */
   .br-next-q{margin:32px 24px 0;padding-top:24px;border-top:1px solid var(--cream-border);}
   .br-next-label{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--mid);margin-bottom:14px;text-align:center;}
@@ -220,8 +227,9 @@
     <div class="reg-line" id="rl2">สังเกตจุดที่ร่างกาย<br>สัมผัสกับพื้นหรือเก้าอี้</div>
     <div class="reg-line" id="rl3">หายใจออกช้าๆ<br>ครั้งเดียวก็พอ</div>
   </div>
-  <div class="reg-foot">
-    <button class="reg-btn" id="reg-ready" onclick="goTo('s-body')">พร้อมแล้ว →</button>
+  <div class="reg-foot" style="display:flex;align-items:center;gap:16px;justify-content:center;">
+    <button class="reg-btn" id="reg-ready" onclick="goTo('s-body')" style="flex:1;max-width:200px;">พร้อมแล้ว →</button>
+    <button style="background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:8px;flex-shrink:0;" onclick="goTo('s-body')">ข้าม →</button>
   </div>
 </div>
 
@@ -229,6 +237,7 @@
 <div class="screen" id="s-body">
   <button class="back-btn" onclick="goTo('s-regulate')">← กลับ</button>
   <div class="progress">
+    <div class="step-count">1 / 4</div>
     <div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
   </div>
   <div class="q-wrap">
@@ -269,6 +278,7 @@
 <div class="screen" id="s-valence">
   <button class="back-btn" onclick="goTo('s-body')">← กลับ</button>
   <div class="progress">
+    <div class="step-count">2 / 4</div>
     <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
   </div>
   <div class="q-wrap">
@@ -297,6 +307,7 @@
 <div class="screen" id="s-arousal">
   <button class="back-btn" onclick="goTo('s-valence')">← กลับ</button>
   <div class="progress">
+    <div class="step-count">3 / 4</div>
     <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
   </div>
   <div class="q-wrap">
@@ -325,6 +336,7 @@
 <div class="screen" id="s-name">
   <button class="back-btn" onclick="goTo('s-arousal')">← กลับ</button>
   <div class="progress">
+    <div class="step-count">4 / 4</div>
     <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div>
   </div>
   <div class="q-wrap" style="overflow-y:auto;padding-bottom:16px;">
@@ -359,16 +371,17 @@
     <div class="br-state-body">
       <div class="br-state-label">ความรู้สึกตอนนี้</div>
       <div class="br-state-name" id="br-state-name"></div>
-      <div class="br-state-desc" id="br-state-desc"></div>
+      <div class="br-state-desc" id="br-state-desc" style="display:none;"></div>
     </div>
   </div>
-  <div class="br-primary">
-    <div class="br-primary-label">แนะนำสำหรับตอนนี้</div>
-    <div id="br-primary-card"></div>
+  <div class="br-noticed">
+    <div class="br-noticed-label">สิ่งที่เราสังเกตเห็น</div>
+    <div class="br-noticed-text" id="br-noticed-text"></div>
+    <div class="br-noticed-sub" id="br-sub-noticed"></div>
   </div>
-  <div class="br-secondary">
-    <div class="br-sec-label">หรือลองทางนี้</div>
-    <div id="br-secondary-btns"></div>
+  <div class="br-primary">
+    <div class="br-primary-label">สิ่งที่อาจช่วยได้ตอนนี้</div>
+    <div id="br-primary-card"></div>
   </div>
   <!-- Three-option closer — routes back into the ecosystem -->
   <div class="br-next-q">
@@ -404,6 +417,10 @@
 
     </div>
   </div>
+  <div class="br-secondary">
+    <div class="br-sec-label">ถ้ายังไม่ใช่</div>
+    <div id="br-secondary-btns"></div>
+  </div>
   <button class="br-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
 </div>
 
@@ -411,8 +428,8 @@
 <div class="screen" id="s-nomatch">
   <div class="nm-icon">🌫</div>
   <div class="nm-title">บางทีความรู้สึก<br>ก็ยังไม่มีชื่อ</div>
-  <div class="nm-sub">และนั่นก็โอเคเหมือนกัน<br>ไม่จำเป็นต้องรู้ก่อนที่จะได้รับการดูแล</div>
-  <button class="nm-peer" onclick="window.location.href='peer.html'">คุยกับ PR — บางทีการพูดออกมาดังๆ ช่วยได้ 💛</button>
+  <div class="nm-sub">และนั่นก็โอเค<br>ไม่จำเป็นต้องเข้าใจตัวเองทั้งหมด<br>ก่อนที่จะเริ่มดูแลตัวเอง</div>
+  <button class="nm-peer" onclick="window.location.href='alltools.html'">🌿 ลองสำรวจต่อ</button>
   <button class="nm-care" onclick="window.location.href='care.html'">ไปพื้นที่ใจ — ไม่ต้องรู้ว่ารู้สึกอะไรก็เริ่มได้</button>
   <button class="nm-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
 </div>
@@ -1142,11 +1159,17 @@ function afterNaming() {
 function buildBridge() {
   const data = S._data;
 
-  document.getElementById('br-sub').textContent = data.bs;
   document.getElementById('br-state-icon').textContent = data.stateIcon;
   document.getElementById('br-state-name').textContent =
     S.name ? S.name + ' · ' + data.stateName : data.stateName;
-  document.getElementById('br-state-desc').textContent = data.stateDesc;
+  // สิ่งที่เราสังเกตเห็น
+  const noticedEl = document.getElementById('br-noticed-text');
+  if (noticedEl) noticedEl.textContent = data.stateDesc;
+  const noticedSub = document.getElementById('br-sub-noticed');
+  if (noticedSub) noticedSub.textContent = data.bs;
+  // keep br-sub hidden (legacy)
+  const legacySub = document.getElementById('br-sub');
+  if (legacySub) legacySub.textContent = '';
 
   const primaryCard = document.getElementById('br-primary-card');
 
@@ -1213,5 +1236,7 @@ function bridgeStillHeavy() {
   setTimeout(() => heavy.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
 }
 </script>
+<div style="text-align:center;padding:24px 24px 8px;font-size:12px;color:var(--soft);">เวอร์ชั่น 1.5 · <a href="reflection_v16.html" style="color:var(--soft);text-decoration:underline;text-underline-offset:3px;">ลองเวอร์ชั่น 1.6 แทน</a></div>
+
 </body>
 </html>
