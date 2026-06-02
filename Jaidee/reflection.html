@@ -99,6 +99,24 @@
 
     /* BRIDGE */
     #s-bridge{padding:0 0 48px;}
+  /* ── THREE-OPTION CLOSER ── */
+  .br-next-q{margin:32px 24px 0;padding-top:24px;border-top:1px solid var(--cream-border);}
+  .br-next-label{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--mid);margin-bottom:14px;text-align:center;}
+  .br-next-opts{display:flex;flex-direction:column;gap:9px;}
+  .br-next-btn{display:flex;align-items:center;gap:14px;padding:15px 18px;border-radius:16px;border:1.5px solid var(--cream-border);background:var(--card-bg);cursor:pointer;font-family:'Mitr',sans-serif;text-align:left;width:100%;transition:transform 0.15s,border-color 0.15s;}
+  .br-next-btn:active{transform:scale(0.97);}
+  .br-next-icon{font-size:24px;flex-shrink:0;width:36px;text-align:center;}
+  .br-next-body{flex:1;text-align:left;}
+  .br-next-name{display:block;font-size:14px;font-weight:500;color:var(--dark);line-height:1.3;margin-bottom:2px;}
+  .br-next-desc{display:block;font-size:11px;font-weight:400;color:var(--soft);}
+  .br-next-arrow{font-size:13px;color:var(--soft);flex-shrink:0;}
+  .br-next-self{border-color:var(--green-border);}
+  .br-next-self .br-next-name{color:#1C4A23;}
+  .br-next-talk{border-color:var(--gold-border);}
+  .br-next-talk .br-next-name{color:#5C3D00;}
+  .br-next-crisis{border-color:rgba(220,38,38,0.25);}
+  .br-next-crisis .br-next-name{color:#7A0000;}
+
     .br-top{padding:48px 28px 24px;text-align:center;}
     .br-thanks{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.5;margin-bottom:8px;}
     .br-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;max-width:300px;margin:0 auto;}
@@ -183,8 +201,8 @@
 <div class="screen active" id="s-welcome">
   <div class="w-icon">🪞</div>
   <div class="w-eye">ใจดี TU · What's This Feeling</div>
-  <div class="w-title">ยินดีที่มา</div>
-  <div class="w-sub">มาหยุดการพยายามคาดการณ์ของสมอง ด้วยชื่อของอารมณ์นี้กันเถอะ</div>
+  <div class="w-title">ไม่ต้องรีบหาคำตอบ</div>
+  <div class="w-sub">ลองสังเกตสิ่งที่เกิดขึ้นข้างในก่อน</div>
   <button class="w-btn" onclick="goTo('s-regulate')">ลองเลย →</button>
   <button class="w-exit" onclick="window.history.back()">← กลับหน้าหลัก</button>
 </div>
@@ -255,8 +273,8 @@
   </div>
   <div class="q-wrap">
     <div class="q-eye">ความรู้สึก</div>
-    <div class="q-title">โดยรวมแล้ว...</div>
-    <div class="q-sub">ความรู้สึกตอนนี้รู้สึกดีหรือไม่ดี?</div>
+    <div class="q-title">อะไรใกล้เคียงกับตอนนี้ที่สุด?</div>
+    <div class="q-sub">ไม่ต้องถูกต้อง · แค่ใกล้เคียงก็พอ</div>
     <div class="v-opts">
       <div class="v-opt" data-v="good" onclick="pick(this,'valence','v-opt','val-next')">
         <div class="v-icon">☀️</div>
@@ -352,48 +370,38 @@
     <div class="br-sec-label">หรือลองทางนี้</div>
     <div id="br-secondary-btns"></div>
   </div>
-  <div class="br-still">
-    <div class="br-still-q">ลองแล้ว ยังรู้สึกหนักอยู่ไหม?</div>
-    <div class="br-still-btns">
-      <button class="br-still-ok" onclick="bridgeFeelOk()">เบาขึ้นบ้างแล้ว</button>
-      <button class="br-still-no" onclick="bridgeStillHeavy()">ยังหนักอยู่</button>
-    </div>
-    <div class="br-heavy" id="br-heavy">
-      <div class="br-heavy-label">ไม่ใช่ความล้มเหลว</div>
-      <div class="br-heavy-note">
-        <strong>เครื่องมือไม่ได้ผลกับทุกคนในทุกวัน</strong><br>
-        นั่นหมายความว่าตอนนี้คุณอาจต้องการการสนับสนุนที่ต่างออกไป ไม่ใช่ว่าคุณไม่พยายามพอ
-      </div>
-      <div class="br-heavy-btns">
-        <a class="br-heavy-btn" href="tel:1323">
-          <span class="br-heavy-btn-icon">📞</span>
-          <span class="br-heavy-btn-body">
-            <span class="br-heavy-btn-name">โทร 1323</span>
-            <span class="br-heavy-btn-desc">ฟรี ตลอด 24 ชั่วโมง · ไม่ต้องรอถึงวิกฤต</span>
-          </span>
-          <span class="br-heavy-btn-arrow">→</span>
-        </a>
-        <a class="br-heavy-btn" href="peer.html">
-          <span class="br-heavy-btn-icon">💛</span>
-          <span class="br-heavy-btn-body">
-            <span class="br-heavy-btn-name">คุยกับ PR</span>
-            <span class="br-heavy-btn-desc">บางทีแค่มีคนรับฟังก็เบาขึ้นได้เยอะ</span>
-          </span>
-          <span class="br-heavy-btn-arrow">→</span>
-        </a>
-        <a class="br-heavy-btn" href="crisis.html">
-          <span class="br-heavy-btn-icon">🛠</span>
-          <span class="br-heavy-btn-body">
-            <span class="br-heavy-btn-name">เครื่องมือและสายด่วนอื่นๆ</span>
-            <span class="br-heavy-btn-desc">ทรัพยากรทั้งหมดที่มีอยู่</span>
-          </span>
-          <span class="br-heavy-btn-arrow">→</span>
-        </a>
-      </div>
-      <div class="br-1323-line">
-        หรือพูดคุยกับผู้เชี่ยวชาญโดยตรง —
-        <a href="tel:1323">1323</a> ฟรี ไม่ต้องนัด ไม่ต้องรอถึงวิกฤต
-      </div>
+  <!-- Three-option closer — routes back into the ecosystem -->
+  <div class="br-next-q">
+    <div class="br-next-label">ตอนนี้อะไรใกล้เคียงที่สุด?</div>
+    <div class="br-next-opts">
+
+      <button class="br-next-btn br-next-self" onclick="window.location.href='alltools.html'">
+        <span class="br-next-icon">🌿</span>
+        <span class="br-next-body">
+          <span class="br-next-name">ฉันอยากลองช่วยตัวเองก่อน</span>
+          <span class="br-next-desc">ดูเครื่องมือทั้งหมด</span>
+        </span>
+        <span class="br-next-arrow">→</span>
+      </button>
+
+      <button class="br-next-btn br-next-talk" onclick="window.location.href='talk.html#heavy'">
+        <span class="br-next-icon">💬</span>
+        <span class="br-next-body">
+          <span class="br-next-name">ฉันอยากคุยกับใครสักคน</span>
+          <span class="br-next-desc">เพื่อน · ครู · ผู้เชี่ยวชาญ</span>
+        </span>
+        <span class="br-next-arrow">→</span>
+      </button>
+
+      <button class="br-next-btn br-next-crisis" onclick="window.location.href='talk.html#crisis'">
+        <span class="br-next-icon">🔴</span>
+        <span class="br-next-body">
+          <span class="br-next-name">ฉันต้องการความช่วยเหลือมากกว่านี้</span>
+          <span class="br-next-desc">สายด่วน · ฉุกเฉิน</span>
+        </span>
+        <span class="br-next-arrow">→</span>
+      </button>
+
     </div>
   </div>
   <button class="br-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
@@ -425,12 +433,18 @@ const LAYER_LABEL = {
 // ─── TOOL CONFIG ────────────────────────────────────────────────
 // type: 'breathe' | 'journal' | 'reframe' | 'worry' | 'clarity'
 const TOOL_CONFIG = {
-  breathe: { icon:'🌬️', color:'teal',   name:'หายใจก่อนเลย',       hash:'#breathe' },
-  journal: { icon:'📓', color:'purple', name:'เขียนระบายก่อนเลย',   hash:'#journal' },
-  reframe: { icon:'🔄', color:'rose',   name:'ปรับความคิดก่อนเลย',  hash:'#reframe' },
-  worry:   { icon:'🌀', color:'blue',   name:'คลายกังวลก่อนเลย',    hash:'#worry'   },
-  clarity: { icon:'🧭', color:'gold',   name:'หาความชัดก่อนเลย',    hash:'#clarity' },
-  move:    { icon:'🏃', color:'green',  name:'เคลื่อนไหวก่อนเลย',   hash:'#move'    },
+  breathe:   { icon:'🌬️', color:'teal',   name:'หายใจก่อนเลย',         hash:'#breathe'   },
+  journal:   { icon:'📓', color:'purple', name:'เขียนระบายก่อนเลย',     hash:'#journal'   },
+  reframe:   { icon:'🔄', color:'rose',   name:'ปรับความคิดก่อนเลย',    hash:'#reframe'   },
+  worry:     { icon:'🌀', color:'blue',   name:'คลายกังวลก่อนเลย',      hash:'#worry'     },
+  clarity:   { icon:'🧭', color:'gold',   name:'หาความชัดก่อนเลย',      hash:'#clarity'   },
+  move:      { icon:'🏃', color:'green',  name:'เคลื่อนไหวก่อนเลย',     hash:'#move'      },
+  grounding: { icon:'🌱', color:'green',  name:'ลงดินก่อนเลย',           hash:'#grounding' },
+  rest:      { icon:'😴', color:'blue',   name:'พักก่อนเลย',             hash:'#rest'      },
+  rain:      { icon:'🌧️', color:'teal',   name:'ปล่อยให้ผ่านก่อนเลย',   hash:'#rain'      },
+  act:       { icon:'✅', color:'gold',   name:'ลงมือทำก่อนเลย',         hash:'#act'       },
+  savor:     { icon:'🌸', color:'rose',   name:'เพลิดเพลินก่อนเลย',      hash:'#savor'     },
+  play:      { icon:'🎮', color:'purple', name:'เล่นก่อนเลย',             hash:'#play'      },
 };
 
 // ─── DATABASE — all 9 cells, 5 emotions each ────────────────────
@@ -1139,6 +1153,7 @@ function buildBridge() {
   // ── Tool primary ──
   if (data.primaryTool) {
     const tc  = TOOL_CONFIG[data.primaryTool];
+    if (!tc) { console.warn('Missing TOOL_CONFIG entry for:', data.primaryTool); return; }
     const url = 'alltools.html' + tc.hash;
     primaryCard.innerHTML = `
       <a class="br-tool-card ${tc.color}" href="${url}">
