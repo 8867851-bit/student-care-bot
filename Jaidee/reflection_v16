@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What's This Feeling — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#FDFBF7; --cream-border:#EDE9E0;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --green:#3A7D44; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+      --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#5EEAD4;
+      --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
+      --rose:#E11D48; --rose-soft:#FFF1F2; --rose-border:#FECDD3;
+      --blue:#2E5FA3; --blue-soft:#EEF3FB; --blue-border:#C5D8F5;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --card:#FFFFFF;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;}
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:16px 20px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+    .screen{display:none;min-height:100vh;flex-direction:column;}
+    .screen.active{display:flex;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .screen-enter{animation:fadeUp 0.32s ease forwards;}
+
+    .step-count{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:1px;text-align:right;margin-bottom:4px;}
+    .progress{display:flex;gap:5px;padding:0 24px;margin-top:16px;}
+    .dot{width:5px;height:5px;border-radius:50%;background:var(--cream-border);transition:all 0.3s;}
+    .dot.active{background:var(--dark);width:16px;border-radius:3px;}
+    .dot.done{background:var(--green);width:5px;}
+
+    /* WELCOME */
+    #s-welcome{align-items:center;justify-content:center;text-align:center;padding:48px 32px;gap:0;}
+    .w-icon{font-size:48px;margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.2s ease forwards;}
+    .w-eye{font-size:10px;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;font-weight:400;margin-bottom:12px;opacity:0;animation:fadeUp 0.7s 0.4s ease forwards;}
+    .w-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;line-height:1.35;margin-bottom:10px;opacity:0;animation:fadeUp 0.7s 0.55s ease forwards;}
+    .w-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.8;margin-bottom:40px;opacity:0;animation:fadeUp 0.7s 0.7s ease forwards;}
+    .w-btn{background:var(--dark);color:var(--cream);border:none;border-radius:28px;padding:14px 32px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;opacity:0;animation:fadeUp 0.7s 0.9s ease forwards;transition:transform 0.15s;}
+    .w-btn:active{transform:scale(0.96);}
+    .w-exit{margin-top:16px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;opacity:0;animation:fadeUp 0.7s 1.05s ease forwards;}
+
+    /* REGULATE */
+    #s-regulate{justify-content:space-between;}
+    .reg-body{padding:52px 28px 0;flex:1;display:flex;flex-direction:column;justify-content:center;}
+    .reg-label{font-size:10px;letter-spacing:2px;color:var(--soft);text-transform:uppercase;margin-bottom:24px;}
+    .reg-line{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:400;line-height:1.6;opacity:0;transform:translateY(8px);transition:opacity 0.6s ease,transform 0.6s ease;margin-bottom:0;}
+    .reg-line+.reg-line{margin-top:22px;}
+    .reg-line.show{opacity:1;transform:translateY(0);}
+    .reg-line.dim{opacity:0.22;}
+    .reg-foot{padding:32px 28px 44px;}
+    .reg-btn{width:100%;background:var(--dark);color:var(--cream);border:none;border-radius:28px;padding:16px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;opacity:0;transition:opacity 0.5s ease,transform 0.15s;}
+    .reg-btn.show{opacity:1;}
+    .reg-btn:active{transform:scale(0.96);}
+
+    /* SHARED Q */
+    .q-wrap{padding:0 24px;flex:1;}
+    .q-eye{font-size:10px;letter-spacing:2px;color:var(--green);text-transform:uppercase;font-weight:400;margin-bottom:12px;margin-top:24px;}
+    .q-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.4;margin-bottom:6px;}
+    .q-sub{font-size:12px;font-weight:300;color:var(--soft);margin-bottom:20px;line-height:1.6;}
+    .q-foot{padding:0 24px 44px;}
+    .next-btn{width:100%;background:var(--dark);color:var(--cream);border:none;border-radius:28px;padding:16px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;opacity:0.32;transition:opacity 0.25s,transform 0.15s;pointer-events:none;}
+    .next-btn.on{opacity:1;pointer-events:all;}
+    .next-btn:active{transform:scale(0.97);}
+
+    /* BODY GRID */
+    .body-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .b-card{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:16px 14px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;gap:5px;}
+    .b-card.sel{border-color:var(--dark);background:var(--dark);}
+    .b-card.sel .b-label{color:var(--cream);}
+    .b-card.sel .b-desc{color:rgba(253,251,247,0.55);}
+    .b-icon{font-size:22px;}
+    .b-label{font-size:13px;font-weight:500;}
+    .b-desc{font-size:11px;font-weight:300;color:var(--soft);line-height:1.5;}
+
+    /* VAL / AROUSAL OPTS */
+    .v-opts{display:flex;flex-direction:column;gap:10px;}
+    .v-opt{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:18px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.18s;}
+    .v-opt.sel{border-color:var(--dark);background:var(--dark);}
+    .v-opt.sel .v-label{color:var(--cream);}
+    .v-opt.sel .v-desc{color:rgba(253,251,247,0.5);}
+    .v-icon{font-size:24px;flex-shrink:0;}
+    .v-label{font-size:15px;font-weight:500;}
+    .v-desc{font-size:12px;font-weight:300;color:var(--soft);margin-top:2px;}
+
+    /* NAMING — scrollable for 5 options */
+    .n-intro{font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:16px;margin-top:6px;}
+    .n-cards{display:flex;flex-direction:column;gap:8px;}
+    .n-card{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:16px;cursor:pointer;transition:all 0.18s;}
+    .n-card.sel{border-color:var(--green);background:var(--green-soft);}
+    .n-card.sel .n-word{color:var(--green);}
+    .n-word{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;margin-bottom:4px;}
+    .n-desc{font-size:12px;font-weight:300;color:var(--mid);line-height:1.65;}
+    .n-none{width:100%;background:none;border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:300;color:var(--soft);cursor:pointer;margin-top:4px;transition:all 0.18s;}
+    .n-none.sel{border-color:var(--soft);color:var(--mid);}
+
+    /* ONE Q */
+    .oq-opts{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+    .oq-opt{background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:16px;cursor:pointer;font-family:'Mitr',sans-serif;font-size:14px;font-weight:400;color:var(--dark);text-align:left;transition:all 0.18s;}
+    .oq-opt.sel{border-color:var(--dark);background:var(--dark);color:var(--cream);}
+
+    /* BRIDGE */
+    #s-bridge{padding:0 0 48px;}
+    /* ── สิ่งที่เราสังเกตเห็น ── */
+    .br-noticed{margin:0 24px 20px;padding:16px 18px;background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:16px;}
+    .br-noticed-label{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+    .br-noticed-text{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:500;color:var(--dark);line-height:1.6;margin-bottom:6px;}
+    .br-noticed-sub{font-size:12px;font-weight:300;color:var(--mid);line-height:1.65;}
+  /* ── THREE-OPTION CLOSER ── */
+  .br-next-q{margin:32px 24px 0;padding-top:24px;border-top:1px solid var(--cream-border);}
+  .br-next-label{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--mid);margin-bottom:14px;text-align:center;}
+  .br-next-opts{display:flex;flex-direction:column;gap:9px;}
+  .br-next-btn{display:flex;align-items:center;gap:14px;padding:15px 18px;border-radius:16px;border:1.5px solid var(--cream-border);background:var(--card-bg);cursor:pointer;font-family:'Mitr',sans-serif;text-align:left;width:100%;transition:transform 0.15s,border-color 0.15s;}
+  .br-next-btn:active{transform:scale(0.97);}
+  .br-next-icon{font-size:24px;flex-shrink:0;width:36px;text-align:center;}
+  .br-next-body{flex:1;text-align:left;}
+  .br-next-name{display:block;font-size:14px;font-weight:500;color:var(--dark);line-height:1.3;margin-bottom:2px;}
+  .br-next-desc{display:block;font-size:11px;font-weight:400;color:var(--soft);}
+  .br-next-arrow{font-size:13px;color:var(--soft);flex-shrink:0;}
+  .br-next-self{border-color:var(--green-border);}
+  .br-next-self .br-next-name{color:#1C4A23;}
+  .br-next-talk{border-color:var(--gold-border);}
+  .br-next-talk .br-next-name{color:#5C3D00;}
+  .br-next-crisis{border-color:rgba(220,38,38,0.25);}
+  .br-next-crisis .br-next-name{color:#7A0000;}
+
+    .br-top{padding:48px 28px 24px;text-align:center;}
+    .br-thanks{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.5;margin-bottom:8px;}
+    .br-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;max-width:300px;margin:0 auto;}
+    .br-state{margin:0 24px 24px;background:var(--card);border:1px solid var(--cream-border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;}
+    .br-state-icon{font-size:28px;flex-shrink:0;}
+    .br-state-body{flex:1;}
+    .br-state-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:3px;}
+    .br-state-name{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);}
+    .br-state-desc{font-size:11px;font-weight:300;color:var(--mid);margin-top:2px;line-height:1.5;}
+    .br-primary{margin:0 24px 10px;}
+    .br-primary-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:8px;padding:0 2px;}
+    .br-tool-card{border-radius:18px;padding:18px 18px 16px;cursor:pointer;border:none;width:100%;text-align:left;font-family:'Mitr',sans-serif;transition:transform 0.15s;display:block;text-decoration:none;}
+    .br-tool-card:active{transform:scale(0.97);}
+    .br-tool-card.teal{background:linear-gradient(135deg,var(--teal-soft),#E0FAF7);border:1.5px solid var(--teal-border);}
+    .br-tool-card.purple{background:linear-gradient(135deg,var(--purple-soft),#FAF8FF);border:1.5px solid var(--purple-border);}
+    .br-tool-card.green{background:linear-gradient(135deg,var(--green-soft),#F5FBF6);border:1.5px solid var(--green-border);}
+    .br-tool-card.rose{background:linear-gradient(135deg,var(--rose-soft),#FFF8FA);border:1.5px solid var(--rose-border);}
+    .br-tool-card.blue{background:linear-gradient(135deg,var(--blue-soft),#F8FAFF);border:1.5px solid var(--blue-border);}
+    .br-tool-card.gold{background:linear-gradient(135deg,var(--gold-soft),#FFFDF8);border:1.5px solid var(--gold-border);}
+    .br-tool-icon{font-size:28px;margin-bottom:10px;display:block;}
+    .br-tool-eyebrow{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;margin-bottom:4px;}
+    .br-tool-card.teal   .br-tool-eyebrow{color:var(--teal);}
+    .br-tool-card.purple .br-tool-eyebrow{color:var(--purple);}
+    .br-tool-card.green  .br-tool-eyebrow{color:var(--green);}
+    .br-tool-card.rose   .br-tool-eyebrow{color:var(--rose);}
+    .br-tool-card.blue   .br-tool-eyebrow{color:var(--blue);}
+    .br-tool-card.gold   .br-tool-eyebrow{color:#7A5200;}
+    .br-tool-name{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);margin-bottom:4px;}
+    .br-tool-why{font-size:12px;font-weight:300;color:var(--mid);line-height:1.65;}
+    .br-tool-arrow{float:right;font-size:16px;color:var(--soft);margin-top:-28px;}
+    .br-layer-chip{display:inline-flex;align-items:center;gap:5px;margin-top:10px;background:rgba(58,125,68,0.12);border:1px solid var(--green-border);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:500;color:var(--green);}
+    .br-secondary{margin:0 24px;display:flex;flex-direction:column;gap:8px;}
+    .br-sec-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:2px;padding:0 2px;}
+    .br-sec-btn{width:100%;background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px 16px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--mid);cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:border-color 0.18s,color 0.18s;}
+    .br-sec-btn:active{border-color:var(--dark);color:var(--dark);}
+    .br-sec-btn-icon{font-size:18px;flex-shrink:0;}
+    .br-sec-btn-body{flex:1;}
+    .br-sec-btn-name{font-size:13px;font-weight:500;color:var(--dark);margin-bottom:1px;}
+    .br-sec-btn-desc{font-size:11px;font-weight:300;color:var(--soft);}
+    .br-sec-arrow{font-size:14px;color:var(--soft);flex-shrink:0;}
+    .br-exit{display:block;text-align:center;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;margin:20px auto 0;padding:8px;}
+
+    /* STILL HEAVY */
+    .br-still{margin:20px 24px 0;border-top:1px solid var(--cream-border);padding-top:18px;}
+    .br-still-q{font-size:12px;font-weight:400;color:var(--soft);margin-bottom:10px;text-align:center;}
+    .br-still-btns{display:flex;gap:8px;}
+    .br-still-ok{flex:1;background:var(--green-soft);border:1px solid var(--green-border);border-radius:12px;padding:11px 8px;font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--green);cursor:pointer;transition:transform 0.15s;}
+    .br-still-ok:active{transform:scale(0.96);}
+    .br-still-no{flex:1;background:var(--card);border:1.5px solid var(--cream-border);border-radius:12px;padding:11px 8px;font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--mid);cursor:pointer;transition:all 0.18s;}
+    .br-still-no:active{border-color:var(--dark);color:var(--dark);}
+    .br-heavy{display:none;margin-top:12px;background:var(--dark);border-radius:16px;padding:16px;}
+    .br-heavy.show{display:block;}
+    .br-heavy-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;color:rgba(232,150,12,0.7);margin-bottom:10px;}
+    .br-heavy-note{font-size:12px;font-weight:300;color:rgba(253,251,247,0.55);line-height:1.75;margin-bottom:14px;}
+    .br-heavy-note strong{font-weight:500;color:rgba(253,251,247,0.85);}
+    .br-heavy-btns{display:flex;flex-direction:column;gap:8px;}
+    .br-heavy-btn{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);cursor:pointer;font-family:'Mitr',sans-serif;text-decoration:none;transition:background 0.15s;}
+    .br-heavy-btn:active{background:rgba(255,255,255,0.1);}
+    .br-heavy-btn-icon{font-size:16px;flex-shrink:0;}
+    .br-heavy-btn-body{flex:1;}
+    .br-heavy-btn-name{font-size:13px;font-weight:500;color:#FDFBF7;margin-bottom:1px;}
+    .br-heavy-btn-desc{font-size:11px;font-weight:300;color:rgba(253,251,247,0.45);}
+    .br-heavy-btn-arrow{font-size:12px;color:rgba(255,255,255,0.2);flex-shrink:0;}
+    .br-1323-line{margin-top:12px;text-align:center;font-size:11px;font-weight:300;color:rgba(253,251,247,0.3);line-height:1.7;}
+    .br-1323-line a{color:rgba(232,150,12,0.7);text-decoration:none;}
+
+    /* NO MATCH */
+    #s-nomatch{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:0;}
+    .nm-icon{font-size:44px;margin-bottom:24px;}
+    .nm-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.5;margin-bottom:10px;}
+    .nm-sub{font-size:13px;font-weight:300;color:var(--mid);line-height:1.8;margin-bottom:32px;max-width:300px;}
+    .nm-peer{width:100%;max-width:320px;background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:28px;padding:16px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:#7A5C00;cursor:pointer;margin-bottom:10px;transition:transform 0.15s;}
+    .nm-peer:active{transform:scale(0.97);}
+    .nm-care{width:100%;max-width:320px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:28px;padding:15px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--mid);cursor:pointer;transition:all 0.18s;}
+    .nm-care:active{border-color:var(--dark);color:var(--dark);}
+    .nm-exit{background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;margin-top:16px;}
+  </style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div class="screen active" id="s-welcome">
+  <div class="w-icon">🪞</div>
+  <div class="w-eye">ใจดี TU · What's This Feeling</div>
+  <div class="w-title">ไม่ต้องรีบหาคำตอบ</div>
+  <div class="w-sub">ลองสังเกตสิ่งที่เกิดขึ้นข้างในก่อน</div>
+  <button class="w-btn" onclick="goTo('s-regulate')">ลองเลย →</button>
+  <button class="w-exit" onclick="window.history.back()">← กลับหน้าหลัก</button>
+</div>
+
+<!-- REGULATE -->
+<div class="screen" id="s-regulate">
+  <button class="back-btn" onclick="goTo('s-welcome')">← กลับ</button>
+  <div class="progress">
+    <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+  <div class="reg-body">
+    <div class="reg-label">ก่อนอื่น · หยุดสักครู่</div>
+    <div class="reg-line" id="rl0">สังเกตลมหายใจตอนนี้</div>
+    <div class="reg-line" id="rl1">ไม่ต้องเปลี่ยนอะไร<br>แค่รู้ว่ามันอยู่ตรงไหน</div>
+    <div class="reg-line" id="rl2">สังเกตจุดที่ร่างกาย<br>สัมผัสกับพื้นหรือเก้าอี้</div>
+    <div class="reg-line" id="rl3">หายใจออกช้าๆ<br>ครั้งเดียวก็พอ</div>
+  </div>
+  <div class="reg-foot" style="display:flex;align-items:center;gap:16px;justify-content:center;">
+    <button class="reg-btn" id="reg-ready" onclick="goTo('s-body')" style="flex:1;max-width:200px;">พร้อมแล้ว →</button>
+    <button style="background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:8px;flex-shrink:0;" onclick="goTo('s-body')">ข้าม →</button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="screen" id="s-body">
+  <button class="back-btn" onclick="goTo('s-regulate')">← กลับ</button>
+  <div class="progress">
+    <div class="step-count">1 / 4</div>
+    <div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+  <div class="q-wrap">
+    <div class="q-eye">ร่างกาย</div>
+    <div class="q-title">ตอนนี้ร่างกายรู้สึกยังไง?</div>
+    <div class="q-sub">แค่สังเกต ไม่มีผิดถูก</div>
+    <div class="body-grid">
+      <div class="b-card" data-v="heavy" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">😴</div><div class="b-label">หนักและล้า</div>
+        <div class="b-desc">รู้สึกเหมือนแบกอะไรบางอย่างอยู่ อยากนอนลง</div>
+      </div>
+      <div class="b-card" data-v="tight" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">😤</div><div class="b-label">ตึงและเกร็ง</div>
+        <div class="b-desc">ไหล่แข็ง หน้าอกแน่น หรือขากรรไกรล็อค</div>
+      </div>
+      <div class="b-card" data-v="fast" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">⚡</div><div class="b-label">อยู่ไม่สุข</div>
+        <div class="b-desc">หัวใจเต้นเร็ว หายใจตื้น มีพลังงานพุ่งอยู่</div>
+      </div>
+      <div class="b-card" data-v="empty" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">🫥</div><div class="b-label">ชา ๆ ว่าง ๆ</div>
+        <div class="b-desc">รู้สึกเหมือนอยู่หลังกระจก ไม่ค่อยรู้สึกอะไร</div>
+      </div>
+      <div class="b-card" data-v="ok" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">🌿</div><div class="b-label">ค่อนข้างปกติ</div>
+        <div class="b-desc">ไม่มีอะไรผิดปกติชัดเจน ร่างกายพอรับมือได้</div>
+      </div>
+      <div class="b-card" data-v="unsure" onclick="pick(this,'body','b-card','body-next')">
+        <div class="b-icon">🌊</div><div class="b-label">ไม่แน่ใจ</div>
+        <div class="b-desc">ยังอ่านร่างกายตัวเองไม่ออก</div>
+      </div>
+    </div>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="body-next" onclick="goTo('s-valence')">ถัดไป →</button></div>
+</div>
+
+<!-- VALENCE -->
+<div class="screen" id="s-valence">
+  <button class="back-btn" onclick="goTo('s-body')">← กลับ</button>
+  <div class="progress">
+    <div class="step-count">2 / 4</div>
+    <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+  <div class="q-wrap">
+    <div class="q-eye">ความรู้สึก</div>
+    <div class="q-title">อะไรใกล้เคียงกับตอนนี้ที่สุด?</div>
+    <div class="q-sub">ไม่ต้องถูกต้อง · แค่ใกล้เคียงก็พอ</div>
+    <div class="v-opts">
+      <div class="v-opt" data-v="good" onclick="pick(this,'valence','v-opt','val-next')">
+        <div class="v-icon">☀️</div>
+        <div><div class="v-label">รู้สึกดี</div><div class="v-desc">มีบางอย่างที่น่าพอใจหรือสบายใจ</div></div>
+      </div>
+      <div class="v-opt" data-v="neutral" onclick="pick(this,'valence','v-opt','val-next')">
+        <div class="v-icon">🌤</div>
+        <div><div class="v-label">เฉยๆ</div><div class="v-desc">ไม่ดีไม่แย่ หรือยังบอกไม่ถูก</div></div>
+      </div>
+      <div class="v-opt" data-v="bad" onclick="pick(this,'valence','v-opt','val-next')">
+        <div class="v-icon">🌧</div>
+        <div><div class="v-label">ไม่ดี</div><div class="v-desc">มีบางอย่างที่รู้สึกหนักหรือไม่โอเค</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="val-next" onclick="goTo('s-arousal')">ถัดไป →</button></div>
+</div>
+
+<!-- AROUSAL -->
+<div class="screen" id="s-arousal">
+  <button class="back-btn" onclick="goTo('s-valence')">← กลับ</button>
+  <div class="progress">
+    <div class="step-count">3 / 4</div>
+    <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
+  </div>
+  <div class="q-wrap">
+    <div class="q-eye">ความเร็วข้างใน</div>
+    <div class="q-title">ความรู้สึกตอนนี้<br>วิ่งเร็วหรือช้า?</div>
+    <div class="q-sub">ไม่ใช่เรื่องร่างกาย แต่เป็นจังหวะข้างใน</div>
+    <div class="v-opts">
+      <div class="v-opt" data-v="high" onclick="pick(this,'arousal','v-opt','arousal-next')">
+        <div class="v-icon">🔥</div>
+        <div><div class="v-label">วิ่งเร็ว</div><div class="v-desc">คิดเยอะ วนเวียน ความคิดหยุดไม่ค่อยได้</div></div>
+      </div>
+      <div class="v-opt" data-v="mid" onclick="pick(this,'arousal','v-opt','arousal-next')">
+        <div class="v-icon">🌿</div>
+        <div><div class="v-label">พออยู่ได้</div><div class="v-desc">ไม่เร็วไม่ช้า ยังพอรับมือได้</div></div>
+      </div>
+      <div class="v-opt" data-v="low" onclick="pick(this,'arousal','v-opt','arousal-next')">
+        <div class="v-icon">🌑</div>
+        <div><div class="v-label">วิ่งช้า</div><div class="v-desc">รู้สึกล้า หนัก หรืออยากถอยห่างจากทุกอย่าง</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="arousal-next" onclick="buildNaming()">ถัดไป →</button></div>
+</div>
+
+<!-- NAMING -->
+<div class="screen" id="s-name">
+  <button class="back-btn" onclick="goTo('s-arousal')">← กลับ</button>
+  <div class="progress">
+    <div class="step-count">4 / 4</div>
+    <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div>
+  </div>
+  <div class="q-wrap" style="overflow-y:auto;padding-bottom:16px;">
+    <div class="q-eye">ชื่อของมัน</div>
+    <div class="q-title">บางทีความรู้สึกมีชื่อ</div>
+    <div class="n-intro">ลองดูว่ามีอันไหนที่ใกล้เคียงบ้างไหม<br>ไม่ต้องตรงทั้งหมดก็ได้</div>
+    <div class="n-cards" id="name-cards"></div>
+    <button class="n-none" id="n-none" onclick="pickNone()">ไม่มีเลยที่ตรง</button>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="name-next" onclick="afterNaming()">ถัดไป →</button></div>
+</div>
+
+<!-- ONE QUESTION -->
+<div class="screen" id="s-question">
+  <button class="back-btn" onclick="goTo('s-name')">← กลับ</button>
+  <div style="padding:28px 24px;flex:1;">
+    <div class="q-eye" style="margin-top:16px;">คำถามสุดท้าย</div>
+    <div class="q-title" id="oq-title"></div>
+    <div class="oq-opts" id="oq-opts"></div>
+  </div>
+  <div class="q-foot"><button class="next-btn" id="oq-next" onclick="buildBridge()">เสร็จแล้ว →</button></div>
+</div>
+
+<!-- BRIDGE -->
+<div class="screen" id="s-bridge">
+  <div class="br-top">
+    <div class="br-thanks">ขอบคุณที่อยู่กับ<br>ตัวเองสักครู่นะ</div>
+    <div class="br-sub" id="br-sub"></div>
+  </div>
+  <div class="br-state" id="br-state">
+    <div class="br-state-icon" id="br-state-icon"></div>
+    <div class="br-state-body">
+      <div class="br-state-label">ความรู้สึกตอนนี้</div>
+      <div class="br-state-name" id="br-state-name"></div>
+      <div class="br-state-desc" id="br-state-desc" style="display:none;"></div>
+    </div>
+  </div>
+  <div class="br-noticed">
+    <div class="br-noticed-label">สิ่งที่เราสังเกตเห็น</div>
+    <div class="br-noticed-text" id="br-noticed-text"></div>
+    <div class="br-noticed-sub" id="br-sub-noticed"></div>
+  </div>
+  <div class="br-primary">
+    <div class="br-primary-label">สิ่งที่อาจช่วยได้ตอนนี้</div>
+    <div id="br-primary-card"></div>
+  </div>
+  <!-- Three-option closer — routes back into the ecosystem -->
+  <div class="br-next-q">
+    <div class="br-next-label">ตอนนี้อะไรใกล้เคียงที่สุด?</div>
+    <div class="br-next-opts">
+
+      <button class="br-next-btn br-next-self" onclick="window.location.href='alltools.html'">
+        <span class="br-next-icon">🌿</span>
+        <span class="br-next-body">
+          <span class="br-next-name">ฉันอยากลองช่วยตัวเองก่อน</span>
+          <span class="br-next-desc">ดูเครื่องมือทั้งหมด</span>
+        </span>
+        <span class="br-next-arrow">→</span>
+      </button>
+
+      <button class="br-next-btn br-next-talk" onclick="window.location.href='talk.html#heavy'">
+        <span class="br-next-icon">💬</span>
+        <span class="br-next-body">
+          <span class="br-next-name">ฉันอยากคุยกับใครสักคน</span>
+          <span class="br-next-desc">เพื่อน · ครู · ผู้เชี่ยวชาญ</span>
+        </span>
+        <span class="br-next-arrow">→</span>
+      </button>
+
+      <button class="br-next-btn br-next-crisis" onclick="window.location.href='talk.html#crisis'">
+        <span class="br-next-icon">🔴</span>
+        <span class="br-next-body">
+          <span class="br-next-name">ฉันต้องการความช่วยเหลือมากกว่านี้</span>
+          <span class="br-next-desc">สายด่วน · ฉุกเฉิน</span>
+        </span>
+        <span class="br-next-arrow">→</span>
+      </button>
+
+    </div>
+  </div>
+  <div class="br-secondary">
+    <div class="br-sec-label">ถ้ายังไม่ใช่</div>
+    <div id="br-secondary-btns"></div>
+  </div>
+  <button class="br-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
+</div>
+
+<!-- NO MATCH -->
+<div class="screen" id="s-nomatch">
+  <div class="nm-icon">🌫</div>
+  <div class="nm-title">บางทีความรู้สึก<br>ก็ยังไม่มีชื่อ</div>
+  <div class="nm-sub">และนั่นก็โอเค<br>ไม่จำเป็นต้องเข้าใจตัวเองทั้งหมด<br>ก่อนที่จะเริ่มดูแลตัวเอง</div>
+  <button class="nm-peer" onclick="window.location.href='alltools.html'">🌿 ลองสำรวจต่อ</button>
+  <button class="nm-care" onclick="window.location.href='care.html'">ไปพื้นที่ใจ — ไม่ต้องรู้ว่ารู้สึกอะไรก็เริ่มได้</button>
+  <button class="nm-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
+</div>
+
+<script>
+const S = { body:null, valence:null, arousal:null, name:null, noname:false, _data:null };
+
+const LAYER_TAB   = { body:0, connection:1, expression:2, environment:3, belief:4, professional:5 };
+const LAYER_LABEL = {
+  body:        '🏃 ชั้นร่างกาย',
+  connection:  '🫂 ชั้นความสัมพันธ์',
+  expression:  '🎨 ชั้นการแสดงออก',
+  environment: '🌍 ชั้นสิ่งแวดล้อม',
+  belief:      '🪞 ชั้นความเชื่อ',
+  professional:'🏥 ชั้นผู้เชี่ยวชาญ',
+};
+
+// ─── TOOL CONFIG ────────────────────────────────────────────────
+// type: 'breathe' | 'journal' | 'reframe' | 'worry' | 'clarity'
+const TOOL_CONFIG = {
+  breathe:   { icon:'🌬️', color:'teal',   name:'หายใจก่อนเลย',         hash:'#breathe'   },
+  journal:   { icon:'📓', color:'purple', name:'เขียนระบายก่อนเลย',     hash:'#journal'   },
+  reframe:   { icon:'🔄', color:'rose',   name:'ปรับความคิดก่อนเลย',    hash:'#reframe'   },
+  worry:     { icon:'🌀', color:'blue',   name:'คลายกังวลก่อนเลย',      hash:'#worry'     },
+  clarity:   { icon:'🧭', color:'gold',   name:'หาความชัดก่อนเลย',      hash:'#clarity'   },
+  move:      { icon:'🏃', color:'green',  name:'เคลื่อนไหวก่อนเลย',     hash:'#move'      },
+  grounding: { icon:'🌱', color:'green',  name:'ลงดินก่อนเลย',           hash:'#grounding' },
+  rest:      { icon:'😴', color:'blue',   name:'พักก่อนเลย',             hash:'#rest'      },
+  rain:      { icon:'🌧️', color:'teal',   name:'ปล่อยให้ผ่านก่อนเลย',   hash:'#rain'      },
+  act:       { icon:'✅', color:'gold',   name:'ลงมือทำก่อนเลย',         hash:'#act'       },
+  savor:     { icon:'🌸', color:'rose',   name:'เพลิดเพลินก่อนเลย',      hash:'#savor'     },
+  play:      { icon:'🎮', color:'purple', name:'เล่นก่อนเลย',             hash:'#play'      },
+};
+
+// ─── DATABASE — all 9 cells, 5 emotions each ────────────────────
+const DB = {
+
+  // ── BAD + HIGH ──
+  bad_high: {
+    opts:[
+      { w:'วิตกกังวล',    d:'รู้สึกเหมือนมีอะไรบางอย่างที่ยังไม่โอเค รอคอยสิ่งที่ยังไม่มาถึง' },
+      { w:'กดดัน',        d:'ความคาดหวังรู้สึกหนักกว่าที่รับได้ ทั้งจากตัวเองและคนรอบข้าง' },
+      { w:'หงุดหงิด',     d:'มีอะไรบางอย่างที่รู้สึกไม่ยุติธรรม หรือไม่เป็นอย่างที่อยากให้เป็น' },
+      { w:'โกรธ',         d:'รู้สึกร้อนข้างใน มีพลังงานก้าวร้าวที่อยากระบายออก' },
+      { w:'กลัว',         d:'มีบางอย่างที่รู้สึกว่าอันตรายหรือไม่ปลอดภัย ทั้งจริงหรือในความคิด' },
+    ],
+    q:{ t:'ความกดดันนี้มาจากไหนมากกว่า?', o:['จากคนอื่นหรือสิ่งรอบข้าง','จากตัวเอง','ทั้งสองอย่าง','ไม่แน่ใจ'] },
+    primaryTool: 'worry',
+    primaryWhy: 'ตอนที่พลังงานสูงแบบนี้ การแยกว่ากังวลเรื่องอะไรได้จริงๆ\nช่วยให้ระบบประสาทเริ่มผ่อนคลายลงได้',
+    layer: 'environment',
+    bs: 'ความรู้สึกแบบนี้มักเชื่อมกับแรงกดดันรอบตัว\nหลังคลายกังวลแล้ว พื้นที่ใจชั้นสิ่งแวดล้อมรอคุณอยู่',
+    stateIcon:'🌀', stateName:'ตึงเครียด · พลังงานสูง',
+    stateDesc:'ร่างกายตื่นตัวมาก จิตใจกำลังประมวลผลอะไรบางอย่าง',
+    secondary: [
+      { icon:'🔄', name:'ปรับความคิด', desc:'ถ้ารู้สึกว่าความคิดกำลังกดตัวเองอยู่', url:'alltools.html#reframe' },
+      { icon:'🎯', name:'เตรียมตัว',   desc:'ถ้าตึงเพราะมีอะไรสำคัญรออยู่',         url:'alltools.html#grounding' },
+    ],
+  },
+
+  // ── BAD + MID ──
+  bad_mid: {
+    opts:[
+      { w:'เหนื่อยใจ',    d:'รู้สึกล้าจากการพยายามมานาน ไม่ใช่แค่ร่างกาย แต่ข้างใน' },
+      { w:'สับสน',         d:'ไม่รู้จะไปทางไหน หรือไม่รู้ว่าตัวเองรู้สึกอะไรกันแน่' },
+      { w:'โดดเดี่ยว',    d:'อยู่กับคนเยอะ แต่รู้สึกว่าไม่มีใครเข้าใจจริงๆ' },
+      { w:'เสียใจ',        d:'มีบางอย่างที่ไม่เป็นอย่างที่หวัง หรือมีสิ่งที่สูญเสียไป' },
+      { w:'ผิดหวัง',       d:'คาดหวังบางอย่างแล้วมันไม่ได้เป็นแบบนั้น รู้สึกแป้ก' },
+    ],
+    q:{ t:'ตอนนี้รู้สึกอยากทำอะไรมากกว่า?', o:['อยู่คนเดียวสักพัก','คุยกับใครบางคน','ไม่รู้เหมือนกัน','แค่อยากให้มันผ่านไป'] },
+    primaryTool: 'reframe',
+    primaryWhy: 'ความรู้สึกแบบนี้มักมาพร้อมความคิดที่กดตัวเองหนัก\nการปรับมุมมองช่วยได้โดยไม่ต้องเปลี่ยนความจริงภายนอก',
+    layer: 'connection',
+    bs: 'เมื่อรู้สึกโดดเดี่ยว การเชื่อมต่อกับคนอื่น\nหรือแค่ระบายออกมาก็ช่วยได้มาก',
+    stateIcon:'🌧', stateName:'หนักใจ · พลังงานกลาง',
+    stateDesc:'มีบางอย่างค้างอยู่ข้างใน ยังหาทางออกไม่เจอ',
+    secondary: [
+      { icon:'📓', name:'เขียนระบาย',     desc:'ให้สิ่งที่อยู่ในหัวออกมาอยู่ข้างนอก',        url:'alltools.html#journal' },
+      { icon:'🫂', name:'พื้นที่ใจ · ความสัมพันธ์', desc:'อ่านและทำความเข้าใจ', url:'care.html?tab=connection' },
+    ],
+  },
+
+  // ── BAD + LOW ──
+  bad_low: {
+    opts:[
+      { w:'เศร้า',          d:'มีบางอย่างที่รู้สึกสูญเสีย หรือรู้สึกหนักในอก' },
+      { w:'ถอยห่าง',       d:'อยากหายไปจากทุกอย่างสักพัก ไม่อยากมีส่วนร่วมกับอะไร' },
+      { w:'หมดแรง',        d:'ทำทุกอย่างต้องใช้แรงมากกว่าปกติมาก' },
+      { w:'ท้อแท้',         d:'รู้สึกว่าพยายามไปก็ไม่มีอะไรเปลี่ยน อยากหยุด' },
+      { w:'รู้สึกว่างเปล่า', d:'ข้างในรู้สึกเหมือนไม่มีอะไร ไม่ดีและไม่แย่ แค่ว่าง' },
+    ],
+    q:{ t:'ความรู้สึกนี้อยู่มาแล้วนานแค่ไหน?', o:['วันสองวันนี้','สัปดาห์นี้','นานกว่านั้น','ไม่รู้เหมือนกัน'] },
+    primaryTool: 'journal',
+    primaryWhy: 'เมื่อพลังงานต่ำมาก การบังคับตัวเองไปอ่านอะไรยาวๆ ยาก\nบันทึกสั้นๆ ช่วยให้รู้สึกว่าได้ทำบางอย่างเพื่อตัวเอง',
+    layer: 'body',
+    bs: 'ความรู้สึกแบบนี้มักมีรากในร่างกายด้วย\nพื้นที่ใจชั้นร่างกายเริ่มจากจุดเล็กๆ ที่ทำได้ตอนนี้เลย',
+    stateIcon:'🌑', stateName:'หนักเหนื่อย · พลังงานต่ำ',
+    stateDesc:'ร่างกายและใจต้องการการดูแลเป็นพิเศษตอนนี้',
+    secondary: [
+      { icon:'🏃', name:'เคลื่อนไหว',   desc:'ขยับเล็กน้อย บางทีร่างกายนำใจได้',  url:'alltools.html#move' },
+      { icon:'🏃', name:'พื้นที่ใจ · ร่างกาย', desc:'อ่านและทำความเข้าใจ',          url:'care.html?tab=body' },
+    ],
+  },
+
+  // ── NEUTRAL + HIGH ──
+  neutral_high: {
+    opts:[
+      { w:'ลุ้น · ตื่นเต้น',    d:'มีอะไรบางอย่างที่กำลังจะเกิดขึ้น รู้สึกทั้งดีและไม่แน่ใจ' },
+      { w:'กระสับกระส่าย',      d:'อยู่เฉยไม่ค่อยได้ มีพลังงานล้น แต่ยังไม่รู้จะทำอะไรกับมัน' },
+      { w:'ค้างคา',             d:'มีเรื่องในหัวหลายอย่าง ยังไม่ได้ตัดสินใจหรือลงเอยซักที' },
+      { w:'ประหม่า',            d:'กำลังจะเจอบางอย่างที่สำคัญ รู้สึกไม่แน่ใจว่าจะเป็นยังไง' },
+      { w:'ลังเล',              d:'มีทางเลือกหลายทาง แต่ยังตัดสินใจไม่ได้ว่าจะไปทางไหน' },
+    ],
+    q:{ t:'สิ่งที่ครองความคิดมากที่สุดตอนนี้คือ?', o:['เรื่องการเรียน','เรื่องคนอื่น','เรื่องอนาคต','ยังไม่รู้แน่'] },
+    primaryTool: 'worry',
+    primaryWhy: 'พลังงานสูงแบบนี้มักมาพร้อมความกังวลที่วนในหัว\nการแยกประเภทความกังวลช่วยให้มันเบาลงได้',
+    layer: 'expression',
+    bs: 'พลังงานนี้ต้องการพื้นที่ระบายออก\nชั้นการแสดงออกมีเครื่องมือช่วยจัดการกับมัน',
+    stateIcon:'⚡', stateName:'ตื่นตัว · เฉยๆ',
+    stateDesc:'มีพลังงานอยู่ แต่ยังไม่ชัดว่าจะไปทางไหน',
+    secondary: [
+      { icon:'🎯', name:'เตรียมตัว',   desc:'ถ้าประหม่าหรือลุ้นก่อนอะไรสำคัญ',     url:'alltools.html#grounding' },
+      { icon:'🌬️', name:'หายใจก่อน', desc:'ถ้าร่างกายตึงเกินไปจนทำอะไรไม่ได้',   url:'alltools.html#breathe' },
+    ],
+  },
+
+  // ── NEUTRAL + MID ──
+  neutral_mid: {
+    opts:[
+      { w:'เรียบๆ',           d:'ไม่ได้มีอะไรผิดปกติ แต่ก็ไม่ได้รู้สึกว่าดีพิเศษ' },
+      { w:'รอดู',             d:'กำลังดูว่าอะไรจะเกิดขึ้น ยังไม่ได้ลงหลักปักฐาน' },
+      { w:'เหนื่อยแบบเบาๆ', d:'มีความเหนื่อยเล็กๆ ที่ยังอธิบายไม่ถูกชัดเจน' },
+      { w:'เบื่อ',             d:'ทุกอย่างดูซ้ำๆ ไม่มีอะไรน่าสนใจหรือมีความหมายพอ' },
+      { w:'ไม่แน่ใจ',         d:'ไม่แน่ใจว่าตัวเองต้องการอะไร หรืออยู่ตรงไหนกันแน่' },
+    ],
+    q:{ t:'มีเรื่องที่อยู่ในหัวแต่ยังไม่ได้พูดถึงไหม?', o:['มี แต่ยังไม่พร้อมพูด','มี และอยากพูด','ไม่มีเท่าไหร่','ไม่รู้เหมือนกัน'] },
+    primaryTool: 'clarity',
+    primaryWhy: 'ความรู้สึกเรียบๆ หรือไม่แน่ใจมักหมายความว่า\nยังไม่ได้ฟังตัวเองจริงๆ — ลองหาความชัดดู',
+    layer: 'belief',
+    bs: 'ความรู้สึกเรียบๆ อาจซ่อนอะไรบางอย่างไว้\nชั้นความเชื่อช่วยสำรวจเรื่องนี้',
+    stateIcon:'🌤', stateName:'เฉยๆ · พลังงานกลาง',
+    stateDesc:'ไม่ได้ดีไม่ได้แย่ แต่มีบางอย่างที่ยังไม่ชัด',
+    secondary: [
+      { icon:'📓', name:'เขียนระบาย', desc:'บางทีการเขียนช่วยให้ความชัดลอยขึ้นมาเอง', url:'alltools.html#journal' },
+      { icon:'🎮', name:'เล่น',        desc:'ถ้าเบื่อและอยากเปลี่ยนอารมณ์ก่อน',        url:'alltools.html#play' },
+    ],
+  },
+
+  // ── NEUTRAL + LOW ──
+  neutral_low: {
+    opts:[
+      { w:'เฉื่อย',          d:'ไม่ได้อยากทำอะไรเป็นพิเศษ ไม่มีแรงขับ' },
+      { w:'ชา',              d:'รู้สึกน้อยลง ทั้งดีและไม่ดี ทุกอย่างดูเหมือนกันหมด' },
+      { w:'ต้องการพัก',      d:'ร่างกายและหัวใจต้องการพัก ซึ่งนั่นก็โอเคเหมือนกัน' },
+      { w:'หมดไฟ',           d:'ทำสิ่งที่เคยรักแล้วรู้สึกว่างเปล่า ไม่มีความหมายเหมือนเดิม' },
+      { w:'เหนื่อยล้า',      d:'สะสมความเหนื่อยมานาน ทั้งร่างกายและจิตใจ' },
+    ],
+    q:{ t:'ความรู้สึกนี้ต้องการอะไรมากกว่า?', o:['ต้องการพัก','ต้องการแรงบันดาลใจ','ต้องการใครซักคน','ยังไม่รู้'] },
+    primaryTool: 'move',
+    primaryWhy: 'ตอนที่ระบบประสาทอยู่ต่ำแบบนี้\nการขยับร่างกายเพียงเล็กน้อยช่วย activate พลังงานได้เร็วกว่าการคิด',
+    layer: 'body',
+    bs: 'ร่างกายและระบบประสาทอาจต้องการการดูแลก่อน\nพื้นที่ใจชั้นร่างกายเริ่มจากสิ่งเล็กๆ ที่ทำได้ตอนนี้',
+    stateIcon:'🌑', stateName:'เฉื่อย · พลังงานต่ำ',
+    stateDesc:'ร่างกายต้องการพัก การ "ไม่ทำอะไร" ก็เป็นการดูแลตัวเองเหมือนกัน',
+    secondary: [
+      { icon:'🏃', name:'เคลื่อนไหว',   desc:'ขยับเบาๆ เพื่อ activate ร่างกายก่อน', url:'alltools.html#move' },
+      { icon:'💛', name:'คุยกับ PR',     desc:'บางทีแค่มีคนรับฟัง ก็เบาขึ้น',       url:'peer.html' },
+    ],
+  },
+
+  // ── GOOD + HIGH ──
+  good_high: {
+    opts:[
+      { w:'มีพลัง',         d:'รู้สึกพร้อม อยากทำอะไรบางอย่าง มีไฟ' },
+      { w:'มีความหวัง',    d:'เห็นอนาคตในแบบที่ดี อยากก้าวไปข้างหน้า' },
+      { w:'ตื่นเต้น',      d:'มีอะไรที่น่าสนใจกำลังมา รู้สึกเปิดรับ' },
+      { w:'ภูมิใจ',         d:'ทำสำเร็จบางอย่าง หรือเห็นคุณค่าในตัวเองชัดขึ้น' },
+      { w:'กระตือรือร้น', d:'อยากเริ่มทำอะไรบางอย่าง มีแรงบันดาลใจ' },
+    ],
+    q:{ t:'พลังงานนี้อยากใส่ไว้ที่ไหน?', o:['งานหรือการเรียน','ความสัมพันธ์','ตัวเองและความฝัน','ยังไม่รู้'] },
+    primaryTool: null,
+    primaryRoute: 'care',
+    layer: 'expression',
+    bs: 'ดีใจที่คุณมาในวันแบบนี้\nพื้นที่ใจชั้นการแสดงออกช่วยต่อยอดและคงความรู้สึกดีนี้ไว้',
+    stateIcon:'🔥', stateName:'มีพลัง · รู้สึกดี',
+    stateDesc:'พลังงานกำลังดี ดีที่ต่อยอดมันตอนนี้เลย',
+    secondary: [
+      { icon:'✨', name:'อยู่กับสิ่งดี', desc:'เก็บความรู้สึกดีนี้ไว้ให้นานขึ้น',     url:'alltools.html#savor' },
+      { icon:'📓', name:'เขียนระบาย',   desc:'จดความรู้สึกดีนี้ไว้ก่อนมันผ่านไป',   url:'alltools.html#journal' },
+    ],
+  },
+
+  // ── GOOD + MID ──
+  good_mid: {
+    opts:[
+      { w:'สงบ',            d:'รู้สึกเบาและโอเคกับสิ่งที่เป็นอยู่' },
+      { w:'พอใจ',           d:'มีบางอย่างที่เดินหน้าได้ดี รู้สึกขอบคุณ' },
+      { w:'เชื่อมต่อ',      d:'รู้สึกเป็นส่วนหนึ่งของบางอย่างหรือใครบางคน' },
+      { w:'ขอบคุณ',         d:'รู้สึกซาบซึ้งกับบางอย่างในชีวิต แม้จะเล็กน้อย' },
+      { w:'รัก · อบอุ่น',  d:'รู้สึกเชื่อมต่อกับคนที่รัก หรือรู้สึกว่าตัวเองเป็นที่รักอยู่' },
+    ],
+    q:{ t:'อยากให้ความรู้สึกนี้อยู่นานขึ้นไหม?', o:['อยากมากเลย','พอแล้ว แค่นี้ก็ดี','ไม่ได้คิดถึง','ยังไม่รู้'] },
+    primaryTool: null,
+    primaryRoute: 'care',
+    layer: 'connection',
+    bs: 'ดีใจที่คุณมาในวันแบบนี้\nชั้นความสัมพันธ์มีเครื่องมือช่วยรักษาและลึกซึ้งกว่านี้',
+    stateIcon:'☀️', stateName:'สงบ · รู้สึกดี',
+    stateDesc:'วันนี้ดีมาก ใช้โอกาสนี้เสริมความแข็งแรงให้ตัวเอง',
+    secondary: [
+      { icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#savor' },
+      { icon:'💛', name:'คุยกับ PR',     desc:'แบ่งปันให้คนอื่นได้ยิน',              url:'peer.html' },
+    ],
+  },
+
+  // ── GOOD + LOW ──
+  good_low: {
+    opts:[
+      { w:'ผ่อนคลาย',      d:'รู้สึกเบา วางลงได้ ไม่ต้องทำอะไรเพิ่ม' },
+      { w:'ขอบคุณ',         d:'รู้สึกดีกับบางอย่างในชีวิตตอนนี้ แม้จะเล็กน้อย' },
+      { w:'เบาใจ',          d:'อะไรบางอย่างที่เคยหนักรู้สึกเบาลงแล้ว' },
+      { w:'สุขสงบ',         d:'รู้สึกสมบูรณ์ในแบบเงียบๆ ไม่ต้องการอะไรเพิ่ม' },
+      { w:'ปล่อยวาง',       d:'วางบางอย่างลงได้แล้ว รู้สึกเบากว่าเมื่อกี้' },
+    ],
+    q:{ t:'ช่วงนี้มีอะไรที่ทำให้รู้สึกดีขึ้นบ้างไหม?', o:['มี อยากจำมันไว้','มี แต่ยังไม่ชัด','ยังนึกไม่ออก','ไม่มีอะไรชัดเจน'] },
+    primaryTool: null,
+    primaryRoute: 'care',
+    layer: 'expression',
+    bs: 'การมาอยู่กับความรู้สึกดีก็เป็นการดูแลตัวเองเหมือนกัน\nชั้นการแสดงออกช่วยให้ความรู้สึกนี้คงอยู่ได้นานขึ้น',
+    stateIcon:'🌿', stateName:'ผ่อนคลาย · รู้สึกดี',
+    stateDesc:'ร่างกายสงบ ใจเบา ช่วงเวลาดีๆ ที่ควรอยู่กับมัน',
+    secondary: [
+      { icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#savor' },
+      { icon:'📓', name:'เขียนระบาย',   desc:'จดความรู้สึกนี้ไว้ก่อนมันผ่านไป',     url:'alltools.html#journal' },
+    ],
+  },
+};
+
+// ─── NAVIGATION ────────────────────────────────────────────────
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const t = document.getElementById(id);
+  t.classList.add('active','screen-enter');
+  setTimeout(() => t.classList.remove('screen-enter'), 400);
+  window.scrollTo(0,0);
+  if (id === 's-regulate') startRegulation();
+}
+
+// ─── REGULATION ────────────────────────────────────────────────
+let regTimers = [];
+function startRegulation() {
+  regTimers.forEach(clearTimeout); regTimers = [];
+  ['rl0','rl1','rl2','rl3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show','dim');
+  });
+  const btn = document.getElementById('reg-ready');
+  if (btn) btn.classList.remove('show');
+  const delays = [400,1600,2900,4200];
+  ['rl0','rl1','rl2','rl3'].forEach((id,i) => {
+    regTimers.push(setTimeout(() => {
+      const el = document.getElementById(id); if(!el) return;
+      if (i > 0) document.getElementById(['rl0','rl1','rl2','rl3'][i-1]).classList.add('dim');
+      el.classList.add('show');
+    }, delays[i]));
+  });
+  regTimers.push(setTimeout(() => {
+    const b = document.getElementById('reg-ready'); if(b) b.classList.add('show');
+  }, 5800));
+}
+startRegulation();
+
+// ─── EMOTION-LEVEL OVERRIDES ──────────────────────────────────
+// Keyed by the exact Thai word from opts[].w
+// Only needs to specify fields that differ from the cell default.
+const EMOTION_OVERRIDE = {
+
+  // ── bad_high ──
+  'วิตกกังวล': {
+    primaryTool:'worry',
+    primaryWhy:'ความกังวลที่วนในหัวต้องการการ "จัดหมวดหมู่" ก่อน\nไม่ใช่การผลัก — worry tool ช่วยแยกสิ่งที่ควบคุมได้ออกจากสิ่งที่ควบคุมไม่ได้',
+    secondary:[
+      {icon:'🌬️', name:'หายใจก่อน', desc:'ถ้าร่างกายตึงเกินไปจนทำอะไรไม่ได้', url:'alltools.html#breathe'},
+      {icon:'🎯', name:'เตรียมตัว',  desc:'ถ้ากังวลก่อนอะไรสำคัญโดยเฉพาะ',        url:'alltools.html#grounding'},
+    ],
+  },
+  'กดดัน': {
+    primaryTool:'reframe',
+    primaryWhy:'ความกดดันมักมาพร้อมความคิดที่บิดเบือนว่า "ต้องทำได้" หรือ "พลาดไม่ได้"\nการปรับมุมมองช่วยผ่อนน้ำหนักของความคิดเหล่านั้นก่อน',
+    secondary:[
+      {icon:'🎯', name:'เตรียมตัว',    desc:'ถ้ากดดันก่อนเรื่องสำคัญโดยตรง',           url:'alltools.html#grounding'},
+      {icon:'🌀', name:'คลายกังวล',   desc:'ถ้ามีความกังวลวนซ้ำอยู่ด้วย',              url:'alltools.html#worry'},
+    ],
+  },
+  'หงุดหงิด': {
+    primaryTool:'move',
+    primaryWhy:'ความหงุดหงิดมี sympathetic energy ค้างอยู่ในร่างกาย\nการขยับช่วย discharge มันออกได้เร็วกว่าการพยายามคิด',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'ระบายออกมาก่อนที่มันจะพุ่งออกไปทางอื่น', url:'alltools.html#journal'},
+      {icon:'🔄', name:'ปรับความคิด', desc:'ถ้ามีความคิดที่วนซ้ำอยู่กับมัน',           url:'alltools.html#reframe'},
+    ],
+  },
+  'โกรธ': {
+    primaryTool:'move',
+    primaryWhy:'ความโกรธคือ mobilization energy — ร่างกายเตรียมพร้อมทำบางอย่าง\nการเคลื่อนไหวให้พลังงานนั้นมีที่ไป แทนที่จะกดมันไว้',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'เขียนตอนโกรธโดยไม่ต้องกรอง',              url:'alltools.html#journal'},
+      {icon:'🌬️', name:'หายใจก่อน', desc:'ถ้าร่างกายร้อนเกินไปจนทำอะไรไม่ได้',       url:'alltools.html#breathe'},
+    ],
+  },
+  'กลัว': {
+    primaryTool:'grounding',
+    primaryWhy:'ความกลัวดึงสมองออกจากปัจจุบัน — grounding ดึงมันกลับมา\nก่อนที่จะทำอะไรกับความกลัวได้ ต้องอยู่กับปัจจุบันก่อน',
+    secondary:[
+      {icon:'🌬️', name:'หายใจก่อน', desc:'ถ้าร่างกายตึงและใจไม่อยู่กับเนื้อกับตัว',  url:'alltools.html#breathe'},
+      {icon:'🌀', name:'คลายกังวล', desc:'ถ้ากลัวสิ่งที่ยังไม่เกิดขึ้น',              url:'alltools.html#worry'},
+    ],
+  },
+
+  // ── bad_mid ──
+  'เหนื่อยใจ': {
+    primaryTool:'rest',
+    primaryWhy:'เหนื่อยใจต้องการการพักก่อน ไม่ใช่การแก้ปัญหา\nself-compassion ช่วยให้ร่างกายและใจผ่อนคลายก่อนที่จะคิดต่อได้',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'ให้สิ่งที่อยู่ในหัวออกมาอยู่ข้างนอก',      url:'alltools.html#journal'},
+      {icon:'💛', name:'คุยกับ PR',  desc:'บางทีแค่มีคนรับฟัง ก็เบาขึ้น',              url:'peer.html'},
+    ],
+  },
+  'สับสน': {
+    primaryTool:'clarity',
+    primaryWhy:'ความสับสนมักหมายความว่ามีหลายเสียงในหัวพร้อมกัน\nการหาความชัดช่วยแยกเสียงเหล่านั้นออกจากกัน',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'บางทีการเขียนทำให้ความสับสนเริ่มจัดระเบียบ', url:'alltools.html#journal'},
+      {icon:'🔄', name:'ปรับความคิด', desc:'ถ้ามีความคิดที่วนอยู่กับมันด้วย',           url:'alltools.html#reframe'},
+    ],
+  },
+  'โดดเดี่ยว': {
+    primaryTool:null, primaryRoute:'peer',
+    primaryWhy:'ความโดดเดี่ยวตอบสนองต่อ co-regulation ได้ดีที่สุด\nการมีคนรับฟังจริงๆ เปลี่ยน cortisol ได้โดยตรง',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'ระบายออกมาก่อนถ้ายังไม่พร้อมคุย',          url:'alltools.html#journal'},
+      {icon:'🤍', name:'พักใจ',      desc:'self-compassion สำหรับช่วงที่รู้สึกคนเดียว', url:'alltools.html#rest'},
+    ],
+  },
+  'เสียใจ': {
+    primaryTool:'rain',
+    primaryWhy:'ความเสียใจต้องการการ "อยู่กับมัน" ไม่ใช่การแก้\nRAIN ช่วยให้อยู่กับความเจ็บปวดโดยไม่จมกับมัน',
+    secondary:[
+      {icon:'🤍', name:'พักใจ',      desc:'ดูแลตัวเองในช่วงที่เจ็บปวด',                url:'alltools.html#rest'},
+      {icon:'📓', name:'เขียนระบาย', desc:'ให้ความรู้สึกออกมาอยู่ข้างนอก',             url:'alltools.html#journal'},
+    ],
+  },
+  'ผิดหวัง': {
+    primaryTool:'reframe',
+    primaryWhy:'ความผิดหวังมักมาพร้อมความคาดหวังที่ยังฝังอยู่\nการปรับมุมมองช่วยตั้งคำถามกับความคาดหวังนั้น ไม่ใช่ลบมันทิ้ง',
+    secondary:[
+      {icon:'🌊', name:'อยู่กับมัน', desc:'ถ้ายังอยากอยู่กับความรู้สึกนั้นก่อน',        url:'alltools.html#rain'},
+      {icon:'📓', name:'เขียนระบาย', desc:'ระบายออกมาก่อนปรับมุมมอง',                  url:'alltools.html#journal'},
+    ],
+  },
+
+  // ── bad_low ──
+  'เศร้า': {
+    primaryTool:'rain',
+    primaryWhy:'ความเศร้าต้องการพื้นที่อยู่กับมัน ไม่ใช่การผลักหรือรีบแก้\nRAIN ช่วยให้นั่งกับความเศร้าโดยไม่จมและไม่หนี',
+    secondary:[
+      {icon:'🤍', name:'พักใจ',     desc:'self-compassion ในช่วงที่รู้สึกหนัก',         url:'alltools.html#rest'},
+      {icon:'💛', name:'คุยกับ PR', desc:'บางทีแค่มีคนอยู่ด้วยก็เบาขึ้น',               url:'peer.html'},
+    ],
+  },
+  'ถอยห่าง': {
+    primaryTool:'act',
+    primaryWhy:'การถอยห่างมักเริ่มวงจร avoidance ที่ทำให้รู้สึกแย่ขึ้น\nก้าวเล็กๆ หนึ่งก้าวช่วยทำลายวงจรนั้นโดยไม่ต้องฝืนมาก',
+    secondary:[
+      {icon:'🏃', name:'เคลื่อนไหว', desc:'ขยับร่างกายเบาๆ เพื่อ activate พลังงาน', url:'alltools.html#move'},
+      {icon:'💛', name:'คุยกับ PR',  desc:'ถ้าอยากมีคนอยู่ด้วยโดยไม่ต้องพูดมาก',    url:'peer.html'},
+    ],
+  },
+  'หมดแรง': {
+    primaryTool:'rest',
+    primaryWhy:'หมดแรงต้องการการพักก่อนทุกอย่าง\nself-compassion ช่วยให้พักได้โดยไม่รู้สึกผิด',
+    secondary:[
+      {icon:'🏃', name:'เคลื่อนไหว', desc:'ขยับเบาๆ ถ้าพร้อม — บางทีร่างกายนำใจ',  url:'alltools.html#move'},
+      {icon:'💛', name:'คุยกับ PR',  desc:'บางทีแค่มีคนรับฟัง ก็เบาขึ้น',             url:'peer.html'},
+    ],
+  },
+  'ท้อแท้': {
+    primaryTool:'reframe',
+    primaryWhy:'ท้อแท้มักมาพร้อมความคิดว่า "พยายามไปก็ไม่มีอะไรเปลี่ยน"\nการปรับมุมมองช่วยตั้งคำถามกับความเชื่อนั้นก่อน',
+    secondary:[
+      {icon:'🌱', name:'ลงมือทำ',   desc:'ก้าวเล็กๆ หนึ่งก้าวช่วยทำลายวงจรท้อแท้',   url:'alltools.html#act'},
+      {icon:'🤍', name:'พักใจ',     desc:'ดูแลตัวเองก่อนในช่วงที่รู้สึกหนัก',           url:'alltools.html#rest'},
+    ],
+  },
+  'รู้สึกว่างเปล่า': {
+    primaryTool:'journal',
+    primaryWhy:'ความว่างเปล่ายากที่จะ approach โดยตรง\nการเขียนช่วยสร้าง "อะไรบางอย่าง" ในหน้ากระดาษก่อน',
+    secondary:[
+      {icon:'🌊', name:'อยู่กับมัน', desc:'อยู่กับความว่างเปล่าโดยไม่ต่อสู้กับมัน',   url:'alltools.html#rain'},
+      {icon:'🏃', name:'เคลื่อนไหว', desc:'ขยับร่างกายเบาๆ เพื่อ activate ระบบ',      url:'alltools.html#move'},
+    ],
+  },
+
+  // ── neutral_high ──
+  'ลุ้น · ตื่นเต้น': {
+    primaryTool:'worry',
+    primaryWhy:'ความลุ้นมักมีความกังวลซ่อนอยู่ข้างใน\nการแยกส่วนที่ควบคุมได้ออกมาช่วยให้พลังงานนั้นไปในทางที่ดี',
+    secondary:[
+      {icon:'🎯', name:'เตรียมตัว', desc:'ถ้าลุ้นก่อนอะไรสำคัญโดยตรง',               url:'alltools.html#grounding'},
+      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'ถ้าความตื่นเต้นนั้นดีและอยากเก็บไว้',    url:'alltools.html#savor'},
+    ],
+  },
+  'กระสับกระส่าย': {
+    primaryTool:'move',
+    primaryWhy:'กระสับกระส่ายคือพลังงานที่ยังไม่มีที่ไป\nการเคลื่อนไหวให้มันมีที่ระบายก่อนที่จะ ground ความคิด',
+    secondary:[
+      {icon:'🌬️', name:'หายใจก่อน', desc:'ถ้าอยู่ในพื้นที่ที่ขยับไม่ได้',             url:'alltools.html#breathe'},
+      {icon:'🎯', name:'เตรียมตัว',  desc:'ถ้ากระสับกระส่ายก่อนอะไรสำคัญ',             url:'alltools.html#grounding'},
+    ],
+  },
+  'ค้างคา': {
+    primaryTool:'clarity',
+    primaryWhy:'ความค้างคามักหมายความว่ายังไม่ได้ตัดสินใจบางอย่าง\nการหาความชัดช่วยระบุว่า "ค้างคา" อยู่กับเรื่องอะไรกันแน่',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'เทสิ่งที่ค้างอยู่ในหัวออกมาก่อน',           url:'alltools.html#journal'},
+      {icon:'🌀', name:'คลายกังวล', desc:'ถ้ามีความกังวลวนอยู่กับความค้างคานั้น',     url:'alltools.html#worry'},
+    ],
+  },
+  'ประหม่า': {
+    primaryTool:'grounding',
+    primaryWhy:'ความประหม่าดึงสมองออกจากปัจจุบัน\ngrounding ดึงมันกลับมาก่อนที่จะทำสิ่งสำคัญนั้น',
+    secondary:[
+      {icon:'🌬️', name:'หายใจก่อน', desc:'box breathing ลด heart rate ก่อนเริ่ม',    url:'alltools.html#breathe'},
+      {icon:'🌀', name:'คลายกังวล', desc:'ถ้ามีความกังวลวนซ้ำอยู่ด้วย',              url:'alltools.html#worry'},
+    ],
+  },
+  'ลังเล': {
+    primaryTool:'clarity',
+    primaryWhy:'ความลังเลเกิดเมื่อยังไม่ชัดว่าตัวเองต้องการอะไร\nการหาความชัดช่วยฟังเสียงข้างในก่อนที่จะตัดสินใจ',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'pro-con ในกระดาษช่วยได้มากกว่าในหัว',      url:'alltools.html#journal'},
+      {icon:'🌀', name:'คลายกังวล', desc:'ถ้าความกังวลทำให้ตัดสินใจไม่ได้',          url:'alltools.html#worry'},
+    ],
+  },
+
+  // ── neutral_mid ──
+  'เรียบๆ': {
+    primaryTool:'savor',
+    primaryWhy:'วันที่เรียบๆ เป็นวันที่ดีสำหรับการสังเกตสิ่งดีๆ เล็กๆ\nก่อนที่มันจะผ่านไปโดยไม่ทันสังเกต',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'จดอะไรก็ได้ที่อยู่ในใจตอนนี้',              url:'alltools.html#journal'},
+      {icon:'🧭', name:'หาความชัด', desc:'ถ้าอยากรู้ว่าตัวเองต้องการอะไรจริงๆ',       url:'alltools.html#clarity'},
+    ],
+  },
+  'รอดู': {
+    primaryTool:'journal',
+    primaryWhy:'การรอดูมักมีความไม่แน่ใจซ่อนอยู่\nการเขียนช่วยระบุว่ากำลังรออะไรและทำไม',
+    secondary:[
+      {icon:'🧭', name:'หาความชัด', desc:'ถ้าอยากชัดขึ้นว่ารอเรื่องอะไร',              url:'alltools.html#clarity'},
+      {icon:'🎮', name:'เล่น',       desc:'ถ้าอยากหยุดคิดเรื่องนี้สักพัก',              url:'alltools.html#play'},
+    ],
+  },
+  'เหนื่อยแบบเบาๆ': {
+    primaryTool:'rest',
+    primaryWhy:'เหนื่อยเบาๆ เป็นสัญญาณก่อนที่จะเหนื่อยมาก\nself-compassion ช่วยให้พักได้โดยไม่รู้สึกว่าต้องฝืน',
+    secondary:[
+      {icon:'🏃', name:'เคลื่อนไหว', desc:'บางทีขยับเบาๆ ช่วยให้หายเหนื่อยได้',       url:'alltools.html#move'},
+      {icon:'📓', name:'เขียนระบาย', desc:'ระบายความเหนื่อยออกมาก่อน',               url:'alltools.html#journal'},
+    ],
+  },
+  'เบื่อ': {
+    primaryTool:'play',
+    primaryWhy:'ความเบื่อต้องการ pattern interrupt มากกว่าการสำรวจตัวเอง\nเกมเบาๆ ช่วย ground ความคิดและเปลี่ยนโหมดได้เร็ว',
+    secondary:[
+      {icon:'🏃', name:'เคลื่อนไหว', desc:'ถ้าอยากเปลี่ยนอารมณ์แบบ active มากกว่า',  url:'alltools.html#move'},
+      {icon:'🌱', name:'ลงมือทำ',   desc:'ถ้าอยากทำอะไรบางอย่างให้สำเร็จ',           url:'alltools.html#act'},
+    ],
+  },
+  'ไม่แน่ใจ': {
+    primaryTool:'clarity',
+    primaryWhy:'ความไม่แน่ใจมักมาจากการฟังตัวเองไม่ชัด\nการหาความชัดช่วยแยกเสียงข้างในออกจากเสียงคนอื่น',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'เขียนสิ่งที่อยู่ในหัวออกมาก่อน',             url:'alltools.html#journal'},
+      {icon:'🌀', name:'คลายกังวล', desc:'ถ้าความไม่แน่ใจมาพร้อมความกังวล',           url:'alltools.html#worry'},
+    ],
+  },
+
+  // ── neutral_low ──
+  'เฉื่อย': {
+    primaryTool:'act',
+    primaryWhy:'ความเฉื่อยทำลายได้ด้วยก้าวเล็กๆ หนึ่งก้าว\nไม่ต้องทำทั้งหมด แค่ทำหนึ่งอย่างเล็กที่สุดที่นึกได้',
+    secondary:[
+      {icon:'🏃', name:'เคลื่อนไหว', desc:'ขยับร่างกายก่อน บางทีร่างกายนำใจ',         url:'alltools.html#move'},
+      {icon:'🎮', name:'เล่น',        desc:'ถ้าอยากเปลี่ยนโหมดโดยไม่ต้องคิดมาก',      url:'alltools.html#play'},
+    ],
+  },
+  'ชา': {
+    primaryTool:'rain',
+    primaryWhy:'ความชาบางทีคือการที่ระบบประสาทป้องกันตัวจากความรู้สึกมากเกินไป\nRAIN ช่วยค่อยๆ กลับมาสัมผัสตัวเองโดยไม่ต้องรีบ',
+    secondary:[
+      {icon:'🏃', name:'เคลื่อนไหว', desc:'การขยับช่วย activate ระบบประสาทเบาๆ',      url:'alltools.html#move'},
+      {icon:'💛', name:'คุยกับ PR',  desc:'บางทีเสียงคนอื่นช่วยดึงกลับมาได้',          url:'peer.html'},
+    ],
+  },
+  'ต้องการพัก': {
+    primaryTool:'rest',
+    primaryWhy:'ถ้าร่างกายบอกว่าต้องการพัก มันมักหมายความนั้นจริงๆ\nself-compassion ช่วยให้พักได้โดยไม่รู้สึกผิด',
+    secondary:[
+      {icon:'🌊', name:'อยู่กับมัน', desc:'อยู่กับความต้องการพักโดยไม่ต่อสู้กับมัน', url:'alltools.html#rain'},
+      {icon:'🌙', name:'นอนหลับ',    desc:'ถ้าพักได้จริงๆ ตอนนี้',                     url:'sleep.html'},
+    ],
+  },
+  'หมดไฟ': {
+    primaryTool:'clarity',
+    primaryWhy:'หมดไฟมักเกิดเมื่อห่างออกจากสิ่งที่สำคัญกับตัวเองไปนาน\nการหาความชัดช่วยกลับมาหาสิ่งนั้น ไม่ใช่แค่พยายามมากขึ้น',
+    secondary:[
+      {icon:'🤍', name:'พักใจ',      desc:'พักจาก self-criticism ก่อน',                 url:'alltools.html#rest'},
+      {icon:'💛', name:'คุยกับ PR',  desc:'บางทีพูดกับคนอื่นช่วยจุดไฟได้',              url:'peer.html'},
+    ],
+  },
+  'เหนื่อยล้า': {
+    primaryTool:'rest',
+    primaryWhy:'เหนื่อยล้าสะสมต้องการการ "ยอมรับ" ก่อนการ "แก้ไข"\nself-compassion เป็นจุดเริ่มต้นที่ปลอดภัยที่สุด',
+    secondary:[
+      {icon:'🏃', name:'เคลื่อนไหว', desc:'เดินเบาๆ บางทีช่วยได้มากกว่าการนั่งนิ่ง',  url:'alltools.html#move'},
+      {icon:'🌙', name:'นอนหลับ',    desc:'ถ้าเหนื่อยล้าและนอนได้ตอนนี้',              url:'sleep.html'},
+    ],
+  },
+
+  // ── good_high ──
+  'มีพลัง': {
+    primaryTool:null, primaryRoute:'care',
+    primaryWhy:'พลังงานกำลังดี — ใช้มันสำรวจพื้นที่ใจได้เลย\nชั้นการแสดงออกช่วยต่อยอดความรู้สึกนี้',
+    secondary:[
+      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'เก็บความรู้สึกดีนี้ไว้ก่อนมันผ่านไป',    url:'alltools.html#savor'},
+      {icon:'🌱', name:'ลงมือทำ',      desc:'ใช้พลังงานนี้ทำอะไรบางอย่างให้สำเร็จ',   url:'alltools.html#act'},
+    ],
+  },
+  'มีความหวัง': {
+    primaryTool:null, primaryRoute:'care',
+    primaryWhy:'ความหวังเป็นทรัพยากรที่ควรดูแล ไม่ใช่แค่ใช้จ่าย\nการบันทึกมันไว้ช่วยให้มันอยู่ได้นานขึ้น',
+    secondary:[
+      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',           url:'alltools.html#savor'},
+      {icon:'📓', name:'เขียนระบาย',   desc:'จดความหวังนี้ไว้ในกระดาษ',               url:'alltools.html#journal'},
+    ],
+  },
+  'ตื่นเต้น': {
+    primaryTool:null, primaryRoute:'care',
+    primaryWhy:'ความตื่นเต้นเป็นพลังงานที่ดี\nแต่ถ้ามีความกังวลผสมอยู่ด้วย ลองแยกมันออกก่อน',
+    secondary:[
+      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'อยู่กับความตื่นเต้นที่ดีนี้สักครู่',      url:'alltools.html#savor'},
+      {icon:'🎯', name:'เตรียมตัว',    desc:'ถ้าตื่นเต้นก่อนอะไรสำคัญ',               url:'alltools.html#grounding'},
+    ],
+  },
+  'ภูมิใจ': {
+    primaryTool:'savor',
+    primaryWhy:'ความภูมิใจควรถูกให้เวลา ไม่ใช่แค่ผ่านไป\nsavoring ช่วยให้สมองฝังความรู้สึกนี้ไว้ได้นานขึ้น',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'จดว่าทำอะไรสำเร็จและรู้สึกยังไง',           url:'alltools.html#journal'},
+      {icon:'💛', name:'คุยกับ PR',  desc:'แบ่งปันความภูมิใจให้คนอื่นได้ยิน',          url:'peer.html'},
+    ],
+  },
+  'กระตือรือร้น': {
+    primaryTool:'act',
+    primaryWhy:'ความกระตือรือร้นทำงานได้ดีที่สุดเมื่อได้ลงมือจริงๆ\nเลือกอะไรทำหนึ่งอย่างก่อนพลังงานนี้หายไป',
+    secondary:[
+      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'เก็บพลังงานดีๆ นี้ไว้ก่อน',              url:'alltools.html#savor'},
+      {icon:'📓', name:'เขียนระบาย',   desc:'จดสิ่งที่อยากทำในขณะที่ยังมีไฟ',         url:'alltools.html#journal'},
+    ],
+  },
+
+  // ── good_mid ──
+  'สงบ': {
+    primaryTool:'savor',
+    primaryWhy:'ความสงบเป็นสิ่งที่ควรอยู่กับมัน ไม่ใช่รีบทำอะไรกับมัน\nsavoring ช่วยให้ความสงบนี้ฝังลึกกว่าแค่ผ่านไป',
+    secondary:[
+      {icon:'🌊', name:'อยู่กับมัน', desc:'ฝึกอยู่กับความสงบนี้ด้วย RAIN',            url:'alltools.html#rain'},
+      {icon:'📓', name:'เขียนระบาย', desc:'จดความรู้สึกดีนี้ไว้',                      url:'alltools.html#journal'},
+    ],
+  },
+  'พอใจ': {
+    primaryTool:'savor',
+    primaryWhy:'ความพอใจเป็นสิ่งที่หายากและควรให้เวลากับมัน\nช้าลงกับมันสักครู่ก่อนที่มันจะผ่านไป',
+    secondary:[
+      {icon:'💛', name:'คุยกับ PR',  desc:'แบ่งปันความพอใจให้คนอื่นได้ยิน',             url:'peer.html'},
+      {icon:'📓', name:'เขียนระบาย', desc:'จดสิ่งที่ทำให้พอใจไว้',                    url:'alltools.html#journal'},
+    ],
+  },
+  'เชื่อมต่อ': {
+    primaryTool:'savor',
+    primaryWhy:'ความรู้สึกเชื่อมต่อเป็น oxytocin ที่ควรดูแล\nการหยุดกับมันสักครู่ช่วยให้ความสัมพันธ์แข็งแกร่งขึ้น',
+    secondary:[
+      {icon:'💛', name:'คุยกับ PR',  desc:'แบ่งปันความรู้สึกเชื่อมต่อนี้',              url:'peer.html'},
+      {icon:'📓', name:'เขียนระบาย', desc:'จดว่าเชื่อมต่อกับอะไรหรือใคร',             url:'alltools.html#journal'},
+    ],
+  },
+  'ขอบคุณ': {
+    primaryTool:'savor',
+    primaryWhy:'ความขอบคุณที่หยุดกับมัน 20 วินาที\nมีผลต่อ wellbeing มากกว่าความขอบคุณที่รู้สึกแล้วผ่านไป',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'จดสิ่งที่ขอบคุณไว้เป็นหลักฐาน',             url:'alltools.html#journal'},
+      {icon:'💛', name:'คุยกับ PR',  desc:'บอกคนที่ขอบคุณด้วยตัวเอง',                  url:'peer.html'},
+    ],
+  },
+  'รัก · อบอุ่น': {
+    primaryTool:'savor',
+    primaryWhy:'ความรู้สึกอบอุ่นคือ oxytocin ที่ทำงานอยู่\nการอยู่กับมันจริงๆ ช่วยให้ความสัมพันธ์ลึกขึ้น',
+    secondary:[
+      {icon:'💛', name:'คุยกับ PR', desc:'แบ่งปันความรู้สึกดีให้คนอื่นได้ยิน',          url:'peer.html'},
+      {icon:'📓', name:'เขียนระบาย', desc:'จดความรู้สึกนี้ไว้ก่อนมันผ่านไป',          url:'alltools.html#journal'},
+    ],
+  },
+
+  // ── good_low ──
+  'ผ่อนคลาย': {
+    primaryTool:'savor',
+    primaryWhy:'ความผ่อนคลายที่แท้จริงหายากมากในชีวิตประจำวัน\nอยู่กับมันสักครู่ก่อนที่จะต้องทำอะไรต่อ',
+    secondary:[
+      {icon:'🌊', name:'อยู่กับมัน', desc:'ฝึกอยู่กับความผ่อนคลายด้วย RAIN',          url:'alltools.html#rain'},
+      {icon:'🌙', name:'นอนหลับ',    desc:'ถ้าผ่อนคลายและพร้อมนอนได้เลย',              url:'sleep.html'},
+    ],
+  },
+  'เบาใจ': {
+    primaryTool:'savor',
+    primaryWhy:'ความเบาใจมักมาหลังจากแบกอะไรบางอย่างมานาน\nหยุดกับมันก่อน สมองต้องการเวลาในการรับรู้ว่าวางลงแล้ว',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'จดว่าวางอะไรลงได้ไว้เป็นหลักฐาน',          url:'alltools.html#journal'},
+      {icon:'💛', name:'คุยกับ PR',  desc:'เล่าให้คนอื่นฟังว่าเบาใจขึ้น',               url:'peer.html'},
+    ],
+  },
+  'สุขสงบ': {
+    primaryTool:'savor',
+    primaryWhy:'ความสุขสงบที่ "เงียบๆ" มักถูกมองข้ามเพราะไม่ตื่นเต้น\nแต่มันคือ wellbeing ที่ยั่งยืนที่สุด — อยู่กับมัน',
+    secondary:[
+      {icon:'🌊', name:'อยู่กับมัน', desc:'ฝึกอยู่กับความสุขสงบโดยไม่รีบหาสิ่งต่อไป', url:'alltools.html#rain'},
+      {icon:'📓', name:'เขียนระบาย', desc:'จดสิ่งที่ทำให้สงบไว้',                      url:'alltools.html#journal'},
+    ],
+  },
+  'ปล่อยวาง': {
+    primaryTool:'savor',
+    primaryWhy:'การปล่อยวางได้คือทักษะ ไม่ใช่แค่ความรู้สึก\nหยุดกับมันและให้สมองได้รับรู้ว่ามันทำสำเร็จแล้ว',
+    secondary:[
+      {icon:'📓', name:'เขียนระบาย', desc:'จดว่าวางอะไรลงได้',                          url:'alltools.html#journal'},
+      {icon:'🤍', name:'พักใจ',      desc:'self-compassion สำหรับตัวเองที่ผ่านมาได้',   url:'alltools.html#rest'},
+    ],
+  },
+};
+
+// ─── PICK ─────────────────────────────────────────────────────
+function pick(el, key, cls, btnId) {
+  el.closest('.screen').querySelectorAll('.' + cls).forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  S[key] = el.dataset.v;
+  const btn = document.getElementById(btnId);
+  if (btn) btn.classList.add('on');
+}
+
+// ─── NAMING ───────────────────────────────────────────────────
+function buildNaming() {
+  const key  = (S.valence||'neutral') + '_' + (S.arousal||'mid');
+  const raw  = DB[key] || DB['neutral_mid'];
+  // Deep copy so emotion-level overrides don't mutate the original DB entry
+  S._data = Object.assign({}, raw, {
+    secondary: raw.secondary ? raw.secondary.map(s => Object.assign({}, s)) : []
+  });
+  const container = document.getElementById('name-cards');
+  container.innerHTML = '';
+  raw.opts.forEach(opt => {
+    const d = document.createElement('div');
+    d.className = 'n-card';
+    d.innerHTML = `<div class="n-word">${opt.w}</div><div class="n-desc">${opt.d}</div>`;
+    d.onclick = function() { pickName(this); };
+    container.appendChild(d);
+  });
+  document.getElementById('n-none').classList.remove('sel');
+  document.getElementById('name-next').classList.remove('on');
+  S.name = null; S.noname = false;
+  goTo('s-name');
+}
+
+function pickName(el) {
+  document.querySelectorAll('.n-card').forEach(c => c.classList.remove('sel'));
+  document.getElementById('n-none').classList.remove('sel');
+  el.classList.add('sel');
+  S.name   = el.querySelector('.n-word').textContent;
+  S.noname = false;
+  document.getElementById('name-next').classList.add('on');
+
+  // Apply emotion-level override on top of cell defaults
+  const ov = EMOTION_OVERRIDE[S.name];
+  if (ov && S._data) {
+    if (ov.primaryTool  !== undefined) S._data.primaryTool  = ov.primaryTool;
+    if (ov.primaryRoute !== undefined) S._data.primaryRoute = ov.primaryRoute;
+    if (ov.primaryWhy   !== undefined) S._data.primaryWhy   = ov.primaryWhy;
+    if (ov.secondary    !== undefined) S._data.secondary    = ov.secondary;
+  }
+}
+
+function pickNone() {
+  document.querySelectorAll('.n-card').forEach(c => c.classList.remove('sel'));
+  document.getElementById('n-none').classList.add('sel');
+  S.noname = true; S.name = null;
+  document.getElementById('name-next').classList.add('on');
+}
+
+function afterNaming() {
+  if (S.noname) { goTo('s-nomatch'); return; }
+  const q = S._data.q;
+  document.getElementById('oq-title').textContent = q.t;
+  const container = document.getElementById('oq-opts');
+  container.innerHTML = '';
+  q.o.forEach(opt => {
+    const b = document.createElement('button');
+    b.className = 'oq-opt';
+    b.textContent = opt;
+    b.onclick = function() {
+      document.querySelectorAll('.oq-opt').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+      S.question = opt;
+      document.getElementById('oq-next').classList.add('on');
+    };
+    container.appendChild(b);
+  });
+  document.getElementById('oq-next').classList.remove('on');
+  goTo('s-question');
+}
+
+// ─── BRIDGE ───────────────────────────────────────────────────
+function buildBridge() {
+  const data = S._data;
+
+  document.getElementById('br-state-icon').textContent = data.stateIcon;
+  document.getElementById('br-state-name').textContent =
+    S.name ? S.name + ' · ' + data.stateName : data.stateName;
+  // สิ่งที่เราสังเกตเห็น
+  const noticedEl = document.getElementById('br-noticed-text');
+  if (noticedEl) noticedEl.textContent = data.stateDesc;
+  const noticedSub = document.getElementById('br-sub-noticed');
+  if (noticedSub) noticedSub.textContent = data.bs;
+  // keep br-sub hidden (legacy)
+  const legacySub = document.getElementById('br-sub');
+  if (legacySub) legacySub.textContent = '';
+
+  const primaryCard = document.getElementById('br-primary-card');
+
+  // ── Tool primary ──
+  if (data.primaryTool) {
+    const tc  = TOOL_CONFIG[data.primaryTool];
+    if (!tc) { console.warn('Missing TOOL_CONFIG entry for:', data.primaryTool); return; }
+    const url = 'alltools.html' + tc.hash;
+    primaryCard.innerHTML = `
+      <a class="br-tool-card ${tc.color}" href="${url}">
+        <span class="br-tool-icon">${tc.icon}</span>
+        <div class="br-tool-eyebrow">แนะนำสำหรับตอนนี้</div>
+        <div class="br-tool-name">${tc.name}</div>
+        <div class="br-tool-why">${data.primaryWhy.replace(/\n/g,'<br/>')}</div>
+        <span class="br-tool-arrow">→</span>
+      </a>`;
+
+  // ── Care primary ──
+  } else {
+    const tab = LAYER_TAB[data.layer] || 0;
+    primaryCard.innerHTML = `
+      <a class="br-tool-card green" href="care.html?tab=${data.layer}">
+        <span class="br-tool-icon">🌿</span>
+        <div class="br-tool-eyebrow">แนะนำสำหรับตอนนี้</div>
+        <div class="br-tool-name">พื้นที่ใจ</div>
+        <div class="br-tool-why">${data.bs.replace(/\n/g,'<br/>')}</div>
+        <span class="br-layer-chip">${LAYER_LABEL[data.layer]}</span>
+        <span class="br-tool-arrow" style="margin-top:-14px;">→</span>
+      </a>`;
+  }
+
+  // ── Secondary buttons ──
+  const secContainer = document.getElementById('br-secondary-btns');
+  secContainer.innerHTML = (data.secondary || []).map(s => `
+    <button class="br-sec-btn" onclick="window.location.href='${s.url}'">
+      <span class="br-sec-btn-icon">${s.icon}</span>
+      <span class="br-sec-btn-body">
+        <span class="br-sec-btn-name">${s.name}</span>
+        <span class="br-sec-btn-desc">${s.desc}</span>
+      </span>
+      <span class="br-sec-arrow">→</span>
+    </button>`).join('');
+
+  goTo('s-bridge');
+}
+
+// ─── BRIDGE STILL HEAVY ───────────────────────────────────────
+function bridgeFeelOk() {
+  const strip = document.querySelector('.br-still');
+  if (strip) {
+    strip.innerHTML = `<div style="text-align:center;font-size:13px;font-weight:300;color:var(--green);padding:8px 0;">
+      🌿 ดีใจที่ได้ยิน — ดูแลตัวเองต่อไปนะ
+    </div>`;
+  }
+}
+
+function bridgeStillHeavy() {
+  const heavy = document.getElementById('br-heavy');
+  if (heavy) heavy.classList.add('show');
+  const btns = document.querySelector('.br-still-btns');
+  if (btns) btns.style.display = 'none';
+  const q = document.querySelector('.br-still-q');
+  if (q) q.style.display = 'none';
+  setTimeout(() => heavy.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
+}
+</script>
+<div style="text-align:center;padding:24px 24px 8px;font-size:12px;color:var(--soft);">เวอร์ชั่น 1.6 · <a href="reflection.html" style="color:var(--soft);text-decoration:underline;text-underline-offset:3px;">ลองเวอร์ชั่น 1.5 แทน</a></div>
+
+</body>
+</html>
