@@ -214,6 +214,7 @@
     .library-progress-count{color:rgba(176,125,16,0.75);}
     .library-progress-track{height:3px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;}
     .library-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(226,192,96,0.6),rgba(176,125,16,0.9));transition:width 1s ease;}
+
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -324,6 +325,10 @@
   <div id="m4-section-root"></div>
   <div id="m5-section-root"></div>
   <div id="other-section-root"></div>
+
+  <!-- ── ดูแลตัวเอง section ── -->
+  <div id="care-section-root"></div>
+
   <div class="worlds-wrap" id="worlds-wrap"></div>
 <script>
 const API_URL   = "https://script.google.com/macros/s/AKfycbztMREOYjHbq1TkfMplela4FBQmGjooLbRoV2HmccSdK-ZLzNk7NpkDL0ksPw-bPdgF/exec";
@@ -389,6 +394,15 @@ const OTHER_IMGS = [
   { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780395074/Screenshot_2026-06-02_170928_gu6lx8.png",  url: "#" },
 ];
 
+// ดูแลตัวเอง row — 5 image buttons
+const CARE_IMGS = [
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419028/Screenshot_2026-06-02_234919_gouolj.png",  url: "reflection.html" },
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419030/Screenshot_2026-06-02_234928_irhlrl.png",  url: "alltools.html" },
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419033/Screenshot_2026-06-02_234936_mr6mib.png",  url: "https://www.dmh.go.th" },
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419036/Screenshot_2026-06-02_234944_nw3qm0.png",  url: "resources.html" },
+  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419038/Screenshot_2026-06-02_234956_saoikv.png",  url: "https://www.sati.app" },
+];
+
 // ═══ RENDER YEAR ROW ════════════════════════════════════════
 function renderYearRow(containerId, label, badgeColor, imgList, baseDelay) {
   const root = document.getElementById(containerId);
@@ -437,6 +451,7 @@ function renderAll() {
   d = renderYearRow("m4-section-root", "ม.4", "#2E5FA3", M4_IMGS, d);
   d = renderYearRow("m5-section-root", "ม.5", "#E8960C", M5_IMGS, d + 10);
   d = renderYearRow("other-section-root", "อื่นๆ", "#3A7D44", OTHER_IMGS, d + 10);
+  d = renderYearRow("care-section-root", "ดูแลตัวเอง", "#0D9488", CARE_IMGS, d + 10);
 }
 
 // ═══ INIT ════════════════════════════════════════════════════
