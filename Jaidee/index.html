@@ -215,6 +215,21 @@
     .library-progress-track{height:3px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;}
     .library-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(226,192,96,0.6),rgba(176,125,16,0.9));transition:width 1s ease;}
 
+    /* ── วันนี้เป็นยังไงบ้าง? ── */
+    .situation-wrap{padding:16px 16px 0;}
+    .situation-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .situation-label{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2px;text-transform:uppercase;}
+    .situation-scroll{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;}
+    .situation-scroll::-webkit-scrollbar{display:none;}
+    .sit-pill{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:50px;background:var(--card);border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;transition:transform 0.15s,border-color 0.15s;white-space:nowrap;}
+    .sit-pill:active{transform:scale(0.96);}
+    .sit-pill.primary{background:var(--dark);border-color:var(--dark);}
+    .sit-emoji{font-size:16px;line-height:1;}
+    .sit-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:500;color:var(--dark);}
+    .sit-pill.primary .sit-label{color:var(--cream);}
+    .sit-more{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:10px 14px;border-radius:50px;background:none;border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;white-space:nowrap;}
+    .sit-more-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--soft);}
+    .sit-divider{height:1px;background:var(--cream-border);margin:18px 16px 0;}
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -247,6 +262,18 @@
         แบบทดสอบค้นพบตัวเอง
       </div>
       <div style="font-size:24px;color:rgba(232,150,12,0.7);">→</div>
+    </div>
+  </div>
+
+
+  <!-- SITUATION SHEET -->
+  <div id="sit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0);z-index:400;align-items:flex-end;justify-content:center;transition:background 0.3s;pointer-events:none;" onclick="handleSitOverlay(event)">
+    <div id="sit-sheet" style="background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);padding-bottom:env(safe-area-inset-bottom,16px);max-height:85vh;overflow-y:auto;">
+      <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:14px auto 0;flex-shrink:0;"></div>
+      <div id="sit-sheet-content" style="padding:16px 20px 8px;"></div>
+      <div style="padding:0 20px 12px;">
+        <button onclick="closeSitSheet()" style="width:100%;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:10px;">ปิด</button>
+      </div>
     </div>
   </div>
 
@@ -322,11 +349,43 @@
     </div>
   </div>
 
+
+  <!-- ── วันนี้เป็นยังไงบ้าง? ── -->
+  <div class="situation-wrap" id="situation-section">
+    <div class="situation-header">
+      <div class="situation-label">วันนี้เป็นยังไงบ้าง?</div>
+    </div>
+    <div class="situation-scroll">
+      <button class="sit-pill" onclick="openSitSheet('sleep')">
+        <span class="sit-emoji">😴</span>
+        <span class="sit-label">นอนไม่หลับ</span>
+      </button>
+      <button class="sit-pill" onclick="openSitSheet('burnout')">
+        <span class="sit-emoji">🪫</span>
+        <span class="sit-label">หมดไฟ</span>
+      </button>
+      <button class="sit-pill" onclick="openSitSheet('foggy')">
+        <span class="sit-emoji">🤯</span>
+        <span class="sit-label">สมองตื้อ</span>
+      </button>
+      <button class="sit-pill" onclick="openSitSheet('unsure')">
+        <span class="sit-emoji">🤔</span>
+        <span class="sit-label">ไม่แน่ใจว่ารู้สึกอะไร</span>
+      </button>
+      <button class="sit-pill" onclick="openSitSheet('friend')">
+        <span class="sit-emoji">🌿</span>
+        <span class="sit-label">เป็นห่วงเพื่อน</span>
+      </button>
+      <a class="sit-more" href="resources.html">
+        <span class="sit-more-label">ดูทั้งหมด →</span>
+      </a>
+    </div>
+  </div>
+  <div class="sit-divider"></div>
+
   <div id="m4-section-root"></div>
   <div id="m5-section-root"></div>
-  <div id="care-section-root"></div>
   <div id="other-section-root"></div>
-
   <div class="worlds-wrap" id="worlds-wrap"></div>
 <script>
 const API_URL   = "https://script.google.com/macros/s/AKfycbztMREOYjHbq1TkfMplela4FBQmGjooLbRoV2HmccSdK-ZLzNk7NpkDL0ksPw-bPdgF/exec";
@@ -392,15 +451,6 @@ const OTHER_IMGS = [
   { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780395074/Screenshot_2026-06-02_170928_gu6lx8.png",  url: "#" },
 ];
 
-// ดูแลตัวเอง row — 5 image buttons
-const CARE_IMGS = [
-  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419028/Screenshot_2026-06-02_234919_gouolj.png",  url: "reflection.html" },
-  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419030/Screenshot_2026-06-02_234928_irhlrl.png",  url: "alltools.html" },
-  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419033/Screenshot_2026-06-02_234936_mr6mib.png",  url: "https://www.dmh.go.th" },
-  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419036/Screenshot_2026-06-02_234944_nw3qm0.png",  url: "resources.html" },
-  { img: "https://res.cloudinary.com/dlixucdqx/image/upload/v1780419038/Screenshot_2026-06-02_234956_saoikv.png",  url: "https://www.sati.app" },
-];
-
 // ═══ RENDER YEAR ROW ════════════════════════════════════════
 function renderYearRow(containerId, label, badgeColor, imgList, baseDelay) {
   const root = document.getElementById(containerId);
@@ -425,10 +475,8 @@ function renderYearRow(containerId, label, badgeColor, imgList, baseDelay) {
   row.style.cssText = "display:flex;gap:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;";
 
   imgList.forEach((item, i) => {
-    const isFirst = i === 0;
-    const cardW = (containerId === "care-section-root" && isFirst) ? "180px" : "140px";
     const btn = document.createElement("div");
-    btn.style.cssText = `flex-shrink:0;width:${cardW};height:110px;border-radius:16px;overflow:hidden;cursor:pointer;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;border:1px solid var(--cream-border);box-shadow:0 2px 10px rgba(0,0,0,0.08);`;
+    btn.style.cssText = "flex-shrink:0;width:140px;height:110px;border-radius:16px;overflow:hidden;cursor:pointer;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;border:1px solid var(--cream-border);box-shadow:0 2px 10px rgba(0,0,0,0.08);";
     btn.onclick = () => { if (item.url && item.url !== "#") window.location.href = item.url; };
     btn.innerHTML = `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentNode.style.background='var(--cream-warm)'"/>`;
     btn.addEventListener('touchstart', () => btn.style.transform='scale(0.96)', {passive:true});
@@ -450,7 +498,6 @@ function renderAll() {
 
   d = renderYearRow("m4-section-root", "ม.4", "#2E5FA3", M4_IMGS, d);
   d = renderYearRow("m5-section-root", "ม.5", "#E8960C", M5_IMGS, d + 10);
-  d = renderYearRow("care-section-root", "เมื่ออยากดูแลตัวเอง", "#0D9488", CARE_IMGS, d + 10);
   d = renderYearRow("other-section-root", "อื่นๆ", "#3A7D44", OTHER_IMGS, d + 10);
 }
 
@@ -470,6 +517,111 @@ if (isPreview) {
       document.getElementById("greeting-name").innerText = "สวัสดี " + first + " 🤍";
     } catch(e) { /* stay with default สวัสดี 🤍 */ }
   })();
+}
+
+
+// ═══ SITUATION SHEET ══════════════════════════════════════════
+const SIT_DATA = {
+  sleep: {
+    emoji: '😴', title: 'นอนไม่หลับ',
+    note: 'การนอนไม่เพียงพอสะสมส่งผลต่ออารมณ์และสมาธิโดยตรง บางทีที่รู้สึกว่า "ไม่ไหว" อาจเป็นแค่ว่าร่างกายยังพักไม่พอ',
+    tools: [
+      { icon:'🌙', name:'Sleep Reset', desc:'ช่วยให้จิตใจพร้อมนอน', href:'alltools.html#sleep' },
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'2 นาที ก่อนนอน', href:'alltools.html#breathe' },
+      { icon:'📖', name:'คู่มือการนอนสำหรับนักเรียน', desc:'อ่านสั้นๆ', href:'resources.html#sleep' },
+    ],
+    talk: 'นอนไม่หลับมาหลายสัปดาห์แล้ว?',
+  },
+  burnout: {
+    emoji: '🪫', title: 'หมดไฟ',
+    note: 'หมดไฟมักเกิดเมื่อร่างกายและจิตใจทำงานหนักเกินไปนานเกินไป โดยไม่ได้รับการดูแลเรื่องพื้นฐาน ไม่ใช่ความอ่อนแอ แต่เป็นสัญญาณที่ต้องรับฟัง',
+    tools: [
+      { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html' },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html' },
+      { icon:'🏃', name:'เคลื่อนไหวก่อนเลย', desc:'3 นาที เปลี่ยนพลังงาน', href:'alltools.html#move' },
+    ],
+    talk: 'หมดแรงมาหลายสัปดาห์แล้ว ไม่ฟื้นตัวเลย?',
+  },
+  foggy: {
+    emoji: '🤯', title: 'สมองตื้อ อ่านหนังสือไม่เข้า',
+    note: 'สมองที่อ่อนล้าไม่ต่างจากกล้ามเนื้อที่เหนื่อย บังคับให้ทำต่อไปไม่ได้ผล แต่การพักสั้นๆ และขยับตัวมักช่วยได้เร็วกว่าที่คิด',
+    tools: [
+      { icon:'🌬️', name:'หายใจก่อนเลย', desc:'รีเซ็ตสมาธิ 2 นาที', href:'alltools.html#breathe' },
+      { icon:'🏃', name:'ลุกขึ้นขยับตัว', desc:'5 นาที แล้วกลับมาใหม่', href:'alltools.html#move' },
+      { icon:'🌙', name:'Sleep Reset', desc:'ถ้านอนไม่พอคือต้นเหตุ', href:'alltools.html#sleep' },
+    ],
+    talk: 'เป็นมานานแล้ว หรือไม่ใช่แค่เรื่องเรียน?',
+  },
+  unsure: {
+    emoji: '🤔', title: 'ไม่แน่ใจว่ากำลังรู้สึกอะไร',
+    note: 'ไม่ต้องรีบหาคำตอบ แค่รู้ว่ามีบางอย่างอยู่ก็พอ ลองสำรวจดูว่ามันคืออะไร',
+    tools: [
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'เริ่มจากสังเกตข้างใน · ไม่ต้องรู้คำตอบก่อน', href:'reflection.html', primary: true },
+    ],
+    talk: 'อยากคุยกับคนจริงๆ มากกว่า?',
+  },
+  friend: {
+    emoji: '🌿', title: 'เป็นห่วงเพื่อน',
+    note: 'การที่คุณเป็นห่วงเพื่อนอยู่นั้น สำคัญมาก แต่การช่วยเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว',
+    tools: [
+      { icon:'📖', name:'คู่มือ: เป็นห่วงเพื่อน', desc:'ทำอะไรได้บ้าง · พูดยังไงดี', href:'resources.html#friend' },
+      { icon:'💛', name:'คุยกับ PR', desc:'ขอคำแนะนำจากเพื่อนที่ปรึกษา', href:'peer.html' },
+      { icon:'👩‍🏫', name:'ครูแนะแนว', desc:'ถ้าเรื่องหนักเกินไปสำหรับเพื่อน', href:'professionals.html' },
+    ],
+    talk: 'เป็นห่วงมากและไม่รู้จะทำยังไง?',
+  },
+};
+
+function openSitSheet(key) {
+  const d = SIT_DATA[key];
+  if (!d) return;
+
+  // Build content
+  const toolsHtml = d.tools.map(t => `
+    <a href="${t.href}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary ? 'var(--dark)' : 'var(--cream-warm)'};border:1px solid ${t.primary ? 'var(--dark)' : 'var(--cream-border)'};margin-bottom:8px;">
+      <span style="font-size:18px;flex-shrink:0;width:28px;text-align:center;">${t.icon}</span>
+      <span style="flex:1;">
+        <span style="display:block;font-size:13px;font-weight:500;color:${t.primary ? '#FDFBF7' : 'var(--dark)'};">${t.name}</span>
+        <span style="display:block;font-size:11px;font-weight:300;color:${t.primary ? 'rgba(253,251,247,0.55)' : 'var(--soft)'};">${t.desc}</span>
+      </span>
+      <span style="font-size:12px;color:${t.primary ? 'rgba(255,255,255,0.3)' : 'var(--faint)'};">→</span>
+    </a>`).join('');
+
+  document.getElementById('sit-sheet-content').innerHTML = `
+    <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:8px;">วันนี้เป็นยังไงบ้าง?</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <span style="font-size:28px;">${d.emoji}</span>
+      <span style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);">${d.title}</span>
+    </div>
+    <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.75;margin-bottom:16px;padding:12px 14px;background:var(--cream-warm);border-radius:10px;">${d.note}</div>
+    ${toolsHtml}
+    <div style="border-top:1px solid var(--cream-border);padding-top:10px;margin-top:6px;font-size:12px;color:var(--soft);line-height:1.6;">
+      ${d.talk} <a href="talk.html" style="color:var(--mid);font-weight:500;text-decoration:underline;text-underline-offset:3px;" onclick="closeSitSheet()">คุยกับใครสักคน →</a>
+    </div>`;
+
+  const ov = document.getElementById('sit-overlay');
+  ov.style.display = 'flex';
+  ov.style.pointerEvents = 'all';
+  requestAnimationFrame(() => {
+    ov.style.background = 'rgba(0,0,0,0.52)';
+    document.getElementById('sit-sheet').style.transform = 'translateY(0)';
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSitSheet() {
+  const ov = document.getElementById('sit-overlay');
+  ov.style.background = 'rgba(0,0,0,0)';
+  document.getElementById('sit-sheet').style.transform = 'translateY(100%)';
+  setTimeout(() => {
+    ov.style.display = 'none';
+    ov.style.pointerEvents = 'none';
+    document.body.style.overflow = '';
+  }, 360);
+}
+
+function handleSitOverlay(e) {
+  if (e.target === document.getElementById('sit-overlay')) closeSitSheet();
 }
 
 // ═══ CARE SHEET ══════════════════════════════════════════════
