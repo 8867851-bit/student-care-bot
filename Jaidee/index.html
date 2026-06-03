@@ -238,32 +238,14 @@
 <body>
 
   <div class="hero">
-    <div class="hero-name" id="greeting-name">สวัสดี 🤍</div>
     <div class="hero-eyebrow">ใจดี TU</div>
-    <div class="hero-sub">สร้างโดยนักเรียนเตรียมฯ เพื่อนักเรียนเตรียมฯ</div>
+    <div class="hero-name" style="font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;color:var(--dark);margin-bottom:6px;line-height:1.3;">🌱 เรียนรู้และเติบโต</div>
+    <div class="hero-sub" style="font-size:12px;font-weight:300;color:var(--soft);line-height:1.7;">เรื่องของการใช้ชีวิตที่เตรียมฯ · การเข้าใจตัวเอง · การค้นพบสิ่งใหม่ๆ</div>
   </div>
 
-  <div class="pr-banner">
-    <div class="pr-banner-left">
-      <div class="pr-banner-label">Peer Support</div>
-      <div class="pr-banner-text">บางทีแค่มีคนรับฟัง ก็เบาขึ้นได้เยอะ</div>
-      <div class="pr-avail">จ–ศ หลังเลิกเรียน · นัดล่วงหน้า</div>
-    </div>
-    <button class="pr-btn" onclick="window.location.href='peer.html'">นัดคุย →</button>
-  </div>
 
-  <div class="sig-wrap">
-    <div class="sig-card reflection" onclick="openCareSheet()"
-      style="background:linear-gradient(145deg,#0D4A44 0%,#0A3D38 100%);
-             border-color:#0D9488;
-             display:flex;align-items:center;justify-content:space-between;
-             padding:22px 24px;border-radius:20px;border:1px solid #3A332D;cursor:pointer;">
-      <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:#FDFBF7;">
-        แบบทดสอบค้นพบตัวเอง
-      </div>
-      <div style="font-size:24px;color:rgba(232,150,12,0.7);">→</div>
-    </div>
-  </div>
+
+
 
 
   <!-- SITUATION SHEET -->
@@ -350,43 +332,41 @@
   </div>
 
 
-  <!-- ── วันนี้เป็นยังไงบ้าง? ── -->
+  <!-- ── วันนี้เป็นยังไงบ้าง? — Tier system ── -->
   <div class="situation-wrap" id="situation-section">
     <div class="situation-header">
-      <div class="situation-label">วันนี้เป็นยังไงบ้าง?</div>
+      <div class="situation-label" id="tier-label">วันนี้เป็นยังไงบ้าง?</div>
     </div>
-    <div class="situation-scroll">
-      <button class="sit-pill" onclick="openSitSheet('sleep')">
-        <span class="sit-emoji">😴</span>
-        <span class="sit-label">นอนไม่หลับ</span>
-      </button>
-      <button class="sit-pill" onclick="openSitSheet('burnout')">
-        <span class="sit-emoji">🪫</span>
-        <span class="sit-label">หมดไฟ</span>
-      </button>
-      <button class="sit-pill" onclick="openSitSheet('foggy')">
-        <span class="sit-emoji">🤯</span>
-        <span class="sit-label">สมองตื้อ</span>
-      </button>
-      <button class="sit-pill" onclick="openSitSheet('unsure')">
-        <span class="sit-emoji">🤔</span>
-        <span class="sit-label">ไม่แน่ใจว่ารู้สึกอะไร</span>
-      </button>
-      <button class="sit-pill" onclick="openSitSheet('friend')">
-        <span class="sit-emoji">🌿</span>
-        <span class="sit-label">เป็นห่วงเพื่อน</span>
-      </button>
-      <a class="sit-more" href="resources.html">
-        <span class="sit-more-label">ดูทั้งหมด →</span>
-      </a>
+    <div class="situation-scroll" id="tier-pills">
+      <!-- rendered by JS -->
     </div>
   </div>
-  <div class="sit-divider"></div>
+
+  <!-- ── แบบทดสอบค้นพบตัวเอง ── -->
+  <div style="padding:18px 16px 0;">
+    <div onclick="openCareSheet()" style="background:linear-gradient(145deg,#0D4A44,#0A3D38);border-radius:18px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid rgba(13,148,136,0.3);">
+      <div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:#FDFBF7;margin-bottom:4px;">แบบทดสอบค้นพบตัวเอง</div>
+      </div>
+      <div style="font-size:22px;color:rgba(232,150,12,0.6);">→</div>
+    </div>
+  </div>
 
   <div id="m4-section-root"></div>
   <div id="m5-section-root"></div>
   <div id="other-section-root"></div>
   <div class="worlds-wrap" id="worlds-wrap"></div>
+
+  <!-- ── Peer Support — gentle ending ── -->
+  <div style="height:1px;background:var(--cream-border);margin:8px 20px 0;"></div>
+  <div class="pr-banner">
+    <div class="pr-banner-left">
+      <div class="pr-banner-label">เพื่อนที่ปรึกษา</div>
+      <div class="pr-banner-text">บางทีแค่มีคนรับฟัง ก็เบาขึ้นได้เยอะ</div>
+      <div class="pr-avail">จ–ศ หลังเลิกเรียน · นัดล่วงหน้า</div>
+    </div>
+    <button class="pr-btn" onclick="window.location.href='peer.html'">นัดคุย →</button>
+  </div>
 <script>
 const API_URL   = "https://script.google.com/macros/s/AKfycbztMREOYjHbq1TkfMplela4FBQmGjooLbRoV2HmccSdK-ZLzNk7NpkDL0ksPw-bPdgF/exec";
 const LIFF_ID   = "2009806939-H06mwKgI";
@@ -520,6 +500,99 @@ if (isPreview) {
 }
 
 
+
+// ═══ SITUATION TIERS ══════════════════════════════════════════
+const TIERS = [
+  {
+    label: 'วันนี้เป็นยังไงบ้าง?',
+    pills: [
+      { emoji:'😴', label:'นอนไม่หลับ',              key:'sleep'    },
+      { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
+      { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
+      { emoji:'🤔', label:'ไม่แน่ใจว่ารู้สึกอะไร',  key:'unsure'   },
+      { emoji:'🌿', label:'เป็นห่วงเพื่อน',          key:'friend'   },
+    ]
+  },
+  {
+    label: 'เรื่องการเรียน...',
+    pills: [
+      { emoji:'📚', label:'กลัวสอบ',                    key:'exam'       },
+      { emoji:'📖', label:'อ่านหนังสือแล้วไม่เข้าหัว',  key:'study_fog'  },
+      { emoji:'⏰', label:'งานเยอะจนล้น',               key:'overwhelm'  },
+      { emoji:'🎯', label:'กดดันตัวเองมากเกินไป',       key:'pressure'   },
+      { emoji:'📉', label:'รู้สึกว่าตัวเองไม่เก่งพอ',  key:'not_enough' },
+      { emoji:'🏃', label:'ทุกคนดูไปไกลกว่าฉัน',       key:'behind'     },
+    ]
+  },
+  {
+    label: 'เรื่องเพื่อนและความสัมพันธ์...',
+    pills: [
+      { emoji:'👥', label:'เข้ากับเพื่อนไม่ได้',          key:'social'    },
+      { emoji:'🫥', label:'รู้สึกเหมือนไม่มีที่ของตัวเอง', key:'no_place'  },
+      { emoji:'💬', label:'ทะเลาะกับเพื่อน',              key:'fight'     },
+      { emoji:'🥲', label:'รู้สึกโดนทิ้ง',                key:'abandoned' },
+      { emoji:'❤️', label:'แอบชอบใครสักคน',              key:'crush'     },
+      { emoji:'💔', label:'เพิ่งอกหัก',                  key:'heartbreak'},
+      { emoji:'😔', label:'รู้สึกเหงา',                   key:'lonely'    },
+    ]
+  },
+  {
+    label: 'เรื่องบ้านและครอบครัว...',
+    pills: [
+      { emoji:'🏠', label:'คิดถึงบ้าน',                 key:'homesick'     },
+      { emoji:'👨‍👩‍👧', label:'มีปัญหากับครอบครัว',       key:'family'       },
+      { emoji:'🫤', label:'รู้สึกว่าที่บ้านไม่เข้าใจ',  key:'misunderstood'},
+      { emoji:'😮‍💨', label:'อยากมีพื้นที่ของตัวเอง',   key:'need_space'   },
+    ]
+  },
+  {
+    label: 'ร่างกายและชีวิตประจำวัน...',
+    pills: [
+      { emoji:'😴', label:'นอนไม่หลับ',          key:'sleep'      },
+      { emoji:'🍚', label:'กินข้าวไม่ค่อยลง',    key:'no_appetite'},
+      { emoji:'📱', label:'เล่นมือถือจนดึก',     key:'phone'      },
+      { emoji:'☀️', label:'ไม่ค่อยได้ออกไปไหน', key:'no_sun'     },
+      { emoji:'🪫', label:'เหนื่อยตลอดเวลา',     key:'tired'      },
+      { emoji:'🛏️', label:'ไม่อยากลุกจากเตียง',  key:'no_energy'  },
+    ]
+  },
+  {
+    label: 'อยากเข้าใจตัวเอง...',
+    pills: [
+      { emoji:'🤔', label:'อยากรู้จักตัวเองมากขึ้น',    key:'self_know' },
+      { emoji:'🧩', label:'ฉันเป็นคนแบบไหนกันนะ',       key:'who_am_i'  },
+      { emoji:'🌱', label:'อยากเปลี่ยนแปลงตัวเอง',      key:'grow'      },
+      { emoji:'🎭', label:'รู้สึกว่าตัวเองไม่เหมือนเดิม', key:'changed'  },
+      { emoji:'❓', label:'ไม่รู้ว่าตัวเองต้องการอะไร',  key:'lost'      },
+    ]
+  },
+];
+
+let _currentTier = 0;
+
+function renderTier(index) {
+  const tier = TIERS[index];
+  document.getElementById('tier-label').textContent = tier.label;
+  const container = document.getElementById('tier-pills');
+  container.innerHTML = tier.pills.map(p =>
+    `<button class="sit-pill" onclick="openSitSheet('${p.key}')">
+      <span class="sit-emoji">${p.emoji}</span>
+      <span class="sit-label">${p.label}</span>
+    </button>`
+  ).join('') +
+  `<button class="sit-pill" onclick="nextTier()" style="background:var(--cream-warm);border-color:var(--cream-border);gap:5px;">
+    <span class="sit-emoji" style="font-size:14px;">↻</span>
+    <span class="sit-label" style="color:var(--soft);">เรื่องอื่น</span>
+  </button>`;
+}
+
+function nextTier() {
+  _currentTier = (_currentTier + 1) % TIERS.length;
+  renderTier(_currentTier);
+}
+
+// init on load (called after DOM ready)
+
 // ═══ SITUATION SHEET ══════════════════════════════════════════
 const SIT_DATA = {
   sleep: {
@@ -623,6 +696,263 @@ function closeSitSheet() {
 function handleSitOverlay(e) {
   if (e.target === document.getElementById('sit-overlay')) closeSitSheet();
 }
+
+// Extended situation data
+const SIT_DATA_EXTRA = {
+  exam: {
+    emoji:'📚', title:'กลัวสอบ',
+    note:'ความกังวลก่อนสอบเป็นเรื่องปกติมาก แต่ถ้ามันมากเกินจนกระทบการนอนหรือทำให้อ่านไม่ได้เลย อาจต้องการความช่วยเหลือ',
+    tools:[
+      { icon:'🌬️', name:'หายใจก่อนเลย', desc:'ลด cortisol ก่อนเรียนหรือก่อนสอบ', href:'alltools.html#breathe' },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้าความกังวลลึกกว่าแค่เรื่องสอบ', href:'reflection.html' },
+      { icon:'🌙', name:'Sleep Reset', desc:'นอนดีก่อนสอบสำคัญกว่าอ่านดึก', href:'alltools.html#sleep' },
+    ],
+    talk:'กังวลมากจนนอนไม่หลับหรือทำอะไรไม่ได้?',
+  },
+  study_fog: {
+    emoji:'📖', title:'อ่านหนังสือแล้วไม่เข้าหัว',
+    note:'สมองที่ล้าหรือวิตกกังวลอยู่ข้างในไม่สามารถจดจำได้ดี บางทีปัญหาไม่ใช่ที่การอ่าน แต่ที่สภาพข้างใน',
+    tools:[
+      { icon:'🌬️', name:'รีเซ็ตสมาธิ 2 นาที', desc:'หายใจก่อน กลับมาใหม่', href:'alltools.html#breathe' },
+      { icon:'🏃', name:'ลุกขึ้นขยับตัว', desc:'5 นาที เพิ่ม blood flow', href:'alltools.html#move' },
+      { icon:'🌙', name:'Sleep Reset', desc:'ถ้านอนน้อยคือต้นเหตุ', href:'alltools.html#sleep' },
+    ],
+    talk:'เป็นมานานหรือรู้สึกว่าไม่ใช่แค่เรื่องเรียน?',
+  },
+  overwhelm: {
+    emoji:'⏰', title:'งานเยอะจนล้น',
+    note:'ความรู้สึก "ล้น" มักทำให้ paralyzed แทนที่จะทำได้มากขึ้น บางครั้งแค่ระบายออกมาก็ช่วยได้',
+    tools:[
+      { icon:'📓', name:'เขียนระบาย Brain Dump', desc:'ระบายทุกอย่างในหัวออกมาก่อน', href:'alltools.html#journal' },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้ามันหนักกว่าแค่งาน', href:'reflection.html' },
+    ],
+    talk:'รู้สึกหมดแรงจนทำอะไรไม่ได้เลย?',
+  },
+  pressure: {
+    emoji:'🎯', title:'กดดันตัวเองมากเกินไป',
+    note:'การกดดันตัวเองเป็นสัญญาณว่าคุณใส่ใจ แต่มากเกินพอดีทำให้ร่างกายและจิตใจสึกหรอเร็ว',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ความกดดันนี้มาจากไหน', href:'reflection.html' },
+      { icon:'🌬️', name:'หายใจผ่อนคลาย', desc:'ลด tension ลงก่อน', href:'alltools.html#breathe' },
+    ],
+    talk:'กดดันตัวเองจนรู้สึกไม่ไหว?',
+  },
+  not_enough: {
+    emoji:'📉', title:'รู้สึกว่าตัวเองไม่เก่งพอ',
+    note:'ความรู้สึกนี้พบได้บ่อยมากในคนที่เก่งจริงๆ แต่ยังไม่รู้ตัว ไม่ได้แปลว่าเป็นความจริง',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจว่าความรู้สึกนี้มาจากไหน', href:'reflection.html' },
+      { icon:'🧩', name:'ค้นพบจุดแข็งของตัวเอง', desc:'VIA, High5, และอื่นๆ', href:'#', onclick:'openCareSheet()' },
+    ],
+    talk:'ความรู้สึกนี้กระทบชีวิตประจำวันมาก?',
+  },
+  behind: {
+    emoji:'🏃', title:'ทุกคนดูไปไกลกว่าฉัน',
+    note:'Social comparison เป็นธรรมชาติ แต่เราเห็นแค่ highlight ของคนอื่น ไม่เห็น struggle ข้างหลังของพวกเขา',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจข้างในก่อน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับ PR', desc:'บางทีได้ยินว่าคนอื่นรู้สึกเหมือนกันก็ช่วย', href:'peer.html' },
+    ],
+    talk:'รู้สึกแบบนี้บ่อยมากหรือกระทบสุขภาพจิต?',
+  },
+  social: {
+    emoji:'👥', title:'เข้ากับเพื่อนไม่ได้',
+    note:'การหากลุ่มเพื่อนใหม่ใช้เวลา โดยเฉพาะในช่วงเปลี่ยนโรงเรียน มันไม่ได้แปลว่ามีอะไรผิดปกติกับคุณ',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจว่ารู้สึกอะไรอยู่ข้างใน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับ PR', desc:'เพื่อนที่ปรึกษา รับฟังโดยไม่ตัดสิน', href:'peer.html' },
+    ],
+    talk:'รู้สึกโดดเดี่ยวมากและไม่ดีขึ้น?',
+  },
+  no_place: {
+    emoji:'🫥', title:'รู้สึกเหมือนไม่มีที่ของตัวเอง',
+    note:'ความรู้สึกนี้หนักมากและมักเกิดในช่วงเปลี่ยนผ่าน คุณไม่ได้อยู่คนเดียวกับความรู้สึกนี้',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับ PR', desc:'มีคนที่พร้อมรับฟัง', href:'peer.html' },
+    ],
+    talk:'รู้สึกแบบนี้นานแล้วหรือรุนแรงมาก?',
+  },
+  fight: {
+    emoji:'💬', title:'ทะเลาะกับเพื่อน',
+    note:'ความขัดแย้งเป็นส่วนของมิตรภาพ แต่มันก็เจ็บปวดได้มาก โดยเฉพาะถ้ายังแก้ไขไม่ได้',
+    tools:[
+      { icon:'📖', name:'คู่มือ: ความขัดแย้งกับเพื่อน', desc:'จะพูดยังไง จะเริ่มยังไง', href:'resources.html#conflict' },
+      { icon:'💛', name:'คุยกับ PR', desc:'ขอมุมมองจากคนนอก', href:'peer.html' },
+    ],
+    talk:'สถานการณ์ซับซ้อนหรือไม่รู้จะจัดการยังไง?',
+  },
+  abandoned: {
+    emoji:'🥲', title:'รู้สึกโดนทิ้ง',
+    note:'ความเจ็บปวดจากการถูกทิ้งหรือถูกกีดกันเป็นของจริงและสำคัญมาก ไม่ใช่เรื่องเล็กน้อย',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ให้พื้นที่กับความรู้สึกนี้', href:'reflection.html' },
+      { icon:'📓', name:'เขียนระบาย', desc:'บางทีเขียนออกมาก็เบาขึ้น', href:'alltools.html#journal' },
+    ],
+    talk:'รู้สึกแบบนี้มากหรือมีความคิดทำร้ายตัวเอง?',
+  },
+  crush: {
+    emoji:'❤️', title:'แอบชอบใครสักคน',
+    note:'ความรู้สึกชอบใครเป็นส่วนที่ดีของชีวิต แต่มันก็ทำให้ตัวเองวุ่นวายและไม่สบายใจได้เหมือนกัน',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจว่ารู้สึกอะไรอยู่', href:'reflection.html' },
+      { icon:'📓', name:'เขียนระบาย', desc:'ระบายความรู้สึกออกมาก่อน', href:'alltools.html#journal' },
+    ],
+    talk:'มันกระทบชีวิตประจำวันหรือทำให้ทุกข์มาก?',
+  },
+  heartbreak: {
+    emoji:'💔', title:'เพิ่งอกหัก',
+    note:'ความเจ็บปวดจากการอกหักเป็นของจริงมาก สมองเราประมวลผลมันคล้ายกับความเจ็บปวดทางกาย ให้เวลาตัวเอง',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ให้พื้นที่กับความรู้สึกนี้', href:'reflection.html' },
+      { icon:'📓', name:'เขียนระบาย', desc:'เขียนออกมาช่วยได้มาก', href:'alltools.html#journal' },
+      { icon:'🌬️', name:'หายใจผ่อนคลาย', desc:'ลดความเจ็บปวดเฉียบพลัน', href:'alltools.html#breathe' },
+    ],
+    talk:'รู้สึกหนักมากหรือไม่ไหวแล้ว?',
+  },
+  lonely: {
+    emoji:'😔', title:'รู้สึกเหงา',
+    note:'ความเหงาไม่ได้แปลว่าไม่มีเพื่อน บางทีรู้สึกเหงาแม้จะอยู่กับคนรอบข้าง นั่นก็เป็นสัญญาณสำคัญ',
+    tools:[
+      { icon:'💛', name:'คุยกับ PR', desc:'มีคนพร้อมรับฟัง', href:'peer.html' },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจความรู้สึกข้างใน', href:'reflection.html' },
+      { icon:'🎧', name:'Sati — อาสานักรับฟัง', desc:'익명 · ฟรี', href:'https://satiapp.co' },
+    ],
+    talk:'รู้สึกเหงามากหรือนานมากแล้ว?',
+  },
+  homesick: {
+    emoji:'🏠', title:'คิดถึงบ้าน',
+    note:'การคิดถึงบ้านเป็นเรื่องปกติมากสำหรับนักเรียนที่เพิ่งย้ายมา มันไม่ได้แปลว่าคุณอ่อนแอ',
+    tools:[
+      { icon:'💛', name:'คุยกับ PR', desc:'รับฟัง โดยไม่ตัดสิน', href:'peer.html' },
+      { icon:'📓', name:'เขียนระบาย', desc:'เขียนถึงบ้านในสมุด', href:'alltools.html#journal' },
+    ],
+    talk:'คิดถึงบ้านจนกระทบชีวิตประจำวัน?',
+  },
+  family: {
+    emoji:'👨‍👩‍👧', title:'มีปัญหากับครอบครัว',
+    note:'ปัญหาในครอบครัวเป็นเรื่องที่หนักมากและมักไม่มีคำตอบง่ายๆ การมีคนรับฟังช่วยได้มาก',
+    tools:[
+      { icon:'💛', name:'คุยกับ PR', desc:'เล่าให้ฟัง ไม่ตัดสิน', href:'peer.html' },
+      { icon:'👩‍🏫', name:'ครูแนะแนว', desc:'ถ้าต้องการผู้ใหญ่ช่วยดูแล', href:'professionals.html' },
+    ],
+    talk:'ปัญหารุนแรงหรือทำให้ไม่ปลอดภัย?',
+  },
+  misunderstood: {
+    emoji:'🫤', title:'รู้สึกว่าที่บ้านไม่เข้าใจ',
+    note:'ช่วงวัยนี้มักมีช่องว่างระหว่างความรู้สึกของเราและสิ่งที่บ้านเข้าใจ มันทำให้รู้สึกโดดเดี่ยวมาก',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ทำความเข้าใจตัวเองก่อน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับ PR', desc:'มีคนที่เข้าใจชีวิตเตรียมฯ', href:'peer.html' },
+    ],
+    talk:'รู้สึกโดดเดี่ยวมากหรือไม่ปลอดภัยที่บ้าน?',
+  },
+  need_space: {
+    emoji:'😮‍💨', title:'อยากมีพื้นที่ของตัวเอง',
+    note:'ความต้องการพื้นที่ส่วนตัวเป็นสิ่งปกติและสำคัญ โดยเฉพาะสำหรับวัยรุ่น',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจว่าต้องการอะไร', href:'reflection.html' },
+      { icon:'🌬️', name:'หายใจในพื้นที่ของตัวเอง', desc:'2 นาที คนเดียว', href:'alltools.html#breathe' },
+    ],
+    talk:'รู้สึกขาดพื้นที่จนกระทบสุขภาพจิต?',
+  },
+  no_appetite: {
+    emoji:'🍚', title:'กินข้าวไม่ค่อยลง',
+    note:'ความเครียดและความวิตกกังวลส่งผลต่อความอยากอาหารโดยตรง ถ้าเป็นนานหลายวันควรใส่ใจ',
+    tools:[
+      { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html?open=food' },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้ามันเกี่ยวกับอะไรมากกว่าการกิน', href:'reflection.html' },
+    ],
+    talk:'ไม่กินมาหลายวันหรือกินแล้วรู้สึกผิด?',
+  },
+  phone: {
+    emoji:'📱', title:'เล่นมือถือจนดึก',
+    note:'การเล่นมือถือดึกมักเป็นสัญญาณว่าเราหนีจากบางอย่าง ไม่ใช่แค่ชอบเล่น',
+    tools:[
+      { icon:'🌙', name:'Sleep Reset', desc:'ช่วยปิดสมองก่อนนอน', href:'alltools.html#sleep' },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'กำลังหนีจากอะไรอยู่?', href:'reflection.html' },
+    ],
+    talk:'มันกระทบการนอนหรือชีวิตประจำวันมาก?',
+  },
+  no_sun: {
+    emoji:'☀️', title:'ไม่ค่อยได้ออกไปไหน',
+    note:'แสงธรรมชาติมีผลต่อ serotonin และอารมณ์โดยตรง แค่ 10-15 นาทีนอกอาคารต่อวันช่วยได้จริง',
+    tools:[
+      { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'แสงแดดและการขยับตัว', href:'foundations.html?open=sun' },
+      { icon:'🏃', name:'เดินออกไปข้างนอก', desc:'3 นาทีก็ได้', href:'alltools.html#move' },
+    ],
+    talk:'อยู่แต่ในห้องนานมากและรู้สึกแย่ลงเรื่อยๆ?',
+  },
+  tired: {
+    emoji:'🪫', title:'เหนื่อยตลอดเวลา',
+    note:'ความเหนื่อยล้าเรื้อรังอาจมาจากหลายสาเหตุ นอน ความเครียด หรือบางอย่างที่ต้องการความใส่ใจมากกว่านี้',
+    tools:[
+      { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html' },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้าความเหนื่อยมันลึกกว่าร่างกาย', href:'reflection.html' },
+    ],
+    talk:'เหนื่อยมากนานแล้วและไม่ดีขึ้น?',
+  },
+  no_energy: {
+    emoji:'🛏️', title:'ไม่อยากลุกจากเตียง',
+    note:'ความรู้สึกนี้อาจเป็นสัญญาณสำคัญ โดยเฉพาะถ้าเป็นบ่อยหรือนาน ไม่ใช่แค่เรื่องเกียจคร้าน',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
+      { icon:'🌬️', name:'หายใจ 2 นาที บนเตียงก็ได้', desc:'เริ่มเล็กๆ', href:'alltools.html#breathe' },
+    ],
+    talk:'เป็นแบบนี้บ่อยหรือนานมากแล้ว?',
+  },
+  self_know: {
+    emoji:'🤔', title:'อยากรู้จักตัวเองมากขึ้น',
+    note:'การอยากเข้าใจตัวเองเป็นจุดเริ่มต้นของการเติบโต มีหลายทางที่ช่วยได้',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'เริ่มจากสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html', primary:true },
+      { icon:'🧩', name:'แบบทดสอบค้นพบตัวเอง', desc:'MBTI · VIA · High5', href:'#', onclick:'openCareSheet()' },
+    ],
+    talk:'อยากคุยกับใครเกี่ยวกับสิ่งที่ค้นพบ?',
+  },
+  who_am_i: {
+    emoji:'🧩', title:'ฉันเป็นคนแบบไหนกันนะ',
+    note:'ช่วงวัยนี้เป็นช่วงที่ดีที่สุดในการสำรวจว่าตัวเองเป็นใคร ไม่มีคำตอบที่ถูกหรือผิด',
+    tools:[
+      { icon:'🧩', name:'แบบทดสอบค้นพบตัวเอง', desc:'MBTI · VIA · High5 · และอื่นๆ', href:'#', onclick:'openCareSheet()', primary:true },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'เข้าใจอารมณ์ก็ส่วนหนึ่งของการรู้จักตัวเอง', href:'reflection.html' },
+    ],
+    talk:'อยากคุยเรื่องตัวตนกับใครสักคน?',
+  },
+  grow: {
+    emoji:'🌱', title:'อยากเปลี่ยนแปลงตัวเอง',
+    note:'ความอยากเปลี่ยนแปลงเป็นพลังงานที่ดี แต่ต้องรู้ว่าจะเปลี่ยนอะไรและทำไม',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'เริ่มจากการเข้าใจตัวเองก่อน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับ PR', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
+    ],
+    talk:'อยากเปลี่ยนแต่ไม่รู้จะเริ่มยังไง?',
+  },
+  changed: {
+    emoji:'🎭', title:'รู้สึกว่าตัวเองไม่เหมือนเดิม',
+    note:'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้รู้สึกไม่คุ้นเคยกับตัวเอง อาจต้องให้เวลาสำรวจ',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เปลี่ยนไป', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับ PR', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
+    ],
+    talk:'การเปลี่ยนแปลงนี้ทำให้รู้สึกไม่ดีหรือกังวล?',
+  },
+  lost: {
+    emoji:'❓', title:'ไม่รู้ว่าตัวเองต้องการอะไร',
+    note:'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว',
+    tools:[
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html', primary:true },
+      { icon:'🧩', name:'แบบทดสอบค้นพบตัวเอง', desc:'อาจช่วยให้เห็นแนวทาง', href:'#', onclick:'openCareSheet()' },
+    ],
+    talk:'รู้สึก lost มากและกระทบชีวิตประจำวัน?',
+  },
+};
+
+// Merge into SIT_DATA
+Object.assign(SIT_DATA, SIT_DATA_EXTRA);
+
+// Render first tier on load
+renderTier(0);
 
 // ═══ CARE SHEET ══════════════════════════════════════════════
 function openCareSheet() {
