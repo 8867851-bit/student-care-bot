@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <title>แหล่งข้อมูลและเครื่องมือ — ใจดี TU</title>
+  <title>เจอสถานการณ์แบบนี้อยู่ไหม? — ใจดี TU</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -99,43 +99,467 @@
 
 <button class="back-btn" onclick="history.back()">← กลับ</button>
 <div class="hero">
-  <div class="hero-eyebrow">ใจดี TU · แหล่งข้อมูล</div>
-  <div class="hero-title">เครื่องมือและทรัพยากร</div>
-  <div class="hero-sub">รวบรวมไว้ให้ — ใช้เมื่อไหร่ก็ได้ ไม่ต้องมีเหตุผลพิเศษ</div>
+  <div class="hero-eyebrow">ใจดี TU · สถานการณ์</div>
+  <div class="hero-title">🌿 เจอสถานการณ์<br>แบบนี้อยู่ไหม?</div>
+  <div class="hero-sub">บางครั้งการเริ่มจากสิ่งที่กำลังเกิดขึ้นตรงหน้า<br>อาจง่ายกว่าการอธิบายความรู้สึก</div>
 </div>
 
-<!-- ── GROUNDING ── -->
+<!-- ── SITUATIONAL ── -->
 <div class="sec">
-  <div class="sec-dot" style="background:var(--teal)"></div>
-  <div class="sec-text">Grounding — อยู่กับปัจจุบัน</div>
+  <div class="sec-dot" style="background:var(--gold)"></div>
+  <div class="sec-text">จะทำยังไงถ้า...</div>
   <div class="sec-line"></div>
 </div>
-<div class="grounding-wrap">
-  <div class="g-mode-row">
-    <button class="g-mode-btn sel" id="gm-54321"   onclick="selectMode('54321')">5-4-3-2-1</button>
-    <button class="g-mode-btn"    id="gm-animals"  onclick="selectMode('animals')">นึกถึงสัตว์</button>
-    <button class="g-mode-btn"    id="gm-date"     onclick="selectMode('date')">วันนี้คือ?</button>
+
+
+<div class="sec">
+  <div class="sec-dot" style="background:var(--red)"></div>
+  <div class="sec-text">🚨 เรื่องเร่งด่วน</div>
+  <div class="sec-line"></div>
+</div>
+<div class="situation-list"><div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">😶</span>
+      <div class="situation-body">
+        <div class="situation-q">ฉันรู้สึกอยากทำร้ายตัวเอง</div>
+        <div class="situation-hint">ขั้นตอนที่ช่วยได้ตอนนี้เลย</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>ออกจากสถานที่ที่มีสิ่งอันตราย</strong> — ไปที่ที่มีคนอื่น แม้แค่ห้องข้างๆ</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>โทรหาคนที่ไว้ใจได้</strong> — ไม่ต้องอธิบายทุกอย่าง แค่บอกว่า "ฉันต้องการใครซักคนตอนนี้"</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>ถ้าไม่มีใคร — มีบริการที่รอรับฟังอยู่</strong></div></div>
+      <div class="res-list">
+        <a class="res-item red" href="tel:1323"><span class="res-icon">📞</span><span class="res-body"><span class="res-name">โทร 1323</span><span class="res-desc">ฟรี 24 ชม. ไม่ต้องรอ ไม่ต้องพร้อม</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item teal" href="https://heretohealproject.com" target="_blank" rel="noopener"><span class="res-icon">🟡</span><span class="res-body"><span class="res-name">Here to Heal</span><span class="res-desc">คุยกับผู้เชี่ยวชาญผ่านข้อความ ทุกวัน 10:00–22:00</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item teal" href="https://satiapp.co" target="_blank" rel="noopener"><span class="res-icon">🎧</span><span class="res-body"><span class="res-name">Sati App</span><span class="res-desc">อาสานักรับฟัง anonymous ฟรี ตลอด 24 ชม.</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item blue" href="https://www.prescreening.dmind.app" target="_blank" rel="noopener"><span class="res-icon">🤖</span><span class="res-body"><span class="res-name">DMIND Chatbot</span><span class="res-desc">คุยกับ AI ได้เลยตอนนี้ ฟรี 24 ชม.</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
   </div>
-  <div class="g-card">
-    <div id="g-start">
-      <div class="g-hint" id="g-mode-hint">เทคนิค 5-4-3-2-1 ช่วยดึงความสนใจกลับมาที่ร่างกายและสิ่งรอบตัว ผ่านประสาทสัมผัสทั้งห้า</div>
-      <button class="g-start-btn" onclick="startGrounding()">เริ่ม →</button>
+
+<div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">👥</span>
+      <div class="situation-body">
+        <div class="situation-q">เพื่อนบอกว่าอยากทำร้ายตัวเอง</div>
+        <div class="situation-hint">วิธีรับมือและช่วยเพื่อนในสถานการณ์นี้</div>
+      </div>
+      <span class="situation-chevron">›</span>
     </div>
-    <div id="g-active" style="display:none;">
-      <div class="g-dots" id="g-dots"></div>
-      <div class="g-step-label" id="g-step-label"></div>
-      <div class="g-instruction" id="g-instruction"></div>
-      <div class="g-detail" id="g-detail"></div>
-      <button class="g-next-btn" id="g-next-btn" onclick="nextGrounding()">ได้แล้ว →</button>
-      <button class="g-stop-btn" onclick="resetGrounding()">หยุดก่อน</button>
-    </div>
-    <div id="g-done" style="display:none;">
-      <div class="g-done-icon">🌊</div>
-      <div class="g-done-title">ดีมาก</div>
-      <div class="g-done-sub">ลองสังเกตว่าตอนนี้รู้สึกต่างจากก่อนไหม<br>แม้แต่นิดเดียวก็นับ</div>
-      <button class="g-done-again" onclick="resetGrounding()">ลองอีกรอบ</button>
-    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>รับฟังโดยไม่ตัดสิน</strong> — อย่าบอกว่า "อย่าคิดแบบนั้น" แค่บอกว่า "ขอบคุณที่เล่าให้ฟัง ฉันอยู่ตรงนี้"</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>ถามตรงๆ ว่าปลอดภัยไหม</strong> — การถามไม่ทำให้แย่ลง เช่น "ตอนนี้รู้สึกอยากทำร้ายตัวเองไหม?"</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>อยู่กับเขา</strong> — อย่าปล่อยให้อยู่คนเดียวถ้าไม่ปลอดภัย พาไปหาผู้ใหญ่หรือโทร 1323 ด้วยกัน</div></div>
+      <div class="situation-step"><div class="situation-num">4</div><div class="situation-step-text"><strong>บอกผู้ใหญ่ที่ไว้ใจ</strong> — ไม่ใช่การทรยศ แต่คือการรักษาชีวิตเพื่อน</div></div>
+      <div class="res-list">
+        <a class="res-item red" href="tel:1323"><span class="res-icon">📞</span><span class="res-body"><span class="res-name">โทร 1323</span><span class="res-desc">โทรพร้อมกับเพื่อน ฟรี ตลอด 24 ชม.</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item gold" href="talk.html"><span class="res-icon">💛</span><span class="res-body"><span class="res-name">คุยกับ PR</span><span class="res-desc">ถ้าตัวเองก็รู้สึกหนักด้วย — PR รับฟังได้เช่นกัน</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item teal" href="https://satiapp.co" target="_blank" rel="noopener"><span class="res-icon">🎧</span><span class="res-body"><span class="res-name">Sati App</span><span class="res-desc">อาสานักรับฟัง anonymous 24 ชม.</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
   </div>
+</div>
+<div class="sec">
+  <div class="sec-dot" style="background:var(--purple)"></div>
+  <div class="sec-text">🤍 ความรู้สึกของตัวเอง</div>
+  <div class="sec-line"></div>
+</div>
+<div class="situation-list"><div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">🌙</span>
+      <div class="situation-body">
+        <div class="situation-q">นอนไม่หลับ คิดเยอะตอนกลางคืน</div>
+        <div class="situation-hint">เครื่องมือช่วยให้หัวหยุดและนอนหลับได้</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>ไม่ต้องพยายามบังคับให้หลับ</strong> — ยิ่งพยายาม ยิ่งตื่น ลองโฟกัสที่ผ่อนคลายแทนการหลับ</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>ลดแสงหน้าจอ</strong> — ถ้าทำได้ วางโทรศัพท์ 20 นาทีก่อนนอน</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>ใช้เสียงช่วย</strong> — เสียง ambient หรือ guided relaxation ช่วยให้หัวไม่วนเวียน</div></div>
+      <div class="res-list">
+        <a class="res-item blue" href="sleep.html"><span class="res-icon">🌙</span><span class="res-body"><span class="res-name">เครื่องมือนอนหลับ</span><span class="res-desc">Wind-down 4 ขั้นตอน สำหรับคืนที่หัวไม่หยุด</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item purple" href="https://calm.com" target="_blank" rel="noopener"><span class="res-icon">🧘</span><span class="res-body"><span class="res-name">Calm</span><span class="res-desc">Sleep stories meditation breathing บางส่วนฟรี</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item teal" href="alltools.html#breathe"><span class="res-icon">🌬️</span><span class="res-body"><span class="res-name">หายใจก่อนนอน</span><span class="res-desc">Guided breathing ช่วยให้ร่างกายเตรียมนอน</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+
+<div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">🪫</span>
+      <div class="situation-body">
+        <div class="situation-q">รู้สึกหมดไฟ ทำอะไรก็ไม่มีความหมาย</div>
+        <div class="situation-hint">Burnout และการหมดแรงสะสม</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>หมดไฟไม่ใช่ความอ่อนแอ</strong> — มันคือสัญญาณว่าใช้พลังงานไปมากกว่าที่ได้รับกลับมา</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>ลดก่อน อย่าเพิ่ม</strong> — ระยะสั้นนี้ prioritize สิ่งที่ต้องทำจริงๆ วางที่เหลือไว้ก่อน</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>หาสิ่งที่เคยชาร์จพลังงานได้</strong> — ไม่ต้องเยอะ แค่สิ่งเล็กๆ ที่เคยทำแล้วรู้สึกดีขึ้น</div></div>
+      <div class="res-list">
+        <a class="res-item gold" href="alltools.html#clarity"><span class="res-icon">🧭</span><span class="res-body"><span class="res-name">หาความชัด</span><span class="res-desc">Values clarification — กลับมาหาสิ่งที่สำคัญจริงๆ</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item green" href="https://checkin.dmh.go.th" target="_blank" rel="noopener"><span class="res-icon">📋</span><span class="res-body"><span class="res-name">Mental Health Check-In</span><span class="res-desc">ประเมิน burnout กรมสุขภาพจิต ฟรี</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item blue" href="https://liven.app" target="_blank" rel="noopener"><span class="res-icon">🌱</span><span class="res-body"><span class="res-name">Liven</span><span class="res-desc">แผนดูแลสุขภาพจิต CBT-based เป้าหมาย อารมณ์ กิจกรรม</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item gold" href="talk.html"><span class="res-icon">💛</span><span class="res-body"><span class="res-name">คุยกับ PR</span><span class="res-desc">บางทีการพูดออกมาดังๆ ช่วยได้มาก</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+
+<div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">😰</span>
+      <div class="situation-body">
+        <div class="situation-q">ฉันวิตกกังวลมาก หรือมีอาการ panic</div>
+        <div class="situation-hint">ลดอาการตอนนี้เลยและป้องกันในอนาคต</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>นั่งลงหรือพิงอะไรซักอย่าง</strong> — รู้สึกร่างกาย ground อยู่บนพื้น ไม่ได้ลอยอยู่</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>หายใจออกยาวกว่าเข้า</strong> — เข้า 4 ออก 6 ทำซ้ำจน heart rate เริ่มลด</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>บอกตัวเองว่า "นี่คือ anxiety ไม่ใช่อันตราย"</strong> — ร่างกายตอบสนองผิดพลาด ไม่ได้มีอันตรายจริงๆ</div></div>
+      <div class="res-list">
+        <a class="res-item teal" href="alltools.html#breathe"><span class="res-icon">🌬️</span><span class="res-body"><span class="res-name">เครื่องมือหายใจ</span><span class="res-desc">Guided breathing ใช้ได้เลยตอนนี้</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item blue" href="alltools.html#worry"><span class="res-icon">🌀</span><span class="res-body"><span class="res-name">คลายกังวล</span><span class="res-desc">แยกความกังวลที่จัดการได้กับที่จัดการไม่ได้</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item green" href="https://www.rootd.io" target="_blank" rel="noopener"><span class="res-icon">💚</span><span class="res-body"><span class="res-name">Rootd</span><span class="res-desc">แอป panic & anxiety มีปุ่มช่วยฉุกเฉินเมื่อตื่นตระหนก</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item teal" href="https://heretohealproject.com" target="_blank" rel="noopener"><span class="res-icon">🟡</span><span class="res-body"><span class="res-name">Here to Heal</span><span class="res-desc">คุยกับผู้เชี่ยวชาญ ทุกวัน 10:00–22:00</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+
+<div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">🫂</span>
+      <div class="situation-body">
+        <div class="situation-q">รู้สึกโดดเดี่ยว ไม่มีใครเข้าใจ</div>
+        <div class="situation-hint">เชื่อมต่อกับคนอื่นโดยไม่ต้องอธิบายทุกอย่าง</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>ความโดดเดี่ยวไม่ได้แปลว่าไม่มีใครอยากรู้จัก</strong> — มันแปลว่ายังไม่เจอคนที่ใช่</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>เริ่มจากพื้นที่ที่ปลอดภัยก่อน</strong> — ไม่จำเป็นต้องเปิดเผยตัวเองทั้งหมดในครั้งแรก</div></div>
+      <div class="res-list">
+        <a class="res-item teal" href="https://satiapp.co" target="_blank" rel="noopener"><span class="res-icon">🎧</span><span class="res-body"><span class="res-name">Sati App</span><span class="res-desc">มีคนรับฟัง anonymous ไม่ต้องบอกชื่อ</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item purple" href="https://www.buddy4thai.com" target="_blank" rel="noopener"><span class="res-icon">🤝</span><span class="res-body"><span class="res-name">Buddy Thai</span><span class="res-desc">สำหรับคนที่โดดเดี่ยว คุยกับนักจิตวิทยา</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item gold" href="talk.html#pr"><span class="res-icon">💛</span><span class="res-body"><span class="res-name">PR — รุ่นพี่ที่ผ่านการฝึก</span><span class="res-desc">เจอกัน onsite ในโรงเรียน จ–ศ หลังเลิกเรียน</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item teal" href="https://heretohealproject.com" target="_blank" rel="noopener"><span class="res-icon">🟡</span><span class="res-body"><span class="res-name">Here to Heal</span><span class="res-desc">คุยกับผู้เชี่ยวชาญผ่านข้อความ ทุกวัน 10:00–22:00</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+
+<div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">🔍</span>
+      <div class="situation-body">
+        <div class="situation-q">อยากรู้ว่าตัวเองซึมเศร้าหนักแค่ไหน</div>
+        <div class="situation-hint">แบบประเมินที่เชื่อถือได้ ฟรี ใช้คนเดียวได้</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>แบบประเมินไม่ใช่การวินิจฉัย</strong> — ผลที่ได้เป็นแค่ข้อมูลเบื้องต้น ไม่ใช่ตราประทับ</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>ทำได้คนเดียว ไม่ต้องบอกชื่อ</strong> — ปลอดภัยและเป็นส่วนตัว</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>หลังประเมินแล้วจะมีคำแนะนำ</strong> — ว่าควรทำอะไรต่อตามระดับที่ได้</div></div>
+      <div class="res-list">
+        <a class="res-item blue" href="https://www.prescreening.dmind.app" target="_blank" rel="noopener"><span class="res-icon">🤖</span><span class="res-body"><span class="res-name">DMIND Prescreening</span><span class="res-desc">ประเมินซึมเศร้าด้วย AI พร้อมนักจิตวิทยาดูแล 24 ชม.</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item green" href="https://checkin.dmh.go.th" target="_blank" rel="noopener"><span class="res-icon">📋</span><span class="res-body"><span class="res-name">Mental Health Check-In</span><span class="res-desc">กรมสุขภาพจิต ประเมิน stress burnout ซึมเศร้า ฟรี</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item cream" href="https://วัดใจ.com" target="_blank" rel="noopener"><span class="res-icon">📊</span><span class="res-body"><span class="res-name">วัดใจ.com</span><span class="res-desc">ประเมินหลายด้านโดยกรมสุขภาพจิต ฟรี</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+
+<div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">😤</span>
+      <div class="situation-body">
+        <div class="situation-q">ฉันโกรธมากจนควบคุมไม่ได้</div>
+        <div class="situation-hint">ลดความรุนแรงของอารมณ์ตอนนี้เลย</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>ออกจากสถานการณ์ก่อน</strong> — เดินออกไปสักครู่ ไม่ใช่การหนี แต่เป็นการให้เวลาตัวเอง</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>หายใจออกยาวๆ</strong> — หายใจเข้า 4 วินาที ออก 6 วินาที ทำ 5 รอบ ระบบประสาทจะเริ่มสงบ</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>หลังสงบแล้วค่อยกลับมา</strong> — ตัดสินใจสำคัญตอนโกรธมักไม่ดี รอให้สงบก่อน</div></div>
+      <div class="res-list">
+        <a class="res-item teal" href="alltools.html#breathe"><span class="res-icon">🌬️</span><span class="res-body"><span class="res-name">เครื่องมือหายใจ</span><span class="res-desc">Guided breathing ช่วยลด arousal ได้เร็วที่สุด</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item blue" href="alltools.html#worry"><span class="res-icon">🌀</span><span class="res-body"><span class="res-name">คลายกังวล</span><span class="res-desc">จัดการความคิดที่วนเวียนหลังสงบแล้ว</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item green" href="https://www.rootd.io" target="_blank" rel="noopener"><span class="res-icon">💚</span><span class="res-body"><span class="res-name">Rootd</span><span class="res-desc">แอปจัดการ panic & anxiety มีปุ่มช่วยฉุกเฉิน</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+</div>
+<div class="sec">
+  <div class="sec-dot" style="background:var(--blue)"></div>
+  <div class="sec-text">👥 ความสัมพันธ์</div>
+  <div class="sec-line"></div>
+</div>
+<div class="situation-list"><div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">😔</span>
+      <div class="situation-body">
+        <div class="situation-q">เพื่อนดูซึมเศร้า แต่ไม่ยอมพูด</div>
+        <div class="situation-hint">จะเริ่มต้นคุยยังไง</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>เริ่มจากสังเกตจริงๆ</strong> — "เร็วๆ นี้ดูเหนื่อยนะ ไม่เป็นไรหรอ?" ดีกว่า "มีอะไรเกิดขึ้นเหรอ?"</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>อย่าบังคับให้พูด</strong> — บอกว่า "ไม่ต้องเล่าก็ได้ แต่รู้ว่าถ้าอยากคุยฉันอยู่ตรงนี้"</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>ชวนทำอะไรด้วยกัน</strong> — ไม่ต้องพูดถึงเรื่องหนักเลย แค่ "ไปกินข้าวด้วยกันไหม?" ก็ช่วยได้</div></div>
+      <div class="situation-step"><div class="situation-num">4</div><div class="situation-step-text"><strong>แนะนำบริการให้เพื่อน</strong> — ถ้าเพื่อนยังไม่พร้อมคุยกับคน ลองแนะนำแอปที่ใช้คนเดียวได้ก่อน</div></div>
+      <div class="res-list">
+        <a class="res-item teal" href="https://satiapp.co" target="_blank" rel="noopener"><span class="res-icon">🎧</span><span class="res-body"><span class="res-name">Sati App</span><span class="res-desc">แนะนำให้เพื่อน — anonymous ไม่ต้องบอกชื่อ</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item purple" href="https://www.buddy4thai.com" target="_blank" rel="noopener"><span class="res-icon">🤝</span><span class="res-body"><span class="res-name">Buddy Thai</span><span class="res-desc">สำหรับคนที่รู้สึกโดดเดี่ยว คุยกับนักจิตวิทยา</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item blue" href="https://www.prescreening.dmind.app" target="_blank" rel="noopener"><span class="res-icon">🤖</span><span class="res-body"><span class="res-name">DMIND Chatbot</span><span class="res-desc">คุยคนเดียวกับ AI ก่อนพร้อมคุยกับคนจริงๆ</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+
+<div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">😣</span>
+      <div class="situation-body">
+        <div class="situation-q">โดนบูลลี่ หรือถูกกลั่นแกล้ง</div>
+        <div class="situation-hint">ทั้ง onsite และออนไลน์</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>เก็บหลักฐาน</strong> — screenshot ข้อความ รูป วันเวลา โดยไม่ต้องตอบโต้</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>บอกผู้ใหญ่ที่ไว้ใจได้</strong> — ครูแนะแนว ผู้ปกครอง หรือ 1300 ไม่ใช่เรื่องที่ต้องรับมือคนเดียว</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>ดูแลสุขภาพจิตตัวเองด้วย</strong> — การโดนบูลลี่ทิ้งรอยไว้ การได้คุยกับใครช่วยได้มาก</div></div>
+      <div class="res-list">
+        <a class="res-item purple" href="https://www.buddy4thai.com" target="_blank" rel="noopener"><span class="res-icon">🤝</span><span class="res-body"><span class="res-name">Buddy Thai</span><span class="res-desc">บริการสำหรับคนที่โดนบูลลี่โดยเฉพาะ</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item red" href="tel:1300"><span class="res-icon">📞</span><span class="res-body"><span class="res-name">สายด่วน OSCC 1300</span><span class="res-desc">ศูนย์ช่วยเหลือสังคม ฟรี 24 ชม.</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item gold" href="professionals.html"><span class="res-icon">👩‍🏫</span><span class="res-body"><span class="res-name">ครูแนะแนว</span><span class="res-desc">ช่วยประสานงานและให้คำปรึกษาต่อ</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+
+<div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">💬</span>
+      <div class="situation-body">
+        <div class="situation-q">อยากคุยกับใครตอนนี้เลย ไม่นัด</div>
+        <div class="situation-hint">บริการที่ใช้ได้ทันที ไม่ต้องรอ</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>ไม่ต้องอธิบายทุกอย่างก่อน</strong> — แค่เริ่มพูดได้เลย ทุกบริการด้านล่างรับฟังโดยไม่ตัดสิน</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>เลือกตามความสบายใจ</strong> — อยากพูดกับคนจริงๆ หรืออยากพิมพ์ก็ได้ทั้งนั้น</div></div>
+      <div class="res-list">
+        <a class="res-item teal" href="https://heretohealproject.com" target="_blank" rel="noopener"><span class="res-icon">🟡</span><span class="res-body"><span class="res-name">Here to Heal</span><span class="res-desc">ผู้เชี่ยวชาญด้านสุขภาพจิตผ่านข้อความ ทุกวัน 10:00–22:00</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item teal" href="https://satiapp.co" target="_blank" rel="noopener"><span class="res-icon">🎧</span><span class="res-body"><span class="res-name">Sati App</span><span class="res-desc">อาสานักรับฟัง anonymous ฟรี ตลอด 24 ชม.</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item blue" href="https://www.prescreening.dmind.app" target="_blank" rel="noopener"><span class="res-icon">🤖</span><span class="res-body"><span class="res-name">DMIND Chatbot</span><span class="res-desc">คุยกับ AI เหมือนคุยกับเพื่อน ฟรี ตลอด 24 ชม.</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item red" href="tel:1323"><span class="res-icon">📞</span><span class="res-body"><span class="res-name">โทร 1323</span><span class="res-desc">ถ้าอยากพูดกับคนจริงๆ ฟรี 24 ชม.</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+</div>
+<div class="sec">
+  <div class="sec-dot" style="background:var(--green)"></div>
+  <div class="sec-text">🏠 ชีวิตส่วนตัว</div>
+  <div class="sec-line"></div>
+</div>
+<div class="situation-list"><div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">🏠</span>
+      <div class="situation-body">
+        <div class="situation-q">ปัญหาครอบครัว หรือรู้สึกไม่ปลอดภัยที่บ้าน</div>
+        <div class="situation-hint">มีคนช่วยได้ ไม่ต้องรับมือคนเดียว</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>ความปลอดภัยมาก่อน</strong> — ถ้ารู้สึกไม่ปลอดภัยตอนนี้ ออกไปที่ปลอดภัยก่อนแล้วค่อยโทร</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>บอกผู้ใหญ่ที่ไว้ใจนอกบ้าน</strong> — ครูแนะแนว ญาติ เพื่อนบ้าน หรือครูประจำชั้น</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>สายด่วนช่วยได้ทันที</strong> — ไม่ต้องรู้ว่าจะพูดอะไร แค่โทรและบอกว่าต้องการความช่วยเหลือ</div></div>
+      <div class="res-list">
+        <a class="res-item red" href="tel:1300"><span class="res-icon">📞</span><span class="res-body"><span class="res-name">OSCC 1300</span><span class="res-desc">ศูนย์ช่วยเหลือสังคม กรณีถูกทำร้าย ฟรี 24 ชม.</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item red" href="tel:1323"><span class="res-icon">📞</span><span class="res-body"><span class="res-name">1323</span><span class="res-desc">สายด่วนสุขภาพจิต ฟรี 24 ชม.</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item gold" href="professionals.html"><span class="res-icon">👩‍🏫</span><span class="res-body"><span class="res-name">ครูแนะแนว</span><span class="res-desc">ประสานงานและช่วยหาทางออก</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+
+</div><!-- end situation-list -->
+
+<script>
+// ── GROUNDING ─────────────────────────────────
+const MODES = {
+  '54321': {
+    hint: 'เทคนิค 5-4-3-2-1 ช่วยดึงความสนใจกลับมาที่ร่างกายและสิ่งรอบตัว ผ่านประสาทสัมผัสทั้งห้า',
+    steps: [
+      { label:'ขั้นที่ 1 / 5', instruction:'มองรอบตัวแล้วนึกถึง 5 สิ่งที่มองเห็น', detail:'ต้นไม้ข้างถนน โต๊ะ หน้าต่าง มือของคุณ แสงไฟ — อะไรก็ได้ที่ตาเห็นตอนนี้', btn:'ได้แล้ว →' },
+      { label:'ขั้นที่ 2 / 5', instruction:'สัมผัส 4 สิ่งที่อยู่ใกล้ๆ', detail:'พื้น เสื้อผ้า โต๊ะ ผนัง — ลองสังเกตว่านุ่ม แข็ง เรียบ หรือขรุขระ', btn:'ได้แล้ว →' },
+      { label:'ขั้นที่ 3 / 5', instruction:'ฟังเสียง 3 อย่างรอบตัว', detail:'เสียงแอร์ เสียงรถ เสียงลมหายใจ — ไม่ต้องตีความ แค่รับรู้ว่ามีเสียงอะไรบ้าง', btn:'ได้แล้ว →' },
+      { label:'ขั้นที่ 4 / 5', instruction:'สังเกตกลิ่น 2 อย่าง', detail:'กลิ่นอากาศ กลิ่นเสื้อผ้า กลิ่นอาหาร — ถ้านึกไม่ออกแค่หายใจเข้าลึกๆ ก็ได้', btn:'ได้แล้ว →' },
+      { label:'ขั้นที่ 5 / 5', instruction:'รับรู้รสชาติ 1 อย่าง', detail:'รสในปากตอนนี้ หรือลองดื่มน้ำซักอึก แค่นั้นก็พอ', btn:'เสร็จแล้ว ✓' },
+    ]
+  },
+  'animals': {
+    hint: 'เทคนิคนี้ใช้จินตนาการเพื่อดึงสมองออกจากความคิดที่วนเวียน',
+    steps: [
+      { label:'เริ่มต้น', instruction:'วันนี้นึกชื่อสัตว์ 5 ตัว', detail:'อะไรก็ได้ที่นึกออกตอนนี้ ค่อยๆ นึก ไม่ต้องรีบ — สิงโต นก แมว ช้าง เต่า...', btn:'ฉันนึกออกแล้ว →' },
+      { label:'ดี!', instruction:'ลองนึกสีของสัตว์แต่ละตัว', detail:'สิงโตสีเหลือง นกสีแดง — สร้างภาพในหัวช้าๆ ให้มันชัดขึ้น', btn:'ชัดแล้ว →' },
+      { label:'เกือบจบแล้ว', instruction:'สัตว์ตัวไหนที่ชอบที่สุด?', detail:'แค่สังเกตว่าตัวเองคิดอะไร ไม่มีคำตอบที่ถูกหรือผิด', btn:'เสร็จแล้ว ✓' },
+    ]
+  },
+  'date': {
+    hint: 'เมื่อรู้สึกลอยๆ หรือแยกตัวออกจากโลก เทคนิคนี้ช่วยดึงกลับมาสู่ปัจจุบัน',
+    steps: [
+      { label:'ขั้นที่ 1', instruction:'วันนี้วันที่เท่าไหร่?', detail: (() => { const d=new Date(); const days=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์']; const months=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `วัน${days[d.getDay()]}ที่ ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()+543}`; })(), btn:'รู้แล้ว →' },
+      { label:'ขั้นที่ 2', instruction:'ตอนนี้คุณอยู่ที่ไหน?', detail:'ห้องเรียน บ้าน ห้องน้ำ ห้องสมุด — นึกชื่อสถานที่ที่อยู่ตอนนี้ในหัว', btn:'รู้แล้ว →' },
+      { label:'ขั้นที่ 3', instruction:'มีคนที่ไว้ใจได้อยู่ใกล้ๆ ไหม?', detail:'ไม่ต้องโทรหาทันที แค่นึกถึงชื่อคนที่รู้สึกว่าโทรหาได้ถ้าต้องการ', btn:'เสร็จแล้ว ✓' },
+    ]
+  }
+};
+let currentMode='54321', gStep=0;
+function selectMode(m){currentMode=m;document.querySelectorAll('.g-mode-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('gm-'+m).classList.add('sel');document.getElementById('g-mode-hint').textContent=MODES[m].hint;resetGrounding();}
+function startGrounding(){gStep=0;document.getElementById('g-start').style.display='none';document.getElementById('g-active').style.display='block';document.getElementById('g-done').style.display='none';buildDots();renderStep();}
+function buildDots(){document.getElementById('g-dots').innerHTML=MODES[currentMode].steps.map((_,i)=>`<div class="g-dot ${i===0?'active':''}" id="gd-${i}"></div>`).join('');}
+function updateDots(){MODES[currentMode].steps.forEach((_,i)=>{const d=document.getElementById('gd-'+i);if(!d)return;d.className='g-dot'+(i<gStep?' done':i===gStep?' active':'');});}
+function renderStep(){const step=MODES[currentMode].steps[gStep];if(!step){endGrounding();return;}const inst=document.getElementById('g-instruction'),det=document.getElementById('g-detail');inst.style.opacity='0';det.style.opacity='0';setTimeout(()=>{document.getElementById('g-step-label').textContent=step.label;inst.textContent=step.instruction;det.textContent=step.detail;document.getElementById('g-next-btn').textContent=step.btn;inst.style.opacity='1';inst.style.transition='opacity 0.35s';det.style.opacity='1';det.style.transition='opacity 0.35s';},180);updateDots();}
+function nextGrounding(){gStep++;if(gStep>=MODES[currentMode].steps.length){endGrounding();return;}renderStep();}
+function endGrounding(){document.getElementById('g-active').style.display='none';document.getElementById('g-done').style.display='block';}
+function resetGrounding(){gStep=0;document.getElementById('g-start').style.display='';document.getElementById('g-active').style.display='none';document.getElementById('g-done').style.display='none';}
+// ── SITUATIONAL ───────────────────────────────
+function toggleSit(card){const open=card.classList.contains('open');document.querySelectorAll('.situation-card.open').forEach(c=>c.classList.remove('open'));if(!open)card.classList.add('open');}
+</script>
+</body>
+</html
+
+<div class="situation-card" onclick="toggleSit(this)">
+    <div class="situation-header">
+      <span class="situation-icon">📱</span>
+      <div class="situation-body">
+        <div class="situation-q">ภาพหรือคลิปของฉันถูกแชร์โดยไม่ยินยอม</div>
+        <div class="situation-hint">มีบริการช่วยลบออกโดยไม่ต้องแชร์ภาพจริง</div>
+      </div>
+      <span class="situation-chevron">›</span>
+    </div>
+    <div class="situation-content"><div class="situation-inner">
+      <div class="situation-step"><div class="situation-num">1</div><div class="situation-step-text"><strong>ไม่ต้องแชร์ภาพจริงกับใคร</strong> — Stop NCII ใช้เทคโนโลยี hash ให้ platform ลบได้โดยไม่เห็นภาพจริง</div></div>
+      <div class="situation-step"><div class="situation-num">2</div><div class="situation-step-text"><strong>เก็บหลักฐาน</strong> — screenshot วันเวลา URL ก่อนที่เนื้อหาจะถูกลบ</div></div>
+      <div class="situation-step"><div class="situation-num">3</div><div class="situation-step-text"><strong>แจ้งผู้ใหญ่ที่ไว้ใจ</strong> — ครูแนะแนว ผู้ปกครอง หรือสายด่วน 1300</div></div>
+      <div class="res-list">
+        <a class="res-item blue" href="https://stopncii.org" target="_blank" rel="noopener"><span class="res-icon">🛡️</span><span class="res-body"><span class="res-name">Stop NCII</span><span class="res-desc">ลบภาพจาก platform ฟรี ไม่ต้องอัปโหลดภาพจริง</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item red" href="tel:1300"><span class="res-icon">📞</span><span class="res-body"><span class="res-name">สายด่วน OSCC 1300</span><span class="res-desc">ศูนย์ช่วยเหลือสังคม ฟรี 24 ชม.</span></span><span class="res-arrow">→</span></a>
+        <a class="res-item gold" href="professionals.html"><span class="res-icon">👩‍🏫</span><span class="res-body"><span class="res-name">ครูแนะแนว</span><span class="res-desc">ช่วยประสานงานและให้คำปรึกษาต่อ</span></span><span class="res-arrow">→</span></a>
+      </div>
+    </div></div>
+  </div>
+</div>TYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>เจอสถานการณ์แบบนี้อยู่ไหม? — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#FDFBF7; --cream-warm:#FFF8EE; --cream-border:#EDE9E0;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099;
+      --card:#FFFFFF; --card-border:#EDE9E0;
+      --green:#3A7D44; --green-soft:#EEF6EF; --green-border:#C2DFC6;
+      --blue:#2E5FA3; --blue-soft:#EEF3FB; --blue-border:#C5D8F5;
+      --red:#DC2626; --red-soft:#FEF2F2; --red-border:#FECACA;
+      --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#5EEAD4;
+      --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
+      --radius:20px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;overflow-x:hidden;}
+
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:48px 24px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+    .hero{padding:12px 24px 24px;}
+    .hero-eyebrow{font-size:10px;font-weight:500;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
+    .hero-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;color:var(--dark);line-height:1.25;margin-bottom:8px;}
+    .hero-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.75;}
+
+    .sec{display:flex;align-items:center;gap:10px;padding:0 20px;margin:28px 0 14px;}
+    .sec-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+    .sec-text{font-size:11px;font-weight:500;color:var(--mid);white-space:nowrap;}
+    .sec-line{flex:1;height:1px;background:var(--cream-border);}
+
+    /* ── GROUNDING ── */
+    .grounding-wrap{margin:0 16px;}
+    .g-mode-row{display:flex;gap:8px;margin-bottom:14px;}
+    .g-mode-btn{flex:1;padding:10px 8px;border-radius:12px;border:1.5px solid var(--cream-border);background:var(--card);font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--mid);cursor:pointer;transition:all 0.18s;text-align:center;}
+    .g-mode-btn.sel{background:var(--dark);border-color:var(--dark);color:#FDFBF7;font-weight:500;}
+    .g-mode-btn:active{transform:scale(0.97);}
+    .g-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:22px 20px;text-align:center;}
+    #g-start .g-hint{font-size:13px;font-weight:300;color:var(--soft);line-height:1.7;margin-bottom:20px;}
+    #g-start .g-start-btn{background:var(--dark);color:var(--cream);border:none;border-radius:14px;padding:14px 28px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;width:100%;transition:transform 0.15s;}
+    #g-start .g-start-btn:active{transform:scale(0.97);}
+    .g-dots{display:flex;gap:5px;justify-content:center;margin-bottom:18px;}
+    .g-dot{width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:all 0.25s;}
+    .g-dot.active{background:var(--teal);width:18px;border-radius:3px;}
+    .g-dot.done{background:var(--green);}
+    .g-step-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:10px;}
+    .g-instruction{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:10px;transition:opacity 0.35s;}
+    .g-detail{font-size:13px;font-weight:300;color:var(--soft);line-height:1.75;margin-bottom:20px;transition:opacity 0.35s;}
+    .g-next-btn{background:var(--teal);color:#fff;border:none;border-radius:14px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;width:100%;transition:transform 0.15s;}
+    .g-next-btn:active{transform:scale(0.97);}
+    .g-stop-btn{background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;margin-top:10px;display:block;width:100%;padding:6px;}
+    .g-done-icon{font-size:44px;margin-bottom:14px;}
+    .g-done-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);margin-bottom:8px;}
+    .g-done-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.75;margin-bottom:20px;}
+    .g-done-again{background:none;border:1.5px solid var(--cream-border);border-radius:12px;padding:11px 20px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;width:100%;}
+
+    /* ── SITUATIONAL CARDS ── */
+    .situation-list{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+    .situation-card{background:var(--card);border:1.5px solid var(--card-border);border-radius:var(--radius);overflow:hidden;transition:border-color 0.18s;}
+    .situation-card.open{border-color:var(--dark);}
+    .situation-header{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;cursor:pointer;}
+    .situation-icon{font-size:22px;flex-shrink:0;}
+    .situation-body{flex:1;}
+    .situation-q{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);line-height:1.35;margin-bottom:3px;}
+    .situation-hint{font-size:11px;font-weight:300;color:var(--soft);}
+    .situation-chevron{font-size:16px;color:var(--soft);flex-shrink:0;transition:transform 0.2s;padding-top:2px;}
+    .situation-card.open .situation-chevron{transform:rotate(90deg);}
+    .situation-content{max-height:0;overflow:hidden;transition:max-height 0.32s ease;}
+    .situation-card.open .situation-content{max-height:900px;}
+    .situation-inner{padding:0 18px 18px;border-top:1px solid var(--cream-border);padding-top:14px;}
+    .situation-step{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start;}
+    .situation-step:last-of-type{margin-bottom:0;}
+    .situation-num{width:24px;height:24px;border-radius:50%;background:var(--dark);color:#FDFBF7;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .situation-step-text{font-size:13px;font-weight:300;color:var(--mid);line-height:1.7;flex:1;}
+    .situation-step-text strong{font-weight:500;color:var(--dark);}
+
+    /* resource links inside card */
+    .res-list{margin-top:14px;display:flex;flex-direction:column;gap:7px;}
+    .res-item{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:12px;text-decoration:none;transition:opacity 0.15s;}
+    .res-item:active{opacity:0.75;}
+    .res-item.red{background:var(--red-soft);border:1px solid var(--red-border);}
+    .res-item.gold{background:var(--gold-soft);border:1px solid var(--gold-border);}
+    .res-item.green{background:var(--green-soft);border:1px solid var(--green-border);}
+    .res-item.blue{background:var(--blue-soft);border:1px solid var(--blue-border);}
+    .res-item.teal{background:var(--teal-soft);border:1px solid var(--teal-border);}
+    .res-item.purple{background:var(--purple-soft);border:1px solid var(--purple-border);}
+    .res-item.cream{background:var(--cream-warm);border:1px solid var(--cream-border);}
+    .res-icon{font-size:16px;flex-shrink:0;}
+    .res-body{flex:1;}
+    .res-name{font-size:12px;font-weight:500;color:var(--dark);line-height:1.3;}
+    .res-desc{font-size:10px;font-weight:300;color:var(--soft);margin-top:1px;}
+    .res-arrow{font-size:11px;color:var(--soft);flex-shrink:0;}
+  </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="history.back()">← กลับ</button>
+<div class="hero">
+  <div class="hero-eyebrow">ใจดี TU · สถานการณ์</div>
+  <div class="hero-title">🌿 เจอสถานการณ์<br>แบบนี้อยู่ไหม?</div>
+  <div class="hero-sub">บางครั้งการเริ่มจากสิ่งที่กำลังเกิดขึ้นตรงหน้า<br>อาจง่ายกว่าการอธิบายความรู้สึก</div>
 </div>
 
 <!-- ── SITUATIONAL ── -->
