@@ -221,6 +221,16 @@
     .situation-label{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2px;text-transform:uppercase;}
     .situation-scroll{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;}
     .situation-scroll::-webkit-scrollbar{display:none;}
+
+
+    
+
+    .sit-pill.pressing{
+      transform:scale(0.96);
+      border-color:var(--gold-border);
+      box-shadow:0 0 0 3px rgba(232,150,12,0.18);
+      transition:transform 0.08s ease,border-color 0.08s,box-shadow 0.08s;
+    }
     .sit-pill{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:50px;background:var(--card);border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;transition:transform 0.15s,border-color 0.15s;white-space:nowrap;}
     .sit-pill:active{transform:scale(0.96);}
     .sit-pill.primary{background:var(--dark);border-color:var(--dark);}
@@ -250,12 +260,10 @@
 
   <!-- SITUATION SHEET -->
   <div id="sit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0);z-index:400;align-items:flex-end;justify-content:center;transition:background 0.3s;pointer-events:none;" onclick="handleSitOverlay(event)">
-    <div id="sit-sheet" style="background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);padding-bottom:env(safe-area-inset-bottom,16px);max-height:85vh;overflow-y:auto;">
+    <div id="sit-sheet" style="background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);padding-bottom:env(safe-area-inset-bottom,16px);max-height:85vh;overflow-y:auto;position:relative;">
       <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:14px auto 0;flex-shrink:0;"></div>
-      <div id="sit-sheet-content" style="padding:16px 20px 8px;"></div>
-      <div style="padding:0 20px 12px;">
-        <button onclick="closeSitSheet()" style="width:100%;background:none;border:none;font-family:'Mitr',sans-serif;font-size:12px;color:var(--soft);cursor:pointer;padding:10px;">ปิด</button>
-      </div>
+      <button onclick="closeSitSheet()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:16px;color:var(--faint);cursor:pointer;padding:6px;line-height:1;z-index:1;">✕</button>
+      <div id="sit-sheet-content" style="padding:16px 20px 20px;"></div>
     </div>
   </div>
 
@@ -339,16 +347,6 @@
     </div>
     <div class="situation-scroll" id="tier-pills">
       <!-- rendered by JS -->
-    </div>
-  </div>
-
-  <!-- ── แบบทดสอบค้นพบตัวเอง ── -->
-  <div style="padding:18px 16px 0;">
-    <div onclick="openCareSheet()" style="background:linear-gradient(145deg,#0D4A44,#0A3D38);border-radius:18px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid rgba(13,148,136,0.3);">
-      <div>
-        <div style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:#FDFBF7;margin-bottom:4px;">แบบทดสอบค้นพบตัวเอง</div>
-      </div>
-      <div style="font-size:22px;color:rgba(232,150,12,0.6);">→</div>
     </div>
   </div>
 
@@ -479,6 +477,20 @@ function renderAll() {
   d = renderYearRow("m4-section-root", "ม.4", "#2E5FA3", M4_IMGS, d);
   d = renderYearRow("m5-section-root", "ม.5", "#E8960C", M5_IMGS, d + 10);
   d = renderYearRow("other-section-root", "อื่นๆ", "#3A7D44", OTHER_IMGS, d + 10);
+
+  // Append teal button to อื่นๆ row — slightly wider, same height
+  const otherRoot = document.getElementById('other-section-root');
+  const otherRow  = otherRoot.querySelector('[style*="overflow-x"]');
+  if (otherRow) {
+    const tealBtn = document.createElement('div');
+    tealBtn.style.cssText = 'flex-shrink:0;width:160px;height:110px;border-radius:16px;cursor:pointer;background:linear-gradient(145deg,#0D4A44,#0A3D38);border:1px solid rgba(13,148,136,0.3);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:14px;box-sizing:border-box;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;';
+    tealBtn.onclick = openCareSheet;
+    tealBtn.innerHTML = "<div style='font-family:\"Noto Serif Thai\",serif;font-size:13px;font-weight:600;color:#FDFBF7;line-height:1.35;'>แบบทดสอบ<br>ค้นพบตัวเอง</div><div style='font-size:11px;font-weight:500;color:rgba(13,148,136,0.7);margin-top:5px;letter-spacing:0.5px;'>→</div>";
+    tealBtn.addEventListener('touchstart', () => { tealBtn.style.transform='scale(0.96)'; tealBtn.style.boxShadow='0 0 0 3px rgba(13,148,136,0.2)'; }, {passive:true});
+    tealBtn.addEventListener('touchend', () => { tealBtn.style.transform=''; tealBtn.style.boxShadow=''; }, {passive:true});
+    otherRow.appendChild(tealBtn);
+    setTimeout(() => { tealBtn.style.opacity='1'; tealBtn.style.transform='translateY(0)'; }, d + 10);
+  }
 }
 
 // ═══ INIT ════════════════════════════════════════════════════
@@ -575,7 +587,7 @@ function renderTier(index) {
   document.getElementById('tier-label').textContent = tier.label;
   const container = document.getElementById('tier-pills');
   container.innerHTML = tier.pills.map(p =>
-    `<button class="sit-pill" onclick="openSitSheet('${p.key}')">
+    `<button class="sit-pill" onclick="pressPill(this,'${p.key}')">
       <span class="sit-emoji">${p.emoji}</span>
       <span class="sit-label">${p.label}</span>
     </button>`
@@ -645,6 +657,41 @@ const SIT_DATA = {
   },
 };
 
+
+
+// ── SWIPE DOWN TO CLOSE sit-sheet ────────────────────────────
+(function() {
+  const sheet = document.getElementById('sit-sheet');
+  let startY = 0, currentY = 0, dragging = false;
+  sheet.addEventListener('touchstart', e => {
+    if (sheet.scrollTop > 0) return;
+    startY = e.touches[0].clientY; dragging = true;
+    sheet.style.transition = 'none';
+  }, {passive:true});
+  sheet.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const delta = e.touches[0].clientY - startY;
+    if (delta > 0) { currentY = delta; sheet.style.transform = `translateY(${delta}px)`; }
+  }, {passive:true});
+  sheet.addEventListener('touchend', () => {
+    if (!dragging) return; dragging = false;
+    sheet.style.transition = 'transform 0.3s cubic-bezier(0.34,1.05,0.64,1)';
+    if (currentY > 110) closeSitSheet();
+    else sheet.style.transform = 'translateY(0)';
+    startY = 0; currentY = 0;
+  });
+})();
+
+
+
+
+function pressPill(btn, key) {
+  btn.classList.add('pressing');
+  setTimeout(() => {
+    btn.classList.remove('pressing');
+    openSitSheet(key);
+  }, 130);
+}
 function openSitSheet(key) {
   const d = SIT_DATA[key];
   if (!d) return;
@@ -661,16 +708,32 @@ function openSitSheet(key) {
     </a>`).join('');
 
   document.getElementById('sit-sheet-content').innerHTML = `
-    <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:8px;">วันนี้เป็นยังไงบ้าง?</div>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-      <span style="font-size:28px;">${d.emoji}</span>
-      <span style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);">${d.title}</span>
+    <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;">
+      <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:8px;">วันนี้เป็นยังไงบ้าง?</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-size:28px;">${d.emoji}</span>
+        <span style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);">${d.title}</span>
+      </div>
+      <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.75;margin-bottom:16px;padding:12px 14px;background:var(--cream-warm);border-radius:10px;">${d.note}</div>
     </div>
-    <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.75;margin-bottom:16px;padding:12px 14px;background:var(--cream-warm);border-radius:10px;">${d.note}</div>
-    ${toolsHtml}
-    <div style="border-top:1px solid var(--cream-border);padding-top:10px;margin-top:6px;font-size:12px;color:var(--soft);line-height:1.6;">
-      ${d.talk} <a href="talk.html" style="color:var(--mid);font-weight:500;text-decoration:underline;text-underline-offset:3px;" onclick="closeSitSheet()">คุยกับใครสักคน →</a>
+    <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;">
+      ${toolsHtml}
+    </div>
+    <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;">
+      <div style="border-top:1px solid var(--cream-border);padding-top:10px;margin-top:6px;font-size:12px;color:var(--soft);line-height:1.6;">
+        ${d.talk} <a href="talk_who.html" style="color:var(--mid);font-weight:500;text-decoration:underline;text-underline-offset:3px;">คุยกับใครสักคน →</a>
+      </div>
+      <a href="situations.html" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;margin-top:10px;background:var(--green-soft);border:1px solid var(--green-border);border-radius:12px;text-decoration:none;">
+        <span style="font-size:12px;font-weight:400;color:var(--green);">ยังไม่ใช่สิ่งที่กำลังหาอยู่? → ดูสถานการณ์อื่น</span>
+        <span style="font-size:12px;color:var(--green);opacity:0.6;">🌿</span>
+      </a>
     </div>`;
+
+  // Stagger layers: recognition → tools → talk
+  const [STAGGER_DELAYS] = [[0, 150, 300]];
+  document.querySelectorAll('._sl').forEach((el, i) => {
+    setTimeout(() => { el.style.opacity='1'; el.style.transform='translateY(0)'; }, 180 + STAGGER_DELAYS[i]);
+  });
 
   const ov = document.getElementById('sit-overlay');
   ov.style.display = 'flex';
