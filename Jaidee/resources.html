@@ -220,13 +220,546 @@
 <body>
 
 <button class="back-btn" onclick="history.back()">← กลับ</button>
-<div class="hero">
-  <div class="hero-eyebrow">ใจดี TU</div>
-  <div class="hero-title">🌿 เรื่องที่หลายคน<br>เคยเจอ</div>
-  <div class="hero-sub">บางครั้งการเริ่มจากสิ่งที่กำลังเกิดขึ้น<br>อาจง่ายกว่าการอธิบายความรู้สึก</div>
 </div>
 
 <div id="shelf-container"><!-- rendered by JS --></div>
+
+<!-- ── OVERLAY ── -->
+<div id="sit-overlay" onclick="handleOverlayClick(event)">
+  <div id="sit-sheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="closeSheet()">✕</button>
+    <div class="sheet-body" id="sheet-body"><!-- rendered by JS --></div>
+  </div>
+</div>
+
+<script>
+// ═══ SITUATION DATA ════════════════════════════════════════════
+const SITUATIONS = [
+
+  // ── กลุ่ม: ความรู้สึกของตัวเอง ────────────────────────────
+  {
+    group: 'ความรู้สึกของตัวเอง', groupColor: 'var(--purple)',
+    key:'sleep', emoji:'😴',
+    title:'นอนไม่หลับ',
+    subtitle:'บางคืน\nหัวก็ไม่ยอมหยุดคิด',
+    recognition:`บางครั้งมันไม่ใช่แค่เรื่องการนอน<br><br>หลายคนที่เตรียมฯ ก็มีคืนที่<strong>สมองไม่ยอมหยุด</strong> คิดถึงเรื่องเรียน เรื่องเพื่อน หรือเรื่องที่ยังแก้ไม่ได้<br><br>มันไม่ได้แปลว่าคุณผิดปกติ`,
+    stepLabel:'คืนนี้ลองเริ่มจากเรื่องเล็กๆ',
+    actions:[
+      {icon:'🌬️', name:'หายใจช้าๆ', href:'alltools.html#breathe'},
+      {icon:'📱', name:'พักจากหน้าจอ', href:null},
+      {icon:'📝', name:'เขียนสิ่งที่วนอยู่ในหัว', href:'alltools.html#journal'},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'🌙', name:'Sleep Reset', desc:'ช่วยให้จิตใจพร้อมนอน · 5 นาที', href:'alltools.html#sleep'},
+    ],
+    deeperNote:'ถ้าเป็นมาหลายสัปดาห์แล้ว หรือกระทบชีวิตประจำวัน',
+    deeper:[
+      {icon:'🪞', name:"What's This Feeling?", href:'reflection.html'},
+      {icon:'💬', name:'ลองคุยกับใครสักคน', href:'talk.html#heavy'},
+    ],
+    related:['burnout','foggy','pressure'],
+  },
+
+  {
+    group: 'ความรู้สึกของตัวเอง', groupColor: 'var(--purple)',
+    key:'burnout', emoji:'🪫',
+    title:'หมดไฟ',
+    subtitle:'ทุกอย่างดูหนัก\nไปหมด',
+    recognition:`มันไม่ใช่ความอ่อนแอ<br><br>หมดไฟมักเกิดเมื่อร่างกายและจิตใจ<strong>ทำงานหนักเกินไปนานเกินไป</strong> โดยไม่ได้รับการดูแลเรื่องพื้นฐาน<br><br>ร่างกายกำลังส่งสัญญาณที่ควรรับฟัง`,
+    stepLabel:'ลองเริ่มจากเรื่องเล็กๆ',
+    actions:[
+      {icon:'😴', name:'นอนให้พอก่อน', href:'alltools.html#sleep'},
+      {icon:'🏃', name:'ขยับตัวสักนิด', href:'alltools.html#move'},
+      {icon:'🌿', name:'เช็กเรื่องพื้นฐาน', href:'foundations.html'},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'🪞', name:"What's This Feeling?", desc:'สำรวจว่าข้างในรู้สึกอะไรอยู่', href:'reflection.html'},
+    ],
+    deeperNote:'ถ้าหมดไฟมานานจนไม่ดีขึ้นเลย',
+    deeper:[
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+      {icon:'👩‍🏫', name:'ครูแนะแนว', href:'professionals.html'},
+    ],
+    related:['sleep','foggy','not_enough'],
+  },
+
+  {
+    group: 'ความรู้สึกของตัวเอง', groupColor: 'var(--purple)',
+    key:'foggy', emoji:'🤯',
+    title:'สมองตื้อ',
+    subtitle:'อ่านหนังสือ\nแล้วไม่เข้าหัว',
+    recognition:`สมองที่ล้าไม่ต่างจากกล้ามเนื้อที่เหนื่อย<br><br><strong>บังคับให้อ่านต่อไปไม่ได้ผล</strong> แต่การพักสั้นๆ และขยับตัวมักช่วยได้เร็วกว่าที่คิด<br><br>บางทีปัญหาไม่ได้อยู่ที่การอ่าน แต่ที่สภาพข้างใน`,
+    stepLabel:'ลองรีเซ็ตก่อน',
+    actions:[
+      {icon:'🌬️', name:'หายใจ 2 นาที', href:'alltools.html#breathe'},
+      {icon:'🏃', name:'ลุกเดินสัก 5 นาที', href:'alltools.html#move'},
+      {icon:'😴', name:'ถ้านอนน้อย — นอนให้พอก่อน', href:'alltools.html#sleep'},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'🌬️', name:'หายใจตามจังหวะ', desc:'รีเซ็ตสมาธิ · 2 นาที', href:'alltools.html#breathe'},
+    ],
+    deeperNote:'ถ้าเป็นมานานหรือรู้สึกว่าไม่ใช่แค่เรื่องเรียน',
+    deeper:[
+      {icon:'🪞', name:"What's This Feeling?", href:'reflection.html'},
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+    ],
+    related:['sleep','burnout','pressure'],
+  },
+
+  {
+    group: 'ความรู้สึกของตัวเอง', groupColor: 'var(--purple)',
+    key:'anxiety', emoji:'😰',
+    title:'วิตกกังวล',
+    subtitle:'หยุดคิดไม่ได้\nเลย',
+    recognition:`ความวิตกกังวลบางครั้งเกิดขึ้น<strong>แม้จะไม่มีเหตุผลชัดเจน</strong><br><br>ร่างกายเข้าสู่โหมดแจ้งเตือน และมันรู้สึกไม่สบายมาก<br><br>แต่มีสิ่งที่ช่วยให้ระบบประสาทสงบลงได้`,
+    stepLabel:'ลองลดความตึงเครียดก่อน',
+    actions:[
+      {icon:'🌬️', name:'หายใจออกยาวกว่าเข้า', href:'alltools.html#breathe'},
+      {icon:'🌱', name:'5-4-3-2-1 Grounding', href:'alltools.html#grounding'},
+      {icon:'📝', name:'เขียนสิ่งที่กังวลออกมา', href:'alltools.html#journal'},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'🌬️', name:'หายใจก่อนเลย', desc:'ลด cortisol · 2 นาที', href:'alltools.html#breathe'},
+    ],
+    deeperNote:'ถ้าวิตกกังวลมากจนกระทบชีวิตประจำวัน',
+    deeper:[
+      {icon:'🪞', name:"What's This Feeling?", href:'reflection.html'},
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+    ],
+    related:['sleep','pressure','foggy'],
+  },
+
+  {
+    group: 'ความรู้สึกของตัวเอง', groupColor: 'var(--purple)',
+    key:'lonely', emoji:'😔',
+    title:'รู้สึกเหงา',
+    subtitle:'มีคน\nแต่ยังรู้สึกโดดเดี่ยว',
+    recognition:`ความเหงาไม่ได้แปลว่าไม่มีเพื่อน<br><br>บางทีรู้สึกเหงาแม้จะ<strong>อยู่กับคนรอบข้าง</strong> นั่นเป็นสัญญาณว่ามีบางอย่างที่ต้องการมากกว่าแค่การมีคนอยู่ด้วย`,
+    stepLabel:'ลองเชื่อมต่อ',
+    actions:[
+      {icon:'💛', name:'ทักเพื่อนซักคน', href:null},
+      {icon:'🪞', name:'สำรวจว่าต้องการอะไร', href:'reflection.html'},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'💛', name:'นัดคุยกับ PR', desc:'เพื่อนที่ปรึกษา · ฟรี', href:'peer.html'},
+    ],
+    deeperNote:'ถ้าเหงามานานแล้วและไม่ดีขึ้น',
+    deeper:[
+      {icon:'🎧', name:'Sati — อาสานักรับฟัง', href:'https://satiapp.co'},
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+    ],
+    related:['no_place','abandoned','friend'],
+  },
+
+  // ── กลุ่ม: ชีวิตการเรียน ───────────────────────────────────
+  {
+    group: 'ชีวิตการเรียน', groupColor: 'var(--blue)',
+    key:'pressure', emoji:'📚',
+    title:'กลัวสอบ',
+    subtitle:'กังวลมาก\nจนอ่านไม่ได้',
+    recognition:`ความกังวลก่อนสอบเป็น<strong>เรื่องปกติมาก</strong><br><br>แต่ถ้ามันมากเกินจนกระทบการนอนหรือทำให้อ่านไม่ได้เลย ร่างกายกำลังบอกว่าต้องการความช่วยเหลือ`,
+    stepLabel:'ลองเริ่มจากตรงนี้',
+    actions:[
+      {icon:'🌬️', name:'หายใจก่อนเลย', href:'alltools.html#breathe'},
+      {icon:'📝', name:'เขียนสิ่งที่กังวลออกมา', href:'alltools.html#journal'},
+      {icon:'😴', name:'นอนให้พอก่อนสอบ', href:'alltools.html#sleep'},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'🪞', name:"What's This Feeling?", desc:'ถ้าความกังวลลึกกว่าแค่สอบ', href:'reflection.html'},
+    ],
+    deeperNote:'กังวลมากจนนอนไม่หลับหลายคืน?',
+    deeper:[
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+      {icon:'👩‍🏫', name:'ครูแนะแนว', href:'professionals.html'},
+    ],
+    related:['foggy','burnout','not_enough'],
+  },
+
+  {
+    group: 'ชีวิตการเรียน', groupColor: 'var(--blue)',
+    key:'not_enough', emoji:'📉',
+    title:'รู้สึกว่าตัวเอง\nไม่เก่งพอ',
+    subtitle:'ทุกคนดู\nไปไกลกว่า',
+    recognition:`ความรู้สึกนี้พบได้บ่อยมากใน<strong>คนที่เก่งจริงๆ แต่ยังไม่รู้ตัว</strong><br><br>เราเห็นแค่ highlight ของคนอื่น ไม่เห็น struggle ข้างหลังของพวกเขา<br><br>ไม่ได้แปลว่าเป็นความจริง`,
+    stepLabel:'ลองมองตัวเองใหม่',
+    actions:[
+      {icon:'🪞', name:'สำรวจว่าความรู้สึกนี้มาจากไหน', href:'reflection.html'},
+      {icon:'🧩', name:'ค้นพบจุดแข็งของตัวเอง', href:'index.html'},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'🪞', name:"What's This Feeling?", desc:'ที่มาของความรู้สึกนี้', href:'reflection.html'},
+    ],
+    deeperNote:'กระทบชีวิตประจำวันมาก?',
+    deeper:[
+      {icon:'💛', name:'คุยกับ PR', href:'peer.html'},
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+    ],
+    related:['pressure','burnout','foggy'],
+  },
+
+  // ── กลุ่ม: คนรอบตัว ─────────────────────────────────────────
+  {
+    group: 'คนรอบตัว', groupColor: 'var(--gold)',
+    key:'friend', emoji:'🌿',
+    title:'เป็นห่วงเพื่อน',
+    subtitle:'ไม่รู้ว่า\nควรทำยังไงดี',
+    recognition:`การที่คุณเป็นห่วงเพื่อนอยู่นั้น<strong>สำคัญมาก</strong><br><br>แต่การช่วยเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว<br><br>มีวิธีช่วยที่ไม่ทำให้ตัวเองหมดแรง`,
+    stepLabel:'ทำได้ตอนนี้เลย',
+    actions:[
+      {icon:'👂', name:'รับฟังโดยไม่ตัดสิน', href:null},
+      {icon:'❓', name:'ถามตรงๆ ว่าปลอดภัยไหม', href:null},
+      {icon:'🤝', name:'อยู่ข้างๆ ก่อน', href:null},
+    ],
+    toolLabel:'ข้อมูลที่ช่วยได้',
+    tools:[
+      {icon:'📖', name:'คู่มือ: เพื่อนอยากทำร้ายตัวเอง', desc:'วิธีพูด · วิธีช่วย · เมื่อต้องบอกผู้ใหญ่', href:'resources_detail.html#friend'},
+    ],
+    deeperNote:'ถ้าสถานการณ์หนักเกินหรือไม่รู้จะทำยังไง',
+    deeper:[
+      {icon:'💛', name:'คุยกับ PR', href:'peer.html'},
+      {icon:'👩‍🏫', name:'ครูแนะแนว', href:'professionals.html'},
+      {icon:'📞', name:'โทร 1323 พร้อมกับเพื่อน', href:'tel:1323'},
+    ],
+    related:['selfharm_friend','lonely','fight'],
+  },
+
+  {
+    group: 'คนรอบตัว', groupColor: 'var(--gold)',
+    key:'heartbreak', emoji:'💔',
+    title:'เพิ่งอกหัก',
+    subtitle:'เจ็บปวดมาก\nทำอะไรไม่ได้',
+    recognition:`ความเจ็บปวดจากการอกหักเป็น<strong>ของจริงมาก</strong><br><br>สมองเราประมวลผลมันคล้ายกับความเจ็บปวดทางกาย<br><br>ให้เวลาตัวเอง ไม่ต้องรีบ "หายแล้ว"`,
+    stepLabel:'ดูแลตัวเองก่อน',
+    actions:[
+      {icon:'🌬️', name:'หายใจผ่อนคลาย', href:'alltools.html#breathe'},
+      {icon:'📝', name:'เขียนระบาย', href:'alltools.html#journal'},
+      {icon:'😴', name:'นอนพักให้พอ', href:'alltools.html#sleep'},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'🪞', name:"What's This Feeling?", desc:'ให้พื้นที่กับความรู้สึกนี้', href:'reflection.html'},
+    ],
+    deeperNote:'รู้สึกหนักมากหรือไม่ไหวแล้ว?',
+    deeper:[
+      {icon:'💛', name:'คุยกับ PR', href:'peer.html'},
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+    ],
+    related:['lonely','abandoned','sleep'],
+  },
+
+  {
+    group: 'คนรอบตัว', groupColor: 'var(--gold)',
+    key:'social', emoji:'👥',
+    title:'เข้ากับเพื่อน\nไม่ได้',
+    subtitle:'รู้สึกอยู่\nไม่เป็นที่',
+    recognition:`การหากลุ่มเพื่อนใหม่ใช้เวลา<br><br><strong>โดยเฉพาะในช่วงเปลี่ยนโรงเรียน</strong> มันไม่ได้แปลว่ามีอะไรผิดปกติกับคุณ<br><br>หลายคนก็รู้สึกแบบนี้ในช่วงต้น`,
+    stepLabel:'ลองเริ่มเล็กๆ',
+    actions:[
+      {icon:'🪞', name:'สำรวจว่าข้างในรู้สึกอะไร', href:'reflection.html'},
+      {icon:'💛', name:'ลองทักคนซักคน', href:null},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'💛', name:'คุยกับ PR', desc:'เพื่อนที่ปรึกษา · ฟรี · ไม่ตัดสิน', href:'peer.html'},
+    ],
+    deeperNote:'รู้สึกโดดเดี่ยวมากจนกระทบสุขภาพจิต?',
+    deeper:[
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+    ],
+    related:['lonely','no_place','heartbreak'],
+  },
+
+  // ── กลุ่ม: เร่งด่วน ──────────────────────────────────────────
+  {
+    group: 'เรื่องเร่งด่วน', groupColor: 'var(--red)', urgent:true,
+    key:'selfharm', emoji:'😶',
+    title:'ฉันรู้สึกอยาก\nทำร้ายตัวเอง',
+    subtitle:'ต้องการ\nความช่วยเหลือตอนนี้',
+    recognition:`ความรู้สึกนี้บอกว่าตอนนี้คุณต้องการความช่วยเหลือ<br><br><strong>ไม่ต้องรับมือคนเดียว</strong><br><br>มีคนรอรับสายอยู่ตลอด 24 ชั่วโมง ไม่ต้องพร้อม ไม่ต้องอธิบายทุกอย่าง`,
+    stepLabel:'ทำตอนนี้เลย',
+    actions:[
+      {icon:'🚶', name:'ออกจากที่ที่อยู่คนเดียว', href:null},
+      {icon:'📞', name:'โทร 1323 ได้เลย', href:'tel:1323'},
+    ],
+    toolLabel:'ติดต่อได้เลย',
+    tools:[
+      {icon:'📞', name:'โทร 1323', desc:'ฟรี 24 ชม. ไม่ต้องรอ ไม่ต้องพร้อม', href:'tel:1323'},
+    ],
+    deeperNote:'หรือคุยผ่านข้อความ',
+    deeper:[
+      {icon:'💬', name:'Here to Heal', href:'https://heretohealproject.com'},
+      {icon:'🎧', name:'Sati App', href:'https://satiapp.co'},
+    ],
+    related:['selfharm_friend'],
+  },
+
+  {
+    group: 'เรื่องเร่งด่วน', groupColor: 'var(--red)', urgent:true,
+    key:'selfharm_friend', emoji:'👥',
+    title:'เพื่อนบอกว่าอยาก\nทำร้ายตัวเอง',
+    subtitle:'ไม่รู้ต้องทำ\nอะไรตอนนี้',
+    recognition:`การที่เพื่อนบอกคุณ แปลว่าเขา<strong>ไว้ใจคุณ</strong><br><br>คุณไม่จำเป็นต้องแก้ทุกอย่าง แค่อยู่ข้างๆ และช่วยให้เขาได้รับความช่วยเหลือ`,
+    stepLabel:'ทำตอนนี้เลย',
+    actions:[
+      {icon:'👂', name:'รับฟัง อย่าตัดสิน', href:null},
+      {icon:'❓', name:'ถามตรงๆ ว่าปลอดภัยไหม', href:null},
+      {icon:'🤝', name:'อย่าปล่อยให้อยู่คนเดียว', href:null},
+    ],
+    toolLabel:'ขอความช่วยเหลือ',
+    tools:[
+      {icon:'📞', name:'โทร 1323 พร้อมกับเพื่อน', desc:'ฟรี 24 ชม.', href:'tel:1323'},
+    ],
+    deeperNote:'บอกผู้ใหญ่ที่ไว้ใจได้ — ไม่ใช่การทรยศ',
+    deeper:[
+      {icon:'👩‍🏫', name:'ครูแนะแนว', href:'professionals.html'},
+      {icon:'💛', name:'คุยกับ PR เพื่อขอคำแนะนำ', href:'peer.html'},
+    ],
+    related:['friend','selfharm'],
+  },
+
+  // ── กลุ่ม: ชีวิตส่วนตัว ─────────────────────────────────────
+  {
+    group: 'ชีวิตส่วนตัว', groupColor: 'var(--green)',
+    key:'family', emoji:'🏠',
+    title:'ปัญหา\nครอบครัว',
+    subtitle:'รู้สึกว่าที่บ้าน\nไม่เข้าใจ',
+    recognition:`ปัญหาในครอบครัวเป็นเรื่องที่<strong>หนักมาก</strong> และมักไม่มีคำตอบง่ายๆ<br><br>การมีคนรับฟังช่วยได้มาก แม้แค่ได้เล่าให้ใครฟัง`,
+    stepLabel:'ลองพูดออกมา',
+    actions:[
+      {icon:'📝', name:'เขียนระบายก่อน', href:'alltools.html#journal'},
+      {icon:'🪞', name:'สำรวจความรู้สึกข้างใน', href:'reflection.html'},
+    ],
+    toolLabel:'อาจช่วยได้',
+    tools:[
+      {icon:'💛', name:'คุยกับ PR', desc:'รับฟัง ไม่ตัดสิน', href:'peer.html'},
+    ],
+    deeperNote:'ถ้าปัญหารุนแรงหรือรู้สึกไม่ปลอดภัย',
+    deeper:[
+      {icon:'👩‍🏫', name:'ครูแนะแนว', href:'professionals.html'},
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+    ],
+    related:['lonely','no_place','burnout'],
+  },
+
+  {
+    group: 'ชีวิตส่วนตัว', groupColor: 'var(--green)',
+    key:'image_shared', emoji:'📱',
+    title:'ภาพถูกแชร์\nโดยไม่ยินยอม',
+    subtitle:'ไม่รู้ต้อง\nทำอะไรก่อน',
+    recognition:`สิ่งที่เกิดขึ้นนี้<strong>ไม่ใช่ความผิดของคุณ</strong><br><br>คุณมีสิทธิ์ขอให้ลบและขอความช่วยเหลือทางกฎหมาย<br><br>ไม่ต้องรับมือคนเดียว`,
+    stepLabel:'ทำตอนนี้',
+    actions:[
+      {icon:'📸', name:'บันทึกหลักฐาน screenshot', href:null},
+      {icon:'🚫', name:'แจ้งแพลตฟอร์มให้ลบ', href:null},
+      {icon:'👩‍🏫', name:'บอกผู้ใหญ่ที่ไว้ใจ', href:null},
+    ],
+    toolLabel:'ขอความช่วยเหลือ',
+    tools:[
+      {icon:'📞', name:'สายด่วน MSDHS 1300', desc:'กระทรวงพัฒนาสังคม · ฟรี', href:'tel:1300'},
+    ],
+    deeperNote:'ถ้าต้องการความช่วยเหลือทางจิตใจด้วย',
+    deeper:[
+      {icon:'💬', name:'คุยกับใครสักคน', href:'talk.html#heavy'},
+      {icon:'👩‍🏫', name:'ครูแนะแนว', href:'professionals.html'},
+    ],
+    related:['family','lonely'],
+  },
+];
+
+
+// ── PRESS ANIMATION ─────────────────────────────────────────
+function pressCard(el, key) {
+  el.classList.add('pressing');
+  setTimeout(() => {
+    el.classList.remove('pressing');
+    openSheet(key);
+  }, 140);
+}
+
+// ── STAGGER LAYERS after sheet opens ─────────────────────────
+function staggerLayers() {
+  document.querySelectorAll('.sheet-layer').forEach(layer => {
+    const delay = parseInt(layer.dataset.delay || 0);
+    setTimeout(() => layer.classList.add('in'), delay);
+  });
+}
+
+// ── SWIPE DOWN TO CLOSE ──────────────────────────────────────
+(function() {
+  const sheet = document.getElementById('sit-sheet');
+  let startY = 0, currentY = 0, isDragging = false;
+
+  sheet.addEventListener('touchstart', e => {
+    if (sheet.scrollTop > 0) return; // only if at top
+    startY = e.touches[0].clientY;
+    isDragging = true;
+    sheet.style.transition = 'none';
+  }, { passive: true });
+
+  sheet.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    currentY = e.touches[0].clientY;
+    const delta = currentY - startY;
+    if (delta > 0) sheet.style.transform = `translateY(${delta}px)`;
+  }, { passive: true });
+
+  sheet.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    const delta = currentY - startY;
+    sheet.style.transition = 'transform 0.3s cubic-bezier(0.34,1.05,0.64,1)';
+    if (delta > 120) {
+      closeSheet();
+    } else {
+      sheet.style.transform = 'translateY(0)';
+    }
+    startY = 0; currentY = 0;
+  });
+})();
+
+// ═══ GROUP RENDERING ══════════════════════════════════════════
+function buildShelf() {
+  const groups = {};
+  SITUATIONS.forEach(s => {
+    if (!groups[s.group]) groups[s.group] = { color: s.groupColor, items: [] };
+    groups[s.group].items.push(s);
+  });
+
+  let html = '';
+  Object.entries(groups).forEach(([name, g]) => {
+    html += `
+      <div class="sec-label">
+        <div class="sec-dot" style="background:${g.color}"></div>
+        <div class="sec-text">${name}</div>
+        <div class="sec-line"></div>
+      </div>
+      <div class="shelf">
+        ${g.items.map(s => `
+          <div class="shelf-card${s.urgent ? ' urgent' : ''}" onclick="pressCard(this,'${s.key}')">
+            <span class="sc-emoji">${s.emoji}</span>
+            <div class="sc-title">${s.title}</div>
+          </div>
+        `).join('')}
+      </div>`;
+  });
+
+  document.getElementById('shelf-container').innerHTML = html;
+
+  // Stagger card entrances
+  document.querySelectorAll('.shelf-card').forEach((card, i) => {
+    setTimeout(() => card.classList.add('visible'), 60 + i * 40);
+  });
+}
+
+// ═══ SHEET RENDERING ══════════════════════════════════════════
+function openSheet(key) {
+  const s = SITUATIONS.find(x => x.key === key);
+  if (!s) return;
+
+  const actionsHtml = s.actions.map(a =>
+    a.href
+      ? `<a class="action-row" href="${a.href}">${a.icon ? `<span class="ar-icon">${a.icon}</span>` : ''}<span class="ar-name">${a.name}</span><span class="ar-arrow">→</span></a>`
+      : `<div class="action-row" style="cursor:default;">${a.icon ? `<span class="ar-icon">${a.icon}</span>` : ''}<span class="ar-name">${a.name}</span></div>`
+  ).join('');
+
+  const toolsHtml = s.tools.map(t =>
+    `<a class="tool-btn" href="${t.href}">
+      <span class="tb-icon">${t.icon}</span>
+      <span class="tb-body">
+        <span class="tb-name">${t.name}</span>
+        ${t.desc ? `<span class="tb-desc">${t.desc}</span>` : ''}
+      </span>
+      <span class="tb-arrow">→</span>
+    </a>`
+  ).join('');
+
+  const deeperHtml = s.deeper.map(d =>
+    `<a class="deeper-link" href="${d.href}">
+      <span class="dl-icon">${d.icon}</span>
+      <span class="dl-name">${d.name}</span>
+      <span class="dl-arrow">→</span>
+    </a>`
+  ).join('');
+
+  const relatedHtml = s.related
+    .map(k => SITUATIONS.find(x => x.key === k))
+    .filter(Boolean)
+    .map(r => `<span class="rpill" onclick="switchSheet('${r.key}')"><span style="font-size:14px;">${r.emoji}</span>${r.title.replace('\n',' ')}</span>`)
+    .join('');
+
+  document.getElementById('sheet-body').innerHTML = `
+    <div class="sheet-layer" data-delay="0">
+      <span class="sit-emoji-lg">${s.emoji}</span>
+      <div class="sit-title-lg">${s.title.replace('\n','<br>')}</div>
+      <div class="sit-recog">${s.recognition}</div>
+    </div>
+
+    <div class="sheet-layer" data-delay="150">
+      <div class="layer-divider"></div>
+      <div class="actions-list">${actionsHtml}</div>
+    </div>
+
+    <div class="sheet-layer" data-delay="280">
+      <div class="layer-divider"></div>
+      ${toolsHtml}
+    </div>
+
+    <div class="sheet-layer" data-delay="400">
+      <div class="layer-divider"></div>
+      <div style="font-size:12px;font-weight:400;color:var(--soft);margin-bottom:10px;line-height:1.65;">${s.deeperNote}</div>
+      ${deeperHtml}
+    </div>
+
+    <div class="sheet-layer" data-delay="550">
+      <div class="layer-divider"></div>
+      <div class="related-note">อาจใกล้เคียงกับ...</div>
+      <div class="related-pills">${relatedHtml}</div>
+      <div style="height:8px;"></div>
+    </div>
+  `;
+
+  const ov = document.getElementById('sit-overlay');
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('sit-sheet').scrollTop = 0;
+  document.getElementById('sit-sheet').style.transform = '';
+  setTimeout(staggerLayers, 180); // after sheet finishes rising
+}
+
+function switchSheet(key) {
+  // Swap sheet content without closing
+  document.getElementById('sit-sheet').scrollTop = 0;
+  openSheet(key);
+}
+
+function closeSheet() {
+  document.getElementById('sit-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('sit-overlay')) closeSheet();
+}
+
+// ═══ DEEP LINK ════════════════════════════════════════════════
+buildShelf();
+
+const hash = window.location.hash.replace('#','');
+if (hash && SITUATIONS.find(s => s.key === hash)) {
+  setTimeout(() => openSheet(hash), 300);
+}
+</script>
+</body>
+</html>
+<div id="shelf-container"><div id="shelf-container"><!-- rendered by JS --></div>
 
 <!-- ── OVERLAY ── -->
 <div id="sit-overlay" onclick="handleOverlayClick(event)">
