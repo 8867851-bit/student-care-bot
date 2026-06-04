@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>อยากคุยกับใคร? — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;600&family=Mitr:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --cream:#FDFBF7; --cream-warm:#FFF8EE; --cream-border:#EDE9E0;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --faint:#C4BDB7;
+      --card:#FFFFFF; --card-border:#EDE9E0;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --blue:#2E5FA3; --blue-soft:#EEF3FB; --blue-border:#C5D8F5;
+      --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:48px;}
+
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:44px 24px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+
+    .hero{padding:16px 24px 32px;}
+    .hero-title{font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;color:var(--dark);line-height:1.3;margin-bottom:6px;}
+    .hero-sub{font-size:13px;font-weight:300;color:var(--soft);}
+
+    .options{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+
+    .opt{
+      display:flex;align-items:center;gap:16px;
+      padding:20px 20px;border-radius:18px;
+      border:1.5px solid var(--card-border);background:var(--card);
+      text-decoration:none;
+      transition:transform 0.15s,border-color 0.15s;
+    }
+    .opt:active{transform:scale(0.97);}
+    .opt.gold{ border-color:var(--gold-border); background:var(--gold-soft); }
+    .opt.blue{ border-color:var(--blue-border); background:var(--blue-soft); }
+    .opt.purple{ border-color:var(--purple-border); background:var(--purple-soft); }
+
+    .opt-emoji{font-size:28px;flex-shrink:0;width:44px;text-align:center;}
+    .opt-body{flex:1;}
+    .opt-label{display:block;font-size:16px;font-weight:500;color:var(--dark);margin-bottom:3px;}
+    .opt.gold .opt-label{color:#5C3D00;}
+    .opt.blue .opt-label{color:#1E3A6E;}
+    .opt.purple .opt-label{color:#4C1D95;}
+    .opt-hint{display:block;font-size:12px;font-weight:300;color:var(--soft);}
+    .opt-arrow{font-size:15px;color:var(--faint);flex-shrink:0;}
+
+    .note{margin:28px 24px 0;font-size:12px;font-weight:300;color:var(--faint);line-height:1.75;text-align:center;}
+    .note a{color:var(--soft);text-decoration:underline;text-underline-offset:3px;}
+  </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="history.back()">← กลับ</button>
+
+<div class="hero">
+  <div class="hero-title">อยากคุยกับใคร?</div>
+  <div class="hero-sub">ไม่ต้องรู้ว่าจะพูดอะไรก่อน</div>
+</div>
+
+<div class="options">
+
+  <a class="opt gold" href="peer.html">
+    <span class="opt-emoji">💛</span>
+    <span class="opt-body">
+      <span class="opt-label">คนวัยเดียวกัน</span>
+      <span class="opt-hint">PR หรืออาสารับฟัง</span>
+    </span>
+    <span class="opt-arrow">›</span>
+  </a>
+
+  <a class="opt blue" href="professionals.html">
+    <span class="opt-emoji">👩‍🏫</span>
+    <span class="opt-body">
+      <span class="opt-label">ผู้ใหญ่ในโรงเรียน</span>
+      <span class="opt-hint">ครูแนะแนว</span>
+    </span>
+    <span class="opt-arrow">›</span>
+  </a>
+
+  <a class="opt purple" href="professionals.html#therapist">
+    <span class="opt-emoji">🧠</span>
+    <span class="opt-body">
+      <span class="opt-label">ผู้เชี่ยวชาญ</span>
+      <span class="opt-hint">นักจิตวิทยา หรือบริการภายนอก</span>
+    </span>
+    <span class="opt-arrow">›</span>
+  </a>
+
+</div>
+
+<div class="note">
+  ต้องการความช่วยเหลือด่วน? <a href="talk.html#crisis">โทร 1323</a>
+</div>
+
+</body>
+</html>
