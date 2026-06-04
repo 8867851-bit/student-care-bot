@@ -52,7 +52,7 @@
       text-align:center;
       cursor:pointer;
       transition:transform 0.15s,border-color 0.15s,box-shadow 0.15s;
-      min-height:110px;
+      min-height:90px;
       opacity:0;transform:translateY(8px);
     }
     .shelf-card.visible{
@@ -71,6 +71,27 @@
     }
     .shelf-card.urgent .sc-title{color:var(--red);}
     .sc-sub{font-size:10px;font-weight:300;color:var(--soft);line-height:1.5;}
+
+
+    /* ── PRESS ANIMATION ── */
+    .shelf-card.pressing{
+      transform:scale(0.96);
+      border-color:var(--gold-border);
+      box-shadow:0 0 0 3px rgba(232,150,12,0.2);
+      transition:transform 0.08s ease,border-color 0.08s,box-shadow 0.08s;
+    }
+
+    /* ── CONTENT LAYERS — stagger fade-in ── */
+    .sheet-layer{
+      opacity:0;
+      transform:translateY(7px);
+      transition:opacity 0.25s ease, transform 0.25s ease;
+    }
+    .sheet-layer.in{opacity:1;transform:translateY(0);}
+
+    /* ── SWIPE HANDLE visual cue ── */
+    .sheet-handle{cursor:grab;}
+    .sheet-handle:active{cursor:grabbing;}
 
     /* ── OVERLAY ── */
     #sit-overlay{
@@ -557,6 +578,57 @@ const SITUATIONS = [
   },
 ];
 
+
+// ── PRESS ANIMATION ─────────────────────────────────────────
+function pressCard(el, key) {
+  el.classList.add('pressing');
+  setTimeout(() => {
+    el.classList.remove('pressing');
+    openSheet(key);
+  }, 140);
+}
+
+// ── STAGGER LAYERS after sheet opens ─────────────────────────
+function staggerLayers() {
+  document.querySelectorAll('.sheet-layer').forEach(layer => {
+    const delay = parseInt(layer.dataset.delay || 0);
+    setTimeout(() => layer.classList.add('in'), delay);
+  });
+}
+
+// ── SWIPE DOWN TO CLOSE ──────────────────────────────────────
+(function() {
+  const sheet = document.getElementById('sit-sheet');
+  let startY = 0, currentY = 0, isDragging = false;
+
+  sheet.addEventListener('touchstart', e => {
+    if (sheet.scrollTop > 0) return; // only if at top
+    startY = e.touches[0].clientY;
+    isDragging = true;
+    sheet.style.transition = 'none';
+  }, { passive: true });
+
+  sheet.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    currentY = e.touches[0].clientY;
+    const delta = currentY - startY;
+    if (delta > 0) sheet.style.transform = `translateY(${delta}px)`;
+  }, { passive: true });
+
+  sheet.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    const delta = currentY - startY;
+    sheet.style.transition = 'transform 0.3s cubic-bezier(0.34,1.05,0.64,1)';
+    if (delta > 120) {
+      closeSheet();
+    } else {
+      sheet.style.transform = 'translateY(0)';
+    }
+    startY = 0; currentY = 0;
+  });
+})();
+
 // ═══ GROUP RENDERING ══════════════════════════════════════════
 function buildShelf() {
   const groups = {};
@@ -575,10 +647,9 @@ function buildShelf() {
       </div>
       <div class="shelf">
         ${g.items.map(s => `
-          <div class="shelf-card${s.urgent ? ' urgent' : ''}" onclick="openSheet('${s.key}')">
+          <div class="shelf-card${s.urgent ? ' urgent' : ''}" onclick="pressCard(this,'${s.key}')">
             <span class="sc-emoji">${s.emoji}</span>
             <div class="sc-title">${s.title}</div>
-            <div class="sc-sub">${s.subtitle.replace('\n','<br>')}</div>
           </div>
         `).join('')}
       </div>`;
@@ -629,32 +700,42 @@ function openSheet(key) {
     .join('');
 
   document.getElementById('sheet-body').innerHTML = `
-    <span class="sit-emoji-lg">${s.emoji}</span>
-    <div class="sit-title-lg">${s.title.replace('\n','<br>')}</div>
-    <div class="sit-recog">${s.recognition}</div>
+    <div class="sheet-layer" data-delay="0">
+      <span class="sit-emoji-lg">${s.emoji}</span>
+      <div class="sit-title-lg">${s.title.replace('\n','<br>')}</div>
+      <div class="sit-recog">${s.recognition}</div>
+    </div>
 
-    <div class="layer-divider"></div>
-    <div class="layer-lbl">${s.stepLabel}</div>
-    <div class="actions-list">${actionsHtml}</div>
+    <div class="sheet-layer" data-delay="150">
+      <div class="layer-divider"></div>
+      <div class="actions-list">${actionsHtml}</div>
+    </div>
 
-    <div class="layer-divider"></div>
-    <div class="layer-lbl">${s.toolLabel}</div>
-    ${toolsHtml}
+    <div class="sheet-layer" data-delay="280">
+      <div class="layer-divider"></div>
+      ${toolsHtml}
+    </div>
 
-    <div class="layer-divider"></div>
-    <div class="layer-lbl">${s.deeperNote}</div>
-    ${deeperHtml}
+    <div class="sheet-layer" data-delay="400">
+      <div class="layer-divider"></div>
+      <div style="font-size:12px;font-weight:400;color:var(--soft);margin-bottom:10px;line-height:1.65;">${s.deeperNote}</div>
+      ${deeperHtml}
+    </div>
 
-    <div class="layer-divider"></div>
-    <div class="related-note">อาจใกล้เคียงกับ...</div>
-    <div class="related-pills">${relatedHtml}</div>
-    <div style="height:8px;"></div>
+    <div class="sheet-layer" data-delay="550">
+      <div class="layer-divider"></div>
+      <div class="related-note">อาจใกล้เคียงกับ...</div>
+      <div class="related-pills">${relatedHtml}</div>
+      <div style="height:8px;"></div>
+    </div>
   `;
 
   const ov = document.getElementById('sit-overlay');
   ov.classList.add('open');
   document.body.style.overflow = 'hidden';
   document.getElementById('sit-sheet').scrollTop = 0;
+  document.getElementById('sit-sheet').style.transform = '';
+  setTimeout(staggerLayers, 180); // after sheet finishes rising
 }
 
 function switchSheet(key) {
