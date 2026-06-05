@@ -17,7 +17,7 @@
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;}
 
-    .hero{padding:38px 24px 18px;position:relative;overflow:hidden;text-align:center;transition:padding-top 0.4s ease;}
+    .hero{padding:10px 24px 6px;position:relative;overflow:hidden;text-align:center;transition:padding-top 0.4s ease;}
     .hero.scrolled{padding-top:26px;}
     .hero.locked{padding-top:22px;}
     .hero-name,.hero-eyebrow,.hero-sub{transition:opacity 0.6s ease;}
@@ -27,7 +27,11 @@
     .hero.locked .hero-sub{opacity:0;pointer-events:none;}
     .hero.locked .hero-eyebrow{opacity:0.2;}
     .hero.locked .hero-name{opacity:0.35;}
-    /* Stage 2: third unique pill — watermark */
+    /* Pill stages — one direction only: quieter each time */
+    .hero.pill1 .hero-name,.hero.pill1 .hero-eyebrow,.hero.pill1 .hero-sub{opacity:0.96;}
+    .hero.pill2 .hero-name,.hero.pill2 .hero-eyebrow,.hero.pill2 .hero-sub{opacity:0.92;}
+    .hero.pill3 .hero-name,.hero.pill3 .hero-eyebrow,.hero.pill3 .hero-sub{opacity:0.88;}
+    /* Stage deep: watermark */
     .hero.locked.deep .hero-name{opacity:0.2;}
     .hero.locked.deep .hero-eyebrow{opacity:0.12;}
     .hero::before{content:'';position:absolute;top:20px;left:50%;transform:translateX(-50%);width:220px;height:220px;background:radial-gradient(circle,rgba(255,255,255,0.85) 0%,rgba(255,255,255,0.3) 40%,transparent 70%);border-radius:50%;pointer-events:none;z-index:0;}
@@ -49,7 +53,7 @@
     .pr-banner-left{display:flex;flex-direction:column;gap:2px;}
     .pr-banner-label{font-size:11px;font-weight:400;color:var(--gold);letter-spacing:1px;text-transform:uppercase;}
     .pr-banner-text{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:#5C3D00;}
-    .pr-btn{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-btn);padding:10px 20px;font-size:13px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px rgba(232,150,12,0.3);transition:transform 0.15s;}
+    .pr-btn{background:var(--gold);color:#fff;border:none;border-radius:var(--radius-btn);padding:10px 20px;font-size:13px;font-family:'Mitr',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px rgba(232,150,12,0.25);transition:transform 0.15s;}
     .pr-btn:active{transform:scale(0.96);}
     .pr-avail{font-size:10px;font-weight:400;color:var(--soft);margin-top:3px;letter-spacing:0.3px;}
 
@@ -68,6 +72,7 @@
     .m4-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s ease;}
     .m4-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(46,95,163,0.3),transparent);z-index:1;}
     .m4-card:active{transform:scale(0.97)!important;}
+    .shelf-visited{filter:saturate(0.96);box-shadow:0 0 0 2px rgba(232,150,12,0.15)!important;}
     .m4-row .m4-card:nth-child(even){transform:translateY(6px);}
     .m4-row .m4-card.visible:nth-child(even){transform:translateY(6px);}
     .m4-card-img{width:140px;height:110px;background:var(--m4-soft);overflow:hidden;display:block;border-radius:var(--radius-card);}
@@ -238,10 +243,10 @@
     .library-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(226,192,96,0.6),rgba(176,125,16,0.9));transition:width 1s ease;}
 
     /* ── วันนี้เป็นยังไงบ้าง? ── */
-    .situation-wrap{padding:16px 16px 0;}
+    .situation-wrap{padding:16px 0 0 16px;} /* no right padding — 4th pill clips at edge */
     .situation-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
     .situation-label{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2px;text-transform:uppercase;}
-    .situation-scroll{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;}
+    .situation-scroll{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;-webkit-mask-image:linear-gradient(to right,black 0%,black 88%,transparent 100%);mask-image:linear-gradient(to right,black 0%,black 88%,transparent 100%);}
     .situation-scroll::-webkit-scrollbar{display:none;}
 
 
@@ -265,7 +270,8 @@
       background:rgba(255,248,238,0.75);
       transition:border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
     }
-    .sit-pill{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:50px;background:var(--card);border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;transition:transform 0.15s,border-color 0.15s;white-space:nowrap;}
+    .sit-pill{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:11px 18px;border-radius:99px;background:var(--card);border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;transition:transform 0.15s,border-color 0.15s;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+
     .sit-pill:active{transform:scale(0.96);}
     .sit-pill.primary{background:var(--dark);border-color:var(--dark);}
     .sit-emoji{font-size:16px;line-height:1;}
@@ -484,13 +490,23 @@ function renderYearRow(containerId, label, badgeColor, imgList, baseDelay) {
   // Header badge
   const header = document.createElement("div");
   header.style.cssText = "display:flex;align-items:center;gap:10px;margin-bottom:12px;";
+  const badgeLabel = label === "ม.4" ? "📖 " + label : label;
   header.innerHTML = `
     <div style="display:inline-flex;align-items:center;gap:6px;background:${badgeColor}15;border:1px solid ${badgeColor}40;border-radius:20px;padding:5px 12px 5px 10px;">
       <div style="width:6px;height:6px;background:${badgeColor};border-radius:50%;flex-shrink:0;"></div>
-      <div style="font-size:11px;font-weight:500;color:${badgeColor};letter-spacing:0.5px;white-space:nowrap;">${label}</div>
+      <div style="font-size:11px;font-weight:500;color:${badgeColor};letter-spacing:0.5px;white-space:nowrap;">${badgeLabel}</div>
     </div>
     <div style="flex:1;height:1px;background:var(--cream-border);"></div>`;
-  section.appendChild(header);
+  // Attach bridge sentence directly under badge for M4
+  if (label === "ม.4") {
+    const bridge = document.createElement('div');
+    bridge.style.cssText = 'padding:6px 4px 10px;';
+    bridge.innerHTML = "<div style='font-family:serif;font-size:12px;font-weight:300;color:var(--soft);line-height:2.15;letter-spacing:0.4px;'>หลายคนที่เคยผ่านช่วงนี้มา<br>อยากจะฝากสิ่งเหล่านี้ไว้ให้รุ่นต่อไป</div>";
+    section.appendChild(header);
+    section.appendChild(bridge);
+  } else {
+    section.appendChild(header);
+  }
 
   // Scrollable row of image buttons
   const row = document.createElement("div");
@@ -499,7 +515,7 @@ function renderYearRow(containerId, label, badgeColor, imgList, baseDelay) {
   imgList.forEach((item, i) => {
     const btn = document.createElement("div");
     btn.style.cssText = "flex-shrink:0;width:140px;height:110px;border-radius:16px;overflow:hidden;cursor:pointer;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;border:1px solid var(--cream-border);box-shadow:0 2px 10px rgba(0,0,0,0.08);";
-    btn.onclick = () => { if (item.url && item.url !== "#") window.location.href = item.url; };
+    btn.onclick = () => { btn.classList.add('shelf-visited'); if (item.url && item.url !== "#") window.location.href = item.url; };
     btn.innerHTML = `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentNode.style.background='var(--cream-warm)'"/>`;
     btn.addEventListener('touchstart', () => btn.style.transform='scale(0.96)', {passive:true});
     btn.addEventListener('touchend', () => btn.style.transform='', {passive:true});
@@ -518,7 +534,7 @@ function renderAll() {
   wrap.innerHTML = "";
   let d = 30;
 
-  document.getElementById("m4-section-root").style.marginTop = "18px";   /* base 10 + 8 */
+  document.getElementById("m4-section-root").style.marginTop = "4px";   /* tightened to connect pills → shelf */
   d = renderYearRow("m4-section-root", "ม.4", "#2E5FA3", M4_IMGS, d);
   document.getElementById("m5-section-root").style.marginTop = "16px";   /* +16 */
   d = renderYearRow("m5-section-root", "ม.5", "#E8960C", M5_IMGS, d + 10);
@@ -644,11 +660,7 @@ function renderTier(index) {
       <span class="sit-emoji">${p.emoji}</span>
       <span class="sit-label">${p.label}</span>
     </button>`
-  ).join('') +
-  `<button class="sit-pill" onclick="nextTier()" style="background:var(--cream-warm);border-color:var(--cream-border);gap:5px;">
-    <span class="sit-emoji" style="font-size:14px;">↻</span>
-    <span class="sit-label" style="color:var(--soft);">เรื่องอื่น</span>
-  </button>`;
+  ).join('');
 }
 
 function nextTier() {
@@ -772,16 +784,20 @@ function openSitSheet(key) {
   SESSION_OPENED.add(key);
   _lastOpenedKey = key;
 
-  // Stage 1: first pill — hero locks, subtitle quietly fades
+  // Stage 1: first pill
   if (isFirstEver) {
     const hero = document.querySelector('.hero');
-    if (hero) { hero.classList.remove('scrolled'); hero.classList.add('locked'); }
+    if (hero) { hero.classList.remove('scrolled'); hero.classList.add('locked','pill1'); }
   }
-
-  // Stage 2: second pill — hero dims further
+  // Stage 2: second pill
   if (SESSION_OPENED.size === 2) {
     const hero = document.querySelector('.hero');
-    if (hero) hero.classList.add('deep');
+    if (hero) { hero.classList.remove('pill1'); hero.classList.add('pill2'); }
+  }
+  // Stage 3: third pill
+  if (SESSION_OPENED.size === 3) {
+    const hero = document.querySelector('.hero');
+    if (hero) { hero.classList.remove('pill2'); hero.classList.add('pill3'); }
   }
 
   // Stage 3: third unique pill — page quiets + recognition appears
@@ -875,6 +891,11 @@ function closeSitSheet() {
         p.style.opacity = '';
       });
       _updatePillStates();
+      // Gently scroll touched pill back into view
+      setTimeout(() => {
+        const touched = document.querySelector('#tier-pills .sit-pill.touched-last');
+        if (touched) touched.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+      }, 250);
     }, 80);
   }, 280);
 }
@@ -1168,14 +1189,7 @@ const SIT_DATA_EXTRA = {
   // Before M4
   const m4Root = document.getElementById('m4-section-root');
   if (m4Root) {
-    const intro = document.createElement('div');
-    intro.id = 'm4-intro';
-    intro.style.cssText = 'padding:28px 28px 8px;text-align:center;';
-    intro.innerHTML = `
-      <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
-        หลายคนที่เคยผ่านช่วงนี้มา<br>อยากจะฝากสิ่งเหล่านี้ไว้ให้รุ่นต่อไป
-      </div>`;
-    m4Root.parentNode.insertBefore(intro, m4Root);
+    // m4-intro removed — bridge now lives inside renderYearRow for M4
   }
   // Before M5
   const m5Root = document.getElementById('m5-section-root');
@@ -1185,7 +1199,7 @@ const SIT_DATA_EXTRA = {
     intro2.style.cssText = 'padding:28px 28px 8px;text-align:center;';
     intro2.innerHTML = `
       <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
-        หลายคนก็ค่อยๆ<br>รู้จักตัวเองผ่านการลองทำสิ่งใหม่ๆ
+        หลายคนก็เคยลองเดินออกไป<br>แล้วได้เจออะไรบางอย่างที่ไม่คาดคิด
       </div>`;
     m5Root.parentNode.insertBefore(intro2, m5Root);
   }
