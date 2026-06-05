@@ -593,15 +593,38 @@ function renderTier(index) {
       <span class="sit-label">${p.label}</span>
     </button>`
   ).join('') +
-  `<button class="sit-pill" onclick="nextTier()" style="background:var(--cream-warm);border-color:var(--cream-border);gap:5px;">
-    <span class="sit-emoji" style="font-size:14px;">↻</span>
-    <span class="sit-label" style="color:var(--soft);">เรื่องอื่น</span>
+  `<button class="sit-pill" id="expand-btn" onclick="expandSituations()" style="background:var(--cream-warm);border-color:var(--cream-border);">
+    <span class="sit-label" style="color:var(--soft);font-size:11px;">ไม่เจอสิ่งที่หาอยู่?</span>
   </button>`;
 }
 
-function nextTier() {
-  _currentTier = (_currentTier + 1) % TIERS.length;
-  renderTier(_currentTier);
+function expandSituations() {
+  const btn = document.getElementById('expand-btn');
+  if (btn) btn.style.display = 'none';
+
+  // Pick 6 random pills from tiers 1–5
+  const pool = [];
+  TIERS.slice(1).forEach(t => pool.push(...t.pills));
+  const shuffled = pool.sort(() => Math.random() - 0.5).slice(0, 6);
+
+  // Build expanded row
+  const wrap = document.createElement('div');
+  wrap.id = 'expanded-pills';
+  wrap.style.cssText = 'margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;opacity:0;transform:translateY(6px);transition:opacity 0.3s ease,transform 0.3s ease;';
+
+  wrap.innerHTML = shuffled.map(p =>
+    `<button class="sit-pill" onclick="pressPill(this,'${p.key}')">
+      <span class="sit-emoji">${p.emoji}</span>
+      <span class="sit-label">${p.label}</span>
+    </button>`
+  ).join('') +
+  `<a href="situations.html" class="sit-more"><span class="sit-more-label">ดูทั้งหมด →</span></a>`;
+
+  document.getElementById('tier-pills').after(wrap);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    wrap.style.opacity = '1';
+    wrap.style.transform = 'translateY(0)';
+  }));
 }
 
 // init on load (called after DOM ready)
@@ -651,7 +674,7 @@ const SIT_DATA = {
     note: 'การที่คุณเป็นห่วงเพื่อนอยู่นั้น สำคัญมาก แต่การช่วยเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว',
     tools: [
       { icon:'📖', name:'คู่มือ: เป็นห่วงเพื่อน', desc:'ทำอะไรได้บ้าง · พูดยังไงดี', href:'resources.html#friend' },
-      { icon:'💛', name:'คุยกับ PR', desc:'ขอคำแนะนำจากเพื่อนที่ปรึกษา', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ขอคำแนะนำจากเพื่อนที่ปรึกษา', href:'peer.html' },
       { icon:'👩‍🏫', name:'ครูแนะแนว', desc:'ถ้าเรื่องหนักเกินไปสำหรับเพื่อน', href:'professionals.html' },
     ],
     talk: 'เป็นห่วงมากและไม่รู้จะทำยังไง?',
@@ -815,7 +838,7 @@ const SIT_DATA_EXTRA = {
     note:'Social comparison เป็นธรรมชาติ แต่เราเห็นแค่ highlight ของคนอื่น ไม่เห็น struggle ข้างหลังของพวกเขา',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจข้างในก่อน', href:'reflection.html' },
-      { icon:'💛', name:'คุยกับ PR', desc:'บางทีได้ยินว่าคนอื่นรู้สึกเหมือนกันก็ช่วย', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'บางทีได้ยินว่าคนอื่นรู้สึกเหมือนกันก็ช่วย', href:'peer.html' },
     ],
     talk:'รู้สึกแบบนี้บ่อยมากหรือกระทบสุขภาพจิต?',
   },
@@ -824,7 +847,7 @@ const SIT_DATA_EXTRA = {
     note:'การหากลุ่มเพื่อนใหม่ใช้เวลา โดยเฉพาะในช่วงเปลี่ยนโรงเรียน มันไม่ได้แปลว่ามีอะไรผิดปกติกับคุณ',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจว่ารู้สึกอะไรอยู่ข้างใน', href:'reflection.html' },
-      { icon:'💛', name:'คุยกับ PR', desc:'เพื่อนที่ปรึกษา รับฟังโดยไม่ตัดสิน', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'เพื่อนที่ปรึกษา รับฟังโดยไม่ตัดสิน', href:'peer.html' },
     ],
     talk:'รู้สึกโดดเดี่ยวมากและไม่ดีขึ้น?',
   },
@@ -833,7 +856,7 @@ const SIT_DATA_EXTRA = {
     note:'ความรู้สึกนี้หนักมากและมักเกิดในช่วงเปลี่ยนผ่าน คุณไม่ได้อยู่คนเดียวกับความรู้สึกนี้',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
-      { icon:'💛', name:'คุยกับ PR', desc:'มีคนที่พร้อมรับฟัง', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่พร้อมรับฟัง', href:'peer.html' },
     ],
     talk:'รู้สึกแบบนี้นานแล้วหรือรุนแรงมาก?',
   },
@@ -842,7 +865,7 @@ const SIT_DATA_EXTRA = {
     note:'ความขัดแย้งเป็นส่วนของมิตรภาพ แต่มันก็เจ็บปวดได้มาก โดยเฉพาะถ้ายังแก้ไขไม่ได้',
     tools:[
       { icon:'📖', name:'คู่มือ: ความขัดแย้งกับเพื่อน', desc:'จะพูดยังไง จะเริ่มยังไง', href:'resources.html#conflict' },
-      { icon:'💛', name:'คุยกับ PR', desc:'ขอมุมมองจากคนนอก', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ขอมุมมองจากคนนอก', href:'peer.html' },
     ],
     talk:'สถานการณ์ซับซ้อนหรือไม่รู้จะจัดการยังไง?',
   },
@@ -878,7 +901,7 @@ const SIT_DATA_EXTRA = {
     emoji:'😔', title:'รู้สึกเหงา',
     note:'ความเหงาไม่ได้แปลว่าไม่มีเพื่อน บางทีรู้สึกเหงาแม้จะอยู่กับคนรอบข้าง นั่นก็เป็นสัญญาณสำคัญ',
     tools:[
-      { icon:'💛', name:'คุยกับ PR', desc:'มีคนพร้อมรับฟัง', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนพร้อมรับฟัง', href:'peer.html' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจความรู้สึกข้างใน', href:'reflection.html' },
       { icon:'🎧', name:'Sati — อาสานักรับฟัง', desc:'익명 · ฟรี', href:'https://satiapp.co' },
     ],
@@ -888,7 +911,7 @@ const SIT_DATA_EXTRA = {
     emoji:'🏠', title:'คิดถึงบ้าน',
     note:'การคิดถึงบ้านเป็นเรื่องปกติมากสำหรับนักเรียนที่เพิ่งย้ายมา มันไม่ได้แปลว่าคุณอ่อนแอ',
     tools:[
-      { icon:'💛', name:'คุยกับ PR', desc:'รับฟัง โดยไม่ตัดสิน', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'รับฟัง โดยไม่ตัดสิน', href:'peer.html' },
       { icon:'📓', name:'เขียนระบาย', desc:'เขียนถึงบ้านในสมุด', href:'alltools.html#journal' },
     ],
     talk:'คิดถึงบ้านจนกระทบชีวิตประจำวัน?',
@@ -897,7 +920,7 @@ const SIT_DATA_EXTRA = {
     emoji:'👨‍👩‍👧', title:'มีปัญหากับครอบครัว',
     note:'ปัญหาในครอบครัวเป็นเรื่องที่หนักมากและมักไม่มีคำตอบง่ายๆ การมีคนรับฟังช่วยได้มาก',
     tools:[
-      { icon:'💛', name:'คุยกับ PR', desc:'เล่าให้ฟัง ไม่ตัดสิน', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'เล่าให้ฟัง ไม่ตัดสิน', href:'peer.html' },
       { icon:'👩‍🏫', name:'ครูแนะแนว', desc:'ถ้าต้องการผู้ใหญ่ช่วยดูแล', href:'professionals.html' },
     ],
     talk:'ปัญหารุนแรงหรือทำให้ไม่ปลอดภัย?',
@@ -907,7 +930,7 @@ const SIT_DATA_EXTRA = {
     note:'ช่วงวัยนี้มักมีช่องว่างระหว่างความรู้สึกของเราและสิ่งที่บ้านเข้าใจ มันทำให้รู้สึกโดดเดี่ยวมาก',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ทำความเข้าใจตัวเองก่อน', href:'reflection.html' },
-      { icon:'💛', name:'คุยกับ PR', desc:'มีคนที่เข้าใจชีวิตเตรียมฯ', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่เข้าใจชีวิตเตรียมฯ', href:'peer.html' },
     ],
     talk:'รู้สึกโดดเดี่ยวมากหรือไม่ปลอดภัยที่บ้าน?',
   },
@@ -988,7 +1011,7 @@ const SIT_DATA_EXTRA = {
     note:'ความอยากเปลี่ยนแปลงเป็นพลังงานที่ดี แต่ต้องรู้ว่าจะเปลี่ยนอะไรและทำไม',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'เริ่มจากการเข้าใจตัวเองก่อน', href:'reflection.html' },
-      { icon:'💛', name:'คุยกับ PR', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
     ],
     talk:'อยากเปลี่ยนแต่ไม่รู้จะเริ่มยังไง?',
   },
@@ -997,7 +1020,7 @@ const SIT_DATA_EXTRA = {
     note:'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้รู้สึกไม่คุ้นเคยกับตัวเอง อาจต้องให้เวลาสำรวจ',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เปลี่ยนไป', href:'reflection.html' },
-      { icon:'💛', name:'คุยกับ PR', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
     ],
     talk:'การเปลี่ยนแปลงนี้ทำให้รู้สึกไม่ดีหรือกังวล?',
   },
