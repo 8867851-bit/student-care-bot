@@ -15,11 +15,12 @@
       --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
       --red:#DC2626; --red-soft:#FEF2F2; --red-border:#FECACA;
       --radius:20px;
+      --green:#2D6A4F; --green-soft:#F0FAF4; --green-border:#B7DFC8;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;overflow-x:hidden;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:16px;overflow-x:hidden;}
 
-    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:48px 24px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:20px 24px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
 
     .hero{padding:12px 24px 32px;}
     .hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
@@ -27,14 +28,14 @@
     .hero-sub{font-size:14px;font-weight:400;color:var(--soft);line-height:1.65;}
 
     /* ── TRIAGE ── */
-    .triage-wrap{padding:0 16px 8px;}
+    .triage-wrap{padding:0 16px 4px;}
     .triage-q{font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:var(--dark);margin-bottom:14px;text-align:center;}
     .triage-grid{display:flex;flex-direction:column;gap:10px;}
     .triage-btn{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:18px;border:1.5px solid var(--card-border);background:var(--card);cursor:pointer;font-family:'Mitr',sans-serif;text-align:left;transition:transform 0.15s,border-color 0.15s;width:100%;}
     .triage-btn:active{transform:scale(0.98);}
     .triage-btn.state-unsure.selected{border-color:#7C3AED;background:#F5F3FF;}
     .triage-btn.state-heavy.selected{border-color:var(--gold);background:var(--gold-soft);}
-    .triage-btn.state-crisis.selected{border-color:var(--red);background:var(--red-soft);}
+    .triage-btn.state-crisis.selected{border-color:var(--red);background:#fff;}
     .triage-emoji{font-size:32px;flex-shrink:0;width:48px;text-align:center;}
     .triage-body{flex:1;}
     .triage-label{font-size:16px;font-weight:500;color:var(--dark);line-height:1.3;margin-bottom:3px;}
@@ -44,6 +45,7 @@
     .result-panel{padding:0 16px;display:none;opacity:0;transform:translateY(10px);transition:opacity 0.35s ease,transform 0.35s ease;}
     .result-panel.visible{display:block;}
     .result-panel.shown{opacity:1;transform:translateY(0);}
+    .result-panel:not(.visible){display:none!important;}
 
     /* ── ACTION CARDS ── */
     .action-list{display:flex;flex-direction:column;gap:10px;}
@@ -65,7 +67,7 @@
     .intent-btn.intent-expert.active{border-color:var(--purple-border);background:var(--purple-soft);}
     .intent-btn.intent-peer.active .intent-label{color:#92400E;}
     .intent-btn.intent-adult.active .intent-label{color:#1E3A6E;}
-    .intent-btn.intent-expert.active .intent-label{color:#4C1D95;}
+    .intent-btn.intent-expert.active .intent-label{color:#5B3EA8;}
     .intent-btn.intent-peer.active .intent-chevron{color:var(--gold);}
     .intent-btn.intent-adult.active .intent-chevron{color:var(--blue);}
     .intent-btn.intent-expert.active .intent-chevron{color:var(--purple);}
@@ -78,35 +80,105 @@
     .intent-btn.active .intent-chevron{transform:rotate(90deg);}
 
     /* ── INTENT SUB-PANELS ── */
-    .intent-panel{overflow:hidden;max-height:0;transition:max-height 0.32s ease,opacity 0.25s ease;opacity:0;padding:0;}
-    .intent-panel.open{max-height:600px;opacity:1;}
 
     /* ── SECTION DIVIDER ── */
     .section-divider{display:flex;align-items:center;gap:10px;margin:16px 0 12px;}
     .sd-line{flex:1;height:1px;background:var(--cream-border);}
     .sd-text{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);white-space:nowrap;}
+
+    /* Hero collapse — fades + height → 0 */
+    .hero{
+      transition:opacity 0.3s ease, max-height 0.35s ease, padding 0.3s ease;
+      overflow:hidden; max-height:300px;
+    }
+    .hero.gone{opacity:0; max-height:0; padding-top:0; padding-bottom:0;}
+    .triage-q{transition:opacity 0.25s ease; max-height:40px; overflow:hidden;
+      transition:opacity 0.25s ease, max-height 0.3s ease, margin 0.3s ease;}
+    .triage-q.gone{opacity:0; max-height:0; margin:0;}
+
+    /* Triage collapse */
+    .triage-btn{
+      overflow:hidden;
+      max-height:120px;
+      transition:transform 0.15s, border-color 0.15s,
+        max-height 0.32s ease, opacity 0.22s ease,
+        padding 0.28s ease, margin 0.28s ease, border-width 0.28s ease;
+    }
+    .triage-btn.collapsed{
+      max-height:0 !important; opacity:0 !important;
+      padding-top:0 !important; padding-bottom:0 !important;
+      margin:0 !important; border-width:0 !important;
+      pointer-events:none;
+    }
+    /* Selected triage btn — lift slightly */
+    .triage-btn.selected{}
+
+    /* Crisis gap + smaller visual weight */
+    .triage-grid{ gap:10px; }
+    .triage-grid .state-crisis{ margin-top:10px; }
+    .triage-btn.state-crisis .triage-emoji{ font-size:22px; width:36px; }
+    .triage-btn.state-crisis .triage-label{ font-size:14px; }
+    .triage-btn.state-crisis .triage-hint{ font-size:11px; }
+    .triage-btn.state-crisis{ padding:13px 16px; opacity:0.75; background:#fff; border-color:var(--red-border); }
+    .triage-btn.state-crisis:hover,.triage-btn.state-crisis:active{ opacity:1; }
+
+    /* Soft redirect path */
+    .soft-path{margin-top:32px;padding-top:20px;border-top:1px solid var(--cream-border);
+      font-size:13px;color:var(--soft);line-height:1.8;}
+    .soft-path-btn{display:inline;background:none;border:none;font-family:'Mitr',sans-serif;
+      font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;
+      text-decoration:underline;text-decoration-color:var(--cream-border);
+      text-underline-offset:3px;padding:0;}
+    .soft-path-btn:active{opacity:0.6;}
+
+    /* Crisis breathing space */
+    .crisis-space{height:28px;}
+
+    /* Intent buttons — no chevron rotation, no accordion feel */
+    .intent-btn{ cursor:pointer; }
+    .intent-chevron{ display:none; }          /* T3: remove chevrons */
+
+    /* Intent collapse — not accordion, just disappear */
+    .intent-btn.collapsed-intent{
+      max-height:0 !important; opacity:0;
+      padding-top:0; padding-bottom:0; margin:0;
+      border-width:0; pointer-events:none; overflow:hidden;
+    }
+
+    /* Resources under peer — appear inline, no section divider needed */
+    .intent-panel{ overflow:hidden; max-height:0;
+      transition:max-height 0.35s ease, opacity 0.28s ease; opacity:0; }
+    .intent-panel.open{ max-height:700px; opacity:1; }
+
+    /* Staggered peer cards */
+    .action-card.stagger{opacity:0;transform:translateY(6px);
+      transition:opacity 0.28s ease, transform 0.28s ease;}
+    .action-card.stagger.appeared{opacity:1;transform:translateY(0);}
+
+    /* Remove all arrows visually */
+    .ac-arrow{ display:none; }
+    .triage-btn > span:last-child{ display:none; }
   </style>
 </head>
 <body>
 
-<button class="back-btn" onclick="history.back()">← กลับ</button>
+<button class="back-btn" id="back-btn" onclick="goBack()">← กลับ</button>
 
 <div class="hero">
   <div class="hero-eyebrow">ใจดี TU · ความช่วยเหลือ</div>
-  <div class="hero-title">ไม่ต้องรับมือคนเดียว</div>
+  <div class="hero-title">ไม่จำเป็นต้องรู้ว่าต้องการอะไร</div>
 
 </div>
 
 <!-- ── TRIAGE ── -->
 <div class="triage-wrap">
-  <div class="triage-q">ตอนนี้รู้สึกยังไง?</div>
   <div class="triage-grid">
 
     <button class="triage-btn state-unsure" onclick="select('unsure', this)">
       <span class="triage-emoji">🤔</span>
       <span class="triage-body">
         <span class="triage-label">ไม่แน่ใจว่ากำลังรู้สึกอะไร</span>
-        <span class="triage-hint">แค่รู้สึกว่ามีบางอย่าง แต่ยังบอกไม่ถูก</span>
+
       </span>
       <span style="font-size:14px;color:var(--soft);">›</span>
     </button>
@@ -115,7 +187,7 @@
       <span class="triage-emoji">💭</span>
       <span class="triage-body">
         <span class="triage-label">อยากคุยกับใครสักคน</span>
-        <span class="triage-hint">มีคนรับฟัง · ไม่ว่าเรื่องเล็กหรือใหญ่</span>
+
       </span>
       <span style="font-size:14px;color:var(--soft);">›</span>
     </button>
@@ -123,8 +195,8 @@
     <button class="triage-btn state-crisis" onclick="select('crisis', this)">
       <span class="triage-emoji">🔴</span>
       <span class="triage-body">
-        <span class="triage-label">ต้องการคนด่วนตอนนี้</span>
-        <span class="triage-hint">ไม่ปลอดภัย หรือรู้สึกไม่ไหวแล้ว</span>
+        <span class="triage-label">อยากมีคนอยู่ด้วยตอนนี้</span>
+
       </span>
       <span style="font-size:14px;color:var(--red);">›</span>
     </button>
@@ -135,21 +207,26 @@
 <div class="result-panel" id="panel-unsure">
 
   <!-- ONE giant primary action — curious, soft purple -->
-  <a href="reflection.html" style="display:flex;align-items:flex-start;gap:16px;padding:22px 20px;border-radius:20px;text-decoration:none;background:#F5F3FF;border:1.5px solid #DDD6FE;margin-top:20px;">
+  <a href="reflection.html" style="display:flex;align-items:flex-start;gap:16px;padding:22px 20px;border-radius:20px;text-decoration:none;background:#F7F5FC;border:1.5px solid #E4DFFA;margin-top:20px;">
     <span style="font-size:36px;flex-shrink:0;margin-top:2px;">🪞</span>
     <span style="flex:1;">
-      <span style="display:block;font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:#4C1D95;line-height:1.3;margin-bottom:6px;">What's This Feeling?</span>
-      <span style="display:block;font-size:13px;font-weight:400;color:#7C3AED;line-height:1.6;opacity:0.8;">ไม่ต้องรู้ว่าปัญหาคืออะไร<br>เริ่มจากสังเกตสิ่งที่เกิดขึ้นข้างใน</span>
+      <span style="display:block;font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:#5B3EA8;line-height:1.3;margin-bottom:6px;">What's This Feeling?</span>
+      <span style="display:block;font-size:13px;font-weight:400;color:#8B6EC4;line-height:1.6;opacity:0.85;">ไม่ต้องรู้ว่าปัญหาคืออะไร<br>เริ่มจากสังเกตสิ่งที่เกิดขึ้นข้างใน</span>
     </span>
-    <span style="font-size:18px;color:#C4B5FD;flex-shrink:0;margin-top:4px;">→</span>
+    <span style="font-size:18px;color:#C4B5FD;flex-shrink:0;margin-top:4px;display:none;">→</span>
   </a>
+
+  <div class="soft-path">
+    หรือถ้าวันหนึ่ง<br>
+    อยากลองคุยกับใครสักคน<br>
+    <button class="soft-path-btn" onclick="document.querySelector('.state-heavy').click()">ไปดูตัวเลือกได้เลย</button>
+  </div>
 
 </div>
 
 <!-- ── PANEL: HEAVY ── -->
 <div class="result-panel" id="panel-heavy">
   <div style="margin-top:20px;">
-    <div style="font-family:'Mitr',sans-serif;font-size:16px;font-weight:500;color:var(--dark);margin-bottom:14px;">อยากคุยกับใคร?</div>
     <div style="display:flex;flex-direction:column;gap:8px;">
 
       <button class="intent-btn intent-peer" onclick="showIntent('peer')" id="intent-peer">
@@ -158,7 +235,6 @@
           <span class="intent-label"><span class="intent-dot" style="background:var(--gold);"></span>คนวัยเดียวกัน</span>
           <span class="intent-hint">เพื่อนที่ปรึกษา หรืออาสารับฟัง</span>
         </span>
-        <span class="intent-chevron">›</span>
       </button>
 
       <button class="intent-btn intent-adult" onclick="showIntent('adult')" id="intent-adult">
@@ -167,7 +243,6 @@
           <span class="intent-label"><span class="intent-dot" style="background:var(--blue);"></span>ผู้ใหญ่ในโรงเรียน</span>
           <span class="intent-hint">ครูแนะแนว</span>
         </span>
-        <span class="intent-chevron">›</span>
       </button>
 
       <button class="intent-btn intent-expert" onclick="showIntent('expert')" id="intent-expert">
@@ -176,139 +251,151 @@
           <span class="intent-label"><span class="intent-dot" style="background:var(--purple);"></span>ผู้เชี่ยวชาญ</span>
           <span class="intent-hint">นักจิตวิทยา หรือบริการภายนอก</span>
         </span>
-        <span class="intent-chevron">›</span>
       </button>
 
     </div>
   </div>
 
+  <div class="soft-path" style="margin-top:28px;">
+    หรือถ้าอยากลอง<br>
+    ทำความเข้าใจตัวเองก่อน<br>
+    <button class="soft-path-btn" onclick="document.querySelector('.state-unsure').click()">ลองสำรวจความรู้สึกก่อน</button>
+  </div>
+
+  <div id="heavy-1323" style="margin-top:24px;padding-top:20px;border-top:1px solid var(--cream-border);text-align:center;transition:opacity 0.2s ease,max-height 0.3s ease;overflow:hidden;max-height:200px;">
+    <div style="font-size:12px;color:var(--soft);margin-bottom:12px;">หรือ · คุยได้ทุกเรื่อง ตอนนี้เลย</div>
+    <a href="tel:1323" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;padding:14px 24px;border-radius:14px;border:1.5px solid var(--gold-border);background:var(--gold-soft);">
+      <span style="font-size:18px;font-weight:600;color:var(--dark);font-family:'Noto Serif Thai',serif;">📞 <span style="color:var(--red);">1323</span></span>
+      <span style="font-size:12px;color:var(--mid);">ฟรี · 24 ชั่วโมง</span>
+    </a>
+  </div>
+
   <!-- sub-panel: peer -->
   <div class="intent-panel" id="subpanel-peer">
-    <div class="section-divider"><div class="sd-line"></div><div class="sd-text" style="color:var(--gold);">คนวัยเดียวกัน</div><div class="sd-line"></div></div>
-    <div style="margin-bottom:12px;">
-      <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.7;">ไม่จำเป็นต้องมีปัญหาใหญ่<br>ไม่จำเป็นต้องรู้ว่าจะพูดอะไร<br><span style="font-weight:500;color:var(--dark);">เลือกคนที่อยากคุยด้วยได้เลย</span></div>
-    </div>
+    <div style="height:12px;"></div>
     <div class="action-list">
-      <a class="action-card gold" href="peer.html">
+      <a class="action-card gold stagger" href="peer.html">
         <span class="ac-icon">💛</span>
         <span class="ac-body">
           <span class="ac-name">นัดคุยกับเพื่อนที่ปรึกษา</span>
-          <span class="ac-desc">เพื่อนที่ปรึกษา · นัดล่วงหน้า · จ–ศ หลังเลิกเรียน · ฟรี</span>
+          <span class="ac-desc">นัดล่วงหน้า · จ–ศ หลังเลิกเรียน · ฟรี</span>
         </span>
-        <span class="ac-arrow">→</span>
       </a>
-      <a class="action-card" href="https://satiapp.co" target="_blank" rel="noopener">
+      <a class="action-card stagger" href="https://satiapp.co" target="_blank" rel="noopener">
         <span class="ac-icon">🎧</span>
         <span class="ac-body">
           <span class="ac-name">Sati — อาสานักรับฟัง</span>
-          <span class="ac-desc">익명 · ฟังโดยไม่ตัดสิน · ฟรี · 24 ชม.</span>
+          <span class="ac-desc">ฟังโดยไม่ตัดสิน · ฟรี · 24 ชม.</span>
         </span>
-        <span class="ac-arrow">→</span>
       </a>
-      <a class="action-card" href="https://heretohealproject.com" target="_blank" rel="noopener">
+      <a class="action-card stagger" href="https://heretohealproject.com" target="_blank" rel="noopener">
         <span class="ac-icon">🟡</span>
         <span class="ac-body">
           <span class="ac-name">Here to Heal</span>
           <span class="ac-desc">ผู้เชี่ยวชาญสุขภาพจิต ผ่านข้อความ · ทุกวัน 10:00–22:00</span>
         </span>
-        <span class="ac-arrow">→</span>
       </a>
     </div>
   </div>
 
   <!-- sub-panel: adult -->
   <div class="intent-panel" id="subpanel-adult">
-    <div class="section-divider"><div class="sd-line"></div><div class="sd-text" style="color:var(--blue);">ผู้ใหญ่ในโรงเรียน</div><div class="sd-line"></div></div>
+    <div style="height:12px;"></div>
     <div class="action-list">
-      <a class="action-card" href="professionals.html">
+      <a class="action-card stagger" href="professionals.html">
         <span class="ac-icon">👩‍🏫</span>
         <span class="ac-body">
           <span class="ac-name">ครูแนะแนว</span>
           <span class="ac-desc">TCAS · portfolio · ปัญหาชีวิตในโรงเรียน · ทัก LINE เพื่อนัด · ฟรี</span>
         </span>
-        <span class="ac-arrow">→</span>
       </a>
     </div>
   </div>
 
   <!-- sub-panel: expert -->
   <div class="intent-panel" id="subpanel-expert">
-    <div class="section-divider"><div class="sd-line"></div><div class="sd-text" style="color:var(--purple);">ผู้เชี่ยวชาญ</div><div class="sd-line"></div></div>
+    <div style="height:12px;"></div>
     <div class="action-list">
-      <a class="action-card" href="professionals.html#therapist">
+      <a class="action-card stagger" href="professionals.html#therapist">
         <span class="ac-icon">🧠</span>
         <span class="ac-body">
           <span class="ac-name">นักจิตวิทยาโรงเรียน</span>
           <span class="ac-desc">คำปรึกษาเชิงลึก · anxiety · depression · self-esteem · ฟรี</span>
         </span>
-        <span class="ac-arrow">→</span>
       </a>
-      <a class="action-card" href="https://www.prescreening.dmind.app" target="_blank" rel="noopener">
+      <a class="action-card stagger" href="https://www.prescreening.dmind.app" target="_blank" rel="noopener">
         <span class="ac-icon">🤖</span>
         <span class="ac-body">
           <span class="ac-name">D-Mind — ประเมินด้วย AI</span>
           <span class="ac-desc">จุฬาฯ × กรมสุขภาพจิต · มีนักจิตวิทยาดูแล · ฟรี</span>
         </span>
-        <span class="ac-arrow">→</span>
       </a>
-      <a class="action-card" href="care.html?tab=professional">
+      <a class="action-card stagger" href="care.html?tab=professional">
         <span class="ac-icon">🌿</span>
         <span class="ac-body">
           <span class="ac-name">คลินิกและผู้เชี่ยวชาญภายนอก</span>
           <span class="ac-desc">สำหรับกรณีที่ต้องการจิตแพทย์หรือยา</span>
         </span>
-        <span class="ac-arrow">→</span>
       </a>
     </div>
-  </div>
   </div>
 </div>
 
 <!-- ── PANEL: CRISIS ── -->
 <div class="result-panel" id="panel-crisis">
-  <div style="margin-top:20px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:var(--mid);margin-bottom:12px;">ติดต่อได้เลยตอนนี้</div>
+  <div style="height:24px;"></div>
 
-  <!-- 1323 — primary, dominant, impossible to miss -->
-  <a href="tel:1323" style="display:flex;align-items:center;gap:18px;padding:26px 22px;border-radius:20px;text-decoration:none;background:var(--red);margin-bottom:16px;">
-    <span style="flex:1;">
-      <span style="display:block;font-family:'Noto Serif Thai',serif;font-size:28px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:5px;">📞 โทร 1323</span>
-      <span style="display:block;font-size:14px;font-weight:500;color:rgba(255,255,255,0.9);margin-bottom:2px;">นักจิตพร้อมรับสายทุกระดับความหนัก</span>
-      <span style="display:block;font-size:12px;font-weight:400;color:rgba(255,255,255,0.65);">ฟรี · 24 ชั่วโมง · ทุกวัน</span>
-    </span>
-    <span style="font-size:22px;color:rgba(255,255,255,0.4);">→</span>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:400;color:var(--soft);line-height:2;text-align:center;margin-bottom:20px;">
+    รู้สึกว่าไม่อยากอยู่กับเรื่องนี้คนเดียวแล้ว<br>
+    <span style="color:var(--dark);font-weight:500;">มีคนรับสายอยู่เสมอ</span>
+  </div>
+
+  <a href="tel:1323" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:28px 22px;border-radius:20px;text-decoration:none;background:var(--cream-warm);border:1.5px solid #FECACA;margin-bottom:16px;">
+    <span style="font-family:'Noto Serif Thai',serif;font-size:38px;font-weight:700;color:var(--red);line-height:1;">📞 1323</span>
+    <span style="font-size:13px;font-weight:400;color:var(--mid);">ฟรี · 24 ชั่วโมง</span>
   </a>
 
-  <!-- Secondary — clearly below 1323, for those not ready to call -->
-  <div style="font-size:11px;font-weight:500;color:var(--soft);letter-spacing:0.5px;margin-bottom:10px;text-align:center;">หรือถ้ายังไม่พร้อมโทร</div>
-  <a class="action-card" href="https://heretohealproject.com" target="_blank" rel="noopener">
-    <span class="ac-icon">💬</span>
-    <span class="ac-body">
-      <span class="ac-name">Here to Heal — คุยผ่านข้อความ</span>
-      <span class="ac-desc">ผู้เชี่ยวชาญสุขภาพจิต · ทุกวัน 10:00–22:00</span>
-    </span>
-    <span class="ac-arrow">→</span>
-  </a>
+  <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:2;text-align:center;padding:0 12px;">
+    บางช่วงอาจต้องรอสักหน่อย<br>
+    แต่ถ้ายังถือสายไว้<br>
+    <span style="color:var(--dark);font-weight:500;">จะมีคนรับฟังคุณแน่นอน</span>
+  </div>
 
-  <div style="margin-top:14px;background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:14px;padding:14px 16px;">
-    <div style="font-size:12px;font-weight:400;color:var(--soft);line-height:1.65;">ไม่ต้องรอให้วิกฤตก่อน ถ้ารู้สึกว่าไม่ไหว ก็ขอความช่วยเหลือได้เลย</div>
+  <div style="height:24px;"></div>
+
+  <div style="font-size:12px;color:var(--soft);text-align:center;">
+    หรือถ้ายังไม่พร้อมโทร&nbsp;·&nbsp;<a href="https://heretohealproject.com" target="_blank" rel="noopener" style="color:var(--dark);font-weight:500;text-decoration:underline;text-underline-offset:3px;">Here to Heal — คุยผ่านข้อความ</a>
   </div>
 </div>
 
 <script>
 function select(state, btn) {
-  document.querySelectorAll('.triage-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
+  // Hero + question label disappear completely
+  document.querySelector('.hero').classList.add('gone');
+  const _tq = document.querySelector('.triage-q'); if(_tq) _tq.classList.add('gone');
 
-  document.querySelectorAll('.result-panel').forEach(p => {
-    p.classList.remove('shown');
-    setTimeout(() => { if (!p.classList.contains('shown')) p.classList.remove('visible'); }, 350);
+  // Collapse all unchosen triage buttons; lift chosen
+  document.querySelectorAll('.triage-btn').forEach(b => {
+    if (b === btn) {
+      b.classList.add('selected');
+      b.classList.remove('collapsed');
+    } else {
+      b.classList.remove('selected');
+      b.classList.add('collapsed');
+    }
   });
 
+  // Hide all result panels instantly
+  document.querySelectorAll('.result-panel').forEach(p => {
+    p.classList.remove('shown', 'visible');
+  });
+
+  // Reveal chosen panel
   const panel = document.getElementById('panel-' + state);
   panel.classList.add('visible');
   requestAnimationFrame(() => requestAnimationFrame(() => {
     panel.classList.add('shown');
-    setTimeout(() => panel.scrollIntoView({ behavior:'smooth', block:'nearest' }), 80);
+    setTimeout(() => panel.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
   }));
 }
 
@@ -316,21 +403,70 @@ function showIntent(type) {
   ['peer','adult','expert'].forEach(t => {
     const btn   = document.getElementById('intent-' + t);
     const panel = document.getElementById('subpanel-' + t);
+
     if (t === type) {
-      const isOpen = panel.classList.contains('open');
-      panel.classList.toggle('open', !isOpen);
-      btn.classList.toggle('active', !isOpen);
-    } else {
-      panel.classList.remove('open');
-      btn.classList.remove('active');
+      // If already open — do nothing (no toggle back)
+      if (panel.classList.contains('open')) return;
+
+      // Collapse the other two intent buttons — they're done
+      ['peer','adult','expert'].filter(x => x !== t).forEach(other => {
+        document.getElementById('intent-' + other).classList.add('collapsed-intent');
+        document.getElementById('subpanel-' + other).classList.remove('open');
+        document.getElementById('intent-' + other).classList.remove('active');
+      });
+
+      // Hide 1323 block once an intent is chosen
+      const block1323 = document.getElementById('heavy-1323');
+      if(block1323){ block1323.style.opacity='0'; block1323.style.maxHeight='0'; block1323.style.marginTop='0'; block1323.style.paddingTop='0'; }
+      // Activate chosen
+      btn.classList.add('active');
+      panel.classList.add('open');
+
+      // Stagger cards (all types, 70ms apart)
+      const cards = panel.querySelectorAll('.action-card.stagger');
+      cards.forEach((card, i) => {
+        card.classList.remove('appeared');
+        setTimeout(() => card.classList.add('appeared'), 60 + i * 75);
+      });
+
+      setTimeout(() => panel.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
     }
   });
-  setTimeout(() => {
-    const p = document.getElementById('subpanel-' + type);
-    if (p.classList.contains('open')) p.scrollIntoView({ behavior:'smooth', block:'nearest' });
-  }, 80);
 }
 
+function goBack() {
+  const anySelected = document.querySelector('.triage-btn.selected');
+  const anyIntent   = document.querySelector('.intent-btn.active');
+
+  if (anyIntent) {
+    // Level 2 → back to Level 1: restore intent buttons, close subpanels
+    ['peer','adult','expert'].forEach(t => {
+      const btn = document.getElementById('intent-' + t);
+      const panel = document.getElementById('subpanel-' + t);
+      btn.classList.remove('active','collapsed-intent');
+      btn.style.maxHeight = ''; btn.style.opacity = ''; btn.style.padding = '';
+      btn.style.margin = ''; btn.style.borderWidth = '';
+      btn.style.pointerEvents = '';
+      panel.classList.remove('open');
+    });
+    return;
+  }
+
+  if (anySelected) {
+    // Level 1 → back to start: restore hero, question, all triage buttons
+    document.querySelector('.hero').classList.remove('gone');
+    const _tq2 = document.querySelector('.triage-q'); if(_tq2) _tq2.classList.remove('gone');
+    document.querySelectorAll('.triage-btn').forEach(b => {
+      b.classList.remove('selected','collapsed');
+    });
+    document.querySelectorAll('.result-panel').forEach(p => {
+      p.classList.remove('shown','visible');
+    });
+    return;
+  }
+
+  history.back();
+}
 
 // Deep links
 const hash = window.location.hash;
@@ -338,12 +474,22 @@ if      (hash === '#crisis')   { const b = document.querySelector('.state-crisis
 else if (hash === '#heavy' || hash === '#pr') { const b = document.querySelector('.state-heavy');  if(b) select('heavy', b); }
 else if (hash === '#unsure')   { const b = document.querySelector('.state-unsure'); if(b) select('unsure', b); }
 </script>
+</div>
+
+<!-- ── QUIET 1323 FOOTER ── -->
+<div style="text-align:center;padding:28px 32px 4px;border-top:1px solid var(--cream-border);margin:24px 16px 0;">
+  <div style="font-size:12px;color:var(--soft);line-height:2;font-family:'Noto Serif Thai',serif;font-weight:300;">
+    ถ้าวันนี้แค่อยากมีใครสักคนอยู่ด้วย
+  </div>
+  <a href="tel:1323" style="display:block;font-size:20px;font-weight:600;color:var(--dark);text-decoration:none;font-family:'Noto Serif Thai',serif;margin:4px 0 2px;">📞 1323</a>
+  <div style="font-size:11px;color:var(--soft);">ฟรี · 24 ชั่วโมง</div>
+</div>
+
 <!-- ── RESOURCES — single link ── -->
-<div style="margin:32px 16px 0;">
-  <div style="border-top:1px solid var(--cream-border);padding-top:20px;">
-    <a href="situations.html" style="display:flex;align-items:center;gap:6px;padding:16px 18px;background:var(--green-soft);border:1.5px solid var(--green-border);border-radius:16px;text-decoration:none;">
+<div style="margin:16px 16px 0;">
+  <div style="border-top:1px solid var(--cream-border);padding-top:16px;">
+    <a href="situations.html" style="display:flex;align-items:center;gap:6px;padding:14px 18px;background:var(--green-soft);border:1.5px solid var(--green-border);border-radius:16px;text-decoration:none;">
       <span style="font-size:13px;font-weight:500;color:var(--green);">ยังไม่ใช่สิ่งที่กำลังหาอยู่?</span>
-      <span style="font-size:14px;color:var(--green);opacity:0.7;">→</span>
     </a>
   </div>
 </div>
