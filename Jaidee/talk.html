@@ -102,15 +102,6 @@
   <div class="triage-q">ตอนนี้รู้สึกยังไง?</div>
   <div class="triage-grid">
 
-    <button class="triage-btn state-crisis" onclick="select('crisis', this)">
-      <span class="triage-emoji">🔴</span>
-      <span class="triage-body">
-        <span class="triage-label">ต้องการคนด่วนตอนนี้</span>
-        <span class="triage-hint">ไม่ปลอดภัย หรือรู้สึกไม่ไหวแล้ว</span>
-      </span>
-      <span style="font-size:14px;color:var(--red);">›</span>
-    </button>
-
     <button class="triage-btn state-unsure" onclick="select('unsure', this)">
       <span class="triage-emoji">🤔</span>
       <span class="triage-body">
@@ -129,8 +120,16 @@
       <span style="font-size:14px;color:var(--soft);">›</span>
     </button>
 
+    <button class="triage-btn state-crisis" onclick="select('crisis', this)">
+      <span class="triage-emoji">🔴</span>
+      <span class="triage-body">
+        <span class="triage-label">ต้องการคนด่วนตอนนี้</span>
+        <span class="triage-hint">ไม่ปลอดภัย หรือรู้สึกไม่ไหวแล้ว</span>
+      </span>
+      <span style="font-size:14px;color:var(--red);">›</span>
+    </button>
+
   </div>
-</div>
 
 <!-- ── PANEL: UNSURE ── -->
 <div class="result-panel" id="panel-unsure">
@@ -157,7 +156,7 @@
         <span class="intent-emoji">💛</span>
         <span class="intent-body">
           <span class="intent-label"><span class="intent-dot" style="background:var(--gold);"></span>คนวัยเดียวกัน</span>
-          <span class="intent-hint">PR หรืออาสารับฟัง</span>
+          <span class="intent-hint">เพื่อนที่ปรึกษา หรืออาสารับฟัง</span>
         </span>
         <span class="intent-chevron">›</span>
       </button>
@@ -193,7 +192,7 @@
       <a class="action-card gold" href="peer.html">
         <span class="ac-icon">💛</span>
         <span class="ac-body">
-          <span class="ac-name">นัดคุยกับ PR</span>
+          <span class="ac-name">นัดคุยกับเพื่อนที่ปรึกษา</span>
           <span class="ac-desc">เพื่อนที่ปรึกษา · นัดล่วงหน้า · จ–ศ หลังเลิกเรียน · ฟรี</span>
         </span>
         <span class="ac-arrow">→</span>
@@ -273,7 +272,7 @@
   <a href="tel:1323" style="display:flex;align-items:center;gap:18px;padding:26px 22px;border-radius:20px;text-decoration:none;background:var(--red);margin-bottom:16px;">
     <span style="flex:1;">
       <span style="display:block;font-family:'Noto Serif Thai',serif;font-size:28px;font-weight:700;color:#fff;line-height:1.15;margin-bottom:5px;">📞 โทร 1323</span>
-      <span style="display:block;font-size:14px;font-weight:500;color:rgba(255,255,255,0.9);margin-bottom:2px;">คุยกับคนจริงได้ทันที</span>
+      <span style="display:block;font-size:14px;font-weight:500;color:rgba(255,255,255,0.9);margin-bottom:2px;">นักจิตพร้อมรับสายทุกระดับความหนัก</span>
       <span style="display:block;font-size:12px;font-weight:400;color:rgba(255,255,255,0.65);">ฟรี · 24 ชั่วโมง · ทุกวัน</span>
     </span>
     <span style="font-size:22px;color:rgba(255,255,255,0.4);">→</span>
@@ -342,12 +341,9 @@ else if (hash === '#unsure')   { const b = document.querySelector('.state-unsure
 <!-- ── RESOURCES — single link ── -->
 <div style="margin:32px 16px 0;">
   <div style="border-top:1px solid var(--cream-border);padding-top:20px;">
-    <a href="resources.html" style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--green-soft);border:1.5px solid var(--green-border);border-radius:16px;text-decoration:none;">
-      <span style="flex:1;">
-        <span style="display:block;font-size:13px;font-weight:500;color:var(--green);margin-bottom:2px;">ยังไม่ใช่สิ่งที่กำลังหาอยู่?</span>
-        <span style="display:block;font-size:12px;font-weight:400;color:#5A7A5C;">🌿 ดูสถานการณ์ต่างๆ ที่รวบรวมไว้</span>
-      </span>
-      <span style="font-size:14px;color:var(--green);opacity:0.6;">→</span>
+    <a href="situations.html" style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--green-soft);border:1.5px solid var(--green-border);border-radius:16px;text-decoration:none;">
+      <span style="font-size:13px;font-weight:500;color:var(--green);">ยังไม่ใช่สิ่งที่กำลังหาอยู่?</span>
+      <span style="font-size:14px;color:var(--green);opacity:0.6;">🌿 →</span>
     </a>
   </div>
 </div>
