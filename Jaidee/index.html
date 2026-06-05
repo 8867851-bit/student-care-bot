@@ -68,6 +68,8 @@
     .m4-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,box-shadow 0.15s ease;}
     .m4-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(46,95,163,0.3),transparent);z-index:1;}
     .m4-card:active{transform:scale(0.97)!important;}
+    .m4-row .m4-card:nth-child(even){transform:translateY(6px);}
+    .m4-row .m4-card.visible:nth-child(even){transform:translateY(6px);}
     .m4-card-img{width:140px;height:110px;background:var(--m4-soft);overflow:hidden;display:block;border-radius:var(--radius-card);}
     .m4-card-img img{width:100%;height:100%;object-fit:cover;display:block;}
 
@@ -397,24 +399,9 @@
     </div>
   </div>
 
-  <!-- Walk-in text -->
-  <div style="padding:36px 28px 20px;text-align:center;">
-    <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:300;color:var(--soft);line-height:2.1;letter-spacing:0.3px;">
-      เผื่อว่าวันหนึ่ง<br>
-      <span style="color:var(--mid);font-weight:400;">อาจเป็นประโยชน์</span>
-    </div>
-  </div>
+  <div style="height:80px;"></div>
 
-  <!-- Gentle pre-peer divider -->
-  <div style="margin:0 28px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;">
-    <div style="width:100%;height:1px;background:var(--cream-border);"></div>
-    <div style="font-family:'Noto Serif Thai',serif;font-size:12px;font-weight:300;color:var(--soft);line-height:1.9;text-align:center;letter-spacing:0.3px;">
-      บางคนชอบค่อย ๆ<br>ทำความเข้าใจตัวเองก่อน
-    </div>
-    <div style="width:100%;height:1px;background:var(--cream-border);"></div>
-  </div>
-
-  <div class="pr-banner">
+  <div class="pr-banner" style="margin-left:28px;margin-right:20px;">
     <div class="pr-banner-left">
       <div class="pr-banner-label">เพื่อนที่ปรึกษา</div>
       <div class="pr-banner-text">บางทีแค่มีคนรับฟัง ก็เบาขึ้นได้เยอะ</div>
@@ -753,10 +740,14 @@ const SIT_DATA = {
 
 function pressPill(btn, key) {
   btn.classList.add('pressing');
+  // Soften all other pills briefly so this one anchors
+  document.querySelectorAll('#tier-pills .sit-pill').forEach(p => {
+    if (p !== btn) p.style.opacity = '0.45';
+  });
   setTimeout(() => {
     btn.classList.remove('pressing');
     openSitSheet(key);
-  }, 130);
+  }, 150);
 }
 
 function _updatePillStates() {
@@ -781,51 +772,37 @@ function openSitSheet(key) {
   SESSION_OPENED.add(key);
   _lastOpenedKey = key;
 
-  // Ticket 01: lock hero after first pill (stage 1)
+  // Stage 1: first pill — hero locks, subtitle quietly fades
   if (isFirstEver) {
     const hero = document.querySelector('.hero');
-    if (hero) {
-      hero.classList.remove('scrolled');
-      hero.classList.add('locked');
-    }
+    if (hero) { hero.classList.remove('scrolled'); hero.classList.add('locked'); }
   }
 
-  // Ticket 01 stage 2 + Ticket 02: at 3 unique pills — watermark hero + quiet page
-  if (SESSION_OPENED.size === 3) {
+  // Stage 2: second pill — hero dims further
+  if (SESSION_OPENED.size === 2) {
     const hero = document.querySelector('.hero');
     if (hero) hero.classList.add('deep');
+  }
+
+  // Stage 3: third unique pill — page quiets + recognition appears
+  if (SESSION_OPENED.size === 3) {
     document.body.classList.add('quieted');
-  }
-
-  // Ticket 03 — M4 badge adapts if heavy pills opened (sleep or burnout)
-  if (key === 'sleep' || key === 'burnout' || key === 'tired' || key === 'no_energy') {
-    const m4BadgeEl = document.querySelector('#m4-section-root [style*="font-size:11px"][style*="font-weight:500"]');
-    if (m4BadgeEl && !m4BadgeEl.dataset.adapted) {
-      m4BadgeEl.dataset.adapted = '1';
-      m4BadgeEl.style.transition = 'opacity 0.4s ease';
-      m4BadgeEl.style.opacity = '0';
-      setTimeout(() => {
-        m4BadgeEl.textContent = 'ม.4 · เผื่อว่าวันหนึ่ง อาจเป็นประโยชน์';
-        m4BadgeEl.style.opacity = '1';
-      }, 400);
-    }
-  }
-
-  // Adapt peer support text if sleep-related
-  if (key === 'sleep') {
-    const prText = document.querySelector('.pr-banner-text');
-    if (prText && !prText.dataset.adapted) {
-      prText.dataset.adapted = '1';
-      prText.textContent = 'บางทีหลังจากพยายามจัดการเองแล้ว การได้คุยกับใครสักคนก็ช่วยได้';
-    }
-  }
-
-  // Ticket 06: session recognition — show after 3+ pills
-  if (SESSION_OPENED.size >= 3) {
     const rec = document.getElementById('session-recognition');
     if (rec && rec.style.display === 'none') {
       rec.style.display = 'block';
-      requestAnimationFrame(() => { rec.style.opacity = '1'; });
+      requestAnimationFrame(() => requestAnimationFrame(() => { rec.style.opacity = '1'; }));
+      // Slowly fade to 0.4 after 18 seconds — becomes part of the page
+      setTimeout(() => { rec.style.transition = 'opacity 2.5s ease'; rec.style.opacity = '0.4'; }, 18000);
+    }
+  }
+
+  // วันนี้พอแค่นี้ — show after 2+ pills
+  if (SESSION_OPENED.size === 2) {
+    const exit = document.getElementById('exit-line');
+    if (exit) {
+      exit.style.pointerEvents = 'none';
+      // Delay so it appears when they next scroll to the bottom
+      setTimeout(() => { exit.style.opacity = '1'; }, 800);
     }
   }
 
@@ -891,10 +868,14 @@ function closeSitSheet() {
     ov.style.pointerEvents = 'none';
     document.body.style.overflow = '';
     sheet.style.transition = 'transform 0.35s cubic-bezier(0.34,1.05,0.64,1)';
-    // Ticket 04: 300ms silence — then glow slowly settles in (CSS transition handles the fade)
+    // Sheet fades — 80ms later other pills regain opacity; selected pill stays warm last
     setTimeout(() => {
+      document.querySelectorAll('#tier-pills .sit-pill').forEach(p => {
+        p.style.transition = 'opacity 0.3s ease';
+        p.style.opacity = '';
+      });
       _updatePillStates();
-    }, 300);
+    }, 80);
   }, 280);
 }
 
@@ -1158,7 +1139,7 @@ const SIT_DATA_EXTRA = {
   const hero = document.querySelector('.hero');
   let faded = false;
   window.addEventListener('scroll', () => {
-    if (hero.classList.contains('locked')) return; // locked wins forever
+    if (hero.classList.contains('locked')) return;
     const y = window.scrollY;
     if (!faded && y >= 150) {
       hero.classList.add('scrolled');
@@ -1166,6 +1147,18 @@ const SIT_DATA_EXTRA = {
     } else if (faded && y < 10) {
       hero.classList.remove('scrolled');
       faded = false;
+    }
+    // M4 badge fades after scrolling 200px past it
+    const badge = document.querySelector('.m4-badge');
+    if (badge) {
+      const rect = badge.getBoundingClientRect();
+      const pastBy = -rect.bottom;
+      if (pastBy > 200) {
+        badge.style.opacity = '0.5';
+        badge.style.transition = 'opacity 0.6s ease';
+      } else {
+        badge.style.opacity = '';
+      }
     }
   }, { passive: true });
 })();
@@ -1177,7 +1170,7 @@ const SIT_DATA_EXTRA = {
   if (m4Root) {
     const intro = document.createElement('div');
     intro.id = 'm4-intro';
-    intro.style.cssText = 'padding:32px 28px 8px;text-align:center;';
+    intro.style.cssText = 'padding:32px 28px 32px;text-align:center;';
     intro.innerHTML = `
       <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
         หลายคนที่เคยผ่านช่วงนี้มา<br>อยากจะฝากสิ่งเหล่านี้ไว้ให้รุ่นต่อไป
@@ -1231,7 +1224,7 @@ function handleCareOverlay(e) {
   if (e.target === document.getElementById('care-overlay')) closeCareSheet();
 }
 </script>
-  <div style="text-align:center;padding:32px 24px 48px;">
+  <div id="exit-line" style="text-align:center;padding:32px 24px 48px;opacity:0;transition:opacity 1.2s ease;pointer-events:none;">
     <div style="font-size:12px;color:var(--soft);font-family:'Noto Serif Thai',serif;font-weight:300;letter-spacing:0.3px;">วันนี้พอแค่นี้ก็ได้ 🤍</div>
   </div>
 </body>
