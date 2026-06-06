@@ -43,18 +43,18 @@
 
     /* ── SCREEN 1: INTRO / CONSENT ── */
     #screen-intro{justify-content:space-between;}
-    .intro-top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+    .intro-top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
     .info-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--cream-border);background:var(--cream-warm);color:var(--d);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.12s ease,background 0.15s ease;-webkit-tap-highlight-color:transparent;}
     .info-btn:active{transform:scale(0.96);background:#FFF0DC;}
-    .intro-middle{flex:1;display:flex;flex-direction:column;justify-content:center;gap:24px;}
-
-    /* Notebook illustration */
+    /* Notebook illustration — shrunk ~20%, top-biased */
     .notebook-scene{
-      width:100%;max-width:322px;margin:0 auto;
+      width:100%;max-width:255px;margin:0 auto;
       aspect-ratio:4/3;position:relative;
       display:flex;align-items:center;justify-content:center;
     }
     .notebook-svg{width:100%;height:100%;}
+    /* Middle column — no justify:center, let content flow naturally from top */
+    .intro-middle{flex:1;display:flex;flex-direction:column;gap:20px;}
 
     .intro-copy{display:flex;flex-direction:column;gap:8px;}
     .intro-headline{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;line-height:1.55;color:var(--d);}
@@ -70,35 +70,44 @@
     .intro-bottom{display:flex;flex-direction:column;gap:10px;}
 
     /* ── SCREEN 0: ANNOUNCE ── */
-    #screen-announce{justify-content:space-between;background:var(--cream);}
-    .announce-top{display:flex;justify-content:flex-start;align-items:center;gap:6px;}
-    .announce-pin{font-size:18px;opacity:0.55;}
-    .announce-pin-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--soft);}
-    .announce-middle{flex:1;display:flex;flex-direction:column;justify-content:center;gap:0;}
+    #screen-announce{
+      justify-content:flex-start;
+      background:var(--cream);
+      padding-top:32px; /* tight top — illustration rises into header zone */
+    }
 
-    /* Illustration container */
+    /* Illustration — pushes up close to top */
     .announce-illo{
-      width:130px;height:130px;margin:0 auto 20px;
+      width:140px;height:140px;
+      margin:0 auto 0;
       opacity:0;transform:translateY(8px);
-      transition:opacity 0.55s ease,transform 0.55s ease;
+      transition:opacity 0.4s ease,transform 0.4s ease;
+      display:block;
     }
     .announce-illo.visible{opacity:1;transform:translateY(0);}
 
-    /* Title */
+    /* 📌 ประกาศ title — centered anchor below illustration */
     .announce-title{
       font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;
       text-align:center;line-height:1.4;color:var(--d);
+      margin:18px 0 0;
       opacity:0;transform:translateY(6px);
-      transition:opacity 0.5s ease 0.15s,transform 0.5s ease 0.15s;
-      margin-bottom:28px;
+      transition:opacity 0.4s ease 0.08s,transform 0.4s ease 0.08s;
     }
     .announce-title.visible{opacity:1;transform:translateY(0);}
+
+    /* Content area — tight, owned spacing */
+    .announce-content{
+      display:flex;flex-direction:column;
+      margin-top:18px;
+      flex:1;
+    }
 
     /* Content blocks */
     .announce-block{
       display:flex;flex-direction:column;gap:6px;
-      opacity:0;transform:translateY(6px);
-      transition:opacity 0.5s ease,transform 0.5s ease;
+      opacity:0;transform:translateY(5px);
+      transition:opacity 0.4s ease,transform 0.4s ease;
     }
     .announce-block.visible{opacity:1;transform:translateY(0);}
 
@@ -107,8 +116,8 @@
       color:var(--green);
     }
     .announce-block-body{
-      font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:400;
-      line-height:2;color:var(--d);
+      font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:400;
+      line-height:1.85;color:var(--d);
     }
     .announce-block-body .muted{color:var(--soft);}
 
@@ -339,18 +348,17 @@
 <!-- ═══════════════════════════════════════ -->
 <div class="screen active" id="screen-announce">
 
-  <div class="announce-top">
-    <span class="announce-pin">📌</span>
+  <!-- Illustration — high, near top breathing space -->
+  <div class="announce-illo" id="announce-illo">
+    <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_532,w_879,x_328,y_169/a468baf6-7b53-479c-b607-a9c7be68654f_bjengo.png" alt="" style="width:100%;height:100%;object-fit:contain;" loading="eager"/>
   </div>
 
-  <div class="announce-middle">
+  <!-- 📌 ประกาศ — visual anchor -->
+  <div class="announce-title" id="announce-title">📌 ประกาศ</div>
 
-    <!-- Empty chair illustration -->
-    <div class="announce-illo" id="announce-illo">
-      <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_532,w_879,x_328,y_169/a468baf6-7b53-479c-b607-a9c7be68654f_bjengo.png" alt="" style="width:100%;height:100%;object-fit:contain;" loading="eager"/>
-    </div>
+  <!-- Content blocks — tight, one composition -->
+  <div class="announce-content">
 
-    <!-- Block 1: schedule -->
     <div class="announce-block" id="announce-b1">
       <div class="announce-block-label">เวลาที่มักจะนัดกัน</div>
       <div class="announce-block-body">
@@ -362,7 +370,6 @@
 
     <div class="announce-divider" id="announce-div"></div>
 
-    <!-- Block 2: confidentiality -->
     <div class="announce-block" id="announce-b2">
       <div class="announce-block-label">เรื่องที่คุยกัน</div>
       <div class="announce-block-body">
@@ -378,7 +385,7 @@
 
   </div>
 
-  <div class="intro-bottom">
+  <div class="intro-bottom" style="margin-top:auto;padding-top:20px;">
     <button class="btn-green" onclick="goFromAnnounce()">เข้าใจแล้ว 🤍</button>
   </div>
 
@@ -413,7 +420,7 @@
       </div>
     </div>
 
-    <div class="music-strip" onclick="toggleMusic()" role="button" aria-label="เปิด/ปิดเพลง">
+    <div class="music-strip" onclick="toggleMusic()" role="button" aria-label="เปิด/ปิดเพลง" style="margin-top:-12px;">
       <div class="music-jaidee">
         <div class="music-note-wrap" id="music-note-wrap-intro">
           <span class="music-note music-note-a" id="music-note-a-intro">♪</span>
@@ -937,12 +944,12 @@ function _staggerReassurances() {
 }
 
 function _staggerAnnounce() {
-  const ids = ['announce-illo','announce-b1','announce-div','announce-b2'];
+  const ids = ['announce-illo','announce-title','announce-b1','announce-div','announce-b2'];
   ids.forEach((id, i) => {
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.remove('visible');
-    setTimeout(() => el.classList.add('visible'), 120 + i * 200);
+    setTimeout(() => el.classList.add('visible'), 80 + i * 160);
   });
 }
 
