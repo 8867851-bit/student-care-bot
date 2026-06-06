@@ -27,10 +27,10 @@
     .hero.locked .hero-sub{opacity:0;pointer-events:none;}
     .hero.locked .hero-eyebrow{opacity:0.2;}
     .hero.locked .hero-name{opacity:0.35;}
-    /* Pill stages — one direction only: quieter each time */
-    .hero.pill1 .hero-name,.hero.pill1 .hero-eyebrow,.hero.pill1 .hero-sub{opacity:0.96;}
-    .hero.pill2 .hero-name,.hero.pill2 .hero-eyebrow,.hero.pill2 .hero-sub{opacity:0.92;}
-    .hero.pill3 .hero-name,.hero.pill3 .hero-eyebrow,.hero.pill3 .hero-sub{opacity:0.88;}
+    /* Two states: PRESENTING → LISTENING */
+    .hero.listening .hero-eyebrow{opacity:0.15;transition:opacity 0.5s ease;}
+    .hero.listening .hero-name{opacity:0.25;transition:opacity 0.5s ease;}
+    .hero.listening .hero-sub{opacity:0;pointer-events:none;transition:opacity 0.35s ease;}
     /* Stage deep: watermark */
     .hero.locked.deep .hero-name{opacity:0.2;}
     .hero.locked.deep .hero-eyebrow{opacity:0.12;}
@@ -252,34 +252,63 @@
 
     
 
+    /* Bookmark states — not "I completed this", but "someone kept my place here" */
     .sit-pill.pressing{
       transform:scale(0.96);
-      border-color:var(--gold-border);
-      box-shadow:0 0 0 3px rgba(232,150,12,0.18);
+      border-color:#E6C77A;
+      box-shadow:0 0 0 3px rgba(87,143,98,0.12);
       transition:transform 0.08s ease,border-color 0.08s,box-shadow 0.08s;
     }
     .sit-pill.touched{
-      border-color:rgba(232,150,12,0.55);
-      box-shadow:0 0 0 2px rgba(232,150,12,0.12), 0 2px 10px rgba(232,150,12,0.14);
-      background:rgba(255,243,220,0.55);
+      /* A gentle hand was placed here — pale green-cream, muted gold border */
+      background:#F7FBF5;
+      border-color:rgba(230,199,122,0.55);
+      box-shadow:0 0 0 2px rgba(87,143,98,0.08), 0 2px 10px rgba(87,143,98,0.06);
       transition:border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
     }
     .sit-pill.touched-last{
-      border-color:rgba(232,150,12,0.75);
-      box-shadow:0 0 0 2.5px rgba(232,150,12,0.22), 0 3px 14px rgba(232,150,12,0.2);
-      background:rgba(255,248,238,0.75);
+      /* The bookmark — most recent, slightly warmer glow */
+      background:#F4FAF2;
+      border-color:#E6C77A;
+      box-shadow:0 0 0 3px rgba(87,143,98,0.10), 0 2px 12px rgba(87,143,98,0.08);
       transition:border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
     }
-    .sit-pill{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:11px 18px;border-radius:99px;background:var(--card);border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;transition:transform 0.15s,border-color 0.15s;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+    .sit-pill{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:11px 18px;border-radius:99px;background:#FDFCFA;border:1.5px solid #E8E3D8;cursor:pointer;text-decoration:none;transition:transform 0.12s ease,box-shadow 0.12s ease;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);}
 
-    .sit-pill:active{transform:scale(0.96);}
+    .sit-pill:active{transform:translateY(2px) scale(0.97);box-shadow:0 1px 3px rgba(0,0,0,0.08);}
     .sit-pill.primary{background:var(--dark);border-color:var(--dark);}
     .sit-emoji{font-size:16px;line-height:1;}
     .sit-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:500;color:var(--dark);}
     .sit-pill.primary .sit-label{color:var(--cream);}
+
+    /* ── Pill preview strip — teaches the interaction model passively ── */
+    .pill-preview{
+      padding:14px 20px 0;
+      min-height:48px;
+    }
+    .pill-preview-inner{
+      display:flex;align-items:flex-start;gap:10px;
+      opacity:0;transform:translateY(4px);
+      transition:opacity 0.45s ease,transform 0.45s ease;
+    }
+    .pill-preview-inner.visible{opacity:1;transform:translateY(0);}
+    .pill-preview-line{
+      width:2px;flex-shrink:0;margin-top:3px;
+      background:var(--cream-border);border-radius:2px;align-self:stretch;
+      min-height:28px;
+    }
+    .pill-preview-text{
+      font-family:'Noto Serif Thai',serif;
+      font-size:12px;font-weight:300;
+      color:var(--soft);line-height:1.75;letter-spacing:0.2px;
+    }
+    .pill-preview-action{
+      display:block;margin-top:5px;
+      font-family:'Mitr',sans-serif;font-size:10px;font-weight:400;
+      color:var(--soft);opacity:0.6;letter-spacing:0.5px;
+    }
     .sit-more{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:10px 14px;border-radius:50px;background:none;border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;white-space:nowrap;}
     .sit-more-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--soft);}
-    .sit-divider{height:1px;background:var(--cream-border);margin:18px 16px 0;}
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -300,10 +329,19 @@
 
   <!-- SITUATION SHEET -->
   <div id="sit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0);z-index:400;align-items:flex-end;justify-content:center;transition:background 0.3s;pointer-events:none;" onclick="handleSitOverlay(event)">
-    <div id="sit-sheet" style="background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.05,0.64,1);padding-bottom:env(safe-area-inset-bottom,16px);max-height:85vh;overflow-y:auto;position:relative;">
-      <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:14px auto 0;flex-shrink:0;"></div>
-      <button onclick="closeSitSheet()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:16px;color:var(--faint);cursor:pointer;padding:6px;line-height:1;z-index:1;">✕</button>
-      <div id="sit-sheet-content" style="padding:16px 20px 20px;"></div>
+    <div id="sit-sheet" style="background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);padding-bottom:env(safe-area-inset-bottom,16px);max-height:92vh;overflow-y:auto;position:relative;display:flex;flex-direction:column;">
+      <!-- Sheet header: handle + close + pill nav -->
+      <div id="sit-sheet-header" style="flex-shrink:0;position:sticky;top:0;background:var(--cream);z-index:2;padding:14px 16px 0;">
+        <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:0 auto 10px;"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);" id="sit-sheet-label">วันนี้เป็นยังไงบ้าง?</div>
+          <button onclick="closeSitSheet()" style="background:none;border:none;font-size:15px;color:var(--soft);cursor:pointer;padding:4px 6px;line-height:1;">✕</button>
+        </div>
+        <!-- Pill navigation row inside the sheet -->
+        <div id="sit-nav-pills" style="display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:12px;-webkit-mask-image:linear-gradient(to right,black 0%,black 85%,transparent 100%);mask-image:linear-gradient(to right,black 0%,black 85%,transparent 100%);"></div>
+        <div style="height:1px;background:var(--cream-border);margin:0 -16px;"></div>
+      </div>
+      <div id="sit-sheet-content" style="padding:16px 20px 24px;flex:1;"></div>
     </div>
   </div>
 
@@ -388,22 +426,50 @@
     <div class="situation-scroll" id="tier-pills">
       <!-- rendered by JS -->
     </div>
+    <div class="pill-preview" id="pill-preview">
+      <div class="pill-preview-inner" id="pill-preview-inner">
+        <div class="pill-preview-line"></div>
+        <div>
+          <div class="pill-preview-text" id="pill-preview-text"></div>
+          <span class="pill-preview-action" id="pill-preview-action"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALL SITUATIONS SHEET -->
+  <div id="allsit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0);z-index:450;align-items:flex-end;justify-content:center;transition:background 0.3s;pointer-events:none;" onclick="handleAllSitOverlay(event)">
+    <div id="allsit-sheet" style="background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);padding-bottom:env(safe-area-inset-bottom,24px);height:calc(100vh - 28px);overflow-y:auto;position:relative;">
+      <div style="position:sticky;top:0;background:var(--cream);z-index:2;padding:14px 20px 10px;border-bottom:1px solid var(--cream-border);">
+        <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:0 auto 12px;"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--soft);">เรื่องที่หลายคนเคยเจอ</div>
+          <button onclick="closeAllSituationsSheet()" style="background:none;border:none;font-size:16px;color:var(--soft);cursor:pointer;padding:4px 6px;line-height:1;">✕</button>
+        </div>
+      </div>
+      <div id="allsit-content" style="padding:16px 16px 32px;"></div>
+    </div>
+  </div>
+
+  <!-- Permission sentence + library entry — visible from load, brightens on first interaction -->
+  <div id="session-recognition" style="opacity:0.18;padding:36px 28px 0;text-align:center;transition:opacity 0.9s ease;">
+    <div id="permission-sentence" style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
+      ไม่ต้องรีบเข้าใจทุกอย่างก็ได้ 🤍
+    </div>
+    <div id="library-entry" style="margin-top:10px;opacity:0;transition:opacity 0.6s ease 0.4s;">
+      <button onclick="openAllSituationsSheet()" style="background:none;border:none;padding:4px 0;cursor:pointer;font-family:'Noto Serif Thai',serif;">
+        <div style="font-size:11px;font-weight:300;color:var(--soft);opacity:0.75;letter-spacing:0.2px;">เผื่อว่าจะมีเรื่องที่ใกล้กับเรามากกว่านี้ →</div>
+      </button>
+    </div>
   </div>
 
   <div id="m4-section-root"></div>
   <div id="m5-section-root"></div>
-  <div id="other-section-root"></div>
   <div class="worlds-wrap" id="worlds-wrap"></div>
 
   <!-- ── Peer Support — gentle ending ── -->
   <div class="peer-divider" style="height:1px;background:var(--cream-border);margin:48px 20px 0;"></div>
 
-  <!-- Ticket 06 + Ticket 03: session recognition — sits just above walk-in text -->
-  <div id="session-recognition" style="display:none;opacity:0;padding:36px 28px 0;text-align:center;transition:opacity 0.6s ease;">
-    <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
-      บางทีการค่อยๆ ทำความเข้าใจ<br>ก็เป็นจุดเริ่มต้นที่ดีแล้ว 🤍
-    </div>
-  </div>
 
   <div style="height:80px;"></div>
 
@@ -495,8 +561,7 @@ function renderYearRow(containerId, label, badgeColor, imgList, baseDelay) {
     <div style="display:inline-flex;align-items:center;gap:6px;background:${badgeColor}15;border:1px solid ${badgeColor}40;border-radius:20px;padding:5px 12px 5px 10px;">
       <div style="width:6px;height:6px;background:${badgeColor};border-radius:50%;flex-shrink:0;"></div>
       <div style="font-size:11px;font-weight:500;color:${badgeColor};letter-spacing:0.5px;white-space:nowrap;">${badgeLabel}</div>
-    </div>
-    <div style="flex:1;height:1px;background:var(--cream-border);"></div>`;
+    </div>`;
   // Attach bridge sentence directly under badge for M4
   if (label === "ม.4") {
     const bridge = document.createElement('div');
@@ -538,24 +603,10 @@ function renderAll() {
   d = renderYearRow("m4-section-root", "ม.4", "#2E5FA3", M4_IMGS, d);
   document.getElementById("m5-section-root").style.marginTop = "16px";   /* +16 */
   d = renderYearRow("m5-section-root", "ม.5", "#E8960C", M5_IMGS, d + 10);
-  d = renderYearRow("other-section-root", "อื่นๆ", "#3A7D44", OTHER_IMGS, d + 10);
   /* peer support divider gets +32 via peer-divider margin — set after render */
   const pd = document.querySelector('.peer-divider');
   if (pd) pd.style.marginTop = '80px'; /* 48 base + 32 */
 
-  // Append teal button to อื่นๆ row — slightly wider, same height
-  const otherRoot = document.getElementById('other-section-root');
-  const otherRow  = otherRoot.querySelector('[style*="overflow-x"]');
-  if (otherRow) {
-    const tealBtn = document.createElement('div');
-    tealBtn.style.cssText = 'flex-shrink:0;width:160px;height:110px;border-radius:16px;cursor:pointer;background:linear-gradient(145deg,#0D4A44,#0A3D38);border:1px solid rgba(13,148,136,0.3);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:14px;box-sizing:border-box;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;';
-    tealBtn.onclick = openCareSheet;
-    tealBtn.innerHTML = "<div style='font-family:\"Noto Serif Thai\",serif;font-size:13px;font-weight:600;color:#FDFBF7;line-height:1.35;'>แบบทดสอบ<br>ค้นพบตัวเอง</div><div style='font-size:11px;font-weight:500;color:rgba(13,148,136,0.7);margin-top:5px;letter-spacing:0.5px;'>→</div>";
-    tealBtn.addEventListener('touchstart', () => { tealBtn.style.transform='scale(0.96)'; tealBtn.style.boxShadow='0 0 0 3px rgba(13,148,136,0.2)'; }, {passive:true});
-    tealBtn.addEventListener('touchend', () => { tealBtn.style.transform=''; tealBtn.style.boxShadow=''; }, {passive:true});
-    otherRow.appendChild(tealBtn);
-    setTimeout(() => { tealBtn.style.opacity='1'; tealBtn.style.transform='translateY(0)'; }, d + 10);
-  }
 }
 
 // ═══ INIT ════════════════════════════════════════════════════
@@ -774,6 +825,107 @@ function _updatePillStates() {
   });
 }
 
+// ── Notebook: render current tier's pills into the sheet nav bar ──
+function _renderSheetNavPills(activeKey) {
+  const nav = document.getElementById('sit-nav-pills');
+  if (!nav) return;
+  const tier = TIERS[_currentTier];
+  nav.innerHTML = tier.pills.map(p => {
+    const isActive = p.key === activeKey;
+    const isTouched = SESSION_OPENED.has(p.key) && !isActive;
+    return `<button
+      onclick="_sheetNavPress('${p.key}')"
+      style="flex-shrink:0;display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:99px;
+             background:${isActive ? '#F7FBF5' : '#FDFCFA'};
+             border:1.5px solid ${isActive ? '#E6C77A' : isTouched ? 'rgba(230,199,122,0.5)' : '#E8E3D8'};
+             box-shadow:${isActive ? '0 0 0 3px rgba(87,143,98,0.10)' : 'none'};
+             cursor:pointer;white-space:nowrap;font-family:Mitr,sans-serif;
+             transition:background 0.25s,border-color 0.25s,box-shadow 0.25s;">
+      <span style="font-size:14px;line-height:1;">${p.emoji}</span>
+      <span style="font-size:11px;font-weight:${isActive ? '500' : '400'};color:var(--dark);">${p.label}</span>
+    </button>`;
+  }).join('');
+  // Scroll active pill into view
+  setTimeout(() => {
+    const active = nav.querySelector('button[style*="#F7FBF5"]');
+    if (active) active.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+  }, 60);
+}
+
+// Tap a pill inside the open sheet — crossfade content, stay open
+function _sheetNavPress(key) {
+  if (key === _lastOpenedKey) return; // already showing
+  SESSION_OPENED.add(key);
+  _lastOpenedKey = key;
+  _updatePillStates();
+  _renderSheetNavPills(key);
+  _loadSheetContent(key, true); // true = crossfade
+}
+
+// Build and inject sit-sheet content; crossfade=true skips sheet open animation
+function _loadSheetContent(key, crossfade) {
+  const d = SIT_DATA[key];
+  if (!d) return;
+  const contentEl = document.getElementById('sit-sheet-content');
+  if (!contentEl) return;
+
+  const toolsHtml = d.tools.map(t => `
+    <a href="${t.href}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary ? 'var(--dark)' : 'var(--cream-warm)'};border:1px solid ${t.primary ? 'var(--dark)' : 'var(--cream-border)'};margin-bottom:8px;">
+      <span style="font-size:18px;flex-shrink:0;width:28px;text-align:center;">${t.icon}</span>
+      <span style="flex:1;">
+        <span style="display:block;font-size:13px;font-weight:500;color:${t.primary ? '#FDFBF7' : 'var(--dark)'};">${t.name}</span>
+        <span style="display:block;font-size:11px;font-weight:300;color:${t.primary ? 'rgba(253,251,247,0.55)' : 'var(--soft)'};">${t.desc}</span>
+      </span>
+      <span style="font-size:12px;color:${t.primary ? 'rgba(255,255,255,0.3)' : 'var(--faint)'};">→</span>
+    </a>`).join('');
+
+  const newHtml = `
+    <div class="_sl" style="opacity:0;transform:translateY(${crossfade ? '4px' : '6px'});transition:opacity 0.22s ease,transform 0.22s ease;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-size:28px;">${d.emoji}</span>
+        <span style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);">${d.title}</span>
+      </div>
+      <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.75;margin-bottom:16px;padding:12px 14px;background:var(--cream-warm);border-radius:10px;">${d.note}</div>
+    </div>
+    <div class="_sl" style="opacity:0;transform:translateY(${crossfade ? '4px' : '6px'});transition:opacity 0.22s ease,transform 0.22s ease;transition-delay:0.12s;">
+      ${toolsHtml}
+    </div>
+    <div class="_sl" style="opacity:0;transform:translateY(${crossfade ? '4px' : '6px'});transition:opacity 0.22s ease,transform 0.22s ease;transition-delay:0.24s;">
+      <div style="border-top:1px solid var(--cream-border);padding-top:10px;margin-top:6px;font-size:12px;color:var(--soft);line-height:1.6;">
+        ${d.talk} <a href="talk_who.html" style="color:var(--mid);font-weight:500;text-decoration:underline;text-underline-offset:3px;">คุยกับใครสักคน →</a>
+      </div>
+      <button onclick="closeSitSheet();setTimeout(openAllSituationsSheet,320);" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;margin-top:10px;background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:12px;width:100%;cursor:pointer;font-family:'Mitr',sans-serif;">
+        <span style="font-size:12px;font-weight:400;color:var(--soft);">ดูเรื่องอื่นๆ ทั้งหมด</span>
+        <span style="font-size:12px;opacity:0.45;">🌿</span>
+      </button>
+    </div>`;
+
+  if (crossfade) {
+    // Fade out old content, swap, fade in
+    contentEl.style.transition = 'opacity 0.15s ease';
+    contentEl.style.opacity = '0';
+    setTimeout(() => {
+      contentEl.innerHTML = newHtml;
+      contentEl.style.opacity = '1';
+      contentEl.scrollTop = 0;
+      requestAnimationFrame(() => {
+        contentEl.querySelectorAll('._sl').forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      });
+    }, 150);
+  } else {
+    contentEl.innerHTML = newHtml;
+    requestAnimationFrame(() => {
+      contentEl.querySelectorAll('._sl').forEach(el => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    });
+  }
+}
+
 function openSitSheet(key) {
   const d = SIT_DATA[key];
   if (!d) return;
@@ -784,32 +936,26 @@ function openSitSheet(key) {
   SESSION_OPENED.add(key);
   _lastOpenedKey = key;
 
-  // Stage 1: first pill
+  // First interaction — hero becomes a watermark immediately
   if (isFirstEver) {
     const hero = document.querySelector('.hero');
-    if (hero) { hero.classList.remove('scrolled'); hero.classList.add('locked','pill1'); }
-  }
-  // Stage 2: second pill
-  if (SESSION_OPENED.size === 2) {
-    const hero = document.querySelector('.hero');
-    if (hero) { hero.classList.remove('pill1'); hero.classList.add('pill2'); }
-  }
-  // Stage 3: third pill
-  if (SESSION_OPENED.size === 3) {
-    const hero = document.querySelector('.hero');
-    if (hero) { hero.classList.remove('pill2'); hero.classList.add('pill3'); }
+    if (hero) { hero.classList.remove('scrolled'); hero.classList.add('locked','listening'); }
+    // Page warms slightly
+    document.body.style.transition = 'background 1.2s ease';
+    document.body.style.background = '#FDF9F4';
+    // Label softens
+    const lbl = document.getElementById('tier-label');
+    if (lbl) { setTimeout(() => { lbl.style.transition='opacity 0.4s ease'; lbl.style.opacity='0'; setTimeout(()=>{ lbl.textContent='ลองค่อย ๆ ดูก็ได้'; lbl.style.opacity='1'; },400); }, 600); }
   }
 
-  // Stage 3: third unique pill — page quiets + recognition appears
+  // Stage 3: third unique pill — page quiets
   if (SESSION_OPENED.size === 3) {
     document.body.classList.add('quieted');
-    const rec = document.getElementById('session-recognition');
-    if (rec && rec.style.display === 'none') {
-      rec.style.display = 'block';
-      requestAnimationFrame(() => requestAnimationFrame(() => { rec.style.opacity = '1'; }));
-      // Slowly fade to 0.4 after 18 seconds — becomes part of the page
-      setTimeout(() => { rec.style.transition = 'opacity 2.5s ease'; rec.style.opacity = '0.4'; }, 18000);
-    }
+  }
+
+  // First meaningful interaction — permission sentence brightens after 2.5s
+  if (isFirstEver) {
+    _triggerPermissionSentence();
   }
 
   // วันนี้พอแค่นี้ — show after 2+ pills
@@ -822,46 +968,9 @@ function openSitSheet(key) {
     }
   }
 
-  // Build content
-  const toolsHtml = d.tools.map(t => `
-    <a href="${t.href}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary ? 'var(--dark)' : 'var(--cream-warm)'};border:1px solid ${t.primary ? 'var(--dark)' : 'var(--cream-border)'};margin-bottom:8px;">
-      <span style="font-size:18px;flex-shrink:0;width:28px;text-align:center;">${t.icon}</span>
-      <span style="flex:1;">
-        <span style="display:block;font-size:13px;font-weight:500;color:${t.primary ? '#FDFBF7' : 'var(--dark)'};">${t.name}</span>
-        <span style="display:block;font-size:11px;font-weight:300;color:${t.primary ? 'rgba(253,251,247,0.55)' : 'var(--soft)'};">${t.desc}</span>
-      </span>
-      <span style="font-size:12px;color:${t.primary ? 'rgba(255,255,255,0.3)' : 'var(--faint)'};">→</span>
-    </a>`).join('');
-
-  document.getElementById('sit-sheet-content').innerHTML = `
-    <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;">
-      <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:8px;">วันนี้เป็นยังไงบ้าง?</div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <span style="font-size:28px;">${d.emoji}</span>
-        <span style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);">${d.title}</span>
-      </div>
-      <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.75;margin-bottom:16px;padding:12px 14px;background:var(--cream-warm);border-radius:10px;">${d.note}</div>
-    </div>
-    <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;transition-delay:0.15s;">
-      ${toolsHtml}
-    </div>
-    <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;transition-delay:0.3s;">
-      <div style="border-top:1px solid var(--cream-border);padding-top:10px;margin-top:6px;font-size:12px;color:var(--soft);line-height:1.6;">
-        ${d.talk} <a href="talk_who.html" style="color:var(--mid);font-weight:500;text-decoration:underline;text-underline-offset:3px;">คุยกับใครสักคน →</a>
-      </div>
-      <a href="situations.html" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;margin-top:10px;background:var(--green-soft);border:1px solid var(--green-border);border-radius:12px;text-decoration:none;">
-        <span style="font-size:12px;font-weight:400;color:var(--green);">ยังไม่ใช่สิ่งที่กำลังหาอยู่? → ดูสถานการณ์อื่น</span>
-        <span style="font-size:12px;color:var(--green);opacity:0.6;">🌿</span>
-      </a>
-    </div>`;
-
-  // Stagger: trigger each section sequentially via rAF
-  requestAnimationFrame(() => {
-    document.querySelectorAll('._sl').forEach(el => {
-      el.style.opacity = '1';
-      el.style.transform = 'translateY(0)';
-    });
-  });
+  // Build content via shared helper (no crossfade on first open)
+  _renderSheetNavPills(key);
+  _loadSheetContent(key, false);
 
   const ov = document.getElementById('sit-overlay');
   ov.style.display = 'flex';
@@ -883,7 +992,7 @@ function closeSitSheet() {
     ov.style.display = 'none';
     ov.style.pointerEvents = 'none';
     document.body.style.overflow = '';
-    sheet.style.transition = 'transform 0.35s cubic-bezier(0.34,1.05,0.64,1)';
+    sheet.style.transition = 'transform 0.42s cubic-bezier(0.22,1,0.36,1)';
     // Sheet fades — 80ms later other pills regain opacity; selected pill stays warm last
     setTimeout(() => {
       document.querySelectorAll('#tier-pills .sit-pill').forEach(p => {
@@ -1155,13 +1264,125 @@ const SIT_DATA_EXTRA = {
   },
 };
 
+// ═══ PILL PREVIEW STRIP ══════════════════════════════════════
+// One quiet line that shows what's inside the centered pill.
+// Teaches the interaction model without requiring a tap.
+const PILL_PREVIEWS = {
+  sleep:       { text: 'บางทีที่รู้สึกไม่ไหว อาจเป็นแค่ร่างกายยังพักไม่พอ', action: '🌙 Sleep Reset · หายใจผ่อนคลาย' },
+  burnout:     { text: 'หมดไฟไม่ใช่ความอ่อนแอ — มันคือสัญญาณที่ต้องรับฟัง', action: '🌱 เช็กเรื่องพื้นฐาน · เคลื่อนไหวก่อนเลย' },
+  foggy:       { text: 'สมองที่ล้าไม่ต่างจากกล้ามเนื้อที่เหนื่อย บังคับต่อไม่ได้ผล', action: '🌬️ รีเซ็ตสมาธิ 2 นาที' },
+  unsure:      { text: 'ไม่ต้องรีบหาคำตอบ แค่รู้ว่ามีบางอย่างอยู่ก็พอ', action: '🪞 สำรวจข้างใน' },
+  friend:      { text: 'การเป็นห่วงเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว', action: '📖 คู่มือ: เป็นห่วงเพื่อน' },
+  exam:        { text: 'ความกังวลก่อนสอบเป็นเรื่องปกติ แต่ถ้ามันมากเกินจนนอนไม่หลับ...', action: '🌬️ ลด cortisol ก่อนสอบ · 🌙 Sleep Reset' },
+  study_fog:   { text: 'บางทีปัญหาไม่ใช่ที่การอ่าน แต่ที่สภาพข้างใน', action: '🌬️ รีเซ็ตก่อน · 🏃 ขยับตัว 5 นาที' },
+  overwhelm:   { text: 'ความรู้สึก "ล้น" มักทำให้ทำอะไรไม่ได้เลย — แค่ระบายก็ช่วยได้', action: '📓 Brain Dump' },
+  pressure:    { text: 'การกดดันตัวเองเป็นสัญญาณว่าคุณใส่ใจ แต่มากเกินพอดีก็สึกหรอ', action: '🪞 ความกดดันนี้มาจากไหน' },
+  not_enough:  { text: 'ความรู้สึกนี้พบได้บ่อยในคนที่เก่งจริงๆ แต่ยังไม่รู้ตัว', action: '🪞 สำรวจข้างใน · 🧩 ค้นพบจุดแข็ง' },
+  behind:      { text: 'เราเห็นแค่ highlight ของคนอื่น ไม่เห็น struggle ข้างหลังของพวกเขา', action: '🪞 สำรวจข้างใน' },
+  social:      { text: 'การหากลุ่มเพื่อนใหม่ใช้เวลา — ไม่ได้แปลว่ามีอะไรผิดปกติกับคุณ', action: '💛 คุยกับเพื่อนที่ปรึกษา' },
+  no_place:    { text: 'ความรู้สึกนี้มักเกิดในช่วงเปลี่ยนผ่าน คุณไม่ได้อยู่คนเดียว', action: '🪞 สำรวจข้างใน · 💛 มีคนที่พร้อมรับฟัง' },
+  fight:       { text: 'ความขัดแย้งเป็นส่วนของมิตรภาพ แต่มันก็เจ็บปวดได้มากเหมือนกัน', action: '📖 คู่มือ: จะพูดยังไงดี' },
+  abandoned:   { text: 'ความเจ็บปวดจากการถูกทิ้งเป็นของจริงและสำคัญมาก', action: '🪞 ให้พื้นที่กับความรู้สึกนี้' },
+  crush:       { text: 'ความรู้สึกชอบใครก็ทำให้วุ่นวายและไม่สบายใจได้เหมือนกัน', action: '🪞 สำรวจข้างใน · 📓 เขียนระบาย' },
+  heartbreak:  { text: 'สมองเราประมวลผลความอกหักคล้ายความเจ็บปวดทางกาย — ให้เวลาตัวเอง', action: '🪞 ให้พื้นที่กับมัน · 🌬️ ผ่อนคลาย' },
+  lonely:      { text: 'ความเหงาไม่ได้แปลว่าคุณอยู่คนเดียวจริงๆ เสมอไป', action: '💛 คุยกับเพื่อนที่ปรึกษา' },
+  homesick:    { text: 'คิดถึงบ้านไม่ใช่ความอ่อนแอ — มันคือรักที่มีอยู่', action: '📓 เขียนระบาย' },
+  family:      { text: 'ความสัมพันธ์ในครอบครัวซับซ้อนได้มาก และเจ็บปวดในแบบที่บอกคนอื่นยาก', action: '💛 มีคนที่พร้อมรับฟัง' },
+  misunderstood:{ text: 'รู้สึกว่าบ้านไม่เข้าใจ — ความรู้สึกนี้พบบ่อยในช่วงนี้ของชีวิต', action: '🪞 สำรวจข้างใน' },
+  need_space:  { text: 'ต้องการพื้นที่เป็นเรื่องปกติมาก ไม่ใช่เรื่องผิด', action: '💛 คุยกับเพื่อนที่ปรึกษา' },
+  no_appetite: { text: 'ร่างกายบอกอะไรบางอย่างเมื่อเราไม่อยากกิน', action: '🌱 เช็กเรื่องพื้นฐาน' },
+  phone:       { text: 'เล่นมือถือจนดึกมักเป็นวิธีหนีจากความรู้สึกที่ไม่อยากเผชิญ', action: '🌙 Sleep Reset' },
+  no_sun:      { text: 'แสงแดดและการขยับตัวเปลี่ยนอารมณ์ได้จริงๆ', action: '🏃 เคลื่อนไหวก่อนเลย' },
+  tired:       { text: 'เหนื่อยตลอดเวลาแม้พักแล้ว — ร่างกายกำลังบอกอะไรบางอย่าง', action: '🌱 เช็กเรื่องพื้นฐาน' },
+  no_energy:   { text: 'ไม่อยากลุกจากเตียง — บางทีนั่นคือร่างกายที่ต้องการความเห็นใจ ไม่ใช่แรงผลักดัน', action: '🌱 เช็กเรื่องพื้นฐาน' },
+  self_know:   { text: 'อยากรู้จักตัวเองมากขึ้น — นั่นคือจุดเริ่มต้นที่ดีมากแล้ว', action: '🪞 สำรวจข้างใน · 🧩 ค้นพบตัวเอง' },
+  who_am_i:   { text: 'คำถาม "ฉันเป็นใคร" ไม่มีคำตอบเดียว — แต่การถามคือการเติบโต', action: '🧩 ค้นพบตัวเอง' },
+  grow:        { text: 'อยากเปลี่ยนแปลงตัวเอง — ความอยากเปลี่ยนคือสัญญาณที่ดีแล้ว', action: '🌱 เช็กเรื่องพื้นฐาน' },
+  changed:     { text: 'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้ไม่คุ้นเคยตัวเอง...', action: '🪞 สำรวจสิ่งที่เปลี่ยนไป' },
+  lost:        { text: 'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว', action: '🪞 ลองสำรวจข้างในก่อน' },
+};
+
+// Which pill is visually centered in the scroll row
+function _getCenteredPillKey() {
+  const scroll = document.getElementById('tier-pills');
+  if (!scroll) return null;
+  const pills = scroll.querySelectorAll('.sit-pill[data-key], .sit-pill[onclick]');
+  if (!pills.length) return null;
+  const scrollCenter = scroll.getBoundingClientRect().left + scroll.clientWidth / 2;
+  let closest = null, minDist = Infinity;
+  pills.forEach(p => {
+    const rect = p.getBoundingClientRect();
+    const pillCenter = rect.left + rect.width / 2;
+    const dist = Math.abs(pillCenter - scrollCenter);
+    if (dist < minDist) { minDist = dist; closest = p; }
+  });
+  if (!closest) return null;
+  // Extract key from onclick attr
+  const oc = closest.getAttribute('onclick') || '';
+  const m = oc.match(/'([^']+)'\)/);
+  return m ? m[1] : null;
+}
+
+let _previewKey = null;
+let _previewTimer = null;
+
+function _updatePillPreview(key) {
+  if (key === _previewKey) return;
+  _previewKey = key;
+  const inner = document.getElementById('pill-preview-inner');
+  const textEl = document.getElementById('pill-preview-text');
+  const actionEl = document.getElementById('pill-preview-action');
+  if (!inner || !textEl || !actionEl) return;
+  const data = PILL_PREVIEWS[key];
+  if (!data) { inner.classList.remove('visible'); return; }
+  // Fade out, swap, fade in
+  inner.classList.remove('visible');
+  setTimeout(() => {
+    textEl.textContent = data.text;
+    actionEl.textContent = data.action;
+    inner.classList.add('visible');
+  }, 180);
+}
+
+function _initPillPreview() {
+  // Show first pill's preview immediately
+  const firstPill = document.querySelector('#tier-pills .sit-pill');
+  if (firstPill) {
+    const oc = firstPill.getAttribute('onclick') || '';
+    const m = oc.match(/'([^']+)'\)/);
+    if (m) { setTimeout(() => _updatePillPreview(m[1]), 300); }
+  }
+  // Update on scroll
+  const scroll = document.getElementById('tier-pills');
+  if (scroll) {
+    scroll.addEventListener('scroll', () => {
+      clearTimeout(_previewTimer);
+      _previewTimer = setTimeout(() => {
+        _updatePillPreview(_getCenteredPillKey());
+      }, 80);
+    }, { passive: true });
+  }
+}
+setTimeout(_initPillPreview, 400);
+
 // ═══ EDIT 1: HERO FADE ON SCROLL ══════════════════════════════
 (function() {
   const hero = document.querySelector('.hero');
   let faded = false;
+  let listenTriggered = false;
   window.addEventListener('scroll', () => {
-    if (hero.classList.contains('locked')) return;
     const y = window.scrollY;
+    // Scroll > 80 counts as first interaction — same as pressing a pill
+    if (!listenTriggered && y > 80 && !hero.classList.contains('listening')) {
+      listenTriggered = true;
+      hero.classList.remove('scrolled');
+      hero.classList.add('locked','listening');
+      document.body.style.transition = 'background 1.2s ease';
+      document.body.style.background = '#FDF9F4';
+      // Deep scroll = first meaningful interaction too
+      if (SESSION_OPENED.size === 0) _triggerPermissionSentence();
+    }
+    if (hero.classList.contains('locked')) return;
     if (!faded && y >= 150) {
       hero.classList.add('scrolled');
       faded = true;
@@ -1205,11 +1426,49 @@ const SIT_DATA_EXTRA = {
   }
 })();
 
+// ═══ PERMISSION SENTENCE ════════════════════════════════════
+// Triggered by first meaningful interaction (pill or deep scroll).
+// The sentence already exists in DOM at 0.18 opacity — this brightens it.
+let _permissionTriggered = false;
+function _triggerPermissionSentence() {
+  if (_permissionTriggered) return;
+  _permissionTriggered = true;
+  setTimeout(() => {
+    const rec = document.getElementById('session-recognition');
+    const lib = document.getElementById('library-entry');
+    if (rec) { rec.style.transition = 'opacity 1.2s ease'; rec.style.opacity = '1'; }
+    // Library entry fades in 0.4s after sentence (via CSS transition-delay)
+    if (lib) lib.style.opacity = '1';
+  }, 2500);
+}
+
 // Merge into SIT_DATA
 Object.assign(SIT_DATA, SIT_DATA_EXTRA);
 
 // Render first tier on load
 renderTier(0);
+
+// ── Scroll sync: pills ↔ M4 shelf ────────────────────────────────────────
+(function() {
+  let _syncing = false;
+  function syncScroll(source, target, ratio) {
+    if (_syncing) return;
+    _syncing = true;
+    const pct = source.scrollLeft / (source.scrollWidth - source.clientWidth || 1);
+    target.scrollLeft = pct * (target.scrollWidth - target.clientWidth) * ratio;
+    requestAnimationFrame(() => { _syncing = false; });
+  }
+  function attachSync() {
+    const pills = document.getElementById('tier-pills');
+    // M4 shelf row — first overflow row inside m4-section-root
+    const m4Row = document.querySelector('#m4-section-root div[style*="overflow-x"]');
+    if (!pills || !m4Row) return;
+    pills.addEventListener('scroll', () => syncScroll(pills, m4Row, 0.85), { passive: true });
+    m4Row.addEventListener('scroll', () => syncScroll(m4Row, pills, 1/0.85), { passive: true });
+  }
+  // Attach after render completes
+  setTimeout(attachSync, 600);
+})();
 
 // ═══ CARE SHEET ══════════════════════════════════════════════
 function openCareSheet() {
@@ -1237,6 +1496,87 @@ function closeCareSheet() {
 function handleCareOverlay(e) {
   if (e.target === document.getElementById('care-overlay')) closeCareSheet();
 }
+
+// ═══ ALL SITUATIONS SHEET ════════════════════════════════════
+function openAllSituationsSheet() {
+  const content = document.getElementById('allsit-content');
+
+  // Render all tiers as grouped pill lists
+  content.innerHTML = TIERS.map(tier => `
+    <div style="margin-bottom:22px;">
+      <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:10px;padding:0 4px;">${tier.label}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;" data-tier-pills>
+        ${tier.pills.map(p => `
+          <button class="sit-pill${SESSION_OPENED.has(p.key) ? (p.key === _lastOpenedKey ? ' touched-last' : ' touched') : ''}"
+            data-key="${p.key}">
+            <span class="sit-emoji">${p.emoji}</span>
+            <span class="sit-label">${p.label}</span>
+          </button>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  // Wire up pills: close this sheet, then open the sit-sheet
+  content.querySelectorAll('.sit-pill[data-key]').forEach(btn => {
+    btn.onclick = () => {
+      const key = btn.dataset.key;
+      closeAllSituationsSheet(() => {
+        setTimeout(() => pressPill(btn, key), 60);
+      });
+    };
+  });
+
+  const ov = document.getElementById('allsit-overlay');
+  ov.style.display = 'flex';
+  ov.style.pointerEvents = 'all';
+  requestAnimationFrame(() => {
+    ov.style.background = 'rgba(0,0,0,0.52)';
+    document.getElementById('allsit-sheet').style.transform = 'translateY(0)';
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAllSituationsSheet(cb) {
+  const ov = document.getElementById('allsit-overlay');
+  const sheet = document.getElementById('allsit-sheet');
+  ov.style.background = 'rgba(0,0,0,0)';
+  sheet.style.transition = 'transform 0.28s ease-in';
+  sheet.style.transform = 'translateY(100%)';
+  setTimeout(() => {
+    ov.style.display = 'none';
+    ov.style.pointerEvents = 'none';
+    document.body.style.overflow = '';
+    sheet.style.transition = 'transform 0.42s cubic-bezier(0.22,1,0.36,1)';
+    if (typeof cb === 'function') cb();
+  }, 280);
+}
+
+function handleAllSitOverlay(e) {
+  if (e.target === document.getElementById('allsit-overlay')) closeAllSituationsSheet();
+}
+
+// Swipe down to close allsit-sheet
+(function() {
+  const sheet = document.getElementById('allsit-sheet');
+  let startY = 0, currentY = 0, dragging = false;
+  sheet.addEventListener('touchstart', e => {
+    if (sheet.scrollTop > 0) return;
+    startY = e.touches[0].clientY; dragging = true;
+    sheet.style.transition = 'none';
+  }, {passive:true});
+  sheet.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const delta = e.touches[0].clientY - startY;
+    if (delta > 0) { currentY = delta; sheet.style.transform = `translateY(${delta}px)`; }
+  }, {passive:true});
+  sheet.addEventListener('touchend', () => {
+    if (!dragging) return; dragging = false;
+    sheet.style.transition = 'transform 0.3s cubic-bezier(0.34,1.05,0.64,1)';
+    if (currentY > 110) closeAllSituationsSheet();
+    else sheet.style.transform = 'translateY(0)';
+    startY = 0; currentY = 0;
+  });
+})();
 </script>
   <div id="exit-line" style="text-align:center;padding:32px 24px 48px;opacity:0;transition:opacity 1.2s ease;pointer-events:none;">
     <div style="font-size:12px;color:var(--soft);font-family:'Noto Serif Thai',serif;font-weight:300;letter-spacing:0.3px;">วันนี้พอแค่นี้ก็ได้ 🤍</div>
