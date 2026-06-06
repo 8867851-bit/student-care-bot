@@ -597,20 +597,22 @@
   <div style="position:absolute;top:20px;left:24px;">
     <button onclick="show('screen-booking')" style="background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;">← ย้อนกลับ</button>
   </div>
-  <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_687,w_958,x_271,y_155/6c487a47-2c77-466d-a0b4-0f05c290e9b5_hjkczr.png" alt="" style="width:160px;height:auto;margin-bottom:20px;display:block;"/>
-  <div style="font-family:'Noto Serif Thai',serif;font-size:19px;font-weight:600;line-height:1.7;color:var(--d);margin-bottom:14px;">
-    บางทีตารางของเรา<br>อาจไม่ตรงกัน
+  <div style="font-size:32px;margin-bottom:20px;">🌱</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.5;color:var(--d);margin-bottom:24px;">
+    เดี๋ยวเราบอกนะ 🤍
   </div>
-  <div style="font-size:14px;color:var(--mid);line-height:2;margin-bottom:32px;">
-    ลองบอกเวลาที่สะดวกมาได้เลย<br>
-    ถ้ามีรุ่นพี่ว่างตรงนั้น<br>เราจะพยายามหาคนให้ 🤍
+  <div style="font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:400;line-height:2.1;color:var(--mid);margin-bottom:32px;">
+    ถ้าสัปดาห์นี้ยังไม่สะดวก<br>
+    ไม่เป็นไรเลย<br>
+    <br>
+    พอเพื่อนที่ปรึกษา<br>
+    ลงตารางของสัปดาห์หน้า<br>
+    <br>
+    เราจะส่ง LINE<br>
+    มาบอกคุณทันที
   </div>
   <div style="width:100%;display:flex;flex-direction:column;gap:10px;align-items:center;">
-    <button class="btn-green" onclick="saveAndNotify()" style="max-width:280px;">บอกเราว่าอยากมา 🤍</button>
-    <button class="btn-ghost" onclick="showSpecialRequest()" style="font-size:12px;">หรือขอเวลาพิเศษก็ได้นะ →</button>
-    <div style="font-size:11px;font-family:'Noto Serif Thai',serif;font-weight:300;color:var(--softer);line-height:1.8;margin-top:4px;">
-      หรือจะลองกลับมาดูอีกครั้งวันอาทิตย์ก็ได้ 🌱
-    </div>
+    <button class="btn-green" onclick="saveAndNotify()" style="max-width:300px;">แจ้งฉันเมื่อมีตารางใหม่ 🤍</button>
   </div>
 </div>
 
@@ -1289,12 +1291,22 @@ async function finalConfirm(){
   let assignedRoom=null;
   try{
     const d=await apiCall({action:"bookSlot",userId,caseId,slot:chosenSlot});
+    // DEBUG — remove after fixing
+    console.log("[bookSlot] raw response:", JSON.stringify(d));
     const{status:bookStatus,room}=d;
+    console.log("[bookSlot] bookStatus:", bookStatus, "| room:", room, "| caseId:", caseId, "| userId:", userId);
     if(bookStatus==="SLOT_TAKEN"||bookStatus==="ALREADY_BOOKED"){showSorry();return;}
-    if(bookStatus!=="OK")throw new Error(d.message||"unknown");
+    if(bookStatus!=="OK"){
+      console.warn("[bookSlot] unexpected status:", bookStatus, "— treating as success if no error field");
+      // Guard: if API returns {status:"success"} or {status:"ok"} (case variations), treat as OK
+      const s=(bookStatus||"").toLowerCase();
+      if(s==="success"||s==="ok"||s==="booked"){showSuccess(d.room||null);return;}
+      throw new Error(d.message||"unknown status: "+bookStatus);
+    }
     assignedRoom=room;
     showSuccess(assignedRoom);
   }catch(e){
+    console.error("[bookSlot] catch:", e.message);
     if(e.message==="SLOT_TAKEN"||e.message==="ALREADY_BOOKED"){showSorry();return;}
     showSuccess(null);
   }finally{
