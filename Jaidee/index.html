@@ -1002,6 +1002,8 @@ function openSitSheet(key) {
     // Label softens
     const lbl = document.getElementById('tier-label');
     if (lbl) { setTimeout(() => { lbl.style.transition='opacity 0.4s ease'; lbl.style.opacity='0'; setTimeout(()=>{ lbl.textContent='ลองค่อย ๆ ดูก็ได้'; lbl.style.opacity='1'; },400); }, 600); }
+    // Start notebook whispers after user has engaged
+    _startNotebookWhispers();
   }
 
   // Stage 3: third unique pill — page quiets
@@ -1358,6 +1360,57 @@ const PILL_PREVIEWS = {
   lost:        { text: 'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว', action: '🪞 ลองสำรวจข้างในก่อน' },
 };
 
+// ── Notebook whispers — rotate into preview strip after listening state ──
+// Shown occasionally when user has swiped 2+ pills and hero is in listening mode.
+const NOTEBOOK_WHISPERS = [
+  { text: 'บางทีการมีใครสักคนช่วยเรียบเรียงสิ่งที่เรารู้สึก ก็ทำให้เราได้เจอคำที่ก่อนหน้านี้ยังอธิบายไม่ถูกเลยก็ได้', action: '💛 คุยกับเพื่อนที่ปรึกษา' },
+  { text: 'ไม่ต้องรีบหาคำที่ถูกต้องที่สุด — บางทีการเริ่มพูดก็คือจุดเริ่มต้นแล้ว', action: '🪞 ลองสำรวจข้างใน' },
+  { text: 'สิ่งที่อยู่ในหัวบางอย่างอธิบายได้ยาก แต่เมื่อเริ่มเขียนออกมา มันมักชัดขึ้นเองโดยไม่รู้ตัว', action: '📓 เขียนระบาย' },
+];
+let _whisperIndex = 0;
+let _whisperInterval = null;
+
+function _startNotebookWhispers() {
+  if (_whisperInterval) return; // already running
+  // Wait 8s after listening state, then show first whisper
+  setTimeout(() => {
+    _injectWhisper();
+    _whisperInterval = setInterval(_injectWhisper, 18000); // every 18s
+  }, 8000);
+}
+
+function _injectWhisper() {
+  const hero = document.querySelector('.hero');
+  // Only whisper when in listening state and no sheet is open
+  if (!hero || !hero.classList.contains('listening')) return;
+  if (document.getElementById('sit-overlay').style.display !== 'none') return;
+  const w = NOTEBOOK_WHISPERS[_whisperIndex % NOTEBOOK_WHISPERS.length];
+  _whisperIndex++;
+  // Temporarily swap the preview text for any centered pill
+  const inner = document.getElementById('pill-preview-inner');
+  const textEl = document.getElementById('pill-preview-text');
+  const actionEl = document.getElementById('pill-preview-action');
+  if (!inner || !textEl || !actionEl) return;
+  const prevText = textEl.textContent;
+  const prevAction = actionEl.textContent;
+  // Fade out
+  inner.classList.remove('visible');
+  setTimeout(() => {
+    textEl.textContent = w.text;
+    actionEl.textContent = w.action;
+    inner.classList.add('visible');
+    // Restore after 12s
+    setTimeout(() => {
+      inner.classList.remove('visible');
+      setTimeout(() => {
+        textEl.textContent = prevText;
+        actionEl.textContent = prevAction;
+        inner.classList.add('visible');
+      }, 200);
+    }, 12000);
+  }, 200);
+}
+
 // Which pill is visually centered in the scroll row
 function _getCenteredPillKey() {
   const scroll = document.getElementById('tier-pills');
@@ -1437,6 +1490,7 @@ setTimeout(_initPillPreview, 400);
       document.body.style.background = '#FDF9F4';
       // Deep scroll = first meaningful interaction too
       if (SESSION_OPENED.size === 0) _triggerPermissionSentence();
+      _startNotebookWhispers();
     }
     if (hero.classList.contains('locked')) return;
     if (!faded && y >= 150) {
