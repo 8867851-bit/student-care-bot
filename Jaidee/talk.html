@@ -20,7 +20,7 @@
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:16px;overflow-x:hidden;}
 
-    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:20px 24px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top) + 16px) 24px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
 
     .hero{padding:12px 24px 32px;}
     .hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
@@ -162,7 +162,7 @@
 </head>
 <body>
 
-<button class="back-btn" id="back-btn" onclick="goBack()">← กลับ</button>
+<button class="back-btn" id="back-btn" onclick="goBack()" style="position:sticky;top:env(safe-area-inset-top);z-index:10;">← กลับ</button>
 
 <div class="hero">
   <div class="hero-title" style="display:inline-block;border-bottom:2.5px solid var(--gold);padding-bottom:4px;">อันไหนใกล้กับคุณที่สุด?</div>
@@ -368,9 +368,11 @@
 
 <script>
 function select(state, btn) {
-  // Hero + question label disappear completely
-  document.querySelector('.hero').classList.add('gone');
-  const _tq = document.querySelector('.triage-q'); if(_tq) _tq.classList.add('gone');
+  // Wait 300ms before collapsing hero — lets browser finish its own animation first
+  setTimeout(() => {
+    document.querySelector('.hero').classList.add('gone');
+    const _tq = document.querySelector('.triage-q'); if(_tq) _tq.classList.add('gone');
+  }, 300);
 
   // Collapse all unchosen triage buttons; lift chosen
   document.querySelectorAll('.triage-btn').forEach(b => {
@@ -388,12 +390,11 @@ function select(state, btn) {
     p.classList.remove('shown', 'visible');
   });
 
-  // Reveal chosen panel
+  // Reveal chosen panel — no programmatic scroll, let Safari own viewport movement
   const panel = document.getElementById('panel-' + state);
   panel.classList.add('visible');
   requestAnimationFrame(() => requestAnimationFrame(() => {
     panel.classList.add('shown');
-    setTimeout(() => panel.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
   }));
 }
 
@@ -426,8 +427,6 @@ function showIntent(type) {
         card.classList.remove('appeared');
         setTimeout(() => card.classList.add('appeared'), 60 + i * 75);
       });
-
-      setTimeout(() => panel.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
     }
   });
 }
