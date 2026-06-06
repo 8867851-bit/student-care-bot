@@ -1476,36 +1476,7 @@ Object.assign(SIT_DATA, SIT_DATA_EXTRA);
 // Render first tier on load
 renderTier(0);
 
-// ── Scroll sync: pills → M4 shelf (one-way, clamps at M4 end) ───────────
-// Pills are infinite; M4 is finite. Sync drives M4 from pills only while M4
-// still has room. Once M4 hits its max, it stays put — pills keep wandering.
-// M4 scrolling never drives pills (would fight the infinite loop).
-(function() {
-  let _syncing = false;
-  function attachSync() {
-    const pills = document.getElementById('tier-pills');
-    const m4Row = document.querySelector('#m4-section-root div[style*="overflow-x"]');
-    if (!pills || !m4Row) return;
 
-    pills.addEventListener('scroll', () => {
-      if (_syncing) return;
-      _syncing = true;
-      const m4Max = m4Row.scrollWidth - m4Row.clientWidth;
-      if (m4Max <= 0) { _syncing = false; return; } // M4 not scrollable
-      // Map pills position relative to the middle copy (the "real" copy)
-      const third = pills.scrollWidth / 3;
-      const pillsOffset = pills.scrollLeft - third; // negative = left of start, positive = right
-      // Only sync while pillsOffset is positive and m4 still has range
-      const target = pillsOffset * 0.85;
-      m4Row.scrollLeft = Math.min(Math.max(target, 0), m4Max);
-      requestAnimationFrame(() => { _syncing = false; });
-    }, { passive: true });
-
-    // M4 → pills: disabled intentionally. M4 is finite; syncing back would
-    // interfere with the infinite loop and feel broken.
-  }
-  setTimeout(attachSync, 600);
-})();
 
 // ═══ CARE SHEET ══════════════════════════════════════════════
 function openCareSheet() {
