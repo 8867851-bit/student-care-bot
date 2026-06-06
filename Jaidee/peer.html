@@ -363,7 +363,7 @@
 <!-- ═══════════════════════════════════════ -->
 <!-- SCREEN 0: YEAR COVER                  -->
 <!-- ═══════════════════════════════════════ -->
-<div class="screen" id="screen-year">
+<div class="screen active" id="screen-year">
   <div class="year-inner">
 
     <div class="year-header">
@@ -414,7 +414,7 @@
 <!-- ═══════════════════════════════════════ -->
 <!-- SCREEN 1: CONSENT / INTRO              -->
 <!-- ═══════════════════════════════════════ -->
-<div class="screen active" id="screen-intro">
+<div class="screen" id="screen-intro">
   <div class="intro-top-bar">
     <div class="eyebrow">ใจดี TU · เพื่อนที่ปรึกษา</div>
     <button class="info-btn" onclick="openInfoSheet()">🤍</button>
@@ -454,6 +454,20 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- Margin note — handwritten feel, discovered not announced -->
+  <div style="width:80%;margin:8px auto 0;text-align:center;">
+    <div style="font-family:'Noto Serif Thai',serif;font-size:12px;font-weight:300;color:var(--softer);line-height:2;letter-spacing:0.2px;">
+      🤍<br>
+      ส่วนใหญ่เราจะได้นัดกัน<br>
+      หลังเลิกเรียนหรือช่วงเย็น<br>
+      <br>
+      ถ้าถึงตอนเลือกเวลา<br>
+      แล้วยังไม่เจอช่วงที่สะดวก<br>
+      ไม่เป็นไรนะ<br>
+      เราจะค่อย ๆ หาทางด้วยกัน
+    </div>
   </div>
 
   <div class="intro-bottom">
@@ -506,6 +520,17 @@
     <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_377,w_764,x_408,y_351/6a566f2c-182e-4887-b55c-1c4fc5e42c42_iy6ymj.png" alt="" style="width:80px;height:auto;display:block;margin:0 auto -4px;"/>
     <div class="booking-headline">มีรุ่นพี่<br>รออยู่นะ 🤍</div>
     <div class="booking-sub" id="booking-sub-text">เลือกเวลาที่สบายใจที่สุด · นัด 1 ชั่วโมง</div>
+    <div style="background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;">
+      <div style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:2px;">เวลาที่มักจะนัดกัน</div>
+      <div style="font-size:13px;color:var(--mid);line-height:1.8;">
+        หลังเลิกเรียน · จันทร์–พฤหัส<br>
+        ประมาณ 15:30–17:30 น.<br>
+        <span style="color:var(--soft);">ศุกร์ 12:30–16:00 น.</span>
+      </div>
+      <div style="font-size:12px;font-family:'Noto Serif Thai',serif;font-weight:300;color:var(--soft);margin-top:2px;">
+        ถ้ายังไม่ตรงกับเรา ไม่เป็นไรนะ<br>เดี๋ยวค่อยหาทางด้วยกัน 🤍
+      </div>
+    </div>
 
     <div class="music-strip" onclick="toggleMusic()" role="button" aria-label="เปิด/ปิดเพลง">
       <div class="music-jaidee">
@@ -581,15 +606,21 @@
 <!-- ═══════════════════════════════════════ -->
 <!-- BRANCH: NO MATCHING SLOT               -->
 <!-- ═══════════════════════════════════════ -->
-<div class="screen branch-screen" id="screen-no-slots">
-  <div class="branch-icon">🌙</div>
-  <div class="branch-title">ไม่มีเวลา<br>ที่สะดวกใช่ไหม?</div>
-  <div class="branch-body">ไม่เป็นไรเลยนะ ยังมีสองทางให้เลือก —<br><br>ให้เราแจ้งเตือนเมื่อมีตารางใหม่<br>หรือขอเวลาพิเศษที่คุณสะดวกจริง ๆ</div>
-  <div class="branch-actions">
-    <button class="btn-green" onclick="showSpecialRequest()">ขอเวลาพิเศษ →</button>
-    <button class="btn-primary" onclick="saveAndNotify()">แจ้งเตือนเมื่อมีตารางใหม่</button>
-    <button class="btn-ghost" onclick="show('screen-external')">ดูตัวเลือกอื่น ๆ</button>
-    <button class="btn-ghost" onclick="show('screen-booking');loadSlots();">← ดูเวลาที่มีอีกครั้ง</button>
+<div class="screen" id="screen-no-slots" style="align-items:center;justify-content:center;text-align:center;padding:48px 28px 40px;gap:0;">
+  <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_687,w_958,x_271,y_155/6c487a47-2c77-466d-a0b4-0f05c290e9b5_hjkczr.png" alt="" style="width:160px;height:auto;margin-bottom:20px;display:block;"/>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:19px;font-weight:600;line-height:1.6;color:var(--d);margin-bottom:14px;">
+    ดูเหมือนว่าสัปดาห์นี้<br>เรายังหาเวลาที่ตรงกันไม่ได้ 🤍
+  </div>
+  <div style="font-size:13px;color:var(--mid);line-height:2;margin-bottom:32px;">
+    กดแจ้งเตือนไว้ก่อนได้นะ<br>
+    พอมีที่นั่งใหม่ เราจะรีบบอกเธอเลย
+  </div>
+  <div style="width:100%;display:flex;flex-direction:column;gap:10px;align-items:center;">
+    <button class="btn-green" onclick="saveAndNotify()" style="max-width:280px;">บอกเราว่าอยากมา 🤍</button>
+    <button class="btn-ghost" onclick="showSpecialRequest()" style="font-size:12px;">หรือขอเวลาพิเศษก็ได้นะ →</button>
+    <div style="font-size:11px;font-family:'Noto Serif Thai',serif;font-weight:300;color:var(--softer);line-height:1.8;margin-top:4px;">
+      หรือจะลองกลับมาดูอีกครั้งวันอาทิตย์ก็ได้ 🌱
+    </div>
   </div>
 </div>
 
