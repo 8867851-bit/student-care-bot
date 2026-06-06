@@ -71,8 +71,9 @@
 
     /* ── SCREEN 0: ANNOUNCE ── */
     #screen-announce{justify-content:space-between;background:var(--cream);}
-    .announce-top{display:flex;justify-content:flex-start;align-items:center;}
+    .announce-top{display:flex;justify-content:flex-start;align-items:center;gap:6px;}
     .announce-pin{font-size:18px;opacity:0.55;}
+    .announce-pin-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--soft);}
     .announce-middle{flex:1;display:flex;flex-direction:column;justify-content:center;gap:0;}
 
     /* Illustration container */
@@ -467,16 +468,15 @@
 
   <div class="announce-top">
     <span class="announce-pin">📌</span>
+    <span class="announce-pin-label">ประกาศ</span>
   </div>
 
   <div class="announce-middle">
 
-    <!-- Empty chair + notebook illustration (same Cloudinary image used on intro) -->
+    <!-- Empty chair illustration -->
     <div class="announce-illo" id="announce-illo">
       <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_532,w_879,x_328,y_169/a468baf6-7b53-479c-b607-a9c7be68654f_bjengo.png" alt="" style="width:100%;height:100%;object-fit:contain;" loading="eager"/>
     </div>
-
-    <div class="announce-title" id="announce-title">ก่อนเริ่มนิดนึง 🤍</div>
 
     <!-- Block 1: schedule -->
     <div class="announce-block" id="announce-b1">
@@ -494,13 +494,12 @@
     <div class="announce-block" id="announce-b2">
       <div class="announce-block-label">เรื่องที่คุยกัน</div>
       <div class="announce-block-body">
-        จะอยู่ระหว่างคุณ<br>
-        กับเพื่อนที่ปรึกษา<br>
+        เรื่องที่คุณเล่า จะอยู่ระหว่างคุณ<br>กับเพื่อนที่ปรึกษา<br>
         <br>
         <span class="muted" style="font-size:14px;line-height:1.9;">
           ยกเว้นในกรณีที่เราเป็นห่วงว่า<br>
           คุณอาจกำลังไม่ปลอดภัย<br>
-          ซึ่งเราจะพยายามบอกคุณก่อนเสมอ
+          ซึ่งถ้าเป็นไปได้ เราจะคุยกับคุณก่อนเสมอ
         </span>
       </div>
     </div>
@@ -558,22 +557,8 @@
 
   </div>
 
-  <!-- Margin note — handwritten feel, discovered not announced -->
-  <div style="width:80%;margin:8px auto 0;text-align:center;">
-    <div style="font-family:'Noto Serif Thai',serif;font-size:12px;font-weight:300;color:var(--softer);line-height:2;letter-spacing:0.2px;">
-      🤍<br>
-      ส่วนใหญ่เราจะได้นัดกัน<br>
-      หลังเลิกเรียนหรือช่วงเย็น<br>
-      <br>
-      ถ้าถึงตอนเลือกเวลา<br>
-      แล้วยังไม่เจอช่วงที่สะดวก<br>
-      ไม่เป็นไรนะ<br>
-      เราจะค่อย ๆ หาทางด้วยกัน
-    </div>
-  </div>
-
   <div class="intro-bottom">
-    <button class="btn-green" id="btn-start" onclick="acknowledgeAndStart(this)">พร้อมแล้ว →</button>
+    <button class="btn-green" id="btn-start" onclick="acknowledgeAndStart(this)">พร้อมแล้ว 🤍</button>
     <button class="btn-permission" onclick="goHome()">ยังไม่แน่ใจ ไว้วันอื่นก็ได้นะ 🤍</button>
   </div>
 </div>
@@ -674,13 +659,18 @@
 </div>
 
 <!-- ═══════════════════════════════════════ -->
-<!-- SCREEN: SORRY                          -->
+<!-- SCREEN: SLOT TAKEN                     -->
 <!-- ═══════════════════════════════════════ -->
-<div class="screen" id="screen-sorry" style="background:var(--d);align-items:center;justify-content:center;gap:16px;text-align:center;">
-  <div style="font-size:44px;">🙏</div>
-  <div class="sorry-title">เสียใจมากเลยนะ<br>เวลานี้เพิ่งถูกเลือกไป</div>
-  <div class="sorry-sub">กำลังพาคุณกลับไปเลือกใหม่นะ...</div>
-  <div class="sorry-bar-wrap"><div class="sorry-bar-fill"></div></div>
+<div class="screen" id="screen-sorry" style="align-items:center;justify-content:center;gap:20px;text-align:center;padding:48px 32px;background:var(--cream);">
+  <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_532,w_879,x_328,y_169/a468baf6-7b53-479c-b607-a9c7be68654f_bjengo.png" alt="" style="width:160px;height:160px;object-fit:contain;opacity:0.85;" id="sorry-illo"/>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;line-height:1.6;color:var(--d);">
+    ดูเหมือนว่า<br>ที่นั่งนี้จะมีคนมาถึงก่อนเรา 🤍
+  </div>
+  <div style="font-size:14px;color:var(--mid);line-height:1.9;">
+    ไม่เป็นไรนะ<br>
+    ลองเลือกเวลาอื่นดูได้เลย
+  </div>
+  <div class="sorry-bar-wrap" style="background:var(--cream-border);"><div class="sorry-bar-fill" style="background:var(--green);animation:sorryBar 3s linear forwards;"></div></div>
 </div>
 
 <!-- ═══════════════════════════════════════ -->
@@ -860,7 +850,7 @@ function selectYear(year, card) {
     scr.classList.add('fading');
     setTimeout(() => {
       // Continue to intro (which checkPauseStatus was already setting up)
-      show('screen-announce'); _staggerAnnounce();
+      show('screen-intro');
     }, 420);
   }, 380);
 }
@@ -1083,13 +1073,8 @@ async function _checkAvailabilityGate(){
     return;
   }
 
-  // CASE B: slots available — enter the flow
-  // TODO: restore localStorage skip before production:
-  // try {
-  //   const saved = localStorage.getItem('jaidee_year');
-  //   if (saved) { _selectedYear = saved; show('screen-intro'); return; }
-  // } catch(e) {}
-  show('screen-year');
+  // CASE B: slots available — enter the flow at announce screen
+  show('screen-announce');
 }
 
 // checkPauseStatus and checkBookingStatus removed — logic consolidated into _checkAvailabilityGate()
@@ -1138,12 +1123,12 @@ function _staggerReassurances() {
 }
 
 function _staggerAnnounce() {
-  const ids = ['announce-illo','announce-title','announce-b1','announce-div','announce-b2'];
+  const ids = ['announce-illo','announce-b1','announce-div','announce-b2'];
   ids.forEach((id, i) => {
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.remove('visible');
-    setTimeout(() => el.classList.add('visible'), 120 + i * 180);
+    setTimeout(() => el.classList.add('visible'), 120 + i * 200);
   });
 }
 
@@ -1152,7 +1137,7 @@ function goFromAnnounce() {
   screen.style.transition = 'opacity 0.25s ease';
   screen.style.opacity = '0';
   setTimeout(() => {
-    show('screen-intro');
+    show('screen-year');
   }, 260);
 }
 
@@ -1380,7 +1365,7 @@ function showSorry(){
     document.getElementById("chosen-preview").classList.remove("visible");
     document.querySelectorAll(".slot-chip").forEach(c=>c.classList.remove("chosen"));
     loadSlots(); show("screen-booking");
-  },5000);
+  },3000);
 }
 
 function showSuccess(room){
