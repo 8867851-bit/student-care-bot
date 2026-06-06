@@ -69,6 +69,55 @@
     .divider-thin{height:1px;background:var(--cream-border);}
     .intro-bottom{display:flex;flex-direction:column;gap:10px;}
 
+    /* ── SCREEN 0: ANNOUNCE ── */
+    #screen-announce{justify-content:space-between;background:var(--cream);}
+    .announce-top{display:flex;justify-content:flex-start;align-items:center;}
+    .announce-pin{font-size:18px;opacity:0.55;}
+    .announce-middle{flex:1;display:flex;flex-direction:column;justify-content:center;gap:0;}
+
+    /* Illustration container */
+    .announce-illo{
+      width:130px;height:130px;margin:0 auto 20px;
+      opacity:0;transform:translateY(8px);
+      transition:opacity 0.55s ease,transform 0.55s ease;
+    }
+    .announce-illo.visible{opacity:1;transform:translateY(0);}
+
+    /* Title */
+    .announce-title{
+      font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;
+      text-align:center;line-height:1.4;color:var(--d);
+      opacity:0;transform:translateY(6px);
+      transition:opacity 0.5s ease 0.15s,transform 0.5s ease 0.15s;
+      margin-bottom:28px;
+    }
+    .announce-title.visible{opacity:1;transform:translateY(0);}
+
+    /* Content blocks */
+    .announce-block{
+      display:flex;flex-direction:column;gap:6px;
+      opacity:0;transform:translateY(6px);
+      transition:opacity 0.5s ease,transform 0.5s ease;
+    }
+    .announce-block.visible{opacity:1;transform:translateY(0);}
+
+    .announce-block-label{
+      font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+      color:var(--green);
+    }
+    .announce-block-body{
+      font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:400;
+      line-height:2;color:var(--d);
+    }
+    .announce-block-body .muted{color:var(--soft);}
+
+    .announce-divider{
+      height:1px;background:var(--cream-border);
+      margin:20px 0;
+      opacity:0;transition:opacity 0.4s ease;
+    }
+    .announce-divider.visible{opacity:1;}
+
     /* ── SCREEN 2: TRANSITION ── */
     #screen-transition{align-items:center;justify-content:center;gap:20px;text-align:center;background:var(--cream);}
     .transition-word{font-family:'Noto Serif Thai',serif;font-size:18px;color:var(--soft);font-weight:300;line-height:2;letter-spacing:0.3px;}
@@ -409,6 +458,59 @@
 
     </div>
   </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 0: ANNOUNCE — bulletin board    -->
+<!-- ═══════════════════════════════════════ -->
+<div class="screen" id="screen-announce">
+
+  <div class="announce-top">
+    <span class="announce-pin">📌</span>
+  </div>
+
+  <div class="announce-middle">
+
+    <!-- Empty chair + notebook illustration (same Cloudinary image used on intro) -->
+    <div class="announce-illo" id="announce-illo">
+      <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_532,w_879,x_328,y_169/a468baf6-7b53-479c-b607-a9c7be68654f_bjengo.png" alt="" style="width:100%;height:100%;object-fit:contain;" loading="eager"/>
+    </div>
+
+    <div class="announce-title" id="announce-title">ก่อนเริ่มนิดนึง 🤍</div>
+
+    <!-- Block 1: schedule -->
+    <div class="announce-block" id="announce-b1">
+      <div class="announce-block-label">เวลาที่มักจะนัดกัน</div>
+      <div class="announce-block-body">
+        หลังเลิกเรียน<br>
+        จันทร์–พฤหัส&nbsp;&nbsp;15:30–17:30<br>
+        <span class="muted">ศุกร์&nbsp;&nbsp;12:30–16:00</span>
+      </div>
+    </div>
+
+    <div class="announce-divider" id="announce-div"></div>
+
+    <!-- Block 2: confidentiality -->
+    <div class="announce-block" id="announce-b2">
+      <div class="announce-block-label">เรื่องที่คุยกัน</div>
+      <div class="announce-block-body">
+        จะอยู่ระหว่างคุณ<br>
+        กับเพื่อนที่ปรึกษา<br>
+        <br>
+        <span class="muted" style="font-size:14px;line-height:1.9;">
+          ยกเว้นในกรณีที่เราเป็นห่วงว่า<br>
+          คุณอาจกำลังไม่ปลอดภัย<br>
+          ซึ่งเราจะพยายามบอกคุณก่อนเสมอ
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="intro-bottom">
+    <button class="btn-green" onclick="goFromAnnounce()">เข้าใจแล้ว 🤍</button>
+  </div>
+
 </div>
 
 <!-- ═══════════════════════════════════════ -->
@@ -758,7 +860,7 @@ function selectYear(year, card) {
     scr.classList.add('fading');
     setTimeout(() => {
       // Continue to intro (which checkPauseStatus was already setting up)
-      show('screen-intro');
+      show('screen-announce'); _staggerAnnounce();
     }, 420);
   }, 380);
 }
@@ -893,6 +995,9 @@ function show(id){
   document.querySelectorAll(".screen").forEach(s=>{s.classList.remove("active");s.style.display="none";});
   const el=document.getElementById(id);
   el.style.display="flex"; void el.offsetWidth; el.classList.add("active");
+  if (id === 'screen-announce') {
+    _staggerAnnounce();
+  }
   if (id === 'screen-intro') {
     _applyYearCopy();
     _staggerReassurances();
@@ -1030,6 +1135,25 @@ function _staggerReassurances() {
     el.classList.remove('visible');
     setTimeout(() => el.classList.add('visible'), 300 + i * 200);
   });
+}
+
+function _staggerAnnounce() {
+  const ids = ['announce-illo','announce-title','announce-b1','announce-div','announce-b2'];
+  ids.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('visible');
+    setTimeout(() => el.classList.add('visible'), 120 + i * 180);
+  });
+}
+
+function goFromAnnounce() {
+  const screen = document.getElementById('screen-announce');
+  screen.style.transition = 'opacity 0.25s ease';
+  screen.style.opacity = '0';
+  setTimeout(() => {
+    show('screen-intro');
+  }, 260);
 }
 
 function acknowledgeAndStart(btn) {
