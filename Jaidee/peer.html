@@ -425,7 +425,6 @@
 
   <div class="intro-bottom">
     <button class="btn-green" id="btn-start" onclick="acknowledgeAndStart(this)">พร้อมแล้ว 🤍</button>
-    <button class="btn-permission" onclick="goHome()">ยังไม่แน่ใจ ไว้วันอื่นก็ได้นะ 🤍</button>
   </div>
 </div>
 
@@ -476,22 +475,22 @@
       <button onclick="goBackFromBooking()" style="background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;">← ย้อนกลับ</button>
     </div>
 
-    <!-- Header row: title on left, Jaidee on right -->
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-top:4px;">
-      <div style="flex:1;min-width:0;">
-        <div class="booking-headline">มีรุ่นพี่รออยู่นะ</div>
-        <div class="booking-sub" id="booking-sub-text" style="margin-top:6px;">เลือกเวลาที่สบายใจที่สุด · นัด 1 ชั่วโมง</div>
+    <!-- Header row: title+sub -->
+    <div style="padding-top:4px;">
+      <div class="booking-headline" style="display:flex;align-items:flex-end;gap:6px;">
+        <span>มีรุ่นพี่รออยู่นะ</span>
+        <!-- Tiny Jaidee sits at end of headline -->
+        <button onclick="toggleMusic()" aria-label="เปิด/ปิดเพลง"
+          style="flex-shrink:0;background:none;border:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;width:32px;height:32px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:2px;">
+          <div class="music-note-wrap" id="music-note-wrap-book" style="top:-8px;right:-4px;">
+            <span class="music-note music-note-a" id="music-note-a-book">♪</span>
+            <span class="music-note music-note-b" id="music-note-b-book">♫</span>
+          </div>
+          <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_417,w_497,x_517,y_297/c04d32f5-0b6b-42ca-be28-205a832c715b_m3jrhf.png" alt="Jaidee"
+            style="width:30px;height:30px;object-fit:contain;object-position:bottom;opacity:0.85;"/>
+        </button>
       </div>
-      <!-- Tiny Jaidee music toggle — right side, no label -->
-      <button onclick="toggleMusic()" aria-label="เปิด/ปิดเพลง"
-        style="flex-shrink:0;background:none;border:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;width:36px;height:36px;display:flex;align-items:flex-end;justify-content:center;margin-top:4px;">
-        <div class="music-note-wrap" id="music-note-wrap-book" style="top:-8px;right:-4px;">
-          <span class="music-note music-note-a" id="music-note-a-book">♪</span>
-          <span class="music-note music-note-b" id="music-note-b-book">♫</span>
-        </div>
-        <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_417,w_497,x_517,y_297/c04d32f5-0b6b-42ca-be28-205a832c715b_m3jrhf.png" alt="Jaidee"
-          style="width:34px;height:34px;object-fit:contain;object-position:bottom;opacity:0.85;"/>
-      </button>
+      <div class="booking-sub" id="booking-sub-text" style="margin-top:6px;">เลือกเวลาที่สบายใจที่สุด · นัด 1 ชั่วโมง</div>
     </div>
 
     <div id="booking-week-badge"></div>
@@ -513,8 +512,8 @@
       <div class="chosen-preview-who">จะมีรุ่นพี่คนหนึ่งรอฟังคุณอยู่ 🤍</div>
     </div>
     <button class="btn-green" id="btn-book" disabled onclick="finalConfirm()">ฝากเรื่องนี้ไว้กับเรา 🤍</button>
-    <button class="btn-ghost" onclick="show('screen-no-slots')">เวลาไม่ตรงเลยสักช่วง?</button>
-    <button class="btn-ghost" style="font-size:11px;color:#bbb;padding:2px;" onclick="show('screen-external')">ต้องการพูดคุยกับผู้เชี่ยวชาญ?</button>
+    <div style="font-size:12px;color:var(--soft);text-align:center;line-height:1.7;margin-top:-4px;">เราจะจับคู่กับรุ่นพี่<br>ตามเวลาที่เลือกไว้</div>
+    <button class="btn-ghost" onclick="show('screen-no-slots')">ไม่มีเวลาที่สะดวกเลย?</button>
   </div>
 </div>
 
@@ -564,12 +563,12 @@
     <button onclick="show('screen-booking')" style="background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;">← ย้อนกลับ</button>
   </div>
   <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_687,w_958,x_271,y_155/6c487a47-2c77-466d-a0b4-0f05c290e9b5_hjkczr.png" alt="" style="width:160px;height:auto;margin-bottom:20px;display:block;"/>
-  <div style="font-family:'Noto Serif Thai',serif;font-size:19px;font-weight:600;line-height:1.6;color:var(--d);margin-bottom:14px;">
-    ดูเหมือนว่าสัปดาห์นี้<br>เรายังหาเวลาที่ตรงกันไม่ได้ 🤍
+  <div style="font-family:'Noto Serif Thai',serif;font-size:19px;font-weight:600;line-height:1.7;color:var(--d);margin-bottom:14px;">
+    บางทีตารางของเรา<br>อาจไม่ตรงกัน
   </div>
-  <div style="font-size:13px;color:var(--mid);line-height:2;margin-bottom:32px;">
-    กดแจ้งเตือนไว้ก่อนได้นะ<br>
-    พอมีที่นั่งใหม่ เราจะรีบบอกเธอเลย
+  <div style="font-size:14px;color:var(--mid);line-height:2;margin-bottom:32px;">
+    ลองบอกเวลาที่สะดวกมาได้เลย<br>
+    ถ้ามีรุ่นพี่ว่างตรงนั้น<br>เราจะพยายามหาคนให้ 🤍
   </div>
   <div style="width:100%;display:flex;flex-direction:column;gap:10px;align-items:center;">
     <button class="btn-green" onclick="saveAndNotify()" style="max-width:280px;">บอกเราว่าอยากมา 🤍</button>
@@ -675,15 +674,15 @@
   <div class="success-stage" id="success-info" style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:4px;">
     <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(0,0,0,0.03);border-radius:12px;padding:12px 14px;">
       <span style="font-size:16px;flex-shrink:0;">📩</span>
-      <div style="font-size:13px;color:var(--mid);line-height:1.65;">เราส่ง LINE ยืนยันให้แล้ว กดดูในแชทได้เลย</div>
+      <div style="font-size:13px;color:var(--mid);line-height:1.7;">เราส่ง LINE ยืนยันให้แล้ว กดดูในแชทได้เลย</div>
     </div>
     <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(0,0,0,0.03);border-radius:12px;padding:12px 14px;">
       <span style="font-size:16px;flex-shrink:0;">📍</span>
-      <div style="font-size:13px;color:var(--mid);line-height:1.65;">ตรงเวลา ไปที่ห้องที่แจ้งในแชทได้เลย รุ่นพี่รอคุณอยู่</div>
+      <div style="font-size:13px;color:var(--mid);line-height:1.7;">มาถึงตามเวลาที่นัด ที่ห้องที่แจ้งในแชทได้เลย<br><br>ถ้าช้ากว่านิดหน่อย หรือมีอะไรเกิดขึ้น แค่ส่ง LINE มาบอกเรา — รุ่นพี่จะรอประมาณ 15 นาที 🤍</div>
     </div>
     <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(0,0,0,0.03);border-radius:12px;padding:12px 14px;">
-      <span style="font-size:16px;flex-shrink:0;">🔄</span>
-      <div style="font-size:13px;color:var(--mid);line-height:1.65;">ถ้าต้องการเปลี่ยนเวลา พิมพ์ "เปลี่ยนเวลา" ใน LINE ได้เลย</div>
+      <span style="font-size:16px;flex-shrink:0;">💬</span>
+      <div style="font-size:13px;color:var(--mid);line-height:1.7;">ถ้ามีอะไรอยากบอกเพิ่ม หรืออยากเปลี่ยนเวลา<br>พิมพ์หาเราใน LINE ได้เสมอนะ 🤍</div>
     </div>
   </div>
   <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:1.9;text-align:center;margin-top:4px;">
