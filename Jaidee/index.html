@@ -309,6 +309,10 @@
     }
     .sit-more{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:10px 14px;border-radius:50px;background:none;border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;white-space:nowrap;}
     .sit-more-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--soft);}
+
+    /* Invitation card — the notebook page turn */
+    #invitation-card{-webkit-tap-highlight-color:transparent;}
+    #invitation-card:active{transform:translateY(1px) scale(0.99)!important;box-shadow:0 1px 4px rgba(0,0,0,0.06)!important;}
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -451,15 +455,19 @@
     </div>
   </div>
 
-  <!-- Permission sentence + library entry — visible from load, brightens on first interaction -->
+  <!-- The entire cream card is the page turn — no arrows, no underlines, no affordance -->
   <div id="session-recognition" style="opacity:0.18;padding:36px 28px 0;text-align:center;transition:opacity 0.9s ease;">
-    <div id="permission-sentence" style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
-      ไม่ต้องรีบเข้าใจทุกอย่างก็ได้ 🤍
-    </div>
-    <div id="library-entry" style="margin-top:10px;opacity:0;transition:opacity 0.6s ease 0.4s;">
-      <button onclick="openAllSituationsSheet()" style="background:none;border:none;padding:4px 0;cursor:pointer;font-family:'Noto Serif Thai',serif;">
-        <div style="font-size:11px;font-weight:300;color:var(--soft);opacity:0.75;letter-spacing:0.2px;">เผื่อว่าจะมีเรื่องที่ใกล้กับเรามากกว่านี้ →</div>
-      </button>
+    <div id="library-entry" style="opacity:0;transition:opacity 0.6s ease 0.4s;">
+      <div id="invitation-card"
+           onclick="openAllSituationsSheet()"
+           style="display:inline-block;cursor:pointer;padding:20px 24px;border-radius:16px;background:var(--cream-warm);border:1px solid var(--cream-border);text-align:center;transition:transform 0.12s ease,box-shadow 0.12s ease;user-select:none;-webkit-user-select:none;">
+        <div id="permission-sentence" style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
+          ไม่ต้องรีบเข้าใจทุกอย่างก็ได้ 🤍
+        </div>
+        <div style="margin-top:6px;font-size:11px;font-weight:300;color:var(--soft);opacity:0.75;letter-spacing:0.2px;font-family:'Noto Serif Thai',serif;">
+          เผื่อว่าจะมีเรื่องที่ใกล้กับเรามากกว่านี้...
+        </div>
+      </div>
     </div>
   </div>
 
@@ -482,8 +490,6 @@
     <button class="pr-btn" onclick="window.location.href='peer.html'">นัดคุย →</button>
   </div>
 <script>
-const API_URL   = "https://script.google.com/macros/s/AKfycbztMREOYjHbq1TkfMplela4FBQmGjooLbRoV2HmccSdK-ZLzNk7NpkDL0ksPw-bPdgF/exec";
-const LIFF_ID   = "2009806939-H06mwKgI";
 const BASE_URL  = "https://jaidee-tu.vercel.app";
 const SCHOOL_SUPPORT_URL = BASE_URL + "/school.html";
 
@@ -610,22 +616,7 @@ function renderAll() {
 }
 
 // ═══ INIT ════════════════════════════════════════════════════
-const isPreview = new URLSearchParams(window.location.search).get("preview") === "1";
-if (isPreview) {
-  document.getElementById("greeting-name").innerText = "สวัสดี 🤍";
-  renderAll();
-} else {
-  renderAll();
-  (async () => {
-    try {
-      await liff.init({ liffId: LIFF_ID });
-      if (!liff.isLoggedIn()) { liff.login(); return; }
-      const p = await liff.getProfile();
-      const first = p.displayName.split(/\s+/)[0];
-      document.getElementById("greeting-name").innerText = "สวัสดี " + first + " 🤍";
-    } catch(e) { /* stay with default สวัสดี 🤍 */ }
-  })();
-}
+renderAll();
 
 
 
@@ -706,12 +697,31 @@ function renderTier(index) {
   const tier = TIERS[index];
   document.getElementById('tier-label').textContent = tier.label;
   const container = document.getElementById('tier-pills');
-  container.innerHTML = tier.pills.map(p =>
+
+  // Build pill HTML — render twice for pseudo-infinite feel
+  const pillHtml = tier.pills.map(p =>
     `<button class="sit-pill${SESSION_OPENED.has(p.key) ? (p.key === _lastOpenedKey ? ' touched-last' : ' touched') : ''}" onclick="pressPill(this,'${p.key}')">
       <span class="sit-emoji">${p.emoji}</span>
       <span class="sit-label">${p.label}</span>
     </button>`
   ).join('');
+
+  // Two copies — when user nears the end of the first, quietly loop
+  container.innerHTML = pillHtml + pillHtml;
+
+  // Pseudo-infinite: when scrolled past ~70% of the first copy, reset to the start of first copy silently
+  const _infiniteHandler = () => {
+    const half = (container.scrollWidth / 2);
+    if (container.scrollLeft > half * 0.7) {
+      // Jump back without animation
+      container.style.scrollBehavior = 'auto';
+      container.scrollLeft = container.scrollLeft - half;
+      requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
+    }
+  };
+  container.removeEventListener('scroll', container._infiniteHandler);
+  container._infiniteHandler = _infiniteHandler;
+  container.addEventListener('scroll', _infiniteHandler, { passive: true });
 }
 
 function nextTier() {
