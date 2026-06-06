@@ -311,84 +311,7 @@
 
     .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--d);color:white;padding:12px 20px;border-radius:99px;font-size:14px;font-family:'Sarabun',sans-serif;white-space:nowrap;z-index:200;animation:fadeUp 0.3s ease both;}
 
-    /* ── SCREEN: YEAR COVER ── */
-    #screen-year{
-      justify-content:center;align-items:stretch;gap:0;
-      padding:0;background:var(--cream);
-    }
-    .year-inner{
-      flex:1;display:flex;flex-direction:column;
-      justify-content:center;align-items:center;
-      padding:48px 28px 56px;gap:32px;
-    }
-    .year-header{text-align:center;display:flex;flex-direction:column;gap:8px;}
-    .year-heart{font-size:28px;line-height:1;}
-    .year-title{
-      font-family:'Noto Serif Thai',serif;
-      font-size:16px;font-weight:600;color:var(--d);
-      line-height:1.6;letter-spacing:0.2px;
-    }
-    .year-subtitle{
-      font-family:'Noto Serif Thai',serif;
-      font-size:13px;font-weight:300;color:var(--soft);
-      line-height:1.9;letter-spacing:0.2px;
-    }
-    .year-cards{display:flex;flex-direction:column;gap:12px;width:100%;}
-    .year-card{
-      background:var(--white);
-      border:1px solid var(--cream-border);
-      border-radius:18px;
-      padding:20px 22px;
-      cursor:pointer;
-      display:flex;align-items:center;gap:18px;
-      transition:transform 0.15s ease,box-shadow 0.15s ease,border-color 0.2s ease,background 0.2s ease;
-      -webkit-tap-highlight-color:transparent;
-      position:relative;overflow:hidden;
-    }
-    .year-card:active{transform:scale(0.98);}
-    .year-card.glowing{
-      background:#F4FAF2;
-      border-color:var(--gold-border);
-      box-shadow:0 0 0 4px rgba(87,143,98,0.10), 0 4px 20px rgba(87,143,98,0.10);
-    }
-    .year-card-illo{
-      width:56px;height:56px;flex-shrink:0;
-      display:flex;align-items:center;justify-content:center;
-      transition:transform 0.35s ease;
-    }
-    .year-card-illo img{
-      width:56px;height:56px;object-fit:contain;
-      display:block;
-    }
-    /* M.4 — door lifts 2px */
-    #ycard-4.glowing .year-card-illo{
-      transform:translateY(-2px);
-    }
-    /* M.5 — notebook opens: slight scale-x gives a page-spreading feel */
-    #ycard-5.glowing .year-card-illo{
-      transform:scaleX(1.04) translateY(-1px);
-    }
-    /* M.6 — bookmark swings: slight rotate on the whole illo */
-    #ycard-6.glowing .year-card-illo{
-      transform:rotate(3deg);
-      transform-origin:center bottom;
-    }
-    .year-card-body{flex:1;min-width:0;}
-    .year-card-grade{
-      font-family:'Noto Serif Thai',serif;
-      font-size:20px;font-weight:700;color:var(--d);
-      line-height:1.2;margin-bottom:3px;
-    }
-    .year-card-sub{
-      font-family:'Noto Serif Thai',serif;
-      font-size:12px;font-weight:300;color:var(--soft);
-      line-height:1.5;letter-spacing:0.2px;
-    }
-    /* Fade-out transition for the whole screen */
-    #screen-year.fading{
-      opacity:0;transform:scale(0.98);
-      transition:opacity 0.45s ease,transform 0.45s ease;
-    }
+
   </style>
 </head>
 <body>
@@ -410,65 +333,14 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SCREEN 0: YEAR COVER                  -->
-<!-- ═══════════════════════════════════════ -->
-<div class="screen active" id="screen-year">
-  <div class="year-inner">
-
-    <div class="year-header">
-      <div class="year-heart">🤍</div>
-      <div class="year-title">ก่อนเริ่มนิดนึง</div>
-      <div class="year-subtitle">เราอยู่บทไหนของการเดินทางแล้วนะ</div>
-    </div>
-
-    <div class="year-cards">
-
-      <!-- ม.4 — the door -->
-      <div class="year-card" id="ycard-4" onclick="selectYear('ม.4', this)">
-        <div class="year-card-illo">
-          <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_300,w_251,x_268,y_317/5852375c-ad8a-4d16-8104-72ba5451b1a5_dtky7e.png" alt="ม.4" style="width:56px;height:56px;object-fit:contain;"/>
-        </div>
-        <div class="year-card-body">
-          <div class="year-card-grade">ม.4</div>
-          <div class="year-card-sub">เริ่มต้นบทใหม่</div>
-        </div>
-      </div>
-
-      <!-- ม.5 — sprout from notebook -->
-      <div class="year-card" id="ycard-5" onclick="selectYear('ม.5', this)">
-        <div class="year-card-illo">
-          <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_266,w_352,x_622,y_361/5852375c-ad8a-4d16-8104-72ba5451b1a5_dtky7e.png" alt="ม.5" style="width:56px;height:56px;object-fit:contain;"/>
-        </div>
-        <div class="year-card-body">
-          <div class="year-card-grade">ม.5</div>
-          <div class="year-card-sub">ค่อย ๆ เติบโต</div>
-        </div>
-      </div>
-
-      <!-- ม.6 — notebook with folded pages -->
-      <div class="year-card" id="ycard-6" onclick="selectYear('ม.6', this)">
-        <div class="year-card-illo">
-          <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_225,w_335,x_1029,y_386/5852375c-ad8a-4d16-8104-72ba5451b1a5_lyxzmf.png" alt="ม.6" style="width:56px;height:56px;object-fit:contain;"/>
-        </div>
-        <div class="year-card-body">
-          <div class="year-card-grade">ม.6</div>
-          <div class="year-card-sub">กำลังจะก้าวต่อไป</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 <!-- ═══════════════════════════════════════ -->
 <!-- SCREEN 0: ANNOUNCE — bulletin board    -->
 <!-- ═══════════════════════════════════════ -->
-<div class="screen" id="screen-announce">
+<div class="screen active" id="screen-announce">
 
   <div class="announce-top">
     <span class="announce-pin">📌</span>
-    <span class="announce-pin-label">ประกาศ</span>
   </div>
 
   <div class="announce-middle">
@@ -829,31 +701,6 @@
 <script>
 
 
-// ══════════════════════════════════════════════
-// YEAR COVER
-// ══════════════════════════════════════════════
-let _selectedYear = null;
-
-function selectYear(year, card) {
-  if (_selectedYear) return; // prevent double-tap
-  _selectedYear = year;
-
-  // Save permanently
-  try { localStorage.setItem('jaidee_year', year); } catch(e) {}
-
-  // Glow the card
-  card.classList.add('glowing');
-
-  // After glow settles, fade the whole screen out then proceed
-  setTimeout(() => {
-    const scr = document.getElementById('screen-year');
-    scr.classList.add('fading');
-    setTimeout(() => {
-      // Continue to intro (which checkPauseStatus was already setting up)
-      show('screen-intro');
-    }, 420);
-  }, 380);
-}
 
 // ══════════════════════════════════════════════
 // MUSIC
@@ -939,12 +786,16 @@ const LIFF_ID = "2009806939-xslRo9A6";
 // STATE
 // ══════════════════════════════════════════════
 let currentQ=0, answers=[], chosenSlot=null, caseId=null, userId=null;
+let _selectedYear = null;
 let _specialSelectedSlots = new Set();
 
 // ══════════════════════════════════════════════
 // QUESTIONS — same content, copy softened
 // ══════════════════════════════════════════════
 const questions = [
+  { q:"เราอยู่บทไหนของการเดินทางแล้วนะ",
+    opts:["ม.4 — เริ่มต้นบทใหม่","ม.5 — ค่อย ๆ เติบโต","ม.6 — กำลังจะก้าวต่อไป"],
+    isYear: true },
   { q:"ตอนนี้อะไรหนักใจที่สุด?",
     opts:["ความเครียด / แรงกดดัน","ความสัมพันธ์","ความรู้สึกของตัวเอง","เรื่องเรียน","ยังบอกไม่ถูกเลย"] },
   { q:"มันส่งผลกับชีวิตประจำวันแค่ไหน?",
@@ -961,7 +812,8 @@ const leadIns = [
   "อยากรู้จักคุณมากขึ้นหน่อย",
   "แค่อยากเข้าใจมากขึ้น",
   "เกือบถึงแล้วนะ",
-  "ข้อสุดท้ายแล้วนะ 🤍",
+  "ข้อสุดท้ายแล้วนะ",
+  "",
 ];
 
 // ══════════════════════════════════════════════
@@ -989,7 +841,6 @@ function show(id){
     _staggerAnnounce();
   }
   if (id === 'screen-intro') {
-    _applyYearCopy();
     _staggerReassurances();
   }
 }
@@ -1082,37 +933,6 @@ async function _checkAvailabilityGate(){
 // ══════════════════════════════════════════════
 // FLOW
 // ══════════════════════════════════════════════
-function _applyYearCopy() {
-  const y = _selectedYear;
-  // Headline on consent page
-  const hl = document.getElementById('intro-headline');
-  // Sub on consent page
-  const sub = document.getElementById('intro-sub');
-  // Booking sub
-  const bsub = document.getElementById('booking-sub-text');
-
-  const copy = {
-    'ม.4': {
-      headline: 'ค่อย ๆ เล่าเท่าที่\nสบายใจก็พอ 🤍',
-      sub: 'หลายคนเพิ่งเข้ามาที่นี่\nแล้วก็ยังไม่ค่อยแน่ใจเหมือนกัน',
-      booking: 'จะมีรุ่นพี่คนหนึ่งรอฟังคุณอยู่',
-    },
-    'ม.5': {
-      headline: 'ค่อย ๆ เล่าเท่าที่\nสบายใจก็พอ 🤍',
-      sub: 'บางทีการค่อย ๆ ทำความเข้าใจ\nก็พาเราไปรู้จักตัวเองมากขึ้น',
-      booking: 'บางทีการได้คุยกับใครสักคน\nก็ทำให้มองเห็นอะไรใหม่ ๆ',
-    },
-    'ม.6': {
-      headline: 'ค่อย ๆ เล่าเท่าที่\nสบายใจก็พอ 🤍',
-      sub: 'หลายเรื่องที่เราแบกไว้\nไม่จำเป็นต้องแบกคนเดียวก็ได้',
-      booking: 'จะมีอีกคนหนึ่ง\nค่อย ๆ ฟังเรื่องนี้ไปกับคุณ',
-    },
-  };
-  const d = copy[y] || copy['ม.4'];
-  if (hl) hl.innerHTML = d.headline.replace(/\n/g, '<br>');
-  if (sub) sub.innerHTML = d.sub.replace(/\n/g, '<br>');
-  if (bsub) bsub.innerHTML = d.booking.replace(/\n/g, '<br>');
-}
 
 function _staggerReassurances() {
   const items = document.querySelectorAll('.intro-reassurance');
@@ -1137,7 +957,7 @@ function goFromAnnounce() {
   screen.style.transition = 'opacity 0.25s ease';
   screen.style.opacity = '0';
   setTimeout(() => {
-    show('screen-year');
+    show('screen-intro');
   }, 260);
 }
 
@@ -1244,6 +1064,11 @@ function renderQuestion(){
 function selectAnswer(btn,answer){
   document.querySelectorAll(".option-btn").forEach(b=>b.style.pointerEvents="none");
   btn.classList.add("pressed");
+  // If this is the year question, extract just the grade prefix
+  if(questions[currentQ].isYear){
+    _selectedYear = answer.split(" ")[0]; // "ม.4", "ม.5", "ม.6"
+    try { localStorage.setItem('jaidee_year', _selectedYear); } catch(e) {}
+  }
   answers.push(answer);
   setTimeout(()=>{
     currentQ++;
@@ -1256,10 +1081,10 @@ async function submitAndRoute(){
   if(window._pauseActive)return;
   show("screen-booking");
   let level="green";
-  if(answers[1]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว")level="yellow";
-  if(answers[1]==="มากเลย ยากมากตอนนี้")level="red";
+  if(answers[2]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว")level="yellow";
+  if(answers[2]==="มากเลย ยากมากตอนนี้")level="red";
   try{
-    const d=await apiCall({action:"createCase",userId,level,q1:answers[0],q2:answers[1],q3:answers[2],q4:answers[3],q5:answers[4]});
+    const d=await apiCall({action:"createCase",userId,level,q1:answers[1],q2:answers[2],q3:answers[3],q4:answers[4],q5:answers[5],year:answers[0]});
     const{status,caseId:newCaseId}=d;
     if(status==="OK")caseId=newCaseId;
     else throw new Error();
@@ -1384,7 +1209,7 @@ function showSuccess(room){
     `<div class="success-row"><span class="label">วัน</span><span class="value">${day}</span></div>`+
     `<div class="success-row"><span class="label">เวลา</span><span class="value">${rest.join(" ")}</span></div>`+
     (room?`<div class="success-row"><span class="label">📍 ห้อง</span><span class="value">ห้อง ${room}</span></div>`:"")+
-    `<div class="success-row"><span class="label">เรื่องที่แชร์</span><span class="value">${topicMap[answers[0]]||answers[0]}</span></div>`+
+    `<div class="success-row"><span class="label">เรื่องที่แชร์</span><span class="value">${topicMap[answers[1]]||answers[1]}</span></div>`+
     `<div class="success-note">รุ่นพี่จะได้รับสิ่งที่คุณแชร์มา เพื่อให้พร้อมรับฟังตั้งแต่ต้น 🤍<br><br>พิมพ์ "นัดของฉัน" ใน LINE เพื่อดูข้อมูลนัดอีกครั้งได้เลยนะ</div>`;
 
   show("screen-success");
@@ -1459,7 +1284,7 @@ async function submitSpecialRequest(){
   const btn=document.getElementById("btn-special-submit");
   if(btn){btn.disabled=true;btn.textContent="กำลังส่ง...";}
   try{
-    await apiCall({action:"createSpecialRequest",userId,caseId,slots:JSON.stringify(slots),timeNote:note,q1:answers[0],level:answers[1]==="มากเลย ยากมากตอนนี้"?"red":answers[1]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว"?"yellow":"green"});
+    await apiCall({action:"createSpecialRequest",userId,caseId,slots:JSON.stringify(slots),timeNote:note,q1:answers[1],level:answers[2]==="มากเลย ยากมากตอนนี้"?"red":answers[2]==="ค่อนข้างมาก เริ่มยากขึ้นแล้ว"?"yellow":"green"});
   }catch(e){console.warn("createSpecialRequest failed",e);}
   finally{if(btn){btn.disabled=false;btn.textContent="ส่งคำขอ →";}}
   _specialSelectedSlots.clear();
