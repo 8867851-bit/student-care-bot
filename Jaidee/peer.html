@@ -584,9 +584,7 @@
   </div>
   <div style="height:1px;background:var(--cream-border);width:40px;margin:16px auto;"></div>
   <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;margin-bottom:28px;">
-    ฝากให้เราช่วยจำไว้ก็ได้นะ<br><br>
-    พอตารางพร้อม<br>
-    เดี๋ยวเรามาบอกเอง 🤍
+    ฝากให้เราช่วยจำไว้ก็ได้นะ พอตารางพร้อม เดี๋ยวเราทักไลน์ไปเอง 🤍
   </div>
   <div style="width:100%;display:flex;flex-direction:column;gap:10px;align-items:center;">
     <button class="btn-green" onclick="saveAndNotify()" style="max-width:280px;">แจ้งฉันเมื่อมีตารางใหม่</button>
@@ -982,11 +980,30 @@ window.onload=async()=>{
     console.warn("LIFF unavailable, using test userId");
     userId="test_"+Date.now();
   }
-  // Show announce immediately — gate runs in background and redirects only if needed
+  // Show announce immediately but lock the proceed button until gate resolves
   show('screen-announce');
-  // Gate: check pause → check availability → redirect only if not normal flow
-  _checkAvailabilityGate();
+  _lockAnnounce();
+  // 3-second hard timeout: if gate hasn't resolved, redirect to empty state
+  const gateTimeout = setTimeout(()=>{ show('screen-truly-empty'); }, 3000);
+  await _checkAvailabilityGate();
+  clearTimeout(gateTimeout);
+  _unlockAnnounce();
 };
+
+function _lockAnnounce(){
+  const btn = document.querySelector('#screen-announce .btn-green');
+  if(!btn) return;
+  btn.disabled = true;
+  btn.style.opacity = '0.45';
+  btn.style.cursor = 'default';
+}
+function _unlockAnnounce(){
+  const btn = document.querySelector('#screen-announce .btn-green');
+  if(!btn) return;
+  btn.disabled = false;
+  btn.style.opacity = '';
+  btn.style.cursor = '';
+}
 
 // ══════════════════════════════════════════════
 // VACATION MODE CONFIG
@@ -996,11 +1013,6 @@ window.onload=async()=>{
 const VACATION_MODE = false;
 const VACATION_RETURN_DATE = "...";
 
-// Single entry gate — runs before anything is shown to the user.
-// CASE VACATION: vacation mode → screen-vacation (replaces everything)
-// CASE A: paused → screen-pause
-// CASE B: no slots yet → screen-truly-empty (notify me)
-// CASE C: open → year cover → consent → questions → booking
 async function _checkAvailabilityGate(){
   // 0. Vacation mode — overrides everything
   if (VACATION_MODE) {
@@ -1056,11 +1068,10 @@ async function _checkAvailabilityGate(){
   }catch(e){ window._cachedSlots=null; }
 
   if(!slotsAvailable){
-    // No open slots — redirect away from announce
     show("screen-truly-empty");
     return;
   }
-  // Normal flow — announce is already showing, nothing to do
+  // Normal flow — announce stays, button will be unlocked by caller
 }
 
 // checkPauseStatus and checkBookingStatus removed — logic consolidated into _checkAvailabilityGate()
