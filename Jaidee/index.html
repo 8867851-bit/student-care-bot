@@ -713,33 +713,51 @@ function _renderAllPillsInfinite() {
     </button>`
   ).join('');
 
-  // Three copies: start in the middle so the user can wander in either direction
-  container.innerHTML = makePills() + makePills() + makePills();
+  // Two copies — user starts at position 0 of the first copy and scrolls left→right.
+  // When they reach the end of copy 1, silently jump back to copy 1 start.
+  container.innerHTML = makePills() + makePills();
 
-  // Jump to middle copy immediately (no visible flash)
-  requestAnimationFrame(() => {
-    const third = container.scrollWidth / 3;
-    container.style.scrollBehavior = 'auto';
-    container.scrollLeft = third;
-    requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
-  });
+  // Start at the very beginning (leftmost) — natural left-to-right reading
+  container.scrollLeft = 0;
 
-  // Loop: silently teleport when drifting into the first or third copy
+  // Loop: when nearing end of first copy, reset to equivalent position in first copy
   const onScroll = () => {
-    const third = container.scrollWidth / 3;
-    if (container.scrollLeft < third * 0.05) {
+    const half = container.scrollWidth / 2;
+    // Only loop rightward — clamp so it never scrolls left past 0
+    if (container.scrollLeft < 0) {
       container.style.scrollBehavior = 'auto';
-      container.scrollLeft += third;
+      container.scrollLeft = 0;
       requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
-    } else if (container.scrollLeft > third * 1.95) {
+    } else if (container.scrollLeft >= half * 0.95) {
       container.style.scrollBehavior = 'auto';
-      container.scrollLeft -= third;
+      container.scrollLeft -= half;
       requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
+    }
+
+    // Trigger invitation card on first swipe — calm fade, same as scroll-down trigger
+    if (!_permissionTriggered && container.scrollLeft > 40) {
+      _triggerPermissionSentence(600);
     }
   };
   if (container._infiniteHandler) container.removeEventListener('scroll', container._infiniteHandler);
   container._infiniteHandler = onScroll;
   container.addEventListener('scroll', onScroll, { passive: true });
+
+  // Block leftward scroll past 0 via touchmove (belt + suspenders)
+  if (!container._leftGuard) {
+    container._leftGuard = true;
+    let _touchStartX = 0;
+    container.addEventListener('touchstart', e => {
+      _touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    container.addEventListener('touchmove', e => {
+      const delta = e.touches[0].clientX - _touchStartX;
+      // Swipe right (delta > 0) while already at 0 — block it
+      if (delta > 0 && container.scrollLeft <= 0) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+  }
 }
 
 function nextTier() {
@@ -1458,16 +1476,16 @@ setTimeout(_initPillPreview, 400);
 // Triggered by first meaningful interaction (pill or deep scroll).
 // The sentence already exists in DOM at 0.18 opacity — this brightens it.
 let _permissionTriggered = false;
-function _triggerPermissionSentence() {
+function _triggerPermissionSentence(delay) {
   if (_permissionTriggered) return;
   _permissionTriggered = true;
+  // delay=0 when triggered by first pill swipe; 2500 when triggered by pill tap
   setTimeout(() => {
     const rec = document.getElementById('session-recognition');
     const lib = document.getElementById('library-entry');
-    if (rec) { rec.style.transition = 'opacity 1.2s ease'; rec.style.opacity = '1'; }
-    // Library entry fades in 0.4s after sentence (via CSS transition-delay)
+    if (rec) { rec.style.transition = 'opacity 1.4s ease'; rec.style.opacity = '1'; }
     if (lib) lib.style.opacity = '1';
-  }, 2500);
+  }, delay !== undefined ? delay : 2500);
 }
 
 // Merge into SIT_DATA
