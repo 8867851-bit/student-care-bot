@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — Peer Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #F7F4EF;
+      --surface: #FDFCF9;
+      --surface2: #F0EDE8;
+      --border: #E2DDD7;
+      --border-soft: #EDEAE5;
+      --gold: #C8860A;
+      --gold-soft: #FBF3E2;
+      --gold-border: #F0D080;
+      --green: #3A7D52;
+      --green-soft: #EBF6EF;
+      --green-border: #B8DCCA;
+      --red: #C0392B;
+      --red-soft: #FDEDED;
+      --red-border: #F5BBBB;
+      --yellow: #B8780A;
+      --yellow-soft: #FEF9E7;
+      --d: #1A1714;
+      --mid: #5A5550;
+      --soft: #9A9590;
+      --softer: #C8C4C0;
+      --white: #FFFFFF;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body { font-family:'Sarabun',sans-serif; background:var(--cream); color:var(--d); min-height:100vh; }
+
+    /* ── PASSWORD GATE ── */
+    #gate {
+      position:fixed; inset:0; background:var(--cream);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:24px; padding:40px 24px; z-index:200;
+    }
+    .gate-logo { font-family:'Noto Serif Thai',serif; font-size:22px; font-weight:600; color:var(--d); text-align:center; line-height:1.5; }
+    .gate-sub { font-size:13px; color:var(--soft); }
+    .gate-form { display:flex; flex-direction:column; gap:12px; width:100%; max-width:280px; }
+    .gate-input {
+      background:var(--surface); border:1.5px solid var(--border); border-radius:12px;
+      padding:14px 16px; font-size:15px; font-family:'Sarabun',sans-serif; color:var(--d);
+      text-align:center; letter-spacing:3px; outline:none; transition:border-color 0.2s;
+    }
+    .gate-input:focus { border-color:var(--gold); }
+    .gate-input.shake { animation:shake 0.35s ease; }
+    .gate-btn {
+      background:var(--d); color:#fff; border:none; border-radius:12px;
+      padding:14px; font-size:14px; font-family:'Sarabun',sans-serif; font-weight:600;
+      cursor:pointer; transition:opacity 0.2s;
+    }
+    .gate-btn:active { opacity:0.8; }
+    .gate-error { font-size:12px; color:var(--red); text-align:center; min-height:16px; }
+    @keyframes shake {
+      0%,100% { transform:translateX(0); }
+      25% { transform:translateX(-8px); }
+      75% { transform:translateX(8px); }
+    }
+
+    /* ── APP SHELL ── */
+    #app { display:none; flex-direction:row; min-height:100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width:220px; flex-shrink:0; background:var(--surface);
+      border-right:1px solid var(--border); padding:20px 0;
+      position:sticky; top:0; height:100vh; overflow-y:auto;
+      display:flex; flex-direction:column;
+    }
+    .sidebar-brand { padding:0 18px 20px; border-bottom:1px solid var(--border-soft); margin-bottom:8px; }
+    .sidebar-brand-name { font-family:'Noto Serif Thai',serif; font-size:16px; font-weight:600; color:var(--d); }
+    .sidebar-brand-sub { font-size:11px; color:var(--soft); margin-top:2px; }
+    .sidebar-pr-name {
+      margin:0 12px 16px; padding:10px 14px;
+      background:var(--gold-soft); border:1px solid var(--gold-border);
+      border-radius:10px; font-size:13px; font-weight:600; color:var(--gold);
+    }
+    .sidebar-item {
+      display:flex; align-items:center; gap:10px; padding:10px 18px;
+      font-size:13px; color:var(--mid); cursor:pointer;
+      transition:background 0.12s, color 0.12s;
+      border-left:2px solid transparent; position:relative;
+    }
+    .sidebar-item:hover { background:var(--surface2); }
+    .sidebar-item.active { background:var(--gold-soft); color:var(--gold); font-weight:600; border-left-color:var(--gold); }
+    .sidebar-icon { font-size:16px; width:20px; text-align:center; flex-shrink:0; }
+    .sidebar-badge {
+      margin-left:auto; background:var(--red); color:#fff;
+      font-size:10px; font-weight:700; border-radius:99px;
+      padding:1px 7px; min-width:18px; text-align:center;
+    }
+    .sidebar-section {
+      font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+      color:var(--softer); padding:12px 18px 4px;
+    }
+    .sidebar-divider { height:1px; background:var(--border-soft); margin:8px 16px; }
+    .sidebar-bottom { margin-top:auto; padding:16px 18px 0; border-top:1px solid var(--border-soft); }
+    .sidebar-logout { font-size:12px; color:var(--soft); cursor:pointer; padding:4px 0; }
+    .sidebar-logout:hover { color:var(--red); }
+
+    /* ── MOBILE ── */
+    .hamburger { display:none; background:none; border:none; cursor:pointer; padding:8px; }
+    .hamburger span { display:block; width:20px; height:2px; background:var(--d); margin:4px 0; border-radius:2px; }
+    .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:49; }
+    .sidebar-overlay.open { display:block; }
+    @media(max-width:680px) {
+      #app { flex-direction:column !important; }
+      .sidebar { position:fixed; left:-230px; top:0; height:100vh; z-index:50; transition:left 0.25s ease; }
+      .sidebar.open { left:0; box-shadow:4px 0 24px rgba(0,0,0,0.12); }
+      .topbar { display:flex !important; }
+      .hamburger { display:flex; flex-direction:column; justify-content:center; }
+    }
+    .topbar {
+      display:none; position:sticky; top:0; z-index:30;
+      background:var(--surface); border-bottom:1px solid var(--border);
+      padding:0 16px; height:48px;
+      align-items:center; justify-content:space-between;
+    }
+    .topbar-title { font-size:14px; font-weight:600; }
+
+    /* ── MAIN ── */
+    .main { flex:1; overflow-y:auto; display:flex; flex-direction:column; }
+    .tab-content { display:none; padding:24px 20px 60px; flex-direction:column; gap:18px; animation:fadeUp 0.25s ease both; }
+    .tab-content.active { display:flex; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── SHARED COMPONENTS ── */
+    .section-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--soft); }
+    .card { background:var(--surface); border-radius:16px; padding:18px; border:1px solid var(--border); }
+    .card-title { font-size:15px; font-weight:700; color:var(--d); margin-bottom:2px; }
+    .card-sub { font-size:13px; color:var(--mid); line-height:1.6; }
+    .input-label { font-size:12px; font-weight:600; color:var(--mid); margin-bottom:4px; display:block; }
+    .input-field {
+      background:var(--surface2); border:1.5px solid var(--border);
+      border-radius:10px; padding:10px 14px; font-size:14px;
+      font-family:'Sarabun',sans-serif; color:var(--d); width:100%;
+      outline:none; transition:border-color 0.15s;
+    }
+    .input-field:focus { border-color:var(--gold); }
+    textarea.input-field { resize:none; min-height:80px; line-height:1.65; }
+    .btn { border:none; border-radius:10px; padding:10px 18px; font-size:13px; font-family:'Sarabun',sans-serif; font-weight:600; cursor:pointer; transition:opacity 0.15s, transform 0.12s; }
+    .btn:active { opacity:0.8; transform:scale(0.98); }
+    .btn:disabled { opacity:0.45; cursor:default; transform:none; }
+    .btn-gold { background:var(--gold); color:#fff; }
+    .btn-green { background:var(--green); color:#fff; }
+    .btn-ghost { background:var(--surface2); color:var(--mid); }
+    .btn-danger { background:var(--red-soft); color:var(--red); }
+    .btn-full { width:100%; padding:13px; font-size:14px; border-radius:12px; }
+    .btn-row { display:flex; gap:8px; flex-wrap:wrap; }
+    .badge { display:inline-block; font-size:10px; font-weight:700; border-radius:99px; padding:3px 10px; }
+    .badge-green { background:var(--green-soft); color:var(--green); }
+    .badge-yellow { background:var(--yellow-soft); color:var(--yellow); }
+    .badge-red { background:var(--red-soft); color:var(--red); }
+    .badge-gold { background:var(--gold-soft); color:var(--gold); }
+    .badge-soft { background:var(--surface2); color:var(--mid); }
+    .divider { height:1px; background:var(--border-soft); }
+    .empty-state { text-align:center; padding:32px 16px; color:var(--soft); font-size:13px; line-height:1.8; }
+
+    /* ── TOAST ── */
+    .toast-wrap { position:fixed; bottom:28px; left:50%; transform:translateX(-50%); z-index:300; display:flex; flex-direction:column; gap:8px; align-items:center; pointer-events:none; }
+    .toast-item { background:var(--d); color:#fff; padding:11px 20px; border-radius:99px; font-size:13px; white-space:nowrap; animation:toastIn 0.3s ease both; }
+    .toast-item.out { animation:toastOut 0.3s ease forwards; }
+    @keyframes toastIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes toastOut { to{opacity:0;transform:translateY(12px)} }
+
+    /* ── ALERT BANNER ── */
+    .alert-banner {
+      background:var(--green-soft); border:1px solid var(--green-border);
+      border-radius:14px; padding:16px 18px; display:flex; align-items:flex-start; gap:12px;
+    }
+    .alert-banner.urgent { background:var(--red-soft); border-color:var(--red-border); }
+    .alert-banner-icon { font-size:20px; flex-shrink:0; }
+    .alert-banner-body { flex:1; }
+    .alert-banner-title { font-size:14px; font-weight:700; color:var(--d); }
+    .alert-banner-sub { font-size:13px; color:var(--mid); margin-top:2px; line-height:1.6; }
+    .alert-close { background:none; border:none; font-size:16px; color:var(--soft); cursor:pointer; flex-shrink:0; }
+
+    /* ── SLOT GRID ── */
+    .day-group { display:flex; flex-direction:column; gap:8px; }
+    .day-label { font-size:11px; font-weight:700; color:var(--soft); letter-spacing:0.5px; text-transform:uppercase; }
+    .slots-row { display:flex; flex-wrap:wrap; gap:7px; }
+    .slot-chip {
+      background:var(--surface2); border:1.5px solid var(--border);
+      border-radius:10px; padding:8px 14px; font-size:13px; color:var(--mid);
+      cursor:pointer; transition:all 0.15s; font-family:'Sarabun',sans-serif;
+    }
+    .slot-chip:hover { border-color:var(--gold); color:var(--d); }
+    .slot-chip.selected { background:var(--gold-soft); border-color:var(--gold); color:var(--gold); font-weight:600; }
+    .slot-chip.booked { background:var(--green-soft); border-color:var(--green-border); color:var(--green); cursor:default; }
+    .slot-chip.locked { background:var(--surface2); border-color:var(--border); color:var(--softer); cursor:default; text-decoration:line-through; }
+
+    /* ── BOOKING CARD ── */
+    .booking-card {
+      background:var(--surface); border-radius:14px; padding:16px 18px;
+      border:1px solid var(--border); border-left:4px solid var(--green);
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .booking-card .bc-slot { font-family:'Noto Serif Thai',serif; font-size:20px; font-weight:600; }
+    .booking-card .bc-meta { font-size:12px; color:var(--mid); display:flex; gap:8px; flex-wrap:wrap; }
+    .booking-card .bc-answers { font-size:13px; color:var(--mid); line-height:1.8; }
+    .booking-card .bc-label { font-size:11px; color:var(--soft); }
+
+    /* ── SESSION NOTE ── */
+    .sn-chip {
+      background:var(--surface2); border:1.5px solid var(--border);
+      border-radius:99px; padding:7px 14px; font-size:12px; font-weight:600;
+      color:var(--mid); cursor:pointer; transition:all 0.15s; font-family:'Sarabun',sans-serif;
+    }
+    .sn-chip:hover { border-color:var(--gold); color:var(--gold); }
+    .sn-chip.sel { background:var(--gold-soft); border-color:var(--gold); color:var(--gold); }
+    .sn-chip.sel-red { background:var(--red-soft); border-color:var(--red); color:var(--red); }
+    .sn-chips-row { display:flex; flex-wrap:wrap; gap:7px; }
+    .sn-section { display:flex; flex-direction:column; gap:10px; }
+    .sn-section-title { font-size:13px; font-weight:700; color:var(--d); padding-top:4px; }
+    .recent-note-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:12px;
+      padding:12px 14px; min-width:190px; max-width:200px;
+      flex-shrink:0; display:flex; flex-direction:column; gap:5px;
+    }
+    .rnc-id { font-size:11px; font-weight:700; color:var(--gold); }
+    .rnc-date { font-size:11px; color:var(--soft); }
+    .rnc-issue { font-size:12px; color:var(--d); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .recent-notes-strip { display:flex; gap:10px; overflow-x:auto; padding-bottom:8px; -webkit-overflow-scrolling:touch; }
+    .recent-notes-strip::-webkit-scrollbar { height:4px; }
+    .recent-notes-strip::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
+
+    /* ── PAUSE CARD ── */
+    .pause-active-card {
+      background:var(--yellow-soft); border:1px solid var(--gold-border);
+      border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:8px;
+    }
+
+    /* ── SPINNER ── */
+    .spinner { width:18px; height:18px; border:2px solid var(--border); border-top-color:var(--gold); border-radius:50%; animation:spin 0.8s linear infinite; flex-shrink:0; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .loading-row { display:flex; align-items:center; gap:10px; color:var(--soft); font-size:13px; }
+    /* ── COMPLETION MODAL ── */
+    .modal-backdrop {
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);
+      z-index:150; align-items:flex-end; justify-content:center;
+    }
+    .modal-backdrop.open { display:flex; }
+    .modal-sheet {
+      background:var(--surface); border-radius:20px 20px 0 0;
+      padding:28px 24px 40px; width:100%; max-width:480px;
+      display:flex; flex-direction:column; gap:16px;
+      animation:sheetUp 0.28s ease both;
+    }
+    @keyframes sheetUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .modal-handle { width:36px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 4px; }
+    .modal-title { font-family:'Noto Serif Thai',serif; font-size:19px; font-weight:600; }
+  </style>
+</head>
+<body>
+
+<!-- ── TOAST CONTAINER ── -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PASSWORD GATE                                 -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="gate">
+  <div>
+    <div class="gate-logo">ใจดี TU<br><span style="font-size:14px;font-weight:400;color:var(--soft);">ระบบหลังบ้าน · เพื่อนที่ปรึกษา</span></div>
+  </div>
+  <div class="gate-form">
+    <div style="font-size:13px;color:var(--soft);text-align:center;">ใส่รหัสผ่านเพื่อเข้าสู่ระบบ</div>
+    <input class="gate-input" type="password" id="gate-pw" placeholder="••••••" autocomplete="off" onkeydown="if(event.key==='Enter')gateLogin()"/>
+    <button class="gate-btn" onclick="gateLogin()">เข้าสู่ระบบ →</button>
+    <div class="gate-error" id="gate-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- APP                                           -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- ── TOPBAR (mobile) ── -->
+  <div class="topbar" id="topbar">
+    <button class="hamburger" onclick="openSidebar()"><span></span><span></span><span></span></button>
+    <div class="topbar-title">ใจดี TU</div>
+    <div style="width:36px;"></div>
+  </div>
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-name">ใจดี TU</div>
+      <div class="sidebar-brand-sub">เพื่อนที่ปรึกษา</div>
+    </div>
+    <div class="sidebar-pr-name" id="sidebar-pr-name">— กำลังโหลด —</div>
+
+    <div class="sidebar-section">งานของฉัน</div>
+    <div class="sidebar-item active" onclick="showTab('home')" id="nav-home"><span class="sidebar-icon">🏠</span>หน้าหลัก</div>
+    <div class="sidebar-item" onclick="showTab('slots')" id="nav-slots"><span class="sidebar-icon">📅</span>ลงเวลาที่ว่าง</div>
+    <div class="sidebar-item" onclick="showTab('bookings')" id="nav-bookings"><span class="sidebar-icon">🤍</span>นัดที่ได้รับ <span class="sidebar-badge" id="badge-bookings" style="display:none;">0</span></div>
+    <div class="sidebar-item" onclick="showTab('notes')" id="nav-notes"><span class="sidebar-icon">📝</span>บันทึก session</div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">การจัดการ</div>
+    <div class="sidebar-item" onclick="showTab('pause')" id="nav-pause"><span class="sidebar-icon">⏸</span>Pause management</div>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-logout" onclick="logout()">← ออกจากระบบ</div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- ══ HOME ══ -->
+    <div class="tab-content active" id="tab-home">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="section-label">ภาพรวม</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;" id="home-greeting">สวัสดี 🤍</div>
+        <div style="font-size:13px;color:var(--mid);" id="home-week-label">—</div>
+      </div>
+
+      <!-- New booking alerts -->
+      <div id="home-alerts"></div>
+
+      <!-- This week's slots summary -->
+      <div class="card" id="home-slots-summary">
+        <div class="card-title">เวลาของสัปดาห์นี้</div>
+        <div id="home-slots-body" style="margin-top:12px;">
+          <div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-ghost" onclick="showTab('slots')">แก้ไขเวลา →</button>
+        </div>
+      </div>
+
+      <!-- Pause status -->
+      <div id="home-pause-status"></div>
+    </div>
+
+    <!-- ══ SLOTS ══ -->
+    <div class="tab-content" id="tab-slots">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="section-label">ลงเวลาที่ว่าง</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;">เลือกเวลาที่สะดวก</div>
+        <div style="font-size:13px;color:var(--mid);" id="slots-week-label">—</div>
+      </div>
+
+      <div class="card" style="gap:6px;display:flex;flex-direction:column;">
+        <div class="card-sub" style="font-size:12px;line-height:1.8;">
+          เลือกช่วงเวลาที่สะดวก · เปลี่ยนแปลงได้ทุกเมื่อก่อนที่จะมีนัด<br>
+          <span style="color:var(--green);font-weight:600;">■</span> มีนัดแล้ว (ยกเลิกไม่ได้) &nbsp;
+          <span style="color:var(--gold);font-weight:600;">■</span> เลือกไว้ &nbsp;
+          <span style="color:var(--softer);font-weight:600;">■</span> ปิดชั่วคราว
+        </div>
+      </div>
+
+      <div id="slot-grid">
+        <div class="loading-row"><div class="spinner"></div><span>กำลังโหลดตาราง...</span></div>
+      </div>
+
+      <button class="btn btn-gold btn-full" id="btn-save-slots" onclick="saveSlots()" disabled>บันทึกเวลา</button>
+    </div>
+
+    <!-- ══ BOOKINGS ══ -->
+    <div class="tab-content" id="tab-bookings">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="section-label">นัดที่ได้รับ</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;">นักเรียนที่จะมาหา</div>
+      </div>
+      <div id="bookings-list">
+        <div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>
+      </div>
+    </div>
+
+    <!-- ══ SESSION NOTES ══ -->
+    <div class="tab-content" id="tab-notes">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="section-label">Session Notes</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;">บันทึก session</div>
+        <div style="font-size:13px;color:var(--soft);">ไม่แสดงต่อสาธารณะ — เห็นเฉพาะคนที่เขียน</div>
+      </div>
+
+      <!-- Recent notes -->
+      <div id="recent-notes-section" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="section-label">บันทึกล่าสุด</div>
+        <div id="recent-notes-strip-wrap">
+          <div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- New note form -->
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="section-label">เขียนบันทึกใหม่</div>
+        <div style="font-size:12px;color:var(--soft);">ใส่ Case ID หรือปล่อยว่างก็ได้</div>
+      </div>
+
+      <div class="card" style="gap:16px;display:flex;flex-direction:column;">
+
+        <!-- Case ID lookup -->
+        <div style="display:flex;gap:8px;align-items:flex-end;">
+          <div style="flex:1;">
+            <label class="input-label">Case ID <span style="font-weight:300;color:var(--soft);">(ตัวเลือก)</span></label>
+            <input class="input-field" id="sn-caseid" placeholder="CS-0001" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"/>
+          </div>
+          <button class="btn btn-ghost" onclick="lookupCase()" style="white-space:nowrap;flex-shrink:0;align-self:flex-end;">ดึงข้อมูล</button>
+        </div>
+
+        <!-- Pre-session context (auto-filled from case) -->
+        <div id="sn-case-preview" style="display:none;" class="card" style="background:var(--gold-soft);border-color:var(--gold-border);">
+        </div>
+
+        <!-- PHASE: Pre -->
+        <div class="sn-section">
+          <div class="sn-section-title">ก่อน session</div>
+          <div>
+            <label class="input-label">เป้าหมายของ session นี้</label>
+            <textarea class="input-field" id="sn-goal" placeholder="อยากให้นักเรียนได้อะไรจาก session นี้..." rows="2"></textarea>
+          </div>
+          <div>
+            <label class="input-label">คำถามที่อยากถาม / ประเด็นที่อยากสำรวจ</label>
+            <textarea class="input-field" id="sn-questions" placeholder="ประเด็นที่อยากเปิดดู..." rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- PHASE: During -->
+        <div class="sn-section">
+          <div class="sn-section-title">ระหว่าง session</div>
+          <div>
+            <label class="input-label">มาพบหรือไม่?</label>
+            <div class="sn-chips-row" id="sn-attended-chips">
+              <button class="sn-chip" onclick="snSelect('attended','yes',this)">✓ มาพบ</button>
+              <button class="sn-chip" onclick="snSelect('attended','no',this)">✗ ไม่มาพบ</button>
+            </div>
+          </div>
+          <div id="sn-noreason-wrap" style="display:none;">
+            <label class="input-label">เหตุผลที่ไม่มา <span style="font-weight:300;color:var(--soft);">(ถ้าทราบ)</span></label>
+            <input class="input-field" id="sn-noreason" placeholder="ติดซ้อม / ลืม / ฯลฯ"/>
+          </div>
+          <div>
+            <label class="input-label">เรื่องที่นักเรียนเล่า</label>
+            <textarea class="input-field" id="sn-userstory" placeholder="สรุปสิ่งที่นักเรียนแชร์มา..." rows="3"></textarea>
+          </div>
+          <div>
+            <label class="input-label">ประเด็นหลักที่พบ</label>
+            <textarea class="input-field" id="sn-mainissue" placeholder="ปัญหาหลักที่คุยกัน..." rows="2"></textarea>
+          </div>
+          <div>
+            <label class="input-label">อารมณ์ที่สังเกตได้</label>
+            <div class="sn-chips-row" id="sn-mood-chips">
+              <button class="sn-chip" onclick="snSelectMulti('mood','เศร้า',this)">เศร้า</button>
+              <button class="sn-chip" onclick="snSelectMulti('mood','กังวล',this)">กังวล</button>
+              <button class="sn-chip" onclick="snSelectMulti('mood','โกรธ',this)">โกรธ</button>
+              <button class="sn-chip" onclick="snSelectMulti('mood','สับสน',this)">สับสน</button>
+              <button class="sn-chip" onclick="snSelectMulti('mood','เหนื่อย',this)">เหนื่อย</button>
+              <button class="sn-chip" onclick="snSelectMulti('mood','ดีขึ้น',this)">ดีขึ้น</button>
+              <button class="sn-chip" onclick="snSelectMulti('mood','ระวัง',this)">🚩 ระวัง</button>
+            </div>
+          </div>
+          <div>
+            <label class="input-label">สิ่งที่ทำใน session</label>
+            <div class="sn-chips-row" id="sn-actions-chips">
+              <button class="sn-chip" onclick="snSelectMulti('actions','รับฟัง',this)">รับฟัง</button>
+              <button class="sn-chip" onclick="snSelectMulti('actions','ตั้งคำถาม',this)">ตั้งคำถาม</button>
+              <button class="sn-chip" onclick="snSelectMulti('actions','สะท้อนความรู้สึก',this)">สะท้อนความรู้สึก</button>
+              <button class="sn-chip" onclick="snSelectMulti('actions','ให้ข้อมูล',this)">ให้ข้อมูล</button>
+              <button class="sn-chip" onclick="snSelectMulti('actions','ฝึกทักษะ',this)">ฝึกทักษะ</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- PHASE: Post -->
+        <div class="sn-section">
+          <div class="sn-section-title">หลัง session</div>
+          <div>
+            <label class="input-label">ต้อง follow-up ไหม?</label>
+            <div class="sn-chips-row" id="sn-followup-chips">
+              <button class="sn-chip" onclick="snSelect('followup','yes',this)">ใช่</button>
+              <button class="sn-chip" onclick="snSelect('followup','no',this)">ไม่</button>
+            </div>
+          </div>
+          <div id="sn-followup-detail-wrap" style="display:none;">
+            <label class="input-label">Follow-up เมื่อไร / อะไร</label>
+            <input class="input-field" id="sn-followup-when" placeholder="เช่น สัปดาห์หน้า ติดตามเรื่อง..."/>
+          </div>
+          <div>
+            <label class="input-label">ส่งต่อหรือไม่?</label>
+            <div class="sn-chips-row" id="sn-referral-chips">
+              <button class="sn-chip" onclick="snSelect('referral','no',this)">ไม่ส่งต่อ</button>
+              <button class="sn-chip" onclick="snSelect('referral','guidance',this)">ครูแนะแนว</button>
+              <button class="sn-chip" onclick="snSelect('referral','psych',this)">นักจิตวิทยา</button>
+              <button class="sn-chip sel-red" onclick="snSelect('referral','urgent',this)">🆘 เร่งด่วน</button>
+            </div>
+          </div>
+          <div>
+            <label class="input-label">สถานะสุดท้าย</label>
+            <div class="sn-chips-row" id="sn-finalstatus-chips">
+              <button class="sn-chip" onclick="snSelect('finalStatus','resolved',this)">✓ จบดี</button>
+              <button class="sn-chip" onclick="snSelect('finalStatus','ongoing',this)">กำลังดำเนินการ</button>
+              <button class="sn-chip" onclick="snSelect('finalStatus','referred',this)">ส่งต่อแล้ว</button>
+              <button class="sn-chip sel-red" onclick="snSelect('finalStatus','concern',this)">🚩 น่าเป็นห่วง</button>
+            </div>
+          </div>
+          <div>
+            <label class="input-label">ความรู้สึกของตัวเอง / สิ่งที่อยากจดไว้</label>
+            <textarea class="input-field" id="sn-reflection" placeholder="reflection ส่วนตัว ไม่มีใครอ่านนอกจากเรา..." rows="3"></textarea>
+          </div>
+        </div>
+
+        <button class="btn btn-gold btn-full" id="btn-save-note" onclick="saveNote()">บันทึก session note</button>
+        <button class="btn btn-ghost btn-full" onclick="clearNote()" style="margin-top:-8px;">ล้างฟอร์ม</button>
+
+      </div>
+    </div>
+
+    <!-- ══ PAUSE MANAGEMENT ══ -->
+    <div class="tab-content" id="tab-pause">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="section-label">Pause management</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;">จัดการการเปิด-ปิดระบบ</div>
+        <div style="font-size:13px;color:var(--soft);">ทีม PR ทุกคนสามารถตั้งค่า pause ได้</div>
+      </div>
+
+      <!-- Current status -->
+      <div id="pause-current-status">
+        <div class="loading-row"><div class="spinner"></div><span>กำลังโหลดสถานะ...</span></div>
+      </div>
+
+      <!-- Set pause -->
+      <div class="card" style="gap:14px;display:flex;flex-direction:column;">
+        <div class="card-title">ตั้ง Pause ใหม่</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label class="input-label">ประเภท</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;" id="pause-type-chips">
+            <button class="sn-chip sel" onclick="snSelect('pauseType','holiday',this)">วันหยุด</button>
+            <button class="sn-chip" onclick="snSelect('pauseType','midterm',this)">สอบกลางภาค</button>
+            <button class="sn-chip" onclick="snSelect('pauseType','finals',this)">สอบปลายภาค</button>
+            <button class="sn-chip" onclick="snSelect('pauseType','summer',this)">ปิดเทอม</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label class="input-label">วันเริ่ม</label>
+            <input class="input-field" type="date" id="pause-start"/>
+          </div>
+          <div>
+            <label class="input-label">วันสิ้นสุด</label>
+            <input class="input-field" type="date" id="pause-end"/>
+          </div>
+        </div>
+        <button class="btn btn-gold btn-full" onclick="setPause()">ตั้ง Pause →</button>
+      </div>
+
+      <!-- Clear pause -->
+      <div class="card" style="gap:10px;display:flex;flex-direction:column;">
+        <div class="card-title">ยกเลิก Pause</div>
+        <div class="card-sub">กดปุ่มด้านล่างเพื่อกลับสู่การรับนัดปกติ</div>
+        <button class="btn btn-danger btn-full" onclick="clearPause()">ยกเลิก Pause ทันที</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════════
+const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const DASHBOARD_PASSWORD = "jaidee2568"; // ← เปลี่ยนรหัสผ่านตรงนี้
+
+// Session time slots by day
+const SLOT_TIMES = {
+  จันทร์:   ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  อังคาร:  ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  พุธ:     ["15:30–16:30","16:00–17:00","16:30–17:30"],
+  พฤหัสบดี:["15:30–16:30","16:00–17:00","16:30–17:30"],
+  ศุกร์:   ["12:30–13:30","13:00–14:00","14:00–15:00","15:00–16:00"],
+};
+const DAY_ORDER = ["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
+
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+let MY_USER_ID = null;  // will be set after login (from localStorage or URL param)
+let MY_NAME    = null;
+let currentWeekId = getWeekId();
+
+// Slot selection state
+let selectedSlots  = new Set(); // newly selected
+let existingSlots  = [];        // already registered (from API)
+let bookedSlotKeys = new Set(); // slots that are locked (student booked)
+let lockedSlotKeys = new Set(); // slots manually locked
+
+// SN form state
+const snState = {
+  attended: null, followup: null, referral: null,
+  finalStatus: null, pauseType: 'holiday',
+  mood: new Set(), actions: new Set(),
+};
+
+// Bookings data
+let myBookings = [];
+let lastBookingCount = 0;
+
+// ══════════════════════════════════════════════════════════════
+// GATE
+// ══════════════════════════════════════════════════════════════
+function gateLogin() {
+  const pw = document.getElementById('gate-pw').value.trim();
+  const errEl = document.getElementById('gate-error');
+  if (pw === DASHBOARD_PASSWORD) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    // Try to get userId from URL param (for multi-user use)
+    const params = new URLSearchParams(location.search);
+    MY_USER_ID = params.get('uid') || localStorage.getItem('pr_uid') || null;
+    MY_NAME    = localStorage.getItem('pr_name') || null;
+    if (!MY_USER_ID) {
+      promptUserId();
+    } else {
+      initDashboard();
+    }
+  } else {
+    errEl.textContent = 'รหัสผ่านไม่ถูกต้อง';
+    const inp = document.getElementById('gate-pw');
+    inp.classList.add('shake');
+    setTimeout(() => inp.classList.remove('shake'), 400);
+    document.getElementById('gate-pw').value = '';
+  }
+}
+
+function promptUserId() {
+  const uid = prompt('ใส่ LINE User ID ของเธอ (ดูได้จาก getid.html):\n\nID จะถูกบันทึกไว้ในเครื่องนี้');
+  if (!uid || !uid.trim()) { promptUserId(); return; }
+  MY_USER_ID = uid.trim();
+  const name = prompt('ชื่อเล่น / ชื่อที่ใช้ในทีม:') || 'PR';
+  MY_NAME = name.trim();
+  localStorage.setItem('pr_uid', MY_USER_ID);
+  localStorage.setItem('pr_name', MY_NAME);
+  initDashboard();
+}
+
+function logout() {
+  if (!confirm('ออกจากระบบ?')) return;
+  localStorage.removeItem('pr_uid');
+  localStorage.removeItem('pr_name');
+  location.reload();
+}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+function initDashboard() {
+  document.getElementById('sidebar-pr-name').textContent = MY_NAME || MY_USER_ID?.slice(0,16) || '—';
+  document.getElementById('home-greeting').textContent = `สวัสดี ${MY_NAME || ''} 🤍`;
+  document.getElementById('home-week-label').textContent = 'สัปดาห์: ' + getWeekRangeThai();
+  document.getElementById('slots-week-label').textContent = 'สัปดาห์: ' + getWeekRangeThai();
+  // Set default dates for pause
+  const today = new Date().toISOString().split('T')[0];
+  const nextWeek = new Date(Date.now()+7*86400000).toISOString().split('T')[0];
+  document.getElementById('pause-start').value = today;
+  document.getElementById('pause-end').value = nextWeek;
+
+  loadHomeData();
+  loadBookingsAlert();
+  // Poll for new bookings every 60s while page is open
+  setInterval(pollBookings, 60000);
+}
+
+async function loadHomeData() {
+  await Promise.all([loadMySlotsForHome(), loadPauseStatus()]);
+}
+
+// ══════════════════════════════════════════════════════════════
+// API
+// ══════════════════════════════════════════════════════════════
+async function api(params) {
+  const url = API_URL + '?' + new URLSearchParams(params).toString();
+  const res  = await fetch(url);
+  return await res.json();
+}
+
+async function apiPost(body) {
+  const res = await fetch(API_URL, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  return await res.json();
+}
+
+// ══════════════════════════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════════════════════════
+async function loadMySlotsForHome() {
+  try {
+    const d = await api({action:'getMySlots', userId:MY_USER_ID});
+    const slots = (d.slots || []).filter(s => s.weekId === currentWeekId);
+    const el = document.getElementById('home-slots-body');
+    if (!slots.length) {
+      el.innerHTML = '<div class="empty-state">ยังไม่ได้ลงเวลาสัปดาห์นี้<br><span style="font-size:12px;">กดที่ "ลงเวลาที่ว่าง" เพื่อเพิ่ม</span></div>';
+      return;
+    }
+    el.innerHTML = slots.map(s => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-soft);">
+        <span style="font-size:14px;">${s.slot}</span>
+        ${s.locked ? '<span class="badge badge-green">มีนัด</span>' : (s.manualLock==='TRUE'||s.manualLock===true ? '<span class="badge badge-soft">ปิดชั่วคราว</span>' : '<span class="badge badge-gold">ว่าง</span>')}
+      </div>
+    `).join('');
+  } catch(e) {
+    document.getElementById('home-slots-body').innerHTML = '<div class="empty-state" style="color:var(--red);">โหลดไม่ได้ ลองใหม่อีกครั้ง</div>';
+  }
+}
+
+async function loadPauseStatus() {
+  try {
+    const d = await api({action:'getPauseStatus'});
+    const el = document.getElementById('home-pause-status');
+    if (d.pause) {
+      const end = new Date(d.pause.end).toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+      el.innerHTML = `
+        <div class="pause-active-card">
+          <div style="font-size:13px;font-weight:700;color:var(--yellow);">⏸ ระบบ Pause อยู่ตอนนี้</div>
+          <div style="font-size:13px;color:var(--mid);">ประเภท: ${pauseTypeLabel(d.pause.type)} · สิ้นสุด ${end}</div>
+          <button class="btn btn-ghost" onclick="showTab('pause')" style="align-self:flex-start;margin-top:4px;">จัดการ →</button>
+        </div>
+      `;
+    } else {
+      el.innerHTML = '';
+    }
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════════════════════════
+// BOOKINGS — with alert on new bookings
+// ══════════════════════════════════════════════════════════════
+async function loadBookingsAlert() {
+  try {
+    const d = await api({action:'getMyCases', userId:MY_USER_ID});
+    myBookings = (d.cases || []).filter(c => c.status === 'active');
+    updateBookingBadge(myBookings.length);
+    renderHomeAlerts(myBookings);
+    lastBookingCount = myBookings.length;
+  } catch(e) {}
+}
+
+async function pollBookings() {
+  try {
+    const d = await api({action:'getMyCases', userId:MY_USER_ID});
+    const active = (d.cases || []).filter(c => c.status === 'active');
+    if (active.length > lastBookingCount) {
+      const diff = active.length - lastBookingCount;
+      toast(`🤍 มีนัดใหม่ ${diff} รายการ!`);
+      renderHomeAlerts(active);
+    }
+    myBookings = active;
+    lastBookingCount = active.length;
+    updateBookingBadge(active.length);
+  } catch(e) {}
+}
+
+function updateBookingBadge(count) {
+  const el = document.getElementById('badge-bookings');
+  if (count > 0) { el.textContent = count; el.style.display = ''; }
+  else { el.style.display = 'none'; }
+}
+
+function renderHomeAlerts(bookings) {
+  const el = document.getElementById('home-alerts');
+  if (!bookings.length) { el.innerHTML = ''; return; }
+  el.innerHTML = bookings.map(b => `
+    <div class="alert-banner">
+      <div class="alert-banner-icon">🤍</div>
+      <div class="alert-banner-body">
+        <div class="alert-banner-title">${b.slot || '—'} · ${b.caseId}</div>
+        <div class="alert-banner-sub">
+          ${b.q1 ? `เรื่อง: ${b.q1}` : ''}${b.level ? ` · ระดับ: <span class="badge badge-${b.level}">${b.level}</span>` : ''}
+        </div>
+      </div>
+      <button class="alert-close" onclick="this.closest('.alert-banner').remove()">✕</button>
+    </div>
+  `).join('');
+}
+
+async function loadBookingsTab() {
+  const el = document.getElementById('bookings-list');
+  el.innerHTML = '<div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>';
+  try {
+    const d = await api({action:'getMyCases', userId:MY_USER_ID});
+    const cases = d.cases || [];
+    if (!cases.length) {
+      el.innerHTML = '<div class="empty-state">ยังไม่มีนัดที่ได้รับ 🤍</div>';
+      return;
+    }
+    el.innerHTML = cases.map(b => `
+      <div class="booking-card" style="border-left-color:${levelColor(b.level)};">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="bc-slot">${b.slot || '—'}</div>
+            <div class="bc-meta">
+              <span class="badge badge-${b.level || 'soft'}">${b.level || '?'}</span>
+              <span style="color:var(--soft);">${b.caseId}</span>
+              ${b.room ? `<span>📍 ห้อง ${b.room}</span>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+            <span class="badge ${b.status==='active'?'badge-green':'badge-soft'}">${b.status === 'active' ? 'กำลังดำเนินการ' : b.status}</span>
+          </div>
+        </div>
+        <div class="bc-answers" style="background:var(--surface2);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;">
+          ${b.q1 ? `<div><span class="bc-label">เรื่องที่หนักใจ </span>${b.q1}</div>` : ''}
+          ${b.q2 ? `<div><span class="bc-label">ผลกระทบ </span>${b.q2}</div>` : ''}
+          ${b.q3 ? `<div><span class="bc-label">มานานแค่ไหน </span>${b.q3}</div>` : ''}
+          ${b.q4 ? `<div><span class="bc-label">เคยเล่าให้ใครฟัง </span>${b.q4}</div>` : ''}
+          ${b.q5 ? `<div><span class="bc-label">อยากได้อะไร </span>${b.q5}</div>` : ''}
+        </div>
+        <div class="btn-row" style="flex-wrap:wrap;">
+          <button class="btn btn-ghost" onclick="prefillNote('${b.caseId}')">📝 เขียน note</button>
+        </div>
+        <div class="divider" style="margin:4px 0;"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-green" style="flex:1;min-width:140px;" onclick="openCompleteModal('${b.caseId}','${b.studentId||''}','met')">
+            ✓ จบการพูดคุย
+          </button>
+          <button class="btn" style="flex:1;min-width:140px;background:var(--yellow-soft);color:var(--yellow);border:1.5px solid var(--gold-border);" onclick="openCompleteModal('${b.caseId}','${b.studentId||''}','noshow')">
+            ○ ไม่สามารถเจอกันได้
+          </button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    el.innerHTML = '<div class="empty-state" style="color:var(--red);">โหลดไม่ได้ ลองใหม่</div>';
+  }
+}
+
+function prefillNote(caseId) {
+  showTab('notes');
+  document.getElementById('sn-caseid').value = caseId;
+  setTimeout(() => lookupCase(), 300);
+}
+
+// ── COMPLETION MODAL ──────────────────────────────────────────
+let _pendingComplete = null; // { caseId, studentId, type }
+
+function openCompleteModal(caseId, studentId, type) {
+  _pendingComplete = { caseId, studentId, type };
+  const modal = document.getElementById('complete-modal');
+  const titleEl = document.getElementById('modal-title');
+  const bodyEl  = document.getElementById('modal-body');
+  const btnEl   = document.getElementById('modal-confirm-btn');
+
+  if (type === 'met') {
+    titleEl.textContent = '✓ จบการพูดคุย';
+    bodyEl.innerHTML = `
+      <div style="font-size:13px;color:var(--mid);line-height:1.8;">
+        ยืนยันว่า session <strong>${caseId}</strong> เสร็จสิ้นแล้ว<br>
+        ระบบจะส่งข้อความ follow-up ให้นักเรียนทาง LINE<br>
+        <span style="font-size:12px;color:var(--soft);">(ประมาณ 45 วินาที หลังกดยืนยัน)</span>
+      </div>`;
+    btnEl.textContent = 'ยืนยัน — จบการพูดคุย';
+    btnEl.className = 'btn btn-green btn-full';
+  } else {
+    titleEl.textContent = '○ ไม่สามารถเจอกันได้';
+    bodyEl.innerHTML = `
+      <div style="font-size:13px;color:var(--mid);line-height:1.8;">
+        ยืนยันว่า <strong>${caseId}</strong> ไม่ได้เจอกันในวันนี้<br>
+        ระบบจะส่งข้อความ check-in ให้นักเรียนทาง LINE<br>
+        <span style="font-size:12px;color:var(--soft);">(ประมาณ 45 วินาที หลังกดยืนยัน)</span>
+      </div>`;
+    btnEl.textContent = 'ยืนยัน — ไม่ได้เจอกัน';
+    btnEl.className = 'btn btn-full';
+    btnEl.style.cssText = 'background:var(--yellow-soft);color:var(--yellow);border:1.5px solid var(--gold-border);width:100%;padding:13px;font-size:14px;border-radius:12px;';
+  }
+
+  modal.classList.add('open');
+}
+
+function closeCompleteModal() {
+  document.getElementById('complete-modal').classList.remove('open');
+  _pendingComplete = null;
+}
+
+async function submitCompleteModal() {
+  if (!_pendingComplete) return;
+  const { caseId, studentId, type } = _pendingComplete;
+  const btn = document.getElementById('modal-confirm-btn');
+  btn.disabled = true;
+  btn.textContent = 'กำลังบันทึก...';
+
+  try {
+    const action = type === 'met' ? 'completeCase' : 'noShowCase';
+    const d = await api({ action, caseId, userId: MY_USER_ID, studentUserId: studentId });
+    if (d.status === 'OK') {
+      closeCompleteModal();
+      toast(type === 'met' ? '✓ บันทึก session เสร็จสิ้นแล้ว' : '○ บันทึก no-show แล้ว');
+      loadBookingsTab();
+      loadBookingsAlert();
+    } else {
+      toast('เกิดข้อผิดพลาด ลองใหม่');
+      btn.disabled = false;
+      btn.textContent = type === 'met' ? 'ยืนยัน — จบการพูดคุย' : 'ยืนยัน — ไม่ได้เจอกัน';
+    }
+  } catch(e) {
+    toast('เชื่อมต่อไม่ได้ ลองใหม่');
+    btn.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// SLOTS
+// ══════════════════════════════════════════════════════════════
+async function loadSlotGrid() {
+  const el = document.getElementById('slot-grid');
+  el.innerHTML = '<div class="loading-row"><div class="spinner"></div><span>กำลังโหลดตาราง...</span></div>';
+  selectedSlots.clear();
+  existingSlots = [];
+  bookedSlotKeys.clear();
+  lockedSlotKeys.clear();
+
+  try {
+    const d = await api({action:'getMySlots', userId:MY_USER_ID});
+    const slots = d.slots || [];
+    slots.filter(s => s.weekId === currentWeekId).forEach(s => {
+      existingSlots.push(s.slot);
+      if (s.locked === true || s.locked === 'TRUE') bookedSlotKeys.add(s.slot);
+      if (s.manualLock === true || s.manualLock === 'TRUE') lockedSlotKeys.add(s.slot);
+    });
+  } catch(e) {}
+
+  // Build grid
+  el.innerHTML = DAY_ORDER.map(day => {
+    const times = SLOT_TIMES[day] || [];
+    if (!times.length) return '';
+    const chips = times.map(time => {
+      const key = `${day} ${time}`;
+      const isBooked  = bookedSlotKeys.has(key);
+      const isLocked  = lockedSlotKeys.has(key);
+      const isExisting = existingSlots.includes(key);
+      let cls = 'slot-chip';
+      let extra = '';
+      if (isBooked) {
+        cls += ' booked';
+        extra = `data-booked="1"`;
+      } else if (isLocked) {
+        cls += ' locked';
+        extra = `data-locked="1"`;
+      } else if (isExisting) {
+        cls += ' selected';
+      }
+      return `<button class="${cls}" ${extra} data-slot="${key}" onclick="toggleSlot(this,'${key}')">${time}</button>`;
+    }).join('');
+    return `<div class="day-group"><div class="day-label">${day}</div><div class="slots-row">${chips}</div></div>`;
+  }).join('');
+
+  document.getElementById('btn-save-slots').disabled = false;
+}
+
+function toggleSlot(btn, key) {
+  if (btn.dataset.booked || btn.dataset.locked) return;
+  if (btn.classList.contains('selected')) {
+    btn.classList.remove('selected');
+    selectedSlots.delete(key);
+    // Mark for removal if was existing
+  } else {
+    btn.classList.add('selected');
+    selectedSlots.add(key);
+  }
+}
+
+async function saveSlots() {
+  const btn = document.getElementById('btn-save-slots');
+  btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+  // Collect all currently selected (visual) slots
+  const allSelected = Array.from(document.querySelectorAll('#slot-grid .slot-chip.selected, #slot-grid .slot-chip.booked'))
+    .map(c => c.dataset.slot).filter(Boolean);
+  try {
+    const d = await api({action:'registerAvailability', userId:MY_USER_ID, weekId:currentWeekId, slots:JSON.stringify(allSelected)});
+    if (d.status === 'OK') {
+      toast(`✓ บันทึกเวลา ${allSelected.length} ช่วงแล้ว`);
+      loadSlotGrid();
+      loadMySlotsForHome();
+    } else {
+      toast('เกิดข้อผิดพลาด');
+    }
+  } catch(e) {
+    toast('เชื่อมต่อไม่ได้ ลองใหม่');
+  }
+  btn.disabled = false; btn.textContent = 'บันทึกเวลา';
+}
+
+// ══════════════════════════════════════════════════════════════
+// SESSION NOTES
+// ══════════════════════════════════════════════════════════════
+async function loadRecentNotes() {
+  const el = document.getElementById('recent-notes-strip-wrap');
+  el.innerHTML = '<div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>';
+  try {
+    const d = await api({action:'getMyNotes', prId:MY_USER_ID, limit:'8'});
+    const notes = d.notes || [];
+    if (!notes.length) {
+      el.innerHTML = '<div class="empty-state">ยังไม่มีบันทึก</div>';
+      return;
+    }
+    el.innerHTML = `<div class="recent-notes-strip">${notes.map(n => `
+      <div class="recent-note-card">
+        <div class="rnc-id">${n.caseId || '—'}</div>
+        <div class="rnc-date">${n.createdAt ? new Date(n.createdAt).toLocaleDateString('th-TH',{day:'numeric',month:'short'}) : ''}</div>
+        <div class="rnc-issue">${n.mainIssue || n.reflection || '—'}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;">
+          ${n.finalStatus ? `<span class="badge badge-${n.finalStatus==='resolved'?'green':n.finalStatus==='concern'?'red':'soft'}">${finalStatusLabel(n.finalStatus)}</span>` : ''}
+          ${n.referral && n.referral !== 'no' ? `<span class="badge badge-red">ส่งต่อ</span>` : ''}
+        </div>
+      </div>
+    `).join('')}</div>`;
+  } catch(e) {
+    el.innerHTML = '<div class="empty-state" style="color:var(--red);">โหลดไม่ได้</div>';
+  }
+}
+
+async function lookupCase() {
+  const caseId = document.getElementById('sn-caseid').value.trim().toUpperCase();
+  if (!caseId) return;
+  const preview = document.getElementById('sn-case-preview');
+  preview.style.display = '';
+  preview.innerHTML = '<div class="loading-row"><div class="spinner"></div><span>ค้นหา...</span></div>';
+  try {
+    const d = await api({action:'getCaseById', caseId});
+    if (d.status === 'OK' && d.case) {
+      const c = d.case;
+      preview.style.cssText = 'display:flex;flex-direction:column;gap:8px;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:12px;padding:14px;';
+      preview.innerHTML = `
+        <div style="font-size:12px;font-weight:700;color:var(--gold);">${c.caseId} · <span class="badge badge-${c.level}">${c.level}</span></div>
+        ${c.q1 ? `<div style="font-size:13px;"><span style="color:var(--soft);">เรื่อง </span>${c.q1}</div>` : ''}
+        ${c.q2 ? `<div style="font-size:13px;"><span style="color:var(--soft);">ผลกระทบ </span>${c.q2}</div>` : ''}
+        ${c.slot ? `<div style="font-size:13px;"><span style="color:var(--soft);">เวลา </span>${c.slot}</div>` : ''}
+      `;
+    } else {
+      preview.style.cssText = 'display:flex;background:var(--red-soft);border:1px solid var(--red-border);border-radius:12px;padding:14px;';
+      preview.innerHTML = '<div style="color:var(--red);font-size:13px;">ไม่พบ Case ID นี้</div>';
+    }
+  } catch(e) {
+    preview.innerHTML = '<div style="color:var(--red);font-size:13px;">เชื่อมต่อไม่ได้</div>';
+  }
+}
+
+function snSelect(key, val, btn) {
+  const containerMap = {
+    attended: 'sn-attended-chips', followup: 'sn-followup-chips',
+    referral: 'sn-referral-chips', finalStatus: 'sn-finalstatus-chips',
+    pauseType: 'pause-type-chips',
+  };
+  const wrap = document.getElementById(containerMap[key]);
+  if (wrap) wrap.querySelectorAll('.sn-chip').forEach(b => b.classList.remove('sel','sel-red'));
+  if (btn.classList.contains('sel-red')) {
+    btn.classList.add('sel-red');
+  } else {
+    btn.classList.add('sel');
+  }
+  snState[key] = val;
+  // Side effects
+  if (key === 'attended') {
+    document.getElementById('sn-noreason-wrap').style.display = val === 'no' ? '' : 'none';
+  }
+  if (key === 'followup') {
+    document.getElementById('sn-followup-detail-wrap').style.display = val === 'yes' ? '' : 'none';
+  }
+}
+
+function snSelectMulti(key, val, btn) {
+  if (snState[key].has(val)) {
+    snState[key].delete(val);
+    btn.classList.remove('sel');
+  } else {
+    snState[key].add(val);
+    btn.classList.add('sel');
+  }
+}
+
+async function saveNote() {
+  const btn = document.getElementById('btn-save-note');
+  btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+  const payload = {
+    action: 'saveSessionNote',
+    prId:         MY_USER_ID,
+    caseId:       document.getElementById('sn-caseid').value.trim().toUpperCase(),
+    attended:     snState.attended || '',
+    noReason:     document.getElementById('sn-noreason').value,
+    goal:         document.getElementById('sn-goal').value,
+    questions:    document.getElementById('sn-questions').value,
+    userStory:    document.getElementById('sn-userstory').value,
+    mainIssue:    document.getElementById('sn-mainissue').value,
+    mood:         [...snState.mood].join(', '),
+    actionsTaken: [...snState.actions].join(', '),
+    followUp:     snState.followup || '',
+    followUpWhen: document.getElementById('sn-followup-when').value,
+    referral:     snState.referral || '',
+    finalStatus:  snState.finalStatus || '',
+    reflection:   document.getElementById('sn-reflection').value,
+  };
+  try {
+    const d = await apiPost(payload);
+    if (d.status === 'OK') {
+      toast('✓ บันทึก session note แล้ว');
+      clearNote();
+      loadRecentNotes();
+    } else {
+      toast('เกิดข้อผิดพลาด ลองใหม่');
+    }
+  } catch(e) {
+    toast('เชื่อมต่อไม่ได้ ลองใหม่');
+  }
+  btn.disabled = false; btn.textContent = 'บันทึก session note';
+}
+
+function clearNote() {
+  ['sn-caseid','sn-goal','sn-questions','sn-userstory','sn-mainissue',
+   'sn-noreason','sn-followup-when','sn-reflection'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['sn-attended-chips','sn-followup-chips','sn-referral-chips','sn-finalstatus-chips']
+    .forEach(id => document.getElementById(id)?.querySelectorAll('.sn-chip')
+      .forEach(b => b.classList.remove('sel','sel-red')));
+  document.getElementById('sn-mood-chips').querySelectorAll('.sn-chip').forEach(b => b.classList.remove('sel'));
+  document.getElementById('sn-actions-chips').querySelectorAll('.sn-chip').forEach(b => b.classList.remove('sel'));
+  document.getElementById('sn-noreason-wrap').style.display = 'none';
+  document.getElementById('sn-followup-detail-wrap').style.display = 'none';
+  document.getElementById('sn-case-preview').style.display = 'none';
+  snState.attended = null; snState.followup = null; snState.referral = null;
+  snState.finalStatus = null; snState.mood.clear(); snState.actions.clear();
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAUSE MANAGEMENT
+// ══════════════════════════════════════════════════════════════
+async function loadPauseTab() {
+  const el = document.getElementById('pause-current-status');
+  el.innerHTML = '<div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>';
+  try {
+    const d = await api({action:'getPauseStatus'});
+    if (d.pause) {
+      const start = new Date(d.pause.start).toLocaleDateString('th-TH',{day:'numeric',month:'long'});
+      const end   = new Date(d.pause.end).toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+      el.innerHTML = `
+        <div class="pause-active-card">
+          <div style="font-size:14px;font-weight:700;color:var(--yellow);">⏸ ระบบ Pause อยู่ตอนนี้</div>
+          <div style="font-size:13px;color:var(--mid);">ประเภท: ${pauseTypeLabel(d.pause.type)}</div>
+          <div style="font-size:13px;color:var(--mid);">${start} – ${end}</div>
+        </div>
+      `;
+    } else {
+      el.innerHTML = `
+        <div class="card" style="background:var(--green-soft);border-color:var(--green-border);">
+          <div style="font-size:14px;font-weight:700;color:var(--green);">✓ ระบบเปิดรับนัดอยู่</div>
+          <div style="font-size:13px;color:var(--mid);margin-top:4px;">ไม่มี Pause ที่ active อยู่</div>
+        </div>
+      `;
+    }
+  } catch(e) {
+    el.innerHTML = '<div class="empty-state" style="color:var(--red);">โหลดไม่ได้</div>';
+  }
+}
+
+async function setPause() {
+  const start = document.getElementById('pause-start').value;
+  const end   = document.getElementById('pause-end').value;
+  const type  = snState.pauseType || 'holiday';
+  if (!start || !end) { toast('กรุณาใส่วันที่'); return; }
+  if (new Date(end) <= new Date(start)) { toast('วันสิ้นสุดต้องหลังวันเริ่ม'); return; }
+  try {
+    const d = await api({action:'setPause', type, start, end});
+    if (d.status === 'OK') {
+      toast('✓ ตั้ง Pause แล้ว');
+      loadPauseTab();
+      loadPauseStatus();
+    } else { toast('เกิดข้อผิดพลาด'); }
+  } catch(e) { toast('เชื่อมต่อไม่ได้'); }
+}
+
+async function clearPause() {
+  if (!confirm('ยืนยัน: ยกเลิก Pause และเปิดรับนัดปกติ?')) return;
+  try {
+    const d = await api({action:'clearPause'});
+    if (d.status === 'OK') {
+      toast('✓ ยกเลิก Pause แล้ว ระบบเปิดรับนัดปกติ');
+      loadPauseTab();
+      loadPauseStatus();
+    } else { toast('เกิดข้อผิดพลาด'); }
+  } catch(e) { toast('เชื่อมต่อไม่ได้'); }
+}
+
+// ══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('tab-'+id)?.classList.add('active');
+  document.getElementById('nav-'+id)?.classList.add('active');
+  closeSidebar();
+  // Lazy load
+  if (id === 'slots')    loadSlotGrid();
+  if (id === 'bookings') loadBookingsTab();
+  if (id === 'notes')    loadRecentNotes();
+  if (id === 'pause')    loadPauseTab();
+}
+
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ══════════════════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════════════════
+function getWeekId() {
+  const now = new Date(), day = now.getDay();
+  const diff = day === 6 ? 0 : day === 0 ? -1 : -(day+1);
+  const sat = new Date(now); sat.setDate(now.getDate()+diff);
+  return sat.toISOString().split('T')[0];
+}
+
+function getWeekRangeThai() {
+  const now = new Date(), day = now.getDay();
+  const diff = day === 6 ? 0 : day === 0 ? -1 : -(day+1);
+  const sat = new Date(now); sat.setDate(now.getDate()+diff);
+  const mon = new Date(sat); mon.setDate(sat.getDate()+2);
+  const fri = new Date(sat); fri.setDate(sat.getDate()+6);
+  const opts = {day:'numeric',month:'long'};
+  return mon.toLocaleDateString('th-TH',opts) + ' – ' + fri.toLocaleDateString('th-TH',{...opts,year:'numeric'});
+}
+
+function levelColor(level) {
+  return {red:'var(--red)',yellow:'var(--yellow)',green:'var(--green)'}[level] || 'var(--border)';
+}
+
+function pauseTypeLabel(t) {
+  return {holiday:'วันหยุด',midterm:'สอบกลางภาค',finals:'สอบปลายภาค',summer:'ปิดเทอม'}[t] || t;
+}
+
+function finalStatusLabel(s) {
+  return {resolved:'จบดี',ongoing:'ดำเนินการอยู่',referred:'ส่งต่อ',concern:'น่าเป็นห่วง'}[s] || s;
+}
+
+function toast(msg) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = 'toast-item';
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.classList.add('out');
+    setTimeout(() => el.remove(), 320);
+  }, 3200);
+}
+</script>
+<!-- ── COMPLETION MODAL ── -->
+<div class="modal-backdrop" id="complete-modal" onclick="if(event.target===this)closeCompleteModal()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title">ยืนยัน</div>
+    <div id="modal-body"></div>
+    <button id="modal-confirm-btn" class="btn btn-green btn-full" onclick="submitCompleteModal()">ยืนยัน</button>
+    <button class="btn btn-ghost btn-full" onclick="closeCompleteModal()">ยกเลิก</button>
+  </div>
+</div>
+
+</body>
+</html>
