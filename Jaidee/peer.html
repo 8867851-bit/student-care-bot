@@ -888,6 +888,9 @@ function show(id){
   }
   if (id === 'screen-intro') {
     _staggerReassurances();
+    // Reset start button in case user navigated back after it was already tapped
+    const btn = document.getElementById('btn-start');
+    if (btn) { btn.disabled = false; btn.textContent = 'พร้อมแล้ว 🤍'; btn.style.background = ''; btn.style.transition = ''; }
   }
 }
 function toast(msg){const t=document.createElement("div");t.className="toast";t.innerText=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3500);}
