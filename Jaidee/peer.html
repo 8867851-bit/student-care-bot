@@ -446,7 +446,7 @@
           <span class="music-note music-note-a" id="music-note-a-intro">♪</span>
           <span class="music-note music-note-b" id="music-note-b-intro">♫</span>
         </div>
-        <img class="music-jaidee-img" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_129,w_170,x_1058,y_275/f3927f31-ad2b-48a2-b116-1ec54c528563_zevxfd.png" alt="Jaidee"/>
+        <img class="music-jaidee-img" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_417,w_497,x_517,y_297/c04d32f5-0b6b-42ca-be28-205a832c715b_m3jrhf.png" alt="Jaidee"/>
       </div>
       <div class="music-body">
         <div class="music-label">เพลงจากทีม ใจดี TU</div>
@@ -513,7 +513,7 @@
           <span class="music-note music-note-a" id="music-note-a-book">♪</span>
           <span class="music-note music-note-b" id="music-note-b-book">♫</span>
         </div>
-        <img class="music-jaidee-img" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_129,w_170,x_1058,y_275/f3927f31-ad2b-48a2-b116-1ec54c528563_zevxfd.png" alt="Jaidee"/>
+        <img class="music-jaidee-img" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_417,w_497,x_517,y_297/c04d32f5-0b6b-42ca-be28-205a832c715b_m3jrhf.png" alt="Jaidee"/>
       </div>
       <div class="music-body">
         <div class="music-label">เพลงจากทีม ใจดี TU</div>
@@ -887,25 +887,23 @@ window.onload=async()=>{
     console.warn("LIFF unavailable, using test userId");
     userId="test_"+Date.now();
   }
-  // TESTING: always show year cover regardless of saved value
-  // TODO: restore localStorage skip before production
-  // try {
-  //   const saved = localStorage.getItem('jaidee_year');
-  //   if (saved) { _selectedYear = saved; checkPauseStatus(); return; }
-  // } catch(e) {}
-  show('screen-year');
-  checkPauseStatus();
+  // Gate: check pause → check availability → then decide entry point
+  await _checkAvailabilityGate();
 };
 
-async function checkPauseStatus(){
+// Single entry gate — runs before anything is shown to the user.
+// CASE A: paused → screen-pause
+// CASE B: no slots yet → screen-truly-empty (notify me)
+// CASE C: open → year cover → consent → questions → booking
+async function _checkAvailabilityGate(){
+  // 1. Check pause first
   try{
     const res=await fetch(API_URL+"?action=getPauseStatus");
     const d=await res.json();
-    const{pause}=d;
-    if(pause){
-      const end=new Date(pause.end);
+    if(d.pause){
+      const end=new Date(d.pause.end);
       const daysLeft=Math.max(0,Math.ceil((end-new Date())/86400000));
-      const type=pause.type||"midterm";
+      const type=d.pause.type||"midterm";
       document.getElementById("pause-days").innerText=daysLeft;
       const msgs={midterm:"ช่วงนี้เป็นช่วงสอบกลางภาค",finals:"ช่วงนี้เป็นช่วงสอบปลายภาค",summer:"ช่วงนี้เป็นปิดเทอมใหญ่",holiday:"ช่วงนี้เป็นวันหยุด"};
       const subMsgs={midterm:"เพื่อนที่ปรึกษากำลังเตรียมสอบอยู่ จะกลับมาเร็ว ๆ นี้ 🤍",finals:"เพื่อนที่ปรึกษากำลังเตรียมสอบปลายภาค จะกลับมาเร็ว ๆ นี้ 🤍",summer:"เพื่อนที่ปรึกษากำลังพักร้อน จะกลับมาในเทอมหน้า 🤍",holiday:"หยุดพักชั่วคราว จะกลับมาเร็ว ๆ นี้ 🤍"};
@@ -915,25 +913,50 @@ async function checkPauseStatus(){
       if(bodyEl)bodyEl.innerHTML=subMsgs[type]||subMsgs.midterm;
       window._pauseActive=true;
       show("screen-pause");
-    }else{window._pauseActive=false;checkBookingStatus();}
-  }catch(e){window._pauseActive=false;}
+      return;
+    }
+    window._pauseActive=false;
+  }catch(e){ window._pauseActive=false; }
+
+  // 2. Check slot availability
+  let slotsAvailable=false;
+  try{
+    const res=await fetch(API_URL+"?action=getSlots");
+    const j=await res.json();
+    if(j.status==="OK"&&j.slots?.length){
+      // Filter to active slots (not already past)
+      const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
+      const todayIdx=dayOrder.indexOf(getTodayDayName());
+      const todayTime=getCurrentTime();
+      const active=j.slots.filter(s=>{
+        const slotDay=s.slot.split(" ")[0];
+        const idx=dayOrder.indexOf(slotDay);
+        if(idx<todayIdx)return false;
+        if(idx===todayIdx){const slotStart=s.slot.split(" ")[1].split("–")[0];const[h,m]=slotStart.split(":").map(Number);return h*60+m>todayTime;}
+        return true;
+      });
+      slotsAvailable=active.length>0;
+      // Cache slots so loadSlots() can reuse without a second fetch
+      window._cachedSlots=active;
+    }
+  }catch(e){ window._cachedSlots=null; }
+
+  if(!slotsAvailable){
+    // CASE A: no open slots — show waiting page, skip consent & questions
+    show("screen-truly-empty");
+    return;
+  }
+
+  // CASE B: slots available — enter the flow
+  // TODO: restore localStorage skip before production:
+  // try {
+  //   const saved = localStorage.getItem('jaidee_year');
+  //   if (saved) { _selectedYear = saved; show('screen-intro'); return; }
+  // } catch(e) {}
+  show('screen-year');
 }
 
-async function checkBookingStatus(){
-  try{
-    const res=await fetch(API_URL+'?action=getBookingStatus');
-    const d=await res.json();
-    const{booking,openEstimate}=d;
-    if(booking!=='pending')return;
-    const openEst=openEstimate||'อาทิตย์ 20:00 น.';
-    const introMiddle=document.querySelector('#screen-intro .intro-middle');
-    const startBtn=document.querySelector('#screen-intro .btn-green');
-    if(introMiddle){introMiddle.innerHTML=`<div style='text-align:center;padding:8px 0;'><div style='font-size:40px;margin-bottom:14px;'>💛</div><div style='font-family:"Noto Serif Thai",serif;font-size:22px;font-weight:600;line-height:1.4;margin-bottom:14px;'>กำลังจัดที่นั่งให้คุณอยู่นะ</div><div style='font-size:14px;color:var(--mid);line-height:1.85;margin-bottom:20px;'>เพื่อนที่ปรึกษากำลังเลือกเวลาที่สะดวก<br>จะเปิดรับนัดเมื่อพร้อมแล้ว</div><div style='background:var(--cream);border-radius:18px;padding:18px 24px;display:inline-block;'><div style='font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:6px;'>คาดว่าจะเปิดช่วง</div><div style='font-family:"Noto Serif Thai",serif;font-size:26px;font-weight:600;color:var(--gold);'>${openEst}</div></div></div>`;}
-    if(startBtn){startBtn.textContent='แจ้งเตือนฉันเมื่อเปิดรับนัด 💛';startBtn.disabled=false;startBtn.onclick=function(){saveAndNotify();};}
-    const introBottom=document.querySelector('#screen-intro .intro-bottom');
-    if(introBottom&&!document.getElementById('pending-other-btn')){var btn=document.createElement('button');btn.id='pending-other-btn';btn.className='btn-ghost';btn.textContent='ดูตัวเลือกอื่น →';btn.onclick=function(){show('screen-external');};introBottom.appendChild(btn);}
-  }catch(e){}
-}
+// checkPauseStatus and checkBookingStatus removed — logic consolidated into _checkAvailabilityGate()
 
 // ══════════════════════════════════════════════
 // FLOW
@@ -1106,24 +1129,29 @@ async function submitAndRoute(){
 
 async function loadSlots(){
   document.getElementById("booking-week-badge").innerHTML=`<span class="week-badge">📅 ${getWeekRange()}</span>`;
-  let slots;
-  try{
-    const res=await fetch(API_URL+"?action=getSlots");
-    const j=await res.json();
-    if(j.status==="OK"&&j.slots?.length)slots=j.slots;
-    else slots=[];
-  }catch{slots=[];}
-  if(!slots.length){show("screen-truly-empty");return;}
-  const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
-  const todayIdx=dayOrder.indexOf(getTodayDayName());
-  const todayTime=getCurrentTime();
-  const active=slots.filter(s=>{
-    const slotDay=s.slot.split(" ")[0];
-    const idx=dayOrder.indexOf(slotDay);
-    if(idx<todayIdx)return false;
-    if(idx===todayIdx){const slotStart=s.slot.split(" ")[1].split("–")[0];const[h,m]=slotStart.split(":").map(Number);return h*60+m>todayTime;}
-    return true;
-  });
+  // Use cached slots from gate check if available; otherwise refetch
+  let active=window._cachedSlots||null;
+  if(!active){
+    let slots=[];
+    try{
+      const res=await fetch(API_URL+"?action=getSlots");
+      const j=await res.json();
+      if(j.status==="OK"&&j.slots?.length) slots=j.slots;
+    }catch{}
+    const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
+    const todayIdx=dayOrder.indexOf(getTodayDayName());
+    const todayTime=getCurrentTime();
+    active=slots.filter(s=>{
+      const slotDay=s.slot.split(" ")[0];
+      const idx=dayOrder.indexOf(slotDay);
+      if(idx<todayIdx)return false;
+      if(idx===todayIdx){const slotStart=s.slot.split(" ")[1].split("–")[0];const[h,m]=slotStart.split(":").map(Number);return h*60+m>todayTime;}
+      return true;
+    });
+    window._cachedSlots=active;
+  }
+  // Invalidate cache after use so retry (e.g. after sorry screen) gets fresh data
+  window._cachedSlots=null;
   if(!active.length){show("screen-no-slots");buildSpecialSlots();return;}
   renderSlots(active); buildSpecialSlots();
 }
