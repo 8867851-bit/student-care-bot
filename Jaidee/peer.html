@@ -73,24 +73,14 @@
     #screen-announce{
       justify-content:flex-start;
       background:var(--cream);
-      padding-top:32px; /* tight top — illustration rises into header zone */
+      padding-top:28px;
     }
 
-    /* Illustration — pushes up close to top */
-    .announce-illo{
-      width:140px;height:140px;
-      margin:0 auto 0;
-      opacity:0;transform:translateY(8px);
-      transition:opacity 0.4s ease,transform 0.4s ease;
-      display:block;
-    }
-    .announce-illo.visible{opacity:1;transform:translateY(0);}
-
-    /* 📌 ประกาศ title — centered anchor below illustration */
+    /* 📌 ประกาศ title */
     .announce-title{
       font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;
       text-align:center;line-height:1.4;color:var(--d);
-      margin:18px 0 0;
+      margin:0 0 0;
       opacity:0;transform:translateY(6px);
       transition:opacity 0.4s ease 0.08s,transform 0.4s ease 0.08s;
     }
@@ -348,16 +338,14 @@
 <!-- ═══════════════════════════════════════ -->
 <div class="screen active" id="screen-announce">
 
-  <!-- Illustration — high, near top breathing space -->
-  <div class="announce-illo" id="announce-illo">
-    <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_532,w_879,x_328,y_169/a468baf6-7b53-479c-b607-a9c7be68654f_bjengo.png" alt="" style="width:100%;height:100%;object-fit:contain;" loading="eager"/>
+  <!-- 📌 ประกาศ — visual anchor -->
+  <div class="announce-title" id="announce-title">
+    📌 ประกาศ<br>
+    <span style="font-size:13px;font-weight:400;font-family:'Sarabun',sans-serif;color:var(--soft);letter-spacing:0;text-transform:none;">ใจดี TU · เพื่อนที่ปรึกษา</span>
   </div>
 
-  <!-- 📌 ประกาศ — visual anchor -->
-  <div class="announce-title" id="announce-title">📌 ประกาศ</div>
-
   <!-- Content blocks — tight, one composition -->
-  <div class="announce-content">
+  <div class="announce-content" style="margin-top:14px;">
 
     <div class="announce-block" id="announce-b1">
       <div class="announce-block-label">เวลาที่มักจะนัดกัน</div>
@@ -373,9 +361,9 @@
     <div class="announce-block" id="announce-b2">
       <div class="announce-block-label">เรื่องที่คุยกัน</div>
       <div class="announce-block-body">
-        เรื่องที่คุณเล่า จะอยู่ระหว่างคุณ<br>กับเพื่อนที่ปรึกษา<br>
+        เรื่องที่คุณเล่า จะอยู่ระหว่างคุณกับเพื่อนที่ปรึกษา<br>
         <br>
-        <span class="muted" style="font-size:14px;line-height:1.9;">
+        <span style="font-size:14px;line-height:1.9;color:var(--soft);">
           ยกเว้นในกรณีที่เราเป็นห่วงว่า<br>
           คุณอาจกำลังไม่ปลอดภัย<br>
           ซึ่งถ้าเป็นไปได้ เราจะคุยกับคุณก่อนเสมอ
@@ -386,7 +374,7 @@
   </div>
 
   <div class="intro-bottom" style="margin-top:auto;padding-top:20px;">
-    <button class="btn-green" onclick="goFromAnnounce()">เข้าใจแล้ว 🤍</button>
+    <button class="btn-green" onclick="goFromAnnounce()">เริ่มกันเลย 🤍</button>
   </div>
 
 </div>
@@ -402,9 +390,22 @@
 
   <div class="intro-middle">
 
-    <!-- Notebook illustration -->
-    <div class="notebook-scene">
+    <!-- Hero zone: notebook + Jaidee sitting beside it -->
+    <div class="notebook-scene" style="position:relative;">
       <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_532,w_879,x_328,y_169/a468baf6-7b53-479c-b607-a9c7be68654f_bjengo.png" alt="" style="width:100%;height:100%;object-fit:contain;" loading="eager"/>
+      <!-- Jaidee sitting beside the notebook — tappable, no card -->
+      <button id="jaidee-hero" onclick="toggleMusic()" aria-label="เปิด/ปิดเพลง"
+        style="position:absolute;bottom:6px;right:2px;width:52px;height:52px;background:none;border:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:flex-end;justify-content:center;">
+        <!-- Idle floating note — JS drives visibility -->
+        <span id="jaidee-idle-note" style="position:absolute;top:-4px;right:0;font-size:12px;color:var(--green);opacity:0;transition:opacity 0.4s ease,transform 0.4s ease;pointer-events:none;">♪</span>
+        <!-- Playing note wrap -->
+        <div class="music-note-wrap" id="music-note-wrap-intro" style="top:-10px;right:-2px;">
+          <span class="music-note music-note-a" id="music-note-a-intro">♪</span>
+          <span class="music-note music-note-b" id="music-note-b-intro">♫</span>
+        </div>
+        <img id="jaidee-hero-img" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_417,w_497,x_517,y_297/c04d32f5-0b6b-42ca-be28-205a832c715b_m3jrhf.png" alt="Jaidee"
+          style="width:44px;height:44px;object-fit:contain;object-position:bottom;opacity:0.88;transition:transform 0.15s ease;"/>
+      </button>
     </div>
 
     <div class="intro-copy">
@@ -417,20 +418,6 @@
         <div class="intro-reassurance"><div class="reassurance-dot"></div>ไม่มีคำตอบที่ถูกหรือผิด</div>
         <div class="intro-reassurance"><div class="reassurance-dot"></div>เปลี่ยนใจได้เสมอ</div>
         <div class="intro-reassurance"><div class="reassurance-dot"></div>ไม่จำเป็นต้องเล่าทุกอย่าง</div>
-      </div>
-    </div>
-
-    <div class="music-strip" onclick="toggleMusic()" role="button" aria-label="เปิด/ปิดเพลง" style="margin-top:-12px;">
-      <div class="music-jaidee">
-        <div class="music-note-wrap" id="music-note-wrap-intro">
-          <span class="music-note music-note-a" id="music-note-a-intro">♪</span>
-          <span class="music-note music-note-b" id="music-note-b-intro">♫</span>
-        </div>
-        <img class="music-jaidee-img" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_417,w_497,x_517,y_297/c04d32f5-0b6b-42ca-be28-205a832c715b_m3jrhf.png" alt="Jaidee"/>
-      </div>
-      <div class="music-body">
-        <div class="music-label">เพลงจากทีม ใจดี TU</div>
-        <div class="music-title" id="music-title-intro">กดเปิดฟังระหว่างอ่านก็ได้นะ</div>
       </div>
     </div>
 
@@ -708,11 +695,56 @@
 // ══════════════════════════════════════════════
 const _audio = document.getElementById('peer-audio');
 let _musicPlaying = false;
+let _musicFirstPlay = true;
+
 function toggleMusic() {
-  if (_musicPlaying) { _audio.pause(); _musicPlaying = false; }
-  else { _audio.play().catch(()=>{}); _musicPlaying = true; }
+  if (_musicPlaying) {
+    _audio.pause();
+    _musicPlaying = false;
+    // Subtle scale-down on Jaidee
+    const img = document.getElementById('jaidee-hero-img');
+    if (img) { img.style.transform = 'scale(0.95)'; setTimeout(()=>img.style.transform='', 200); }
+  } else {
+    _audio.play().catch(()=>{});
+    _musicPlaying = true;
+    // Tiny bounce on Jaidee
+    const img = document.getElementById('jaidee-hero-img');
+    if (img) { img.style.transform = 'scale(1.1)'; setTimeout(()=>img.style.transform='scale(1.0)', 150); }
+    if (_musicFirstPlay) {
+      _musicFirstPlay = false;
+      setTimeout(() => toast('เพลงจะอยู่เป็นเพื่อนระหว่างอ่านนะ 🤍'), 300);
+    }
+  }
   _syncMusicUI();
 }
+
+// ── Idle note pulse: every ~12s a ♪ floats up 3px and fades ──
+(function _idleNotePulse() {
+  function pulse() {
+    if (_musicPlaying) return; // don't pulse while playing
+    const n = document.getElementById('jaidee-idle-note');
+    if (!n) return;
+    // Reset
+    n.style.transition = 'none';
+    n.style.opacity = '0';
+    n.style.transform = 'translateY(0)';
+    // Trigger
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        n.style.transition = 'opacity 0.5s ease, transform 1.4s ease';
+        n.style.opacity = '0.55';
+        n.style.transform = 'translateY(-3px)';
+        setTimeout(() => {
+          n.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+          n.style.opacity = '0';
+          n.style.transform = 'translateY(-6px)';
+        }, 900);
+      });
+    });
+  }
+  // First pulse after 4s so page feels settled
+  setTimeout(() => { pulse(); setInterval(pulse, 12000); }, 4000);
+})();
 // ── Music note crossfade timer ──
 let _noteCrossfadeTimer = null;
 let _notePhase = false; // false=♪, true=♫
@@ -755,7 +787,7 @@ function _noteStep() {
 function _syncMusicUI() {
   ['intro','book'].forEach(s => {
     const w     = document.getElementById('music-note-wrap-'+s);
-    const title = document.getElementById('music-title-'+s);
+    const title = document.getElementById('music-title-'+s); // only exists in booking strip
     if (!w) return;
     if (_musicPlaying) {
       w.classList.add('bobbing');
@@ -764,10 +796,12 @@ function _syncMusicUI() {
     } else {
       w.classList.remove('bobbing');
       _stopNoteCrossfade();
-      const suffix = s === 'intro' ? 'ระหว่างอ่านก็ได้นะ' : 'เปิดฟังได้นะ';
-      if (title) title.textContent = s === 'intro' ? 'กดเปิดฟัง' + suffix : suffix;
+      if (title) title.textContent = s === 'intro' ? 'กดเปิดฟังระหว่างอ่านก็ได้นะ' : 'เปิดฟังได้นะ';
     }
   });
+  // Show/hide idle note: only visible when NOT playing
+  const idleNote = document.getElementById('jaidee-idle-note');
+  if (idleNote) idleNote.style.display = _musicPlaying ? 'none' : '';
 }
 _audio.addEventListener('ended', ()=>{ _musicPlaying=false; _syncMusicUI(); });
 
@@ -944,7 +978,7 @@ function _staggerReassurances() {
 }
 
 function _staggerAnnounce() {
-  const ids = ['announce-illo','announce-title','announce-b1','announce-div','announce-b2'];
+  const ids = ['announce-title','announce-b1','announce-div','announce-b2'];
   ids.forEach((id, i) => {
     const el = document.getElementById(id);
     if (!el) return;
