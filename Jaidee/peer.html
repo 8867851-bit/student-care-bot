@@ -476,26 +476,22 @@
       <button onclick="goBackFromBooking()" style="background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;">← ย้อนกลับ</button>
     </div>
 
-    <!-- Header row: title+sub on left, Jaidee+note on right -->
+    <!-- Header row: title on left, Jaidee on right -->
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-top:4px;">
       <div style="flex:1;min-width:0;">
-        <div class="booking-headline">มีรุ่นพี่รออยู่นะ 🤍</div>
+        <div class="booking-headline">มีรุ่นพี่รออยู่นะ</div>
         <div class="booking-sub" id="booking-sub-text" style="margin-top:6px;">เลือกเวลาที่สบายใจที่สุด · นัด 1 ชั่วโมง</div>
       </div>
-      <!-- Jaidee music toggle — right side -->
-      <div class="music-strip" onclick="toggleMusic()" role="button" aria-label="เปิด/ปิดเพลง" style="flex-shrink:0;align-self:flex-start;margin-top:4px;">
-        <div class="music-jaidee">
-          <div class="music-note-wrap" id="music-note-wrap-book">
-            <span class="music-note music-note-a" id="music-note-a-book">♪</span>
-            <span class="music-note music-note-b" id="music-note-b-book">♫</span>
-          </div>
-          <img class="music-jaidee-img" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_417,w_497,x_517,y_297/c04d32f5-0b6b-42ca-be28-205a832c715b_m3jrhf.png" alt="Jaidee"/>
+      <!-- Tiny Jaidee music toggle — right side, no label -->
+      <button onclick="toggleMusic()" aria-label="เปิด/ปิดเพลง"
+        style="flex-shrink:0;background:none;border:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;width:36px;height:36px;display:flex;align-items:flex-end;justify-content:center;margin-top:4px;">
+        <div class="music-note-wrap" id="music-note-wrap-book" style="top:-8px;right:-4px;">
+          <span class="music-note music-note-a" id="music-note-a-book">♪</span>
+          <span class="music-note music-note-b" id="music-note-b-book">♫</span>
         </div>
-        <div class="music-body">
-          <div class="music-label">เพลง</div>
-          <div class="music-title" id="music-title-book" style="white-space:nowrap;">เปิดฟังได้นะ</div>
-        </div>
-      </div>
+        <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_417,w_497,x_517,y_297/c04d32f5-0b6b-42ca-be28-205a832c715b_m3jrhf.png" alt="Jaidee"
+          style="width:34px;height:34px;object-fit:contain;object-position:bottom;opacity:0.85;"/>
+      </button>
     </div>
 
     <div id="booking-week-badge"></div>
