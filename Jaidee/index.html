@@ -693,35 +693,53 @@ const TIERS = [
 
 let _currentTier = 0;
 
+// Flat list of every situation pill across all tiers — for the infinite scroll row
+const ALL_PILLS = TIERS.reduce((acc, tier) => acc.concat(tier.pills), []);
+
 function renderTier(index) {
+  // Label still reflects the current tier for context, but the row shows everything
   const tier = TIERS[index];
   document.getElementById('tier-label').textContent = tier.label;
+  _renderAllPillsInfinite();
+}
+
+function _renderAllPillsInfinite() {
   const container = document.getElementById('tier-pills');
 
-  // Build pill HTML — render twice for pseudo-infinite feel
-  const pillHtml = tier.pills.map(p =>
+  const makePills = () => ALL_PILLS.map(p =>
     `<button class="sit-pill${SESSION_OPENED.has(p.key) ? (p.key === _lastOpenedKey ? ' touched-last' : ' touched') : ''}" onclick="pressPill(this,'${p.key}')">
       <span class="sit-emoji">${p.emoji}</span>
       <span class="sit-label">${p.label}</span>
     </button>`
   ).join('');
 
-  // Two copies — when user nears the end of the first, quietly loop
-  container.innerHTML = pillHtml + pillHtml;
+  // Three copies: start in the middle so the user can wander in either direction
+  container.innerHTML = makePills() + makePills() + makePills();
 
-  // Pseudo-infinite: when scrolled past ~70% of the first copy, reset to the start of first copy silently
-  const _infiniteHandler = () => {
-    const half = (container.scrollWidth / 2);
-    if (container.scrollLeft > half * 0.7) {
-      // Jump back without animation
+  // Jump to middle copy immediately (no visible flash)
+  requestAnimationFrame(() => {
+    const third = container.scrollWidth / 3;
+    container.style.scrollBehavior = 'auto';
+    container.scrollLeft = third;
+    requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
+  });
+
+  // Loop: silently teleport when drifting into the first or third copy
+  const onScroll = () => {
+    const third = container.scrollWidth / 3;
+    if (container.scrollLeft < third * 0.05) {
       container.style.scrollBehavior = 'auto';
-      container.scrollLeft = container.scrollLeft - half;
+      container.scrollLeft += third;
+      requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
+    } else if (container.scrollLeft > third * 1.95) {
+      container.style.scrollBehavior = 'auto';
+      container.scrollLeft -= third;
       requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
     }
   };
-  container.removeEventListener('scroll', container._infiniteHandler);
-  container._infiniteHandler = _infiniteHandler;
-  container.addEventListener('scroll', _infiniteHandler, { passive: true });
+  if (container._infiniteHandler) container.removeEventListener('scroll', container._infiniteHandler);
+  container._infiniteHandler = onScroll;
+  container.addEventListener('scroll', onScroll, { passive: true });
 }
 
 function nextTier() {
@@ -1458,25 +1476,34 @@ Object.assign(SIT_DATA, SIT_DATA_EXTRA);
 // Render first tier on load
 renderTier(0);
 
-// ── Scroll sync: pills ↔ M4 shelf ────────────────────────────────────────
+// ── Scroll sync: pills → M4 shelf (one-way, clamps at M4 end) ───────────
+// Pills are infinite; M4 is finite. Sync drives M4 from pills only while M4
+// still has room. Once M4 hits its max, it stays put — pills keep wandering.
+// M4 scrolling never drives pills (would fight the infinite loop).
 (function() {
   let _syncing = false;
-  function syncScroll(source, target, ratio) {
-    if (_syncing) return;
-    _syncing = true;
-    const pct = source.scrollLeft / (source.scrollWidth - source.clientWidth || 1);
-    target.scrollLeft = pct * (target.scrollWidth - target.clientWidth) * ratio;
-    requestAnimationFrame(() => { _syncing = false; });
-  }
   function attachSync() {
     const pills = document.getElementById('tier-pills');
-    // M4 shelf row — first overflow row inside m4-section-root
     const m4Row = document.querySelector('#m4-section-root div[style*="overflow-x"]');
     if (!pills || !m4Row) return;
-    pills.addEventListener('scroll', () => syncScroll(pills, m4Row, 0.85), { passive: true });
-    m4Row.addEventListener('scroll', () => syncScroll(m4Row, pills, 1/0.85), { passive: true });
+
+    pills.addEventListener('scroll', () => {
+      if (_syncing) return;
+      _syncing = true;
+      const m4Max = m4Row.scrollWidth - m4Row.clientWidth;
+      if (m4Max <= 0) { _syncing = false; return; } // M4 not scrollable
+      // Map pills position relative to the middle copy (the "real" copy)
+      const third = pills.scrollWidth / 3;
+      const pillsOffset = pills.scrollLeft - third; // negative = left of start, positive = right
+      // Only sync while pillsOffset is positive and m4 still has range
+      const target = pillsOffset * 0.85;
+      m4Row.scrollLeft = Math.min(Math.max(target, 0), m4Max);
+      requestAnimationFrame(() => { _syncing = false; });
+    }, { passive: true });
+
+    // M4 → pills: disabled intentionally. M4 is finite; syncing back would
+    // interfere with the infinite loop and feel broken.
   }
-  // Attach after render completes
   setTimeout(attachSync, 600);
 })();
 
