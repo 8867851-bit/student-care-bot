@@ -471,6 +471,11 @@
 
   <div class="booking-scroll" id="booking-scroll">
 
+    <!-- Back button — top left -->
+    <div style="margin-bottom:8px;">
+      <button onclick="goBackFromBooking()" style="background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;">← ย้อนกลับ</button>
+    </div>
+
     <!-- Header row: title+sub on left, Jaidee+note on right -->
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-top:4px;">
       <div style="flex:1;min-width:0;">
@@ -514,7 +519,6 @@
     <button class="btn-green" id="btn-book" disabled onclick="finalConfirm()">ฝากเรื่องนี้ไว้กับเรา 🤍</button>
     <button class="btn-ghost" onclick="show('screen-no-slots')">เวลาไม่ตรงเลยสักช่วง?</button>
     <button class="btn-ghost" style="font-size:11px;color:#bbb;padding:2px;" onclick="show('screen-external')">ต้องการพูดคุยกับผู้เชี่ยวชาญ?</button>
-    <button onclick="goBackFromBooking()" style="background:none;border:none;color:var(--soft);font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:4px 0 0 0;">← ย้อนกลับ</button>
   </div>
 </div>
 
@@ -558,7 +562,11 @@
 <!-- ═══════════════════════════════════════ -->
 <!-- BRANCH: NO MATCHING SLOT               -->
 <!-- ═══════════════════════════════════════ -->
-<div class="screen" id="screen-no-slots" style="align-items:center;justify-content:center;text-align:center;padding:48px 28px 40px;gap:0;">
+<div class="screen" id="screen-no-slots" style="position:relative;align-items:center;justify-content:center;text-align:center;padding:48px 28px 40px;gap:0;">
+  <!-- Back to booking -->
+  <div style="position:absolute;top:20px;left:24px;">
+    <button onclick="show('screen-booking')" style="background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;">← ย้อนกลับ</button>
+  </div>
   <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_687,w_958,x_271,y_155/6c487a47-2c77-466d-a0b4-0f05c290e9b5_hjkczr.png" alt="" style="width:160px;height:auto;margin-bottom:20px;display:block;"/>
   <div style="font-family:'Noto Serif Thai',serif;font-size:19px;font-weight:600;line-height:1.6;color:var(--d);margin-bottom:14px;">
     ดูเหมือนว่าสัปดาห์นี้<br>เรายังหาเวลาที่ตรงกันไม่ได้ 🤍
@@ -629,6 +637,10 @@
 <!-- BRANCH: EXTERNAL                       -->
 <!-- ═══════════════════════════════════════ -->
 <div class="screen" id="screen-external">
+  <!-- Back to booking -->
+  <div style="margin-bottom:8px;">
+    <button onclick="show('screen-booking')" style="background:none;border:none;color:var(--soft);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;">← ย้อนกลับ</button>
+  </div>
   <div class="external-headline">ตัวเลือก<br>อื่น ๆ 🤍</div>
   <div style="font-size:13px;color:var(--mid);line-height:1.75;margin-top:-8px;">เราทำการบ้านให้คุณแล้ว — ราคา ระยะทาง และช่องทางออนไลน์</div>
   <div class="clinic-card" style="border-left:3px solid var(--green);">
@@ -653,7 +665,6 @@
     <span style="color:#A8A099;font-size:16px;">→</span>
   </a>
   <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;">
-    <button class="btn-ghost" onclick="window.history.back()">← กลับ</button>
     <button class="btn-ghost" onclick="goHome()">กลับหน้าหลัก</button>
   </div>
 </div>
