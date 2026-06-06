@@ -738,6 +738,16 @@ function _renderAllPillsInfinite() {
     if (!_permissionTriggered && container.scrollLeft > 40) {
       _triggerPermissionSentence(600);
     }
+
+    // ── Hero fade on pill swipe — same effect as scrolling down ──
+    const hero = document.querySelector('.hero');
+    if (hero && !hero.classList.contains('locked') && !hero.classList.contains('listening')) {
+      if (container.scrollLeft > 60) {
+        hero.classList.add('scrolled');
+      } else {
+        hero.classList.remove('scrolled');
+      }
+    }
   };
   if (container._infiniteHandler) container.removeEventListener('scroll', container._infiniteHandler);
   container._infiniteHandler = onScroll;
