@@ -348,7 +348,7 @@
   <div class="announce-content" style="margin-top:14px;">
 
     <div class="announce-block" id="announce-b1">
-      <div class="announce-block-label">เวลาที่มักจะนัดกัน</div>
+      <div class="announce-block-label">📍 เวลาที่มักจะนัดกัน</div>
       <div class="announce-block-body">
         หลังเลิกเรียน<br>
         จันทร์–พฤหัส&nbsp;&nbsp;15:30–17:30<br>
@@ -359,7 +359,7 @@
     <div class="announce-divider" id="announce-div"></div>
 
     <div class="announce-block" id="announce-b2">
-      <div class="announce-block-label">เรื่องที่คุยกัน</div>
+      <div class="announce-block-label">🤍 เรื่องที่คุยกัน</div>
       <div class="announce-block-body">
         เรื่องที่คุณเล่า จะอยู่ระหว่างคุณกับเพื่อนที่ปรึกษา<br>
         <br>
@@ -367,6 +367,24 @@
           ยกเว้นในกรณีที่เราเป็นห่วงว่า<br>
           คุณอาจกำลังไม่ปลอดภัย<br>
           ซึ่งถ้าเป็นไปได้ เราจะคุยกับคุณก่อนเสมอ
+        </span>
+      </div>
+    </div>
+
+    <div class="announce-divider" id="announce-div2" style="margin:20px 0;opacity:0;transition:opacity 0.4s ease 0.3s;"></div>
+
+    <div class="announce-block" id="announce-b3" style="transition-delay:0.3s;">
+      <div class="announce-block-label">🌱 การเปิดรับนัด</div>
+      <div class="announce-block-body">
+        เราเปิดรับนัดเป็นรอบในแต่ละสัปดาห์<br>
+        <br>
+        <span style="font-size:14px;line-height:1.9;color:var(--soft);">
+          ถ้าสัปดาห์นี้ยังไม่สะดวก<br>
+          สามารถกดแจ้งเตือนไว้ก่อนได้<br>
+          <br>
+          และในช่วงปิดเทอมหรือวันหยุดยาว<br>
+          เราอาจพักการเปิดรับนัดชั่วคราว<br>
+          ซึ่งจะแจ้งให้ทราบล่วงหน้าเสมอ
         </span>
       </div>
     </div>
@@ -504,16 +522,33 @@
     <div style="height:16px;flex-shrink:0;"></div>
   </div>
 
-  <!-- Sticky bottom — chosen slot preview + confirm — no popup -->
+  <!-- Sticky bottom — 3 zones separated by dividers -->
   <div class="booking-sticky">
+
+    <!-- ── ZONE 1: confirm ── -->
     <div class="chosen-preview" id="chosen-preview">
       <div class="chosen-preview-day" id="chosen-day-label"></div>
       <div class="chosen-preview-time" id="chosen-time-label"></div>
       <div class="chosen-preview-who">จะมีรุ่นพี่คนหนึ่งรอฟังคุณอยู่ 🤍</div>
     </div>
     <button class="btn-green" id="btn-book" disabled onclick="finalConfirm()">ฝากเรื่องนี้ไว้กับเรา 🤍</button>
-    <div style="font-size:12px;color:var(--soft);text-align:center;line-height:1.7;margin-top:-4px;">เราจะจับคู่กับรุ่นพี่<br>ตามเวลาที่เลือกไว้</div>
-    <button class="btn-ghost" onclick="show('screen-no-slots')">ไม่มีเวลาที่สะดวกเลย?</button>
+    <div style="font-size:12px;color:var(--soft);text-align:center;line-height:1.7;margin-top:-4px;">เราจะจับคู่กับรุ่นพี่ตามเวลาที่เลือกไว้</div>
+
+    <!-- ── ZONE 2: no match ── -->
+    <div style="height:1px;background:var(--cream-border);margin:8px 0 4px;"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:2px 0;">
+      <div style="font-size:12px;color:var(--soft);text-align:center;">ไม่มีเวลาที่ตรงกับเรา?</div>
+      <div style="font-size:11px;font-family:'Noto Serif Thai',serif;font-weight:300;color:var(--softer);text-align:center;">บางทีเราอาจช่วยหาช่วงอื่นให้ได้ 🤍</div>
+      <button class="btn-ghost" onclick="showSpecialRequest()" style="font-size:12px;padding:4px 0;color:var(--mid);">ลองหาช่วงอื่นกัน →</button>
+    </div>
+
+    <!-- ── ZONE 3: not convenient this week ── -->
+    <div style="height:1px;background:var(--cream-border);margin:4px 0;"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:2px 0;">
+      <div style="font-size:12px;color:var(--soft);text-align:center;">สัปดาห์นี้ยังไม่สะดวก?</div>
+      <button class="btn-ghost" onclick="show('screen-no-slots')" style="font-size:12px;padding:4px 0;color:var(--mid);">แจ้งฉันเมื่อมีตารางใหม่ →</button>
+    </div>
+
   </div>
 </div>
 
@@ -596,6 +631,31 @@
   <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;">
     <button class="btn-green" id="btn-special-submit" onclick="submitSpecialRequest()">ส่งคำขอ →</button>
     <button class="btn-ghost" onclick="show('screen-no-slots')">← กลับ</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN: VACATION MODE                  -->
+<!-- Replaces entire peer flow when active  -->
+<!-- ═══════════════════════════════════════ -->
+<div class="screen" id="screen-vacation" style="align-items:center;justify-content:center;text-align:center;padding:48px 28px 40px;gap:0;">
+  <div class="eyebrow" style="margin-bottom:20px;">ใจดี TU · เพื่อนที่ปรึกษา</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;line-height:1.5;margin-bottom:24px;">🌱 ช่วงนี้เราขอพักสักนิด</div>
+  <!-- Empty chair illustration — same as screen-no-slots -->
+  <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_687,w_958,x_271,y_155/6c487a47-2c77-466d-a0b4-0f05c290e9b5_hjkczr.png" alt="" style="width:160px;height:auto;margin-bottom:28px;display:block;opacity:0.9;"/>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:400;line-height:2;color:var(--d);margin-bottom:6px;">
+    ตอนนี้เพื่อนที่ปรึกษา<br>
+    กำลังอยู่ในช่วงปิดภาคเรียน
+  </div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:400;line-height:2;color:var(--d);margin-bottom:6px;">
+    เราจะกลับมาเปิดรับนัดอีกครั้ง<br>
+    ในวันที่ <span id="vacation-return-date" style="font-weight:600;">...</span>
+  </div>
+  <div style="font-size:13px;color:var(--soft);line-height:1.9;margin-bottom:32px;">
+    ถ้าอยากให้เราเตือน<br>กดด้านล่างไว้ได้เลย 🤍
+  </div>
+  <div style="width:100%;display:flex;flex-direction:column;gap:10px;align-items:center;">
+    <button class="btn-green" onclick="saveAndNotify()" style="max-width:300px;">แจ้งฉันเมื่อกลับมาเปิดรับนัด 🤍</button>
   </div>
 </div>
 
@@ -914,11 +974,28 @@ window.onload=async()=>{
   _checkAvailabilityGate();
 };
 
+// ══════════════════════════════════════════════
+// VACATION MODE CONFIG
+// Set VACATION_MODE = true to replace entire peer flow with vacation screen
+// Set VACATION_RETURN_DATE to show the return date (e.g. "15 มิถุนายน 2568")
+// ══════════════════════════════════════════════
+const VACATION_MODE = false;
+const VACATION_RETURN_DATE = "...";
+
 // Single entry gate — runs before anything is shown to the user.
+// CASE VACATION: vacation mode → screen-vacation (replaces everything)
 // CASE A: paused → screen-pause
 // CASE B: no slots yet → screen-truly-empty (notify me)
 // CASE C: open → year cover → consent → questions → booking
 async function _checkAvailabilityGate(){
+  // 0. Vacation mode — overrides everything
+  if (VACATION_MODE) {
+    const returnEl = document.getElementById('vacation-return-date');
+    if (returnEl) returnEl.textContent = VACATION_RETURN_DATE;
+    show('screen-vacation');
+    return;
+  }
+
   // 1. Check pause first
   try{
     const res=await fetch(API_URL+"?action=getPauseStatus");
@@ -987,12 +1064,12 @@ function _staggerReassurances() {
 }
 
 function _staggerAnnounce() {
-  const ids = ['announce-title','announce-b1','announce-div','announce-b2'];
+  const ids = ['announce-title','announce-b1','announce-div','announce-b2','announce-div2','announce-b3'];
   ids.forEach((id, i) => {
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.remove('visible');
-    setTimeout(() => el.classList.add('visible'), 80 + i * 160);
+    setTimeout(() => { el.classList.add('visible'); el.style.opacity='1'; }, 80 + i * 160);
   });
 }
 
