@@ -1055,33 +1055,25 @@ function openEmergencyModal(slot, caseId, studentId) {
 }
 
 function emgStep2() {
-  const msg =
-    "🤍
-
-" +
-    "มีเรื่องไม่คาดคิดเกิดขึ้นกับเพื่อนที่ปรึกษาของคุณ
-
-" +
-    "เราขอโทษมากนะ
-" +
-    "ที่การนัดในวัน " + (_emgSlot||'') + "
-" +
-    "ต้องยกเลิกกะทันหัน
-
-" +
-    "นี่ไม่ใช่เรื่องที่เกี่ยวกับคุณเลย
-" +
-    "เพื่อนที่ปรึกษาของคุณมีเรื่องที่ควบคุมไม่ได้เกิดขึ้น
-
-" +
-    "คำตอบที่คุณแชร์ไว้ยังอยู่ครบนะ
-" +
-    "ไม่ต้องตอบคำถามใหม่อีกครั้ง
-
-" +
-    "ถ้าพร้อมอีกครั้ง
-" +
-    "เราก็ยังอยู่ตรงนี้เสมอ 🌱";
+  const slot = _emgSlot || '';
+  const msg = [
+    "🤍",
+    "",
+    "มีเรื่องไม่คาดคิดเกิดขึ้นกับเพื่อนที่ปรึกษาของคุณ",
+    "",
+    "เราขอโทษมากนะ",
+    "ที่การนัดในวัน " + slot,
+    "ต้องยกเลิกกะทันหัน",
+    "",
+    "นี่ไม่ใช่เรื่องที่เกี่ยวกับคุณเลย",
+    "เพื่อนที่ปรึกษาของคุณมีเรื่องที่ควบคุมไม่ได้เกิดขึ้น",
+    "",
+    "คำตอบที่คุณแชร์ไว้ยังอยู่ครบนะ",
+    "ไม่ต้องตอบคำถามใหม่อีกครั้ง",
+    "",
+    "ถ้าพร้อมอีกครั้ง",
+    "เราก็ยังอยู่ตรงนี้เสมอ 🌱"
+  ].join("\n");
   document.getElementById('emg-msg-preview').textContent = msg;
   document.getElementById('emg-step1').style.display = 'none';
   document.getElementById('emg-step2').style.display = 'flex';
@@ -1090,7 +1082,7 @@ function emgStep2() {
   document.getElementById('emg-step-title').textContent = '📩 ยืนยันอีกครั้ง';
 }
 
-async function emgConfirm() {
+function emgConfirm() {
   const btn = document.querySelector('.emg-confirm-btn.step2');
   btn.disabled = true; btn.textContent = 'กำลังดำเนินการ...';
   try {
