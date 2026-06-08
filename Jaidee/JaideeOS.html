@@ -193,6 +193,10 @@
     .slot-chip.selected { background:var(--gold-soft); border-color:var(--gold); color:var(--gold); font-weight:600; }
     .slot-chip.booked { background:var(--green-soft); border-color:var(--green-border); color:var(--green); cursor:default; }
     .slot-chip.locked { background:var(--surface2); border-color:var(--border); color:var(--softer); cursor:pointer; text-decoration:line-through; }
+    .chip-dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:5px; vertical-align:middle; flex-shrink:0; }
+    .chip-dot-gold  { background:var(--gold); }
+    .chip-dot-green { background:var(--green); }
+    .chip-dot-grey  { background:var(--softer); }
 
     /* Slot action popup */
     .slot-popup {
@@ -1069,13 +1073,17 @@ async function loadSlotGrid() {
   let slots = [];
   try {
     const d = await api({action:'getMySlots', userId:MY_USER_ID});
+    if (d.status !== 'OK') throw new Error(d.msg || 'getMySlots failed');
     slots = d.slots || [];
     slots.filter(s => s.weekId === currentWeekId).forEach(s => {
       existingSlots.push(s.slot);
       if (s.locked === true || s.locked === 'TRUE') bookedSlotKeys.add(s.slot);
       if (s.manualLock === true || s.manualLock === 'TRUE') lockedSlotKeys.add(s.slot);
     });
-  } catch(e) {}
+  } catch(e) {
+    el.innerHTML = `<div style="padding:16px;color:var(--red);font-size:13px;">โหลดตารางไม่ได้: ${e.message}</div>`;
+    return;
+  }
 
   // Build slot booking-info lookup
   const bookedSlotInfo = {}; // slot key → {caseId, studentId}
@@ -1083,30 +1091,34 @@ async function loadSlotGrid() {
     bookedSlotInfo[s.slot] = { caseId: s.caseId||'', studentId: s.studentId||'' };
   });
 
-  // Build grid
+  // Build grid — isExisting excludes booked/locked so else-if chain is clean
   el.innerHTML = DAY_ORDER.map(day => {
     const times = SLOT_TIMES[day] || [];
     if (!times.length) return '';
     const chips = times.map(time => {
       const key = `${day} ${time}`;
-      const isBooked  = bookedSlotKeys.has(key);
-      const isLocked  = lockedSlotKeys.has(key);
-      const isExisting = existingSlots.includes(key);
+      const isBooked   = bookedSlotKeys.has(key);
+      const isLocked   = lockedSlotKeys.has(key);
+      const isExisting = existingSlots.includes(key) && !isBooked && !isLocked;
       const s = bookedSlotInfo[key] || null;
       let cls = 'slot-chip';
       let extra = '';
+      let dot = '';
       if (isBooked) {
         cls += ' booked';
-        extra = `data-booked="1"`;
+        extra = 'data-booked="1"';
+        dot = '<span class="chip-dot chip-dot-green"></span>';
       } else if (isLocked) {
         cls += ' locked';
-        extra = `data-locked="1"`;
+        extra = 'data-locked="1"';
+        dot = '<span class="chip-dot chip-dot-grey"></span>';
       } else if (isExisting) {
         cls += ' selected';
+        dot = '<span class="chip-dot chip-dot-gold"></span>';
       }
       const caseid = (isBooked && s && s.caseId) ? s.caseId : '';
       const studid  = (isBooked && s && s.studentId) ? s.studentId : '';
-      return `<button class="${cls}" ${extra} data-slot="${key}" data-caseid="${caseid}" data-studid="${studid}" onclick="toggleSlot(this,'${key}')">${time}</button>`;
+      return `<button class="${cls}" ${extra} data-slot="${key}" data-caseid="${caseid}" data-studid="${studid}" onclick="toggleSlot(this,'${key}')">${dot}${time}</button>`;
     }).join('');
     return `<div class="day-group"><div class="day-label">${day} · ${getSlotDateShort(day)}</div><div class="slots-row">${chips}</div></div>`;
   }).join('');
@@ -1214,6 +1226,11 @@ function toggleSlot(btn, key) {
 
   // Unregistered → select it
   btn.classList.add('selected');
+  if (!btn.querySelector('.chip-dot')) {
+    const dot = document.createElement('span');
+    dot.className = 'chip-dot chip-dot-gold';
+    btn.prepend(dot);
+  }
   selectedSlots.add(key);
   document.getElementById('btn-save-slots').disabled = false;
 }
@@ -1284,6 +1301,8 @@ async function popupRemove() {
   // Remove from grid visually
   btn.classList.remove('selected');
   btn.removeAttribute('data-locked');
+  const dotEl = btn.querySelector('.chip-dot');
+  if (dotEl) dotEl.remove();
   selectedSlots.delete(key);
   // Also remove from existingSlots so save picks it up correctly
   existingSlots = existingSlots.filter(s => s !== key);
