@@ -193,6 +193,10 @@
     .slot-chip.selected { background:var(--gold-soft); border-color:var(--gold); color:var(--gold); font-weight:600; }
     .slot-chip.booked { background:var(--green-soft); border-color:var(--green-border); color:var(--green); cursor:default; }
     .slot-chip.locked { background:var(--surface2); border-color:var(--border); color:var(--softer); cursor:pointer; text-decoration:line-through; }
+    .chip-dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:5px; vertical-align:middle; flex-shrink:0; }
+    .chip-dot-gold  { background:var(--gold); }
+    .chip-dot-green { background:var(--green); }
+    .chip-dot-grey  { background:var(--softer); }
     .sr-slot-btn { background:var(--surface2); border:1.5px solid var(--border); border-radius:8px; padding:6px 12px; font-size:12px; font-family:'Sarabun',sans-serif; color:var(--mid); cursor:pointer; transition:all 0.12s; }
     .sr-slot-btn:hover { border-color:var(--gold); color:var(--d); }
     .sr-slot-selected { background:var(--gold-soft) !important; border-color:var(--gold) !important; color:var(--gold) !important; font-weight:600; }
@@ -589,7 +593,6 @@
         <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;">จัดเวลาพิเศษ</div>
         <div style="font-size:13px;color:var(--mid);">นักเรียนที่ไม่พบช่วงที่ใช่ ขอให้ทีมช่วยหาเวลาให้</div>
       </div>
-
       <div id="special-requests-list">
         <div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>
       </div>
@@ -973,6 +976,7 @@ async function loadBookingsTab() {
             <span class="badge ${b.status==='active'?'badge-green':'badge-soft'}">${b.status === 'active' ? 'กำลังดำเนินการ' : b.status}</span>
           </div>
         </div>
+        ${b.lateAlert ? `<div style="background:var(--red-soft);border:1.5px solid var(--red-border);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--red);display:flex;align-items:center;gap:8px;">⚠️ นักเรียนแจ้งว่าจะสาย (>15 นาที) — ยืนยันว่าจะมานะ</div>` : ''}
         <div class="bc-answers" style="background:var(--surface2);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;">
           ${b.q1 ? `<div><span class="bc-label">เรื่องที่หนักใจ </span>${b.q1}</div>` : ''}
           ${b.q2 ? `<div><span class="bc-label">ผลกระทบ </span>${b.q2}</div>` : ''}
@@ -1087,44 +1091,48 @@ async function loadSlotGrid() {
   let slots = [];
   try {
     const d = await api({action:'getMySlots', userId:MY_USER_ID});
+    if (d.status !== 'OK') throw new Error(d.msg || 'getMySlots failed');
     slots = d.slots || [];
     slots.filter(s => s.weekId === currentWeekId).forEach(s => {
       existingSlots.push(s.slot);
       if (s.locked === true || s.locked === 'TRUE') bookedSlotKeys.add(s.slot);
       if (s.manualLock === true || s.manualLock === 'TRUE') lockedSlotKeys.add(s.slot);
     });
-  } catch(e) {}
+  } catch(e) {
+    el.innerHTML = `<div style="padding:16px;color:var(--red);font-size:13px;">โหลดตารางไม่ได้: ${e.message}</div>`;
+    return;
+  }
 
-  // Build slot booking-info lookup
-  const bookedSlotInfo = {}; // slot key → {caseId, studentId}
+  const bookedSlotInfo = {};
   slots.filter(s => s.weekId === currentWeekId && s.locked).forEach(s => {
     bookedSlotInfo[s.slot] = { caseId: s.caseId||'', studentId: s.studentId||'' };
   });
 
-  // Build grid
   el.innerHTML = DAY_ORDER.map(day => {
     const times = SLOT_TIMES[day] || [];
     if (!times.length) return '';
     const chips = times.map(time => {
       const key = `${day} ${time}`;
-      const isBooked  = bookedSlotKeys.has(key);
-      const isLocked  = lockedSlotKeys.has(key);
-      const isExisting = existingSlots.includes(key);
+      const isBooked   = bookedSlotKeys.has(key);
+      const isLocked   = lockedSlotKeys.has(key);
+      const isExisting = existingSlots.includes(key) && !isBooked && !isLocked;
       const s = bookedSlotInfo[key] || null;
       let cls = 'slot-chip';
       let extra = '';
+      let dot = '';
       if (isBooked) {
-        cls += ' booked';
-        extra = `data-booked="1"`;
+        cls += ' booked'; extra = 'data-booked="1"';
+        dot = '<span class="chip-dot chip-dot-green"></span>';
       } else if (isLocked) {
-        cls += ' locked';
-        extra = `data-locked="1"`;
+        cls += ' locked'; extra = 'data-locked="1"';
+        dot = '<span class="chip-dot chip-dot-grey"></span>';
       } else if (isExisting) {
         cls += ' selected';
+        dot = '<span class="chip-dot chip-dot-gold"></span>';
       }
       const caseid = (isBooked && s && s.caseId) ? s.caseId : '';
       const studid  = (isBooked && s && s.studentId) ? s.studentId : '';
-      return `<button class="${cls}" ${extra} data-slot="${key}" data-caseid="${caseid}" data-studid="${studid}" onclick="toggleSlot(this,'${key}')">${time}</button>`;
+      return `<button class="${cls}" ${extra} data-slot="${key}" data-caseid="${caseid}" data-studid="${studid}" onclick="toggleSlot(this,'${key}')">${dot}${time}</button>`;
     }).join('');
     return `<div class="day-group"><div class="day-label">${day} · ${getSlotDateShort(day)}</div><div class="slots-row">${chips}</div></div>`;
   }).join('');
@@ -1220,19 +1228,27 @@ function toggleSlot(btn, key) {
 
   // If locked (ปิดชั่วคราว) → reopen with single click
   if (btn.dataset.locked) {
+    event.stopPropagation();
     openSlotPopup(btn, key, 'locked');
     return;
   }
 
   // If already registered (gold/selected) → show action popup
   if (btn.classList.contains('selected')) {
+    event.stopPropagation();
     openSlotPopup(btn, key, 'selected');
     return;
   }
 
   // Unregistered → select it
   btn.classList.add('selected');
+  if (!btn.querySelector('.chip-dot')) {
+    const dot = document.createElement('span');
+    dot.className = 'chip-dot chip-dot-gold';
+    btn.prepend(dot);
+  }
   selectedSlots.add(key);
+  document.getElementById('btn-save-slots').disabled = false;
 }
 
 function openSlotPopup(btn, key, mode) {
@@ -1301,9 +1317,11 @@ async function popupRemove() {
   // Remove from grid visually
   btn.classList.remove('selected');
   btn.removeAttribute('data-locked');
+  const dotEl = btn.querySelector('.chip-dot');
+  if (dotEl) dotEl.remove();
   selectedSlots.delete(key);
-  // Also remove from existingSlots so save picks it up correctly
   existingSlots = existingSlots.filter(s => s !== key);
+  document.getElementById('btn-save-slots').disabled = false;
   toast('ลบช่วงเวลาแล้ว — กด "บันทึกเวลา" เพื่อยืนยัน');
 }
 
@@ -1350,19 +1368,13 @@ async function loadSpecialRequests() {
     el.innerHTML = `<div style="padding:16px;color:var(--red);font-size:13px;">โหลดไม่ได้: ${e.message}</div>`;
     return;
   }
-
-  // Update badge
+  requests = requests.filter(r => !_srSkipped.has(r.id));
   const badge = document.getElementById('badge-special');
-  if (badge) {
-    badge.textContent = requests.length;
-    badge.style.display = requests.length ? 'inline-flex' : 'none';
-  }
-
+  if (badge) { badge.textContent = requests.length; badge.style.display = requests.length ? 'inline-flex' : 'none'; }
   if (!requests.length) {
     el.innerHTML = '<div style="padding:32px 0;text-align:center;color:var(--soft);font-size:14px;">ไม่มีคำขอพิเศษตอนนี้ 🤍</div>';
     return;
   }
-
   el.innerHTML = requests.map(r => {
     const levelColor = r.level === 'red' ? 'var(--red)' : r.level === 'yellow' ? '#C8860A' : 'var(--green)';
     const levelLabel = r.level === 'red' ? 'ยากมาก' : r.level === 'yellow' ? 'ค่อนข้างยาก' : 'พอรับได้';
@@ -1384,22 +1396,20 @@ async function loadSpecialRequests() {
         <div style="font-size:12px;color:var(--soft);font-weight:600;">ช่วงเวลาที่ขอ — กดเพื่อเลือก:</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;" id="sr-slots-${r.id}">${slotsHtml}</div>
       </div>
-      <div id="sr-actions-${r.id}" style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn btn-gold" id="sr-assign-${r.id}" onclick="assignSpecialRequest('${r.id}','${r.caseId}')" disabled>
-          นัดเวลานี้ →
-        </button>
-        <button class="btn btn-ghost" onclick="dismissSpecialRequest('${r.id}')">ข้ามคำขอนี้</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-gold" id="sr-assign-${r.id}" onclick="assignSpecialRequest('${r.id}','${r.caseId}')" disabled>นัดเวลานี้ →</button>
+        <button class="btn btn-ghost" onclick="skipSpecialRequest('${r.id}')">ข้ามไปก่อน</button>
       </div>
     </div>`;
   }).join('');
 }
 
-let _srSelected = {}; // requestId → slot
+let _srSelected = {};
+let _srSkipped  = new Set();
 
 function toggleSRSlot(btn, reqId) {
   const slot = btn.dataset.slot;
-  const container = document.getElementById('sr-slots-' + reqId);
-  container.querySelectorAll('.sr-slot-btn').forEach(b => b.classList.remove('sr-slot-selected'));
+  document.getElementById('sr-slots-' + reqId).querySelectorAll('.sr-slot-btn').forEach(b => b.classList.remove('sr-slot-selected'));
   if (_srSelected[reqId] === slot) {
     delete _srSelected[reqId];
     document.getElementById('sr-assign-' + reqId).disabled = true;
@@ -1421,12 +1431,7 @@ async function assignSpecialRequest(reqId, caseId) {
       toast('✓ นัดเวลาพิเศษแล้ว — แจ้ง LINE นักเรียนแล้ว');
       document.getElementById('sr-card-' + reqId)?.remove();
       delete _srSelected[reqId];
-      // Update badge
-      const remaining = document.querySelectorAll('[id^="sr-card-"]').length;
-      const badge = document.getElementById('badge-special');
-      if (badge) { badge.textContent = remaining; badge.style.display = remaining ? 'inline-flex' : 'none'; }
-      if (!remaining) document.getElementById('special-requests-list').innerHTML =
-        '<div style="padding:32px 0;text-align:center;color:var(--soft);font-size:14px;">ไม่มีคำขอพิเศษตอนนี้ 🤍</div>';
+      _updateSRBadge();
     } else {
       toast('เกิดข้อผิดพลาด: ' + (d.message||''));
       btn.disabled = false; btn.textContent = 'นัดเวลานี้ →';
@@ -1437,6 +1442,22 @@ async function assignSpecialRequest(reqId, caseId) {
   }
 }
 
+function skipSpecialRequest(reqId) {
+  _srSkipped.add(reqId);
+  document.getElementById('sr-card-' + reqId)?.remove();
+  delete _srSelected[reqId];
+  _updateSRBadge();
+  toast('ข้ามไปก่อน — เพื่อนสมาชิกคนอื่นยังเห็นคำขอนี้อยู่');
+}
+
+function _updateSRBadge() {
+  const remaining = document.querySelectorAll('[id^="sr-card-"]').length;
+  const badge = document.getElementById('badge-special');
+  if (badge) { badge.textContent = remaining; badge.style.display = remaining ? 'inline-flex' : 'none'; }
+  if (!remaining) document.getElementById('special-requests-list').innerHTML =
+    '<div style="padding:32px 0;text-align:center;color:var(--soft);font-size:14px;">ไม่มีคำขอพิเศษตอนนี้ 🤍</div>';
+}
+
 async function loadSpecialRequestsBadge() {
   try {
     const d = await api({action:'getSpecialRequests'});
@@ -1444,22 +1465,6 @@ async function loadSpecialRequestsBadge() {
     const badge = document.getElementById('badge-special');
     if (badge) { badge.textContent = count; badge.style.display = count ? 'inline-flex' : 'none'; }
   } catch(e) {}
-}
-
-async function dismissSpecialRequest(reqId) {
-  try {
-    await api({action:'dismissSpecialRequest', id:reqId});
-    document.getElementById('sr-card-' + reqId)?.remove();
-    delete _srSelected[reqId];
-    const remaining = document.querySelectorAll('[id^="sr-card-"]').length;
-    const badge = document.getElementById('badge-special');
-    if (badge) { badge.textContent = remaining; badge.style.display = remaining ? 'inline-flex' : 'none'; }
-    if (!remaining) document.getElementById('special-requests-list').innerHTML =
-      '<div style="padding:32px 0;text-align:center;color:var(--soft);font-size:14px;">ไม่มีคำขอพิเศษตอนนี้ 🤍</div>';
-    toast('ข้ามคำขอนี้แล้ว');
-  } catch(e) {
-    toast('เชื่อมต่อไม่ได้ ลองใหม่');
-  }
 }
 
 // ══════════════════════════════════════════════════════════════
