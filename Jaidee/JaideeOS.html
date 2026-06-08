@@ -361,6 +361,8 @@
     <div class="sidebar-section">การจัดการ</div>
     <div class="sidebar-item" onclick="showTab('pause')" id="nav-pause"><span class="sidebar-icon">⏸</span>Pause management</div>
 
+    <div class="sidebar-item" onclick="showTab('other')" id="nav-other"><span class="sidebar-icon">⚙️</span>อื่นๆ</div>
+
     <div class="sidebar-bottom">
       <div class="sidebar-logout" onclick="logout()">← ออกจากระบบ</div>
     </div>
@@ -638,6 +640,61 @@
 
     </div>
 
+
+    <!-- อื่นๆ TAB -->
+    <div class="tab-content" id="tab-other">
+      <div class="section-title">⚙️ อื่นๆ &amp; ข้อมูลระบบ</div>
+
+      <!-- Booking week cycle -->
+      <div class="card">
+        <div style="font-weight:700;font-size:15px;margin-bottom:8px;">📅 รอบการนัด (Week Cycle)</div>
+        <div style="font-size:13px;color:var(--mid);line-height:2.2;">
+          <div>🗓 <strong>เสาร์ 00:00 – ศุกร์ 12:59</strong> — สัปดาห์ปัจจุบัน</div>
+          <div>🔄 <strong>ศุกร์ 13:00</strong> — ระบบเปิดสัปดาห์ใหม่ (Week ID เปลี่ยน)</div>
+          <div>📝 <strong>เสาร์–อาทิตย์</strong> — ทีม Peer ลงเวลาที่ว่างสำหรับสัปดาห์หน้า</div>
+          <div>📣 หลังลงเวลาแล้ว กด <strong>"ส่งแจ้งเตือน Waiting List"</strong> เพื่อแจ้งนักเรียนที่รอ</div>
+        </div>
+      </div>
+
+      <!-- Slot hours -->
+      <div class="card">
+        <div style="font-weight:700;font-size:15px;margin-bottom:8px;">⏰ ช่วงเวลา Session</div>
+        <div style="font-size:13px;color:var(--mid);line-height:2.2;">
+          <div>จันทร์–พฤหัส: <strong>15:00 – 17:30</strong> (ทุก 15 นาที)</div>
+          <div>ศุกร์: <strong>12:00 – 17:00</strong> (ทุก 15 นาที)</div>
+          <div style="color:var(--soft);font-size:12px;margin-top:4px;">แต่ละ slot = 1 ชั่วโมง ไม่จำเป็นต้องใช้ครบ</div>
+        </div>
+      </div>
+
+      <!-- Case status -->
+      <div class="card">
+        <div style="font-weight:700;font-size:15px;margin-bottom:8px;">🔄 สถานะ Case</div>
+        <div style="font-size:13px;color:var(--mid);line-height:2.4;">
+          <div><span style="background:#f0f4ff;padding:2px 8px;border-radius:6px;font-size:12px;">open</span> → นักเรียนยื่นคำขอ รอจับคู่</div>
+          <div><span style="background:#fff3cd;padding:2px 8px;border-radius:6px;font-size:12px;">booked</span> → จับคู่แล้ว รอ session</div>
+          <div><span style="background:#d4edda;padding:2px 8px;border-radius:6px;font-size:12px;">active</span> → กำลัง session</div>
+          <div><span style="background:#e8f5e9;padding:2px 8px;border-radius:6px;font-size:12px;">completed</span> → จบแล้ว</div>
+          <div><span style="background:#fdecea;padding:2px 8px;border-radius:6px;font-size:12px;">no-show</span> → นักเรียนไม่มา</div>
+        </div>
+      </div>
+
+      <!-- Slot colors -->
+      <div class="card">
+        <div style="font-weight:700;font-size:15px;margin-bottom:8px;">🎨 สีของ Slot ในปฏิทิน</div>
+        <div style="font-size:13px;color:var(--mid);line-height:2.4;">
+          <div><span style="background:#3a8c6e;color:#fff;padding:2px 10px;border-radius:6px;font-size:12px;">เขียว</span> — มีนัดแล้ว (กดเพื่อยกเลิกฉุกเฉิน)</div>
+          <div><span style="background:#b8960c;color:#fff;padding:2px 10px;border-radius:6px;font-size:12px;">ทอง</span> — ปิดชั่วคราว (กดเพื่อเปิด/ยกเลิก)</div>
+          <div><span style="background:#aaa;color:#fff;padding:2px 10px;border-radius:6px;font-size:12px;">เทา</span> — เลือกไว้ รับนักเรียนได้</div>
+        </div>
+      </div>
+
+      <!-- Current week ID display -->
+      <div class="card" style="background:var(--green-soft);border-color:var(--green-border);">
+        <div style="font-weight:700;font-size:14px;color:var(--green);margin-bottom:6px;">📌 Week ID ปัจจุบัน</div>
+        <div style="font-size:13px;color:var(--mid);" id="other-weekid-display">กำลังโหลด...</div>
+      </div>
+    </div><!-- end tab-other -->
+
   </main>
 </div>
 
@@ -663,6 +720,16 @@ const DAY_ORDER = ["จันทร์","อังคาร","พุธ","พฤ
 // ══════════════════════════════════════════════════════════════
 let MY_USER_ID = null;  // will be set after login (from localStorage or URL param)
 let MY_NAME    = null;
+function getWeekId() {
+  const now=new Date(), day=now.getDay(), h=now.getHours(), m=now.getMinutes();
+  let diff;
+  if(day===6) diff=0;
+  else if(day===0) diff=-1;
+  else if(day===5&&(h>13||(h===13&&m>=0))) diff=1; // Fri ≥13:00 → next week
+  else diff=-(day+1);
+  const sat=new Date(now); sat.setDate(now.getDate()+diff);
+  return sat.toISOString().split("T")[0];
+}
 let currentWeekId = getWeekId();
 
 // Slot selection state
@@ -1445,12 +1512,16 @@ async function loadWaitingCount() {
   if (!el) return;
   try {
     const d = await api({action:'getWaitingCount'});
-    const n = d.count ?? 0;
+    if (d.status !== "OK") {
+      el.innerHTML = `<span style="color:#c0392b;font-size:12px;">⚠️ โหลดไม่ได้: ${d.msg||d.status||"ไม่ทราบสาเหตุ"}</span>`;
+      return;
+    }
+    const n = typeof d.count === "number" ? d.count : 0;
     el.innerHTML = n > 0
       ? `<span style="color:var(--gold);font-weight:700;">🕐 ${n} คน</span> รอรับแจ้งเตือนอยู่`
       : `<span style="color:var(--green);font-weight:700;">✓ ไม่มีคนรอ</span> ทุกคนได้รับแจ้งแล้ว`;
   } catch(e) {
-    el.textContent = 'โหลดไม่ได้';
+    el.innerHTML = `<span style="color:#c0392b;font-size:12px;">⚠️ fetch ล้มเหลว: ${e.message}</span>`;
   }
 }
 
@@ -1501,6 +1572,10 @@ function showTab(id) {
   if (id === 'bookings') loadBookingsTab();
   if (id === 'notes')    loadRecentNotes();
   if (id === 'pause')    loadPauseTab();
+  if (id === 'other') {
+    const el = document.getElementById('other-weekid-display');
+    if (el) el.textContent = currentWeekId || '—';
+  }
 }
 
 function openSidebar() {
