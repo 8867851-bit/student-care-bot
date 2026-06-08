@@ -1111,7 +1111,7 @@ async function loadSlotGrid() {
     return `<div class="day-group"><div class="day-label">${day} · ${getSlotDateShort(day)}</div><div class="slots-row">${chips}</div></div>`;
   }).join('');
 
-  document.getElementById('btn-save-slots').disabled = false;
+  document.getElementById('btn-save-slots').disabled = true;
 }
 
 // Active popup state
@@ -1215,6 +1215,7 @@ function toggleSlot(btn, key) {
   // Unregistered → select it
   btn.classList.add('selected');
   selectedSlots.add(key);
+  document.getElementById('btn-save-slots').disabled = false;
 }
 
 function openSlotPopup(btn, key, mode) {
@@ -1286,6 +1287,7 @@ async function popupRemove() {
   selectedSlots.delete(key);
   // Also remove from existingSlots so save picks it up correctly
   existingSlots = existingSlots.filter(s => s !== key);
+  document.getElementById('btn-save-slots').disabled = false;
   toast('ลบช่วงเวลาแล้ว — กด "บันทึกเวลา" เพื่อยืนยัน');
 }
 
