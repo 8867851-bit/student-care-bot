@@ -351,8 +351,15 @@
       <div class="announce-block-label">📍 เวลาที่มักจะนัดกัน</div>
       <div class="announce-block-body">
         หลังเลิกเรียน<br>
-        จันทร์–พฤหัส&nbsp;&nbsp;15:30–17:30<br>
-        <span class="muted">ศุกร์&nbsp;&nbsp;12:30–16:00</span>
+        จันทร์–พฤหัส&nbsp;&nbsp;15:00–17:30<br>
+        <span class="muted">ศุกร์&nbsp;&nbsp;12:00–17:00</span><br>
+        <br>
+        <span style="font-size:13px;line-height:1.8;color:var(--soft);">
+          ⏱ ช่วงเวลาที่เลือกคือ 1 ชั่วโมง<br>
+          แต่ไม่ต้องใช้เต็มเวลาก็ได้นะ<br>
+          นี่แค่เป็นการจองพื้นที่ให้เราได้อยู่ด้วยกัน<br>
+          อย่างสบาย ๆ ไม่มีแรงกดดัน
+        </span>
       </div>
     </div>
 
@@ -945,7 +952,7 @@ function getWeekRange() {
 function getTodayDayName(){return["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"][new Date().getDay()];}
 function getCurrentTime(){const n=new Date();return n.getHours()*60+n.getMinutes();}
 function generateTimes(s,e){const times=[];const[sh,sm]=s.split(":").map(Number);const[eh,em]=e.split(":").map(Number);let cur=sh*60+sm;const end=eh*60+em;while(cur<=end){const endSlot=cur+60;const fmt=t=>String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");times.push(fmt(cur)+"–"+fmt(endSlot));cur+=15;}return times;}
-const ALL_SLOT_TIMES={จันทร์:generateTimes("15:30","17:30"),อังคาร:generateTimes("15:30","17:30"),พุธ:generateTimes("15:30","17:30"),พฤหัสบดี:generateTimes("15:30","17:30"),ศุกร์:generateTimes("15:30","17:30")};
+const ALL_SLOT_TIMES={จันทร์:generateTimes("15:00","16:30"),อังคาร:generateTimes("15:00","16:30"),พุธ:generateTimes("15:00","16:30"),พฤหัสบดี:generateTimes("15:00","16:30"),ศุกร์:generateTimes("12:00","16:00")};
 // ── Real date for a Thai day name in the current week ──────────
 // Returns "09/06/69" (DD/MM/YY Buddhist era)
 function getSlotDateShort(dayName){
