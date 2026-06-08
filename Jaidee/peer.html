@@ -946,6 +946,22 @@ function getTodayDayName(){return["อาทิตย์","จันทร์","
 function getCurrentTime(){const n=new Date();return n.getHours()*60+n.getMinutes();}
 function generateTimes(s,e){const times=[];const[sh,sm]=s.split(":").map(Number);const[eh,em]=e.split(":").map(Number);let cur=sh*60+sm;const end=eh*60+em;while(cur<=end){const endSlot=cur+60;const fmt=t=>String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");times.push(fmt(cur)+"–"+fmt(endSlot));cur+=15;}return times;}
 const ALL_SLOT_TIMES={จันทร์:generateTimes("15:30","17:30"),อังคาร:generateTimes("15:30","17:30"),พุธ:generateTimes("15:30","17:30"),พฤหัสบดี:generateTimes("15:30","17:30"),ศุกร์:generateTimes("15:30","17:30")};
+// ── Real date for a Thai day name in the current week ──────────
+// Returns "09/06/69" (DD/MM/YY Buddhist era)
+function getSlotDateShort(dayName){
+  const now=new Date(), day=now.getDay();
+  const diff=day===6?0:day===0?-1:-(day+1);
+  const sat=new Date(now); sat.setDate(now.getDate()+diff);
+  const offsets={"จันทร์":2,"อังคาร":3,"พุธ":4,"พฤหัสบดี":5,"ศุกร์":6};
+  const offset=offsets[dayName];
+  if(offset===undefined)return "";
+  const d=new Date(sat); d.setDate(sat.getDate()+offset);
+  const dd=String(d.getDate()).padStart(2,"0");
+  const mm=String(d.getMonth()+1).padStart(2,"0");
+  const yy=String(d.getFullYear()+543).slice(-2);
+  return dd+"/"+mm+"/"+yy;
+}
+
 
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>{s.classList.remove("active");s.style.display="none";});
@@ -1277,7 +1293,7 @@ function renderSlots(slots){
   dayOrder.forEach(day=>{
     if(!grouped[day])return;
     const g=document.createElement("div"); g.className="day-group";
-    const l=document.createElement("div"); l.className="day-name"; l.innerText=day; g.appendChild(l);
+    const l=document.createElement("div"); l.className="day-name"; l.innerText=day+" · "+getSlotDateShort(day); g.appendChild(l);
     const r=document.createElement("div"); r.className="slots-row";
     grouped[day].forEach(s=>{
       const chip=document.createElement("button"); chip.className="slot-chip";
@@ -1298,7 +1314,7 @@ function selectSlot(chip,slot,day,time){
   const preview=document.getElementById("chosen-preview");
   preview.classList.remove("visible");
   setTimeout(()=>{
-    document.getElementById("chosen-day-label").innerText=day;
+    document.getElementById("chosen-day-label").innerText=day+" · "+getSlotDateShort(day);
     document.getElementById("chosen-time-label").innerText=time;
     preview.classList.add("visible");
   }, preview.classList.contains("visible") ? 150 : 0);
@@ -1417,7 +1433,7 @@ function buildSpecialSlots(){
     });
     if(!filtered.length)return;
     const g=document.createElement("div"); g.style.cssText="display:flex;flex-direction:column;gap:6px;";
-    const lbl=document.createElement("div"); lbl.style.cssText="font-size:11px;font-weight:700;color:var(--mid);letter-spacing:0.5px;"; lbl.textContent=day; g.appendChild(lbl);
+    const lbl=document.createElement("div"); lbl.style.cssText="font-size:11px;font-weight:700;color:var(--mid);letter-spacing:0.5px;"; lbl.textContent=day+" · "+getSlotDateShort(day); g.appendChild(lbl);
     const chips=document.createElement("div"); chips.style.cssText="display:flex;gap:6px;flex-wrap:wrap;";
     filtered.forEach(time=>{
       const key=day+" "+time;
