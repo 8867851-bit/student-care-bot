@@ -191,7 +191,55 @@
     .slot-chip:hover { border-color:var(--gold); color:var(--d); }
     .slot-chip.selected { background:var(--gold-soft); border-color:var(--gold); color:var(--gold); font-weight:600; }
     .slot-chip.booked { background:var(--green-soft); border-color:var(--green-border); color:var(--green); cursor:default; }
-    .slot-chip.locked { background:var(--surface2); border-color:var(--border); color:var(--softer); cursor:default; text-decoration:line-through; }
+    .slot-chip.locked { background:var(--surface2); border-color:var(--border); color:var(--softer); cursor:pointer; text-decoration:line-through; }
+
+    /* Slot action popup */
+    .slot-popup {
+      position:fixed; z-index:999; background:#fff; border:1.5px solid var(--border);
+      border-radius:14px; box-shadow:0 4px 24px rgba(0,0,0,0.13);
+      padding:6px; display:flex; flex-direction:column; gap:2px; min-width:170px;
+    }
+    .slot-popup button {
+      background:none; border:none; text-align:left; padding:10px 14px;
+      font-size:13px; font-family:'Sarabun',sans-serif; cursor:pointer;
+      border-radius:10px; color:var(--mid); transition:background 0.12s;
+    }
+    .slot-popup button:hover { background:var(--surface2); }
+    .slot-popup button.danger { color:var(--red); }
+    .slot-popup .popup-label {
+      font-size:11px; color:var(--softer); padding:6px 14px 2px;
+      font-weight:600; letter-spacing:0.4px;
+    }
+
+    /* Emergency cancel modal */
+    .emg-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:1000;
+      display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .emg-modal {
+      background:#fff; border-radius:20px; padding:28px 24px;
+      max-width:400px; width:100%; display:flex; flex-direction:column; gap:16px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.18);
+    }
+    .emg-title { font-size:16px; font-weight:700; color:var(--red); }
+    .emg-slot  { font-size:13px; color:var(--soft); margin-top:-8px; }
+    .emg-msg-box {
+      background:#fafafa; border:1.5px solid var(--border); border-radius:12px;
+      padding:14px; font-size:13px; line-height:1.8; color:var(--mid);
+      white-space:pre-wrap; max-height:220px; overflow-y:auto;
+    }
+    .emg-msg-label { font-size:11px; font-weight:700; color:var(--softer); letter-spacing:0.4px; }
+    .emg-rebook-preview {
+      background:var(--green-soft); border:1.5px solid var(--green-border);
+      border-radius:10px; padding:10px 14px; font-size:12px; color:var(--green);
+      font-weight:600; text-align:center;
+    }
+    .emg-row { display:flex; gap:10px; }
+    .emg-row button { flex:1; padding:12px; border-radius:12px; font-size:14px;
+      font-family:'Sarabun',sans-serif; cursor:pointer; font-weight:600; border:none; }
+    .emg-cancel-btn { background:var(--surface2); color:var(--mid); }
+    .emg-confirm-btn { background:var(--red-soft); color:var(--red); }
+    .emg-confirm-btn.step2 { background:var(--red); color:#fff; }
 
     /* ── BOOKING CARD ── */
     .booking-card {
@@ -949,6 +997,12 @@ async function loadSlotGrid() {
     });
   } catch(e) {}
 
+  // Build slot booking-info lookup
+  const bookedSlotInfo = {}; // slot key → {caseId, studentId}
+  slots.filter(s => s.weekId === currentWeekId && s.locked).forEach(s => {
+    bookedSlotInfo[s.slot] = { caseId: s.caseId||'', studentId: s.studentId||'' };
+  });
+
   // Build grid
   el.innerHTML = DAY_ORDER.map(day => {
     const times = SLOT_TIMES[day] || [];
@@ -958,6 +1012,7 @@ async function loadSlotGrid() {
       const isBooked  = bookedSlotKeys.has(key);
       const isLocked  = lockedSlotKeys.has(key);
       const isExisting = existingSlots.includes(key);
+      const s = bookedSlotInfo[key] || null;
       let cls = 'slot-chip';
       let extra = '';
       if (isBooked) {
@@ -969,7 +1024,9 @@ async function loadSlotGrid() {
       } else if (isExisting) {
         cls += ' selected';
       }
-      return `<button class="${cls}" ${extra} data-slot="${key}" onclick="toggleSlot(this,'${key}')">${time}</button>`;
+      const caseid = (isBooked && s && s.caseId) ? s.caseId : '';
+      const studid  = (isBooked && s && s.studentId) ? s.studentId : '';
+      return `<button class="${cls}" ${extra} data-slot="${key}" data-caseid="${caseid}" data-studid="${studid}" onclick="toggleSlot(this,'${key}')">${time}</button>`;
     }).join('');
     return `<div class="day-group"><div class="day-label">${day} · ${getSlotDateShort(day)}</div><div class="slots-row">${chips}</div></div>`;
   }).join('');
@@ -977,17 +1034,194 @@ async function loadSlotGrid() {
   document.getElementById('btn-save-slots').disabled = false;
 }
 
-function toggleSlot(btn, key) {
-  if (btn.dataset.booked || btn.dataset.locked) return;
-  if (btn.classList.contains('selected')) {
-    btn.classList.remove('selected');
-    selectedSlots.delete(key);
-    // Mark for removal if was existing
-  } else {
-    btn.classList.add('selected');
-    selectedSlots.add(key);
+// Active popup state
+let _popupSlotKey = null;
+let _popupBtn     = null;
+
+// Emergency cancel state
+let _emgSlot = null, _emgCaseId = null, _emgStudId = null;
+
+function openEmergencyModal(slot, caseId, studentId) {
+  _emgSlot   = slot;
+  _emgCaseId = caseId;
+  _emgStudId = studentId;
+  document.getElementById('emg-slot-label').textContent = '📅 ' + slot;
+  document.getElementById('emg-step-title').textContent  = '⚠️ ยกเลิกนัดฉุกเฉิน';
+  document.getElementById('emg-step1').style.display = 'flex';
+  document.getElementById('emg-step1').style.flexDirection = 'column';
+  document.getElementById('emg-step1').style.gap = '14px';
+  document.getElementById('emg-step2').style.display = 'none';
+  document.getElementById('emg-overlay').style.display = 'flex';
+}
+
+function emgStep2() {
+  const msg =
+    "🤍
+
+" +
+    "มีเรื่องไม่คาดคิดเกิดขึ้นกับเพื่อนที่ปรึกษาของคุณ
+
+" +
+    "เราขอโทษมากนะ
+" +
+    "ที่การนัดในวัน " + (_emgSlot||'') + "
+" +
+    "ต้องยกเลิกกะทันหัน
+
+" +
+    "นี่ไม่ใช่เรื่องที่เกี่ยวกับคุณเลย
+" +
+    "เพื่อนที่ปรึกษาของคุณมีเรื่องที่ควบคุมไม่ได้เกิดขึ้น
+
+" +
+    "คำตอบที่คุณแชร์ไว้ยังอยู่ครบนะ
+" +
+    "ไม่ต้องตอบคำถามใหม่อีกครั้ง
+
+" +
+    "ถ้าพร้อมอีกครั้ง
+" +
+    "เราก็ยังอยู่ตรงนี้เสมอ 🌱";
+  document.getElementById('emg-msg-preview').textContent = msg;
+  document.getElementById('emg-step1').style.display = 'none';
+  document.getElementById('emg-step2').style.display = 'flex';
+  document.getElementById('emg-step2').style.flexDirection = 'column';
+  document.getElementById('emg-step2').style.gap = '12px';
+  document.getElementById('emg-step-title').textContent = '📩 ยืนยันอีกครั้ง';
+}
+
+async function emgConfirm() {
+  const btn = document.querySelector('.emg-confirm-btn.step2');
+  btn.disabled = true; btn.textContent = 'กำลังดำเนินการ...';
+  try {
+    const d = await api({
+      action: 'cancelBooking',
+      caseId: _emgCaseId,
+      prId: MY_USER_ID,
+      slot: _emgSlot,
+      studentUserId: _emgStudId
+    });
+    closeEmgModal();
+    if (d.reassigned) {
+      toast('✓ หา PR คนใหม่ได้แล้ว — นักเรียนได้รับแจ้งอัตโนมัติ');
+    } else {
+      toast('✓ ยกเลิกนัดแล้ว — ส่งข้อความให้นักเรียนแล้ว');
+    }
+    loadSlotGrid();
+    loadMySlotsForHome();
+    loadBookingsTab();
+  } catch(e) {
+    toast('เชื่อมต่อไม่ได้ ลองใหม่');
+    btn.disabled = false; btn.textContent = 'ยืนยัน — ส่งและยกเลิกนัด';
   }
 }
+
+function closeEmgModal() {
+  document.getElementById('emg-overlay').style.display = 'none';
+  _emgSlot = _emgCaseId = _emgStudId = null;
+}
+
+function toggleSlot(btn, key) {
+  if (btn.dataset.booked) {
+    // Emergency cancel — open 2-step modal
+    openEmergencyModal(btn.dataset.slot, btn.dataset.caseid, btn.dataset.studid);
+    return;
+  }
+
+  // If locked (ปิดชั่วคราว) → reopen with single click
+  if (btn.dataset.locked) {
+    openSlotPopup(btn, key, 'locked');
+    return;
+  }
+
+  // If already registered (gold/selected) → show action popup
+  if (btn.classList.contains('selected')) {
+    openSlotPopup(btn, key, 'selected');
+    return;
+  }
+
+  // Unregistered → select it
+  btn.classList.add('selected');
+  selectedSlots.add(key);
+}
+
+function openSlotPopup(btn, key, mode) {
+  closeSlotPopup();
+  _popupSlotKey = key;
+  _popupBtn     = btn;
+  const popup = document.getElementById('slot-popup');
+  const label = document.getElementById('slot-popup-label');
+  const lockBtn   = document.getElementById('slot-popup-lock');
+  const removeBtn = document.getElementById('slot-popup-remove');
+  label.textContent = key;
+
+  if (mode === 'locked') {
+    lockBtn.textContent   = '🔓 เปิดใหม่';
+    removeBtn.textContent = '✕ ยกเลิกเวลานี้';
+  } else {
+    lockBtn.textContent   = '🔒 ปิดชั่วคราว';
+    removeBtn.textContent = '✕ ยกเลิกเวลานี้';
+  }
+
+  // Position near the button
+  const rect = btn.getBoundingClientRect();
+  popup.style.display = 'flex';
+  let top = rect.bottom + 6 + window.scrollY;
+  let left = rect.left + window.scrollX;
+  // Keep within viewport
+  const pw = 180;
+  if (left + pw > window.innerWidth - 12) left = window.innerWidth - pw - 12;
+  popup.style.top  = top + 'px';
+  popup.style.left = left + 'px';
+}
+
+function closeSlotPopup() {
+  document.getElementById('slot-popup').style.display = 'none';
+  _popupSlotKey = null;
+  _popupBtn     = null;
+}
+
+async function popupLock() {
+  if (!_popupSlotKey || !_popupBtn) return closeSlotPopup();
+  const btn = _popupBtn, key = _popupSlotKey;
+  closeSlotPopup();
+
+  const isCurrentlyLocked = btn.dataset.locked;
+  if (isCurrentlyLocked) {
+    // Reactivate
+    try {
+      const d = await api({action:'reactivateSlot', userId:MY_USER_ID, slot:key});
+      if (d.status === 'OK') { toast('✓ เปิดช่วงเวลาแล้ว'); loadSlotGrid(); }
+      else toast('เกิดข้อผิดพลาด: ' + (d.message||''));
+    } catch(e) { toast('เชื่อมต่อไม่ได้'); }
+  } else {
+    // Deactivate
+    try {
+      const d = await api({action:'deactivateSlot', userId:MY_USER_ID, slot:key});
+      if (d.status === 'OK') { toast('🔒 ปิดชั่วคราวแล้ว'); loadSlotGrid(); }
+      else toast('เกิดข้อผิดพลาด: ' + (d.message||''));
+    } catch(e) { toast('เชื่อมต่อไม่ได้'); }
+  }
+}
+
+async function popupRemove() {
+  if (!_popupSlotKey || !_popupBtn) return closeSlotPopup();
+  const btn = _popupBtn, key = _popupSlotKey;
+  closeSlotPopup();
+  // Remove from grid visually
+  btn.classList.remove('selected');
+  btn.removeAttribute('data-locked');
+  selectedSlots.delete(key);
+  // Also remove from existingSlots so save picks it up correctly
+  existingSlots = existingSlots.filter(s => s !== key);
+  toast('ลบช่วงเวลาแล้ว — กด "บันทึกเวลา" เพื่อยืนยัน');
+}
+
+// Close popup when clicking elsewhere
+document.addEventListener('click', e => {
+  const popup = document.getElementById('slot-popup');
+  if (popup && !popup.contains(e.target)) closeSlotPopup();
+});
 
 async function saveSlots() {
   const btn = document.getElementById('btn-save-slots');
@@ -1353,6 +1587,46 @@ function toast(msg) {
     <button id="modal-confirm-btn" class="btn btn-green btn-full" onclick="submitCompleteModal()">ยืนยัน</button>
     <button class="btn btn-ghost btn-full" onclick="closeCompleteModal()">ยกเลิก</button>
   </div>
+</div>
+
+<!-- EMERGENCY CANCEL MODAL -->
+<div class="emg-overlay" id="emg-overlay" style="display:none;" onclick="if(event.target===this)closeEmgModal()">
+  <div class="emg-modal">
+    <div>
+      <div class="emg-title" id="emg-step-title">⚠️ ยกเลิกนัดฉุกเฉิน</div>
+      <div class="emg-slot" id="emg-slot-label"></div>
+    </div>
+    <!-- Step 1 -->
+    <div id="emg-step1">
+      <div style="font-size:13px;color:var(--mid);line-height:1.7;">
+        นักเรียนที่จองช่วงเวลานี้จะได้รับข้อความแจ้งทาง LINE<br>
+        ระบบจะพยายามหา PR คนอื่นในช่วงเวลาเดียวกันก่อน<br><br>
+        <strong>กด "ดูข้อความ" เพื่อดูสิ่งที่จะส่งไปให้นักเรียน</strong>
+      </div>
+      <div class="emg-row" style="margin-top:4px;">
+        <button class="emg-cancel-btn" onclick="closeEmgModal()">ยกเลิก</button>
+        <button class="emg-confirm-btn" onclick="emgStep2()">ดูข้อความ →</button>
+      </div>
+    </div>
+    <!-- Step 2 -->
+    <div id="emg-step2" style="display:none;">
+      <div class="emg-msg-label">📩 ข้อความที่จะส่งให้นักเรียน</div>
+      <div class="emg-msg-box" id="emg-msg-preview"></div>
+      <div class="emg-rebook-preview">🔗 ปุ่ม "จองเวลาใหม่กับเพื่อนที่ปรึกษา 🤍" (จะแนบไปด้วย)</div>
+      <div style="font-size:12px;color:var(--red);font-weight:600;">ยืนยันอีกครั้ง — ข้อความนี้จะถูกส่งจริง และยกเลิกนัดไม่ได้</div>
+      <div class="emg-row">
+        <button class="emg-cancel-btn" onclick="closeEmgModal()">ยกเลิก</button>
+        <button class="emg-confirm-btn step2" onclick="emgConfirm()">ยืนยัน — ส่งและยกเลิกนัด</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLOT ACTION POPUP -->
+<div class="slot-popup" id="slot-popup" style="display:none;" onclick="event.stopPropagation()">
+  <div class="popup-label" id="slot-popup-label">เวลาที่เลือก</div>
+  <button id="slot-popup-lock" onclick="popupLock()">🔒 ปิดชั่วคราว</button>
+  <button id="slot-popup-remove" class="danger" onclick="popupRemove()">✕ ยกเลิกเวลานี้</button>
 </div>
 
 </body>
