@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <title>ใจดี TU — Peer Dashboard</title>
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_429,w_466,x_100,y_283/9e05abd4-56b6-4885-ab10-21e15dd98e1c_yiqgkt.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -313,7 +314,10 @@
 <!-- ══════════════════════════════════════════════ -->
 <div id="gate">
   <div>
-    <div class="gate-logo">ใจดี TU<br><span style="font-size:14px;font-weight:400;color:var(--soft);">ระบบหลังบ้าน · เพื่อนที่ปรึกษา</span></div>
+    <div class="gate-logo" style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+      <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_429,w_466,x_100,y_283/9e05abd4-56b6-4885-ab10-21e15dd98e1c_yiqgkt.png" alt="ใจดี TU" style="width:200px;height:auto;border-radius:20px;object-fit:contain;"/>
+      <div>ใจดี TU<br><span style="font-size:14px;font-weight:400;color:var(--soft);">ระบบหลังบ้าน · เพื่อนที่ปรึกษา</span></div>
+    </div>
   </div>
   <div class="gate-form">
     <div style="font-size:13px;color:var(--soft);text-align:center;">ใส่รหัสผ่านเพื่อเข้าสู่ระบบ</div>
@@ -1082,7 +1086,7 @@ function emgStep2() {
   document.getElementById('emg-step-title').textContent = '📩 ยืนยันอีกครั้ง';
 }
 
-function emgConfirm() {
+async function emgConfirm() {
   const btn = document.querySelector('.emg-confirm-btn.step2');
   btn.disabled = true; btn.textContent = 'กำลังดำเนินการ...';
   try {
