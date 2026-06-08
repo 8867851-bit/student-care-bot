@@ -894,7 +894,7 @@ _audio.addEventListener('ended', ()=>{ _musicPlaying=false; _syncMusicUI(); });
 // ══════════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════════
-const API_URL = "https://script.google.com/macros/s/AKfycbyQFbcxgTyjwRrp-3vJb0MPMD8ZVAPnzZiGJFD68ojv3jQlUaEOadYoSPYua5052B9kWQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbztMREOYjHbq1TkfMplela4FBQmGjooLbRoV2HmccSdK-ZLzNk7NpkDL0ksPw-bPdgF/exec";
 async function apiCall(data) {
   const params = new URLSearchParams();
   for (const [k,v] of Object.entries(data)) params.append(k, typeof v==='object'?JSON.stringify(v):v);
