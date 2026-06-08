@@ -272,6 +272,7 @@
     <input class="gate-input" type="password" id="gate-pw" placeholder="••••••" autocomplete="off" onkeydown="if(event.key==='Enter')gateLogin()"/>
     <button class="gate-btn" onclick="gateLogin()">เข้าสู่ระบบ →</button>
     <div class="gate-error" id="gate-error"></div>
+    <a href="getid.html" target="_blank" style="font-size:12px;color:var(--soft);text-align:center;margin-top:4px;text-decoration:underline;text-underline-offset:3px;">ยังไม่รู้ LINE ID ของฉัน →</a>
   </div>
 </div>
 
@@ -651,7 +652,7 @@ function gateLogin() {
 }
 
 function promptUserId() {
-  const uid = prompt('ใส่ LINE User ID ของเธอ (ดูได้จาก getid.html):\n\nID จะถูกบันทึกไว้ในเครื่องนี้');
+  const uid = prompt('ใส่ LINE User ID ของเธอ\n(เปิด getid.html เพื่อดู ID ของเธอ)\n\nID จะถูกบันทึกไว้ในเครื่องนี้');
   if (!uid || !uid.trim()) { promptUserId(); return; }
   MY_USER_ID = uid.trim();
   const name = prompt('ชื่อเล่น / ชื่อที่ใช้ในทีม:') || 'PR';
