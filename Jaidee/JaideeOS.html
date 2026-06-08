@@ -567,6 +567,16 @@
         <div class="card-sub">กดปุ่มด้านล่างเพื่อกลับสู่การรับนัดปกติ</div>
         <button class="btn btn-danger btn-full" onclick="clearPause()">ยกเลิก Pause ทันที</button>
       </div>
+
+      <!-- Notify waiting list -->
+      <div class="card" style="gap:12px;display:flex;flex-direction:column;">
+        <div class="card-title">📣 แจ้งเตือน Waiting List</div>
+        <div class="card-sub">ส่ง LINE แจ้งนักเรียนที่กด "แจ้งฉันเมื่อมีตารางใหม่" ทุกคนที่ยังไม่ได้รับแจ้ง</div>
+        <div id="waiting-count-display" style="font-size:13px;color:var(--soft);">กำลังโหลด...</div>
+        <button class="btn btn-gold btn-full" onclick="notifyWaiting()" id="btn-notify-waiting">
+          📣 ส่งแจ้งเตือนเดี๋ยวนี้
+        </button>
+      </div>
     </div>
 
   </main>
@@ -1146,6 +1156,7 @@ function clearNote() {
 async function loadPauseTab() {
   const el = document.getElementById('pause-current-status');
   el.innerHTML = '<div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>';
+  loadWaitingCount();
   try {
     const d = await api({action:'getPauseStatus'});
     if (d.pause) {
@@ -1185,6 +1196,45 @@ async function setPause() {
       loadPauseStatus();
     } else { toast('เกิดข้อผิดพลาด'); }
   } catch(e) { toast('เชื่อมต่อไม่ได้'); }
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// WAITING LIST — notify students when new slots open
+// ══════════════════════════════════════════════════════════════
+async function loadWaitingCount() {
+  const el = document.getElementById('waiting-count-display');
+  if (!el) return;
+  try {
+    const d = await api({action:'getWaitingCount'});
+    const n = d.count ?? 0;
+    el.innerHTML = n > 0
+      ? `<span style="color:var(--gold);font-weight:700;">🕐 ${n} คน</span> รอรับแจ้งเตือนอยู่`
+      : `<span style="color:var(--green);font-weight:700;">✓ ไม่มีคนรอ</span> ทุกคนได้รับแจ้งแล้ว`;
+  } catch(e) {
+    el.textContent = 'โหลดไม่ได้';
+  }
+}
+
+async function notifyWaiting() {
+  const btn = document.getElementById('btn-notify-waiting');
+  const n = parseInt((document.getElementById('waiting-count-display')?.textContent || '0'));
+  if (!confirm('ยืนยัน: ส่ง LINE แจ้งเตือนนักเรียนใน Waiting List ทุกคน?')) return;
+  btn.disabled = true;
+  btn.textContent = 'กำลังส่ง...';
+  try {
+    const d = await api({action:'notifyWaiting'});
+    if (d.status === 'OK') {
+      toast(`✓ ส่งแจ้งเตือนแล้ว ${d.notified} คน`);
+      loadWaitingCount();
+    } else {
+      toast('เกิดข้อผิดพลาด');
+    }
+  } catch(e) {
+    toast('เชื่อมต่อไม่ได้');
+  }
+  btn.disabled = false;
+  btn.textContent = '📣 ส่งแจ้งเตือนเดี๋ยวนี้';
 }
 
 async function clearPause() {
