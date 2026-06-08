@@ -1302,13 +1302,14 @@ async function saveSlots() {
   const allSelected = Array.from(document.querySelectorAll('#slot-grid .slot-chip.selected, #slot-grid .slot-chip.booked'))
     .map(c => c.dataset.slot).filter(Boolean);
   try {
-    const d = await api({action:'registerAvailability', userId:MY_USER_ID, weekId:currentWeekId, slots:JSON.stringify(allSelected)});
+    // Use POST (not GET) for write operations — GAS GET requests can be cached
+    const d = await apiPost({action:'registerAvailability', userId:MY_USER_ID, weekId:currentWeekId, slots:allSelected});
     if (d.status === 'OK') {
       toast(`✓ บันทึกเวลา ${allSelected.length} ช่วงแล้ว`);
-      loadSlotGrid();
-      loadMySlotsForHome();
+      await loadSlotGrid();
+      await loadMySlotsForHome();
     } else {
-      toast('เกิดข้อผิดพลาด');
+      toast('เกิดข้อผิดพลาด: ' + (d.msg || ''));
     }
   } catch(e) {
     toast('เชื่อมต่อไม่ได้ ลองใหม่');
