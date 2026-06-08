@@ -1015,7 +1015,7 @@ window.onload=async()=>{
   show('screen-announce');
   _lockAnnounce();
   // 3-second hard timeout: if gate hasn't resolved, redirect to empty state
-  const gateTimeout = setTimeout(()=>{ show('screen-truly-empty'); }, 3000);
+  const gateTimeout = setTimeout(()=>{ show('screen-truly-empty'); }, 12000);
   await _checkAvailabilityGate();
   clearTimeout(gateTimeout);
   _unlockAnnounce();
@@ -1053,14 +1053,20 @@ async function _checkAvailabilityGate(){
     return;
   }
 
-  // 1. Check pause first
+  // Run pause check + slot check in parallel to stay within timeout
+  let slotsAvailable=false;
   try{
-    const res=await fetch(API_URL+"?action=getPauseStatus");
-    const d=await res.json();
-    if(d.pause){
-      const end=new Date(d.pause.end);
+    const [pauseRes, slotsRes] = await Promise.all([
+      fetch(API_URL+"?action=getPauseStatus"),
+      fetch(API_URL+"?action=getSlots")
+    ]);
+    const [pauseData, slotsData] = await Promise.all([pauseRes.json(), slotsRes.json()]);
+
+    // 1. Handle pause
+    if(pauseData.pause){
+      const end=new Date(pauseData.pause.end);
       const daysLeft=Math.max(0,Math.ceil((end-new Date())/86400000));
-      const type=d.pause.type||"midterm";
+      const type=pauseData.pause.type||"midterm";
       document.getElementById("pause-days").innerText=daysLeft;
       const msgs={midterm:"ช่วงนี้เป็นช่วงสอบกลางภาค",finals:"ช่วงนี้เป็นช่วงสอบปลายภาค",summer:"ช่วงนี้เป็นปิดเทอมใหญ่",holiday:"ช่วงนี้เป็นวันหยุด"};
       const subMsgs={midterm:"เพื่อนที่ปรึกษากำลังเตรียมสอบอยู่ จะกลับมาเร็ว ๆ นี้ 🤍",finals:"เพื่อนที่ปรึกษากำลังเตรียมสอบปลายภาค จะกลับมาเร็ว ๆ นี้ 🤍",summer:"เพื่อนที่ปรึกษากำลังพักร้อน จะกลับมาในเทอมหน้า 🤍",holiday:"หยุดพักชั่วคราว จะกลับมาเร็ว ๆ นี้ 🤍"};
@@ -1073,19 +1079,13 @@ async function _checkAvailabilityGate(){
       return;
     }
     window._pauseActive=false;
-  }catch(e){ window._pauseActive=false; }
 
-  // 2. Check slot availability
-  let slotsAvailable=false;
-  try{
-    const res=await fetch(API_URL+"?action=getSlots");
-    const j=await res.json();
-    if(j.status==="OK"&&j.slots?.length){
-      // Filter to active slots (not already past)
+    // 2. Handle slots
+    if(slotsData.status==="OK"&&slotsData.slots?.length){
       const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
       const todayIdx=dayOrder.indexOf(getTodayDayName());
       const todayTime=getCurrentTime();
-      const active=j.slots.filter(s=>{
+      const active=slotsData.slots.filter(s=>{
         const slotDay=s.slot.split(" ")[0];
         const idx=dayOrder.indexOf(slotDay);
         if(idx<todayIdx)return false;
@@ -1093,10 +1093,9 @@ async function _checkAvailabilityGate(){
         return true;
       });
       slotsAvailable=active.length>0;
-      // Cache slots so loadSlots() can reuse without a second fetch
       window._cachedSlots=active;
     }
-  }catch(e){ window._cachedSlots=null; }
+  }catch(e){ window._pauseActive=false; window._cachedSlots=null; }
 
   if(!slotsAvailable){
     show("screen-truly-empty");
