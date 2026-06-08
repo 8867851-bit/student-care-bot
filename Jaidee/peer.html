@@ -940,10 +940,19 @@ const leadIns = [
 // ══════════════════════════════════════════════
 // UTILS
 // ══════════════════════════════════════════════
+function getCurrentSaturday() {
+  const now=new Date(), day=now.getDay(), h=now.getHours(), m=now.getMinutes();
+  let diff;
+  if(day===6) diff=0;
+  else if(day===0) diff=-1;
+  else if(day===5&&(h>13||(h===13&&m>=0))) diff=1; // Fri ≥13:00 → next week
+  else diff=-(day+1);
+  const sat=new Date(now); sat.setDate(now.getDate()+diff);
+  return sat;
+}
 function getWeekRange() {
   const now=new Date(), day=now.getDay();
-  const diff=day===6?0:day===0?-1:-(day+1);
-  const sat=new Date(now); sat.setDate(now.getDate()+diff);
+  const sat=getCurrentSaturday();
   const mon=new Date(sat); mon.setDate(sat.getDate()+2);
   const fri=new Date(sat); fri.setDate(sat.getDate()+6);
   const opts={day:"numeric",month:"long",year:"numeric"};
@@ -956,9 +965,7 @@ const ALL_SLOT_TIMES={จันทร์:generateTimes("15:00","16:30"),อั�
 // ── Real date for a Thai day name in the current week ──────────
 // Returns "09/06/69" (DD/MM/YY Buddhist era)
 function getSlotDateShort(dayName){
-  const now=new Date(), day=now.getDay();
-  const diff=day===6?0:day===0?-1:-(day+1);
-  const sat=new Date(now); sat.setDate(now.getDate()+diff);
+  const sat=getCurrentSaturday();
   const offsets={"จันทร์":2,"อังคาร":3,"พุธ":4,"พฤหัสบดี":5,"ศุกร์":6};
   const offset=offsets[dayName];
   if(offset===undefined)return "";
