@@ -370,7 +370,7 @@
     <div class="tab-content" id="tab-bookings">
       <div style="display:flex;flex-direction:column;gap:4px;">
         <div class="section-label">นัดที่ได้รับ</div>
-        <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;">นักเรียนที่จะมาหา</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;">เคสทั้งหมด (ปัจจุบัน + คลัง)</div>
       </div>
       <div id="bookings-list">
         <div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>
@@ -713,7 +713,7 @@ async function loadMySlotsForHome() {
     }
     el.innerHTML = slots.map(s => `
       <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-soft);">
-        <span style="font-size:14px;">${s.slot}</span>
+        <span style="font-size:14px;">${slotWithDate(s.slot)}</span>
         ${s.locked ? '<span class="badge badge-green">มีนัด</span>' : (s.manualLock==='TRUE'||s.manualLock===true ? '<span class="badge badge-soft">ปิดชั่วคราว</span>' : '<span class="badge badge-gold">ว่าง</span>')}
       </div>
     `).join('');
@@ -782,7 +782,7 @@ function renderHomeAlerts(bookings) {
     <div class="alert-banner">
       <div class="alert-banner-icon">🤍</div>
       <div class="alert-banner-body">
-        <div class="alert-banner-title">${b.slot || '—'} · ${b.caseId}</div>
+        <div class="alert-banner-title">${slotWithDate(b.slot) || '—'} · ${b.caseId}</div>
         <div class="alert-banner-sub">
           ${b.q1 ? `เรื่อง: ${b.q1}` : ''}${b.level ? ` · ระดับ: <span class="badge badge-${b.level}">${b.level}</span>` : ''}
         </div>
@@ -806,7 +806,7 @@ async function loadBookingsTab() {
       <div class="booking-card" style="border-left-color:${levelColor(b.level)};">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div>
-            <div class="bc-slot">${b.slot || '—'}</div>
+            <div class="bc-slot">${slotWithDate(b.slot) || '—'}</div>
             <div class="bc-meta">
               <span class="badge badge-${b.level || 'soft'}">${b.level || '?'}</span>
               <span style="color:var(--soft);">${b.caseId}</span>
@@ -828,6 +828,7 @@ async function loadBookingsTab() {
           <button class="btn btn-ghost" onclick="prefillNote('${b.caseId}')">📝 เขียน note</button>
         </div>
         <div class="divider" style="margin:4px 0;"></div>
+        ${b.status==='active' ? `
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn btn-green" style="flex:1;min-width:140px;" onclick="openCompleteModal('${b.caseId}','${b.studentId||''}','met')">
             ✓ จบการพูดคุย
@@ -835,7 +836,7 @@ async function loadBookingsTab() {
           <button class="btn" style="flex:1;min-width:140px;background:var(--yellow-soft);color:var(--yellow);border:1.5px solid var(--gold-border);" onclick="openCompleteModal('${b.caseId}','${b.studentId||''}','noshow')">
             ○ ไม่สามารถเจอกันได้
           </button>
-        </div>
+        </div>` : `<div style="font-size:12px;color:var(--soft);padding:4px 0;">🗂 คลัง — ${b.status==='completed'?'เสร็จสิ้น':b.status==='no-show'?'ไม่ได้เจอกัน':b.status}</div>`}
       </div>
     `).join('');
   } catch(e) {
@@ -959,7 +960,7 @@ async function loadSlotGrid() {
       }
       return `<button class="${cls}" ${extra} data-slot="${key}" onclick="toggleSlot(this,'${key}')">${time}</button>`;
     }).join('');
-    return `<div class="day-group"><div class="day-label">${day}</div><div class="slots-row">${chips}</div></div>`;
+    return `<div class="day-group"><div class="day-label">${day} · ${getSlotDateShort(day)}</div><div class="slots-row">${chips}</div></div>`;
   }).join('');
 
   document.getElementById('btn-save-slots').disabled = false;
@@ -1242,6 +1243,31 @@ function getWeekRangeThai() {
   const opts = {day:'numeric',month:'long'};
   return mon.toLocaleDateString('th-TH',opts) + ' – ' + fri.toLocaleDateString('th-TH',{...opts,year:'numeric'});
 }
+
+function getSlotDateShort(dayName){
+  const now=new Date(), day=now.getDay();
+  const diff=day===6?0:day===0?-1:-(day+1);
+  const sat=new Date(now); sat.setDate(now.getDate()+diff);
+  const offsets={"จันทร์":2,"อังคาร":3,"พุธ":4,"พฤหัสบดี":5,"ศุกร์":6};
+  const offset=offsets[dayName];
+  if(offset===undefined)return "";
+  const d=new Date(sat); d.setDate(sat.getDate()+offset);
+  const dd=String(d.getDate()).padStart(2,"0");
+  const mm=String(d.getMonth()+1).padStart(2,"0");
+  const yy=String(d.getFullYear()+543).slice(-2);
+  return dd+"/"+mm+"/"+yy;
+}
+
+function slotWithDate(slot){
+  if(!slot)return slot;
+  const parts=slot.split(" ");
+  if(parts.length<2)return slot;
+  const dayName=parts[0];
+  const timeStr=parts.slice(1).join(" ");
+  const dateStr=getSlotDateShort(dayName);
+  return dateStr ? dayName+" "+dateStr+" · "+timeStr : slot;
+}
+
 
 function levelColor(level) {
   return {red:'var(--red)',yellow:'var(--yellow)',green:'var(--green)'}[level] || 'var(--border)';
