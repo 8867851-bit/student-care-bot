@@ -431,9 +431,19 @@
 
     <!-- ══ BOOKINGS ══ -->
     <div class="tab-content" id="tab-bookings">
-      <div style="display:flex;flex-direction:column;gap:4px;">
-        <div class="section-label">นัดที่ได้รับ</div>
-        <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;">เคสทั้งหมด (ปัจจุบัน + คลัง)</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div class="section-label">นัดที่ได้รับ</div>
+          <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;" id="bookings-tab-title">ปัจจุบัน</div>
+        </div>
+        <div style="display:flex;gap:6px;padding-top:4px;">
+          <button id="bv-active-btn" onclick="setBookingView('active')" title="ปัจจุบัน"
+            style="width:36px;height:36px;border-radius:10px;border:1.5px solid var(--gold);background:var(--gold-soft);color:var(--gold);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;">📋</button>
+          <button id="bv-trash-btn" onclick="setBookingView('trash')" title="ไม่ได้เจอกัน"
+            style="width:36px;height:36px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--soft);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;">🗑</button>
+          <button id="bv-history-btn" onclick="setBookingView('history')" title="เสร็จสิ้น"
+            style="width:36px;height:36px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--soft);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;">🕐</button>
+        </div>
       </div>
       <div id="bookings-list">
         <div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>
@@ -951,32 +961,74 @@ function renderHomeAlerts(bookings) {
   `).join('');
 }
 
-async function loadBookingsTab() {
+let _bookingView = 'active'; // 'active' | 'trash' | 'history'
+let _allCases = []; // cached from last load
+
+function setBookingView(view) {
+  _bookingView = view;
+  // Update button styles
+  const views = ['active','trash','history'];
+  const btns  = ['bv-active-btn','bv-trash-btn','bv-history-btn'];
+  const titles = { active:'ปัจจุบัน', trash:'ไม่ได้เจอกัน', history:'เสร็จสิ้น' };
+  views.forEach((v,i) => {
+    const btn = document.getElementById(btns[i]);
+    if (!btn) return;
+    const isActive = v === view;
+    btn.style.border      = isActive ? '1.5px solid var(--gold)' : '1.5px solid var(--border)';
+    btn.style.background  = isActive ? 'var(--gold-soft)' : 'transparent';
+    btn.style.color       = isActive ? 'var(--gold)' : 'var(--soft)';
+  });
+  const titleEl = document.getElementById('bookings-tab-title');
+  if (titleEl) titleEl.textContent = titles[view];
+  renderBookingsView();
+}
+
+function renderBookingsView() {
   const el = document.getElementById('bookings-list');
-  el.innerHTML = '<div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>';
-  try {
-    const d = await api({action:'getMyCases', userId:MY_USER_ID});
-    const cases = d.cases || [];
-    if (!cases.length) {
-      el.innerHTML = '<div class="empty-state">ยังไม่มีนัดที่ได้รับ 🤍</div>';
-      return;
-    }
-    el.innerHTML = cases.map(b => `
-      <div class="booking-card" style="border-left-color:${levelColor(b.level)};">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <div>
+  if (!el) return;
+
+  const trashStatuses   = ['no-show','cancelled','student_self_cancel'];
+  const historyStatuses = ['completed'];
+
+  let filtered = _allCases.filter(b => {
+    if (_bookingView === 'active')  return b.status === 'active';
+    if (_bookingView === 'trash')   return trashStatuses.includes(b.status);
+    if (_bookingView === 'history') return historyStatuses.includes(b.status);
+    return false;
+  });
+
+  if (!filtered.length) {
+    const emptyMsg = {
+      active:  'ยังไม่มีนัดใหม่ตอนนี้ 🤍',
+      trash:   'ไม่มีนัดที่ไม่ได้เจอกัน 🤍',
+      history: 'ยังไม่มี session ที่เสร็จสิ้น'
+    }[_bookingView];
+    el.innerHTML = `<div class="empty-state">${emptyMsg}</div>`;
+    return;
+  }
+
+  el.innerHTML = filtered.map(b => {
+    const isActive    = b.status === 'active';
+    const isHistory   = b.status === 'completed';
+    const statusLabel = isActive ? 'กำลังดำเนินการ'
+      : b.status === 'completed'  ? 'เสร็จสิ้น'
+      : b.status === 'no-show'    ? 'ไม่ได้เจอกัน'
+      : b.status === 'cancelled'  ? 'ยกเลิกแล้ว'
+      : b.status;
+    const lateTag = b.lateAlert ? `<div style="background:var(--red-soft);border:1.5px solid var(--red-border);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--red);display:flex;align-items:center;gap:8px;">⚠️ นักเรียนแจ้งว่าจะสาย (>15 นาที) — ยืนยันว่าจะมานะ</div>` : '';
+    return `
+      <div class="booking-card">
+        <div class="bc-header">
+          <div style="display:flex;flex-direction:column;gap:3px;">
             <div class="bc-slot">${slotWithDate(b.slot) || '—'}</div>
-            <div class="bc-meta">
-              <span class="badge badge-${b.level || 'soft'}">${b.level || '?'}</span>
+            <div style="font-size:11px;color:var(--soft);display:flex;gap:8px;flex-wrap:wrap;">
               <span style="color:var(--soft);">${b.caseId}</span>
               ${b.room ? `<span>📍 ห้อง ${b.room}</span>` : ''}
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
-            <span class="badge ${b.status==='active'?'badge-green':'badge-soft'}">${b.status === 'active' ? 'กำลังดำเนินการ' : b.status}</span>
-          </div>
+          <span class="badge ${isActive ? 'badge-green' : 'badge-soft'}">${statusLabel}</span>
         </div>
-        ${b.lateAlert ? `<div style="background:var(--red-soft);border:1.5px solid var(--red-border);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--red);display:flex;align-items:center;gap:8px;">⚠️ นักเรียนแจ้งว่าจะสาย (>15 นาที) — ยืนยันว่าจะมานะ</div>` : ''}
+        ${lateTag}
         <div class="bc-answers" style="background:var(--surface2);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;">
           ${b.q1 ? `<div><span class="bc-label">เรื่องที่หนักใจ </span>${b.q1}</div>` : ''}
           ${b.q2 ? `<div><span class="bc-label">ผลกระทบ </span>${b.q2}</div>` : ''}
@@ -988,17 +1040,22 @@ async function loadBookingsTab() {
           <button class="btn btn-ghost" onclick="prefillNote('${b.caseId}')">📝 เขียน note</button>
         </div>
         <div class="divider" style="margin:4px 0;"></div>
-        ${b.status==='active' ? `
+        ${isActive ? `
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-green" style="flex:1;min-width:140px;" onclick="openCompleteModal('${b.caseId}','${b.studentId||''}','met')">
-            ✓ จบการพูดคุย
-          </button>
-          <button class="btn" style="flex:1;min-width:140px;background:var(--yellow-soft);color:var(--yellow);border:1.5px solid var(--gold-border);" onclick="openCompleteModal('${b.caseId}','${b.studentId||''}','noshow')">
-            ○ ไม่สามารถเจอกันได้
-          </button>
-        </div>` : `<div style="font-size:12px;color:var(--soft);padding:4px 0;">🗂 คลัง — ${b.status==='completed'?'เสร็จสิ้น':b.status==='no-show'?'ไม่ได้เจอกัน':b.status}</div>`}
-      </div>
-    `).join('');
+          <button class="btn btn-green" style="flex:1;min-width:140px;" onclick="openCompleteModal('${b.caseId}','${b.studentId||''}','met')">✓ จบการพูดคุย</button>
+          <button class="btn" style="flex:1;min-width:140px;background:var(--yellow-soft);color:var(--yellow);border:1.5px solid var(--gold-border);" onclick="openCompleteModal('${b.caseId}','${b.studentId||''}','noshow')">○ ไม่สามารถเจอกันได้</button>
+        </div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+async function loadBookingsTab() {
+  const el = document.getElementById('bookings-list');
+  el.innerHTML = '<div class="loading-row"><div class="spinner"></div><span>กำลังโหลด...</span></div>';
+  try {
+    const d = await api({action:'getMyCases', userId:MY_USER_ID});
+    _allCases = d.cases || [];
+    renderBookingsView();
   } catch(e) {
     el.innerHTML = '<div class="empty-state" style="color:var(--red);">โหลดไม่ได้ ลองใหม่</div>';
   }
