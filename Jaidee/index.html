@@ -632,7 +632,7 @@ const TIERS = [
       { emoji:'😴', label:'นอนไม่หลับ',              key:'sleep'    },
       { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
       { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
-      { emoji:'🤔', label:'ไม่แน่ใจว่ารู้สึกอะไร',  key:'unsure'   },
+      { emoji:'🤔', label:'ยังอธิบายตัวเองไม่ถูก',  key:'unsure'   },
       { emoji:'🌿', label:'เป็นห่วงเพื่อน',          key:'friend'   },
     ]
   },
@@ -687,6 +687,7 @@ const TIERS = [
       { emoji:'🌱', label:'อยากเปลี่ยนแปลงตัวเอง',      key:'grow'      },
       { emoji:'🎭', label:'รู้สึกว่าตัวเองไม่เหมือนเดิม', key:'changed'  },
       { emoji:'❓', label:'ไม่รู้ว่าตัวเองต้องการอะไร',  key:'lost'      },
+      { emoji:'🫥', label:'รู้สึกว่าตัวเองค่อย ๆ หายไป', key:'fading'    },
     ]
   },
 ];
@@ -796,6 +797,7 @@ const SIT_DATA = {
       { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html' },
       { icon:'🏃', name:'เคลื่อนไหวก่อนเลย', desc:'3 นาที เปลี่ยนพลังงาน', href:'alltools.html#move' },
+      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ ฟื้นฟูตัวเอง ผ่านคำถามและกิจกรรมสั้น ๆ', href:'https://thelittlebylittle.com/' },
     ],
     talk: 'หมดแรงมาหลายสัปดาห์แล้ว ไม่ฟื้นตัวเลย?',
   },
@@ -810,10 +812,11 @@ const SIT_DATA = {
     talk: 'เป็นมานานแล้ว หรือไม่ใช่แค่เรื่องเรียน?',
   },
   unsure: {
-    emoji: '🤔', title: 'ไม่แน่ใจว่ากำลังรู้สึกอะไร',
+    emoji: '🤔', title: 'ยังอธิบายตัวเองไม่ถูก',
     note: 'ไม่ต้องรีบหาคำตอบ แค่รู้ว่ามีบางอย่างอยู่ก็พอ ลองสำรวจดูว่ามันคืออะไร',
     tools: [
       { icon:'🪞', name:'What\'s This Feeling?', desc:'เริ่มจากสังเกตข้างใน · ไม่ต้องรู้คำตอบก่อน', href:'reflection.html', primary: true },
+      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ สำรวจตัวเอง ในวันที่ยังอธิบายตัวเองไม่ถูก', href:'https://thelittlebylittle.com/' },
     ],
     talk: 'อยากคุยกับคนจริงๆ มากกว่า?',
   },
@@ -1144,6 +1147,7 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่พร้อมรับฟัง', href:'peer.html' },
+      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ กลับมาฟังเสียงของตัวเอง ทีละนิด', href:'https://thelittlebylittle.com/' },
     ],
     talk:'รู้สึกแบบนี้นานแล้วหรือรุนแรงมาก?',
   },
@@ -1191,6 +1195,7 @@ const SIT_DATA_EXTRA = {
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนพร้อมรับฟัง', href:'peer.html' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจความรู้สึกข้างใน', href:'reflection.html' },
       { icon:'🎧', name:'Sati — อาสานักรับฟัง', desc:'익명 · ฟรี', href:'https://satiapp.co' },
+      { icon:'🌱', name:'Little by Little', desc:'กิจกรรมสั้น ๆ ที่ช่วยให้มองเห็นสิ่งสำคัญในชีวิตอีกครั้ง', href:'https://thelittlebylittle.com/' },
     ],
     talk:'รู้สึกเหงามากหรือนานมากแล้ว?',
   },
@@ -1308,6 +1313,7 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เปลี่ยนไป', href:'reflection.html' },
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
+      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ ทำความรู้จักกับตัวเองที่เปลี่ยนไป', href:'https://thelittlebylittle.com/' },
     ],
     talk:'การเปลี่ยนแปลงนี้ทำให้รู้สึกไม่ดีหรือกังวล?',
   },
@@ -1317,8 +1323,18 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html', primary:true },
       { icon:'🧩', name:'แบบทดสอบค้นพบตัวเอง', desc:'อาจช่วยให้เห็นแนวทาง', href:'#', onclick:'openCareSheet()' },
+      { icon:'🌱', name:'Little by Little', desc:'สำหรับวันที่ยังไม่รู้ว่ากำลังต้องการอะไร — ไม่ต้องรีบหาคำตอบ', href:'https://thelittlebylittle.com/' },
     ],
     talk:'รู้สึก lost มากและกระทบชีวิตประจำวัน?',
+  },
+  fading: {
+    emoji:'🫥', title:'รู้สึกว่าตัวเองค่อย ๆ หายไป',
+    note:'บางช่วงของชีวิต เราอาจรู้สึกเหมือนตัวเองค่อย ๆ หายไปจากสายตาของใครหลายคน จากที่เคยมีบทบาท เคยรู้สึกว่าตัวเองสำคัญ<br><br>วันหนึ่งอาจเริ่มสงสัยว่า "วันนี้ฉันยังมีความหมายอยู่ไหมนะ"<br><br>ความรู้สึกแบบนี้ไม่ได้แปลว่าอ่อนแอ มันอาจเป็นสัญญาณว่าใจเรากำลังอยากถูกรับฟัง และอยากถูกมองเห็นอีกครั้ง',
+    tools:[
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่พร้อมมองเห็นคุณ', href:'peer.html', primary:true },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html' },
+    ],
+    talk:'รู้สึกแบบนี้นานแล้วหรือรุนแรงมาก?',
   },
 };
 
@@ -1358,6 +1374,7 @@ const PILL_PREVIEWS = {
   grow:        { text: 'อยากเปลี่ยนแปลงตัวเอง — ความอยากเปลี่ยนคือสัญญาณที่ดีแล้ว', action: '🌱 เช็กเรื่องพื้นฐาน' },
   changed:     { text: 'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้ไม่คุ้นเคยตัวเอง...', action: '🪞 สำรวจสิ่งที่เปลี่ยนไป' },
   lost:        { text: 'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว', action: '🪞 ลองสำรวจข้างในก่อน' },
+  fading:      { text: 'ความรู้สึกว่าตัวเองค่อย ๆ หายไป — มันอาจเป็นสัญญาณว่าใจอยากถูกมองเห็น', action: '💛 มีคนที่พร้อมมองเห็นคุณ' },
 };
 
 // ── Notebook whispers — rotate into preview strip after listening state ──
