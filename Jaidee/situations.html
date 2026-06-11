@@ -195,6 +195,7 @@ const SIT_DATA = {
       { icon:'🌬️', name:'หายใจก่อนเลย', desc:'รีเซ็ตสมาธิ 2 นาที', href:'alltools.html#breathe' },
       { icon:'🏃', name:'ลุกขึ้นขยับตัว', desc:'5 นาที แล้วกลับมาใหม่', href:'alltools.html#move' },
       { icon:'🌙', name:'Sleep Reset', desc:'ถ้านอนไม่พอคือต้นเหตุ', href:'alltools.html#sleep' },
+      { icon:'⚡', name:'Rewire สวิตช์ 30 วิ', desc:'ไมโครแฮบิตเล็กๆ รีบูตสมอง', href:'alltools.html#rewire' },
     ],
     talk: 'เป็นมานานแล้ว หรือไม่ใช่แค่เรื่องเรียน?',
   },
@@ -325,6 +326,7 @@ const SIT_DATA_EXTRA = {
     emoji:'📚', title:'กลัวสอบ',
     note:'ความกังวลก่อนสอบเป็นเรื่องปกติมาก แต่ถ้ามันมากเกินจนกระทบการนอนหรือทำให้อ่านไม่ได้เลย อาจต้องการความช่วยเหลือ',
     tools:[
+      { icon:'🎯', name:'เตรียมตัวก่อนสอบ', desc:'Pre-performance grounding ลด anxiety ใน 3 นาที', href:'alltools.html#grounding' },
       { icon:'🌬️', name:'หายใจก่อนเลย', desc:'ลด cortisol ก่อนเรียนหรือก่อนสอบ', href:'alltools.html#breathe' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้าความกังวลลึกกว่าแค่เรื่องสอบ', href:'reflection.html' },
       { icon:'🌙', name:'Sleep Reset', desc:'นอนดีก่อนสอบสำคัญกว่าอ่านดึก', href:'alltools.html#sleep' },
@@ -354,8 +356,10 @@ const SIT_DATA_EXTRA = {
     emoji:'🎯', title:'กดดันตัวเองมากเกินไป',
     note:'การกดดันตัวเองเป็นสัญญาณว่าคุณใส่ใจ แต่มากเกินพอดีทำให้ร่างกายและจิตใจสึกหรอเร็ว',
     tools:[
+      { icon:'🎯', name:'เตรียมตัว — ลด tension ก่อน', desc:'Grounding 3 นาที ก่อนเผชิญสิ่งที่กดดัน', href:'alltools.html#grounding' },
+      { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ไม่ต่อสู้กับความรู้สึก — อยู่กับมันโดยไม่จม', href:'alltools.html#rain' },
+      { icon:'🤍', name:'พักใจ', desc:'เมื่อกดดันตัวเองมากเกิน self-compassion ช่วยได้', href:'alltools.html#rest' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ความกดดันนี้มาจากไหน', href:'reflection.html' },
-      { icon:'🌬️', name:'หายใจผ่อนคลาย', desc:'ลด tension ลงก่อน', href:'alltools.html#breathe' },
     ],
     talk:'กดดันตัวเองจนรู้สึกไม่ไหว?',
   },
@@ -513,6 +517,7 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้าความเหนื่อยมันลึกกว่าร่างกาย', href:'reflection.html' },
+      { icon:'⚡', name:'Rewire สวิตช์ 30 วิ', desc:'ไมโครแฮบิตเล็กๆ รีบูตสมอง', href:'alltools.html#rewire' },
     ],
     talk:'เหนื่อยมากนานแล้วและไม่ดีขึ้น?',
   },
@@ -522,6 +527,7 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
       { icon:'🌬️', name:'หายใจ 2 นาที บนเตียงก็ได้', desc:'เริ่มเล็กๆ', href:'alltools.html#breathe' },
+      { icon:'⚡', name:'สวิตช์เล็กที่สุด', desc:'ยิ้ม 3 วิ ทำบนเตียงได้เลย', href:'alltools.html#rewire-smile' },
     ],
     talk:'เป็นแบบนี้บ่อยหรือนานมากแล้ว?',
   },
