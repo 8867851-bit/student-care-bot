@@ -32,7 +32,7 @@
 
     /* WELCOME */
     #s-welcome{align-items:center;justify-content:center;text-align:center;padding:48px 32px;gap:0;}
-    .w-icon{font-size:48px;margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.2s ease forwards;}
+    .w-icon{width:120px;height:120px;margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.2s ease forwards;border-radius:50%;object-fit:cover;}
     .w-eye{font-size:10px;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;font-weight:400;margin-bottom:12px;opacity:0;animation:fadeUp 0.7s 0.4s ease forwards;}
     .w-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;line-height:1.35;margin-bottom:10px;opacity:0;animation:fadeUp 0.7s 0.55s ease forwards;}
     .w-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.8;margin-bottom:40px;opacity:0;animation:fadeUp 0.7s 0.7s ease forwards;}
@@ -206,7 +206,7 @@
 
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
-  <div class="w-icon">🪞</div>
+  <img class="w-icon" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_872,w_870,x_307,y_110/reflectjaidee_wpskha.png" alt="" draggable="false"/>
   <div class="w-eye">ใจดี TU · What's This Feeling</div>
   <div class="w-title">ไม่ต้องรีบหาคำตอบ</div>
   <div class="w-sub">ลองสังเกตสิ่งที่เกิดขึ้นข้างในก่อน</div>
@@ -462,6 +462,7 @@ const TOOL_CONFIG = {
   act:       { icon:'✅', color:'gold',   name:'ลงมือทำก่อนเลย',         hash:'#act'       },
   savor:     { icon:'🌸', color:'rose',   name:'เพลิดเพลินก่อนเลย',      hash:'#savor'     },
   play:      { icon:'🎮', color:'purple', name:'เล่นก่อนเลย',             hash:'#play'      },
+  rewire:    { icon:'⚡', color:'gold',   name:'จุดสวิตช์เล็กๆ ก่อนเลย',  hash:'#rewire'    },
 };
 
 // ─── DATABASE — all 9 cells, 5 emotions each ────────────────────
@@ -574,6 +575,7 @@ const DB = {
     secondary: [
       { icon:'📓', name:'เขียนระบาย', desc:'บางทีการเขียนช่วยให้ความชัดลอยขึ้นมาเอง', url:'alltools.html#journal' },
       { icon:'🎮', name:'เล่น',        desc:'ถ้าเบื่อและอยากเปลี่ยนอารมณ์ก่อน',        url:'alltools.html#play' },
+      { icon:'⚡', name:'Rewire',        desc:'สวิตช์ 30 วินาที ฝึกสมองให้เก็บความสุขเก่งขึ้น', url:'alltools.html#rewire' },
     ],
   },
 
@@ -618,6 +620,7 @@ const DB = {
     secondary: [
       { icon:'✨', name:'อยู่กับสิ่งดี', desc:'เก็บความรู้สึกดีนี้ไว้ให้นานขึ้น',     url:'alltools.html#savor' },
       { icon:'📓', name:'เขียนระบาย',   desc:'จดความรู้สึกดีนี้ไว้ก่อนมันผ่านไป',   url:'alltools.html#journal' },
+      { icon:'⚡', name:'Rewire',        desc:'สวิตช์ 30 วินาที ฝึกสมองให้เก็บความสุขเก่งขึ้น', url:'alltools.html#rewire' },
     ],
   },
 
@@ -640,6 +643,7 @@ const DB = {
     secondary: [
       { icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#savor' },
       { icon:'💛', name:'คุยกับ PR',     desc:'แบ่งปันให้คนอื่นได้ยิน',              url:'peer.html' },
+      { icon:'⚡', name:'Rewire',        desc:'สวิตช์ 30 วินาที ฝึกสมองให้เก็บความสุขเก่งขึ้น', url:'alltools.html#rewire' },
     ],
   },
 
@@ -662,6 +666,7 @@ const DB = {
     secondary: [
       { icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#savor' },
       { icon:'📓', name:'เขียนระบาย',   desc:'จดความรู้สึกนี้ไว้ก่อนมันผ่านไป',     url:'alltools.html#journal' },
+      { icon:'⚡', name:'Rewire',        desc:'สวิตช์ 30 วินาที ฝึกสมองให้เก็บความสุขเก่งขึ้น', url:'alltools.html#rewire' },
     ],
   },
 };
