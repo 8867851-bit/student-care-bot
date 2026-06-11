@@ -305,6 +305,62 @@
     .still-1323 a{color:rgba(232,150,12,0.7);text-decoration:none;}
     .fade-up{animation:fadeUp 0.32s ease forwards;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    .ph-zone.gold{color:var(--gold);}
+
+    /* ── REWIRE ── */
+    .rw-spark-row{display:flex;align-items:center;gap:10px;margin:0 16px 14px;padding:12px 16px;background:var(--card);border:1px solid var(--cream-border);border-radius:14px;}
+    .rw-spark-label{font-size:12px;font-weight:400;color:var(--mid);flex:1;}
+    .rw-sparks{display:flex;gap:5px;}
+    .rw-spark{width:8px;height:8px;border-radius:50%;background:var(--cream-border);transition:all 0.4s;}
+    .rw-spark.lit{background:var(--gold);box-shadow:0 0 6px rgba(232,150,12,0.55);}
+    .rw-today{margin:0 16px 18px;background:linear-gradient(135deg,#FFF8EE,#FFF3DC);border:1.5px solid var(--gold-border);border-radius:18px;padding:18px;cursor:pointer;text-align:left;width:calc(100% - 32px);font-family:'Sarabun',sans-serif;display:block;transition:transform 0.15s;}
+    .rw-today:active{transform:scale(0.98);}
+    .rw-today-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:8px;}
+    .rw-today-row{display:flex;align-items:center;gap:14px;}
+    .rw-today-icon{font-size:36px;flex-shrink:0;}
+    .rw-today-name{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;color:var(--dark);line-height:1.3;}
+    .rw-today-desc{font-size:12px;font-weight:300;color:var(--mid);line-height:1.5;margin-top:2px;}
+    .rw-list{display:flex;flex-direction:column;gap:8px;padding:0 16px;margin-bottom:18px;}
+    .rw-item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--cream-border);border-radius:14px;padding:13px 14px;cursor:pointer;text-align:left;width:100%;font-family:'Sarabun',sans-serif;transition:transform 0.15s,border-color 0.3s;}
+    .rw-item:active{transform:scale(0.98);}
+    .rw-item.done-today{border-color:var(--gold-border);background:var(--cream-warm);}
+    .rw-item-icon{font-size:22px;flex-shrink:0;width:30px;text-align:center;}
+    .rw-item-body{flex:1;min-width:0;}
+    .rw-item-name{font-size:14px;font-weight:600;color:var(--dark);}
+    .rw-item-desc{font-size:11.5px;font-weight:300;color:var(--soft);line-height:1.45;}
+    .rw-item-time{font-size:10px;font-weight:600;color:var(--gold);background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:99px;padding:3px 9px;flex-shrink:0;white-space:nowrap;}
+    .rw-item.done-today .rw-item-time{background:var(--gold);color:#fff;}
+    .rw-note{margin:0 20px 28px;font-size:12px;font-weight:300;color:var(--soft);line-height:1.8;}
+    .rw-stage{padding:6px 20px 18px;text-align:center;}
+    .rw-circle{width:150px;height:150px;border-radius:50%;margin:16px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(232,150,12,0.4),rgba(232,150,12,0.08));transition:transform 1.2s ease-in-out,box-shadow 1s,background 1s;}
+    .rw-count{font-family:'Sarabun',sans-serif;font-size:44px;font-weight:300;color:#FDFBF7;line-height:1;}
+    .rw-circle-sub{font-size:11px;color:rgba(253,251,247,0.5);margin-top:4px;}
+    .rw-cta{display:block;width:calc(100% - 40px);margin:8px 20px 4px;padding:15px;background:var(--gold);border:none;border-radius:16px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;color:#fff;cursor:pointer;transition:transform 0.15s;}
+    .rw-cta:active{transform:scale(0.97);}
+    .rw-cta.ghost{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(253,251,247,0.6);font-weight:400;}
+    .rw-skipline{display:block;width:100%;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:rgba(253,251,247,0.35);cursor:pointer;padding:10px 0 14px;}
+    .rw-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:14px 20px 4px;}
+    .rw-chip{background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.14);border-radius:99px;padding:9px 16px;font-family:'Sarabun',sans-serif;font-size:13px;color:#FDFBF7;cursor:pointer;transition:all 0.18s;}
+    .rw-chip:active{border-color:var(--gold);}
+    #rw-dim{display:none;position:fixed;inset:0;background:#000;z-index:600;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;transition:opacity 0.6s;text-align:center;padding:32px;}
+    #rw-dim.show{display:flex;}
+    .rw-dim-text{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:rgba(253,251,247,0.85);line-height:1.6;}
+    .rw-dim-count{font-size:44px;font-weight:300;color:rgba(253,251,247,0.35);font-family:'Sarabun',sans-serif;}
+
+    /* ── LISTEN ── */
+    .listen-track{display:flex;align-items:center;gap:12px;margin:0 20px 8px;padding:14px 16px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;cursor:pointer;font-family:'Sarabun',sans-serif;width:calc(100% - 40px);text-align:left;transition:border-color 0.18s;}
+    .listen-track.playing{border-color:var(--teal);}
+    .listen-track-icon{font-size:22px;flex-shrink:0;}
+    .listen-track-name{font-size:14px;font-weight:600;color:#FDFBF7;}
+    .listen-track-desc{font-size:11.5px;font-weight:300;color:rgba(253,251,247,0.45);}
+    .listen-track-state{margin-left:auto;font-size:13px;color:var(--teal);flex-shrink:0;}
+
+    /* ── ENTRY TYPE COLORS ── */
+    .entry-card.savor::before{background:var(--gold);}
+    .entry-card.clarity::before{background:var(--teal);}
+    .entry-card.savor .entry-badge{background:var(--gold-soft);color:#7A5C00;border:1px solid var(--gold-border);}
+    .entry-card.clarity .entry-badge{background:var(--teal-soft);color:var(--teal);border:1px solid var(--teal-border);}
     .back-link{display:block;text-align:center;padding:8px 0 0;font-size:13px;color:var(--soft);text-decoration:none;}
   </style>
 </head>
@@ -315,6 +371,7 @@
   <button class="tab-btn active" data-panel="1" onclick="switchToolsTab(1)">🌿 โซนทั่วไป</button>
   <button class="tab-btn" data-panel="2" onclick="switchToolsTab(2)">🔄 ปรับความคิด</button>
   <button class="tab-btn" data-panel="3" onclick="switchToolsTab(3)">✨ เสริมพลัง</button>
+  <button class="tab-btn" data-panel="4" onclick="switchToolsTab(4)">⚡ Rewire</button>
   <a class="care-link" href="care.html">🧠 ระบบจิตใจ 6 ชั้น</a>
 </div>
 
@@ -407,17 +464,17 @@
       </div>
     </button>
 
-    <!-- ฟัง — ยังรอ audio asset -->
-    <div class="tool-img-card coming">
+    <!-- ฟัง — ปลดล็อกอัตโนมัติเมื่อใส่ URL เสียงใน AUDIO_TRACKS -->
+    <button class="tool-img-card coming" id="card-listen" onclick="markToolTapped();openListen()">
       <div class="card-bg bg-slate"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🎧</div>
-      <div class="card-content">
+      <div class="card-content" id="card-listen-content">
         <div class="card-badge soon">เร็วๆ นี้</div>
         <div class="card-title">ฟัง</div>
         <div class="card-sub">เสียงนำทาง body scan</div>
       </div>
-    </div>
+    </button>
   </div>
 
   <div id="idle-nudge">
@@ -557,6 +614,29 @@
   </div>
 </div>
 
+<!-- ══════════════
+     PANEL 4 — REWIRE
+══════════════ -->
+<div class="panel" id="panel-4">
+  <div class="panel-header">
+    <div class="ph-zone gold">Rewire</div>
+    <div class="ph-title">ฝึกสมองให้หาความสุขเอง</div>
+    <div class="ph-sub">สวิตช์เล็กๆ ใช้เวลาไม่ถึงครึ่งนาที — เล็กจนสมองเปลี่ยนไปโดยไม่ทันรู้ตัว</div>
+  </div>
+
+  <div class="rw-spark-row">
+    <span class="rw-spark-label" id="rw-spark-label"></span>
+    <div class="rw-sparks" id="rw-sparks"></div>
+  </div>
+
+  <button class="rw-today" id="rw-today"></button>
+
+  <div class="sec-div"><span class="sec-div-text">สวิตช์ทั้งหมด</span><div class="sec-div-line"></div></div>
+  <div class="rw-list" id="rw-list"></div>
+
+  <div class="rw-note">ทำไมต้องเล็กขนาดนี้? — เพราะสมองเรียนรู้จากความถี่ ไม่ใช่ความแรง สิ่งที่เล็กพอจะทำได้ทุกวัน ชนะสิ่งที่ใหญ่แต่ทำครั้งเดียวเสมอ</div>
+</div>
+
 <!-- ── MODALS (unchanged from before) ── -->
 <div class="modal-overlay" id="breathe-modal" onclick="handleOverlayClick(event,'breathe-modal',closeBreathe)">
   <div class="modal-sheet" onclick="event.stopPropagation()">
@@ -659,10 +739,10 @@ function saveEntry(e){try{const a=loadEntries();a.unshift(e);if(a.length>50)a.sp
 function deleteAllEntries(){try{localStorage.removeItem(STORAGE_KEY);renderEntries();}catch(e){}}
 function relativeTime(iso){const t=new Date(iso),n=new Date();const m=Math.floor((n-t)/60000),h=Math.floor((n-t)/3600000),d=Math.floor((n-t)/86400000);const hm=t.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});if(m<2)return'เมื่อกี้';if(h<1)return m+' นาทีที่แล้ว';if(d===0)return'วันนี้ '+hm;if(d===1)return'เมื่อวาน '+hm;if(d<7)return d+' วันที่แล้ว';return t.toLocaleDateString('th-TH',{day:'numeric',month:'short'});}
 const PROMPTS=[{label:'ขอบคุณ',q:'วันนี้มีอะไรที่รู้สึกขอบคุณบ้าง?',sub:'ไม่ต้องเป็นเรื่องใหญ่',ph:'เช่น อากาศเย็นตอนเช้า...'},{label:'ในหัว',q:'อะไรที่วนเวียนอยู่ในหัวตอนนี้?',sub:'เขียนออกมาได้เลย',ph:'ทุกอย่างที่ค้างอยู่...'},{label:'ตัวเอง',q:'ตอนนี้ตัวเองต้องการอะไรมากที่สุด?',sub:'ฟังตัวเองโดยไม่ตัดสิน',ph:'เช่น พัก ความเข้าใจ...'}];
-function previewText(e){if(e.type==='worry')return(e.text||'').slice(0,100);const f=(e.answers||[]).filter(a=>a&&a.trim());return f.length?f[0].slice(0,100):'(ไม่มีข้อความ)';}
-function buildFull(e){if(e.type==='worry')return'<div class="entry-q">ความกังวล</div><div class="entry-a">'+(e.text||'')+'</div>';return PROMPTS.map((p,i)=>{const a=(e.answers||[])[i];return'<div class="entry-q">'+p.label+'</div><div class="entry-a '+(a?'':'empty')+'">'+(a||'ข้ามไป')+'</div>';}).join('');}
+function previewText(e){if(e.type==='worry')return(e.text||'').slice(0,100);if(e.qa&&e.qa.length){const f=e.qa.filter(x=>x.a&&x.a.trim());return f.length?f[0].a.slice(0,100):'(ไม่มีข้อความ)';}const f=(e.answers||[]).filter(a=>a&&a.trim());return f.length?f[0].slice(0,100):'(ไม่มีข้อความ)';}
+function buildFull(e){if(e.type==='worry')return'<div class="entry-q">ความกังวล</div><div class="entry-a">'+(e.text||'')+'</div>';if(e.qa&&e.qa.length)return e.qa.map(x=>'<div class="entry-q">'+x.q+'</div><div class="entry-a '+(x.a?'':'empty')+'">'+(x.a||'—')+'</div>').join('');return PROMPTS.map((p,i)=>{const a=(e.answers||[])[i];return'<div class="entry-q">'+p.label+'</div><div class="entry-a '+(a?'':'empty')+'">'+(a||'ข้ามไป')+'</div>';}).join('');}
 let showAll=false;
-function renderEntries(){const entries=loadEntries();const sec=document.getElementById('entries-section');const list=document.getElementById('entries-list');const more=document.getElementById('entries-more');if(!entries.length){sec.style.display='none';return;}sec.style.display='block';const show=showAll?entries:entries.slice(0,3);list.innerHTML='';show.forEach(e=>{const c=document.createElement('div');c.className='entry-card '+e.type;const badge=e.type==='journal'?'📓 บันทึก':'🔒 ความกังวล';c.innerHTML='<div class="entry-top"><span class="entry-badge">'+badge+'</span><span class="entry-date">'+relativeTime(e.ts)+'</span></div><div class="entry-preview">'+previewText(e)+'</div><div class="entry-full">'+buildFull(e)+'</div>';c.onclick=()=>c.classList.toggle('expanded');list.appendChild(c);});if(entries.length>3){more.style.display='block';more.textContent=showAll?'ย่อกลับ ↑':'ดูทั้งหมด '+entries.length+' รายการ →';}else more.style.display='none';}
+function renderEntries(){const entries=loadEntries();const sec=document.getElementById('entries-section');const list=document.getElementById('entries-list');const more=document.getElementById('entries-more');if(!entries.length){sec.style.display='none';return;}sec.style.display='block';const show=showAll?entries:entries.slice(0,3);list.innerHTML='';show.forEach(e=>{const c=document.createElement('div');c.className='entry-card '+e.type;const BADGES={journal:'📓 บันทึก',worry:'🔒 ความกังวล',savor:'✨ สิ่งดี',clarity:'🧭 ความชัด'};const badge=BADGES[e.type]||'📓 บันทึก';c.innerHTML='<div class="entry-top"><span class="entry-badge">'+badge+'</span><span class="entry-date">'+relativeTime(e.ts)+'</span></div><div class="entry-preview">'+previewText(e)+'</div><div class="entry-full">'+buildFull(e)+'</div>';c.onclick=()=>c.classList.toggle('expanded');list.appendChild(c);});if(entries.length>3){more.style.display='block';more.textContent=showAll?'ย่อกลับ ↑':'ดูทั้งหมด '+entries.length+' รายการ →';}else more.style.display='none';}
 function toggleAllEntries(){showAll=!showAll;renderEntries();}
 function confirmClear(){if(confirm('ลบบันทึกทั้งหมดใช่ไหม?'))deleteAllEntries();}
 
@@ -887,7 +967,8 @@ const CQ=[{label:'เวลา',q:'มีอะไรที่ทำแล้ว
 let cStep=0,cAns=['','',''];
 function openClarity(){cStep=0;cAns=['','',''];openModal('clarity-modal');renderC();}
 function closeClarity(){closeModal('clarity-modal');}
-function renderC(){const el=document.getElementById('clarity-inner');if(cStep<CQ.length){const q=CQ[cStep];const dots=CQ.map((_,i)=>'<div class="mstep-dot '+(i<cStep?'done':i===cStep?'active':'')+'"></div>').join('');el.innerHTML='<div class="mstep-progress">'+dots+'</div><div class="mstep-eyebrow fade-up" style="color:var(--gold);">'+q.label+'</div><div class="mstep-q fade-up">'+q.q+'</div><div class="mstep-sub fade-up">'+q.sub+'</div><textarea class="mstep-ta fade-up" id="c-ta" placeholder="'+q.ph+'" style="border-color:var(--gold-border);">'+cAns[cStep]+'</textarea><button class="mstep-next" onclick="cNext()" style="background:var(--dark);">'+(cStep<CQ.length-1?'ถัดไป →':'ดูผลลัพธ์ →')+'</button>'+(cStep>0?'<button class="mstep-back" onclick="cBack()">← ย้อนกลับ</button>':'');setTimeout(()=>{const t=document.getElementById('c-ta');if(t)t.focus();},320);}else{const f=cAns.map((a,i)=>({l:CQ[i].label,t:a.trim()})).filter(x=>x.t);el.innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">สิ่งที่คุณบอก</div><div class="mstep-q" style="margin-bottom:16px;">กระจกสะท้อนตัวคุณ</div><div class="clarity-mirror"><div class="cm-label">จากที่คุณเล่า</div>'+f.map(x=>'<div class="cm-line">จากเรื่อง<strong>'+x.l+'</strong> — <strong>'+x.t.slice(0,60)+'</strong></div>').join('')+(f.length?'<div class="cm-line" style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(232,150,12,0.2);">สิ่งที่ดูสำคัญ: <strong>'+f.map(x=>x.t.slice(0,20)).join(' · ')+'</strong></div>':'')+'</div><div class="mstep-sub">เสียงของคุณเองที่สะท้อนกลับมา</div><button class="tool-done-close" onclick="closeClarity()" style="margin:8px 20px;">← กลับ</button>';}}
+function renderC(){const el=document.getElementById('clarity-inner');if(cStep<CQ.length){const q=CQ[cStep];const dots=CQ.map((_,i)=>'<div class="mstep-dot '+(i<cStep?'done':i===cStep?'active':'')+'"></div>').join('');el.innerHTML='<div class="mstep-progress">'+dots+'</div><div class="mstep-eyebrow fade-up" style="color:var(--gold);">'+q.label+'</div><div class="mstep-q fade-up">'+q.q+'</div><div class="mstep-sub fade-up">'+q.sub+'</div><textarea class="mstep-ta fade-up" id="c-ta" placeholder="'+q.ph+'" style="border-color:var(--gold-border);">'+cAns[cStep]+'</textarea><button class="mstep-next" onclick="cNext()" style="background:var(--dark);">'+(cStep<CQ.length-1?'ถัดไป →':'ดูผลลัพธ์ →')+'</button>'+(cStep>0?'<button class="mstep-back" onclick="cBack()">← ย้อนกลับ</button>':'');setTimeout(()=>{const t=document.getElementById('c-ta');if(t)t.focus();},320);}else{const f=cAns.map((a,i)=>({l:CQ[i].label,q:CQ[i].q,t:a.trim()})).filter(x=>x.t);window._clarityAnswers=f;if(!f.length){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">กระจก</div><div class="mstep-q">ยังไม่มีคำตอบ — ไม่เป็นไร</div><div class="mstep-sub">บางวันคำตอบยังไม่พร้อมจะออกมา กลับมาเมื่อไหร่ก็ได้</div><button class="tool-done-close" onclick="closeClarity()" style="margin:16px 20px;">← กลับ</button>';return;}el.innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">กระจกสะท้อน</div><div class="mstep-q" style="margin-bottom:14px;">เสียงของคุณเอง</div>'+f.map(x=>'<div class="clarity-mirror" style="margin:0 20px 8px;"><div class="cm-label">'+x.l+'</div><div class="cm-line" style="margin:0;"><strong>'+x.t+'</strong></div></div>').join('')+'<div class="mstep-sub" style="padding-top:10px;">สามคำตอบนี้ออกมาจากคุณเองทั้งหมด<br>ลองอ่านอีกครั้งช้าๆ — มีเส้นอะไรเชื่อมพวกมันอยู่ไหม?</div><button class="mstep-next" id="clarity-save" onclick="claritySave(this)" style="background:var(--gold);">เก็บไว้อ่านทีหลัง ✓</button><button class="tool-done-close" onclick="closeClarity()" style="margin:8px 20px;">← กลับ</button>';}}
+function claritySave(btn){const f=window._clarityAnswers||[];if(!f.length)return;saveEntry({id:Date.now(),type:'clarity',ts:new Date().toISOString(),qa:f.map(x=>({q:x.l,a:x.t}))});btn.textContent='เก็บแล้ว ✓';btn.disabled=true;btn.style.opacity='0.55';btn.onclick=null;}
 function cNext(){const t=document.getElementById('c-ta');if(t)cAns[cStep]=t.value.trim();cStep++;renderC();}
 function cBack(){const t=document.getElementById('c-ta');if(t)cAns[cStep]=t.value.trim();cStep--;renderC();}
 
@@ -1005,8 +1086,8 @@ function openPlay(){_playScore=0;_playStreak=0;_playActive=false;clearInterval(_
 function closePlay(){clearInterval(_playInterval);closeModal('play-modal');}
 function startPlay(){document.getElementById('play-start-btn').style.display='none';document.getElementById('play-score-row').style.display='block';_playScore=0;_playStreak=0;_playActive=true;renderPlayGrid();scheduleNext();}
 function renderPlayGrid(){const g=document.getElementById('play-grid');g.innerHTML='';for(let i=0;i<4;i++){const btn=document.createElement('button');btn.id='play-btn-'+i;btn.style.cssText=`aspect-ratio:1;border-radius:20px;border:none;background:${PLAY_COLORS[i]}22;font-size:32px;cursor:pointer;transition:transform 0.1s,background 0.15s;`;btn.textContent=PLAY_EMOJIS[i];btn.onclick=()=>handleTap(i);g.appendChild(btn);}}
-function scheduleNext(){if(!_playActive)return;const delay=600+Math.random()*900;_playInterval=setTimeout(()=>{const idx=Math.floor(Math.random()*4);_playTarget=idx;const btn=document.getElementById('play-btn-'+idx);if(btn){btn.style.background=PLAY_COLORS[idx];btn.style.transform='scale(1.1)';}setTimeout(()=>{if(_playTarget===idx){if(btn){btn.style.background=PLAY_COLORS[idx]+'22';btn.style.transform='';}  _playStreak=0;_playTarget=null;scheduleNext();}},900);},delay);}
-function handleTap(idx){if(!_playActive)return;const btn=document.getElementById('play-btn-'+idx);if(_playTarget===idx){_playScore++;_playStreak++;clearTimeout(_playInterval);if(btn){btn.style.background='#22c55e';btn.style.transform='scale(0.95)';}setTimeout(()=>{if(btn){btn.style.background=PLAY_COLORS[idx]+'22';btn.style.transform='';}},200);_playTarget=null;document.getElementById('play-score').textContent=_playScore;document.getElementById('play-streak').textContent=_playStreak>2?'🔥 Streak '+_playStreak:'';if(_playScore>=15){_playActive=false;document.getElementById('play-score').textContent='🎉';document.getElementById('play-streak').textContent='ทำได้ '+_playScore+' คะแนน เยี่ยม!';return;}scheduleNext();}else{if(btn){btn.style.background='#ef444422';}setTimeout(()=>{if(btn)btn.style.background=PLAY_COLORS[idx]+'22';},200);_playStreak=0;}}
+function scheduleNext(){if(!_playActive)return;const delay=900+Math.random()*900;_playInterval=setTimeout(()=>{const idx=Math.floor(Math.random()*4);_playTarget=idx;const btn=document.getElementById('play-btn-'+idx);if(btn){btn.style.background=PLAY_COLORS[idx];btn.style.transform='scale(1.1)';}setTimeout(()=>{if(_playTarget===idx){if(btn){btn.style.background=PLAY_COLORS[idx]+'22';btn.style.transform='';}  _playTarget=null;scheduleNext();}},1200);},delay);}
+function handleTap(idx){if(!_playActive)return;const btn=document.getElementById('play-btn-'+idx);if(_playTarget===idx){_playScore++;_playStreak++;clearTimeout(_playInterval);if(btn){btn.style.background='#22c55e';btn.style.transform='scale(0.95)';}setTimeout(()=>{if(btn){btn.style.background=PLAY_COLORS[idx]+'22';btn.style.transform='';}},200);_playTarget=null;document.getElementById('play-score').textContent=_playScore;document.getElementById('play-streak').textContent=_playStreak>2?'🔥 Streak '+_playStreak:'';if(_playScore>=15){_playActive=false;document.getElementById('play-score').textContent='🎉';document.getElementById('play-streak').textContent='ทำได้ '+_playScore+' คะแนน เยี่ยม!';return;}scheduleNext();}else{if(btn){btn.style.background='rgba(168,160,153,0.18)';}setTimeout(()=>{if(btn)btn.style.background=PLAY_COLORS[idx]+'22';},200);}}
 
 // ══ REST (พักใจ / Self-compassion) ════════════════
 const REST_STEPS=[{icon:'🤍',title:'สิ่งที่คุณรู้สึกอยู่ตอนนี้...',body:'ไม่ว่ามันจะเป็นอะไร — เจ็บ กลัว ล้า หรือแค่ไม่โอเค\nทั้งหมดนั้นล้วนเป็นส่วนหนึ่งของการเป็นมนุษย์'},{icon:'🌍',title:'คุณไม่ได้เผชิญมันคนเดียว',body:'มีคนนับล้านในโลกตอนนี้\nที่กำลังรู้สึกบางอย่างที่คล้ายกับที่คุณรู้สึกอยู่'},{icon:'🫶',title:'พูดกับตัวเองเหมือนพูดกับเพื่อน',body:'ถ้าเพื่อนคนสนิทมาบอกคุณว่ารู้สึกแบบนี้\nคุณจะพูดกับเขายังไง?\n\nพูดกับตัวเองแบบนั้นบ้าง'},{icon:'🌿',title:'วางมือบนหน้าอก',body:'รู้สึกถึงความอบอุ่นของมือ\nและบอกตัวเองเบาๆ ว่า\n\n"ตอนนี้ฉันกำลังทุกข์ใจอยู่\nและนั่นก็โอเค"'}];
@@ -1025,10 +1106,11 @@ function renderAct(){const c=_actPick;document.getElementById('act-body').innerH
 
 // ══ SAVOR (อยู่กับสิ่งดี) ═══════════════════════
 const SAVOR_PROMPTS=['มีอะไรในวันนี้ที่ทำให้รู้สึกดีขึ้นแม้เพียงเล็กน้อย?','ตอนนี้มีอะไรที่รู้สึกขอบคุณได้บ้าง — ไม่ว่าจะเล็กแค่ไหน?','ช่วงสัปดาห์นี้มีช่วงไหนที่รู้สึกเบาหรือดีบ้างไหม?','ถ้าต้องเก็บความรู้สึกดีๆ จากวันนี้ไว้หนึ่งอย่าง มันจะเป็นอะไร?'];
-let _savorStep=0,_savorText='';
-function openSavor(){_savorStep=0;_savorText='';renderSavor();openModal('savor-modal');}
+let _savorStep=0,_savorText='',_savorPrompt='';
+function openSavor(){_savorStep=0;_savorText='';_savorPrompt=SAVOR_PROMPTS[Math.floor(Math.random()*SAVOR_PROMPTS.length)];renderSavor();openModal('savor-modal');}
+function savorNext(){const v=document.getElementById('savor-input').value.trim();if(!v)return;_savorText=v;_savorStep=1;saveEntry({id:Date.now(),type:'savor',ts:new Date().toISOString(),qa:[{q:_savorPrompt,a:_savorText}]});renderSavor();}
 function closeSavor(){closeModal('savor-modal');}
-function renderSavor(){const prompt=SAVOR_PROMPTS[Math.floor(Math.random()*SAVOR_PROMPTS.length)];if(_savorStep===0){document.getElementById('savor-body').innerHTML=`<div style="text-align:center;margin-bottom:20px;"><div style="font-size:48px;margin-bottom:12px;">✨</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:8px;">ช้าลงกับสิ่งดีๆ</div><div style="font-size:13px;color:var(--soft);line-height:1.7;">สมองเราจดจำสิ่งไม่ดีได้ดีกว่าสิ่งดี<br>การหยุดกับความรู้สึกดีนาน 20-30 วินาที<br>ช่วยให้มันฝังลึกกว่าแค่ผ่านไป</div></div><div style="background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:16px;padding:18px;margin-bottom:20px;"><div style="font-size:12px;color:var(--gold);font-weight:600;letter-spacing:0.5px;margin-bottom:8px;">คำถาม</div><div style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;line-height:1.5;">${prompt}</div></div><textarea id="savor-input" placeholder="เขียนอะไรก็ได้ — ยาวหรือสั้นก็โอเค" oninput="document.getElementById('savor-next').style.opacity=this.value.trim()?'1':'0.4'" style="width:100%;background:var(--cream);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-size:14px;font-family:'Sarabun',sans-serif;min-height:90px;resize:none;color:var(--dark);margin-bottom:14px;"></textarea><button id="savor-next" onclick="if(document.getElementById('savor-input').value.trim()){_savorText=document.getElementById('savor-input').value.trim();_savorStep=1;renderSavor();}" style="width:100%;background:var(--gold);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;opacity:0.4;transition:opacity 0.2s;">อยู่กับมันสักครู่ →</button>`;}else{document.getElementById('savor-body').innerHTML=`<div style="text-align:center;padding:16px 0 20px;"><div style="font-size:40px;margin-bottom:12px;">☀️</div><div style="font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;margin-bottom:16px;">ที่คุณเขียนไว้</div><div style="background:var(--gold-soft);border-radius:16px;padding:18px;font-size:15px;line-height:1.7;color:var(--dark);text-align:left;margin-bottom:16px;">${_savorText}</div><div style="font-size:13px;color:var(--soft);line-height:1.7;margin-bottom:24px;">ลองหลับตาและอยู่กับความรู้สึกนี้<br>สัก 20 วินาที ก่อนปิด</div><button onclick="closeSavor()" style="width:100%;background:var(--gold);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">เก็บไว้ในใจแล้ว ✨</button></div>`;}}
+function renderSavor(){const prompt=_savorPrompt;if(_savorStep===0){document.getElementById('savor-body').innerHTML=`<div style="text-align:center;margin-bottom:20px;"><div style="font-size:48px;margin-bottom:12px;">✨</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:8px;">ช้าลงกับสิ่งดีๆ</div><div style="font-size:13px;color:var(--soft);line-height:1.7;">สมองเราจดจำสิ่งไม่ดีได้ดีกว่าสิ่งดี<br>การหยุดกับความรู้สึกดีนาน 20-30 วินาที<br>ช่วยให้มันฝังลึกกว่าแค่ผ่านไป</div></div><div style="background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:16px;padding:18px;margin-bottom:20px;"><div style="font-size:12px;color:var(--gold);font-weight:600;letter-spacing:0.5px;margin-bottom:8px;">คำถาม</div><div style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;line-height:1.5;">${prompt}</div></div><textarea id="savor-input" placeholder="เขียนอะไรก็ได้ — ยาวหรือสั้นก็โอเค" oninput="document.getElementById('savor-next').style.opacity=this.value.trim()?'1':'0.4'" style="width:100%;background:var(--cream);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-size:14px;font-family:'Sarabun',sans-serif;min-height:90px;resize:none;color:var(--dark);margin-bottom:14px;"></textarea><button id="savor-next" onclick="savorNext()" style="width:100%;background:var(--gold);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;opacity:0.4;transition:opacity 0.2s;">อยู่กับมันสักครู่ →</button>`;}else{document.getElementById('savor-body').innerHTML=`<div style="text-align:center;padding:16px 0 20px;"><div style="font-size:40px;margin-bottom:12px;">☀️</div><div style="font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;margin-bottom:16px;">ที่คุณเขียนไว้</div><div style="background:var(--gold-soft);border-radius:16px;padding:18px;font-size:15px;line-height:1.7;color:var(--dark);text-align:left;margin-bottom:16px;">${_savorText}</div><div style="font-size:13px;color:var(--soft);line-height:1.7;margin-bottom:24px;">ลองหลับตาและอยู่กับความรู้สึกนี้สัก 20 วินาที<br>เก็บไว้ใน "บันทึกล่าสุด" ให้แล้ว — กลับมาอ่านวันที่ใจหนักได้</div><button onclick="closeSavor()" style="width:100%;background:var(--gold);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">เก็บไว้ในใจแล้ว ✨</button></div>`;}}
 
 // ══ RAIN (อยู่กับมัน) ════════════════════════════
 const RAIN_STEPS=[{letter:'R',word:'Recognize',icon:'👁',title:'สังเกต',body:'มีความรู้สึกอะไรกำลังเกิดขึ้นอยู่ตอนนี้?\nไม่ต้องตั้งชื่อให้ถูก แค่รับรู้ว่ามีอะไรบางอย่างอยู่'},{letter:'A',word:'Allow',icon:'🤲',title:'ปล่อยให้มันอยู่',body:'ไม่ต้องแก้ ไม่ต้องผลัก ไม่ต้องหนี\nแค่บอกตัวเองว่า "โอเค ความรู้สึกนี้อยู่ที่นี่ได้"'},{letter:'I',word:'Investigate',icon:'🔍',title:'สำรวจเบาๆ',body:'มันอยู่ที่ไหนในร่างกาย?\nหน้าอก ไหล่ กระเพาะ หรือที่อื่น?\nรู้สึกหนัก แน่น หรือตึงแบบไหน?'},{letter:'N',word:'Nurture',icon:'🌿',title:'ดูแลตัวเอง',body:'วางมือบนจุดที่รู้สึกนั้น\nและบอกตัวเองเบาๆ ว่า\n\n"ฉันเห็นเธอ และฉันอยู่กับเธอ"'}];
@@ -1046,6 +1128,170 @@ function closeGrounding(){closeModal('grounding-modal');}
 function renderGrounding(){const s=GROUNDING_STEPS[_groundStep];const isLast=_groundStep===GROUNDING_STEPS.length-1;document.getElementById('grounding-body').innerHTML=`<div style="text-align:center;margin-bottom:20px;"><div style="font-size:52px;margin-bottom:14px;">${s.icon}</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:12px;">${s.title}</div><div style="font-size:14px;color:var(--mid);line-height:1.9;white-space:pre-line;margin-bottom:24px;">${s.body}</div><div style="display:flex;gap:6px;justify-content:center;margin-bottom:4px;">${GROUNDING_STEPS.map((_,i)=>`<div style="width:${i===_groundStep?16:6}px;height:6px;border-radius:3px;background:${i===_groundStep?'var(--indigo)':'var(--cream-border)'};transition:all 0.3s;"></div>`).join('')}</div></div><button onclick="${isLast?'closeGrounding()':'nextGrounding()'}" style="width:100%;background:var(--indigo);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">${isLast?'พร้อมแล้ว 🎯':'ถัดไป →'}</button>`;}
 function nextGrounding(){if(_groundStep<GROUNDING_STEPS.length-1){_groundStep++;renderGrounding();}}
 
+
+// ══ REWIRE — สวิตช์เล็กๆ ฝึกสมองให้หาความสุขเอง ═══════════════
+const REWIRE_HABITS=[
+ {id:'smile', icon:'🙂', name:'ยิ้ม 3 วินาที', desc:'ใบหน้าส่งสัญญาณกลับไปบอกสมอง', time:'3 วิ',
+  how:'สมองไม่ได้สั่งใบหน้าทางเดียว — ใบหน้าก็ส่งสัญญาณกลับไปบอกสมองด้วย\nยิ้มเล็กๆ แม้จะตั้งใจยิ้ม ก็พอให้สมองเริ่มปรับสารเคมีแล้ว',
+  done:'สังเกตไหมว่ามีอะไรเบาขึ้นนิดหนึ่ง?\nนั่นไม่ใช่จินตนาการ — มันคือวงจรป้อนกลับระหว่างใบหน้ากับสมอง'},
+ {id:'breath1', icon:'🌬️', name:'หายใจครั้งเดียว', desc:'ลมหายใจเดียว เปลี่ยนสัญญาณทั้งระบบ', time:'10 วิ',
+  how:'ลมหายใจคือระบบเดียวในร่างกายที่ทั้งอัตโนมัติและสั่งได้\nหายใจออกยาวกว่าเข้า = บอกระบบประสาทว่า "ปลอดภัยแล้ว"',
+  done:'แค่ครั้งเดียวก็เปลี่ยนสัญญาณได้แล้ว\nและไม่มีใครรู้เลยว่าเราเพิ่งกดสวิตช์ไป'},
+ {id:'snapshot', icon:'📸', name:'ถ่ายภาพในใจ', desc:'เก็บสิ่งดีหนึ่งอย่างที่อยู่ตรงหน้า', time:'5 วิ',
+  how:'สมองถูกตั้งค่าให้มองหาปัญหาก่อนเสมอ\nการหยุดอยู่กับสิ่งดีเล็กๆ สัก 5 วินาที คือการสอนให้มันสแกนหาสิ่งดีเองเป็น',
+  done:'ภาพนี้ถูกเก็บแล้ว\nยิ่งถ่ายบ่อย สมองยิ่งหาสิ่งดีเองเก่งขึ้น'},
+ {id:'posture', icon:'🌳', name:'ยืดตัว 10 วินาที', desc:'ท่าทางเปลี่ยน สารเคมีในสมองก็เปลี่ยน', time:'10 วิ',
+  how:'ตัวงอ ไหล่ห่อ = สมองอ่านว่า "กำลังแย่"\nยืดหลัง เปิดไหล่ = สัญญาณกลับด้านภายในไม่กี่วินาที',
+  done:'ร่างกายเพิ่งบอกสมองว่า "เรายังไหว"\nมันฟังท่าทางของเรามากกว่าที่คิด'},
+ {id:'nameit', icon:'🏷️', name:'เรียกชื่อมัน', desc:'ตั้งชื่อความรู้สึก เสียงในหัวก็เบาลง', time:'5 วิ',
+  how:'ความรู้สึกที่ไม่มีชื่อจะดังที่สุด\nแค่เรียกชื่อมันออกมา สมองส่วนอารมณ์ก็ลดความแรงลงทันที',
+  done:'พอเรียกชื่อ มันก็กลายเป็นแค่ "สิ่งที่เรากำลังรู้สึก"\nไม่ใช่ทั้งหมดของตัวเรา'},
+ {id:'fargaze', icon:'🪟', name:'มองไกล 5 วินาที', desc:'เปิดมุมมองกว้าง บอกร่างกายว่าปลอดภัย', time:'5 วิ',
+  how:'ตอนเครียด สายตาเราจะแคบลงเหมือนโดนล็อกเป้า\nการมองไกลๆ เปิดมุมมองกว้าง คือสวิตช์ธรรมชาติที่บอกระบบประสาทว่าไม่มีอันตราย',
+  done:'โลกกว้างขึ้นนิดหนึ่งไหม?\nสวิตช์นี้พกติดตัวได้ทุกที่ — แค่เงยหน้าจากจอ'},
+ {id:'futureme', icon:'🔭', name:'ถามตัวเองในวันหน้า', desc:'เราเวอร์ชันที่ผ่านมันมาแล้ว จะพูดว่าอะไร', time:'10 วิ',
+  how:'ตอนอารมณ์พาไป สมองส่วนตอบสนองไวจะคุมเกม\nคำถามเดียว — "ตัวเราในวันหน้าจะบอกอะไร" — สลับไปใช้สมองส่วนคิดยาวทันที',
+  done:'เก็บประโยคนั้นไว้\nมันมาจากเราเอง — เวอร์ชันที่ใจเย็นกว่านี้นิดหนึ่ง'},
+ {id:'kindword', icon:'💛', name:'ชมหนึ่งคน', desc:'คำชมจริงใจหนึ่งครั้ง ดีต่อใจทั้งสองฝั่ง', time:'30 วิ',
+  how:'การชมคนอื่นแบบจริงใจ ทำให้สมอง "ของเรา" หลั่งสารแห่งความเชื่อมต่อด้วย\nไม่ใช่แค่เขาที่รู้สึกดี — เราได้ก่อนเขาอีก',
+  done:'ส่งต่อไปแล้วหนึ่งดวง 💛\nความรู้สึกดีแบบนี้แพร่กระจายเก่งกว่าที่คิด'},
+];
+function _rwKey(){const d=new Date();return 'jaidee_rewire_'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function rwDoneMap(){try{return JSON.parse(localStorage.getItem(_rwKey())||'{}');}catch(e){return{};}}
+function rwMarkDone(id){try{const m=rwDoneMap();m[id]=1;localStorage.setItem(_rwKey(),JSON.stringify(m));}catch(e){}renderRewirePanel();}
+function renderRewirePanel(){
+  const list=document.getElementById('rw-list');if(!list)return;
+  const m=rwDoneMap();const n=Object.keys(m).length;const total=REWIRE_HABITS.length;
+  document.getElementById('rw-sparks').innerHTML=REWIRE_HABITS.map(h=>'<div class="rw-spark '+(m[h.id]?'lit':'')+'"></div>').join('');
+  document.getElementById('rw-spark-label').textContent=
+    n===0?'วันนี้ยังไม่ได้จุดสวิตช์เลย — อันเดียวก็นับ':
+    n>=total?'ครบทั้ง '+total+' แล้ววันนี้ ✨':
+    'วันนี้จุดไปแล้ว '+n+' สวิตช์';
+  const today=REWIRE_HABITS[Math.floor(Date.now()/86400000)%total];
+  const t=document.getElementById('rw-today');
+  t.onclick=()=>{markToolTapped();openRewire(today.id);};
+  t.innerHTML='<div class="rw-today-eyebrow">วันนี้ลองอันนี้'+(m[today.id]?' · ทำแล้ว ✓':'')+'</div><div class="rw-today-row"><div class="rw-today-icon">'+today.icon+'</div><div><div class="rw-today-name">'+today.name+'</div><div class="rw-today-desc">'+today.desc+'</div></div></div>';
+  list.innerHTML=REWIRE_HABITS.map(h=>'<button class="rw-item '+(m[h.id]?'done-today':'')+'" onclick="markToolTapped();openRewire(\''+h.id+'\')"><div class="rw-item-icon">'+h.icon+'</div><div class="rw-item-body"><div class="rw-item-name">'+h.name+'</div><div class="rw-item-desc">'+h.desc+'</div></div><div class="rw-item-time">'+(m[h.id]?'✓':h.time)+'</div></button>').join('');
+}
+let _rwHabit=null,_rwT1=null,_rwT2=null;
+function openRewire(id){_rwHabit=REWIRE_HABITS.find(h=>h.id===id);if(!_rwHabit)return;openModal('rewire-modal');rwIntro();}
+function closeRewire(){clearInterval(_rwT1);clearInterval(_rwT2);_rwT1=_rwT2=null;const d=document.getElementById('rw-dim');if(d){d.classList.remove('show');d.style.opacity='0';}closeModal('rewire-modal');}
+function rwEl(){return document.getElementById('rewire-inner');}
+function rwIntro(){
+  const h=_rwHabit;
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">Rewire · '+h.time+'</div><div class="rw-stage fade-up"><div style="font-size:52px;margin-bottom:10px;">'+h.icon+'</div><div style="font-family:\'Noto Serif Thai\',serif;font-size:22px;font-weight:700;color:#FDFBF7;margin-bottom:12px;">'+h.name+'</div><div style="font-size:13.5px;font-weight:300;color:rgba(253,251,247,0.55);line-height:1.85;white-space:pre-line;">'+h.how+'</div></div><button class="rw-cta" onclick="rwStart()">เริ่มเลย →</button><button class="rw-skipline" onclick="closeRewire()">ปิด</button>';
+}
+function rwStart(){({smile:rwSmile,breath1:rwBreath,snapshot:rwSnapshot,posture:rwPosture,nameit:rwNameIt,fargaze:rwFarGaze,futureme:rwFutureMe,kindword:rwKindWord})[_rwHabit.id]();}
+function rwDone(extraHtml){
+  rwMarkDone(_rwHabit.id);
+  const m=rwDoneMap();const next=REWIRE_HABITS.find(h=>!m[h.id]);
+  rwEl().innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">'+_rwHabit.icon+'</div><div class="tool-done-title">จุดติดแล้ว</div><div class="tool-done-sub" style="white-space:pre-line;">'+_rwHabit.done+'</div>'+(extraHtml||'')+(next?'<button class="rw-cta" style="margin:0 0 8px;width:100%;" onclick="openRewire(\''+next.id+'\')">อีกสวิตช์หนึ่ง — '+next.icon+' '+next.name+' →</button>':'')+'<button class="tool-done-close" onclick="closeRewire()">พอแค่นี้ก่อน ✓</button></div>';
+}
+// ── 🙂 smile ──
+function rwSmile(){
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">ยิ้ม 3 วินาที</div><div class="rw-stage"><div class="rw-circle" id="rw-c" style="box-shadow:0 0 0 rgba(232,150,12,0);"><span class="rw-count" id="rw-n">3</span></div><div style="font-size:15px;color:#FDFBF7;font-weight:500;margin-bottom:4px;">ยิ้มค้างไว้...</div><div style="font-size:12px;color:rgba(253,251,247,0.4);">มุมปากขยับนิดเดียวก็นับ</div></div>';
+  let n=3;const glow=[0.25,0.5,0.85];
+  _rwT1=setInterval(()=>{n--;const c=document.getElementById('rw-c');if(n<=0){clearInterval(_rwT1);rwDone();return;}document.getElementById('rw-n').textContent=n;if(c)c.style.boxShadow='0 0 '+(40*glow[3-n-1]||20)+'px rgba(232,150,12,'+glow[2-n]+')';},1000);
+  const c=document.getElementById('rw-c');if(c)c.style.boxShadow='0 0 18px rgba(232,150,12,0.25)';
+}
+// ── 🌬️ one breath ──
+function rwBreath(){
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--teal);">หายใจครั้งเดียว</div><div class="rw-stage"><div class="rw-circle" id="rw-c" style="background:radial-gradient(circle,rgba(13,148,136,0.7),rgba(13,148,136,0.2));transform:scale(0.75);"><span class="rw-count" id="rw-n">4</span><span class="rw-circle-sub" id="rw-sub">หายใจเข้า</span></div><div style="font-size:12px;color:rgba(253,251,247,0.4);">เข้า 4 · ค้าง 1 · ออกยาวๆ 6</div></div>';
+  const phases=[{l:'หายใจเข้า',c:4,sc:1.3},{l:'ค้างไว้',c:1,sc:1.3},{l:'ออกยาวๆ...',c:6,sc:0.7}];let pi=0;
+  function run(){if(pi>=phases.length){rwDone('<a href="#" onclick="closeRewire();openBreathe();return false;" style="display:block;text-align:center;margin-bottom:14px;font-size:12px;color:rgba(94,234,212,0.7);text-decoration:none;">อยากหายใจต่อ → เครื่องมือหายใจแบบเต็ม</a>');return;}
+    const p=phases[pi];const c=document.getElementById('rw-c');if(!c)return;
+    c.style.transition='transform '+p.c+'s ease-in-out, background 1s';c.style.transform='scale('+p.sc+')';
+    document.getElementById('rw-sub').textContent=p.l;let n=p.c;document.getElementById('rw-n').textContent=n;
+    clearInterval(_rwT1);_rwT1=setInterval(()=>{n--;if(n<=0){clearInterval(_rwT1);pi++;run();}else document.getElementById('rw-n').textContent=n;},1000);}
+  setTimeout(run,300);
+}
+// ── 📸 snapshot ──
+let _rwHold=null,_rwHoldVal=0;
+function rwSnapshot(){
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">ถ่ายภาพในใจ</div><div class="mstep-q">มองหาสิ่งดีเล็กๆ ตรงหน้า</div><div class="mstep-sub">แสงตอนนี้ เพลงที่เปิดอยู่ ลมเย็นๆ เพื่อนข้างๆ — อะไรก็ได้ที่กำลังโอเค</div><div class="rw-stage"><div style="position:relative;width:140px;height:140px;margin:14px auto 8px;"><svg width="140" height="140" style="transform:rotate(-90deg);position:absolute;inset:0;"><circle cx="70" cy="70" r="64" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="5"/><circle id="rw-ring" cx="70" cy="70" r="64" fill="none" stroke="var(--gold)" stroke-width="5" stroke-dasharray="402" stroke-dashoffset="402" style="transition:stroke-dashoffset 0.1s linear;"/></svg><button id="rw-hold" style="position:absolute;inset:14px;border-radius:50%;border:none;background:rgba(232,150,12,0.18);font-size:38px;cursor:pointer;">📸</button></div><div style="font-size:13px;color:rgba(253,251,247,0.5);">เจอแล้วใช่ไหม? กดชัตเตอร์ค้างไว้ 3 วินาที</div></div>';
+  const btn=document.getElementById('rw-hold');
+  const start=e=>{e.preventDefault();clearInterval(_rwHold);_rwHoldVal=0;_rwHold=setInterval(()=>{_rwHoldVal+=100;const r=document.getElementById('rw-ring');if(r)r.style.strokeDashoffset=402*(1-Math.min(_rwHoldVal/3000,1));if(_rwHoldVal>=3000){clearInterval(_rwHold);rwSnapshotCaptured();}},100);};
+  const stop=()=>{clearInterval(_rwHold);if(_rwHoldVal<3000){_rwHoldVal=0;const r=document.getElementById('rw-ring');if(r)r.style.strokeDashoffset=402;}};
+  btn.addEventListener('pointerdown',start);btn.addEventListener('pointerup',stop);btn.addEventListener('pointerleave',stop);
+}
+function rwSnapshotCaptured(){
+  if(navigator.vibrate)navigator.vibrate(40);
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">เก็บภาพแล้ว 📸</div><div class="mstep-q">อยากเขียนเก็บไว้ไหม?</div><div class="mstep-sub">ไม่บังคับเลย — แต่ภาพที่มีคำกำกับ สมองจะหยิบกลับมาดูได้ง่ายกว่า</div><textarea class="mstep-ta" id="rw-snap-ta" placeholder="เช่น แดดตอนเย็นวันนี้สวยมาก..." rows="3" style="border-color:var(--gold-border);"></textarea><button class="rw-cta" onclick="rwSnapshotSave()">เก็บไว้ในบันทึก ✓</button><button class="rw-skipline" onclick="rwDone()">ข้ามไป — เก็บไว้ในใจพอ</button>';
+}
+function rwSnapshotSave(){const t=document.getElementById('rw-snap-ta');const v=t?t.value.trim():'';if(v)saveEntry({id:Date.now(),type:'savor',ts:new Date().toISOString(),qa:[{q:'ภาพในใจวันนี้',a:v}]});rwDone();}
+// ── 🌳 posture ──
+function rwPosture(){
+  const lines=['ยืดหลังขึ้นช้าๆ','เปิดไหล่ออก','เงยหน้าขึ้นนิดหนึ่ง','หายใจเข้าลึกๆ'];
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--green);">ยืดตัว 10 วินาที</div><div class="rw-stage"><div class="rw-circle" id="rw-c" style="background:radial-gradient(circle,rgba(58,125,68,0.55),rgba(58,125,68,0.12));"><span class="rw-count" id="rw-n">10</span></div><div id="rw-line" style="font-family:\'Noto Serif Thai\',serif;font-size:19px;font-weight:600;color:#FDFBF7;min-height:30px;transition:opacity 0.4s;">'+lines[0]+'</div></div>';
+  let n=10;
+  _rwT1=setInterval(()=>{n--;if(n<=0){clearInterval(_rwT1);clearInterval(_rwT2);rwDone();return;}const el=document.getElementById('rw-n');if(el)el.textContent=n;},1000);
+  let li=0;
+  _rwT2=setInterval(()=>{li=(li+1)%lines.length;const l=document.getElementById('rw-line');if(!l)return;l.style.opacity='0';setTimeout(()=>{l.textContent=lines[li];l.style.opacity='1';},380);},2500);
+}
+// ── 🏷️ name it ──
+function rwNameIt(){
+  const words=['เครียด','กังวล','เหนื่อย','หงุดหงิด','เศร้า','เบื่อ','ว่างเปล่า','เฉยๆ','ตื่นเต้น','โอเค','ไม่แน่ใจ'];
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">เรียกชื่อมัน</div><div class="mstep-q">ตอนนี้กำลังรู้สึกอะไรอยู่?</div><div class="mstep-sub">ไม่ต้องเลือกให้ถูกเป๊ะ — ใกล้เคียงก็พอ</div><div class="rw-chips">'+words.map(w=>'<button class="rw-chip" onclick="rwNamePicked(\''+w+'\')">'+w+'</button>').join('')+'</div><button class="rw-skipline" onclick="closeRewire()">ปิด</button>';
+}
+function rwNamePicked(w){
+  rwEl().innerHTML='<div class="rw-stage" style="padding-top:28px;"><div style="font-size:13px;color:rgba(253,251,247,0.45);margin-bottom:10px;">ตอนนี้ฉันกำลังรู้สึก</div><div id="rw-word" style="font-family:\'Noto Serif Thai\',serif;font-size:34px;font-weight:700;color:#FDFBF7;transition:all 1.2s ease;">"'+w+'"</div><div id="rw-after" style="opacity:0;transition:opacity 0.8s;margin-top:22px;font-size:13.5px;font-weight:300;color:rgba(253,251,247,0.6);line-height:1.85;">เห็นไหม — พอเรียกชื่อมัน<br>มันก็กลายเป็นแค่ "สิ่งที่เรากำลังรู้สึก"<br>ไม่ใช่ทั้งหมดของตัวเรา</div></div>';
+  setTimeout(()=>{const el=document.getElementById('rw-word');if(el){el.style.transform='scale(0.8)';el.style.opacity='0.5';}const a=document.getElementById('rw-after');if(a)a.style.opacity='1';},1500);
+  setTimeout(()=>{rwDone('<a href="reflection.html" style="display:block;text-align:center;margin-bottom:14px;font-size:12px;color:rgba(232,150,12,0.7);text-decoration:none;">อยากสำรวจความรู้สึกนี้ให้ลึกกว่านี้ → Reflection</a>');},4200);
+}
+// ── 🪟 far gaze ──
+function rwFarGaze(){
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--teal);">มองไกล 5 วินาที</div><div class="rw-stage"><div style="font-size:52px;margin:10px 0 14px;">🪟</div><div style="font-family:\'Noto Serif Thai\',serif;font-size:20px;font-weight:700;color:#FDFBF7;margin-bottom:10px;">พอกดเริ่ม จอจะมืดลง</div><div style="font-size:13.5px;font-weight:300;color:rgba(253,251,247,0.55);line-height:1.8;">เงยหน้าจากจอ แล้วมองสิ่งที่ไกลที่สุดที่หาได้<br>นอกหน้าต่าง สุดทางเดิน หรือท้องฟ้า</div></div><button class="rw-cta" onclick="rwGazeStart()">พร้อมแล้ว →</button><button class="rw-skipline" onclick="closeRewire()">ปิด</button>';
+}
+function rwGazeStart(){
+  const d=document.getElementById('rw-dim');d.classList.add('show');requestAnimationFrame(()=>d.style.opacity='1');
+  let n=5;document.getElementById('rw-dim-count').textContent=n;
+  _rwT1=setInterval(()=>{n--;if(n<=0){clearInterval(_rwT1);if(navigator.vibrate)navigator.vibrate(60);d.style.opacity='0';setTimeout(()=>{d.classList.remove('show');rwDone();},650);return;}document.getElementById('rw-dim-count').textContent=n;},1000);
+}
+// ── 🔭 future me ──
+function rwFutureMe(){
+  const phrases=['หายใจก่อน เดี๋ยวมันก็ผ่าน','ไม่ต้องสมบูรณ์แบบก็ได้','พักก่อนได้นะ ไม่ผิด','เรื่องนี้เล็กกว่าที่คิดเยอะ','ภูมิใจนะที่ยังพยายามอยู่'];
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">ถามตัวเองในวันหน้า</div><div class="mstep-q">เราในอีกหนึ่งปีข้างหน้า — เวอร์ชันที่ผ่านเรื่องวันนี้มาแล้ว</div><div class="mstep-sub">เขาจะบอกอะไรกับเราตอนนี้?</div><div class="rw-chips">'+phrases.map(p=>'<button class="rw-chip" onclick="rwFuturePicked(this.textContent)">'+p+'</button>').join('')+'</div><textarea class="mstep-ta" id="rw-fm-ta" placeholder="หรือเขียนประโยคของตัวเอง..." rows="2"></textarea><button class="rw-cta ghost" onclick="rwFuturePicked(document.getElementById(\'rw-fm-ta\').value.trim())">ใช้ประโยคที่เขียน →</button><button class="rw-skipline" onclick="closeRewire()">ปิด</button>';
+}
+function rwFuturePicked(p){
+  if(!p)return;
+  rwDone('<div class="reframe-permission" style="margin:0 0 16px;"><div class="reframe-permission-label" style="color:var(--gold);">จากเราในวันหน้า</div><div class="reframe-permission-text">"'+p+'"</div></div>');
+}
+// ── 💛 kind word ──
+function rwKindWord(){
+  const ex=['ฟังคนอื่นเก่งจริงๆ','ทำให้ห้องสนุกขึ้นทุกครั้ง','พยายามแบบเงียบๆ มาตลอด','ใจดีโดยไม่ต้องพยายาม'];
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">ชมหนึ่งคน</div><div class="mstep-q">นึกถึงหนึ่งคน — เพื่อน ครู หรือคนที่บ้าน</div><div class="mstep-sub">มีอะไรในตัวเขาที่เราชอบจริงๆ? ยิ่งเจาะจง ยิ่งมีความหมาย</div><div class="rw-chips">'+ex.map(e=>'<button class="rw-chip" onclick="document.getElementById(\'rw-kw-ta\').value=this.textContent">'+e+'</button>').join('')+'</div><textarea class="mstep-ta" id="rw-kw-ta" placeholder="เช่น เธอเป็นคนที่ทำให้กลุ่มเราไม่เครียดเลย..." rows="2"></textarea><button class="rw-cta" onclick="rwDone()">จะไปบอกเขาวันนี้ 💛</button><div style="text-align:center;font-size:11.5px;color:rgba(253,251,247,0.35);padding:0 20px 12px;">ต่อหน้าก็ได้ ทักไปก็ได้ — ขอแค่จริงใจ</div><button class="rw-skipline" onclick="closeRewire()">ปิด</button>';
+}
+renderRewirePanel();
+
+// ══ LISTEN — ปลดล็อกเมื่อใส่เสียง ═══════════════════════════
+// วิธีเพิ่มเสียง: อัปโหลด mp3 ขึ้น Cloudinary แล้วเพิ่ม object ตามตัวอย่างด้านล่าง
+// การ์ด "ฟัง" จะเปลี่ยนจาก "เร็วๆ นี้" เป็นใช้งานได้อัตโนมัติทันทีที่มีอย่างน้อย 1 เสียง
+const AUDIO_TRACKS=[
+  // {id:'bodyscan', icon:'🧘', name:'Body Scan 5 นาที', desc:'เสียงนำทางสำรวจร่างกาย ทีละส่วน', url:'https://res.cloudinary.com/.../bodyscan.mp3', loop:false},
+  // {id:'rain',     icon:'🌧️', name:'เสียงฝน',          desc:'เสียงบรรยากาศ เปิดคลอได้เรื่อยๆ',   url:'https://res.cloudinary.com/.../rain.mp3',     loop:true},
+];
+const _listenAudio=new Audio();let _listenCurrent=null;
+(function initListenCard(){
+  if(!AUDIO_TRACKS.length)return;
+  const card=document.getElementById('card-listen');if(!card)return;
+  card.classList.remove('coming');
+  document.getElementById('card-listen-content').innerHTML='<div class="card-badge">ใช้ได้เลย</div><div class="card-title">ฟัง</div><div class="card-sub">เสียงนำทางและเสียงบรรยากาศ</div><div class="card-btn teal">เริ่ม →</div>';
+})();
+function openListen(){
+  if(!AUDIO_TRACKS.length)return;
+  renderListen();openModal('listen-modal');
+}
+function closeListen(){_listenAudio.pause();_listenAudio.currentTime=0;_listenCurrent=null;closeModal('listen-modal');}
+function renderListen(){
+  document.getElementById('listen-inner').innerHTML='<div class="breathe-header"><div class="breathe-title">🎧 ฟัง</div><button class="breathe-close" onclick="closeListen()">✕</button></div><div style="font-size:13px;font-weight:300;color:rgba(253,251,247,0.45);padding:0 20px 14px;line-height:1.7;">ใส่หูฟังถ้าสะดวก — เลือกเสียงแล้วแค่อยู่กับมัน</div>'+AUDIO_TRACKS.map(t=>'<button class="listen-track'+(_listenCurrent===t.id?' playing':'')+'" onclick="toggleTrack(\''+t.id+'\')"><span class="listen-track-icon">'+t.icon+'</span><span><span class="listen-track-name" style="display:block;">'+t.name+'</span><span class="listen-track-desc">'+t.desc+'</span></span><span class="listen-track-state">'+(_listenCurrent===t.id?'⏸ กำลังเล่น':'▶')+'</span></button>').join('')+'<div style="height:16px;"></div>';
+}
+function toggleTrack(id){
+  const t=AUDIO_TRACKS.find(x=>x.id===id);if(!t)return;
+  if(_listenCurrent===id){_listenAudio.pause();_listenCurrent=null;}
+  else{_listenAudio.src=t.url;_listenAudio.loop=!!t.loop;_listenAudio.volume=0.8;_listenAudio.play().catch(()=>{});_listenCurrent=id;}
+  renderListen();
+}
+
 // ── hash routing — after all declarations ──
 (function(){
   const h=window.location.hash;
@@ -1061,8 +1307,30 @@ function nextGrounding(){if(_groundStep<GROUNDING_STEPS.length-1){_groundStep++;
   else if(h==='#savor'){switchToolsTab(3);openSavor();}
   else if(h==='#rain'){switchToolsTab(3);openRain();}
   else if(h==='#grounding'){switchToolsTab(3);openGrounding();}
+  else if(h==='#listen'){switchToolsTab(1);if(AUDIO_TRACKS.length)openListen();}
+  else if(h.indexOf('#rewire')===0){switchToolsTab(4);const id=h.split('-')[1];if(id)openRewire(id);}
 })();
 </script>
+<!-- ══ REWIRE MODAL ══ -->
+<div class="modal-overlay" id="rewire-modal" onclick="handleOverlayClick(event,'rewire-modal',closeRewire)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+  <div class="modal-handle" style="margin-bottom:8px;"></div>
+  <div class="mstep-inner" id="rewire-inner"></div>
+</div></div>
+
+<!-- ══ LISTEN MODAL ══ -->
+<div class="modal-overlay" id="listen-modal" onclick="handleOverlayClick(event,'listen-modal',closeListen)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+  <div class="modal-handle"></div>
+  <div id="listen-inner"></div>
+</div></div>
+
+<!-- ══ FAR-GAZE DIM ══ -->
+<div id="rw-dim">
+  <div class="rw-dim-text">เงยหน้าจากจอ<br>มองสิ่งที่ไกลที่สุดที่หาได้</div>
+  <div class="rw-dim-count" id="rw-dim-count">5</div>
+</div>
+
 <!-- ══ PLAY MODAL ══ -->
 <div class="modal-overlay" id="play-modal" onclick="handleOverlayClick(event,'play-modal',closePlay)">
 <div class="modal-sheet" onclick="event.stopPropagation()">
@@ -1070,7 +1338,7 @@ function nextGrounding(){if(_groundStep<GROUNDING_STEPS.length-1){_groundStep++;
   <div id="play-screen-pick">
     <div class="modal-eyebrow blue">เล่น</div>
     <div class="modal-title">แตะให้ตรงจังหวะ</div>
-    <div class="modal-sub">ไม่ต้องคิดอะไร แค่ฟังและแตะ<br>สมองจะ ground เองโดยอัตโนมัติ</div>
+    <div class="modal-sub">ไม่ต้องคิดอะไร แค่มองและแตะ<br>พลาดได้ ไม่มีอะไรเสีย — สมองจะกลับมาอยู่กับปัจจุบันเอง</div>
     <div id="play-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0;"></div>
     <div id="play-score-row" style="display:none;text-align:center;margin-bottom:20px;">
       <div style="font-size:13px;color:var(--soft);margin-bottom:4px;">คะแนน</div>
@@ -1122,7 +1390,6 @@ function nextGrounding(){if(_groundStep<GROUNDING_STEPS.length-1){_groundStep++;
   <button onclick="closeGrounding()" style="width:100%;margin-top:8px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
 </div></div>
 
-</body>
 <div id="move-overlay" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0);transition:background 0.3s;" onclick="closeMove()"></div>
 <div id="move-sheet" style="position:fixed;bottom:0;left:50%;right:auto;transform:translateX(-50%) translateY(100%);z-index:301;background:#FDFBF7;border-radius:28px 28px 0 0;padding:28px 24px 48px;transition:transform 0.35s cubic-bezier(0.34,1.1,0.64,1);max-height:88vh;overflow-y:auto;width:100%;max-width:420px;">
   <div style="width:36px;height:4px;background:#EDE9E0;border-radius:2px;margin:0 auto 24px;"></div>
