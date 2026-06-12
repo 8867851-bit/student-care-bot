@@ -304,6 +304,102 @@
       padding: 2px 9px;
       margin-bottom: 6px;
     }
+    /* ── INLINE TOOL LINK ────────────────────────────── */
+    .tool-link {
+      color: #2563EB;
+      text-decoration: underline;
+      text-decoration-color: rgba(37,99,235,0.35);
+      text-underline-offset: 3px;
+      cursor: pointer;
+      font-weight: 400;
+      white-space: nowrap;
+      transition: text-decoration-color 0.15s;
+    }
+    .tool-link:hover { text-decoration-color: #2563EB; }
+
+    /* ── TOOL POPUP ──────────────────────────────────── */
+    .tool-popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(28,25,23,0.4);
+      backdrop-filter: blur(2px);
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .tool-popup-overlay.open { display: flex; }
+    .tool-popup {
+      background: var(--cream);
+      border-radius: 24px 24px 0 0;
+      padding: 20px 24px 40px;
+      width: 100%;
+      max-width: 480px;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.34,1.1,0.64,1);
+    }
+    .tool-popup-overlay.open .tool-popup { transform: translateY(0); }
+    .tool-popup-handle {
+      width: 36px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+    .tool-popup-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--soft);
+      margin-bottom: 6px;
+    }
+    .tool-popup-title {
+      font-family: 'Noto Serif Thai', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .tool-popup-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .tool-popup-go {
+      display: block;
+      width: 100%;
+      background: var(--dark);
+      color: var(--cream);
+      border: none;
+      border-radius: 99px;
+      padding: 14px 20px;
+      font-family: 'Noto Serif Thai', serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      margin-bottom: 10px;
+      transition: opacity 0.15s;
+    }
+    .tool-popup-go:active { opacity: 0.8; }
+    .tool-popup-close {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      font-family: 'Noto Serif Thai', serif;
+      font-size: 13px;
+      color: var(--soft);
+      cursor: pointer;
+      padding: 8px;
+      text-align: center;
+    }
+
+    /* ── LOADING STATE ───────────────────────────────── */
     #loading {
       display: flex;
       align-items: center;
@@ -422,6 +518,51 @@ function goBack() {
 window.addEventListener('scroll', () => {
   document.getElementById('back-bar').classList.toggle('scrolled', window.scrollY > 8);
 }, { passive: true });
+
+// ── INLINE TOOL LINK INJECTION ────────────────────────────────
+function injectToolLinks(container, links) {
+  // Only inject into text nodes inside .nb-body, .nb-callout, .nb-closing, td
+  const selectors = '.nb-body, .nb-callout, .nb-closing, .nb-attr-inner, td';
+  container.querySelectorAll(selectors).forEach(el => {
+    links.forEach(({ phrase, toolId }) => {
+      // Walk text nodes only — don't double-wrap
+      walkTextNodes(el, phrase, toolId);
+    });
+  });
+}
+
+function walkTextNodes(el, phrase, toolId) {
+  // Skip if already contains a tool-link for this phrase
+  if (el.querySelector && el.querySelector('.tool-link')) {
+    // Check if this exact phrase is already linked
+    const existing = Array.from(el.querySelectorAll('.tool-link'));
+    if (existing.some(e => e.textContent === phrase)) return;
+  }
+  const children = Array.from(el.childNodes);
+  children.forEach(node => {
+    if (node.nodeType === 3) { // text node
+      const idx = node.textContent.indexOf(phrase);
+      if (idx === -1) return;
+      // Replace only first occurrence per text node
+      const before = document.createTextNode(node.textContent.slice(0, idx));
+      const link = document.createElement('span');
+      link.className = 'tool-link';
+      link.textContent = phrase;
+      link.setAttribute('role', 'button');
+      link.setAttribute('tabindex', '0');
+      link.onclick = () => openToolPopup(toolId);
+      link.onkeydown = (e) => { if (e.key === 'Enter') openToolPopup(toolId); };
+      const after = document.createTextNode(node.textContent.slice(idx + phrase.length));
+      const parent = node.parentNode;
+      parent.insertBefore(before, node);
+      parent.insertBefore(link, node);
+      parent.insertBefore(after, node);
+      parent.removeChild(node);
+    } else if (node.nodeType === 1 && !node.classList.contains('tool-link')) {
+      walkTextNodes(node, phrase, toolId);
+    }
+  });
+}
 
 // ── CONTENT RENDERER ──────────────────────────────────────────
 function renderGuide(g) {
@@ -583,6 +724,13 @@ function renderGuide(g) {
   const content = document.getElementById('nb-content');
   content.innerHTML = html;
   content.style.display = 'block';
+
+  // Inject inline tool links
+  if (window.GUIDE_TOOL_LINKS && window.GUIDE_TOOL_LINKS.length) {
+    injectToolLinks(content, window.GUIDE_TOOL_LINKS);
+  }
+
+  window.dispatchEvent(new Event('nb_content_ready'));
 }
 
 // ── GUIDE LOADER ───────────────────────────────────────────────
@@ -619,6 +767,86 @@ function showError() {
 }
 
 loadGuide();
+</script>
+<!-- ── TOOL POPUP OVERLAY ── -->
+<div class="tool-popup-overlay" id="tool-popup-overlay" onclick="closeToolPopup(event)">
+  <div class="tool-popup" onclick="event.stopPropagation()">
+    <div class="tool-popup-handle"></div>
+    <div class="tool-popup-eyebrow" id="tp-eyebrow"></div>
+    <div class="tool-popup-title" id="tp-title"></div>
+    <div class="tool-popup-desc" id="tp-desc"></div>
+    <a class="tool-popup-go" id="tp-go" href="#">เปิดเครื่องมือนี้ →</a>
+    <button class="tool-popup-close" onclick="dismissToolPopup()">อ่านต่อก่อน ←</button>
+  </div>
+</div>
+
+<script>
+// ── TOOL POPUP ────────────────────────────────────────────────
+const TOOL_REGISTRY = {
+  breathe:   { eyebrow:'หายใจ', title:'หายใจผ่อนคลาย', desc:'เทคนิคหายใจที่ช่วยส่งสัญญาณบอกระบบประสาทว่าปลอดภัยแล้ว รวมถึง Physiological Sigh และ 4-7-8', href:'alltools.html#breathe' },
+  journal:   { eyebrow:'เขียน', title:'เขียนระบาย', desc:'พื้นที่ปลอดภัยสำหรับทิ้งความคิดและความรู้สึกออกมาก่อนจะล้นหัว', href:'alltools.html#journal' },
+  reframe:   { eyebrow:'ความคิด', title:'คลายมือจากความคิด', desc:'แยก Fact ออกจาก Interpretation และปรับมุมมองที่กำลังบีบคุณอยู่', href:'alltools.html#reframe' },
+  move:      { eyebrow:'เคลื่อนไหว', title:'ขยับร่างกาย', desc:'ปลดปล่อยพลังงานความเครียดที่ค้างอยู่ในระบบ เลือกตามระดับพลังงานที่มีได้เลย', href:'alltools.html#move' },
+  rest:      { eyebrow:'พักใจ', title:'พักใจ · Self-Compassion', desc:'Body scan และการพูดกับตัวเองอย่างนุ่มนวล เหมาะกับคืนที่หนักเกินไป', href:'alltools.html#rest' },
+  rain:      { eyebrow:'อยู่กับมัน', title:'RAIN — อยู่กับความรู้สึก', desc:'Recognize · Allow · Investigate · Nurture วิธีนั่งกับความรู้สึกยากๆ โดยไม่ต้องหนีมัน', href:'alltools.html#rain' },
+  grounding: { eyebrow:'ลงดิน', title:'Grounding 5-4-3-2-1', desc:'ดึงสมองกลับมาอยู่กับปัจจุบันทันทีผ่านประสาทสัมผัสทั้งห้า', href:'alltools.html#grounding' },
+  play:      { eyebrow:'โฟกัส', title:'แตะให้ตรงจังหวะ', desc:'ฝึกสมองให้กลับมาอยู่กับปัจจุบัน ไม่ต้องคิดอะไร แค่มองและแตะ', href:'alltools.html#play' },
+  savor:     { eyebrow:'ซึมซับ', title:'บันทึกช่วงเวลาดีๆ', desc:'ฝึกสมองให้สังเกตเห็นสิ่งดีๆ เล็กๆ ที่มีอยู่รอบตัว แก้ Negativity Bias', href:'alltools.html#savor' },
+  worry:     { eyebrow:'กังวล', title:'กล่องวางความกังวล', desc:'บรรจุความกังวลลงกล่องก่อนนอน ให้สมองได้วางมันลงชั่วคราว', href:'alltools.html#worry' },
+  clarity:   { eyebrow:'ความชัดเจน', title:'Clarity — จัดการความคิดรก', desc:'เมื่อมีหลายสิ่งค้างในหัว เครื่องมือนี้ช่วยเรียงลำดับและหาจุดเริ่มต้น', href:'alltools.html#clarity' },
+};
+
+let _scrollBeforePopup = 0;
+
+function openToolPopup(toolId) {
+  const t = TOOL_REGISTRY[toolId];
+  if (!t) return;
+  _scrollBeforePopup = window.scrollY;
+  document.getElementById('tp-eyebrow').textContent = t.eyebrow;
+  document.getElementById('tp-title').textContent   = t.title;
+  document.getElementById('tp-desc').textContent    = t.desc;
+  const go = document.getElementById('tp-go');
+  go.href = t.href;
+  go.onclick = () => {
+    // Save scroll position so user can return to reading
+    sessionStorage.setItem('nb_tool_return_scroll', String(_scrollBeforePopup));
+    sessionStorage.setItem('nb_tool_return_id', new URLSearchParams(location.search).get('id') || '');
+  };
+  document.getElementById('tool-popup-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function dismissToolPopup() {
+  const overlay = document.getElementById('tool-popup-overlay');
+  const popup = overlay.querySelector('.tool-popup');
+  popup.style.transform = 'translateY(100%)';
+  setTimeout(() => {
+    overlay.classList.remove('open');
+    popup.style.transform = '';
+    document.body.style.overflow = '';
+    // Restore scroll position
+    window.scrollTo(0, _scrollBeforePopup);
+  }, 280);
+}
+
+function closeToolPopup(e) {
+  if (e.target === document.getElementById('tool-popup-overlay')) dismissToolPopup();
+}
+
+// ── RESTORE SCROLL after returning from tool ──────────────────
+(function(){
+  const returnId     = sessionStorage.getItem('nb_tool_return_id');
+  const returnScroll = parseInt(sessionStorage.getItem('nb_tool_return_scroll') || '-1', 10);
+  const currentId    = new URLSearchParams(location.search).get('id') || '';
+  if (returnId === currentId && returnScroll >= 0) {
+    sessionStorage.removeItem('nb_tool_return_scroll');
+    sessionStorage.removeItem('nb_tool_return_id');
+    // Restore after content renders
+    window.addEventListener('nb_content_ready', () => {
+      requestAnimationFrame(() => window.scrollTo(0, returnScroll));
+    }, { once: true });
+  }
+})();
 </script>
 </body>
 </html>
