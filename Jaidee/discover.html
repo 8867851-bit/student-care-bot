@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>รู้จักตัวเอง — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;500;600&family=Mitr:wght@300;400;500&family=Sarabun:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --cream:#FDFBF7;--cream-warm:#FFF8EE;--cream-border:#EDE9E0;
+      --gold:#E8960C;--gold-deep:#B9740A;--gold-soft:#FFF3DC;--gold-border:#FFE0A0;
+      --dark:#1C1917;--mid:#6B6560;--soft:#A8A099;--faint:#C4BDB7;
+      --card:#FFFFFF;--card-border:#EDE9E0;
+      --green:#3A7D44;--green-soft:#EEF6EF;--green-border:#C2DFC6;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:64px;overflow-x:hidden;}
+    .wrap{max-width:480px;margin:0 auto;}
+
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:44px 24px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
+
+    /* ── HERO: a quiet question, not a number-hero ── */
+    .hero{padding:18px 28px 8px;}
+    .hero-eyebrow{font-size:10px;font-weight:500;letter-spacing:2.5px;color:var(--gold-deep);text-transform:uppercase;margin-bottom:14px;}
+    .hero-title{font-family:'Noto Serif Thai',serif;font-size:27px;font-weight:600;line-height:1.45;letter-spacing:-0.2px;}
+    .hero-title .accent{color:var(--gold);}
+    .hero-caption{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:400;color:var(--soft);line-height:1.9;margin-top:4px;}
+
+    .hero-rule{height:1px;background:linear-gradient(to right,var(--gold-border),transparent);margin:24px 28px 8px;}
+
+    /* ── GROUP ── */
+    .group{padding:20px 24px 4px;}
+    .group-head{display:flex;align-items:baseline;gap:10px;margin:0 4px 14px;}
+    .group-q{font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:var(--dark);white-space:nowrap;}
+    .group-note{font-family:'Sarabun',sans-serif;font-size:11.5px;font-weight:300;color:var(--soft);line-height:1.4;}
+
+    /* ── ENTRY: stitched field-guide card ── */
+    .stack{position:relative;padding-left:18px;}
+    /* the thread that stitches entries in a group */
+    .stack::before{content:'';position:absolute;left:5px;top:8px;bottom:24px;width:1.5px;background:repeating-linear-gradient(to bottom,var(--gold-border) 0 4px,transparent 4px 9px);}
+    .entry{position:relative;display:block;text-decoration:none;color:inherit;background:var(--card);border:1.5px solid var(--card-border);border-radius:16px;padding:16px 16px 14px;margin-bottom:12px;transition:transform 0.16s ease,box-shadow 0.16s ease,border-color 0.16s ease;}
+    .entry::before{content:'';position:absolute;left:-13.5px;top:24px;width:9px;height:9px;border-radius:50%;background:var(--cream);border:1.5px solid var(--gold-border);}
+    .entry:active{transform:scale(0.985);}
+    .entry:hover{border-color:var(--gold-border);box-shadow:0 6px 20px rgba(184,116,10,0.07);}
+
+    .entry-top{display:flex;align-items:flex-start;gap:12px;}
+    .glyph{font-size:24px;line-height:1;flex-shrink:0;margin-top:1px;filter:saturate(0.92);}
+    .entry-name{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;line-height:1.3;}
+    .entry-reveal{font-family:'Sarabun',sans-serif;font-size:13px;font-weight:300;color:var(--mid);line-height:1.7;margin-top:5px;}
+
+    .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px;}
+    .tag{font-family:'Mitr',sans-serif;font-size:10px;font-weight:400;letter-spacing:0.2px;padding:3px 9px;border-radius:50px;line-height:1.5;}
+    .tag-free{background:var(--green-soft);color:var(--green);border:1px solid var(--green-border);}
+    .tag-paid{background:var(--gold);color:#fff;border:1px solid var(--gold);}
+    .tag-time{background:var(--cream-warm);color:var(--mid);border:1px solid var(--cream-border);}
+    .tag-what{background:transparent;color:var(--soft);border:1px solid var(--cream-border);}
+    .go{margin-left:auto;display:inline-flex;align-items:center;gap:3px;font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--gold-deep);}
+
+    .worth{font-family:'Sarabun',sans-serif;font-size:11.5px;font-weight:300;color:var(--soft);line-height:1.6;margin-top:9px;padding-top:9px;border-top:1px dashed var(--cream-border);}
+    .worth b{font-weight:400;color:var(--gold-deep);}
+
+    /* paid group gets a warmer frame */
+    .group.paid .group-q{color:var(--gold-deep);}
+    .group.paid .stack::before{background:repeating-linear-gradient(to bottom,var(--gold) 0 4px,transparent 4px 9px);opacity:0.45;}
+    .group.paid .entry::before{border-color:var(--gold);}
+
+    .foot{text-align:center;font-family:'Sarabun',sans-serif;font-size:11px;font-weight:300;color:var(--faint);padding:26px 28px 0;line-height:1.7;}
+
+    /* ── entrance ── */
+    ._r{opacity:0;transform:translateY(8px);}
+    ._r.in{opacity:1;transform:translateY(0);transition:opacity 0.5s ease,transform 0.5s cubic-bezier(0.22,1,0.36,1);}
+    @media (prefers-reduced-motion:reduce){._r{opacity:1;transform:none;}._r.in{transition:none;}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <button class="back-btn" onclick="history.length>1?history.back():location.href='index.html'">← กลับ</button>
+
+  <div class="hero _r">
+    <div class="hero-caption">ภาษาใหม่ไว้เรียก<br>สิ่งที่ตัวคุณรู้สึกอยู่แล้วลึกๆ</div>
+  </div>
+
+  <div class="hero-rule _r"></div>
+
+  <div id="groups"></div>
+
+  <div class="foot _r">เราไม่ได้เก็บผลของคุณ — แต่ละแบบทดสอบเป็นเว็บภายนอกที่เปิดในแท็บใหม่<br>ราคาของแบบเสียเงินอาจเปลี่ยนแปลงได้</div>
+
+</div>
+
+<script>
+const GROUPS=[
+  {
+    q:'จุดแข็งของฉัน', note:'อะไรที่คุณทำได้ดีโดยไม่ต้องฝืน',
+    tests:[
+      { glyph:'🌿', name:'VIA Character Strengths', reveal:'ค้นว่าอะไรคือจุดแข็งที่ทำให้คุณเป็นตัวเองตอนที่ดีที่สุด — มีเวอร์ชันสำหรับเยาวชนโดยเฉพาะ', free:true, time:'~15 นาที', what:'24 จุดแข็ง', url:'https://www.viacharacter.org/' },
+      { glyph:'✋', name:'HIGH5 Test', reveal:'รู้ 5 จุดแข็งเด่นที่คุณพึ่งได้ตอนเป็นตัวเองที่สุด เน้นบวก ไม่ตัดสิน', free:true, time:'~15–20 นาที', what:'5 จุดแข็ง', url:'https://high5test.com/' },
+    ]
+  },
+  {
+    q:'ฉันเป็นคนแบบไหน', note:'วิธีที่คุณคิด รู้สึก และเชื่อมต่อ',
+    tests:[
+      { glyph:'🧭', name:'16Personalities', reveal:'แบบที่วัยรุ่นชอบที่สุด — เข้าใจวิธีคิด การตัดสินใจ และการอยู่กับคนอื่นของคุณ (แนว MBTI)', free:true, time:'~12 นาที', what:'16 บุคลิก', url:'https://www.16personalities.com/th' },
+      { glyph:'🪟', name:'Big Five (Truity)', reveal:'ภาพบุคลิกที่งานวิจัยจิตวิทยาเชื่อถือมากที่สุด ตรงไปตรงมา ไม่จับใส่กล่อง', free:true, time:'~10 นาที', what:'5 มิติ', url:'https://www.truity.com/test/big-five-personality-test' },
+    ]
+  },
+  {
+    q:'เส้นทางที่ใช่', note:'เผื่อช่วยตอนเลือกสายหรือคณะ',
+    tests:[
+      { glyph:'🗺️', name:'Holland Code (RIASEC)', reveal:'มองว่าความสนใจของคุณเข้ากับสาย งาน หรือคณะแบบไหน — เหมาะมากตอน ม.ปลายต้องเลือกทาง', free:true, time:'~12 นาที', what:'ความสนใจอาชีพ', url:'https://www.truity.com/test/holland-code-career-test' },
+    ]
+  },
+  {
+    q:'ลึกลงไปอีก', note:'เสียเงิน แต่ถ้าอยากเข้าใจตัวเองจริงๆ คุ้ม', paid:true,
+    tests:[
+      { glyph:'🔍', name:'Enneagram — RHETI (ฉบับทางการ)', reveal:'เข้าใจ "ทำไม" เบื้องหลังพฤติกรรม — แรงขับและความกลัวลึกๆ ที่ขับเคลื่อนคุณ', paid:'~$12', time:'~40 นาที', what:'9 ประเภท', url:'https://www.enneagraminstitute.com/rheti', worth:'อยากลองฟรีก่อน? <b>Truity</b> มี Enneagram เวอร์ชันฟรีให้ชิมลางได้' },
+      { glyph:'💎', name:'CliftonStrengths (Gallup)', reveal:'รายงานจุดแข็งเชิงลึกระดับมาตรฐานสากล จัดอันดับสิ่งที่คุณเก่งจากธีมทั้งหมด', paid:'~$25', time:'~35 นาที', what:'34 ธีม', url:'https://www.gallup.com/cliftonstrengths/', worth:'คุ้มถ้าคุณชอบ HIGH5/VIA แล้วอยากเวอร์ชันละเอียดที่สุด' },
+    ]
+  },
+];
+
+function tagFor(t){
+  if(t.free) return '<span class="tag tag-free">ฟรี</span>';
+  return '<span class="tag tag-paid">เสียเงิน '+t.paid+'</span>';
+}
+function render(){
+  document.getElementById('groups').innerHTML = GROUPS.map(g=>`
+    <div class="group${g.paid?' paid':''} _r">
+      <div class="group-head">
+        <div class="group-q">${g.q}</div>
+        <div class="group-note">${g.note}</div>
+      </div>
+      <div class="stack">
+        ${g.tests.map(t=>`
+          <a class="entry" href="${t.url}" target="_blank" rel="noopener">
+            <div class="entry-top">
+              <div class="glyph">${t.glyph}</div>
+              <div>
+                <div class="entry-name">${t.name}</div>
+                <div class="entry-reveal">${t.reveal}</div>
+              </div>
+            </div>
+            <div class="meta">
+              ${tagFor(t)}
+              <span class="tag tag-time">${t.time}</span>
+              <span class="tag tag-what">${t.what}</span>
+              <span class="go">เริ่มทำ →</span>
+            </div>
+            ${t.worth?`<div class="worth">${t.worth}</div>`:''}
+          </a>`).join('')}
+      </div>
+    </div>`).join('');
+}
+render();
+
+// gentle staggered entrance
+const els=[...document.querySelectorAll('._r')];
+els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'), 80+i*90));
+</script>
+</body>
+</html>
