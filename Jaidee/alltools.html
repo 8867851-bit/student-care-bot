@@ -508,7 +508,7 @@
       <div class="card-content">
         <div class="card-badge">ใช้ได้เลย</div>
         <div class="card-title">ปรับความคิด</div>
-        <div class="card-sub">ความคิดวนซ้ำหรือกดตัวเอง</div>
+        <div class="card-sub">เมื่อความคิดเกาะแน่นจนเจ็บ — คลายมือ</div>
         <div class="card-btn rose">เริ่ม →</div>
       </div>
     </button>
@@ -561,30 +561,6 @@
         <div class="card-title">พักใจ</div>
         <div class="card-sub">เมื่อกดดันตัวเองมากเกิน</div>
         <div class="card-btn teal">เริ่ม →</div>
-      </div>
-    </button>
-
-    <button class="tool-img-card" onclick="markToolTapped();openAct()">
-      <div class="card-bg bg-green"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">🌱</div>
-      <div class="card-content">
-        <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">ลงมือทำ</div>
-        <div class="card-sub">ทำลายวงจรเฉื่อยทีละก้าว</div>
-        <div class="card-btn" style="background:var(--green);color:#fff;">เริ่ม →</div>
-      </div>
-    </button>
-
-    <button class="tool-img-card" onclick="markToolTapped();openSavor()">
-      <div class="card-bg bg-gold"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">✨</div>
-      <div class="card-content">
-        <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">อยู่กับสิ่งดี</div>
-        <div class="card-sub">ช้าลงกับช่วงเวลาดีๆ</div>
-        <div class="card-btn gold">เริ่ม →</div>
       </div>
     </button>
 
@@ -655,6 +631,7 @@
         <button class="pat-btn sel" onclick="setPat(this,'box')"><span class="pat-name">Box</span><span class="pat-counts">4·4·4·4</span></button>
         <button class="pat-btn"     onclick="setPat(this,'478')"><span class="pat-name">4-7-8</span><span class="pat-counts">4·7·8</span></button>
         <button class="pat-btn"     onclick="setPat(this,'calm')"><span class="pat-name">ผ่อนคลาย</span><span class="pat-counts">5·0·7</span></button>
+        <button class="pat-btn"     onclick="setPat(this,'sigh')"><span class="pat-name">Sigh</span><span class="pat-counts">2 เข้า·ออกยาว</span></button>
       </div>
       <div class="breathe-stage">
         <div class="circle-wrap">
@@ -750,7 +727,7 @@ function openModal(id){const o=document.getElementById(id);o.style.display='flex
 function closeModal(id,cb){const o=document.getElementById(id);o.classList.remove('active');setTimeout(()=>{o.style.display='none';document.body.style.overflow='';if(cb)cb();},360);}
 function handleOverlayClick(e,id,fn){if(e.target===document.getElementById(id))fn();}
 
-const PATTERNS={box:{phases:[{l:'หายใจเข้า',c:4,cls:'expand'},{l:'ค้าง',c:4,cls:'hold-in'},{l:'หายใจออก',c:4,cls:'contract'},{l:'ค้าง',c:4,cls:'hold-out'}],label:'Box',sub:'ผ่อนคลาย ตั้งสติ'},478:{phases:[{l:'หายใจเข้า',c:4,cls:'expand'},{l:'ค้าง',c:7,cls:'hold-in'},{l:'หายใจออก',c:8,cls:'contract'}],label:'4-7-8',sub:'ลด anxiety'},calm:{phases:[{l:'หายใจเข้า',c:5,cls:'expand'},{l:'หายใจออก',c:7,cls:'contract'}],label:'ผ่อนคลาย',sub:'เรียบง่าย'}};
+const PATTERNS={box:{phases:[{l:'หายใจเข้า',c:4,cls:'expand'},{l:'ค้าง',c:4,cls:'hold-in'},{l:'หายใจออก',c:4,cls:'contract'},{l:'ค้าง',c:4,cls:'hold-out'}],label:'Box',sub:'ผ่อนคลาย ตั้งสติ'},478:{phases:[{l:'หายใจเข้า',c:4,cls:'expand'},{l:'ค้าง',c:7,cls:'hold-in'},{l:'หายใจออก',c:8,cls:'contract'}],label:'4-7-8',sub:'ลด anxiety'},calm:{phases:[{l:'หายใจเข้า',c:5,cls:'expand'},{l:'หายใจออก',c:7,cls:'contract'}],label:'ผ่อนคลาย',sub:'เรียบง่าย'},sigh:{phases:[{l:'หายใจเข้าทางจมูก',c:3,cls:'expand'},{l:'สูดเพิ่มอีกนิด',c:1,cls:'hold-in'},{l:'ผ่อนลมยาวๆ ทางปาก',c:7,cls:'contract'}],label:'Physiological Sigh',sub:'รีเซ็ตระบบเร็วที่สุด'}};
 let bDur=3,bPat='box',bTimer=null,bCI=null,bRem=0,bPi=0,bCnt=0;
 function setDur(b,m){bDur=m;document.querySelectorAll('.dur-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}
 function setPat(b,p){bPat=p;document.querySelectorAll('.pat-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const pt=PATTERNS[p];document.getElementById('preview-label').textContent=pt.label;document.getElementById('preview-sub').textContent=pt.sub;}
@@ -761,10 +738,18 @@ function updateTimer(){const m=Math.floor(bRem/60),s=bRem%60;const el=document.g
 function runPhase(){clearInterval(bCI);const ph=PATTERNS[bPat].phases[bPi%PATTERNS[bPat].phases.length];const c=document.getElementById('s-circle'),l=document.getElementById('s-phase-label'),n=document.getElementById('s-count');c.className='c-main '+ph.cls;l.textContent=ph.l;bCnt=ph.c;n.textContent=bCnt;bCI=setInterval(()=>{bCnt--;if(bCnt<=0){clearInterval(bCI);bPi++;runPhase();}else if(n)n.textContent=bCnt;},1000);}
 function resetBreathe(){document.getElementById('b-pick').style.display='block';document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='none';}
 
-let jStep=0;const jAns=['','',''];
-function openJournal(){jStep=0;jAns.fill('');openModal('journal-modal');renderJ();}
+let jStep=0,jMode=null,jQ=[],jAns=[];
+const J_HEAVY=[{label:'เทออกมา',q:'ในหัวมีอะไรค้างอยู่บ้าง?',sub:'เทออกมาเลย ไม่ต้องเรียบร้อย',ph:'ทุกอย่างที่ค้างอยู่...'},{label:'พูดกับตัวเอง',q:'ถ้าจะบอกตัวเองสักประโยคให้ใจเบาลงนิดนึง จะบอกว่าอะไร?',sub:'พูดแบบที่จะพูดกับเพื่อนสนิท',ph:'เช่น ไม่เป็นไรนะ วันนี้ก็ทำดีที่สุดแล้ว...'},{label:'จุดที่ยังโอเค',q:'มีอะไรเล็กๆ วันนี้ที่ยังพอโอเคบ้าง?',sub:'แม้แค่นิดเดียวก็นับ',ph:'เช่น กาแฟอุ่นๆ ตอนเช้า...'}];
+const J_GOOD=[{label:'ขอบคุณ',q:'วันนี้มีอะไรที่รู้สึกขอบคุณบ้าง?',sub:'ไม่ต้องเป็นเรื่องใหญ่',ph:'เช่น มีคนทักมาถามไถ่...'},{label:'ตัวเอง',q:'ตอนนี้ตัวเองอยากได้อะไรต่อ?',sub:'ฟังตัวเองโดยไม่ตัดสิน',ph:'เช่น อยากพัก อยากเล่นต่อ...'},{label:'เก็บไว้',q:'ถ้าจะเก็บความรู้สึกดีวันนี้ไว้หนึ่งอย่าง จะเป็นอะไร?',sub:'สมองจำสิ่งดีได้ไม่เก่งเท่าสิ่งแย่ — จดไว้ช่วยได้',ph:'...'}];
+function openJournal(){jStep=-1;jMode=null;jQ=[];jAns=[];openModal('journal-modal');renderJ();}
 function closeJournal(){closeModal('journal-modal');}
-function renderJ(){const el=document.getElementById('journal-inner');if(jStep>=PROMPTS.length){if(jAns.some(a=>a&&a.trim()))saveEntry({id:Date.now(),type:'journal',ts:new Date().toISOString(),answers:[...jAns]});el.innerHTML='<div class="j-done fade-up"><div class="j-done-icon">🌿</div><div class="j-done-title">ขอบคุณที่เขียนออกมา</div><div class="j-done-sub">หวังว่าจะเบาขึ้นบ้างนะ</div><button class="j-done-close" onclick="closeJournal()">← กลับ</button></div>';return;}const p=PROMPTS[jStep];const dots=PROMPTS.map((_,i)=>'<div class="j-dot '+(i<jStep?'done':i===jStep?'active':'')+'"></div>').join('');el.innerHTML='<div class="j-progress">'+dots+'</div><div class="fade-up"><div class="j-label">'+p.label+'</div><div class="j-q">'+p.q+'</div><div class="j-sub">'+p.sub+'</div><textarea class="j-ta" id="j-ta" placeholder="'+p.ph+'" rows="5">'+jAns[jStep]+'</textarea><button class="j-next" onclick="jNext()" style="background:var(--purple);">'+(jStep<PROMPTS.length-1?'ถัดไป →':'เสร็จแล้ว ✓')+'</button><button class="j-skip" onclick="jSkip()">ข้ามคำถามนี้</button></div>';setTimeout(()=>{const t=document.getElementById('j-ta');if(t)t.focus();},320);}
+function jPick(m){jMode=m;jQ=(m==='heavy'?J_HEAVY:J_GOOD);jAns=jQ.map(()=>'');jStep=0;renderJ();}
+function renderJ(){const el=document.getElementById('journal-inner');
+  if(jStep===-1){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--purple);">บันทึก</div><div class="mstep-q">วันนี้เป็นวันแบบไหน?</div><div class="mstep-sub">เลือกเพื่อให้คำถามเข้ากับใจตอนนี้</div><div class="mstep-choices"><button class="mstep-choice" onclick="jPick(\'heavy\')"><div class="mstep-choice-title">🌧 วันนี้หนัก</div><div class="mstep-choice-sub">เทของในหัวออกก่อน แล้วค่อยหาจุดที่ยังโอเค</div></button><button class="mstep-choice" onclick="jPick(\'good\')"><div class="mstep-choice-title">☀️ วันนี้พอไหว</div><div class="mstep-choice-sub">เก็บสิ่งดีๆ ไว้ก่อนมันผ่านไป</div></button></div>';return;}
+  if(jStep>=jQ.length){const qa=jQ.map((p,i)=>({q:p.q,a:jAns[i]})).filter(x=>x.a&&x.a.trim());if(qa.length)saveEntry({id:Date.now(),type:'journal',ts:new Date().toISOString(),qa:qa});const d=jMode==='heavy'?{ic:'🌙',t:'เทออกมาแล้ว',sb:'เบาลงนิดนึงไหม? สิ่งที่เขียนอยู่ใน "บันทึกล่าสุด" แล้ว<br>พรุ่งนี้ค่อยว่ากันใหม่นะ'}:{ic:'☀️',t:'วันแบบนี้ก็มีจริง',sb:'ดีใจที่คุณหยุดสังเกตมัน<br>เก็บไว้ใน "บันทึกล่าสุด" แล้ว — กลับมาอ่านวันที่ใจหนักได้'};el.innerHTML='<div class="j-done fade-up"><div class="j-done-icon">'+d.ic+'</div><div class="j-done-title">'+d.t+'</div><div class="j-done-sub">'+d.sb+'</div><button class="j-done-close" onclick="closeJournal()">← กลับ</button></div>';return;}
+  const p=jQ[jStep];const dots=jQ.map((_,i)=>'<div class="j-dot '+(i<jStep?'done':i===jStep?'active':'')+'"></div>').join('');
+  el.innerHTML='<div class="j-progress">'+dots+'</div><div class="fade-up"><div class="j-label">'+p.label+'</div><div class="j-q">'+p.q+'</div><div class="j-sub">'+p.sub+'</div><textarea class="j-ta" id="j-ta" placeholder="'+p.ph+'" rows="5">'+jAns[jStep]+'</textarea><button class="j-next" onclick="jNext()" style="background:var(--purple);">'+(jStep<jQ.length-1?'ถัดไป →':'เสร็จแล้ว ✓')+'</button>'+(jStep===0?'<button class="j-skip" onclick="jStep=-1;renderJ()">← เปลี่ยนโหมด</button>':'<button class="j-skip" onclick="jSkip()">ข้ามข้อนี้</button>')+'</div>';
+  setTimeout(()=>{const t=document.getElementById('j-ta');if(t)t.focus();},320);}
 function jNext(){const t=document.getElementById('j-ta');if(t)jAns[jStep]=t.value.trim();jStep++;renderJ();}
 function jSkip(){jAns[jStep]='';jStep++;renderJ();}
 
@@ -776,184 +761,38 @@ let _it=null,_tt=false;
 function startIdleTimer(){_it=setTimeout(()=>{if(_tt)return;const n=document.getElementById('idle-nudge');if(n){n.style.display='block';requestAnimationFrame(()=>n.style.opacity='1');}},45000);}
 function markToolTapped(){_tt=true;clearTimeout(_it);const n=document.getElementById('idle-nudge');if(n)n.style.display='none';}
 
-const RP=[
-{id:'perfect',
- title:'ต้องทำให้สมบูรณ์แบบ',
- sub:'ถ้าไม่ดีพอแสดงว่าฉันไม่เก่ง',
- thought:'ฉันต้องทำทุกอย่างให้สมบูรณ์แบบ',
- bridge:'ชั้นความเชื่อ',url:'care.html?tab=belief',
- permissions:[
-  'ฉันทำได้ดีพอแล้ว — แม้จะยังไม่สมบูรณ์',
-  'ความผิดพลาดไม่ได้หมายความว่าฉันล้มเหลว มันหมายความว่าฉันกำลังพยายาม',
-  'ไม่มีใครทำอะไรได้สมบูรณ์แบบตั้งแต่ครั้งแรก — ไม่มีสักคน',
-  'สมองที่เหนื่อยล้ามักตั้งมาตรฐานที่สูงกว่าความเป็นจริง',
-  'ฉันอนุญาตให้ตัวเองทำได้แค่นี้ในวันนี้',
-  'งานที่เสร็จ 80% ส่งได้ ดีกว่างานที่สมบูรณ์ 100% แต่ไม่เคยเสร็จ',
-  'ฉันไม่ได้ต้องเอาชนะทุกคน ฉันแค่ต้องทำให้ดีที่สุดในสภาพที่เป็นอยู่',
-  'ความรู้สึกว่าไม่พอนั้น ไม่ใช่ข้อเท็จจริง — มันคือเสียงที่เรียนรู้มาจากที่ไหนสักที่',
-  'ฉันสามารถพัก และกลับมาทำต่อได้ — นั่นไม่ใช่การล้มเลิก',
-  'สิ่งที่ฉันเรียกว่า "ไม่พอ" อาจเป็น "มากพอ" ในสายตาคนอื่น',
-  'Cortisol สูงทำให้มาตรฐานในหัวพุ่งขึ้น — ร่างกายกำลังโกหกฉันอยู่',
-  'ฉันไม่จำเป็นต้องพิสูจน์คุณค่าตัวเองผ่านผลงาน',
-  'ความอ่อนแอในบางด้านไม่ได้ลบความสำเร็จในด้านอื่น',
-  'ฉันให้อภัยตัวเองได้ — เหมือนที่จะให้อภัยเพื่อน',
-  'วันนี้พอแค่นี้ก็พอ',
-  'ฉันได้ทำในสิ่งที่ทำได้ ด้วยสิ่งที่มีอยู่ ในเวลาที่เป็นอยู่',
-  'ความสมบูรณ์แบบไม่ใช่เป้าหมาย — ความก้าวหน้าต่างหากที่สำคัญ',
-  'ฉันไม่จำเป็นต้องรู้สึกดีเสมอ เพื่อที่จะเป็นคนดี',
-  'ฉันได้พยายามแล้ว และนั่นสำคัญ',
-  'ร่างกายและหัวใจต้องการพักบ้าง — นั่นไม่ใช่ความอ่อนแอ'
- ]
-},
-{id:'compare',
- title:'ทุกคนเก่งกว่าฉัน',
- sub:'ฉันไม่เหมาะที่จะอยู่ที่นี่',
- thought:'ฉันด้อยกว่าคนรอบข้างทุกคน',
- bridge:'ชั้นความสัมพันธ์',url:'care.html?tab=connection',
- permissions:[
-  'ทุกคนที่นี่เคยเป็นมือใหม่มาก่อน — รวมถึงคนที่ดูเก่งที่สุด',
-  'สิ่งที่ฉันเห็นในคนอื่นคือ highlight ของเขา ไม่ใช่ทั้งชีวิต',
-  'การเปรียบตัวเองกับคนอื่นทำให้สมองหลั่ง cortisol — ไม่ใช่ข้อมูลที่ถูกต้อง',
-  'ฉันมีจุดแข็งที่คนอื่นไม่มี แม้ฉันยังมองไม่เห็นมันตอนนี้',
-  'Impostor syndrome เกิดกับคนเก่งมากกว่าคนธรรมดา — งานวิจัยพิสูจน์แล้ว',
-  'ฉันไม่ได้แข่งกับใคร ฉันแค่กำลังเติบโตในแบบของตัวเอง',
-  'ความรู้สึกนี้ไม่ได้หมายความว่าฉันไม่เหมาะ มันหมายความว่าฉันใส่ใจ',
-  'คนที่ดูมั่นใจที่สุดในห้องมักเป็นคนที่กลัวที่สุดด้วย',
-  'ฉันอยู่ที่นี่ด้วยเหตุผล แม้ตอนนี้ฉันจะจำมันไม่ได้',
-  'ทักษะสร้างได้ แต่ความกล้าที่จะเริ่มนั้นหายาก — และฉันมีมันอยู่',
-  'ฉันไม่จำเป็นต้องเก่งที่สุด ฉันแค่ต้องเป็นตัวเองที่ดีขึ้นกว่าเมื่อวาน',
-  'ทุกคนที่เก่งตอนนี้เคยไม่เก่งเมื่อก่อน',
-  'ฉันมีมุมมองที่ไม่มีใครมีเหมือนกัน — นั่นคือคุณค่า',
-  'การเห็นว่าคนอื่นเก่งแปลว่าฉันมีตาที่มองเห็นคุณภาพ — นั่นเป็นสัญญาณดี',
-  'ฉันไม่ต้องพิสูจน์ให้ใครเห็น นอกจากตัวฉันเอง',
-  'สังคมสอนให้เปรียบตัวเอง แต่ฉันไม่จำเป็นต้องเล่นเกมนั้น',
-  'ความก้าวหน้าของฉันนับ แม้จะช้ากว่าคนอื่น',
-  'ฉันอยู่ในเส้นทางของตัวเอง ไม่ได้แข่งในเส้นทางของคนอื่น',
-  'คุณค่าของฉันไม่ได้ถูกกำหนดโดยการเปรียบเทียบ',
-  'วันนี้ฉันแค่ต้องเป็นฉัน — แค่นั้นก็พอ'
- ]
-},
-{id:'blame',
- title:'ฉันทำให้ทุกคนผิดหวัง',
- sub:'ฉันเป็นภาระให้คนอื่น',
- thought:'ฉันทำให้คนที่รักผิดหวังเสมอ',
- bridge:'ชั้นความเชื่อ',url:'care.html?tab=belief',
- permissions:[
-  'ฉันมีคุณค่าอยู่แล้ว — โดยไม่ต้องพิสูจน์อะไร',
-  'ความรู้สึกผิดไม่ใช่ข้อเท็จจริง มันคือสัญญาณว่าฉันใส่ใจคนอื่น',
-  'คนที่รักฉันจริงๆ ไม่ได้รักฉันเพราะสิ่งที่ฉันทำ แต่เพราะฉันเป็นใคร',
-  'ฉันไม่สามารถรับผิดชอบความรู้สึกของทุกคนได้',
-  'การที่ฉันรู้สึกเป็นภาระ ไม่ได้แปลว่าฉันเป็นภาระ',
-  'สมองในภาวะเครียดมักตีความว่าคนอื่นผิดหวัง แม้จะไม่เป็นความจริง',
-  'ฉันไม่จำเป็นต้องสมบูรณ์แบบเพื่อให้คนรักฉัน',
-  'ฉันอนุญาตให้ตัวเองผิดพลาดได้ เหมือนที่คนอื่นก็ผิดพลาดได้',
-  'ความรู้สึกผิดที่ไม่มีเหตุผลชัดเจน มักมาจากภายใน ไม่ใช่จากภายนอก',
-  'ฉันทำดีที่สุดเท่าที่ทำได้ ในช่วงเวลาที่ผ่านมา',
-  'ฉันไม่ต้องรับผิดชอบความคาดหวังที่ไม่มีใครบอกฉัน',
-  'การขอโทษและก้าวต่อ ดีกว่าการทรมานตัวเองอยู่กับอดีต',
-  'ฉันสมควรได้รับความเมตตาจากตัวเอง เหมือนที่ฉันให้กับคนอื่น',
-  'ความรักที่แท้จริงไม่มีเงื่อนไขที่ว่า "ต้องไม่ทำให้ผิดหวังเลย"',
-  'ฉันเป็นมนุษย์ และมนุษย์ทำให้คนอื่นผิดหวังบ้างเป็นเรื่องปกติ',
-  'ฉันไม่ใช่ศูนย์กลางของความรู้สึกทุกคน',
-  'Guilt ที่มากเกินไปคือ sign ว่าฉันต้องการดูแลตัวเองมากขึ้น',
-  'ฉันทำดีกว่าที่ตัวเองคิดเสมอ',
-  'ฉันอนุญาตให้ตัวเองก้าวหน้าโดยไม่ต้องลงโทษตัวเองก่อน',
-  'ฉันมีคุณค่า — แม้วันนี้จะรู้สึกไม่ใช่แบบนั้น'
- ]
-},
-{id:'helpless',
- title:'ไม่ว่าจะทำอะไรก็ไม่ดีขึ้น',
- sub:'ฉันเปลี่ยนแปลงอะไรไม่ได้',
- thought:'ความพยายามของฉันไม่มีความหมาย',
- bridge:'แผนดูแล',url:'plans.html',
- permissions:[
-  'ฉันไม่จำเป็นต้องเปลี่ยนทุกอย่างในครั้งเดียว — ก้าวเล็กๆ ก็นับ',
-  'ความรู้สึกว่าไม่มีอะไรดีขึ้น ไม่ใช่ข้อเท็จจริงเกี่ยวกับอนาคต',
-  'สมองที่อ่อนล้ามองไม่เห็นความก้าวหน้าเล็กๆ ที่เกิดขึ้นทุกวัน',
-  'ฉันเคยผ่านวันที่หนักกว่านี้มาได้ — ซึ่งแปลว่าฉันแข็งแกร่งกว่าที่คิด',
-  'Learned helplessness เป็นภาวะที่สมองสร้างขึ้น ไม่ใช่ความจริง',
-  'ฉันไม่จำเป็นต้องรู้สึกว่าจะดีขึ้น เพื่อที่จะทำอะไรเล็กๆ ได้',
-  'ความพยายามที่ไม่มีใครเห็น ยังคงมีความหมายอยู่ดี',
-  'การที่ฉันยังอยู่ที่นี่ ยังพยายาม — นั่นคือหลักฐาน',
-  'บางครั้งความก้าวหน้าเกิดขึ้นข้างในก่อน แล้วค่อยเห็นข้างนอกทีหลัง',
-  'ฉันไม่ต้องรู้สึก motivated เพื่อที่จะเริ่มต้น — action มาก่อน feeling',
-  'สิ่งที่ดูใหญ่เกินจะเปลี่ยน มักกลายเป็นเล็กลงเมื่อเวลาผ่านไป',
-  'ฉันไม่ต้องเห็นเส้นชัยเพื่อที่จะก้าวต่อไปได้',
-  'วันนี้แค่หายใจต่อไปได้ก็นับแล้ว',
-  'ความหวังไม่จำเป็นต้องมาก่อน การกระทำ',
-  'ฉันได้รับอนุญาตให้พักโดยไม่รู้สึกผิด',
-  'ช่วงเวลาที่มืดที่สุดมักเกิดขึ้นก่อนที่อะไรจะเปลี่ยน',
-  'ฉันไม่ต้องเห็นทางออกทั้งหมด แค่เห็นก้าวถัดไปก็พอ',
-  'สิ่งที่ฉันทำมาทั้งหมดไม่ได้สูญเปล่า — มันสร้างตัวฉันในวันนี้',
-  'ฉันขอความช่วยเหลือได้ — นั่นไม่ใช่การยอมแพ้',
-  'วันพรุ่งนี้อาจไม่เหมือนวันนี้ และนั่นก็เพียงพอแล้ว'
- ]
-}];
-let rPat=null,rStep=0,rPermIdx=0;
-function openReframe(){rStep=0;rPat=null;rPermIdx=0;openModal('reframe-modal');renderR();}
+// ══ REFRAME → DEFUSION (คลายมือจากความคิด · ACT cognitive defusion) ══
+// แทนการ "เถียงกับความคิด" (CBT restructuring) ด้วยการเปลี่ยน "ความสัมพันธ์" กับมัน
+// — มองมันเป็นเหตุการณ์ในใจที่ลอยผ่าน ไม่ใช่ความจริงที่ต้องเชื่อทั้งหมด
+let rfThought='',rfStory='',rfStep=0,rfFuse=0;
+const RF_STORIES=['เรื่อง "ไม่ดีพอ"','เรื่อง "ฉันต้องสมบูรณ์แบบ"','เรื่อง "ไม่มีใครเข้าใจ"','เรื่อง "ฉันจัดการไม่ได้"','เรื่อง "มันจะแย่แน่ๆ"','เรื่อง "เป็นความผิดฉัน"'];
+function rfEsc(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function rfDots(n){return [0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join('');}
+function openReframe(){rfThought='';rfStory='';rfStep=0;rfFuse=0;openModal('reframe-modal');renderRf();}
 function closeReframe(){closeModal('reframe-modal');}
-function renderR(){
+function rfN0(){const t=document.getElementById('rf-ta');rfThought=t?t.value.trim():'';if(!rfThought)rfThought='ความคิดที่กำลังเกาะอยู่';rfStep=1;rfFuse=0;renderRf();}
+function rfNext(){rfStep++;renderRf();}
+function rfPickStory(i){rfStory=RF_STORIES[i];rfNext();}
+function rfStoryCustom(){const inp=document.getElementById('rf-story-in');const v=inp?inp.value.trim():'';if(v){rfStory='เรื่อง "'+v+'"';rfNext();}}
+function renderRf(){
   const el=document.getElementById('reframe-inner');
-  const dots=n=>([0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join(''));
-  if(rStep===0){
-    el.innerHTML='<div class="mstep-eyebrow" style="color:var(--rose);">ปรับความคิด</div><div class="mstep-q">ตอนนี้มีความคิดแบบไหนอยู่?</div><div class="mstep-sub">เลือกอันที่ใกล้เคียงที่สุด</div><div class="mstep-choices">'+RP.map((p,i)=>'<button class="mstep-choice" onclick="rPick('+i+')"><div class="mstep-choice-title">'+p.title+'</div><div class="mstep-choice-sub">'+p.sub+'</div></button>').join('')+'</div>';
-  } else if(rStep===1){
-    el.innerHTML='<div class="mstep-progress">'+dots(1)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">ถือความคิดไว้ห่างๆ</div><div class="mstep-q">ลองอ่านประโยคนี้ดู</div><div class="reframe-phrase"><div class="reframe-prefix">ฉันกำลังมีความคิดว่า...</div><div class="reframe-thought">'+rPat.thought+'</div></div><div class="mstep-sub">มันเป็นแค่ความคิด ไม่ใช่ความจริงทั้งหมด</div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);">ถัดไป →</button><button class="mstep-back" onclick="rStep=0;renderR()">← เปลี่ยน</button>';
-  } else if(rStep===2){
-    rPermIdx=0;
-    renderPermDeck(el,dots);
-  } else if(rStep===3){
-    el.innerHTML='<div class="mstep-progress">'+dots(3)+'</div><div class="mstep-eyebrow" style="color:var(--teal);">หายใจ</div><div class="mstep-q">สักครู่หนึ่ง</div><div class="mini-breath"><div class="mini-breath-label">หายใจตามจังหวะ</div><div class="mini-breath-circle">🌬️</div><div class="mini-breath-hint">เข้า 4 · ออก 4 วินาที</div></div><button class="mstep-next" onclick="rNext()" style="background:var(--rose);margin-top:16px;">เสร็จแล้ว ✓</button>';
+  const th=rfEsc(rfThought);
+  if(rfStep===0){
+    el.innerHTML='<div class="mstep-eyebrow" style="color:var(--rose);">คลายมือ</div><div class="mstep-q">ความคิดไหนกำลังเกาะแน่นจนเจ็บ?</div><div class="mstep-sub">พิมพ์มันออกมาตรงๆ — คำที่มันพูดอยู่ในหัว</div><textarea class="mstep-ta" id="rf-ta" placeholder="เช่น ฉันไม่เก่งพอ · ฉันทำพังอีกแล้ว..." style="border-color:var(--rose-border);">'+th+'</textarea><button class="mstep-next" onclick="rfN0()" style="background:var(--rose);">ถัดไป →</button>';
+    setTimeout(()=>{const t=document.getElementById('rf-ta');if(t)t.focus();},320);
+  } else if(rfStep===1){
+    el.innerHTML='<div class="mstep-progress">'+rfDots(1)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">มองมัน</div><div class="mstep-q">อ่านมันช้าๆ อีกหนึ่งครั้ง</div><div class="reframe-phrase"><div class="reframe-thought" style="text-align:center;">"'+th+'"</div></div><div class="mstep-sub">นี่คือสิ่งที่สมองพูด ไม่ใช่สิ่งที่เกิดขึ้นจริงทั้งหมด<br>มันเป็นเหตุการณ์ในใจ เหมือนเมฆก้อนหนึ่งที่ลอยผ่าน</div><button class="mstep-next" onclick="rfNext()" style="background:var(--rose);">ถัดไป →</button><button class="mstep-back" onclick="rfStep=0;renderRf()">← เปลี่ยนความคิด</button>';
+  } else if(rfStep===2){
+    const layers=['"'+th+'"','ฉันกำลังมีความคิดว่า "'+th+'"','ฉันสังเกตเห็นว่า ฉันกำลังมีความคิดว่า "'+th+'"'];
+    const cur=layers[rfFuse];const isLast=rfFuse===layers.length-1;
+    el.innerHTML='<div class="mstep-progress">'+rfDots(2)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">เพิ่มระยะห่าง</div><div class="mstep-q" style="margin-bottom:14px;">แตะการ์ดเพื่อถอยออกมาทีละก้าว</div><div class="reframe-permission" '+(isLast?'':'onclick="rfFuse++;renderRf()" ')+'style="cursor:'+(isLast?'default':'pointer')+';min-height:120px;display:flex;align-items:center;justify-content:center;"><div class="reframe-permission-text" style="text-align:center;line-height:1.8;">'+cur+'</div></div><div class="mstep-sub">'+(isLast?'สังเกตไหม — พอเติม "ฉันสังเกตเห็นว่า" ความคิดนั้นกลายเป็นสิ่งที่คุณ <b>มอง</b> ไม่ใช่สิ่งที่คุณ <b>เป็น</b>':'แตะเพื่อเติมระยะห่างอีกชั้น')+'</div>'+(isLast?'<button class="mstep-next" onclick="rfNext()" style="background:var(--rose);">ถัดไป →</button>':'');
+  } else if(rfStep===3){
+    el.innerHTML='<div class="mstep-progress">'+rfDots(3)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">ตั้งชื่อมัน</div><div class="mstep-q">ความคิดแบบนี้เคยแวะมาก่อนไหม?</div><div class="mstep-sub">ตั้งชื่อเล่นให้ "เรื่อง" ที่สมองชอบเล่าซ้ำ — พอมันมีชื่อ ครั้งหน้าคุณจะจับได้ไวขึ้น</div><div class="mstep-choices">'+RF_STORIES.map((sName,i)=>'<button class="mstep-choice" onclick="rfPickStory('+i+')"><div class="mstep-choice-title">'+sName+'</div></button>').join('')+'</div><div style="display:flex;gap:8px;margin:10px 20px 0;"><input id="rf-story-in" placeholder="หรือพิมพ์ชื่อเอง" style="flex:1;padding:12px 14px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:12px;color:#FDFBF7;font-family:\'Sarabun\',sans-serif;font-size:13px;"/><button class="mstep-next" style="flex:0 0 auto;width:auto;padding:0 18px;margin:0;background:var(--rose);" onclick="rfStoryCustom()">ตั้ง</button></div>';
   } else {
-    el.innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">🌸</div><div class="tool-done-title">ดีมากเลย</div><div class="tool-done-sub">การสังเกตความคิดโดยไม่ถูกมันพัดพาไป เป็นทักษะที่ฝึกได้</div><button class="tool-done-close" onclick="closeReframe()">← กลับ</button><a href="'+rPat.url+'" onclick="closeReframe()" style="display:block;text-align:center;margin-top:10px;font-size:12px;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">อยากเข้าใจเพิ่ม? → <span style="color:var(--rose);">'+rPat.bridge+'</span></a><div class="still-strip" style="margin:16px 20px 0;"><div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div><div class="still-btns"><button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button><button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button></div><div class="still-heavy"></div></div></div>';
+    const story=rfEsc(rfStory)||'เรื่องเดิม';
+    el.innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">🍃</div><div class="tool-done-title">ถือมันให้หลวมลง</div><div class="tool-done-sub">'+story+' แวะมาอีกแล้ว — คุณไม่ต้องไล่มันไป และไม่ต้องเชื่อมันทั้งหมด<br><br>คุณแค่คลายมือที่กำมันแน่นจนเจ็บ ความคิดยังอยู่ตรงนั้น แต่ตอนนี้ <b>คุณถือมัน ไม่ใช่มันถือคุณ</b></div><button class="tool-done-close" onclick="closeReframe()">← กลับ</button><a href="care.html?tab=belief" onclick="closeReframe()" style="display:block;text-align:center;margin-top:10px;font-size:12px;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">อยากเข้าใจ "เรื่อง" ที่สมองเล่าซ้ำ? → <span style="color:var(--rose);">ชั้นความเชื่อ</span></a><div class="still-strip" style="margin:16px 20px 0;"><div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div><div class="still-btns"><button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button><button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button></div><div class="still-heavy"></div></div></div>';
   }
 }
-
-function renderPermDeck(el,dots){
-  var perms=rPat.permissions;
-  var total=perms.length;
-  var perm=perms[rPermIdx];
-  var isLast=rPermIdx===total-1;
-  el.innerHTML=
-    '<div class="mstep-progress">'+dots(2)+'</div>'+
-    '<div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 4px;">'+
-      '<div class="mstep-eyebrow" style="color:var(--rose);">Permission</div>'+
-      '<button onclick="rNext()" style="background:none;border:none;font-size:11px;color:rgba(253,251,247,0.4);cursor:pointer;font-family:var(--font-sans,sans-serif);">พอแล้ว → ถัดไป</button>'+
-    '</div>'+
-    '<div class="mstep-q" style="margin-bottom:16px;">อ่านช้าๆ</div>'+
-    '<div class="reframe-permission" onclick="nextPerm()" style="cursor:pointer;min-height:120px;display:flex;flex-direction:column;justify-content:center;">'+
-      '<div class="reframe-permission-label">Permission</div>'+
-      '<div class="reframe-permission-text">'+perm+'</div>'+
-    '</div>'+
-    '<div style="display:flex;gap:8px;margin:14px 20px 0;">'+
-      (rPermIdx>0 ? '<button class="mstep-back" style="flex:1;" onclick="prevPerm()">← ก่อนหน้า</button>' : '<div style="flex:1;"></div>')+
-      (isLast
-        ? '<button class="mstep-next" style="flex:2;background:var(--rose);" onclick="rNext()">ต่อไป →</button>'
-        : '<button class="mstep-next" style="flex:2;background:var(--rose);" onclick="nextPerm()">ถัดไป →</button>'
-      )+
-    '</div>';
-}
-function nextPerm(){
-  const total=rPat.permissions.length;
-  if(rPermIdx<total-1){
-    rPermIdx++;
-    const el=document.getElementById('reframe-inner');
-    const dots=n=>([0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join(''));
-    renderPermDeck(el,dots);
-  } else {
-    rNext();
-  }
-}
-function prevPerm(){
-  if(rPermIdx>0){
-    rPermIdx--;
-    const el=document.getElementById('reframe-inner');
-    const dots=n=>([0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join(''));
-    renderPermDeck(el,dots);
-  }
-}
-function rPick(i){rPat=RP[i];rStep=1;rPermIdx=0;renderR();}
-function rNext(){rStep++;renderR();}
 
 let wText='',wBranch=0,wStep=0;
 function openWorry(){wStep=0;wText='';wBranch=0;openModal('worry-modal');renderW();}
@@ -1097,20 +936,7 @@ function closeRest(){closeModal('rest-modal');}
 function renderRest(){const s=REST_STEPS[_restStep];const isLast=_restStep===REST_STEPS.length-1;document.getElementById('rest-body').innerHTML=`<div style="text-align:center;padding:8px 0 20px;"><div style="font-size:52px;margin-bottom:16px;">${s.icon}</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:12px;">${s.title}</div><div style="font-size:14px;color:var(--mid);line-height:1.8;white-space:pre-line;margin-bottom:28px;">${s.body}</div><div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px;">${REST_STEPS.map((_,i)=>`<div style="width:${i===_restStep?16:6}px;height:6px;border-radius:3px;background:${i===_restStep?'var(--teal)':'var(--cream-border)'};transition:all 0.3s;"></div>`).join('')}</div></div><button onclick="${isLast?'closeRest()':'nextRest()'}" style="width:100%;background:var(--teal);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">${isLast?'เสร็จแล้ว 🤍':'ถัดไป →'}</button>`;}
 function nextRest(){if(_restStep<REST_STEPS.length-1){_restStep++;renderRest();}}
 
-// ══ ACT (ลงมือทำ) ══════════════════════════════
-const ACT_CHALLENGES=[{time:'2 นาที',icon:'💧',task:'ลุกไปเติมน้ำหนึ่งแก้ว'},{time:'3 นาที',icon:'🪟',task:'เปิดหน้าต่างหรือออกไปรับอากาศ'},{time:'2 นาที',icon:'🧹',task:'เก็บของชิ้นเดียวที่อยู่ไม่ถูกที่'},{time:'5 นาที',icon:'📱',task:'ส่งข้อความหาคนที่นึกถึง'},{time:'3 นาที',icon:'🎵',task:'เปิดเพลงที่ชอบหนึ่งเพลง'},{time:'2 นาที',icon:'🌿',task:'ยืดตัวเบาๆ ขยับไหล่ หมุนคอ'},{time:'5 นาที',icon:'📓',task:'เขียนสิ่งที่อยากทำวันนี้สักอย่าง'},{time:'2 นาที',icon:'😮‍💨',task:'หายใจเข้า 4 วินาที ออก 6 วินาที 3 รอบ'}];
-let _actPick=null,_actDone=false;
-function openAct(){_actPick=ACT_CHALLENGES[Math.floor(Math.random()*ACT_CHALLENGES.length)];_actDone=false;renderAct();openModal('act-modal');}
-function closeAct(){closeModal('act-modal');}
-function renderAct(){const c=_actPick;document.getElementById('act-body').innerHTML=`<div style="font-size:10px;letter-spacing:2.5px;color:var(--green);text-transform:uppercase;font-weight:600;margin-bottom:12px;">ลงมือทำ</div><div style="background:var(--green-soft);border:1.5px solid var(--green-border);border-radius:20px;padding:24px;text-align:center;margin:8px 0 20px;"><div style="font-size:48px;margin-bottom:10px;">${c.icon}</div><div style="font-size:11px;color:var(--green);font-weight:600;letter-spacing:1px;margin-bottom:8px;">${c.time}</div><div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:700;color:var(--dark);line-height:1.35;">${c.task}</div></div>${_actDone?`<div style="text-align:center;padding:8px 0 16px;"><div style="font-size:32px;">🌱</div><div style="font-size:14px;font-weight:600;margin-top:8px;">ทำได้แล้ว — ขั้นแรกสำคัญที่สุด</div></div><button onclick="openAct()" style="width:100%;background:var(--green-soft);border:1.5px solid var(--green-border);color:var(--green);border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;">ทำอีกอันหนึ่ง</button>`:`<button onclick="_actDone=true;renderAct()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;">ทำเสร็จแล้ว ✓</button><button onclick="openAct()" style="width:100%;background:none;border:1.5px solid var(--cream-border);border-radius:28px;padding:12px;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;">เปลี่ยนเป็นอันอื่น</button>`}`;}
-
-// ══ SAVOR (อยู่กับสิ่งดี) ═══════════════════════
-const SAVOR_PROMPTS=['มีอะไรในวันนี้ที่ทำให้รู้สึกดีขึ้นแม้เพียงเล็กน้อย?','ตอนนี้มีอะไรที่รู้สึกขอบคุณได้บ้าง — ไม่ว่าจะเล็กแค่ไหน?','ช่วงสัปดาห์นี้มีช่วงไหนที่รู้สึกเบาหรือดีบ้างไหม?','ถ้าต้องเก็บความรู้สึกดีๆ จากวันนี้ไว้หนึ่งอย่าง มันจะเป็นอะไร?'];
-let _savorStep=0,_savorText='',_savorPrompt='';
-function openSavor(){_savorStep=0;_savorText='';_savorPrompt=SAVOR_PROMPTS[Math.floor(Math.random()*SAVOR_PROMPTS.length)];renderSavor();openModal('savor-modal');}
-function savorNext(){const v=document.getElementById('savor-input').value.trim();if(!v)return;_savorText=v;_savorStep=1;saveEntry({id:Date.now(),type:'savor',ts:new Date().toISOString(),qa:[{q:_savorPrompt,a:_savorText}]});renderSavor();}
-function closeSavor(){closeModal('savor-modal');}
-function renderSavor(){const prompt=_savorPrompt;if(_savorStep===0){document.getElementById('savor-body').innerHTML=`<div style="text-align:center;margin-bottom:20px;"><div style="font-size:48px;margin-bottom:12px;">✨</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:8px;">ช้าลงกับสิ่งดีๆ</div><div style="font-size:13px;color:var(--soft);line-height:1.7;">สมองเราจดจำสิ่งไม่ดีได้ดีกว่าสิ่งดี<br>การหยุดกับความรู้สึกดีนาน 20-30 วินาที<br>ช่วยให้มันฝังลึกกว่าแค่ผ่านไป</div></div><div style="background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:16px;padding:18px;margin-bottom:20px;"><div style="font-size:12px;color:var(--gold);font-weight:600;letter-spacing:0.5px;margin-bottom:8px;">คำถาม</div><div style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;line-height:1.5;">${prompt}</div></div><textarea id="savor-input" placeholder="เขียนอะไรก็ได้ — ยาวหรือสั้นก็โอเค" oninput="document.getElementById('savor-next').style.opacity=this.value.trim()?'1':'0.4'" style="width:100%;background:var(--cream);border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-size:14px;font-family:'Sarabun',sans-serif;min-height:90px;resize:none;color:var(--dark);margin-bottom:14px;"></textarea><button id="savor-next" onclick="savorNext()" style="width:100%;background:var(--gold);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;opacity:0.4;transition:opacity 0.2s;">อยู่กับมันสักครู่ →</button>`;}else{document.getElementById('savor-body').innerHTML=`<div style="text-align:center;padding:16px 0 20px;"><div style="font-size:40px;margin-bottom:12px;">☀️</div><div style="font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;margin-bottom:16px;">ที่คุณเขียนไว้</div><div style="background:var(--gold-soft);border-radius:16px;padding:18px;font-size:15px;line-height:1.7;color:var(--dark);text-align:left;margin-bottom:16px;">${_savorText}</div><div style="font-size:13px;color:var(--soft);line-height:1.7;margin-bottom:24px;">ลองหลับตาและอยู่กับความรู้สึกนี้สัก 20 วินาที<br>เก็บไว้ใน "บันทึกล่าสุด" ให้แล้ว — กลับมาอ่านวันที่ใจหนักได้</div><button onclick="closeSavor()" style="width:100%;background:var(--gold);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">เก็บไว้ในใจแล้ว ✨</button></div>`;}}
+// (ACT + SAVOR tools retired — replaced by Rewire snapshot/micro-actions)
 
 // ══ RAIN (อยู่กับมัน) ════════════════════════════
 const RAIN_STEPS=[{letter:'R',word:'Recognize',icon:'👁',title:'สังเกต',body:'มีความรู้สึกอะไรกำลังเกิดขึ้นอยู่ตอนนี้?\nไม่ต้องตั้งชื่อให้ถูก แค่รับรู้ว่ามีอะไรบางอย่างอยู่'},{letter:'A',word:'Allow',icon:'🤲',title:'ปล่อยให้มันอยู่',body:'ไม่ต้องแก้ ไม่ต้องผลัก ไม่ต้องหนี\nแค่บอกตัวเองว่า "โอเค ความรู้สึกนี้อยู่ที่นี่ได้"'},{letter:'I',word:'Investigate',icon:'🔍',title:'สำรวจเบาๆ',body:'มันอยู่ที่ไหนในร่างกาย?\nหน้าอก ไหล่ กระเพาะ หรือที่อื่น?\nรู้สึกหนัก แน่น หรือตึงแบบไหน?'},{letter:'N',word:'Nurture',icon:'🌿',title:'ดูแลตัวเอง',body:'วางมือบนจุดที่รู้สึกนั้น\nและบอกตัวเองเบาๆ ว่า\n\n"ฉันเห็นเธอ และฉันอยู่กับเธอ"'}];
@@ -1303,8 +1129,8 @@ function toggleTrack(id){
   else if(h==='#move'){switchToolsTab(1);openMove();}
   else if(h==='#play'){switchToolsTab(1);openPlay();}
   else if(h==='#rest'){switchToolsTab(3);openRest();}
-  else if(h==='#act'){switchToolsTab(3);openAct();}
-  else if(h==='#savor'){switchToolsTab(3);openSavor();}
+  else if(h==='#act'){switchToolsTab(1);openMove();}
+  else if(h==='#savor'){switchToolsTab(4);openRewire('snapshot');}
   else if(h==='#rain'){switchToolsTab(3);openRain();}
   else if(h==='#grounding'){switchToolsTab(3);openGrounding();}
   else if(h==='#listen'){switchToolsTab(1);if(AUDIO_TRACKS.length)openListen();}
@@ -1356,22 +1182,6 @@ function toggleTrack(id){
   <div class="modal-handle"></div>
   <div id="rest-body"></div>
   <button onclick="closeRest()" style="width:100%;margin-top:8px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
-</div></div>
-
-<!-- ══ ACT (ลงมือทำ) MODAL ══ -->
-<div class="modal-overlay" id="act-modal" onclick="handleOverlayClick(event,'act-modal',closeAct)">
-<div class="modal-sheet" onclick="event.stopPropagation()">
-  <div class="modal-handle"></div>
-  <div id="act-body"></div>
-  <button onclick="closeAct()" style="width:100%;margin-top:8px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
-</div></div>
-
-<!-- ══ SAVOR (อยู่กับสิ่งดี) MODAL ══ -->
-<div class="modal-overlay" id="savor-modal" onclick="handleOverlayClick(event,'savor-modal',closeSavor)">
-<div class="modal-sheet" onclick="event.stopPropagation()">
-  <div class="modal-handle"></div>
-  <div id="savor-body"></div>
-  <button onclick="closeSavor()" style="width:100%;margin-top:8px;background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;">ปิด</button>
 </div></div>
 
 <!-- ══ RAIN (อยู่กับมัน) MODAL ══ -->
