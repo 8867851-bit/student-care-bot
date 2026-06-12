@@ -86,6 +86,20 @@
     }
     .announce-title.visible{opacity:1;transform:translateY(0);}
 
+    /* Announce preloader — holds the screen until the availability gate resolves */
+    #announce-loader{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:var(--cream);transition:opacity 0.5s ease;}
+    #announce-loader.hide{opacity:0;pointer-events:none;}
+    .al-mascot{width:104px;height:104px;object-fit:contain;animation:alBreathe 3.4s ease-in-out infinite;}
+    .al-fallback{font-size:60px;line-height:1;animation:alBreathe 3.4s ease-in-out infinite;}
+    @keyframes alBreathe{0%,100%{transform:scale(0.93);opacity:0.8;}50%{transform:scale(1.05);opacity:1;}}
+    .al-text{font-family:'Noto Serif Thai',serif;font-size:15px;color:var(--mid);text-align:center;line-height:1.8;opacity:0;animation:alFade 0.7s ease 0.25s forwards;}
+    .al-dots{display:flex;gap:7px;}
+    .al-dots span{width:6px;height:6px;border-radius:50%;background:var(--green-border);animation:alDot 1.4s ease-in-out infinite;}
+    .al-dots span:nth-child(2){animation-delay:0.2s;}
+    .al-dots span:nth-child(3){animation-delay:0.4s;}
+    @keyframes alDot{0%,100%{opacity:0.3;transform:translateY(0);}50%{opacity:1;transform:translateY(-5px);}}
+    @keyframes alFade{to{opacity:1;}}
+
     /* Content area — tight, owned spacing */
     .announce-content{
       display:flex;flex-direction:column;
@@ -337,6 +351,12 @@
 <!-- SCREEN 0: ANNOUNCE — bulletin board    -->
 <!-- ═══════════════════════════════════════ -->
 <div class="screen active" id="screen-announce">
+  <div id="announce-loader">
+    <img class="al-mascot" id="al-mascot-img" src="assets/jaidee-mascot.png" alt="" onerror="this.style.display='none';var fb=document.getElementById('al-fallback');if(fb)fb.style.display='block';">
+    <div class="al-fallback" id="al-fallback" style="display:none;">🪷</div>
+    <div class="al-text">กำลังเตรียมพื้นที่ปลอดภัย<br>ให้คุณอยู่นะ</div>
+    <div class="al-dots"><span></span><span></span><span></span></div>
+  </div>
 
   <!-- 📌 ประกาศ — visual anchor -->
   <div class="announce-title" id="announce-title">
@@ -631,7 +651,7 @@
 <!-- ═══════════════════════════════════════ -->
 <div class="screen" id="screen-special">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-    <button onclick="show('screen-no-slots')" style="background:none;border:none;color:var(--soft);font-size:20px;cursor:pointer;padding:0;line-height:1;">←</button>
+    <button onclick="show('screen-booking')" style="background:none;border:none;color:var(--soft);font-size:20px;cursor:pointer;padding:0;line-height:1;">←</button>
     <div class="eyebrow">เวลาพิเศษ</div>
   </div>
   <div class="special-headline" style="margin-top:4px;">ลองหาช่วงอื่นกัน 🤍</div>
@@ -647,7 +667,7 @@
   </div>
   <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;">
     <button class="btn-green" id="btn-special-submit" onclick="submitSpecialRequest()">ส่งคำขอ →</button>
-    <button class="btn-ghost" onclick="show('screen-no-slots')">← กลับ</button>
+    <button class="btn-ghost" onclick="show('screen-booking')">← กลับ</button>
   </div>
 </div>
 
@@ -1021,8 +1041,17 @@ window.onload=async()=>{
   await _checkAvailabilityGate();
   clearTimeout(gateTimeout);
   _unlockAnnounce();
+  _announceReady=true;
+  _revealAnnounce();
 };
 
+function _revealAnnounce(){
+  const l=document.getElementById('announce-loader');
+  if(l){ l.classList.add('hide'); setTimeout(()=>{ l.style.display='none'; }, 520); }
+  _staggerAnnounce();
+}
+
+let _announceReady=false;
 function _lockAnnounce(){
   const btn = document.querySelector('#screen-announce .btn-green');
   if(!btn) return;
@@ -1121,6 +1150,7 @@ function _staggerReassurances() {
 }
 
 function _staggerAnnounce() {
+  if(!_announceReady) return;
   const ids = ['announce-title','announce-b1','announce-div','announce-b2','announce-div2','announce-b3'];
   ids.forEach((id, i) => {
     const el = document.getElementById(id);
