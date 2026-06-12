@@ -459,10 +459,10 @@ const TOOL_CONFIG = {
   grounding: { icon:'🌱', color:'green',  name:'ลงดินก่อนเลย',           hash:'#grounding' },
   rest:      { icon:'😴', color:'blue',   name:'พักก่อนเลย',             hash:'#rest'      },
   rain:      { icon:'🌧️', color:'teal',   name:'ปล่อยให้ผ่านก่อนเลย',   hash:'#rain'      },
-  act:       { icon:'✅', color:'gold',   name:'ลงมือทำก่อนเลย',         hash:'#act'       },
-  savor:     { icon:'🌸', color:'rose',   name:'เพลิดเพลินก่อนเลย',      hash:'#savor'     },
   play:      { icon:'🎮', color:'purple', name:'เล่นก่อนเลย',             hash:'#play'      },
   rewire:    { icon:'⚡', color:'gold',   name:'จุดสวิตช์เล็กๆ ก่อนเลย',  hash:'#rewire'    },
+  rewire_snapshot: { icon:'📸', color:'gold', name:'เก็บภาพช่วงเวลานี้ก่อนเลย', hash:'#rewire-snapshot' },
+  rewire_kindword: { icon:'💛', color:'gold', name:'ส่งความรู้สึกดีออกไปก่อนเลย', hash:'#rewire-kindword' },
 };
 
 // ─── DATABASE — all 9 cells, 5 emotions each ────────────────────
@@ -618,7 +618,7 @@ const DB = {
     stateIcon:'🔥', stateName:'มีพลัง · รู้สึกดี',
     stateDesc:'พลังงานกำลังดี ดีที่ต่อยอดมันตอนนี้เลย',
     secondary: [
-      { icon:'✨', name:'อยู่กับสิ่งดี', desc:'เก็บความรู้สึกดีนี้ไว้ให้นานขึ้น',     url:'alltools.html#savor' },
+      { icon:'📸', name:'เก็บภาพในใจ', desc:'เก็บความรู้สึกดีนี้ไว้ให้นานขึ้น',     url:'alltools.html#rewire-snapshot' },
       { icon:'📓', name:'เขียนระบาย',   desc:'จดความรู้สึกดีนี้ไว้ก่อนมันผ่านไป',   url:'alltools.html#journal' },
       { icon:'⚡', name:'Rewire',        desc:'สวิตช์ 30 วินาที ฝึกสมองให้เก็บความสุขเก่งขึ้น', url:'alltools.html#rewire' },
     ],
@@ -641,7 +641,7 @@ const DB = {
     stateIcon:'☀️', stateName:'สงบ · รู้สึกดี',
     stateDesc:'วันนี้ดีมาก ใช้โอกาสนี้เสริมความแข็งแรงให้ตัวเอง',
     secondary: [
-      { icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#savor' },
+      { icon:'📸', name:'เก็บภาพในใจ', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#rewire-snapshot' },
       { icon:'💛', name:'คุยกับ PR',     desc:'แบ่งปันให้คนอื่นได้ยิน',              url:'peer.html' },
       { icon:'⚡', name:'Rewire',        desc:'สวิตช์ 30 วินาที ฝึกสมองให้เก็บความสุขเก่งขึ้น', url:'alltools.html#rewire' },
     ],
@@ -664,7 +664,7 @@ const DB = {
     stateIcon:'🌿', stateName:'ผ่อนคลาย · รู้สึกดี',
     stateDesc:'ร่างกายสงบ ใจเบา ช่วงเวลาดีๆ ที่ควรอยู่กับมัน',
     secondary: [
-      { icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#savor' },
+      { icon:'📸', name:'เก็บภาพในใจ', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',       url:'alltools.html#rewire-snapshot' },
       { icon:'📓', name:'เขียนระบาย',   desc:'จดความรู้สึกนี้ไว้ก่อนมันผ่านไป',     url:'alltools.html#journal' },
       { icon:'⚡', name:'Rewire',        desc:'สวิตช์ 30 วินาที ฝึกสมองให้เก็บความสุขเก่งขึ้น', url:'alltools.html#rewire' },
     ],
@@ -804,8 +804,8 @@ const EMOTION_OVERRIDE = {
     ],
   },
   'ถอยห่าง': {
-    primaryTool:'act',
-    primaryWhy:'การถอยห่างมักเริ่มวงจร avoidance ที่ทำให้รู้สึกแย่ขึ้น\nก้าวเล็กๆ หนึ่งก้าวช่วยทำลายวงจรนั้นโดยไม่ต้องฝืนมาก',
+    primaryTool:'move',
+    primaryWhy:'การถอยห่างเริ่มวงจร avoidance ที่ทำให้รู้สึกแย่ลง\nการขยับร่างกายเบาๆ คือก้าวเล็กที่สุดที่ตัดวงจรได้โดยไม่ต้องฝืนใจ',
     secondary:[
       {icon:'🏃', name:'เคลื่อนไหว', desc:'ขยับร่างกายเบาๆ เพื่อ activate พลังงาน', url:'alltools.html#move'},
       {icon:'💛', name:'คุยกับ PR',  desc:'ถ้าอยากมีคนอยู่ด้วยโดยไม่ต้องพูดมาก',    url:'peer.html'},
@@ -823,7 +823,7 @@ const EMOTION_OVERRIDE = {
     primaryTool:'reframe',
     primaryWhy:'ท้อแท้มักมาพร้อมความคิดว่า "พยายามไปก็ไม่มีอะไรเปลี่ยน"\nการปรับมุมมองช่วยตั้งคำถามกับความเชื่อนั้นก่อน',
     secondary:[
-      {icon:'🌱', name:'ลงมือทำ',   desc:'ก้าวเล็กๆ หนึ่งก้าวช่วยทำลายวงจรท้อแท้',   url:'alltools.html#act'},
+      {icon:'⚡', name:'สวิตช์เล็กๆ', desc:'สวิตช์ Rewire เล็กที่สุดช่วยตัดวงจรท้อแท้',   url:'alltools.html#rewire'},
       {icon:'🤍', name:'พักใจ',     desc:'ดูแลตัวเองก่อนในช่วงที่รู้สึกหนัก',           url:'alltools.html#rest'},
     ],
   },
@@ -842,7 +842,7 @@ const EMOTION_OVERRIDE = {
     primaryWhy:'ความลุ้นมักมีความกังวลซ่อนอยู่ข้างใน\nการแยกส่วนที่ควบคุมได้ออกมาช่วยให้พลังงานนั้นไปในทางที่ดี',
     secondary:[
       {icon:'🎯', name:'เตรียมตัว', desc:'ถ้าลุ้นก่อนอะไรสำคัญโดยตรง',               url:'alltools.html#grounding'},
-      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'ถ้าความตื่นเต้นนั้นดีและอยากเก็บไว้',    url:'alltools.html#savor'},
+      {icon:'📸', name:'เก็บภาพในใจ', desc:'ถ้าความตื่นเต้นนั้นดีและอยากเก็บไว้',    url:'alltools.html#rewire-snapshot'},
     ],
   },
   'กระสับกระส่าย': {
@@ -880,7 +880,7 @@ const EMOTION_OVERRIDE = {
 
   // ── neutral_mid ──
   'เรียบๆ': {
-    primaryTool:'savor',
+    primaryTool:'rewire_snapshot',
     primaryWhy:'วันที่เรียบๆ เป็นวันที่ดีสำหรับการสังเกตสิ่งดีๆ เล็กๆ\nก่อนที่มันจะผ่านไปโดยไม่ทันสังเกต',
     secondary:[
       {icon:'📓', name:'เขียนระบาย', desc:'จดอะไรก็ได้ที่อยู่ในใจตอนนี้',              url:'alltools.html#journal'},
@@ -908,7 +908,7 @@ const EMOTION_OVERRIDE = {
     primaryWhy:'ความเบื่อต้องการ pattern interrupt มากกว่าการสำรวจตัวเอง\nเกมเบาๆ ช่วย ground ความคิดและเปลี่ยนโหมดได้เร็ว',
     secondary:[
       {icon:'🏃', name:'เคลื่อนไหว', desc:'ถ้าอยากเปลี่ยนอารมณ์แบบ active มากกว่า',  url:'alltools.html#move'},
-      {icon:'🌱', name:'ลงมือทำ',   desc:'ถ้าอยากทำอะไรบางอย่างให้สำเร็จ',           url:'alltools.html#act'},
+      {icon:'⚡', name:'สวิตช์เล็กๆ', desc:'สวิตช์ Rewire เล็กๆ เปลี่ยนโหมดได้',         url:'alltools.html#rewire'},
     ],
   },
   'ไม่แน่ใจ': {
@@ -922,8 +922,8 @@ const EMOTION_OVERRIDE = {
 
   // ── neutral_low ──
   'เฉื่อย': {
-    primaryTool:'act',
-    primaryWhy:'ความเฉื่อยทำลายได้ด้วยก้าวเล็กๆ หนึ่งก้าว\nไม่ต้องทำทั้งหมด แค่ทำหนึ่งอย่างเล็กที่สุดที่นึกได้',
+    primaryTool:'move',
+    primaryWhy:'ความเฉื่อยตัดได้ด้วยร่างกายก่อนใจ\nขยับเบาๆ สักนิดแล้วแรงจะตามมาเอง — ไม่ต้องรอให้ "อยาก" ก่อน',
     secondary:[
       {icon:'🏃', name:'เคลื่อนไหว', desc:'ขยับร่างกายก่อน บางทีร่างกายนำใจ',         url:'alltools.html#move'},
       {icon:'🎮', name:'เล่น',        desc:'ถ้าอยากเปลี่ยนโหมดโดยไม่ต้องคิดมาก',      url:'alltools.html#play'},
@@ -967,15 +967,15 @@ const EMOTION_OVERRIDE = {
     primaryTool:null, primaryRoute:'care',
     primaryWhy:'พลังงานกำลังดี — ใช้มันสำรวจพื้นที่ใจได้เลย\nชั้นการแสดงออกช่วยต่อยอดความรู้สึกนี้',
     secondary:[
-      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'เก็บความรู้สึกดีนี้ไว้ก่อนมันผ่านไป',    url:'alltools.html#savor'},
-      {icon:'🌱', name:'ลงมือทำ',      desc:'ใช้พลังงานนี้ทำอะไรบางอย่างให้สำเร็จ',   url:'alltools.html#act'},
+      {icon:'📸', name:'เก็บภาพในใจ', desc:'เก็บความรู้สึกดีนี้ไว้ก่อนมันผ่านไป',    url:'alltools.html#rewire-snapshot'},
+      {icon:'⚡', name:'สวิตช์เล็กๆ',   desc:'ใช้พลังงานนี้จุดสวิตช์ Rewire หนึ่งอัน',  url:'alltools.html#rewire'},
     ],
   },
   'มีความหวัง': {
     primaryTool:null, primaryRoute:'care',
     primaryWhy:'ความหวังเป็นทรัพยากรที่ควรดูแล ไม่ใช่แค่ใช้จ่าย\nการบันทึกมันไว้ช่วยให้มันอยู่ได้นานขึ้น',
     secondary:[
-      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',           url:'alltools.html#savor'},
+      {icon:'📸', name:'เก็บภาพในใจ', desc:'ช้าลงกับความรู้สึกดีนี้สักครู่',           url:'alltools.html#rewire-snapshot'},
       {icon:'📓', name:'เขียนระบาย',   desc:'จดความหวังนี้ไว้ในกระดาษ',               url:'alltools.html#journal'},
     ],
   },
@@ -983,12 +983,12 @@ const EMOTION_OVERRIDE = {
     primaryTool:null, primaryRoute:'care',
     primaryWhy:'ความตื่นเต้นเป็นพลังงานที่ดี\nแต่ถ้ามีความกังวลผสมอยู่ด้วย ลองแยกมันออกก่อน',
     secondary:[
-      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'อยู่กับความตื่นเต้นที่ดีนี้สักครู่',      url:'alltools.html#savor'},
+      {icon:'📸', name:'เก็บภาพในใจ', desc:'อยู่กับความตื่นเต้นที่ดีนี้สักครู่',      url:'alltools.html#rewire-snapshot'},
       {icon:'🎯', name:'เตรียมตัว',    desc:'ถ้าตื่นเต้นก่อนอะไรสำคัญ',               url:'alltools.html#grounding'},
     ],
   },
   'ภูมิใจ': {
-    primaryTool:'savor',
+    primaryTool:'rewire_snapshot',
     primaryWhy:'ความภูมิใจควรถูกให้เวลา ไม่ใช่แค่ผ่านไป\nsavoring ช่วยให้สมองฝังความรู้สึกนี้ไว้ได้นานขึ้น',
     secondary:[
       {icon:'📓', name:'เขียนระบาย', desc:'จดว่าทำอะไรสำเร็จและรู้สึกยังไง',           url:'alltools.html#journal'},
@@ -996,17 +996,17 @@ const EMOTION_OVERRIDE = {
     ],
   },
   'กระตือรือร้น': {
-    primaryTool:'act',
-    primaryWhy:'ความกระตือรือร้นทำงานได้ดีที่สุดเมื่อได้ลงมือจริงๆ\nเลือกอะไรทำหนึ่งอย่างก่อนพลังงานนี้หายไป',
+    primaryTool:'rewire',
+    primaryWhy:'พลังงานนี้ทำงานดีที่สุดเมื่อได้ลงมือ\nเลือกสวิตช์ Rewire เล็กๆ ทำเลยหนึ่งอันก่อนไฟจะหาย',
     secondary:[
-      {icon:'✨', name:'อยู่กับสิ่งดี', desc:'เก็บพลังงานดีๆ นี้ไว้ก่อน',              url:'alltools.html#savor'},
+      {icon:'📸', name:'เก็บภาพในใจ', desc:'เก็บพลังงานดีๆ นี้ไว้ก่อน',              url:'alltools.html#rewire-snapshot'},
       {icon:'📓', name:'เขียนระบาย',   desc:'จดสิ่งที่อยากทำในขณะที่ยังมีไฟ',         url:'alltools.html#journal'},
     ],
   },
 
   // ── good_mid ──
   'สงบ': {
-    primaryTool:'savor',
+    primaryTool:'rewire_snapshot',
     primaryWhy:'ความสงบเป็นสิ่งที่ควรอยู่กับมัน ไม่ใช่รีบทำอะไรกับมัน\nsavoring ช่วยให้ความสงบนี้ฝังลึกกว่าแค่ผ่านไป',
     secondary:[
       {icon:'🌊', name:'อยู่กับมัน', desc:'ฝึกอยู่กับความสงบนี้ด้วย RAIN',            url:'alltools.html#rain'},
@@ -1014,7 +1014,7 @@ const EMOTION_OVERRIDE = {
     ],
   },
   'พอใจ': {
-    primaryTool:'savor',
+    primaryTool:'rewire_snapshot',
     primaryWhy:'ความพอใจเป็นสิ่งที่หายากและควรให้เวลากับมัน\nช้าลงกับมันสักครู่ก่อนที่มันจะผ่านไป',
     secondary:[
       {icon:'💛', name:'คุยกับ PR',  desc:'แบ่งปันความพอใจให้คนอื่นได้ยิน',             url:'peer.html'},
@@ -1022,15 +1022,15 @@ const EMOTION_OVERRIDE = {
     ],
   },
   'เชื่อมต่อ': {
-    primaryTool:'savor',
-    primaryWhy:'ความรู้สึกเชื่อมต่อเป็น oxytocin ที่ควรดูแล\nการหยุดกับมันสักครู่ช่วยให้ความสัมพันธ์แข็งแกร่งขึ้น',
+    primaryTool:'rewire_kindword',
+    primaryWhy:'ความเชื่อมต่อคือ oxytocin ที่กำลังทำงาน\nต่อยอดด้วยการส่งมันออกไป — บอกความรู้สึกดีกับใครสักคนตอนที่ยังอุ่นอยู่',
     secondary:[
       {icon:'💛', name:'คุยกับ PR',  desc:'แบ่งปันความรู้สึกเชื่อมต่อนี้',              url:'peer.html'},
       {icon:'📓', name:'เขียนระบาย', desc:'จดว่าเชื่อมต่อกับอะไรหรือใคร',             url:'alltools.html#journal'},
     ],
   },
   'ขอบคุณ': {
-    primaryTool:'savor',
+    primaryTool:'rewire_snapshot',
     primaryWhy:'ความขอบคุณที่หยุดกับมัน 20 วินาที\nมีผลต่อ wellbeing มากกว่าความขอบคุณที่รู้สึกแล้วผ่านไป',
     secondary:[
       {icon:'📓', name:'เขียนระบาย', desc:'จดสิ่งที่ขอบคุณไว้เป็นหลักฐาน',             url:'alltools.html#journal'},
@@ -1038,8 +1038,8 @@ const EMOTION_OVERRIDE = {
     ],
   },
   'รัก · อบอุ่น': {
-    primaryTool:'savor',
-    primaryWhy:'ความรู้สึกอบอุ่นคือ oxytocin ที่ทำงานอยู่\nการอยู่กับมันจริงๆ ช่วยให้ความสัมพันธ์ลึกขึ้น',
+    primaryTool:'rewire_kindword',
+    primaryWhy:'ความอบอุ่นคือ oxytocin ที่กำลังทำงาน\nลองส่งมันออกไป — ชมหรือบอกความรู้สึกดีกับคนที่อยู่ในใจตอนนี้',
     secondary:[
       {icon:'💛', name:'คุยกับ PR', desc:'แบ่งปันความรู้สึกดีให้คนอื่นได้ยิน',          url:'peer.html'},
       {icon:'📓', name:'เขียนระบาย', desc:'จดความรู้สึกนี้ไว้ก่อนมันผ่านไป',          url:'alltools.html#journal'},
@@ -1048,7 +1048,7 @@ const EMOTION_OVERRIDE = {
 
   // ── good_low ──
   'ผ่อนคลาย': {
-    primaryTool:'savor',
+    primaryTool:'rewire_snapshot',
     primaryWhy:'ความผ่อนคลายที่แท้จริงหายากมากในชีวิตประจำวัน\nอยู่กับมันสักครู่ก่อนที่จะต้องทำอะไรต่อ',
     secondary:[
       {icon:'🌊', name:'อยู่กับมัน', desc:'ฝึกอยู่กับความผ่อนคลายด้วย RAIN',          url:'alltools.html#rain'},
@@ -1056,7 +1056,7 @@ const EMOTION_OVERRIDE = {
     ],
   },
   'เบาใจ': {
-    primaryTool:'savor',
+    primaryTool:'rewire_snapshot',
     primaryWhy:'ความเบาใจมักมาหลังจากแบกอะไรบางอย่างมานาน\nหยุดกับมันก่อน สมองต้องการเวลาในการรับรู้ว่าวางลงแล้ว',
     secondary:[
       {icon:'📓', name:'เขียนระบาย', desc:'จดว่าวางอะไรลงได้ไว้เป็นหลักฐาน',          url:'alltools.html#journal'},
@@ -1064,7 +1064,7 @@ const EMOTION_OVERRIDE = {
     ],
   },
   'สุขสงบ': {
-    primaryTool:'savor',
+    primaryTool:'rewire_snapshot',
     primaryWhy:'ความสุขสงบที่ "เงียบๆ" มักถูกมองข้ามเพราะไม่ตื่นเต้น\nแต่มันคือ wellbeing ที่ยั่งยืนที่สุด — อยู่กับมัน',
     secondary:[
       {icon:'🌊', name:'อยู่กับมัน', desc:'ฝึกอยู่กับความสุขสงบโดยไม่รีบหาสิ่งต่อไป', url:'alltools.html#rain'},
@@ -1072,7 +1072,7 @@ const EMOTION_OVERRIDE = {
     ],
   },
   'ปล่อยวาง': {
-    primaryTool:'savor',
+    primaryTool:'rewire_snapshot',
     primaryWhy:'การปล่อยวางได้คือทักษะ ไม่ใช่แค่ความรู้สึก\nหยุดกับมันและให้สมองได้รับรู้ว่ามันทำสำเร็จแล้ว',
     secondary:[
       {icon:'📓', name:'เขียนระบาย', desc:'จดว่าวางอะไรลงได้',                          url:'alltools.html#journal'},
