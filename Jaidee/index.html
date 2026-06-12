@@ -785,7 +785,7 @@ const SIT_DATA = {
     tools: [
       { icon:'🌙', name:'Sleep Reset', desc:'ช่วยให้จิตใจพร้อมนอน', href:'alltools.html#sleep' },
       { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'2 นาที ก่อนนอน', href:'alltools.html#breathe' },
-      { icon:'📖', name:'คู่มือการนอนสำหรับนักเรียน', desc:'อ่านสั้นๆ', href:'resources.html#sleep' },
+      { icon:'📖', name:'คู่มือการนอนสำหรับนักเรียน', desc:'อ่าน 3 นาที', href:'notebook.html?id=sleep' },
     ],
     talk: 'นอนไม่หลับมาหลายสัปดาห์แล้ว?',
   },
@@ -793,10 +793,9 @@ const SIT_DATA = {
     emoji: '🪫', title: 'หมดไฟ',
     note: 'หมดไฟมักเกิดเมื่อร่างกายและจิตใจทำงานหนักเกินไปนานเกินไป โดยไม่ได้รับการดูแลเรื่องพื้นฐาน ไม่ใช่ความอ่อนแอ แต่เป็นสัญญาณที่ต้องรับฟัง',
     tools: [
-      { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html' },
-      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html' },
       { icon:'🏃', name:'เคลื่อนไหวก่อนเลย', desc:'3 นาที เปลี่ยนพลังงาน', href:'alltools.html#move' },
-      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ ฟื้นฟูตัวเอง ผ่านคำถามและกิจกรรมสั้น ๆ', href:'https://thelittlebylittle.com/' },
+      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html' },
+      { icon:'📖', name:'คู่มือรับมือภาวะหมดไฟ', desc:'อ่าน 4 นาที', href:'notebook.html?id=burnout' },
     ],
     talk: 'หมดแรงมาหลายสัปดาห์แล้ว ไม่ฟื้นตัวเลย?',
   },
@@ -806,8 +805,7 @@ const SIT_DATA = {
     tools: [
       { icon:'🌬️', name:'หายใจก่อนเลย', desc:'รีเซ็ตสมาธิ 2 นาที', href:'alltools.html#breathe' },
       { icon:'🏃', name:'ลุกขึ้นขยับตัว', desc:'5 นาที แล้วกลับมาใหม่', href:'alltools.html#move' },
-      { icon:'🌙', name:'Sleep Reset', desc:'ถ้านอนไม่พอคือต้นเหตุ', href:'alltools.html#sleep' },
-      { icon:'⚡', name:'Rewire สวิตช์ 30 วิ', desc:'ไมโครแฮบิตเล็กๆ รีบูตสมอง', href:'alltools.html#rewire' },
+      { icon:'🌙', name:'Sleep Reset', desc:'ถ้านอนน้อยคือต้นเหตุ', href:'alltools.html#sleep' },
     ],
     talk: 'เป็นมานานแล้ว หรือไม่ใช่แค่เรื่องเรียน?',
   },
@@ -815,8 +813,7 @@ const SIT_DATA = {
     emoji: '🤔', title: 'ยังอธิบายตัวเองไม่ถูก',
     note: 'ไม่ต้องรีบหาคำตอบ แค่รู้ว่ามีบางอย่างอยู่ก็พอ ลองสำรวจดูว่ามันคืออะไร',
     tools: [
-      { icon:'🪞', name:'What\'s This Feeling?', desc:'เริ่มจากสังเกตข้างใน · ไม่ต้องรู้คำตอบก่อน', href:'reflection.html', primary: true },
-      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ สำรวจตัวเอง ในวันที่ยังอธิบายตัวเองไม่ถูก', href:'https://thelittlebylittle.com/' },
+      { icon:'🪞', name:"What's This Feeling?", desc:'เริ่มจากสังเกตข้างใน · ไม่ต้องรู้คำตอบก่อน', href:'reflection.html', primary: true },
     ],
     talk: 'อยากคุยกับคนจริงๆ มากกว่า?',
   },
@@ -824,11 +821,281 @@ const SIT_DATA = {
     emoji: '🌿', title: 'เป็นห่วงเพื่อน',
     note: 'การที่คุณเป็นห่วงเพื่อนอยู่นั้น สำคัญมาก แต่การช่วยเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว',
     tools: [
-      { icon:'📖', name:'คู่มือ: เป็นห่วงเพื่อน', desc:'ทำอะไรได้บ้าง · พูดยังไงดี', href:'resources.html#friend' },
+      { icon:'📖', name:'คู่มือ: เป็นห่วงเพื่อน', desc:'ทำอะไรได้บ้าง · พูดยังไงดี', href:'notebook.html?id=friend' },
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ขอคำแนะนำจากเพื่อนที่ปรึกษา', href:'peer.html' },
-      { icon:'👩‍🏫', name:'ครูแนะแนว', desc:'ถ้าเรื่องหนักเกินไปสำหรับเพื่อน', href:'professionals.html' },
+      { icon:'👩‍🏫', name:'ครูแนะแนว', desc:'ถ้าเรื่องหนักเกินไปสำหรับเพื่อน', href:'guidance.html' },
     ],
     talk: 'เป็นห่วงมากและไม่รู้จะทำยังไง?',
+  },
+  hungry: {
+    emoji: '🍚', title: 'หิวแต่จะกินดีมั้ย',
+    note: 'ร่างกายส่งสัญญาณ ไม่ว่าจะเป็นอาการสมองตื้อในห้องเรียน กดดันตัวเองไม่กิน หรือหิวกลางดึก มาทำความเข้าใจกัน',
+    tools: [
+      { icon:'📖', name:'คู่มือ: หิวแต่จะกินดีมั้ย', desc:'เข้าใจสัญญาณร่างกายของคุณ 3 นาที', href:'notebook.html?id=hungry', primary: true },
+      { icon:'🪞', name:"What's This Feeling?", desc:'ถ้ามันเกี่ยวกับอะไรมากกว่าการกิน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ถ้าอยากระบาย', href:'peer.html' },
+    ],
+    talk: 'ไม่กินมาหลายวันหรือมีความคิดเรื่องอาหารที่กวนใจ?',
+  },
+};
+ 
+// ═══════════════════════════════════════════════════════════════
+// SIT_DATA_EXTRA PATCH — paste to REPLACE SIT_DATA_EXTRA block
+// ═══════════════════════════════════════════════════════════════
+ 
+const SIT_DATA_EXTRA = {
+  exam: {
+    emoji:'📝', title:'กังวลก่อนสอบ',
+    note:'ความกังวลก่อนสอบเป็นเรื่องปกติมาก สมองของคุณแค่กำลังเตรียมตัว แต่ถ้ามันเยอะเกินไปจนรบกวนการทำข้อสอบ มีวิธีช่วยได้',
+    tools:[
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'Physiological Sigh ก่อนเข้าห้องสอบ', href:'alltools.html#breathe' },
+      { icon:'📓', name:'Brain dump ก่อนสอบ', desc:'เขียนทุกอย่างในหัวออกมา', href:'alltools.html#journal' },
+      { icon:'📖', name:'คู่มือรับมือความกังวลก่อนสอบ', desc:'อ่าน 4 นาที', href:'notebook.html?id=exam' },
+    ],
+    talk:'กังวลมากจนนอนไม่หลับหรือทำอะไรไม่ได้?',
+  },
+  study_fog: {
+    emoji:'📖', title:'อ่านหนังสือแล้วไม่เข้าหัว',
+    note:'สมองที่ล้าหรือวิตกกังวลอยู่ข้างในไม่สามารถจดจำได้ดี บางทีปัญหาไม่ใช่ที่การอ่าน แต่ที่สภาพข้างใน',
+    tools:[
+      { icon:'🌬️', name:'รีเซ็ตสมาธิ 2 นาที', desc:'หายใจก่อน กลับมาใหม่', href:'alltools.html#breathe' },
+      { icon:'🏃', name:'ลุกขึ้นขยับตัว', desc:'5 นาที เพิ่ม blood flow', href:'alltools.html#move' },
+      { icon:'🌙', name:'Sleep Reset', desc:'ถ้านอนน้อยคือต้นเหตุ', href:'alltools.html#sleep' },
+    ],
+    talk:'เป็นมานานหรือรู้สึกว่าไม่ใช่แค่เรื่องเรียน?',
+  },
+  overwhelm: {
+    emoji:'⏰', title:'งานเยอะจนล้น',
+    note:'ความรู้สึก "ล้น" มักทำให้ paralyzed แทนที่จะทำได้มากขึ้น บางครั้งแค่ระบายออกมาก็ช่วยได้',
+    tools:[
+      { icon:'📓', name:'เขียนระบาย Brain Dump', desc:'ระบายทุกอย่างในหัวออกมาก่อน', href:'alltools.html#journal' },
+      { icon:'🌀', name:'คลายกังวล', desc:'แยกสิ่งที่ทำได้ตอนนี้ ออกจากสิ่งที่ยังไม่ต้องคิด', href:'alltools.html#worry' },
+      { icon:'🪞', name:"What's This Feeling?", desc:'ถ้ามันหนักกว่าแค่งาน', href:'reflection.html' },
+    ],
+    talk:'รู้สึกหมดแรงจนทำอะไรไม่ได้เลย?',
+  },
+  pressure: {
+    emoji:'🎯', title:'กดดันตัวเองมากเกินไป',
+    note:'การกดดันตัวเองเป็นสัญญาณว่าคุณใส่ใจ แต่มากเกินพอดีทำให้ร่างกายและจิตใจสึกหรอเร็ว',
+    tools:[
+      { icon:'🎯', name:'เตรียมตัว — ลด tension', desc:'Grounding 3 นาที ก่อนเผชิญสิ่งที่กดดัน', href:'alltools.html#grounding' },
+      { icon:'🍃', name:'คลายมือจากความคิด', desc:'ผ่อนความเชื่อ "ต้องสมบูรณ์แบบ" ที่กดตัวเองอยู่', href:'alltools.html#reframe' },
+      { icon:'🤍', name:'พักใจ', desc:'เมื่อกดดันตัวเองมากเกิน self-compassion ช่วยได้', href:'alltools.html#rest' },
+      { icon:'📖', name:'คู่มือรับมือความกดดันจากความสมบูรณ์แบบ', desc:'อ่าน 5 นาที', href:'notebook.html?id=pressure' },
+    ],
+    talk:'กดดันตัวเองจนรู้สึกไม่ไหว?',
+  },
+  not_enough: {
+    emoji:'📉', title:'รู้สึกว่าตัวเองไม่เก่งพอ',
+    note:'ความรู้สึกนี้พบได้บ่อยมากในคนที่เก่งจริงๆ แต่ยังไม่รู้ตัว ไม่ได้แปลว่าเป็นความจริง',
+    tools:[
+      { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อ "ไม่เก่งพอ" เกาะแน่นจนเจ็บ', href:'alltools.html#reframe', primary:true },
+      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจว่าความรู้สึกนี้มาจากไหน', href:'reflection.html' },
+      { icon:'📖', name:'คู่มือรับมือความรู้สึกว่าตัวเองไม่เก่งพอ', desc:'อ่าน 5 นาที', href:'notebook.html?id=not_enough' },
+    ],
+    talk:'ความรู้สึกนี้กระทบชีวิตประจำวันมาก?',
+  },
+  behind: {
+    emoji:'🏃', title:'ทุกคนดูไปไกลกว่าฉัน',
+    note:'Social comparison เป็นธรรมชาติ แต่เราเห็นแค่ highlight ของคนอื่น ไม่เห็น struggle ข้างหลังของพวกเขา',
+    tools:[
+      { icon:'🍃', name:'คลายมือจากความคิด', desc:'คลายเรื่อง "ฉันตามไม่ทัน" ที่สมองเล่าซ้ำ', href:'alltools.html#reframe', primary:true },
+      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจข้างในก่อน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'บางทีได้ยินว่าคนอื่นรู้สึกเหมือนกันก็ช่วย', href:'peer.html' },
+    ],
+    talk:'รู้สึกแบบนี้บ่อยมากหรือกระทบสุขภาพจิต?',
+  },
+  social: {
+    emoji:'👥', title:'เข้ากับเพื่อนไม่ได้',
+    note:'การหากลุ่มเพื่อนใหม่ใช้เวลา โดยเฉพาะในช่วงเปลี่ยนโรงเรียน มันไม่ได้แปลว่ามีอะไรผิดปกติกับคุณ',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจว่ารู้สึกอะไรอยู่ข้างใน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'เพื่อนที่ปรึกษา รับฟังโดยไม่ตัดสิน', href:'peer.html' },
+    ],
+    talk:'รู้สึกโดดเดี่ยวมากและไม่ดีขึ้น?',
+  },
+  no_place: {
+    emoji:'🫥', title:'รู้สึกเหมือนไม่มีที่ของตัวเอง',
+    note:'ความรู้สึกนี้หนักมากและมักเกิดในช่วงเปลี่ยนผ่าน คุณไม่ได้อยู่คนเดียวกับความรู้สึกนี้',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่พร้อมรับฟัง', href:'peer.html' },
+    ],
+    talk:'รู้สึกแบบนี้นานแล้วหรือรุนแรงมาก?',
+  },
+  fight: {
+    emoji:'💬', title:'ทะเลาะกับเพื่อน',
+    note:'ความขัดแย้งเป็นส่วนของมิตรภาพ แต่มันก็เจ็บปวดได้มาก โดยเฉพาะถ้ายังแก้ไขไม่ได้',
+    tools:[
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ลดความร้อนในระบบก่อน', href:'alltools.html#breathe' },
+      { icon:'📖', name:'คู่มือ: ความขัดแย้งกับเพื่อน', desc:'จะพูดยังไง จะเริ่มยังไง', href:'notebook.html?id=fight' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ขอมุมมองจากคนนอก', href:'peer.html' },
+    ],
+    talk:'สถานการณ์ซับซ้อนหรือไม่รู้จะจัดการยังไง?',
+  },
+  abandoned: {
+    emoji:'🥲', title:'รู้สึกโดนทิ้ง',
+    note:'ความเจ็บปวดจากการถูกทิ้งหรือถูกกีดกันเป็นของจริงและสำคัญมาก ไม่ใช่เรื่องเล็กน้อย',
+    tools:[
+      { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ให้พื้นที่กับความเจ็บโดยไม่จมไปกับมัน', href:'alltools.html#rain', primary:true },
+      { icon:'🤍', name:'พักใจ', desc:'self-compassion เมื่อรู้สึกถูกทิ้ง', href:'alltools.html#rest' },
+      { icon:'📓', name:'เขียนระบาย', desc:'บางทีเขียนออกมาก็เบาขึ้น', href:'alltools.html#journal' },
+    ],
+    talk:'รู้สึกแบบนี้มากหรือมีความคิดทำร้ายตัวเอง?',
+  },
+  crush: {
+    emoji:'❤️', title:'แอบชอบใครสักคน',
+    note:'ความรู้สึกชอบใครเป็นส่วนที่ดีของชีวิต แต่มันก็ทำให้ตัวเองวุ่นวายและไม่สบายใจได้เหมือนกัน',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจว่ารู้สึกอะไรอยู่', href:'reflection.html' },
+      { icon:'📓', name:'เขียนระบาย', desc:'ระบายความรู้สึกออกมาก่อน', href:'alltools.html#journal' },
+    ],
+    talk:'มันกระทบชีวิตประจำวันหรือทำให้ทุกข์มาก?',
+  },
+  heartbreak: {
+    emoji:'💔', title:'เพิ่งอกหัก',
+    note:'ความเจ็บปวดจากการอกหักเป็นของจริงมาก สมองเราประมวลผลมันคล้ายกับความเจ็บปวดทางกาย ให้เวลาตัวเอง',
+    tools:[
+      { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ความเจ็บนี้ต้องการพื้นที่ ไม่ใช่การรีบแก้', href:'alltools.html#rain', primary:true },
+      { icon:'📓', name:'เขียนระบาย', desc:'เขียนออกมาช่วยได้มาก', href:'alltools.html#journal' },
+      { icon:'🤍', name:'พักใจ', desc:'self-compassion ในวันที่ใจสลาย', href:'alltools.html#rest' },
+      { icon:'📖', name:'คู่มือรับมือสภาวะใจสลาย', desc:'อ่าน 4 นาที', href:'notebook.html?id=heartbreak' },
+    ],
+    talk:'รู้สึกหนักมากหรือไม่ไหวแล้ว?',
+  },
+  lonely: {
+    emoji:'😔', title:'รู้สึกเหงา',
+    note:'ความเหงาไม่ได้แปลว่าไม่มีเพื่อน บางทีรู้สึกเหงาแม้จะอยู่กับคนรอบข้าง นั่นก็เป็นสัญญาณสำคัญ',
+    tools:[
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนพร้อมรับฟัง', href:'peer.html' },
+      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจความรู้สึกข้างใน', href:'reflection.html' },
+      { icon:'📖', name:'คู่มือรับมือความเหงา', desc:'อ่าน 4 นาที', href:'notebook.html?id=lonely' },
+    ],
+    talk:'รู้สึกเหงามากหรือนานมากแล้ว?',
+  },
+  homesick: {
+    emoji:'🏠', title:'คิดถึงบ้าน',
+    note:'การคิดถึงบ้านเป็นเรื่องปกติมากสำหรับนักเรียนที่เพิ่งย้ายมา มันไม่ได้แปลว่าคุณอ่อนแอ',
+    tools:[
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'รับฟัง โดยไม่ตัดสิน', href:'peer.html' },
+      { icon:'📓', name:'เขียนระบาย', desc:'เขียนถึงบ้านในสมุด', href:'alltools.html#journal' },
+      { icon:'📖', name:'คู่มือ: คิดถึงบ้าน', desc:'สำหรับคนที่บ้านคือที่ปลอดภัย', href:'notebook.html?id=homesick_safe' },
+      { icon:'📖', name:'คู่มือ: สูญเสียพื้นที่ปลอดภัย', desc:'สำหรับคนที่ความรู้สึกนี้ซับซ้อนกว่านั้น', href:'notebook.html?id=homesick_complex' },
+    ],
+    talk:'คิดถึงบ้านจนกระทบชีวิตประจำวัน?',
+  },
+  family: {
+    emoji:'👨‍👩‍👧', title:'มีปัญหากับครอบครัว',
+    note:'ปัญหาในครอบครัวเป็นเรื่องที่หนักมากและมักไม่มีคำตอบง่ายๆ การมีคนรับฟังช่วยได้มาก',
+    tools:[
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'เล่าให้ฟัง ไม่ตัดสิน', href:'peer.html' },
+      { icon:'👩‍🏫', name:'ครูแนะแนว', desc:'ถ้าต้องการผู้ใหญ่ช่วยดูแล', href:'guidance.html' },
+    ],
+    talk:'ปัญหารุนแรงหรือทำให้ไม่ปลอดภัย?',
+  },
+  misunderstood: {
+    emoji:'🫤', title:'รู้สึกว่าที่บ้านไม่เข้าใจ',
+    note:'ช่วงวัยนี้มักมีช่องว่างระหว่างความรู้สึกของเราและสิ่งที่บ้านเข้าใจ มันทำให้รู้สึกโดดเดี่ยวมาก',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'ทำความเข้าใจตัวเองก่อน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่เข้าใจชีวิตเตรียมฯ', href:'peer.html' },
+    ],
+    talk:'รู้สึกโดดเดี่ยวมากหรือไม่ปลอดภัยที่บ้าน?',
+  },
+  need_space: {
+    emoji:'😮‍💨', title:'อยากมีพื้นที่ของตัวเอง',
+    note:'ความต้องการพื้นที่ส่วนตัวเป็นสิ่งปกติและสำคัญ โดยเฉพาะสำหรับวัยรุ่น',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจว่าต้องการอะไร', href:'reflection.html' },
+      { icon:'🌬️', name:'หายใจในพื้นที่ของตัวเอง', desc:'2 นาที คนเดียว', href:'alltools.html#breathe' },
+    ],
+    talk:'รู้สึกขาดพื้นที่จนกระทบสุขภาพจิต?',
+  },
+  no_appetite: {
+    emoji:'🍚', title:'กินข้าวไม่ค่อยลง',
+    note:'ความเครียดและความวิตกกังวลส่งผลต่อความอยากอาหารโดยตรง ถ้าเป็นนานหลายวันควรใส่ใจ',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'ถ้ามันเกี่ยวกับอะไรมากกว่าการกิน', href:'reflection.html' },
+      { icon:'📖', name:'คู่มือเมื่อคุณกินข้าวไม่ลง', desc:'อ่าน 4 นาที', href:'notebook.html?id=no_appetite' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ถ้าอยากระบาย', href:'peer.html' },
+    ],
+    talk:'ไม่กินมาหลายวันหรือกินแล้วรู้สึกผิด?',
+  },
+  phone: {
+    emoji:'📱', title:'เล่นมือถือจนดึก',
+    note:'การเล่นมือถือดึกมักเป็นสัญญาณว่าเราหนีจากบางอย่าง ไม่ใช่แค่ชอบเล่น',
+    tools:[
+      { icon:'🌙', name:'Sleep Reset', desc:'ช่วยปิดสมองก่อนนอน', href:'alltools.html#sleep' },
+      { icon:'🪞', name:"What's This Feeling?", desc:'กำลังหนีจากอะไรอยู่?', href:'reflection.html' },
+    ],
+    talk:'มันกระทบการนอนหรือชีวิตประจำวันมาก?',
+  },
+  no_sun: {
+    emoji:'☀️', title:'ไม่ค่อยได้ออกไปไหน',
+    note:'แสงธรรมชาติมีผลต่อ serotonin และอารมณ์โดยตรง แค่ 10-15 นาทีนอกอาคารต่อวันช่วยได้จริง',
+    tools:[
+      { icon:'🏃', name:'เดินออกไปข้างนอก', desc:'3 นาทีก็ได้', href:'alltools.html#move' },
+    ],
+    talk:'อยู่แต่ในห้องนานมากและรู้สึกแย่ลงเรื่อยๆ?',
+  },
+  tired: {
+    emoji:'🪫', title:'เหนื่อยตลอดเวลา',
+    note:'ความเหนื่อยล้าเรื้อรังอาจมาจากหลายสาเหตุ นอน ความเครียด หรือบางอย่างที่ต้องการความใส่ใจมากกว่านี้',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'ถ้าความเหนื่อยมันลึกกว่าร่างกาย', href:'reflection.html' },
+    ],
+    talk:'เหนื่อยมากนานแล้วและไม่ดีขึ้น?',
+  },
+  no_energy: {
+    emoji:'🛏️', title:'ไม่อยากลุกจากเตียง',
+    note:'ความรู้สึกนี้อาจเป็นสัญญาณสำคัญ โดยเฉพาะถ้าเป็นบ่อยหรือนาน ไม่ใช่แค่เรื่องเกียจคร้าน',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
+      { icon:'🌬️', name:'หายใจ 2 นาที บนเตียงก็ได้', desc:'เริ่มเล็กๆ', href:'alltools.html#breathe' },
+    ],
+    talk:'เป็นแบบนี้บ่อยหรือนานมากแล้ว?',
+  },
+  self_know: {
+    emoji:'🤔', title:'อยากรู้จักตัวเองมากขึ้น',
+    note:'ความอยากเข้าใจตัวเองเป็นจุดเริ่มต้นของการเติบโต มีหลายทางที่ช่วยได้',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'เริ่มจากสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html', primary:true },
+    ],
+    talk:'อยากคุยกับใครเกี่ยวกับสิ่งที่ค้นพบ?',
+  },
+  who_am_i: {
+    emoji:'🧩', title:'ฉันเป็นคนแบบไหนกันนะ',
+    note:'ช่วงวัยนี้เป็นช่วงที่ดีที่สุดในการสำรวจว่าตัวเองเป็นใคร ไม่มีคำตอบที่ถูกหรือผิด',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'เข้าใจอารมณ์ก็ส่วนหนึ่งของการรู้จักตัวเอง', href:'reflection.html' },
+    ],
+    talk:'อยากคุยเรื่องตัวตนกับใครสักคน?',
+  },
+  grow: {
+    emoji:'🌱', title:'อยากเปลี่ยนแปลงตัวเอง',
+    note:'ความอยากเปลี่ยนแปลงเป็นพลังงานที่ดี แต่ต้องรู้ว่าจะเปลี่ยนอะไรและทำไม',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'เริ่มจากการเข้าใจตัวเองก่อน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
+    ],
+    talk:'อยากเปลี่ยนแต่ไม่รู้จะเริ่มยังไง?',
+  },
+  changed: {
+    emoji:'🎭', title:'รู้สึกว่าตัวเองไม่เหมือนเดิม',
+    note:'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้รู้สึกไม่คุ้นเคยกับตัวเอง อาจต้องให้เวลาสำรวจ',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจสิ่งที่เปลี่ยนไป', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
+    ],
+    talk:'การเปลี่ยนแปลงนี้ทำให้รู้สึกไม่ดีหรือกังวล?',
+  },
+  lost: {
+    emoji:'❓', title:'ไม่รู้ว่าตัวเองต้องการอะไร',
+    note:'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว',
+    tools:[
+      { icon:'🪞', name:"What's This Feeling?", desc:'ลองสำรวจข้างในก่อน', href:'reflection.html', primary:true },
+    ],
+    talk:'ไม่รู้ว่าต้องการอะไรแบบนี้มานานหรือกระทบชีวิต?',
   },
 };
 
