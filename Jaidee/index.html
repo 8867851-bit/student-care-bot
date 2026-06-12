@@ -673,6 +673,7 @@ const TIERS = [
     pills: [
       { emoji:'😴', label:'นอนไม่หลับ',          key:'sleep'      },
       { emoji:'🍚', label:'กินข้าวไม่ค่อยลง',    key:'no_appetite'},
+      { emoji:'🍚', label:'หิวแต่จะกินดีมั้ย',   key:'hungry'     },
       { emoji:'📱', label:'เล่นมือถือจนดึก',     key:'phone'      },
       { emoji:'☀️', label:'ไม่ค่อยได้ออกไปไหน', key:'no_sun'     },
       { emoji:'🪫', label:'เหนื่อยตลอดเวลา',     key:'tired'      },
@@ -1192,7 +1193,7 @@ function _sheetNavPress(key) {
 
 // Build and inject sit-sheet content; crossfade=true skips sheet open animation
 function _loadSheetContent(key, crossfade) {
-  const d = SIT_DATA[key];
+  const d = SIT_DATA[key] || SIT_DATA_EXTRA[key];
   if (!d) return;
   const contentEl = document.getElementById('sit-sheet-content');
   if (!contentEl) return;
