@@ -632,7 +632,7 @@ const TIERS = [
       { emoji:'😴', label:'นอนไม่หลับ',              key:'sleep'    },
       { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
       { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
-      { emoji:'🤔', label:'ยังอธิบายตัวเองไม่ถูก',  key:'unsure'   },
+      { emoji:'🤔', label:'ไม่แน่ใจว่ารู้สึกอะไร',  key:'unsure'   },
       { emoji:'🌿', label:'เป็นห่วงเพื่อน',          key:'friend'   },
     ]
   },
@@ -687,7 +687,6 @@ const TIERS = [
       { emoji:'🌱', label:'อยากเปลี่ยนแปลงตัวเอง',      key:'grow'      },
       { emoji:'🎭', label:'รู้สึกว่าตัวเองไม่เหมือนเดิม', key:'changed'  },
       { emoji:'❓', label:'ไม่รู้ว่าตัวเองต้องการอะไร',  key:'lost'      },
-      { emoji:'🫥', label:'รู้สึกว่าตัวเองค่อย ๆ หายไป', key:'fading'    },
     ]
   },
 ];
@@ -797,7 +796,6 @@ const SIT_DATA = {
       { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html' },
       { icon:'🏃', name:'เคลื่อนไหวก่อนเลย', desc:'3 นาที เปลี่ยนพลังงาน', href:'alltools.html#move' },
-      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ ฟื้นฟูตัวเอง ผ่านคำถามและกิจกรรมสั้น ๆ', href:'https://thelittlebylittle.com/' },
     ],
     talk: 'หมดแรงมาหลายสัปดาห์แล้ว ไม่ฟื้นตัวเลย?',
   },
@@ -812,11 +810,10 @@ const SIT_DATA = {
     talk: 'เป็นมานานแล้ว หรือไม่ใช่แค่เรื่องเรียน?',
   },
   unsure: {
-    emoji: '🤔', title: 'ยังอธิบายตัวเองไม่ถูก',
+    emoji: '🤔', title: 'ไม่แน่ใจว่ากำลังรู้สึกอะไร',
     note: 'ไม่ต้องรีบหาคำตอบ แค่รู้ว่ามีบางอย่างอยู่ก็พอ ลองสำรวจดูว่ามันคืออะไร',
     tools: [
       { icon:'🪞', name:'What\'s This Feeling?', desc:'เริ่มจากสังเกตข้างใน · ไม่ต้องรู้คำตอบก่อน', href:'reflection.html', primary: true },
-      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ สำรวจตัวเอง ในวันที่ยังอธิบายตัวเองไม่ถูก', href:'https://thelittlebylittle.com/' },
     ],
     talk: 'อยากคุยกับคนจริงๆ มากกว่า?',
   },
@@ -1101,6 +1098,7 @@ const SIT_DATA_EXTRA = {
     note:'ความรู้สึก "ล้น" มักทำให้ paralyzed แทนที่จะทำได้มากขึ้น บางครั้งแค่ระบายออกมาก็ช่วยได้',
     tools:[
       { icon:'📓', name:'เขียนระบาย Brain Dump', desc:'ระบายทุกอย่างในหัวออกมาก่อน', href:'alltools.html#journal' },
+      { icon:'🌀', name:'คลายกังวล', desc:'แยกสิ่งที่ทำได้ตอนนี้ ออกจากสิ่งที่ยังไม่ต้องคิด', href:'alltools.html#worry' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้ามันหนักกว่าแค่งาน', href:'reflection.html' },
     ],
     talk:'รู้สึกหมดแรงจนทำอะไรไม่ได้เลย?',
@@ -1109,8 +1107,10 @@ const SIT_DATA_EXTRA = {
     emoji:'🎯', title:'กดดันตัวเองมากเกินไป',
     note:'การกดดันตัวเองเป็นสัญญาณว่าคุณใส่ใจ แต่มากเกินพอดีทำให้ร่างกายและจิตใจสึกหรอเร็ว',
     tools:[
+      { icon:'🎯', name:'เตรียมตัว — ลด tension', desc:'Grounding 3 นาที ก่อนเผชิญสิ่งที่กดดัน', href:'alltools.html#grounding' },
+      { icon:'🍃', name:'คลายมือจากความคิด', desc:'ผ่อนความเชื่อ "ต้องสมบูรณ์แบบ" ที่กดตัวเองอยู่', href:'alltools.html#reframe' },
+      { icon:'🤍', name:'พักใจ', desc:'เมื่อกดดันตัวเองมากเกิน self-compassion ช่วยได้', href:'alltools.html#rest' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ความกดดันนี้มาจากไหน', href:'reflection.html' },
-      { icon:'🌬️', name:'หายใจผ่อนคลาย', desc:'ลด tension ลงก่อน', href:'alltools.html#breathe' },
     ],
     talk:'กดดันตัวเองจนรู้สึกไม่ไหว?',
   },
@@ -1118,6 +1118,7 @@ const SIT_DATA_EXTRA = {
     emoji:'📉', title:'รู้สึกว่าตัวเองไม่เก่งพอ',
     note:'ความรู้สึกนี้พบได้บ่อยมากในคนที่เก่งจริงๆ แต่ยังไม่รู้ตัว ไม่ได้แปลว่าเป็นความจริง',
     tools:[
+      { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อ "ไม่เก่งพอ" เกาะแน่นจนเจ็บ — คลายมือจากมัน', href:'alltools.html#reframe', primary:true },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจว่าความรู้สึกนี้มาจากไหน', href:'reflection.html' },
       { icon:'🧩', name:'ค้นพบจุดแข็งของตัวเอง', desc:'VIA, High5, และอื่นๆ', href:'#', onclick:'openCareSheet()' },
     ],
@@ -1127,6 +1128,7 @@ const SIT_DATA_EXTRA = {
     emoji:'🏃', title:'ทุกคนดูไปไกลกว่าฉัน',
     note:'Social comparison เป็นธรรมชาติ แต่เราเห็นแค่ highlight ของคนอื่น ไม่เห็น struggle ข้างหลังของพวกเขา',
     tools:[
+      { icon:'🍃', name:'คลายมือจากความคิด', desc:'คลายเรื่อง "ฉันตามไม่ทัน" ที่สมองเล่าซ้ำ', href:'alltools.html#reframe', primary:true },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจข้างในก่อน', href:'reflection.html' },
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'บางทีได้ยินว่าคนอื่นรู้สึกเหมือนกันก็ช่วย', href:'peer.html' },
     ],
@@ -1147,7 +1149,6 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่พร้อมรับฟัง', href:'peer.html' },
-      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ กลับมาฟังเสียงของตัวเอง ทีละนิด', href:'https://thelittlebylittle.com/' },
     ],
     talk:'รู้สึกแบบนี้นานแล้วหรือรุนแรงมาก?',
   },
@@ -1164,7 +1165,8 @@ const SIT_DATA_EXTRA = {
     emoji:'🥲', title:'รู้สึกโดนทิ้ง',
     note:'ความเจ็บปวดจากการถูกทิ้งหรือถูกกีดกันเป็นของจริงและสำคัญมาก ไม่ใช่เรื่องเล็กน้อย',
     tools:[
-      { icon:'🪞', name:'What\'s This Feeling?', desc:'ให้พื้นที่กับความรู้สึกนี้', href:'reflection.html' },
+      { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ให้พื้นที่กับความเจ็บโดยไม่จมไปกับมัน', href:'alltools.html#rain', primary:true },
+      { icon:'🤍', name:'พักใจ', desc:'self-compassion เมื่อรู้สึกถูกทิ้ง', href:'alltools.html#rest' },
       { icon:'📓', name:'เขียนระบาย', desc:'บางทีเขียนออกมาก็เบาขึ้น', href:'alltools.html#journal' },
     ],
     talk:'รู้สึกแบบนี้มากหรือมีความคิดทำร้ายตัวเอง?',
@@ -1182,9 +1184,10 @@ const SIT_DATA_EXTRA = {
     emoji:'💔', title:'เพิ่งอกหัก',
     note:'ความเจ็บปวดจากการอกหักเป็นของจริงมาก สมองเราประมวลผลมันคล้ายกับความเจ็บปวดทางกาย ให้เวลาตัวเอง',
     tools:[
-      { icon:'🪞', name:'What\'s This Feeling?', desc:'ให้พื้นที่กับความรู้สึกนี้', href:'reflection.html' },
+      { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ความเจ็บนี้ต้องการพื้นที่ ไม่ใช่การรีบแก้', href:'alltools.html#rain', primary:true },
       { icon:'📓', name:'เขียนระบาย', desc:'เขียนออกมาช่วยได้มาก', href:'alltools.html#journal' },
-      { icon:'🌬️', name:'หายใจผ่อนคลาย', desc:'ลดความเจ็บปวดเฉียบพลัน', href:'alltools.html#breathe' },
+      { icon:'🤍', name:'พักใจ', desc:'self-compassion ในวันที่ใจสลาย', href:'alltools.html#rest' },
+      { icon:'🌬️', name:'หายใจผ่อนคลาย', desc:'Physiological sigh ลดคลื่นความเจ็บเฉียบพลัน', href:'alltools.html#breathe' },
     ],
     talk:'รู้สึกหนักมากหรือไม่ไหวแล้ว?',
   },
@@ -1195,7 +1198,6 @@ const SIT_DATA_EXTRA = {
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนพร้อมรับฟัง', href:'peer.html' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจความรู้สึกข้างใน', href:'reflection.html' },
       { icon:'🎧', name:'Sati — อาสานักรับฟัง', desc:'익명 · ฟรี', href:'https://satiapp.co' },
-      { icon:'🌱', name:'Little by Little', desc:'กิจกรรมสั้น ๆ ที่ช่วยให้มองเห็นสิ่งสำคัญในชีวิตอีกครั้ง', href:'https://thelittlebylittle.com/' },
     ],
     talk:'รู้สึกเหงามากหรือนานมากแล้ว?',
   },
@@ -1313,7 +1315,6 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เปลี่ยนไป', href:'reflection.html' },
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ได้ยินมุมมองจากคนอื่น', href:'peer.html' },
-      { icon:'🌱', name:'Little by Little', desc:'ค่อย ๆ ทำความรู้จักกับตัวเองที่เปลี่ยนไป', href:'https://thelittlebylittle.com/' },
     ],
     talk:'การเปลี่ยนแปลงนี้ทำให้รู้สึกไม่ดีหรือกังวล?',
   },
@@ -1323,18 +1324,8 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html', primary:true },
       { icon:'🧩', name:'แบบทดสอบค้นพบตัวเอง', desc:'อาจช่วยให้เห็นแนวทาง', href:'#', onclick:'openCareSheet()' },
-      { icon:'🌱', name:'Little by Little', desc:'สำหรับวันที่ยังไม่รู้ว่ากำลังต้องการอะไร — ไม่ต้องรีบหาคำตอบ', href:'https://thelittlebylittle.com/' },
     ],
     talk:'รู้สึก lost มากและกระทบชีวิตประจำวัน?',
-  },
-  fading: {
-    emoji:'🫥', title:'รู้สึกว่าตัวเองค่อย ๆ หายไป',
-    note:'บางช่วงของชีวิต เราอาจรู้สึกเหมือนตัวเองค่อย ๆ หายไปจากสายตาของใครหลายคน จากที่เคยมีบทบาท เคยรู้สึกว่าตัวเองสำคัญ<br><br>วันหนึ่งอาจเริ่มสงสัยว่า "วันนี้ฉันยังมีความหมายอยู่ไหมนะ"<br><br>ความรู้สึกแบบนี้ไม่ได้แปลว่าอ่อนแอ มันอาจเป็นสัญญาณว่าใจเรากำลังอยากถูกรับฟัง และอยากถูกมองเห็นอีกครั้ง',
-    tools:[
-      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่พร้อมมองเห็นคุณ', href:'peer.html', primary:true },
-      { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html' },
-    ],
-    talk:'รู้สึกแบบนี้นานแล้วหรือรุนแรงมาก?',
   },
 };
 
@@ -1374,7 +1365,6 @@ const PILL_PREVIEWS = {
   grow:        { text: 'อยากเปลี่ยนแปลงตัวเอง — ความอยากเปลี่ยนคือสัญญาณที่ดีแล้ว', action: '🌱 เช็กเรื่องพื้นฐาน' },
   changed:     { text: 'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้ไม่คุ้นเคยตัวเอง...', action: '🪞 สำรวจสิ่งที่เปลี่ยนไป' },
   lost:        { text: 'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว', action: '🪞 ลองสำรวจข้างในก่อน' },
-  fading:      { text: 'ความรู้สึกว่าตัวเองค่อย ๆ หายไป — มันอาจเป็นสัญญาณว่าใจอยากถูกมองเห็น', action: '💛 มีคนที่พร้อมมองเห็นคุณ' },
 };
 
 // ── Notebook whispers — rotate into preview strip after listening state ──
