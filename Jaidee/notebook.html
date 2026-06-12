@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ใจดี TU — สมุดบันทึก</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600&family=Mitr:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:     #FDFBF7;
+      --cream-warm:#FFF8EE;
+      --border:    #EDE9E0;
+      --border-mid:#D8D3C8;
+      --dark:      #1C1917;
+      --mid:       #6B6560;
+      --soft:      #A8A099;
+      --gold:      #E8960C;
+      --gold-soft: #FFF3DC;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+    body {
+      font-family: 'Noto Serif Thai', serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+      /* Page enters from scale — set initial opacity for JS to animate */
+      opacity: 0;
+    }
+
+    /* ── ENTRY ANIMATION ─────────────────────────────── */
+    body.entered { opacity: 1; transition: opacity 0.28s ease; }
+
+    /* ── BACK BAR ────────────────────────────────────── */
+    .back-bar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--cream);
+      border-bottom: 1px solid transparent;
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      transition: border-color 0.2s ease;
+    }
+    .back-bar.scrolled { border-bottom-color: var(--border); }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: none;
+      border: none;
+      font-family: 'Noto Serif Thai', serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--soft);
+      cursor: pointer;
+      padding: 8px 0;
+      transition: color 0.15s;
+    }
+    .back-btn:hover { color: var(--mid); }
+    .back-arrow {
+      width: 16px; height: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .back-arrow svg { display: block; }
+
+    /* ── PAGE CONTENT ────────────────────────────────── */
+    .page {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 28px 24px 80px;
+    }
+
+    /* ── HEADER ──────────────────────────────────────── */
+    .nb-eyebrow {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      color: var(--soft);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .nb-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.45;
+      margin-bottom: 7px;
+    }
+    .nb-meta {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--soft);
+    }
+
+    /* ── DIVIDER ─────────────────────────────────────── */
+    .nb-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 32px 0;
+    }
+
+    /* ── BODY TEXT ───────────────────────────────────── */
+    .nb-body {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 2.1;
+      color: var(--mid);
+    }
+    .nb-body + .nb-body { margin-top: 16px; }
+
+    /* ── SECTION HEAD ────────────────────────────────── */
+    .nb-section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 36px 0 14px;
+    }
+    .nb-section-emoji { font-size: 16px; flex-shrink: 0; }
+    .nb-section-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dark);
+      line-height: 1.4;
+    }
+
+    /* ── CALLOUT BLOCK ───────────────────────────────── */
+    .nb-callout {
+      border-left: 2px solid var(--border-mid);
+      padding: 10px 0 10px 18px;
+      margin: 16px 0;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--mid);
+    }
+    .nb-callout-label {
+      font-weight: 500;
+      color: var(--dark);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    /* ── TABLE ───────────────────────────────────────── */
+    .nb-table-wrap { margin: 16px 0 8px; overflow-x: auto; }
+    .nb-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .nb-table th {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--soft);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0 12px 10px 0;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .nb-table td {
+      padding: 14px 12px 14px 0;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.75;
+      color: var(--mid);
+      font-weight: 300;
+    }
+    .nb-table td:first-child {
+      font-weight: 400;
+      color: var(--dark);
+      white-space: nowrap;
+      min-width: 80px;
+    }
+    .nb-table td:nth-child(2) { min-width: 120px; }
+    .nb-table-sub {
+      display: block;
+      font-size: 11px;
+      color: var(--soft);
+      margin-top: 3px;
+    }
+
+    /* ── CLOSING ─────────────────────────────────────── */
+    .nb-closing {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 2.2;
+      color: var(--mid);
+      margin: 8px 0 28px;
+    }
+
+    /* ── RETURN ACTIONS ──────────────────────────────── */
+    .return-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--soft);
+      margin-bottom: 12px;
+    }
+    .return-actions { display: flex; flex-direction: column; gap: 8px; }
+    .return-action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      background: var(--cream-warm);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--dark);
+      font-size: 14px;
+      font-weight: 400;
+      font-family: 'Noto Serif Thai', serif;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .return-action:active { background: #FFF0D6; border-color: #F0D080; }
+    .return-action-icon { font-size: 17px; flex-shrink: 0; width: 24px; text-align: center; }
+    .return-arrow {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--soft);
+    }
+
+    /* ── LOADING STATE ───────────────────────────────── */
+    #loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      color: var(--soft);
+      font-size: 13px;
+      font-weight: 300;
+    }
+
+    /* ── ERROR STATE ─────────────────────────────────── */
+    #error-state { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="back-bar" id="back-bar">
+  <button class="back-btn" id="back-btn" onclick="goBack()">
+    <span class="back-arrow">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    กลับ
+  </button>
+</div>
+
+<div class="page" id="nb-page">
+  <div id="loading">กำลังโหลด...</div>
+  <div id="nb-content" style="display:none;"></div>
+  <div id="error-state">
+    <p style="color:var(--soft);font-size:14px;font-weight:300;">ไม่พบเนื้อหาที่ต้องการ</p>
+    <button onclick="goBack()" style="margin-top:16px;background:none;border:none;color:var(--mid);font-family:'Noto Serif Thai',serif;font-size:13px;cursor:pointer;text-decoration:underline;">← กลับ</button>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION STATE ─────────────────────────────────────────
+// index.html writes these before navigating here
+const _returnKey  = sessionStorage.getItem('nb_return_sit') || null;
+const _returnScroll = parseInt(sessionStorage.getItem('nb_return_scroll') || '0', 10);
+
+function goBack() {
+  // Animate out
+  document.body.style.transition = 'opacity 0.22s ease';
+  document.body.style.opacity = '0';
+  setTimeout(() => {
+    if (_returnKey) {
+      sessionStorage.setItem('jaidee_reopen_sit', _returnKey);
+    }
+    sessionStorage.setItem('nb_restore_scroll', String(_returnScroll));
+    window.location.href = 'index.html';
+  }, 220);
+}
+
+// ── SCROLL SHADOW ─────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('back-bar').classList.toggle('scrolled', window.scrollY > 8);
+}, { passive: true });
+
+// ── CONTENT RENDERER ──────────────────────────────────────────
+function renderGuide(g) {
+  document.title = 'ใจดี TU — ' + g.title;
+
+  let html = '';
+
+  // Header
+  html += `
+    <div class="nb-eyebrow">${g.category}</div>
+    <div class="nb-title">${g.title}</div>
+    <div class="nb-meta">ใช้เวลาอ่านประมาณ ${g.readTime}</div>
+    <div class="nb-divider"></div>`;
+
+  // Sections
+  g.sections.forEach(sec => {
+    if (sec.type === 'intro') {
+      sec.body.split('\n\n').forEach(para => {
+        html += `<p class="nb-body">${para}</p>`;
+      });
+
+    } else if (sec.type === 'section') {
+      html += `<div class="nb-divider"></div>
+        <div class="nb-section-head">
+          <span class="nb-section-emoji" aria-hidden="true">${sec.emoji}</span>
+          <span class="nb-section-label">${sec.heading}</span>
+        </div>`;
+
+      if (sec.body) {
+        sec.body.split('\n\n').forEach(para => {
+          html += `<p class="nb-body">${para}</p>`;
+        });
+      }
+
+      if (sec.callouts) {
+        sec.callouts.forEach(c => {
+          html += `<div class="nb-callout">
+            <span class="nb-callout-label">${c.label}</span>
+            ${c.body}
+          </div>`;
+        });
+      }
+
+      if (sec.after) {
+        sec.after.split('\n\n').forEach(para => {
+          html += `<p class="nb-body" style="margin-top:16px;">${para}</p>`;
+        });
+      }
+
+    } else if (sec.type === 'table') {
+      html += `<div class="nb-divider"></div>
+        <div class="nb-section-head">
+          <span class="nb-section-emoji" aria-hidden="true">${sec.emoji}</span>
+          <span class="nb-section-label">${sec.heading}</span>
+        </div>
+        <div class="nb-table-wrap">
+          <table class="nb-table">
+            <thead><tr>${sec.columns.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+            <tbody>`;
+      sec.rows.forEach(row => {
+        html += '<tr>';
+        row.forEach((cell, i) => {
+          if (i === 1 && cell.includes('\n')) {
+            const parts = cell.split('\n');
+            html += `<td>${parts[0]}<span class="nb-table-sub">${parts[1]}</span></td>`;
+          } else {
+            html += `<td>${cell}</td>`;
+          }
+        });
+        html += '</tr>';
+      });
+      html += `</tbody></table></div>`;
+
+    } else if (sec.type === 'closing') {
+      html += `<div class="nb-divider"></div>
+        <p class="nb-closing">${sec.body.replace(/\n/g, '<br>')}</p>`;
+    }
+  });
+
+  // Return actions
+  if (g.returnActions && g.returnActions.length) {
+    html += `<div class="nb-divider"></div>
+      <div class="return-label">ลองเริ่มจากสิ่งนี้</div>
+      <div class="return-actions">`;
+    g.returnActions.forEach(a => {
+      html += `<a class="return-action" href="${a.href}">
+        <span class="return-action-icon" aria-hidden="true">${a.icon}</span>
+        <span>${a.name}</span>
+        <span class="return-arrow">→</span>
+      </a>`;
+    });
+    html += `</div>`;
+  }
+
+  document.getElementById('loading').style.display = 'none';
+  const content = document.getElementById('nb-content');
+  content.innerHTML = html;
+  content.style.display = 'block';
+}
+
+// ── GUIDE LOADER ───────────────────────────────────────────────
+function loadGuide() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if (!id) { showError(); return; }
+
+  // Content is loaded via <script> tag pointing to guides/{id}.js
+  // That script sets window.GUIDE_CONTENT, then we render it
+  const script = document.createElement('script');
+  script.src = 'guides/' + id + '.js';
+  script.onload = () => {
+    if (window.GUIDE_CONTENT) {
+      renderGuide(window.GUIDE_CONTENT);
+      // Small delay so content is in DOM before animating in
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.body.classList.add('entered');
+        });
+      });
+    } else {
+      showError();
+    }
+  };
+  script.onerror = () => showError();
+  document.head.appendChild(script);
+}
+
+function showError() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('error-state').style.display = 'block';
+  document.body.classList.add('entered');
+}
+
+loadGuide();
+</script>
+</body>
+</html>
