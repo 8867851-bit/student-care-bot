@@ -383,43 +383,17 @@
     <div class="br-primary-label">สิ่งที่อาจช่วยได้ตอนนี้</div>
     <div id="br-primary-card"></div>
   </div>
-  <!-- Three-option closer — routes back into the ecosystem -->
-  <div class="br-next-q">
-    <div class="br-next-label">ตอนนี้อะไรใกล้เคียงที่สุด?</div>
-    <div class="br-next-opts">
-
-      <button class="br-next-btn br-next-self" onclick="window.location.href='alltools.html'">
-        <span class="br-next-icon">🌿</span>
-        <span class="br-next-body">
-          <span class="br-next-name">ฉันอยากลองช่วยตัวเองก่อน</span>
-          <span class="br-next-desc">ดูเครื่องมือทั้งหมด</span>
-        </span>
-        <span class="br-next-arrow">→</span>
-      </button>
-
-      <button class="br-next-btn br-next-talk" onclick="window.location.href='talk.html#heavy'">
-        <span class="br-next-icon">💬</span>
-        <span class="br-next-body">
-          <span class="br-next-name">ฉันอยากคุยกับใครสักคน</span>
-          <span class="br-next-desc">เพื่อน · ครู · ผู้เชี่ยวชาญ</span>
-        </span>
-        <span class="br-next-arrow">→</span>
-      </button>
-
-      <button class="br-next-btn br-next-crisis" onclick="window.location.href='talk.html#crisis'">
-        <span class="br-next-icon">🔴</span>
-        <span class="br-next-body">
-          <span class="br-next-name">ฉันต้องการความช่วยเหลือมากกว่านี้</span>
-          <span class="br-next-desc">สายด่วน · ฉุกเฉิน</span>
-        </span>
-        <span class="br-next-arrow">→</span>
-      </button>
-
-    </div>
-  </div>
   <div class="br-secondary">
-    <div class="br-sec-label">ถ้ายังไม่ใช่</div>
+    <div class="br-sec-label">ยังไม่ใช่สิ่งที่ตามหา?</div>
     <div id="br-secondary-btns"></div>
+    <button class="br-next-btn br-next-self" style="margin-top:8px;" onclick="window.location.href='situations.html'">
+      <span class="br-next-icon">🗂️</span>
+      <span class="br-next-body">
+        <span class="br-next-name">ดูตามสถานการณ์</span>
+        <span class="br-next-desc">เลือกจากสิ่งที่กำลังเผชิญอยู่</span>
+      </span>
+      <span class="br-next-arrow">→</span>
+    </button>
   </div>
   <button class="br-exit" onclick="window.location.href='index.html'">← กลับหน้าหลัก</button>
 </div>
@@ -1241,7 +1215,6 @@ function bridgeStillHeavy() {
   setTimeout(() => heavy.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
 }
 </script>
-<div style="text-align:center;padding:24px 24px 8px;font-size:12px;color:var(--soft);">เวอร์ชั่น 1.5 · <a href="reflection_v16.html" style="color:var(--soft);text-decoration:underline;text-underline-offset:3px;">ลองเวอร์ชั่น 1.6 แทน</a></div>
 
 </body>
 </html>
