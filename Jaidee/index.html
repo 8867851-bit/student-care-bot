@@ -1088,7 +1088,83 @@ document.addEventListener('click', function(e){
 }, true);
 window.addEventListener('pageshow', function(e){ if(e.persisted) _reopenSit(); });
 window.addEventListener('load', _reopenSit);
-
+// ── 1. INTERCEPT guide link taps ─────────────────────────────
+document.addEventListener('click', function(e) {
+  const a = e.target.closest('a[href*="notebook.html"]');
+  if (!a) return;
+ 
+  e.preventDefault();
+  const href = a.getAttribute('href');
+ 
+  // Save current scroll position and open situation key
+  try {
+    sessionStorage.setItem('nb_return_sit',    _currentSitKey || '');
+    sessionStorage.setItem('nb_return_scroll', String(window.scrollY));
+  } catch (_) {}
+ 
+  // Find the tapped element's approximate bounding rect for the expand animation
+  const rect = a.getBoundingClientRect();
+  _animateToNotebook(rect, href);
+}, true);
+ 
+ 
+// ── 2. EXPAND ANIMATION → navigate ───────────────────────────
+function _animateToNotebook(rect, href) {
+  // Overlay div that grows from the tapped card to fill the screen
+  const overlay = document.createElement('div');
+  overlay.style.cssText = [
+    'position:fixed',
+    'z-index:9999',
+    'background:#FDFBF7',
+    'border-radius:14px',
+    // Start position = tapped card
+    'top:'    + rect.top    + 'px',
+    'left:'   + rect.left   + 'px',
+    'width:'  + rect.width  + 'px',
+    'height:' + rect.height + 'px',
+    'transform-origin:center center',
+    'transition:top 0.32s cubic-bezier(0.22,1,0.36,1),' +
+               'left 0.32s cubic-bezier(0.22,1,0.36,1),' +
+               'width 0.32s cubic-bezier(0.22,1,0.36,1),' +
+               'height 0.32s cubic-bezier(0.22,1,0.36,1),' +
+               'border-radius 0.32s ease',
+    'pointer-events:none',
+  ].join(';');
+ 
+  document.body.appendChild(overlay);
+ 
+  // Next frame: expand to full viewport
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      overlay.style.top          = '0px';
+      overlay.style.left         = '0px';
+      overlay.style.width        = '100vw';
+      overlay.style.height       = '100vh';
+      overlay.style.borderRadius = '0px';
+    });
+  });
+ 
+  // After animation completes, navigate
+  setTimeout(() => {
+    window.location.href = href;
+  }, 340);
+}
+ 
+ 
+// ── 3. RESTORE: reopen sit-sheet + scroll on return ──────────
+(function _restoreFromNotebook() {
+  try {
+    const scrollY = parseInt(sessionStorage.getItem('nb_restore_scroll') || '-1', 10);
+    if (scrollY < 0) return;
+    sessionStorage.removeItem('nb_restore_scroll');
+ 
+    // Restore scroll position immediately
+    window.scrollTo(0, scrollY);
+ 
+    // Sit-sheet restore is handled by existing _reopenSit()
+    // which reads 'jaidee_reopen_sit' — notebook.html sets that on back()
+  } catch (_) {}
+})();
 // Extended situation data
 const SIT_DATA_EXTRA = {
   exam: {
