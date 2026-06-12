@@ -87,17 +87,12 @@
     .announce-title.visible{opacity:1;transform:translateY(0);}
 
     /* Announce preloader — holds the screen until the availability gate resolves */
-    #announce-loader{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:var(--cream);transition:opacity 0.5s ease;}
+    #announce-loader{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;background:var(--cream);transition:opacity 0.5s ease;}
     #announce-loader.hide{opacity:0;pointer-events:none;}
-    .al-mascot{width:104px;height:104px;object-fit:contain;animation:alBreathe 3.4s ease-in-out infinite;}
-    .al-fallback{font-size:60px;line-height:1;animation:alBreathe 3.4s ease-in-out infinite;}
-    @keyframes alBreathe{0%,100%{transform:scale(0.93);opacity:0.8;}50%{transform:scale(1.05);opacity:1;}}
-    .al-text{font-family:'Noto Serif Thai',serif;font-size:15px;color:var(--mid);text-align:center;line-height:1.8;opacity:0;animation:alFade 0.7s ease 0.25s forwards;}
-    .al-dots{display:flex;gap:7px;}
-    .al-dots span{width:6px;height:6px;border-radius:50%;background:var(--green-border);animation:alDot 1.4s ease-in-out infinite;}
-    .al-dots span:nth-child(2){animation-delay:0.2s;}
-    .al-dots span:nth-child(3){animation-delay:0.4s;}
-    @keyframes alDot{0%,100%{opacity:0.3;transform:translateY(0);}50%{opacity:1;transform:translateY(-5px);}}
+    .al-frames{position:relative;width:116px;height:116px;}
+    .al-frame{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 250ms ease;}
+    .al-frame.visible{opacity:1;}
+    .al-text{font-family:'Noto Serif Thai',serif;font-size:14px;color:var(--mid);text-align:center;line-height:1.8;opacity:0;animation:alFade 0.7s ease 0.3s forwards;}
     @keyframes alFade{to{opacity:1;}}
 
     /* Content area — tight, owned spacing */
@@ -352,10 +347,12 @@
 <!-- ═══════════════════════════════════════ -->
 <div class="screen active" id="screen-announce">
   <div id="announce-loader">
-    <img class="al-mascot" id="al-mascot-img" src="assets/jaidee-mascot.png" alt="" onerror="this.style.display='none';var fb=document.getElementById('al-fallback');if(fb)fb.style.display='block';">
-    <div class="al-fallback" id="al-fallback" style="display:none;">🪷</div>
-    <div class="al-text">กำลังเตรียมพื้นที่ปลอดภัย<br>ให้คุณอยู่นะ</div>
-    <div class="al-dots"><span></span><span></span><span></span></div>
+    <div class="al-frames">
+      <img class="al-frame visible" id="al-f0" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_240,w_322,x_164,y_408/c226fd72-8fd6-4fbf-b3ee-8b236bd163be_sbw4wu.png" alt=""/>
+      <img class="al-frame" id="al-f1" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_279,w_409,x_557,y_371/c226fd72-8fd6-4fbf-b3ee-8b236bd163be_sbw4wu.png" alt=""/>
+      <img class="al-frame" id="al-f2" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_244,w_428,x_1010,y_411/c226fd72-8fd6-4fbf-b3ee-8b236bd163be_sbw4wu.png" alt=""/>
+    </div>
+    <div class="al-text">กำลังเตรียมพื้นที่ปลอดภัยให้คุณอยู่นะ</div>
   </div>
 
   <!-- 📌 ประกาศ — visual anchor -->
@@ -1045,9 +1042,22 @@ window.onload=async()=>{
   _revealAnnounce();
 };
 
+// ─── ANNOUNCE PRELOADER FRAME LOOP ───────────────────────────
+(function(){
+  const frames = ['al-f0','al-f1','al-f2'].map(id => document.getElementById(id));
+  let cur = 0, timer = null;
+  function cycle(){
+    frames.forEach((f,i) => f && f.classList.toggle('visible', i === cur));
+    cur = (cur + 1) % frames.length;
+  }
+  timer = setInterval(cycle, 1150); // 900ms hold + 250ms crossfade
+  window._stopAlLoop = function(){ clearInterval(timer); };
+})();
+
 function _revealAnnounce(){
   const l=document.getElementById('announce-loader');
   if(l){ l.classList.add('hide'); setTimeout(()=>{ l.style.display='none'; }, 520); }
+  if(window._stopAlLoop) window._stopAlLoop();
   _staggerAnnounce();
 }
 
