@@ -227,7 +227,83 @@
       color: var(--soft);
     }
 
-    /* ── LOADING STATE ───────────────────────────────── */
+    /* ── TRIAGE TABLE ────────────────────────────────── */
+    .nb-triage-intro {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--mid);
+      margin-bottom: 20px;
+    }
+    .nb-triage-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .nb-triage-table th {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--soft);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0 0 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nb-triage-table th:not(:first-child) { padding-left: 14px; }
+    .nb-triage-table td {
+      padding: 16px 0;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.75;
+      font-weight: 300;
+      color: var(--mid);
+    }
+    .nb-triage-table td:not(:first-child) { padding-left: 14px; }
+    .nb-triage-signal { font-weight: 500; color: var(--dark); }
+    .nb-triage-detail {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--soft);
+      margin-top: 3px;
+      line-height: 1.65;
+    }
+    .nb-level-normal {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #2D6A4F;
+      background: #EBF6EF;
+      border: 1px solid #B8DCCA;
+      border-radius: 99px;
+      padding: 2px 9px;
+      margin-bottom: 6px;
+    }
+    .nb-level-consult {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #78500A;
+      background: var(--gold-soft);
+      border: 1px solid var(--gold-border);
+      border-radius: 99px;
+      padding: 2px 9px;
+      margin-bottom: 6px;
+    }
+    .nb-level-clinical {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #8B2020;
+      background: #FDEDED;
+      border: 1px solid #F5BBBB;
+      border-radius: 99px;
+      padding: 2px 9px;
+      margin-bottom: 6px;
+    }
     #loading {
       display: flex;
       align-items: center;
@@ -236,6 +312,65 @@
       color: var(--soft);
       font-size: 13px;
       font-weight: 300;
+    }
+
+    /* ── ATTRIBUTION TABLE ───────────────────────────── */
+    .nb-attr-intro {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--mid);
+      margin-bottom: 16px;
+    }
+    .nb-attr-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4px 0 0;
+      font-size: 13px;
+    }
+    .nb-attr-table th {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--soft);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0 0 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nb-attr-table th:not(:first-child) { padding-left: 14px; }
+    .nb-attr-table td {
+      padding: 14px 0;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.75;
+      font-weight: 300;
+      color: var(--mid);
+    }
+    .nb-attr-table td:not(:first-child) { padding-left: 14px; }
+    .nb-attr-situation {
+      font-weight: 400;
+      color: var(--dark);
+      white-space: nowrap;
+      min-width: 100px;
+    }
+    .nb-attr-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--soft);
+      background: var(--cream-warm);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 2px 9px;
+      margin-bottom: 6px;
+      white-space: nowrap;
+    }
+    .nb-attr-inner {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--mid);
     }
 
     /* ── ERROR STATE ─────────────────────────────────── */
@@ -359,6 +494,69 @@ function renderGuide(g) {
         html += '</tr>';
       });
       html += `</tbody></table></div>`;
+
+    } else if (sec.type === 'triage') {
+      const levelLabels = { normal: 'ธรรมชาติ', consult: 'ควรปรึกษา', clinical: 'ต้องการผู้เชี่ยวชาญ' };
+      html += `<div class="nb-divider"></div>
+        <div class="nb-section-head">
+          <span class="nb-section-emoji" aria-hidden="true">${sec.emoji}</span>
+          <span class="nb-section-label">${sec.heading}</span>
+        </div>`;
+      if (sec.intro) {
+        html += `<p class="nb-triage-intro">${sec.intro}</p>`;
+      }
+      html += `<div class="nb-table-wrap"><table class="nb-triage-table">
+        <thead><tr>
+          <th>สัญญาณ</th>
+          <th>สิ่งที่เกิดขึ้น</th>
+          <th>แนวทางดูแลตัวเอง</th>
+        </tr></thead>
+        <tbody>`;
+      sec.rows.forEach(row => {
+        const levelClass = `nb-level-${row.level}`;
+        html += `<tr>
+          <td>
+            <span class="nb-triage-signal">${row.signal}</span>
+            <span class="nb-triage-detail">${row.detail}</span>
+          </td>
+          <td>${row.mechanism}</td>
+          <td>
+            <span class="${levelClass}">${levelLabels[row.level] || row.level}</span><br>
+            ${row.action}
+          </td>
+        </tr>`;
+      });
+      html += `</tbody></table></div>`;
+
+    } else if (sec.type === 'attribution') {
+      html += `<div class="nb-divider"></div>
+        <div class="nb-section-head">
+          <span class="nb-section-emoji" aria-hidden="true">${sec.emoji}</span>
+          <span class="nb-section-label">${sec.heading}</span>
+        </div>`;
+      if (sec.intro) {
+        html += `<p class="nb-attr-intro">${sec.intro}</p>`;
+      }
+      html += `<div class="nb-table-wrap"><table class="nb-attr-table">
+        <thead><tr>
+          <th>สถานการณ์</th>
+          <th>Attribution</th>
+          <th>เสียงในหัว</th>
+        </tr></thead>
+        <tbody>`;
+      sec.rows.forEach(row => {
+        html += `<tr>
+          <td class="nb-attr-situation">${row.situation}</td>
+          <td><span class="nb-attr-tag">${row.interpretation}</span></td>
+          <td class="nb-attr-inner">${row.inner}</td>
+        </tr>`;
+      });
+      html += `</tbody></table></div>`;
+      if (sec.after) {
+        sec.after.split('\n\n').forEach(para => {
+          html += `<p class="nb-body" style="margin-top:20px;">${para}</p>`;
+        });
+      }
 
     } else if (sec.type === 'closing') {
       html += `<div class="nb-divider"></div>
