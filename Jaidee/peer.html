@@ -320,6 +320,25 @@
     .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--d);color:white;padding:12px 20px;border-radius:99px;font-size:14px;font-family:'Sarabun',sans-serif;white-space:nowrap;z-index:200;animation:fadeUp 0.3s ease both;}
 
 
+    /* ── HOLIDAY SLOT CHIP (peer booking) ── */
+    .slot-chip.holiday {
+      background: var(--gold-soft, #FFF3DC) !important;
+      border-color: var(--gold-border, #FFE0A0) !important;
+      color: #7A5200 !important;
+      cursor: default;
+      opacity: 0.7;
+      pointer-events: none;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+    }
+    .slot-chip.holiday .holiday-tag {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #C8860A;
+    }
   </style>
 </head>
 <body>
@@ -1097,11 +1116,13 @@ async function _checkAvailabilityGate(){
   // Run pause check + slot check in parallel to stay within timeout
   let slotsAvailable=false;
   try{
-    const [pauseRes, slotsRes] = await Promise.all([
+    const [pauseRes, slotsRes, holRes] = await Promise.all([
       fetch(API_URL+"?action=getPauseStatus"),
-      fetch(API_URL+"?action=getSlots")
+      fetch(API_URL+"?action=getSlots"),
+      fetch(API_URL+"?action=getSchoolHolidays")
     ]);
-    const [pauseData, slotsData] = await Promise.all([pauseRes.json(), slotsRes.json()]);
+    const [pauseData, slotsData, holData] = await Promise.all([pauseRes.json(), slotsRes.json(), holRes.json()]);
+    window._schoolHolidays = holData.holidays || [];
 
     // 1. Handle pause
     if(pauseData.pause){
@@ -1136,7 +1157,7 @@ async function _checkAvailabilityGate(){
       slotsAvailable=active.length>0;
       window._cachedSlots=active;
     }
-  }catch(e){ window._pauseActive=false; window._cachedSlots=null; }
+  }catch(e){ window._pauseActive=false; window._cachedSlots=null; window._schoolHolidays=[]; }
 
   if(!slotsAvailable){
     show("screen-truly-empty");
@@ -1339,21 +1360,45 @@ async function loadSlots(){
   renderSlots(active); buildSpecialSlots();
 }
 
+function getSlotDateISO_peer(dayName) {
+  const sat=getCurrentSaturday();
+  const offsets={"จันทร์":2,"อังคาร":3,"พุธ":4,"พฤหัสบดี":5,"ศุกร์":6};
+  const offset=offsets[dayName];
+  if(offset===undefined)return "";
+  const d=new Date(sat); d.setDate(sat.getDate()+offset);
+  const mm=String(d.getMonth()+1).padStart(2,"0");
+  const dd=String(d.getDate()).padStart(2,"0");
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
 function renderSlots(slots){
   const container=document.getElementById("booking-slots-container");
   container.innerHTML="";
   const dayOrder=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
   const grouped={};
   slots.forEach(s=>{const[day,...rest]=s.slot.split(" ");if(!grouped[day])grouped[day]=[];grouped[day].push({time:rest.join(" "),count:s.count,full:s.slot});});
+  const holidays=window._schoolHolidays||[];
   dayOrder.forEach(day=>{
     if(!grouped[day])return;
+    const dayISO=getSlotDateISO_peer(day);
+    const holiday=holidays.find(h=>dayISO>=h.start&&dayISO<=h.end);
     const g=document.createElement("div"); g.className="day-group";
-    const l=document.createElement("div"); l.className="day-name"; l.innerText=day+" · "+getSlotDateShort(day); g.appendChild(l);
+    const l=document.createElement("div"); l.className="day-name";
+    l.innerHTML=day+" · "+getSlotDateShort(day)
+      +(holiday?` <span style="font-size:10px;background:#FFF3DC;border:1px solid #FFE0A0;border-radius:6px;padding:1px 7px;color:#7A5200;font-weight:600;margin-left:6px;">${holiday.label}</span>`:'');
+    g.appendChild(l);
     const r=document.createElement("div"); r.className="slots-row";
     grouped[day].forEach(s=>{
-      const chip=document.createElement("button"); chip.className="slot-chip";
-      chip.innerHTML=`${s.time}<span class="peer-count">(${s.count})</span>`;
-      chip.onclick=()=>selectSlot(chip,s.full,day,s.time);
+      const chip=document.createElement("button");
+      if(holiday){
+        chip.className="slot-chip holiday";
+        chip.innerHTML=`${s.time}<span class="holiday-tag">${holiday.label}</span>`;
+        chip.disabled=true;
+      }else{
+        chip.className="slot-chip";
+        chip.innerHTML=`${s.time}<span class="peer-count">(${s.count})</span>`;
+        chip.onclick=()=>selectSlot(chip,s.full,day,s.time);
+      }
       r.appendChild(chip);
     });
     g.appendChild(r); container.appendChild(g);
