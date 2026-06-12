@@ -362,7 +362,61 @@
     .entry-card.savor .entry-badge{background:var(--gold-soft);color:#7A5C00;border:1px solid var(--gold-border);}
     .entry-card.clarity .entry-badge{background:var(--teal-soft);color:var(--teal);border:1px solid var(--teal-border);}
     .back-link{display:block;text-align:center;padding:8px 0 0;font-size:13px;color:var(--soft);text-decoration:none;}
-  </style>
+  <style id="new-tools-css">
+/* ── POSTURE TOOL ─────────────────────────────────────── */
+.posture-phase{display:none;text-align:center;padding:4px 0 12px;}
+.posture-phase.active{display:block;}
+.posture-phase-icon{font-size:52px;margin-bottom:12px;}
+.posture-phase-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);margin-bottom:6px;line-height:1.35;}
+.posture-phase-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.75;margin-bottom:20px;}
+.posture-ring-wrap{position:relative;width:120px;height:120px;margin:0 auto 20px;}
+.posture-ring-wrap svg{transform:rotate(-90deg);}
+.posture-ring-bg{fill:none;stroke:#EDE9E0;stroke-width:8;}
+.posture-ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s linear;}
+.posture-ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif Thai',serif;font-size:30px;font-weight:600;color:var(--dark);}
+.posture-cue{font-size:14px;font-weight:400;color:var(--mid);line-height:1.8;margin-bottom:24px;min-height:48px;transition:opacity 0.3s;}
+.posture-btn{width:100%;background:var(--dark);color:#FDFBF7;border:none;border-radius:28px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity 0.15s;}
+.posture-btn:active{opacity:0.8;}
+.posture-btn.secondary{background:none;color:var(--soft);border:1.5px solid var(--cream-border);margin-top:10px;}
+
+/* ── CONFLICT PREP TOOL ──────────────────────────────── */
+.cp-step{display:none;}
+.cp-step.active{display:block;}
+.cp-step-indicator{display:flex;gap:6px;margin-bottom:20px;}
+.cp-dot{width:8px;height:8px;border-radius:50%;background:var(--cream-border);transition:background 0.25s;}
+.cp-dot.done{background:var(--gold);}
+.cp-dot.active{background:var(--dark);}
+.cp-label{font-size:11px;font-weight:500;color:var(--soft);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.cp-q{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:6px;}
+.cp-hint{font-size:12px;font-weight:300;color:var(--soft);line-height:1.7;margin-bottom:16px;}
+.cp-textarea{width:100%;border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:300;color:var(--dark);background:var(--cream-warm);resize:none;outline:none;min-height:100px;transition:border-color 0.2s;line-height:1.7;}
+.cp-textarea:focus{border-color:var(--gold-border);}
+.cp-next{width:100%;background:var(--dark);color:#FDFBF7;border:none;border-radius:28px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:14px;transition:opacity 0.15s;}
+.cp-next:active{opacity:0.8;}
+.cp-back{background:none;border:none;font-family:'Mitr',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;padding:8px 0;width:100%;text-align:center;margin-top:6px;}
+/* Result screen */
+.cp-result-section{background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:14px;padding:14px 16px;margin-bottom:10px;}
+.cp-result-label{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:5px;}
+.cp-result-text{font-size:14px;font-weight:300;color:var(--dark);line-height:1.75;}
+.cp-message-box{background:linear-gradient(135deg,#FDFCF8,#FFF8EC);border:1px solid var(--gold-border);border-radius:14px;padding:16px;margin-bottom:16px;font-size:14px;font-weight:300;color:var(--dark);line-height:1.85;}
+.cp-cooldown-btn{width:100%;background:none;border:1.5px solid var(--cream-border);border-radius:28px;padding:13px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;}
+.cp-cooldown-btn:active{background:var(--cream-warm);}
+.cp-cooldown-display{text-align:center;padding:16px 0 8px;}
+.cp-cooldown-num{font-family:'Noto Serif Thai',serif;font-size:56px;font-weight:600;color:var(--dark);line-height:1;}
+.cp-cooldown-sub{font-size:13px;color:var(--soft);margin-top:6px;}
+
+/* ── FACT LOG TOOL ───────────────────────────────────── */
+.fl-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;align-items:start;}
+.fl-col-head{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:0 2px 6px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.fl-col-label-neg{color:#C0392B;}
+.fl-col-label-pos{color:var(--green,#3A7D44);}
+.fl-cell{background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:300;color:var(--dark);line-height:1.65;min-height:64px;width:100%;}
+.fl-cell:focus{outline:none;border-color:var(--gold-border);background:#FFFBF2;}
+.fl-add-btn{width:100%;background:none;border:1.5px dashed var(--cream-border);border-radius:10px;padding:11px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;margin-top:2px;transition:border-color 0.15s,color 0.15s;}
+.fl-add-btn:hover{border-color:var(--gold-border);color:var(--mid);}
+.fl-done-btn{width:100%;background:var(--dark);color:#FDFBF7;border:none;border-radius:28px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:14px;}
+.fl-done-state{text-align:center;padding:20px 0;}
+</style>
 </head>
 <body>
 
@@ -463,7 +517,16 @@
         <div class="card-btn" style="background:var(--blue);color:#fff;">เริ่ม →</div>
       </div>
     </button>
-
+<!-- POSTURE CARD (Tab 1) -->
+<a class="tool-img-card" onclick="openPosture()" style="cursor:pointer;text-decoration:none;display:block;">
+  <div class="card-bg bg-dark" style="background:linear-gradient(135deg,#2D2420 0%,#4A3828 60%,#6B5040 100%);"></div>
+  <div class="card-overlay"></div>
+  <div class="card-content">
+    <div class="card-badge">ก่อนเผชิญสิ่งที่กดดัน</div>
+    <div class="card-title">Power Posture</div>
+    <div class="card-sub">รีเซ็ตร่างกายและลมหายใจ · 2 นาที</div>
+  </div>
+</a>
     <!-- ฟัง — ปลดล็อกอัตโนมัติเมื่อใส่ URL เสียงใน AUDIO_TRACKS -->
     <button class="tool-img-card coming" id="card-listen" onclick="markToolTapped();openListen()">
       <div class="card-bg bg-slate"></div>
@@ -540,7 +603,27 @@
     </button>
   </div>
 </div>
+<!-- CONFLICT PREP CARD (Tab 2) -->
+<a class="tool-img-card" onclick="openConflictPrep()" style="cursor:pointer;text-decoration:none;display:block;">
+  <div class="card-bg" style="background:linear-gradient(135deg,#1E3A2F 0%,#2D5A42 60%,#3D7A58 100%);"></div>
+  <div class="card-overlay"></div>
+  <div class="card-content">
+    <div class="card-badge">ก่อนเคลียร์ใจกับเพื่อน</div>
+    <div class="card-title">เตรียมใจก่อนคุย</div>
+    <div class="card-sub">I-Message · ระบายก่อน · Cooldown timer</div>
+  </div>
+</a>
 
+<!-- FACT LOG CARD (Tab 2) -->
+<a class="tool-img-card" onclick="openFactLog()" style="cursor:pointer;text-decoration:none;display:block;">
+  <div class="card-bg" style="background:linear-gradient(135deg,#1C2B3A 0%,#2A4060 60%,#3A5880 100%);"></div>
+  <div class="card-overlay"></div>
+  <div class="card-content">
+    <div class="card-badge">สำหรับวันที่สมองเล่นตลก</div>
+    <div class="card-title">Fact-Log</div>
+    <div class="card-sub">แยกสิ่งที่สมองบอก ออกจากหลักฐานจริง</div>
+  </div>
+</a>
 <!-- ══════════════════════════════
      PANEL 3 — เสริมความแข็งแกร่ง
 ══════════════════════════════ -->
@@ -1262,6 +1345,180 @@ function toggleTrack(id){
     </div>
   </div>
 </div>
+<!-- ══ POSTURE MODAL ══ -->
+<div class="modal-overlay" id="posture-modal" onclick="handleOverlayClick(event,'posture-modal',closePosture)">
+<div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 48px;">
+  <div class="modal-handle"></div>
+  <div class="modal-eyebrow" style="font-size:10px;letter-spacing:2.5px;color:var(--soft);text-transform:uppercase;font-weight:500;margin-bottom:8px;">ร่างกาย · 2 นาที</div>
+  <div class="modal-title" style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;">Power Posture</div>
+  <div style="font-size:13px;font-weight:300;color:var(--soft);margin-bottom:24px;line-height:1.65;">รีเซ็ตสัญญาณร่างกายก่อนเผชิญสิ่งที่กดดัน<br>สมองจะอ่านร่างกายว่า "พร้อมแล้ว"</div>
 
+  <!-- Phase 0: Intro -->
+  <div class="posture-phase active" id="posture-p0">
+    <div class="posture-phase-icon">🧍</div>
+    <div class="posture-phase-title">3 ขั้นตอน · 2 นาที</div>
+    <div class="posture-phase-sub">ท่าทาง → ลมหายใจ → ยืนยันความพร้อม<br>ทำได้ทุกที่ ก่อนเข้าห้องสอบ ก่อนพูดหน้าชั้น ก่อนเคลียร์ใจกับเพื่อน</div>
+    <button class="posture-btn" onclick="startPosture()">เริ่มเลย →</button>
+    <button class="posture-btn secondary" onclick="closePosture()">ยังไม่พร้อม</button>
+  </div>
+
+  <!-- Phase 1: Posture -->
+  <div class="posture-phase" id="posture-p1">
+    <div class="posture-phase-icon">🪑</div>
+    <div class="posture-phase-title">ขั้นที่ 1: จัดท่าทาง</div>
+    <div class="posture-ring-wrap">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle class="posture-ring-bg" cx="60" cy="60" r="52"/>
+        <circle id="posture-ring-1" class="posture-ring-fill" cx="60" cy="60" r="52"
+          stroke="#E8960C" stroke-dasharray="327" stroke-dashoffset="0"/>
+      </svg>
+      <div class="posture-ring-num" id="posture-num-1">30</div>
+    </div>
+    <div class="posture-cue" id="posture-cue-1">ยืนหรือนั่งให้หลังตรง<br>เปิดหน้าอก วางไหล่ให้ต่ำและผ่อนคลาย</div>
+    <button class="posture-btn secondary" onclick="closePosture()">ปิด</button>
+  </div>
+
+  <!-- Phase 2: Breath -->
+  <div class="posture-phase" id="posture-p2">
+    <div class="posture-phase-icon">🫁</div>
+    <div class="posture-phase-title">ขั้นที่ 2: Physiological Sigh</div>
+    <div class="posture-ring-wrap">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle class="posture-ring-bg" cx="60" cy="60" r="52"/>
+        <circle id="posture-ring-2" class="posture-ring-fill" cx="60" cy="60" r="52"
+          stroke="#0D9488" stroke-dasharray="327" stroke-dashoffset="0"/>
+      </svg>
+      <div class="posture-ring-num" id="posture-num-2">3</div>
+    </div>
+    <div class="posture-cue" id="posture-cue-2">สูดเข้าลึกทางจมูก<br>สูดเติมอีกครั้งสั้นๆ<br>ถอนยาวออกทางปาก</div>
+    <div style="font-size:11px;color:var(--soft);text-align:center;margin-top:-12px;margin-bottom:16px;">รอบที่ <span id="posture-breath-count">0</span> / 3</div>
+    <button class="posture-btn secondary" onclick="closePosture()">ปิด</button>
+  </div>
+
+  <!-- Phase 3: Anchor -->
+  <div class="posture-phase" id="posture-p3">
+    <div class="posture-phase-icon">💫</div>
+    <div class="posture-phase-title">ขั้นที่ 3: ยืนยันความพร้อม</div>
+    <div class="posture-phase-sub">พูดในใจหรือเบาๆ ว่า</div>
+    <div style="background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:14px;padding:16px 18px;margin-bottom:20px;font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:400;color:var(--dark);line-height:1.9;text-align:center;">
+      "ฉันเตรียมตัวมาแล้ว<br>ฉันพร้อมแล้ว<br>ฉันทำได้"
+    </div>
+    <div style="font-size:12px;color:var(--soft);text-align:center;margin-bottom:20px;line-height:1.65;">กดปุ่มเมื่อพูดครบ 3 รอบ</div>
+    <button class="posture-btn" onclick="finishPosture()">พร้อมแล้ว ✓</button>
+    <button class="posture-btn secondary" onclick="closePosture()">ปิด</button>
+  </div>
+
+  <!-- Phase 4: Done -->
+  <div class="posture-phase" id="posture-p4">
+    <div class="posture-phase-icon">✨</div>
+    <div class="posture-phase-title">เยี่ยมมากเลย</div>
+    <div class="posture-phase-sub">ร่างกายส่งสัญญาณความพร้อมไปยังสมองแล้ว<br>ออกไปเผชิญกับมันได้เลย</div>
+    <button class="posture-btn" onclick="closePosture()">ออกไปเลย 🚀</button>
+  </div>
+</div>
+</div>
+
+<!-- ══ CONFLICT PREP MODAL ══ -->
+<div class="modal-overlay" id="cp-modal" onclick="handleOverlayClick(event,'cp-modal',closeConflictPrep)">
+<div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 48px;max-height:88vh;overflow-y:auto;">
+  <div class="modal-handle"></div>
+  <div class="modal-eyebrow" style="font-size:10px;letter-spacing:2.5px;color:var(--soft);text-transform:uppercase;font-weight:500;margin-bottom:8px;">ก่อนเคลียร์ใจ</div>
+  <div class="modal-title" style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;">เตรียมใจก่อนคุย</div>
+  <div style="font-size:13px;font-weight:300;color:var(--soft);margin-bottom:24px;line-height:1.65;">ระบายความรู้สึกออกมาก่อน<br>แล้วเปลี่ยนเป็นภาษาที่เพื่อนรับได้</div>
+
+  <!-- Step indicators -->
+  <div class="cp-step-indicator" id="cp-dots">
+    <div class="cp-dot active" id="cp-dot-0"></div>
+    <div class="cp-dot" id="cp-dot-1"></div>
+    <div class="cp-dot" id="cp-dot-2"></div>
+    <div class="cp-dot" id="cp-dot-3"></div>
+  </div>
+
+  <!-- Step 1: Fact -->
+  <div class="cp-step active" id="cp-s0">
+    <div class="cp-label">ขั้นที่ 1 จาก 3 · Fact</div>
+    <div class="cp-q">อะไรเกิดขึ้นจริงๆ?</div>
+    <div class="cp-hint">เฉพาะสิ่งที่เห็น ได้ยิน หรือสังเกตได้จริงๆ ยังไม่ต้องตีความ</div>
+    <textarea class="cp-textarea" id="cp-fact" placeholder="เช่น เพื่อนไม่ตอบแชตมา 2 วัน · เพื่อนพูดคำนี้ต่อหน้าคนอื่น..."></textarea>
+    <button class="cp-next" onclick="cpNext(1)">ต่อไป →</button>
+  </div>
+
+  <!-- Step 2: Feel -->
+  <div class="cp-step" id="cp-s1">
+    <div class="cp-label">ขั้นที่ 2 จาก 3 · Feel</div>
+    <div class="cp-q">ฉันรู้สึกอะไรกับเรื่องนี้?</div>
+    <div class="cp-hint">ความรู้สึก ไม่ใช่การโทษคนอื่น — "ฉันรู้สึกเจ็บ" ไม่ใช่ "แกทำให้ฉันเจ็บ"</div>
+    <textarea class="cp-textarea" id="cp-feel" placeholder="เช่น เจ็บ · โกรธ · กลัวว่าเราจะไม่ดีเหมือนเดิม · รู้สึกโดนละเลย..."></textarea>
+    <button class="cp-next" onclick="cpNext(2)">ต่อไป →</button>
+    <button class="cp-back" onclick="cpBack(0)">← กลับ</button>
+  </div>
+
+  <!-- Step 3: Need -->
+  <div class="cp-step" id="cp-s2">
+    <div class="cp-label">ขั้นที่ 3 จาก 3 · Need</div>
+    <div class="cp-q">ฉันต้องการอะไรจากการคุยครั้งนี้?</div>
+    <div class="cp-hint">เลือกสิ่งเดียวที่สำคัญที่สุด ไม่ต้องชนะ แค่ได้รับสิ่งที่ต้องการ</div>
+    <textarea class="cp-textarea" id="cp-need" placeholder="เช่น อยากได้คำอธิบาย · อยากให้รู้ว่าฉันเป็นห่วง · อยากให้ยอมรับว่าทำให้ฉันเจ็บ..."></textarea>
+    <button class="cp-next" onclick="cpNext(3)">สร้าง I-Message →</button>
+    <button class="cp-back" onclick="cpBack(1)">← กลับ</button>
+  </div>
+
+  <!-- Step 4: Result -->
+  <div class="cp-step" id="cp-s3">
+    <div class="cp-label">I-Message · พร้อมใช้</div>
+    <div class="cp-q" style="margin-bottom:14px;">ลองพูดแบบนี้ดู</div>
+    <div class="cp-message-box" id="cp-message-output"></div>
+    <div style="font-size:12px;color:var(--soft);line-height:1.7;margin-bottom:16px;">อ่านซ้ำสัก 1-2 รอบก่อน<br>ไม่ต้องพูดตรงๆ แค่ให้รู้สึกตัวเองแล้วค่อยเดินไปคุย</div>
+
+    <!-- Cooldown timer option -->
+    <div id="cp-cooldown-section">
+      <button class="cp-cooldown-btn" id="cp-cooldown-start-btn" onclick="startCooldown()">
+        <span>⏱</span> ตั้ง Cooldown Timer ก่อนไปคุย
+      </button>
+      <div class="cp-cooldown-display" id="cp-cooldown-display" style="display:none;">
+        <div class="cp-cooldown-num" id="cp-cooldown-num">20:00</div>
+        <div class="cp-cooldown-sub">ปล่อยให้อารมณ์เย็นลงก่อน<br>แล้วค่อยเดินไปหาเพื่อน</div>
+        <button class="cp-back" onclick="cancelCooldown()">ยกเลิก timer</button>
+      </div>
+    </div>
+
+    <button class="cp-next" onclick="closeConflictPrep()" style="margin-top:6px;">เสร็จแล้ว ✓</button>
+    <button class="cp-back" onclick="cpBack(2)">← แก้ไข</button>
+  </div>
+</div>
+</div>
+
+<!-- ══ FACT LOG MODAL ══ -->
+<div class="modal-overlay" id="fl-modal" onclick="handleOverlayClick(event,'fl-modal',closeFactLog)">
+<div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 48px;max-height:88vh;overflow-y:auto;">
+  <div class="modal-handle"></div>
+  <div class="modal-eyebrow" style="font-size:10px;letter-spacing:2.5px;color:var(--soft);text-transform:uppercase;font-weight:500;margin-bottom:8px;">ปรับระบบความคิด</div>
+  <div class="modal-title" style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;">Fact-Log</div>
+  <div style="font-size:13px;font-weight:300;color:var(--soft);margin-bottom:6px;line-height:1.65;">สมองบอกอะไร เทียบกับหลักฐานที่มีจริงๆ</div>
+  <div style="font-size:12px;color:var(--soft);margin-bottom:20px;line-height:1.6;">เขียนทีละแถว · แค่ 3-5 ข้อก็พอ</div>
+
+  <!-- Main log screen -->
+  <div id="fl-main">
+    <!-- Column headers -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 2px 8px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#C0392B;">สมองบอก</div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--green,#3A7D44);">หลักฐานจริง</div>
+    </div>
+    <div id="fl-rows"></div>
+    <button class="fl-add-btn" id="fl-add-btn" onclick="flAddRow()">+ เพิ่มแถว</button>
+    <button class="fl-done-btn" onclick="flDone()">บันทึกแล้ว ✓</button>
+    <button class="cp-back" onclick="closeFactLog()">ปิด</button>
+  </div>
+
+  <!-- Done screen -->
+  <div id="fl-done" style="display:none;" class="fl-done-state">
+    <div style="font-size:48px;margin-bottom:14px;">🧩</div>
+    <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);margin-bottom:8px;">บันทึกแล้ว</div>
+    <div style="font-size:13px;font-weight:300;color:var(--soft);line-height:1.75;margin-bottom:24px;">สมองเริ่มเห็นหลักฐานแล้ว<br>ความคิดจะเบาลงเมื่อเราแยกมันออกจากกัน</div>
+    <button class="posture-btn" onclick="closeFactLog()">เสร็จแล้ว</button>
+    <button class="posture-btn secondary" onclick="flReset()">เริ่มใหม่</button>
+  </div>
+</div>
+</div>
 </body>
 </html>
