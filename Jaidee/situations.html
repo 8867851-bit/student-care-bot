@@ -45,9 +45,22 @@
     }
     .sit-pill:active{transform:scale(0.95);}
     .sit-pill.pressing{
-      transform:scale(0.95);
-      border-color:var(--gold-border);
-      box-shadow:0 0 0 3px rgba(232,150,12,0.18);
+      transform:scale(0.96);
+      border-color:#E6C77A;
+      box-shadow:0 0 0 3px rgba(87,143,98,0.14);
+      transition:transform 0.08s ease,border-color 0.08s,box-shadow 0.08s;
+    }
+    .sit-pill.touched{
+      background:#F7FBF5;
+      border-color:rgba(230,199,122,0.55);
+      box-shadow:0 0 0 2px rgba(87,143,98,0.08), 0 2px 10px rgba(87,143,98,0.06);
+      transition:border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    }
+    .sit-pill.touched-last{
+      background:#F4FAF2;
+      border-color:#E6C77A;
+      box-shadow:0 0 0 3px rgba(87,143,98,0.10), 0 2px 12px rgba(87,143,98,0.08);
+      transition:border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
     }
     .sit-emoji{font-size:15px;line-height:1;}
     .sit-label{font-size:12px;font-weight:400;color:var(--dark);}
@@ -259,6 +272,7 @@ function pressPill(btn, key) {
 function openSitSheet(key) {
   const d = SIT_DATA[key];
   if (!d) return;
+  SESSION_OPENED.add(key); _lastOpenedKey = key; _currentSitKey = key;
 
   // Build content
   const toolsHtml = d.tools.map(t => `
@@ -308,11 +322,17 @@ function openSitSheet(key) {
 function closeSitSheet() {
   const ov = document.getElementById('sit-overlay');
   ov.style.background = 'rgba(0,0,0,0)';
+  _currentSitKey = null;
   document.getElementById('sit-sheet').style.transform = 'translateY(100%)';
   setTimeout(() => {
     ov.style.display = 'none';
     ov.style.pointerEvents = 'none';
     document.body.style.overflow = '';
+    _updatePillStates();
+    setTimeout(() => {
+      const t = document.querySelector('.tier-pills .sit-pill.touched-last');
+      if (t) t.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+    }, 200);
   }, 360);
 }
 
@@ -598,6 +618,17 @@ const SIT_DATA_EXTRA = {
 Object.assign(SIT_DATA, SIT_DATA_EXTRA);
 
 
+// ── BOOKMARK MEMORY (green glow on visited pills) ────────────
+const SESSION_OPENED = new Set();
+let _lastOpenedKey = null, _currentSitKey = null;
+function _updatePillStates(){
+  document.querySelectorAll('.tier-pills .sit-pill[onclick]').forEach(b=>{
+    const m=b.getAttribute('onclick').match(/'([^']+)'\)/);
+    if(!m) return; const k=m[1];
+    if(SESSION_OPENED.has(k)){ b.classList.remove('touched','touched-last'); b.classList.add(k===_lastOpenedKey?'touched-last':'touched'); }
+  });
+}
+
 // ── RENDER ALL TIERS ─────────────────────────────────────────
 function renderAllTiers() {
   const container = document.getElementById('tiers-container');
@@ -610,7 +641,7 @@ function renderAllTiers() {
       </div>
       <div class="tier-pills">
         ${tier.pills.map(p => `
-          <button class="sit-pill" onclick="pressPill(this,'${p.key}')">
+          <button class="sit-pill${SESSION_OPENED.has(p.key)?(p.key===_lastOpenedKey?' touched-last':' touched'):''}" onclick="pressPill(this,'${p.key}')">
             <span class="sit-emoji">${p.emoji}</span>
             <span class="sit-label">${p.label}</span>
           </button>`).join('')}
@@ -620,6 +651,17 @@ function renderAllTiers() {
 }
 
 renderAllTiers();
+
+// ── RETURN-TO-CARD: reopen the same situation sheet after visiting a tool ──
+function _reopenSit(){ try{ const k=sessionStorage.getItem('jaidee_reopen_sit'); if(k){ sessionStorage.removeItem('jaidee_reopen_sit'); if(SIT_DATA[k]) openSitSheet(k); } }catch(e){} }
+document.addEventListener('click', function(e){
+  const a = e.target.closest && e.target.closest('a[href]');
+  if(!a) return; const h=a.getAttribute('href');
+  if(!h || h==='#' || h.indexOf('javascript')===0) return;
+  if(_currentSitKey){ try{ sessionStorage.setItem('jaidee_reopen_sit', _currentSitKey); }catch(e){} }
+}, true);
+window.addEventListener('pageshow', function(e){ if(e.persisted) _reopenSit(); });
+_reopenSit();
 
 const _hash = window.location.hash.replace('#','');
 if (_hash && SIT_DATA[_hash]) setTimeout(() => pressPill(null, _hash), 300);
