@@ -373,7 +373,7 @@
       background:none;border:none;
       font-size:14px;color:var(--soft);
       cursor:pointer;display:flex;align-items:center;justify-content:center;
-      opacity:0.5;transition:opacity 0.15s;z-index:11;
+      opacity:0.7;transition:opacity 0.15s;z-index:11;
     }
     #sit-close-btn:hover{opacity:1;}
     /* Continue exploring section */
@@ -389,14 +389,14 @@
     .sit-continue-pill{
       display:flex;align-items:center;gap:10px;
       padding:11px 14px;border-radius:12px;
-      background:var(--cream-warm);border:1px solid var(--cream-border);
+      background:transparent;border:1px dashed var(--cream-border);
       cursor:pointer;font-family:'Mitr',sans-serif;
       transition:border-color 0.15s,background 0.15s;text-decoration:none;
     }
-    .sit-continue-pill:active{background:#FFF0D6;border-color:var(--gold-border);}
+    .sit-continue-pill:active{background:#F7F5F0;border-color:#D8D1C8;border-style:solid;}
     .sit-continue-pill-emoji{font-size:16px;flex-shrink:0;width:22px;text-align:center;}
-    .sit-continue-pill-text{font-size:13px;font-weight:400;color:var(--dark);}
-    .sit-continue-pill-arrow{margin-left:auto;font-size:11px;color:var(--soft);}
+    .sit-continue-pill-text{font-size:13px;font-weight:400;color:var(--mid);}
+    .sit-continue-pill-arrow{margin-left:auto;font-size:11px;color:var(--faint);}
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -545,10 +545,10 @@
            onclick="openAllSituationsSheet()"
            style="display:inline-block;cursor:pointer;padding:20px 24px;border-radius:16px;background:var(--cream-warm);border:1px solid var(--cream-border);text-align:center;transition:transform 0.12s ease,box-shadow 0.12s ease;user-select:none;-webkit-user-select:none;">
         <div id="permission-sentence" style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
-          ไม่ต้องรีบเข้าใจทุกอย่างก็ได้ 🤍
+          บางทีสิ่งที่กำลังเกิดขึ้น<br>อาจมีชื่อเรียกอยู่แล้ว
         </div>
-        <div style="margin-top:6px;font-size:11px;font-weight:300;color:var(--soft);opacity:0.75;letter-spacing:0.2px;font-family:'Noto Serif Thai',serif;">
-          เผื่อว่าจะมีเรื่องที่ใกล้กับเรามากกว่านี้...
+        <div style="margin-top:8px;font-size:12px;font-weight:400;color:var(--soft);opacity:0.85;letter-spacing:0.2px;font-family:'Mitr',sans-serif;">
+          ดูเรื่องอื่นๆ →
         </div>
       </div>
     </div>
@@ -1033,21 +1033,50 @@ function _buildSheetContent(key, contentEl) {
   const d = _getSitData(key);
   if (!d || !contentEl) return;
 
-  const toolsHtml = d.tools.map(t => `
-    <a href="${t.href}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary?'var(--dark)':'var(--cream-warm)'};border:1px solid ${t.primary?'var(--dark)':'var(--cream-border)'};margin-bottom:8px;">
+  // Separate guide (notebook.html) from action tools
+  const guideTools = d.tools.filter(t => t.href && t.href.indexOf('notebook.html') !== -1);
+  const actionTools = d.tools.filter(t => !t.href || t.href.indexOf('notebook.html') === -1);
+
+  function _toolCard(t) {
+    return `<a href="${t.href}"${t.onclick ? ` onclick="${t.onclick}"` : ''} style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary?'var(--dark)':'var(--cream-warm)'};border:1px solid ${t.primary?'var(--dark)':'var(--cream-border)'};margin-bottom:8px;">
       <span style="font-size:18px;flex-shrink:0;width:28px;text-align:center;">${t.icon}</span>
       <span style="flex:1;">
         <span style="display:block;font-size:13px;font-weight:500;color:${t.primary?'#FDFBF7':'var(--dark)'};">${t.name}</span>
         <span style="display:block;font-size:11px;font-weight:300;color:${t.primary?'rgba(253,251,247,0.55)':'var(--soft)'};">${t.desc}</span>
       </span>
       <span style="font-size:12px;color:${t.primary?'rgba(255,255,255,0.3)':'var(--faint)'};">→</span>
-    </a>`).join('');
+    </a>`;
+  }
 
-  // Continue exploring
+  // T4/T5/T10 — Signature guide card: "เริ่มตรงนี้" label + meta line, dashed border
+  // desc field is repurposed as the meta subtitle (e.g. "เข้าใจสิ่งที่เกิดขึ้น + วิธีที่ช่วยได้")
+  const guideHtml = guideTools.map(t => `
+    <div style="margin-bottom:16px;">
+      <div style="font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">เริ่มตรงนี้</div>
+      <a href="${t.href}" style="display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:16px;text-decoration:none;background:var(--cream);border:1.5px dashed #D8D0C6;">
+        <span style="font-size:20px;flex-shrink:0;width:28px;text-align:center;margin-top:2px;">📖</span>
+        <span style="flex:1;">
+          <span style="display:block;font-size:13px;font-weight:500;color:var(--dark);line-height:1.45;margin-bottom:4px;">${t.name}</span>
+          <span style="display:block;font-size:11px;font-weight:400;color:var(--soft);line-height:1.5;">${t.desc}</span>
+        </span>
+        <span style="font-size:12px;color:var(--faint);flex-shrink:0;margin-top:3px;">→</span>
+      </a>
+    </div>`).join('');
+
+  // T1 — action tools stay warm, visually distinct from guide
+  const actionHtml = actionTools.map(_toolCard).join('');
+
+  // T3 — guide first, then divider only if both exist, then tools
+  const toolsDivider = (guideHtml && actionHtml)
+    ? `<div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px;"><div style="flex:1;height:1px;background:var(--cream-border);"></div><div style="font-size:9px;color:var(--faint);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;">เครื่องมือ</div><div style="flex:1;height:1px;background:var(--cream-border);"></div></div>`
+    : '';
+  const toolsHtml = guideHtml + toolsDivider + actionHtml;
+
+  // Continue exploring — T1: already neutral dashed
   const related = (SIT_RELATED[key] || []).slice(0,3);
   const continueHtml = related.length ? `
     <div class="sit-continue">
-      <div class="sit-continue-label">หลายคนที่เปิดเรื่องนี้ ยังดูต่อ...</div>
+      <div class="sit-continue-label">ยังดูต่อ</div>
       <div class="sit-continue-pills">
         ${related.map(rk => {
           const rd = _getSitData(rk);
@@ -1064,14 +1093,18 @@ function _buildSheetContent(key, contentEl) {
       </div>
     </div>` : '';
 
-  // Talk link
+  // T2/T6 — talk nudge: mid color, more breathing room, heavy interaction model
+  // Reuses the "💭 อยากคุยกับใครสักคน" branch from talk.html → goes to talk_who.html
   const talkHtml = d.talk ? `
-    <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--cream-border);">
-      <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.8;font-family:'Noto Serif Thai',serif;margin-bottom:10px;">${d.talk}</div>
-      <div style="display:flex;gap:14px;">
-        <a href="peer.html" style="font-size:12px;font-weight:400;color:var(--soft);text-decoration:none;">เพื่อนที่ปรึกษา →</a>
-        <a href="guidance.html" style="font-size:12px;font-weight:400;color:var(--soft);text-decoration:none;">ครูแนะแนว →</a>
-      </div>
+    <div style="margin-top:36px;padding-top:22px;border-top:1px solid var(--cream-border);">
+      <a href="talk_who.html" style="display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:18px;text-decoration:none;background:var(--cream-warm);border:1.5px solid var(--cream-border);">
+        <span style="font-size:22px;flex-shrink:0;">💭</span>
+        <span style="flex:1;">
+          <span style="display:block;font-size:13px;font-weight:400;color:var(--mid);line-height:1.7;font-family:'Noto Serif Thai',serif;">${d.talk}</span>
+          <span style="display:block;font-size:11px;font-weight:300;color:var(--soft);margin-top:3px;">คุยกับคนจริงๆ →</span>
+        </span>
+        <span style="font-size:15px;color:var(--faint);flex-shrink:0;">›</span>
+      </a>
     </div>` : '';
 
   contentEl.innerHTML = `
@@ -1117,6 +1150,21 @@ function openSitSheet(key) {
   if (SESSION_OPENED.size === 2) {
     const exit = document.getElementById('exit-line');
     if (exit) { exit.style.pointerEvents='none'; setTimeout(()=>{exit.style.opacity='1';},800); }
+  }
+  // T8 — bookmark microcopy: shown exactly once, after second open
+  if (SESSION_OPENED.size === 2 && !sessionStorage.getItem('_bookmark_shown')) {
+    sessionStorage.setItem('_bookmark_shown','1');
+    // inject quietly below pill row, fade in after sheet closes
+    const existing = document.getElementById('bookmark-micro');
+    if (!existing) {
+      const el = document.createElement('div');
+      el.id = 'bookmark-micro';
+      el.style.cssText = 'text-align:center;padding:10px 24px 0;opacity:0;transition:opacity 1s ease;font-size:11px;font-weight:300;color:var(--soft);font-family:Noto Serif Thai,serif;letter-spacing:0.3px;';
+      el.textContent = 'เราจำที่ที่คุณเคยแวะไว้ให้แล้ว 🌱';
+      const preview = document.getElementById('pill-preview');
+      if (preview) preview.after(el);
+      setTimeout(() => { el.style.opacity = '1'; }, 1800);
+    }
   }
 
   // Build nav + content
