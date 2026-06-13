@@ -159,6 +159,7 @@ const TIERS = [
     pills: [
       { emoji:'😴', label:'นอนไม่หลับ',          key:'sleep'      },
       { emoji:'🍚', label:'กินข้าวไม่ค่อยลง',    key:'no_appetite'},
+      { emoji:'🍚', label:'หิวแต่จะกินดีมั้ย',   key:'hungry'     },
       { emoji:'📱', label:'เล่นมือถือจนดึก',     key:'phone'      },
       { emoji:'☀️', label:'ไม่ค่อยได้ออกไปไหน', key:'no_sun'     },
       { emoji:'🪫', label:'เหนื่อยตลอดเวลา',     key:'tired'      },
@@ -186,7 +187,7 @@ const SIT_DATA = {
     tools: [
       { icon:'🌙', name:'Sleep Reset', desc:'ช่วยให้จิตใจพร้อมนอน', href:'alltools.html#sleep' },
       { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'2 นาที ก่อนนอน', href:'alltools.html#breathe' },
-      { icon:'📖', name:'คู่มือการนอนสำหรับนักเรียน', desc:'อ่านสั้นๆ', href:'resources.html#sleep' },
+      { icon:'📖', name:'คู่มือการนอนสำหรับนักเรียน',href:'notebook.html?id=sleep', guideId:'sleep' },
     ],
     talk: 'นอนไม่หลับมาหลายสัปดาห์แล้ว?',
   },
@@ -274,39 +275,71 @@ function openSitSheet(key) {
   if (!d) return;
   SESSION_OPENED.add(key); _lastOpenedKey = key; _currentSitKey = key;
 
-  // Build content
-  const toolsHtml = d.tools.map(t => `
-    <a href="${t.href}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary ? 'var(--dark)' : 'var(--cream-warm)'};border:1px solid ${t.primary ? 'var(--dark)' : 'var(--cream-border)'};margin-bottom:8px;">
+  // ── Guide-first tool rendering (mirrors index.html _buildSheetContent) ──
+  const guideTools  = d.tools.filter(t => t.href && t.href.indexOf('notebook.html') !== -1);
+  const actionTools = d.tools.filter(t => !t.href || t.href.indexOf('notebook.html') === -1);
+
+  function _toolCard(t) {
+    const href = t.href && t.href !== '#' ? `href="${t.href}"` : 'href="#"';
+    const onclick = t.onclick ? ` onclick="${t.onclick}"` : '';
+    return `<a ${href}${onclick} style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary?'var(--dark)':'var(--cream-warm)'};border:1px solid ${t.primary?'var(--dark)':'var(--cream-border)'};margin-bottom:8px;">
       <span style="font-size:18px;flex-shrink:0;width:28px;text-align:center;">${t.icon}</span>
       <span style="flex:1;">
-        <span style="display:block;font-size:13px;font-weight:500;color:${t.primary ? '#FDFBF7' : 'var(--dark)'};">${t.name}</span>
-        <span style="display:block;font-size:11px;font-weight:300;color:${t.primary ? 'rgba(253,251,247,0.55)' : 'var(--soft)'};">${t.desc}</span>
+        <span style="display:block;font-size:13px;font-weight:500;color:${t.primary?'#FDFBF7':'var(--dark)'};">${t.name}</span>
+        <span style="display:block;font-size:11px;font-weight:300;color:${t.primary?'rgba(253,251,247,0.55)':'var(--soft)'};">${t.desc}</span>
       </span>
-      <span style="font-size:12px;color:${t.primary ? 'rgba(255,255,255,0.3)' : 'var(--faint)'};">→</span>
-    </a>`).join('');
+      <span style="font-size:12px;color:${t.primary?'rgba(255,255,255,0.3)':'var(--faint)'};">→</span>
+    </a>`;
+  }
+
+  // Signature guide card with "เริ่มตรงนี้" label
+  const guideHtml = guideTools.map(t => `
+    <div style="margin-bottom:16px;">
+      <div style="font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">เริ่มตรงนี้</div>
+      <a href="${t.href}" style="display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:16px;text-decoration:none;background:var(--cream);border:1.5px dashed #D8D0C6;">
+        <span style="font-size:20px;flex-shrink:0;width:28px;text-align:center;margin-top:2px;">📖</span>
+        <span style="flex:1;">
+          <span style="display:block;font-size:13px;font-weight:500;color:var(--dark);line-height:1.45;margin-bottom:4px;">${t.name}</span>
+          <span style="display:block;font-size:11px;font-weight:400;color:var(--soft);line-height:1.5;">${t.desc || ''}</span>
+        </span>
+        <span style="font-size:12px;color:var(--faint);flex-shrink:0;margin-top:3px;">→</span>
+      </a>
+    </div>`).join('');
+
+  const toolsDivider = (guideHtml && actionTools.length)
+    ? `<div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px;"><div style="flex:1;height:1px;background:var(--cream-border);"></div><div style="font-size:9px;color:var(--faint);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;">เครื่องมือ</div><div style="flex:1;height:1px;background:var(--cream-border);"></div></div>`
+    : '';
+
+  const toolsHtml = guideHtml + toolsDivider + actionTools.map(_toolCard).join('');
+
+  // Talk nudge — index style: big button → talk_who.html, mid color, no continue-exploring
+  const talkHtml = d.talk ? `
+    <div style="margin-top:36px;padding-top:22px;border-top:1px solid var(--cream-border);">
+      <a href="talk_who.html" style="display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:18px;text-decoration:none;background:var(--cream-warm);border:1.5px solid var(--cream-border);">
+        <span style="font-size:22px;flex-shrink:0;">💭</span>
+        <span style="flex:1;">
+          <span style="display:block;font-size:13px;font-weight:400;color:var(--mid);line-height:1.7;font-family:'Noto Serif Thai',serif;">${d.talk}</span>
+          <span style="display:block;font-size:11px;font-weight:300;color:var(--soft);margin-top:3px;">คุยกับคนจริงๆ →</span>
+        </span>
+        <span style="font-size:15px;color:var(--faint);flex-shrink:0;">›</span>
+      </a>
+    </div>` : '';
 
   document.getElementById('sit-sheet-content').innerHTML = `
     <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;">
-      <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:8px;">วันนี้เป็นยังไงบ้าง?</div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
         <span style="font-size:28px;">${d.emoji}</span>
         <span style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);">${d.title}</span>
       </div>
-      <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.75;margin-bottom:16px;padding:12px 14px;background:var(--cream-warm);border-radius:10px;">${d.note}</div>
-    </div>
-    <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;">
+      <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--cream-border);">${d.note}</div>
       ${toolsHtml}
-    </div>
-    <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;">
-      <div style="border-top:1px solid var(--cream-border);padding-top:10px;margin-top:6px;font-size:12px;color:var(--soft);line-height:1.6;">
-        ${d.talk} <a href="talk_who.html" style="color:var(--mid);font-weight:500;text-decoration:underline;text-underline-offset:3px;">คุยกับใครสักคน →</a>
-      </div>
+      ${talkHtml}
     </div>`;
 
-  // Stagger layers: recognition → tools → talk
-  const [STAGGER_DELAYS] = [[0, 150, 300]];
-  document.querySelectorAll('._sl').forEach((el, i) => {
-    setTimeout(() => { el.style.opacity='1'; el.style.transform='translateY(0)'; }, 180 + STAGGER_DELAYS[i]);
+  requestAnimationFrame(() => {
+    document.querySelectorAll('#sit-sheet-content ._sl').forEach(el => {
+      el.style.opacity = '1'; el.style.transform = 'translateY(0)';
+    });
   });
 
   const ov = document.getElementById('sit-overlay');
@@ -611,6 +644,16 @@ const SIT_DATA_EXTRA = {
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html' },
     ],
     talk:'รู้สึกแบบนี้นานแล้วหรือรุนแรงมาก?',
+  },
+  hungry: {
+    emoji:'🍚', title:'หิวแต่จะกินดีมั้ย',
+    note:'ร่างกายส่งสัญญาณ ไม่ว่าจะเป็นอาการสมองตื้อในห้องเรียน กดดันตัวเองไม่กิน หรือหิวกลางดึก มาทำความเข้าใจกัน',
+    tools:[
+      { icon:'📖', name:'คู่มือ: หิวแต่จะกินดีมั้ย', desc:'เข้าใจสัญญาณร่างกายของคุณ', href:'notebook.html?id=hungry' },
+      { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้ามันเกี่ยวกับอะไรมากกว่าการกิน', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ถ้าอยากระบาย', href:'peer.html' },
+    ],
+    talk:'ไม่กินมาหลายวันหรือมีความคิดเรื่องอาหารที่กวนใจ?',
   },
 };
 
