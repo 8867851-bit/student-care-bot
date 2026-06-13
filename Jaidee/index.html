@@ -823,11 +823,6 @@ function _renderAllPillsInfinite() {
   container._infiniteHandler = onScroll;
   container.addEventListener('scroll', onScroll, { passive: true });
 }
-        e.preventDefault();
-      }
-    }, { passive: false });
-  }
-}
 
 function nextTier() {
   _currentTier = (_currentTier + 1) % TIERS.length;
@@ -844,7 +839,7 @@ const SIT_DATA = {
     tools: [
       { icon:'🌙', name:'Sleep Reset', desc:'ช่วยให้จิตใจพร้อมนอน', href:'alltools.html#sleep' },
       { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'2 นาที ก่อนนอน', href:'alltools.html#breathe' },
-      { icon:'📖', name:'คู่มือการนอนสำหรับนักเรียน', desc:'อ่าน 3 นาที', href:'notebook.html?id=sleep' },
+      { icon:'📖', name:'ทำไมยิ่งพยายามนอน ยิ่งนอนไม่หลับ', desc:'เข้าใจสิ่งที่เกิดขึ้น + วิธีที่ช่วยได้', href:'notebook.html?id=sleep' },
     ],
     talk: 'นอนไม่หลับมาหลายสัปดาห์แล้ว?',
   },
@@ -1071,11 +1066,11 @@ function _buildSheetContent(key, contentEl) {
 
   // Talk link
   const talkHtml = d.talk ? `
-    <div style="margin-top:20px;padding:14px 16px;background:var(--cream-warm);border-radius:14px;border:1px solid var(--cream-border);">
-      <div style="font-size:12px;color:var(--soft);margin-bottom:10px;">${d.talk}</div>
-      <div style="display:flex;gap:8px;">
-        <a href="peer.html" style="flex:1;display:block;text-align:center;padding:10px;background:var(--dark);color:#FDFBF7;border-radius:12px;font-size:13px;font-weight:500;text-decoration:none;">💛 คุยกับเพื่อนที่ปรึกษา</a>
-        <a href="guidance.html" style="flex:1;display:block;text-align:center;padding:10px;background:var(--cream);color:var(--dark);border:1px solid var(--cream-border);border-radius:12px;font-size:13px;font-weight:400;text-decoration:none;">👩‍🏫 ครูแนะแนว</a>
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--cream-border);">
+      <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.8;font-family:'Noto Serif Thai',serif;margin-bottom:10px;">${d.talk}</div>
+      <div style="display:flex;gap:14px;">
+        <a href="peer.html" style="font-size:12px;font-weight:400;color:var(--soft);text-decoration:none;">เพื่อนที่ปรึกษา →</a>
+        <a href="guidance.html" style="font-size:12px;font-weight:400;color:var(--soft);text-decoration:none;">ครูแนะแนว →</a>
       </div>
     </div>` : '';
 
@@ -1387,7 +1382,7 @@ const SIT_DATA_EXTRA = {
       { icon:'📓', name:'เขียนระบาย', desc:'เขียนออกมาช่วยได้มาก', href:'alltools.html#journal' },
       { icon:'🤍', name:'พักใจ', desc:'self-compassion ในวันที่ใจสลาย', href:'alltools.html#rest' },
       { icon:'🌬️', name:'หายใจผ่อนคลาย', desc:'Physiological sigh ลดคลื่นความเจ็บเฉียบพลัน', href:'alltools.html#breathe' },
-      { icon:'📖', name:'คู่มือรับมือสภาวะใจสลาย', desc:'อ่าน 4 นาที', href:'notebook.html?id=heartbreak' },
+      { icon:'📖', name:'ทำไมอกหักถึงเจ็บเหมือนเจ็บจริงๆ', desc:'เข้าใจสิ่งที่เกิดขึ้นข้างใน', href:'notebook.html?id=heartbreak' },
     ],
     talk:'รู้สึกหนักมากหรือไม่ไหวแล้ว?',
   },
@@ -1399,7 +1394,7 @@ const SIT_DATA_EXTRA = {
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจความรู้สึกข้างใน', href:'reflection.html' },
       { icon:'🎧', name:'Sati — อาสานักรับฟัง', desc:'익명 · ฟรี', href:'https://satiapp.co' },
       { icon:'🌱', name:'Little by Little', desc:'กิจกรรมสั้น ๆ ที่ช่วยให้มองเห็นสิ่งสำคัญในชีวิตอีกครั้ง', href:'https://thelittlebylittle.com/' },
-      { icon:'📖', name:'คู่มือรับมือความเหงา', desc:'อ่าน 4 นาที', href:'notebook.html?id=lonely' },
+      { icon:'📖', name:'ทำไมอยู่ท่ามกลางคนมากมายแล้วยังเหงา', desc:'เข้าใจสิ่งที่เกิดขึ้นข้างใน', href:'notebook.html?id=lonely' },
     ],
     talk:'รู้สึกเหงามากหรือนานมากแล้ว?',
   },
