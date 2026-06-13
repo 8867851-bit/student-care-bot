@@ -384,39 +384,49 @@
 .cp-step{display:none;}
 .cp-step.active{display:block;}
 .cp-step-indicator{display:flex;gap:6px;margin-bottom:20px;}
-.cp-dot{width:8px;height:8px;border-radius:50%;background:var(--cream-border);transition:background 0.25s;}
+.cp-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:background 0.25s;}
 .cp-dot.done{background:var(--gold);}
-.cp-dot.active{background:var(--dark);}
-.cp-label{font-size:11px;font-weight:500;color:var(--soft);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
-.cp-q{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:6px;}
-.cp-hint{font-size:12px;font-weight:300;color:var(--soft);line-height:1.7;margin-bottom:16px;}
-.cp-textarea{width:100%;border:1.5px solid var(--cream-border);border-radius:14px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:300;color:var(--dark);background:var(--cream-warm);resize:none;outline:none;min-height:100px;transition:border-color 0.2s;line-height:1.7;}
-.cp-textarea:focus{border-color:var(--gold-border);}
-.cp-next{width:100%;background:var(--dark);color:#FDFBF7;border:none;border-radius:28px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:14px;transition:opacity 0.15s;}
-.cp-next:active{opacity:0.8;}
-.cp-back{background:none;border:none;font-family:'Mitr',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;padding:8px 0;width:100%;text-align:center;margin-top:6px;}
+.cp-dot.active{background:#fff;}
+.cp-label{font-size:11px;font-weight:500;color:rgba(255,255,255,0.45);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.cp-q{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:#fff;line-height:1.4;margin-bottom:6px;}
+.cp-hint{font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:16px;}
+.cp-textarea{width:100%;border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:300;color:#fff;background:rgba(255,255,255,0.07);resize:none;outline:none;min-height:100px;transition:border-color 0.2s;line-height:1.7;}
+.cp-textarea::placeholder{color:rgba(255,255,255,0.3);}
+.cp-textarea:focus{border-color:var(--gold-border);background:rgba(255,255,255,0.1);}
+.cp-next{width:100%;background:#fff;color:var(--dark);border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:14px;transition:opacity 0.15s;}
+.cp-next:active{opacity:0.85;}
+.cp-back{background:none;border:none;font-family:'Sarabun',sans-serif;font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;padding:8px 0;width:100%;text-align:center;margin-top:6px;}
+.cp-back:hover{color:rgba(255,255,255,0.7);}
 /* Result screen */
-.cp-result-section{background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:14px;padding:14px 16px;margin-bottom:10px;}
-.cp-result-label{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:5px;}
-.cp-result-text{font-size:14px;font-weight:300;color:var(--dark);line-height:1.75;}
-.cp-message-box{background:linear-gradient(135deg,#FDFCF8,#FFF8EC);border:1px solid var(--gold-border);border-radius:14px;padding:16px;margin-bottom:16px;font-size:14px;font-weight:300;color:var(--dark);line-height:1.85;}
-.cp-cooldown-btn{width:100%;background:none;border:1.5px solid var(--cream-border);border-radius:28px;padding:13px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--mid);cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;}
-.cp-cooldown-btn:active{background:var(--cream-warm);}
+.cp-message-box{background:rgba(255,255,255,0.07);border:1px solid var(--gold-border);border-radius:14px;padding:16px;margin-bottom:16px;font-size:14px;font-weight:300;color:#fff;line-height:1.85;}
+.cp-cooldown-btn{width:100%;background:none;border:1.5px solid rgba(255,255,255,0.2);border-radius:28px;padding:13px;font-family:'Sarabun',sans-serif;font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;}
+.cp-cooldown-btn:active{background:rgba(255,255,255,0.08);}
 .cp-cooldown-display{text-align:center;padding:16px 0 8px;}
-.cp-cooldown-num{font-family:'Noto Serif Thai',serif;font-size:56px;font-weight:600;color:var(--dark);line-height:1;}
-.cp-cooldown-sub{font-size:13px;color:var(--soft);margin-top:6px;}
+.cp-cooldown-num{font-family:'Noto Serif Thai',serif;font-size:56px;font-weight:600;color:#fff;line-height:1;}
+.cp-cooldown-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-top:6px;}
+/* Saved messages section */
+.cp-saved-section{margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);}
+.cp-saved-label{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:12px;}
+.cp-saved-item{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 14px;margin-bottom:8px;position:relative;}
+.cp-saved-text{font-size:13px;font-weight:300;color:rgba(255,255,255,0.75);line-height:1.7;}
+.cp-saved-meta{font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px;}
+.cp-saved-del{position:absolute;top:10px;right:12px;background:none;border:none;color:rgba(255,255,255,0.25);font-size:14px;cursor:pointer;padding:2px 4px;}
+.cp-saved-del:hover{color:rgba(255,255,255,0.6);}
+.cp-save-btn{width:100%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:28px;padding:12px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:8px;transition:background 0.15s;}
+.cp-save-btn:active{background:rgba(255,255,255,0.18);}
 
 /* ── FACT LOG TOOL ───────────────────────────────────── */
 .fl-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;align-items:start;}
-.fl-col-head{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:0 2px 6px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.fl-col-label-neg{color:#C0392B;}
-.fl-col-label-pos{color:var(--green,#3A7D44);}
-.fl-cell{background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:300;color:var(--dark);line-height:1.65;min-height:64px;width:100%;}
-.fl-cell:focus{outline:none;border-color:var(--gold-border);background:#FFFBF2;}
-.fl-add-btn{width:100%;background:none;border:1.5px dashed var(--cream-border);border-radius:10px;padding:11px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--soft);cursor:pointer;margin-top:2px;transition:border-color 0.15s,color 0.15s;}
-.fl-add-btn:hover{border-color:var(--gold-border);color:var(--mid);}
-.fl-done-btn{width:100%;background:var(--dark);color:#FDFBF7;border:none;border-radius:28px;padding:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:14px;}
+.fl-cell{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:300;color:#fff;line-height:1.65;min-height:72px;width:100%;resize:none;outline:none;font-family:'Sarabun',sans-serif;}
+.fl-cell::placeholder{color:rgba(255,255,255,0.28);}
+.fl-cell:focus{border-color:var(--gold-border);background:rgba(255,255,255,0.1);}
+.fl-add-btn{width:100%;background:none;border:1.5px dashed rgba(255,255,255,0.18);border-radius:10px;padding:11px;font-family:'Sarabun',sans-serif;font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;margin-top:2px;transition:border-color 0.15s,color 0.15s;}
+.fl-add-btn:hover{border-color:rgba(255,255,255,0.4);color:rgba(255,255,255,0.7);}
+.fl-done-btn{width:100%;background:#fff;color:var(--dark);border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:14px;}
 .fl-done-state{text-align:center;padding:20px 0;}
+.fl-done-state .fl-done-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:#fff;margin-bottom:8px;}
+.fl-done-state .fl-done-sub{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:24px;}
+.fl-close-btn{width:100%;background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);border-radius:28px;padding:12px;font-family:'Sarabun',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;}
 </style>
 </head>
 <body>
@@ -1256,6 +1266,206 @@ function goBackToIndex() {
   else if(h==='#factlog'){switchToolsTab(2);openFactLog();}
   else if(h.indexOf('#rewire')===0){switchToolsTab(4);const id=h.split('-')[1];if(id)openRewire(id);}
 })();
+
+// ══════════════════════════════════════════════════
+// CONFLICT PREP — เตรียมใจก่อนคุย
+// ══════════════════════════════════════════════════
+let _cpCooldownTimer = null;
+let _cpCooldownSec   = 0;
+
+function openConflictPrep() {
+  const m = document.getElementById('cp-modal');
+  if (!m) return;
+  // Reset to step 0 and clear inputs
+  cpGoTo(0);
+  ['cp-fact','cp-feel','cp-need'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  // Reset cooldown
+  cancelCooldown();
+  document.getElementById('cp-message-output').textContent = '';
+  // Restore save button state
+  const saveBtn = document.querySelector('.cp-save-btn');
+  if (saveBtn) { saveBtn.textContent = '📌 บันทึก I-Message นี้ไว้'; saveBtn.style.opacity = ''; saveBtn.style.pointerEvents = ''; }
+  _cpRenderSaved();
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeConflictPrep() {
+  cancelCooldown();
+  document.getElementById('cp-modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function cpGoTo(step) {
+  for (let i = 0; i < 4; i++) {
+    const s = document.getElementById('cp-s' + i);
+    const d = document.getElementById('cp-dot-' + i);
+    if (s) s.classList.toggle('active', i === step);
+    if (d) {
+      d.classList.toggle('active', i === step);
+      d.classList.toggle('done',   i < step);
+    }
+  }
+  // Scroll sheet back to top when step changes
+  const sheet = document.querySelector('#cp-modal .modal-sheet');
+  if (sheet) sheet.scrollTop = 0;
+}
+
+function cpNext(nextStep) {
+  if (nextStep === 1) {
+    const v = document.getElementById('cp-fact').value.trim();
+    if (!v) { document.getElementById('cp-fact').focus(); return; }
+  } else if (nextStep === 2) {
+    const v = document.getElementById('cp-feel').value.trim();
+    if (!v) { document.getElementById('cp-feel').focus(); return; }
+  } else if (nextStep === 3) {
+    const v = document.getElementById('cp-need').value.trim();
+    if (!v) { document.getElementById('cp-need').focus(); return; }
+    _cpBuildMessage();
+  }
+  cpGoTo(nextStep);
+}
+
+function cpBack(step) { cpGoTo(step); }
+
+function _cpBuildMessage() {
+  const fact = document.getElementById('cp-fact').value.trim();
+  const feel = document.getElementById('cp-feel').value.trim();
+  const need = document.getElementById('cp-need').value.trim();
+  const msg  = `"เมื่อ${fact} ฉันรู้สึก${feel} และสิ่งที่ฉันต้องการคือ${need}"`;
+  document.getElementById('cp-message-output').textContent = msg;
+}
+
+function startCooldown() {
+  _cpCooldownSec = 20 * 60;
+  document.getElementById('cp-cooldown-start-btn').style.display  = 'none';
+  document.getElementById('cp-cooldown-display').style.display     = 'block';
+  _updateCooldownDisplay();
+  _cpCooldownTimer = setInterval(() => {
+    _cpCooldownSec--;
+    _updateCooldownDisplay();
+    if (_cpCooldownSec <= 0) {
+      clearInterval(_cpCooldownTimer);
+      _cpCooldownTimer = null;
+      document.getElementById('cp-cooldown-sub').textContent = 'เวลาผ่านไปแล้ว — พร้อมเดินไปคุยแล้ว 🌿';
+    }
+  }, 1000);
+}
+
+function _updateCooldownDisplay() {
+  const m = Math.floor(_cpCooldownSec / 60).toString().padStart(2,'0');
+  const s = (_cpCooldownSec % 60).toString().padStart(2,'0');
+  const el = document.getElementById('cp-cooldown-num');
+  if (el) el.textContent = m + ':' + s;
+}
+
+function cancelCooldown() {
+  if (_cpCooldownTimer) { clearInterval(_cpCooldownTimer); _cpCooldownTimer = null; }
+  const startBtn = document.getElementById('cp-cooldown-start-btn');
+  const display  = document.getElementById('cp-cooldown-display');
+  if (startBtn) startBtn.style.display = 'flex';
+  if (display)  display.style.display  = 'none';
+}
+
+// ══════════════════════════════════════════════════
+// FACT LOG
+// ══════════════════════════════════════════════════
+let _flRowCount = 0;
+
+function openFactLog() {
+  const m = document.getElementById('fl-modal');
+  if (!m) return;
+  flReset();
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFactLog() {
+  document.getElementById('fl-modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function flReset() {
+  _flRowCount = 0;
+  const rows = document.getElementById('fl-rows');
+  if (rows) rows.innerHTML = '';
+  const main = document.getElementById('fl-main');
+  const done = document.getElementById('fl-done');
+  const addBtn = document.getElementById('fl-add-btn');
+  if (main)   main.style.display   = 'block';
+  if (done)   done.style.display   = 'none';
+  if (addBtn) addBtn.style.display = 'block';
+  // Start with 2 empty rows
+  flAddRow();
+  flAddRow();
+}
+
+function flAddRow() {
+  if (_flRowCount >= 5) {
+    const addBtn = document.getElementById('fl-add-btn');
+    if (addBtn) addBtn.style.display = 'none';
+    return;
+  }
+  _flRowCount++;
+  const row = document.createElement('div');
+  row.className = 'fl-row';
+  row.innerHTML =
+    `<textarea class="fl-cell" placeholder="สิ่งที่สมองบอก…" rows="3"></textarea>` +
+    `<textarea class="fl-cell" placeholder="หลักฐานที่มีจริงๆ…" rows="3"></textarea>`;
+  document.getElementById('fl-rows').appendChild(row);
+  if (_flRowCount >= 5) {
+    const addBtn = document.getElementById('fl-add-btn');
+    if (addBtn) addBtn.style.display = 'none';
+  }
+}
+
+function flDone() {
+  document.getElementById('fl-main').style.display = 'none';
+  document.getElementById('fl-done').style.display = 'block';
+}
+
+// ── I-MESSAGE SAVE ────────────────────────────────────────────
+function cpSaveMessage() {
+  const msg = document.getElementById('cp-message-output').textContent.trim();
+  if (!msg) return;
+  const saved = JSON.parse(localStorage.getItem('jaidee_imessages') || '[]');
+  saved.unshift({ text: msg, ts: Date.now() });
+  if (saved.length > 20) saved.pop();
+  localStorage.setItem('jaidee_imessages', JSON.stringify(saved));
+  const btn = document.querySelector('.cp-save-btn');
+  if (btn) { btn.textContent = '✓ บันทึกแล้ว'; btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; }
+  _cpRenderSaved();
+}
+
+function _cpRenderSaved() {
+  const saved   = JSON.parse(localStorage.getItem('jaidee_imessages') || '[]');
+  const section = document.getElementById('cp-saved-section');
+  const list    = document.getElementById('cp-saved-list');
+  if (!section || !list) return;
+  if (!saved.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  const fmt = ts => {
+    const d = new Date(ts);
+    return d.toLocaleDateString('th-TH', { day:'numeric', month:'short' }) +
+           ' · ' + d.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
+  };
+  list.innerHTML = saved.map((s, i) => `
+    <div class="cp-saved-item">
+      <div class="cp-saved-text">${s.text}</div>
+      <div class="cp-saved-meta">${fmt(s.ts)}</div>
+      <button class="cp-saved-del" onclick="cpDeleteSaved(${i})" title="ลบ">✕</button>
+    </div>`).join('');
+}
+
+function cpDeleteSaved(idx) {
+  const saved = JSON.parse(localStorage.getItem('jaidee_imessages') || '[]');
+  saved.splice(idx, 1);
+  localStorage.setItem('jaidee_imessages', JSON.stringify(saved));
+  _cpRenderSaved();
+}
 </script>
 <!-- ══ REWIRE MODAL ══ -->
 <div class="modal-overlay" id="rewire-modal" onclick="handleOverlayClick(event,'rewire-modal',closeRewire)">
@@ -1459,9 +1669,9 @@ function goBackToIndex() {
 <div class="modal-overlay" id="cp-modal" onclick="handleOverlayClick(event,'cp-modal',closeConflictPrep)">
 <div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 48px;max-height:88vh;overflow-y:auto;">
   <div class="modal-handle"></div>
-  <div class="modal-eyebrow" style="font-size:10px;letter-spacing:2.5px;color:var(--soft);text-transform:uppercase;font-weight:500;margin-bottom:8px;">ก่อนเคลียร์ใจ</div>
-  <div class="modal-title" style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;">เตรียมใจก่อนคุย</div>
-  <div style="font-size:13px;font-weight:300;color:var(--soft);margin-bottom:24px;line-height:1.65;">ระบายความรู้สึกออกมาก่อน<br>แล้วเปลี่ยนเป็นภาษาที่เพื่อนรับได้</div>
+  <div style="font-size:10px;letter-spacing:2.5px;color:rgba(255,255,255,0.4);text-transform:uppercase;font-weight:500;margin-bottom:8px;">ก่อนเคลียร์ใจ</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;color:#fff;">เตรียมใจก่อนคุย</div>
+  <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.45);margin-bottom:24px;line-height:1.65;">ระบายความรู้สึกออกมาก่อน<br>แล้วเปลี่ยนเป็นภาษาที่เพื่อนรับได้</div>
 
   <!-- Step indicators -->
   <div class="cp-step-indicator" id="cp-dots">
@@ -1505,7 +1715,7 @@ function goBackToIndex() {
     <div class="cp-label">I-Message · พร้อมใช้</div>
     <div class="cp-q" style="margin-bottom:14px;">ลองพูดแบบนี้ดู</div>
     <div class="cp-message-box" id="cp-message-output"></div>
-    <div style="font-size:12px;color:var(--soft);line-height:1.7;margin-bottom:16px;">อ่านซ้ำสัก 1-2 รอบก่อน<br>ไม่ต้องพูดตรงๆ แค่ให้รู้สึกตัวเองแล้วค่อยเดินไปคุย</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:16px;">อ่านซ้ำสัก 1-2 รอบก่อน<br>ไม่ต้องพูดตรงๆ แค่ให้รู้สึกตัวเองแล้วค่อยเดินไปคุย</div>
 
     <!-- Cooldown timer option -->
     <div id="cp-cooldown-section">
@@ -1514,13 +1724,20 @@ function goBackToIndex() {
       </button>
       <div class="cp-cooldown-display" id="cp-cooldown-display" style="display:none;">
         <div class="cp-cooldown-num" id="cp-cooldown-num">20:00</div>
-        <div class="cp-cooldown-sub">ปล่อยให้อารมณ์เย็นลงก่อน<br>แล้วค่อยเดินไปหาเพื่อน</div>
+        <div class="cp-cooldown-sub" id="cp-cooldown-sub">ปล่อยให้อารมณ์เย็นลงก่อน<br>แล้วค่อยเดินไปหาเพื่อน</div>
         <button class="cp-back" onclick="cancelCooldown()">ยกเลิก timer</button>
       </div>
     </div>
 
-    <button class="cp-next" onclick="closeConflictPrep()" style="margin-top:6px;">เสร็จแล้ว ✓</button>
+    <button class="cp-save-btn" onclick="cpSaveMessage()">📌 บันทึก I-Message นี้ไว้</button>
+    <button class="cp-next" onclick="closeConflictPrep()" style="margin-top:4px;">เสร็จแล้ว ✓</button>
     <button class="cp-back" onclick="cpBack(2)">← แก้ไข</button>
+  </div>
+
+  <!-- Saved messages -->
+  <div class="cp-saved-section" id="cp-saved-section" style="display:none;">
+    <div class="cp-saved-label">บันทึกที่เก็บไว้</div>
+    <div id="cp-saved-list"></div>
   </div>
 </div>
 </div>
@@ -1529,17 +1746,17 @@ function goBackToIndex() {
 <div class="modal-overlay" id="fl-modal" onclick="handleOverlayClick(event,'fl-modal',closeFactLog)">
 <div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 48px;max-height:88vh;overflow-y:auto;">
   <div class="modal-handle"></div>
-  <div class="modal-eyebrow" style="font-size:10px;letter-spacing:2.5px;color:var(--soft);text-transform:uppercase;font-weight:500;margin-bottom:8px;">ปรับระบบความคิด</div>
-  <div class="modal-title" style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;">Fact-Log</div>
-  <div style="font-size:13px;font-weight:300;color:var(--soft);margin-bottom:6px;line-height:1.65;">สมองบอกอะไร เทียบกับหลักฐานที่มีจริงๆ</div>
-  <div style="font-size:12px;color:var(--soft);margin-bottom:20px;line-height:1.6;">เขียนทีละแถว · แค่ 3-5 ข้อก็พอ</div>
+  <div style="font-size:10px;letter-spacing:2.5px;color:rgba(255,255,255,0.4);text-transform:uppercase;font-weight:500;margin-bottom:8px;">ปรับระบบความคิด</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;color:#fff;">Fact-Log</div>
+  <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);margin-bottom:6px;line-height:1.65;">สมองบอกว่าอะไร → หลักฐานที่ขัดแย้งกับมันมีไหม?</div>
+  <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:20px;line-height:1.75;">สมองของเราชอบเลือกจำแต่เรื่องลบ เครื่องมือนี้ช่วยให้เห็นว่ามีหลักฐานอีกด้านอยู่ด้วย · เขียนทีละแถว แค่ 2-3 ข้อก็พอ</div>
 
   <!-- Main log screen -->
   <div id="fl-main">
     <!-- Column headers -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 2px 8px;">
-      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#C0392B;">สมองบอก</div>
-      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--green,#3A7D44);">หลักฐานจริง</div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,120,100,0.8);">สมองบอกว่า…</div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(120,200,140,0.8);">แต่หลักฐานอีกด้านบอกว่า…</div>
     </div>
     <div id="fl-rows"></div>
     <button class="fl-add-btn" id="fl-add-btn" onclick="flAddRow()">+ เพิ่มแถว</button>
@@ -1550,10 +1767,10 @@ function goBackToIndex() {
   <!-- Done screen -->
   <div id="fl-done" style="display:none;" class="fl-done-state">
     <div style="font-size:48px;margin-bottom:14px;">🧩</div>
-    <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);margin-bottom:8px;">บันทึกแล้ว</div>
-    <div style="font-size:13px;font-weight:300;color:var(--soft);line-height:1.75;margin-bottom:24px;">สมองเริ่มเห็นหลักฐานแล้ว<br>ความคิดจะเบาลงเมื่อเราแยกมันออกจากกัน</div>
-    <button class="posture-btn" onclick="closeFactLog()">เสร็จแล้ว</button>
-    <button class="posture-btn secondary" onclick="flReset()">เริ่มใหม่</button>
+    <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:#fff;margin-bottom:8px;">บันทึกแล้ว</div>
+    <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.75;margin-bottom:24px;">สมองเริ่มเห็นภาพรวมมากขึ้นแล้ว<br>ความคิดจะเบาลงเมื่อเราหยุดให้มันเป็นเรื่องราวเดียว</div>
+    <button class="fl-done-btn" onclick="closeFactLog()">เสร็จแล้ว</button>
+    <button class="fl-close-btn" onclick="flReset()">เริ่มใหม่</button>
   </div>
 </div>
 </div>
