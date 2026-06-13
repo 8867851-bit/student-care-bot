@@ -313,6 +313,90 @@
     /* Invitation card — the notebook page turn */
     #invitation-card{-webkit-tap-highlight-color:transparent;}
     #invitation-card:active{transform:translateY(1px) scale(0.99)!important;box-shadow:0 1px 4px rgba(0,0,0,0.06)!important;}
+
+    /* LIBRARY MODE */
+    #sit-overlay{transition:background 0.3s;}
+    #sit-sheet{
+      border-radius:28px 28px 0 0;
+      transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);
+      display:flex;flex-direction:column;
+      max-height:92vh;
+    }
+    /* Sticky pill nav inside sheet */
+    #sit-nav-bar{
+      position:sticky;top:0;z-index:10;
+      background:var(--cream);
+      border-bottom:1px solid transparent;
+      padding:12px 16px 8px;
+      transition:border-color 0.2s;
+      flex-shrink:0;
+    }
+    #sit-nav-bar.scrolled{border-bottom-color:var(--cream-border);}
+    #sit-nav-pills{
+      display:flex;gap:6px;
+      overflow-x:auto;scrollbar-width:none;padding-bottom:2px;
+    }
+    #sit-nav-pills::-webkit-scrollbar{display:none;}
+    .sit-nav-pill{
+      flex-shrink:0;
+      display:inline-flex;align-items:center;gap:5px;
+      padding:7px 12px;border-radius:99px;
+      border:1.5px solid var(--cream-border);
+      background:var(--cream-warm);
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;
+      color:var(--mid);cursor:pointer;white-space:nowrap;
+      transition:all 0.18s;
+    }
+    .sit-nav-pill.active{
+      background:var(--gold-soft);
+      border-color:var(--gold-border);
+      color:var(--dark);font-weight:500;
+    }
+    /* Scrollable content area */
+    #sit-sheet-content{
+      flex:1;overflow-y:auto;padding:16px 20px 32px;
+    }
+    /* Crossfade transition */
+    #sit-sheet-content._fading{
+      opacity:0;transform:translateY(4px);
+      transition:opacity 0.18s ease,transform 0.18s ease;
+      pointer-events:none;
+    }
+    #sit-sheet-content._visible{
+      opacity:1;transform:translateY(0);
+      transition:opacity 0.22s ease,transform 0.22s ease;
+    }
+    /* Quiet close button */
+    #sit-close-btn{
+      position:absolute;top:14px;right:16px;
+      width:28px;height:28px;border-radius:50%;
+      background:none;border:none;
+      font-size:14px;color:var(--soft);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      opacity:0.5;transition:opacity 0.15s;z-index:11;
+    }
+    #sit-close-btn:hover{opacity:1;}
+    /* Continue exploring section */
+    .sit-continue{
+      margin-top:24px;padding-top:20px;
+      border-top:1px solid var(--cream-border);
+    }
+    .sit-continue-label{
+      font-size:10px;font-weight:500;letter-spacing:2px;
+      text-transform:uppercase;color:var(--soft);margin-bottom:12px;
+    }
+    .sit-continue-pills{display:flex;flex-direction:column;gap:8px;}
+    .sit-continue-pill{
+      display:flex;align-items:center;gap:10px;
+      padding:11px 14px;border-radius:12px;
+      background:var(--cream-warm);border:1px solid var(--cream-border);
+      cursor:pointer;font-family:'Mitr',sans-serif;
+      transition:border-color 0.15s,background 0.15s;text-decoration:none;
+    }
+    .sit-continue-pill:active{background:#FFF0D6;border-color:var(--gold-border);}
+    .sit-continue-pill-emoji{font-size:16px;flex-shrink:0;width:22px;text-align:center;}
+    .sit-continue-pill-text{font-size:13px;font-weight:400;color:var(--dark);}
+    .sit-continue-pill-arrow{margin-left:auto;font-size:11px;color:var(--soft);}
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -332,20 +416,19 @@
 
 
   <!-- SITUATION SHEET -->
-  <div id="sit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0);z-index:400;align-items:flex-end;justify-content:center;transition:background 0.3s;pointer-events:none;" onclick="handleSitOverlay(event)">
-    <div id="sit-sheet" style="background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);padding-bottom:env(safe-area-inset-bottom,16px);max-height:92vh;overflow-y:auto;position:relative;display:flex;flex-direction:column;">
-      <!-- Sheet header: handle + close + pill nav -->
-      <div id="sit-sheet-header" style="flex-shrink:0;position:sticky;top:0;background:var(--cream);z-index:2;padding:14px 16px 0;">
-        <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:0 auto 10px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-          <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);" id="sit-sheet-label">วันนี้เป็นยังไงบ้าง?</div>
-          <button onclick="closeSitSheet()" style="background:none;border:none;font-size:15px;color:var(--soft);cursor:pointer;padding:4px 6px;line-height:1;">✕</button>
-        </div>
-        <!-- Pill navigation row inside the sheet -->
-        <div id="sit-nav-pills" style="display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:12px;-webkit-mask-image:linear-gradient(to right,black 0%,black 85%,transparent 100%);mask-image:linear-gradient(to right,black 0%,black 85%,transparent 100%);"></div>
-        <div style="height:1px;background:var(--cream-border);margin:0 -16px;"></div>
+  <div id="sit-overlay" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0);pointer-events:none;transition:background 0.3s;" onclick="handleSitOverlay(event)">
+    <div id="sit-sheet" style="position:absolute;bottom:0;left:0;right:0;background:var(--cream);border-radius:28px 28px 0 0;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);display:flex;flex-direction:column;max-height:92vh;max-width:480px;margin:0 auto;">
+
+      <!-- Quiet close -->
+      <button id="sit-close-btn" onclick="closeSitSheet()">✕</button>
+
+      <!-- Sticky nav bar with pill switcher -->
+      <div id="sit-nav-bar">
+        <div id="sit-nav-pills"></div>
       </div>
-      <div id="sit-sheet-content" style="padding:16px 20px 24px;flex:1;"></div>
+
+      <!-- Scrollable content -->
+      <div id="sit-sheet-content" class="_visible"></div>
     </div>
   </div>
 
@@ -707,40 +790,27 @@ function renderTier(index) {
 function _renderAllPillsInfinite() {
   const container = document.getElementById('tier-pills');
 
-  const makePills = () => ALL_PILLS.map(p =>
+  // Single finite render — no looping duplicate
+  container.innerHTML = ALL_PILLS.map(p =>
     `<button class="sit-pill${SESSION_OPENED.has(p.key) ? (p.key === _lastOpenedKey ? ' touched-last' : ' touched') : ''}" onclick="pressPill(this,'${p.key}')">
       <span class="sit-emoji">${p.emoji}</span>
       <span class="sit-label">${p.label}</span>
     </button>`
   ).join('');
 
-  // Two copies — user starts at position 0 of the first copy and scrolls left→right.
-  // When they reach the end of copy 1, silently jump back to copy 1 start.
-  container.innerHTML = makePills() + makePills();
-
-  // Start at the very beginning (leftmost) — natural left-to-right reading
   container.scrollLeft = 0;
 
-  // Loop: when nearing end of first copy, reset to equivalent position in first copy
-  const onScroll = () => {
-    const half = container.scrollWidth / 2;
-    // Only loop rightward — clamp so it never scrolls left past 0
-    if (container.scrollLeft < 0) {
-      container.style.scrollBehavior = 'auto';
-      container.scrollLeft = 0;
-      requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
-    } else if (container.scrollLeft >= half * 0.95) {
-      container.style.scrollBehavior = 'auto';
-      container.scrollLeft -= half;
-      requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
-    }
+  // Remove old infinite handler if any
+  if (container._infiniteHandler) {
+    container.removeEventListener('scroll', container._infiniteHandler);
+    container._infiniteHandler = null;
+  }
 
-    // Trigger invitation card on first swipe — calm fade, same as scroll-down trigger
+  // Scroll handler — just hero fade + preview trigger, no looping
+  const onScroll = () => {
     if (!_permissionTriggered && container.scrollLeft > 40) {
       _triggerPermissionSentence(600);
     }
-
-    // ── Hero fade on pill swipe — same effect as scrolling down ──
     const hero = document.querySelector('.hero');
     if (hero && !hero.classList.contains('locked') && !hero.classList.contains('listening')) {
       if (container.scrollLeft > 60) {
@@ -750,21 +820,9 @@ function _renderAllPillsInfinite() {
       }
     }
   };
-  if (container._infiniteHandler) container.removeEventListener('scroll', container._infiniteHandler);
   container._infiniteHandler = onScroll;
   container.addEventListener('scroll', onScroll, { passive: true });
-
-  // Block leftward scroll past 0 via touchmove (belt + suspenders)
-  if (!container._leftGuard) {
-    container._leftGuard = true;
-    let _touchStartX = 0;
-    container.addEventListener('touchstart', e => {
-      _touchStartX = e.touches[0].clientX;
-    }, { passive: true });
-    container.addEventListener('touchmove', e => {
-      const delta = e.touches[0].clientX - _touchStartX;
-      // Swipe right (delta > 0) while already at 0 — block it
-      if (delta > 0 && container.scrollLeft <= 0) {
+}
         e.preventDefault();
       }
     }, { passive: false });
@@ -891,157 +949,187 @@ function _updatePillStates() {
   });
 }
 
-// ── Notebook: render current tier's pills into the sheet nav bar ──
+// Curated "continue exploring" map — hand-picked 3 related keys per situation
+const SIT_RELATED = {
+  sleep:      ['burnout','foggy','no_energy'],
+  burnout:    ['not_enough','pressure','tired'],
+  foggy:      ['sleep','overwhelm','burnout'],
+  unsure:     ['not_enough','who_am_i','lost'],
+  friend:     ['fight','lonely','abandoned'],
+  hungry:     ['no_appetite','tired','no_energy'],
+  exam:       ['pressure','not_enough','sleep'],
+  study_fog:  ['exam','foggy','overwhelm'],
+  overwhelm:  ['burnout','pressure','clarity'],
+  pressure:   ['not_enough','burnout','exam'],
+  not_enough: ['pressure','behind','who_am_i'],
+  behind:     ['not_enough','social','self_know'],
+  social:     ['lonely','no_place','fight'],
+  no_place:   ['lonely','social','abandoned'],
+  fight:      ['abandoned','heartbreak','friend'],
+  abandoned:  ['fight','lonely','heartbreak'],
+  crush:      ['heartbreak','unsure','self_know'],
+  heartbreak: ['abandoned','lonely','burnout'],
+  lonely:     ['homesick','abandoned','social'],
+  homesick:   ['lonely','family','misunderstood'],
+  family:     ['misunderstood','need_space','homesick'],
+  misunderstood:['family','need_space','lonely'],
+  need_space: ['overwhelm','misunderstood','self_know'],
+  no_appetite:['hungry','burnout','tired'],
+  phone:      ['sleep','foggy','overwhelm'],
+  no_sun:     ['tired','no_energy','foggy'],
+  tired:      ['sleep','burnout','no_energy'],
+  no_energy:  ['tired','burnout','sleep'],
+  self_know:  ['who_am_i','not_enough','grow'],
+  who_am_i:   ['self_know','grow','changed'],
+  grow:       ['who_am_i','self_know','changed'],
+  changed:    ['who_am_i','grow','lost'],
+  lost:       ['unsure','changed','self_know'],
+};
+
+function _getSitData(key){ return (SIT_DATA && SIT_DATA[key]) || (SIT_DATA_EXTRA && SIT_DATA_EXTRA[key]); }
+
+// ── Notebook: render ALL pills into the sheet nav bar (library mode) ──
 function _renderSheetNavPills(activeKey) {
-  const nav = document.getElementById('sit-nav-pills');
-  if (!nav) return;
-  const tier = TIERS[_currentTier];
-  nav.innerHTML = tier.pills.map(p => {
-    const isActive = p.key === activeKey;
-    const isTouched = SESSION_OPENED.has(p.key) && !isActive;
-    return `<button
-      onclick="_sheetNavPress('${p.key}')"
-      style="flex-shrink:0;display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:99px;
-             background:${isActive ? '#F7FBF5' : '#FDFCFA'};
-             border:1.5px solid ${isActive ? '#E6C77A' : isTouched ? 'rgba(230,199,122,0.5)' : '#E8E3D8'};
-             box-shadow:${isActive ? '0 0 0 3px rgba(87,143,98,0.10)' : 'none'};
-             cursor:pointer;white-space:nowrap;font-family:Mitr,sans-serif;
-             transition:background 0.25s,border-color 0.25s,box-shadow 0.25s;">
-      <span style="font-size:14px;line-height:1;">${p.emoji}</span>
-      <span style="font-size:11px;font-weight:${isActive ? '500' : '400'};color:var(--dark);">${p.label}</span>
-    </button>`;
+  const el = document.getElementById('sit-nav-pills');
+  if (!el) return;
+  const allPills = typeof ALL_PILLS !== 'undefined' ? ALL_PILLS : [];
+  el.innerHTML = allPills.map(p => {
+    const d = _getSitData(p.key);
+    if (!d) return '';
+    const active = p.key === activeKey;
+    return `<button class="sit-nav-pill${active?' active':''}"
+      onclick="switchSitSheet('${p.key}')"
+      id="snp-${p.key}">${p.emoji} ${p.label}</button>`;
   }).join('');
-  // Scroll active pill into view
-  setTimeout(() => {
-    const active = nav.querySelector('button[style*="#F7FBF5"]');
-    if (active) active.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
-  }, 60);
+  // Scroll active pill into center
+  requestAnimationFrame(() => {
+    const active = document.getElementById('snp-' + activeKey);
+    if (active) active.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+  });
 }
 
-// Tap a pill inside the open sheet — crossfade content, stay open
-function _sheetNavPress(key) {
-  if (key === _lastOpenedKey) return; // already showing
+// Content crossfade switch (library mode)
+function switchSitSheet(key) {
+  if (key === _currentSitKey) return;
   SESSION_OPENED.add(key);
   _lastOpenedKey = key;
   _currentSitKey = key;
-  _updatePillStates();
-  _renderSheetNavPills(key);
-  _loadSheetContent(key, true); // true = crossfade
+  // Update nav active state
+  document.querySelectorAll('.sit-nav-pill').forEach(p => {
+    p.classList.toggle('active', p.id === 'snp-' + key);
+  });
+  const active = document.getElementById('snp-' + key);
+  if (active) active.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+  // Crossfade content
+  const content = document.getElementById('sit-sheet-content');
+  content.classList.remove('_visible');
+  content.classList.add('_fading');
+  setTimeout(() => {
+    _buildSheetContent(key, content);
+    content.classList.remove('_fading');
+    content.classList.add('_visible');
+    content.scrollTop = 0;
+    try { sessionStorage.setItem('jaidee_reopen_sit', key); } catch(e) {}
+  }, 180);
 }
 
-// Build and inject sit-sheet content; crossfade=true skips sheet open animation
-function _loadSheetContent(key, crossfade) {
-  const d = SIT_DATA[key] || SIT_DATA_EXTRA[key];
-  if (!d) return;
-  const contentEl = document.getElementById('sit-sheet-content');
-  if (!contentEl) return;
+// Build content HTML (shared by first open and crossfade switch)
+function _buildSheetContent(key, contentEl) {
+  const d = _getSitData(key);
+  if (!d || !contentEl) return;
 
   const toolsHtml = d.tools.map(t => `
-    <a href="${t.href}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary ? 'var(--dark)' : 'var(--cream-warm)'};border:1px solid ${t.primary ? 'var(--dark)' : 'var(--cream-border)'};margin-bottom:8px;">
+    <a href="${t.href}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary?'var(--dark)':'var(--cream-warm)'};border:1px solid ${t.primary?'var(--dark)':'var(--cream-border)'};margin-bottom:8px;">
       <span style="font-size:18px;flex-shrink:0;width:28px;text-align:center;">${t.icon}</span>
       <span style="flex:1;">
-        <span style="display:block;font-size:13px;font-weight:500;color:${t.primary ? '#FDFBF7' : 'var(--dark)'};">${t.name}</span>
-        <span style="display:block;font-size:11px;font-weight:300;color:${t.primary ? 'rgba(253,251,247,0.55)' : 'var(--soft)'};">${t.desc}</span>
+        <span style="display:block;font-size:13px;font-weight:500;color:${t.primary?'#FDFBF7':'var(--dark)'};">${t.name}</span>
+        <span style="display:block;font-size:11px;font-weight:300;color:${t.primary?'rgba(253,251,247,0.55)':'var(--soft)'};">${t.desc}</span>
       </span>
-      <span style="font-size:12px;color:${t.primary ? 'rgba(255,255,255,0.3)' : 'var(--faint)'};">→</span>
+      <span style="font-size:12px;color:${t.primary?'rgba(255,255,255,0.3)':'var(--faint)'};">→</span>
     </a>`).join('');
 
-  const newHtml = `
-    <div class="_sl" style="opacity:0;transform:translateY(${crossfade ? '4px' : '6px'});transition:opacity 0.22s ease,transform 0.22s ease;">
+  // Continue exploring
+  const related = (SIT_RELATED[key] || []).slice(0,3);
+  const continueHtml = related.length ? `
+    <div class="sit-continue">
+      <div class="sit-continue-label">หลายคนที่เปิดเรื่องนี้ ยังดูต่อ...</div>
+      <div class="sit-continue-pills">
+        ${related.map(rk => {
+          const rd = _getSitData(rk);
+          if (!rd) return '';
+          const pill = (typeof ALL_PILLS!=='undefined' ? ALL_PILLS : []).find(p => p.key === rk);
+          const label = pill ? pill.label : rd.title;
+          const emoji = pill ? pill.emoji : rd.emoji;
+          return `<button class="sit-continue-pill" onclick="switchSitSheet('${rk}')">
+            <span class="sit-continue-pill-emoji">${emoji}</span>
+            <span class="sit-continue-pill-text">${label}</span>
+            <span class="sit-continue-pill-arrow">→</span>
+          </button>`;
+        }).join('')}
+      </div>
+    </div>` : '';
+
+  // Talk link
+  const talkHtml = d.talk ? `
+    <div style="margin-top:20px;padding:14px 16px;background:var(--cream-warm);border-radius:14px;border:1px solid var(--cream-border);">
+      <div style="font-size:12px;color:var(--soft);margin-bottom:10px;">${d.talk}</div>
+      <div style="display:flex;gap:8px;">
+        <a href="peer.html" style="flex:1;display:block;text-align:center;padding:10px;background:var(--dark);color:#FDFBF7;border-radius:12px;font-size:13px;font-weight:500;text-decoration:none;">💛 คุยกับเพื่อนที่ปรึกษา</a>
+        <a href="guidance.html" style="flex:1;display:block;text-align:center;padding:10px;background:var(--cream);color:var(--dark);border:1px solid var(--cream-border);border-radius:12px;font-size:13px;font-weight:400;text-decoration:none;">👩‍🏫 ครูแนะแนว</a>
+      </div>
+    </div>` : '';
+
+  contentEl.innerHTML = `
+    <div class="_sl" style="opacity:0;transform:translateY(4px);transition:opacity 0.22s ease,transform 0.22s ease;">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
         <span style="font-size:28px;">${d.emoji}</span>
         <span style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);">${d.title}</span>
       </div>
-      <div style="font-size:13px;font-weight:400;color:var(--mid);line-height:1.75;margin-bottom:16px;padding:12px 14px;background:var(--cream-warm);border-radius:10px;">${d.note}</div>
-    </div>
-    <div class="_sl" style="opacity:0;transform:translateY(${crossfade ? '4px' : '6px'});transition:opacity 0.22s ease,transform 0.22s ease;transition-delay:0.12s;">
+      <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--cream-border);">${d.note}</div>
       ${toolsHtml}
-    </div>
-    <div class="_sl" style="opacity:0;transform:translateY(${crossfade ? '4px' : '6px'});transition:opacity 0.22s ease,transform 0.22s ease;transition-delay:0.24s;">
-      <div style="border-top:1px solid var(--cream-border);padding-top:10px;margin-top:6px;font-size:12px;color:var(--soft);line-height:1.6;">
-        ${d.talk} <a href="talk_who.html" style="color:var(--mid);font-weight:500;text-decoration:underline;text-underline-offset:3px;">คุยกับใครสักคน →</a>
-      </div>
-      <button onclick="closeSitSheet();setTimeout(openAllSituationsSheet,320);" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;margin-top:10px;background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:12px;width:100%;cursor:pointer;font-family:'Mitr',sans-serif;">
-        <span style="font-size:12px;font-weight:400;color:var(--soft);">ดูเรื่องอื่นๆ ทั้งหมด</span>
-        <span style="font-size:12px;opacity:0.45;">🌿</span>
-      </button>
+      ${talkHtml}
+      ${continueHtml}
     </div>`;
 
-  if (crossfade) {
-    // Fade out old content, swap, fade in
-    contentEl.style.transition = 'opacity 0.15s ease';
-    contentEl.style.opacity = '0';
-    setTimeout(() => {
-      contentEl.innerHTML = newHtml;
-      contentEl.style.opacity = '1';
-      contentEl.scrollTop = 0;
-      requestAnimationFrame(() => {
-        contentEl.querySelectorAll('._sl').forEach(el => {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        });
-      });
-    }, 150);
-  } else {
-    contentEl.innerHTML = newHtml;
-    requestAnimationFrame(() => {
-      contentEl.querySelectorAll('._sl').forEach(el => {
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      });
+  requestAnimationFrame(() => {
+    contentEl.querySelectorAll('._sl').forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
     });
-  }
+  });
 }
 
 function openSitSheet(key) {
-   const d = SIT_DATA[key] || SIT_DATA_EXTRA[key];
-   if (!d) return;
+  const d = _getSitData(key);
+  if (!d) return;
 
   const isFirstEver = SESSION_OPENED.size === 0;
-
-  // Record session memory
   SESSION_OPENED.add(key);
   _lastOpenedKey = key;
   _currentSitKey = key;
 
-  // First interaction — hero becomes a watermark immediately
   if (isFirstEver) {
     const hero = document.querySelector('.hero');
     if (hero) { hero.classList.remove('scrolled'); hero.classList.add('locked','listening'); }
-    // Page warms slightly
     document.body.style.transition = 'background 1.2s ease';
     document.body.style.background = '#FDF9F4';
-    // Label softens
     const lbl = document.getElementById('tier-label');
     if (lbl) { setTimeout(() => { lbl.style.transition='opacity 0.4s ease'; lbl.style.opacity='0'; setTimeout(()=>{ lbl.textContent='ลองค่อย ๆ ดูก็ได้'; lbl.style.opacity='1'; },400); }, 600); }
-    // Start notebook whispers after user has engaged
-    _startNotebookWhispers();
+    _startNotebookWhispers && _startNotebookWhispers();
+    _triggerPermissionSentence && _triggerPermissionSentence();
   }
-
-  // Stage 3: third unique pill — page quiets
-  if (SESSION_OPENED.size === 3) {
-    document.body.classList.add('quieted');
-  }
-
-  // First meaningful interaction — permission sentence brightens after 2.5s
-  if (isFirstEver) {
-    _triggerPermissionSentence();
-  }
-
-  // วันนี้พอแค่นี้ — show after 2+ pills
+  if (SESSION_OPENED.size === 3) document.body.classList.add('quieted');
   if (SESSION_OPENED.size === 2) {
     const exit = document.getElementById('exit-line');
-    if (exit) {
-      exit.style.pointerEvents = 'none';
-      // Delay so it appears when they next scroll to the bottom
-      setTimeout(() => { exit.style.opacity = '1'; }, 800);
-    }
+    if (exit) { exit.style.pointerEvents='none'; setTimeout(()=>{exit.style.opacity='1';},800); }
   }
 
-  // Build content via shared helper (no crossfade on first open)
+  // Build nav + content
   _renderSheetNavPills(key);
-  _loadSheetContent(key, false);
+  const content = document.getElementById('sit-sheet-content');
+  _buildSheetContent(key, content);
 
+  // Open sheet
   const ov = document.getElementById('sit-overlay');
   ov.style.display = 'flex';
   ov.style.pointerEvents = 'all';
@@ -1050,6 +1138,11 @@ function openSitSheet(key) {
     document.getElementById('sit-sheet').style.transform = 'translateY(0)';
   });
   document.body.style.overflow = 'hidden';
+
+  // Scroll listener for nav bar shadow
+  content.onscroll = () => {
+    document.getElementById('sit-nav-bar')?.classList.toggle('scrolled', content.scrollTop > 4);
+  };
 }
 
 function closeSitSheet() {
@@ -1177,10 +1270,10 @@ const SIT_DATA_EXTRA = {
     emoji:'📚', title:'กลัวสอบ',
     note:'ความกังวลก่อนสอบเป็นเรื่องปกติมาก แต่ถ้ามันมากเกินจนกระทบการนอนหรือทำให้อ่านไม่ได้เลย อาจต้องการความช่วยเหลือ',
     tools:[
-      { icon:'🎯', name:'เตรียมตัวก่อนสอบ', desc:'Pre-performance grounding ลด anxiety ใน 3 นาที', href:'alltools.html#grounding' },
-      { icon:'🌬️', name:'หายใจก่อนเลย', desc:'ลด cortisol ก่อนเรียนหรือก่อนสอบ', href:'alltools.html#breathe' },
-      { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้าความกังวลลึกกว่าแค่เรื่องสอบ', href:'reflection.html' },
+      { icon:'💪', name:'Power Posture', desc:'2 นาที รีเซ็ตร่างกายก่อนเข้าห้องสอบ', href:'alltools.html#posture' },
+      { icon:'🌬️', name:'หายใจก่อนเลย', desc:'ลด cortisol ก่อนสอบ', href:'alltools.html#breathe' },
       { icon:'🌙', name:'Sleep Reset', desc:'นอนดีก่อนสอบสำคัญกว่าอ่านดึก', href:'alltools.html#sleep' },
+      { icon:'📖', name:'คู่มือรับมือความกังวลก่อนสอบ', desc:'อ่าน 4 นาที', href:'notebook.html?id=exam' },
     ],
     talk:'กังวลมากจนนอนไม่หลับหรือทำอะไรไม่ได้?',
   },
@@ -1211,7 +1304,8 @@ const SIT_DATA_EXTRA = {
       { icon:'🎯', name:'เตรียมตัว — ลด tension', desc:'Grounding 3 นาที ก่อนเผชิญสิ่งที่กดดัน', href:'alltools.html#grounding' },
       { icon:'🍃', name:'คลายมือจากความคิด', desc:'ผ่อนความเชื่อ "ต้องสมบูรณ์แบบ" ที่กดตัวเองอยู่', href:'alltools.html#reframe' },
       { icon:'🤍', name:'พักใจ', desc:'เมื่อกดดันตัวเองมากเกิน self-compassion ช่วยได้', href:'alltools.html#rest' },
-      { icon:'🪞', name:'What\'s This Feeling?', desc:'ความกดดันนี้มาจากไหน', href:'reflection.html' },
+      { icon:'🧩', name:'Fact-Log', desc:'แยก "ฉันต้องสมบูรณ์แบบ" ออกจากความจริง', href:'alltools.html#factlog' },
+      { icon:'📖', name:'คู่มือรับมือความกดดันจากความสมบูรณ์แบบ', desc:'อ่าน 5 นาที', href:'notebook.html?id=pressure' },
     ],
     talk:'กดดันตัวเองจนรู้สึกไม่ไหว?',
   },
@@ -1221,7 +1315,8 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อ "ไม่เก่งพอ" เกาะแน่นจนเจ็บ — คลายมือจากมัน', href:'alltools.html#reframe', primary:true },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจว่าความรู้สึกนี้มาจากไหน', href:'reflection.html' },
-      { icon:'🧩', name:'ค้นพบจุดแข็งของตัวเอง', desc:'VIA, High5, และอื่นๆ', href:'#', onclick:'openCareSheet()' },
+      { icon:'🧩', name:'Fact-Log', desc:'แยกสิ่งที่สมองบอก ออกจากหลักฐานจริง', href:'alltools.html#factlog' },
+      { icon:'📖', name:'คู่มือรับมือความรู้สึกว่าตัวเองไม่เก่งพอ', desc:'อ่าน 5 นาที', href:'notebook.html?id=not_enough' },
     ],
     talk:'ความรู้สึกนี้กระทบชีวิตประจำวันมาก?',
   },
@@ -1258,7 +1353,9 @@ const SIT_DATA_EXTRA = {
     emoji:'💬', title:'ทะเลาะกับเพื่อน',
     note:'ความขัดแย้งเป็นส่วนของมิตรภาพ แต่มันก็เจ็บปวดได้มาก โดยเฉพาะถ้ายังแก้ไขไม่ได้',
     tools:[
-      { icon:'📖', name:'คู่มือ: ความขัดแย้งกับเพื่อน', desc:'จะพูดยังไง จะเริ่มยังไง', href:'resources.html#conflict' },
+      { icon:'🗣️', name:'เตรียมใจก่อนคุย', desc:'I-Message + Cooldown timer', href:'alltools.html#conflict-prep', primary:true },
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ลดความร้อนในระบบก่อน', href:'alltools.html#breathe' },
+      { icon:'📖', name:'คู่มือ: ความขัดแย้งกับเพื่อน', desc:'จะพูดยังไง จะเริ่มยังไง', href:'notebook.html?id=fight' },
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ขอมุมมองจากคนนอก', href:'peer.html' },
     ],
     talk:'สถานการณ์ซับซ้อนหรือไม่รู้จะจัดการยังไง?',
@@ -1290,6 +1387,7 @@ const SIT_DATA_EXTRA = {
       { icon:'📓', name:'เขียนระบาย', desc:'เขียนออกมาช่วยได้มาก', href:'alltools.html#journal' },
       { icon:'🤍', name:'พักใจ', desc:'self-compassion ในวันที่ใจสลาย', href:'alltools.html#rest' },
       { icon:'🌬️', name:'หายใจผ่อนคลาย', desc:'Physiological sigh ลดคลื่นความเจ็บเฉียบพลัน', href:'alltools.html#breathe' },
+      { icon:'📖', name:'คู่มือรับมือสภาวะใจสลาย', desc:'อ่าน 4 นาที', href:'notebook.html?id=heartbreak' },
     ],
     talk:'รู้สึกหนักมากหรือไม่ไหวแล้ว?',
   },
@@ -1301,6 +1399,7 @@ const SIT_DATA_EXTRA = {
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจความรู้สึกข้างใน', href:'reflection.html' },
       { icon:'🎧', name:'Sati — อาสานักรับฟัง', desc:'익명 · ฟรี', href:'https://satiapp.co' },
       { icon:'🌱', name:'Little by Little', desc:'กิจกรรมสั้น ๆ ที่ช่วยให้มองเห็นสิ่งสำคัญในชีวิตอีกครั้ง', href:'https://thelittlebylittle.com/' },
+      { icon:'📖', name:'คู่มือรับมือความเหงา', desc:'อ่าน 4 นาที', href:'notebook.html?id=lonely' },
     ],
     talk:'รู้สึกเหงามากหรือนานมากแล้ว?',
   },
@@ -1310,6 +1409,8 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'รับฟัง โดยไม่ตัดสิน', href:'peer.html' },
       { icon:'📓', name:'เขียนระบาย', desc:'เขียนถึงบ้านในสมุด', href:'alltools.html#journal' },
+      { icon:'📖', name:'คู่มือ: คิดถึงบ้าน', desc:'สำหรับคนที่บ้านคือที่ปลอดภัย', href:'notebook.html?id=homesick_safe' },
+      { icon:'📖', name:'คู่มือ: สูญเสียพื้นที่ปลอดภัย', desc:'สำหรับคนที่ความรู้สึกนี้ซับซ้อนกว่านั้น', href:'notebook.html?id=homesick_complex' },
     ],
     talk:'คิดถึงบ้านจนกระทบชีวิตประจำวัน?',
   },
@@ -1346,6 +1447,7 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html?open=food' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้ามันเกี่ยวกับอะไรมากกว่าการกิน', href:'reflection.html' },
+      { icon:'📖', name:'คู่มือเมื่อคุณกินข้าวไม่ลง', desc:'อ่าน 4 นาที', href:'notebook.html?id=no_appetite' },
     ],
     talk:'ไม่กินมาหลายวันหรือกินแล้วรู้สึกผิด?',
   },
