@@ -493,13 +493,13 @@
       <!-- STEP 1: Gentle Pause -->
       <div id="fc-step-1" class="fc-step active" style="padding:0 20px 24px;">
         <div style="text-align:center;margin-bottom:24px;">
-          <div style="font-size:36px;margin-bottom:12px;">🌱</div>
+          <div style="font-size:36px;margin-bottom:12px;">💧</div>
           <div style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);margin-bottom:10px;" id="fc-pause-title">ใจดีขอแวะเช็กพลังงานกายแป๊บนึงนะ...</div>
           <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;font-family:'Noto Serif Thai',serif;" id="fc-pause-desc">บางทีสิ่งที่รู้สึกอยู่<br>อาจเป็นเพราะร่างกายกำลังส่งสัญญาณเตือน<br>ลองเช็ก 4 ข้อง่ายๆ ก่อนลุยต่อกันไหม?</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
           <button class="fc-btn-primary" onclick="fcGoStep(2)">แน่นอน เช็กหน่อย 🔋</button>
-          <button class="fc-btn-secondary" id="fc-skip-btn" onclick="fcSkipToSit()">ข้ามไปคุยเลยก็ได้</button>
+          <button class="fc-btn-secondary" id="fc-skip-btn" onclick="fcSkipToSit()">ไม่เป็นไร... ขอข้ามไปเครื่องมือเลย</button>
         </div>
       </div>
 
@@ -576,7 +576,7 @@
 
         <div style="margin-top:6px;">
           <button class="fc-btn-primary" id="fc-checklist-next" onclick="fcGoStep(3)" style="opacity:0.45;pointer-events:none;">บันทึกและดูคำแนะนำ →</button>
-          <button class="fc-btn-secondary" style="margin-top:8px;" onclick="fcSkipToSit()">ข้ามไปคุยเลย</button>
+          <button class="fc-btn-secondary" style="margin-top:8px;" onclick="fcSkipToSit()">ไม่เป็นไร... ขอข้ามไปเครื่องมือเลย</button>
         </div>
       </div>
 
@@ -589,8 +589,8 @@
         <div id="fc-microsteps"></div>
         <div style="margin-top:6px;border-top:1px solid var(--cream-border);padding-top:16px;">
           <div style="font-size:12px;font-weight:300;color:var(--soft);font-family:'Noto Serif Thai',serif;text-align:center;margin-bottom:14px;" id="fc-transition-msg">เก่งมาก! ตอนนี้มาดูแลใจกันต่อเลยนะ</div>
-          <button class="fc-btn-primary" onclick="fcDone()">👍 ทำเสร็จแล้ว! รู้สึกดีขึ้นนิดนึง</button>
-          <button class="fc-btn-secondary" style="margin-top:8px;" onclick="fcSkipToSit()">💬 ทำไม่ไหว... อยากคุยกับใจดีต่อเลย</button>
+          <button class="fc-btn-primary" onclick="fcDone()">👍🏻 ทำภารกิจแล้ว! รู้สึกดีขึ้นนิดนึง</button>
+          <button class="fc-btn-secondary" style="margin-top:8px;" onclick="fcSkipToSit()">ไม่เป็นไร... ขอไปดูแลใจต่อเลย</button>
         </div>
       </div>
 
@@ -1034,8 +1034,8 @@ const SIT_DATA = {
     emoji: '😴', title: 'นอนไม่หลับ',
     note: 'การนอนไม่เพียงพอสะสมส่งผลต่ออารมณ์และสมาธิโดยตรง บางทีที่รู้สึกว่า "ไม่ไหว" อาจเป็นแค่ว่าร่างกายยังพักไม่พอ',
     tools: [
-      { icon:'🌙', name:'Sleep Reset', desc:'ช่วยให้จิตใจพร้อมนอน', href:'alltools.html#sleep' },
-      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'2 นาที ก่อนนอน', href:'alltools.html#breathe' },
+      { icon:'🌙', name:'Sleep Reset', desc:'ปรับร่างกายให้พร้อมนอน · มีไกด์แนะแนว', href:'alltools.html#sleep', primary: true },
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'2 นาที ลดความตื่นตัวก่อนนอน', href:'alltools.html#breathe' },
       { icon:'📖', name:'ทำไมยิ่งพยายามนอน ยิ่งนอนไม่หลับ', desc:'เข้าใจสิ่งที่เกิดขึ้น + วิธีที่ช่วยได้', href:'notebook.html?id=sleep' },
     ],
     talk: 'นอนไม่หลับมาหลายสัปดาห์แล้ว?',
@@ -1044,19 +1044,21 @@ const SIT_DATA = {
     emoji: '🪫', title: 'หมดไฟ',
     note: 'หมดไฟมักเกิดเมื่อร่างกายและจิตใจทำงานหนักเกินไปนานเกินไป โดยไม่ได้รับการดูแลเรื่องพื้นฐาน ไม่ใช่ความอ่อนแอ แต่เป็นสัญญาณที่ต้องรับฟัง',
     tools: [
+      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจว่าหมดไฟจากอะไรกันแน่', href:'reflection.html', primary: true },
       { icon:'🏃', name:'เคลื่อนไหวก่อนเลย', desc:'3 นาที เปลี่ยนพลังงาน', href:'alltools.html#move' },
-      { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html' },
-      { icon:'📖', name:'คู่มือรับมือภาวะหมดไฟ', desc:'อ่าน 4 นาที', href:'notebook.html?id=burnout' },
+      { icon:'📖', name:'คู่มือรับมือภาวะหมดไฟ', desc:'อ่าน 4 นาที · ฟื้นตัวทีละก้าว', href:'notebook.html?id=burnout' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ถ้าหมดไฟมาสักพักแล้ว', href:'peer.html' },
     ],
     talk: 'หมดแรงมาหลายสัปดาห์แล้ว ไม่ฟื้นตัวเลย?',
   },
   foggy: {
-    emoji: '🤯', title: 'สมองตื้อ อ่านหนังสือไม่เข้า',
-    note: 'สมองที่อ่อนล้าไม่ต่างจากกล้ามเนื้อที่เหนื่อย บังคับให้ทำต่อไปไม่ได้ผล แต่การพักสั้นๆ และขยับตัวมักช่วยได้เร็วกว่าที่คิด',
+    emoji: '🤯', title: 'สมองตื้อ',
+    note: 'สมองที่อ่อนล้าไม่ต่างจากกล้ามเนื้อที่เหนื่อย บังคับให้ทำต่อไปไม่ได้ผล แต่การพักสั้นๆ มักช่วยได้เร็วกว่าที่คิด',
     tools: [
-      { icon:'🌬️', name:'หายใจก่อนเลย', desc:'รีเซ็ตสมาธิ 2 นาที', href:'alltools.html#breathe' },
+      { icon:'🫁', name:'หายใจรีเซ็ตสมาธิ', desc:'2 นาที ออกซิเจนเข้าสมองก่อน', href:'alltools.html#breathe', primary: true },
       { icon:'🏃', name:'ลุกขึ้นขยับตัว', desc:'5 นาที แล้วกลับมาใหม่', href:'alltools.html#move' },
       { icon:'🌙', name:'Sleep Reset', desc:'ถ้านอนน้อยคือต้นเหตุ', href:'alltools.html#sleep' },
+      { icon:'📖', name:'สมองตื้อ: เข้าใจและแก้ตรงจุด', desc:'อ่าน 3 นาที', href:'notebook.html?id=foggy' },
     ],
     talk: 'เป็นมานานแล้ว หรือไม่ใช่แค่เรื่องเรียน?',
   },
@@ -1092,7 +1094,8 @@ const SIT_DATA = {
     emoji: '🥛', title: 'วันนี้ดื่มน้ำน้อยมาก',
     note: 'การขาดน้ำเพียงเล็กน้อยทำให้สมองทำงานช้าลง อารมณ์หงุดหงิด และรู้สึกเหนื่อยโดยไม่มีเหตุผล บางทีแค่จิบน้ำก็เปลี่ยนได้เยอะ',
     tools: [
-      { icon:'💧', name:'ดื่มน้ำ 2 อึกก่อนเลย', desc:'ไม่ต้องรีบดื่มทั้งแก้ว แค่เริ่มก็พอ', href:'#' },
+      { icon:'🫁', name:'หายใจ + รีเซ็ต', desc:'ดื่มน้ำแล้วหายใจ 2 นาที สมองจะโล่งขึ้น', href:'alltools.html#breathe', primary: true },
+      { icon:'💧', name:'ดื่มน้ำ 2 อึกก่อนเลย', desc:'ไม่ต้องรีบดื่มทั้งแก้ว แค่เริ่มก็พอ', href:'alltools.html#breathe' },
       { icon:'📖', name:'น้ำกับสมอง: เชื่อมกันยังไง', desc:'อ่าน 2 นาที', href:'notebook.html?id=water' },
     ],
     talk: 'รู้สึกหน้ามืดหรือหมดแรงอย่างหนัก?',
@@ -1101,7 +1104,7 @@ const SIT_DATA = {
     emoji: '🚿', title: 'ดองเค็ม / ยังไม่ได้อาบน้ำ',
     note: 'เมื่อพลังงานต่ำมาก แม้แต่การอาบน้ำก็รู้สึกหนักเกินไป นั่นไม่ใช่ความขี้เกียจ แต่เป็นสัญญาณว่าร่างกายและจิตใจกำลังขอความช่วยเหลือ',
     tools: [
-      { icon:'💡', name:'รีเซ็ต 10 วินาที', desc:'แค่ล้างหน้าด้วยน้ำเย็น หรือเปลี่ยนเสื้อตัวใหม่', href:'#' },
+      { icon:'💡', name:'รีเซ็ต 10 วินาที', desc:'แค่ล้างหน้าด้วยน้ำเย็น หรือเปลี่ยนเสื้อตัวใหม่', href:'alltools.html#breathe', primary: true },
       { icon:'🪞', name:"What's This Feeling?", desc:'ถ้ามันเกี่ยวข้องกับอารมณ์ที่หนักกว่านั้น', href:'reflection.html' },
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ไม่ต้องแบกคนเดียว', href:'peer.html' },
     ],
@@ -1111,8 +1114,8 @@ const SIT_DATA = {
     emoji: '🧺', title: 'ห้องรกจนไม่มีที่เดิน',
     note: 'ห้องที่รกมักสะท้อนสภาพจิตใจที่ล้นเกิน ไม่ใช่เรื่องน่าละอาย แต่บางทีการจัดของแค่มุมเล็กๆ ก็ช่วยให้ใจเบาขึ้นได้จริง',
     tools: [
-      { icon:'📦', name:'จัดมุมเล็ก 5 นาที', desc:'ไม่ต้องจัดทั้งห้อง แค่เก็บของบนโต๊ะนอนก็พอ', href:'#' },
-      { icon:'🏃', name:'ขยับตัวก่อน', desc:'เพิ่มพลังงานก่อนจัดของ', href:'alltools.html#move' },
+      { icon:'🏃', name:'ขยับตัวก่อน 3 นาที', desc:'เพิ่มพลังก่อนลงมือจัด', href:'alltools.html#move', primary: true },
+      { icon:'📦', name:'จัดมุมเล็ก 5 นาที', desc:'ไม่ต้องจัดทั้งห้อง แค่เก็บของบนโต๊ะนอนก็พอ', href:'alltools.html#move' },
       { icon:'📖', name:'ทำไมห้องรกแล้วใจก็รก', desc:'จิตวิทยาของพื้นที่', href:'notebook.html?id=space' },
     ],
     talk: 'รู้สึกท่วมหมดทุกอย่าง ไม่รู้จะเริ่มตรงไหน?',
@@ -1236,32 +1239,6 @@ function closeFoundationSheet(cb) {
 function handleFcOverlay(e) {
   // Only close if tapping the dark backdrop (not the sheet itself)
   if (e.target === document.getElementById('fc-overlay')) fcSkipToSit();
-}
-
-function _fcUpdateProgress() {
-  // Deselect siblings in same key group
-  document.querySelectorAll(`.fc-radio[data-key="${key}"]`).forEach(r => {
-    r.classList.remove('selected-ok','selected-low');
-  });
-  el.classList.add(val === 'ok' ? 'selected-ok' : 'selected-low');
-
-  // Mark card
-  const card = document.getElementById('fc-card-' + key);
-  if (card) {
-    card.classList.remove('checked-ok','checked-low');
-    card.classList.add(val === 'ok' ? 'checked-ok' : 'checked-low');
-  }
-
-  _fcState[key] = val;
-  _fcUpdateProgress();
-
-  // Enable next button when all 4 answered
-  const answered = Object.values(_fcState).filter(v => v !== null).length;
-  const nextBtn = document.getElementById('fc-checklist-next');
-  if (answered === 4) {
-    nextBtn.style.opacity = '1';
-    nextBtn.style.pointerEvents = 'auto';
-  }
 }
 
 function fcSelect(key, val, el) {
@@ -1983,8 +1960,8 @@ const SIT_DATA_EXTRA = {
     emoji:'🍚', title:'กินข้าวไม่ค่อยลง',
     note:'ความเครียดและความวิตกกังวลส่งผลต่อความอยากอาหารโดยตรง ถ้าเป็นนานหลายวันควรใส่ใจ',
     tools:[
-      { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html?open=food' },
-      { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้ามันเกี่ยวกับอะไรมากกว่าการกิน', href:'reflection.html' },
+      { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ให้พื้นที่กับความรู้สึกที่กดทับความอยากอาหารอยู่', href:'alltools.html#rain', primary:true },
+      { icon:'🪞', name:"What's This Feeling?", desc:'ถ้ามันเกี่ยวกับอะไรมากกว่าการกิน', href:'reflection.html' },
       { icon:'📖', name:'คู่มือเมื่อคุณกินข้าวไม่ลง', desc:'อ่าน 4 นาที', href:'notebook.html?id=no_appetite' },
     ],
     talk:'ไม่กินมาหลายวันหรือกินแล้วรู้สึกผิด?',
@@ -2002,8 +1979,9 @@ const SIT_DATA_EXTRA = {
     emoji:'☀️', title:'ไม่ค่อยได้ออกไปไหน',
     note:'แสงธรรมชาติมีผลต่อ serotonin และอารมณ์โดยตรง แค่ 10-15 นาทีนอกอาคารต่อวันช่วยได้จริง',
     tools:[
-      { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'แสงแดดและการขยับตัว', href:'foundations.html?open=sun' },
-      { icon:'🏃', name:'เดินออกไปข้างนอก', desc:'3 นาทีก็ได้', href:'alltools.html#move' },
+      { icon:'🏃', name:'ขยับตัว + อากาศสดชื่น', desc:'3–5 นาทีก็เปลี่ยนได้ · มี guided prompts', href:'alltools.html#move', primary:true },
+      { icon:'🌬️', name:'หายใจริมหน้าต่าง', desc:'เปิดหน้าต่างสูดอากาศ + หายใจ 2 นาที', href:'alltools.html#breathe' },
+      { icon:'⚡', name:'สวิตช์เล็กที่สุด', desc:'เดินออกไปแตะพื้นด้านนอก 30 วิ', href:'alltools.html#rewire' },
     ],
     talk:'อยู่แต่ในห้องนานมากและรู้สึกแย่ลงเรื่อยๆ?',
   },
@@ -2011,9 +1989,9 @@ const SIT_DATA_EXTRA = {
     emoji:'🪫', title:'เหนื่อยตลอดเวลา',
     note:'ความเหนื่อยล้าเรื้อรังอาจมาจากหลายสาเหตุ นอน ความเครียด หรือบางอย่างที่ต้องการความใส่ใจมากกว่านี้',
     tools:[
-      { icon:'🌱', name:'เช็กเรื่องพื้นฐาน', desc:'นอน กิน ขยับตัว', href:'foundations.html' },
-      { icon:'🪞', name:'What\'s This Feeling?', desc:'ถ้าความเหนื่อยมันลึกกว่าร่างกาย', href:'reflection.html' },
-      { icon:'⚡', name:'Rewire สวิตช์ 30 วิ', desc:'ไมโครแฮบิตเล็กๆ รีบูตสมอง', href:'alltools.html#rewire' },
+      { icon:'⚡', name:'Rewire สวิตช์ 30 วิ', desc:'ไมโครแฮบิตเล็กที่สุดที่ทำได้ตอนนี้เลย', href:'alltools.html#rewire', primary:true },
+      { icon:'🪞', name:"What's This Feeling?", desc:'ถ้าความเหนื่อยมันลึกกว่าร่างกาย', href:'reflection.html' },
+      { icon:'🌙', name:'Sleep Reset', desc:'ตรวจสอบว่านอนหลับดีพอไหม', href:'alltools.html#sleep' },
     ],
     talk:'เหนื่อยมากนานแล้วและไม่ดีขึ้น?',
   },
