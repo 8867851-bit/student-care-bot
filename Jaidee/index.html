@@ -397,6 +397,72 @@
     .sit-continue-pill-emoji{font-size:16px;flex-shrink:0;width:22px;text-align:center;}
     .sit-continue-pill-text{font-size:13px;font-weight:400;color:var(--mid);}
     .sit-continue-pill-arrow{margin-left:auto;font-size:11px;color:var(--faint);}
+
+    /* ── FOUNDATION CHECK SHEET ── */
+    #fc-overlay{transition:background 0.3s;}
+    #fc-sheet{
+      border-radius:28px 28px 0 0;
+      transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);
+      display:flex;flex-direction:column;
+      max-height:90vh;
+    }
+    /* Step containers */
+    .fc-step{display:none;flex-direction:column;flex:1;overflow-y:auto;}
+    .fc-step.active{display:flex;}
+    /* Checklist cards */
+    .fc-check-card{
+      background:var(--cream-warm);border:1.5px solid var(--cream-border);
+      border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;
+      transition:border-color 0.18s,background 0.18s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .fc-check-card.checked-ok{
+      background:#F3FAF4;border-color:#A8D4AC;
+    }
+    .fc-check-card.checked-low{
+      background:#FFF8EE;border-color:#FFD080;
+    }
+    .fc-check-row{display:flex;align-items:center;gap:12px;}
+    .fc-check-icon{font-size:22px;flex-shrink:0;width:32px;text-align:center;}
+    .fc-check-label{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:500;color:var(--dark);flex:1;}
+    .fc-check-options{display:flex;flex-direction:column;gap:6px;margin-top:12px;padding-left:44px;}
+    .fc-radio{
+      display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+      border:1.5px solid var(--cream-border);background:var(--cream);cursor:pointer;
+      font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--mid);
+      transition:background 0.15s,border-color 0.15s;
+    }
+    .fc-radio.selected-ok{background:#E8F5EA;border-color:#8BC98F;color:#1A5C20;}
+    .fc-radio.selected-low{background:#FFF3DC;border-color:#FFCC66;color:#7A5000;}
+    .fc-radio-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--cream-border);flex-shrink:0;transition:background 0.15s,border-color 0.15s;}
+    .fc-radio.selected-ok .fc-radio-dot{background:#4CAF50;border-color:#4CAF50;}
+    .fc-radio.selected-low .fc-radio-dot{background:#FFA500;border-color:#FFA500;}
+    /* Progress bar */
+    .fc-progress-track{height:3px;background:var(--cream-border);border-radius:99px;overflow:hidden;margin-bottom:20px;}
+    .fc-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#A8D4AC,#4CAF50);transition:width 0.4s ease;}
+    /* Micro-step cards */
+    .fc-micro-card{
+      background:var(--cream-warm);border:1px solid var(--cream-border);
+      border-radius:14px;padding:14px 16px;margin-bottom:10px;
+    }
+    .fc-micro-icon{font-size:20px;margin-bottom:6px;}
+    .fc-micro-title{font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px;}
+    .fc-micro-desc{font-size:12px;font-weight:300;color:var(--mid);line-height:1.7;}
+    /* CTA buttons */
+    .fc-btn-primary{
+      width:100%;padding:14px 20px;border-radius:20px;border:none;
+      background:var(--dark);color:var(--cream);
+      font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;
+      cursor:pointer;transition:opacity 0.15s;
+    }
+    .fc-btn-primary:active{opacity:0.8;}
+    .fc-btn-secondary{
+      width:100%;padding:12px 20px;border-radius:20px;border:1.5px solid var(--cream-border);
+      background:none;color:var(--mid);
+      font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;
+      cursor:pointer;transition:background 0.15s;
+    }
+    .fc-btn-secondary:active{background:var(--cream-border);}
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -414,6 +480,122 @@
 
 
 
+
+  <!-- FOUNDATION CHECK SHEET -->
+  <div id="fc-overlay" style="display:none;position:fixed;inset:0;z-index:250;background:rgba(0,0,0,0);pointer-events:none;transition:background 0.3s;" onclick="handleFcOverlay(event)">
+    <div id="fc-sheet" style="position:absolute;bottom:0;left:0;right:0;background:var(--cream);border-radius:28px 28px 0 0;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);display:flex;flex-direction:column;max-height:90vh;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom,24px);">
+
+      <!-- Drag handle + close -->
+      <div style="padding:14px 20px 0;flex-shrink:0;">
+        <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:0 auto 16px;"></div>
+      </div>
+
+      <!-- STEP 1: Gentle Pause -->
+      <div id="fc-step-1" class="fc-step active" style="padding:0 20px 24px;">
+        <div style="text-align:center;margin-bottom:24px;">
+          <div style="font-size:36px;margin-bottom:12px;">🌱</div>
+          <div style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);margin-bottom:10px;" id="fc-pause-title">ใจดีขอแวะเช็กพลังงานกายแป๊บนึงนะ...</div>
+          <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;font-family:'Noto Serif Thai',serif;" id="fc-pause-desc">บางทีสิ่งที่รู้สึกอยู่<br>อาจเป็นเพราะร่างกายกำลังส่งสัญญาณเตือน<br>ลองเช็ก 4 ข้อง่ายๆ ก่อนลุยต่อกันไหม?</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+          <button class="fc-btn-primary" onclick="fcGoStep(2)">แน่นอน เช็กหน่อย 🔋</button>
+          <button class="fc-btn-secondary" id="fc-skip-btn" onclick="fcSkipToSit()">ข้ามไปคุยเลยก็ได้</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Checklist -->
+      <div id="fc-step-2" class="fc-step" style="padding:0 20px 24px;">
+        <div style="flex-shrink:0;margin-bottom:16px;">
+          <div style="font-size:13px;font-weight:500;color:var(--dark);margin-bottom:8px;">🔋 เติมพลังงานพื้นฐาน <span id="fc-count" style="color:var(--gold);">0/4</span></div>
+          <div class="fc-progress-track"><div class="fc-progress-fill" id="fc-progress" style="width:0%"></div></div>
+        </div>
+
+        <!-- Water -->
+        <div class="fc-check-card" id="fc-card-water" data-key="water">
+          <div class="fc-check-row">
+            <span class="fc-check-icon">💧</span>
+            <span class="fc-check-label">ดื่มน้ำล่าสุดตอนไหน?</span>
+          </div>
+          <div class="fc-check-options">
+            <div class="fc-radio" data-val="ok" data-key="water" onclick="fcSelect('water','ok',this)">
+              <div class="fc-radio-dot"></div>เพิ่งดื่มไปไม่นาน
+            </div>
+            <div class="fc-radio" data-val="low" data-key="water" onclick="fcSelect('water','low',this)">
+              <div class="fc-radio-dot"></div>ลืมเลย / ไม่ได้ดื่มมาหลายชั่วโมง
+            </div>
+          </div>
+        </div>
+
+        <!-- Food -->
+        <div class="fc-check-card" id="fc-card-food" data-key="food">
+          <div class="fc-check-row">
+            <span class="fc-check-icon">🍚</span>
+            <span class="fc-check-label">วันนี้กินข้าวอิ่มหรือยัง?</span>
+          </div>
+          <div class="fc-check-options">
+            <div class="fc-radio" data-val="ok" data-key="food" onclick="fcSelect('food','ok',this)">
+              <div class="fc-radio-dot"></div>กินเรียบร้อย
+            </div>
+            <div class="fc-radio" data-val="low" data-key="food" onclick="fcSelect('food','low',this)">
+              <div class="fc-radio-dot"></div>ข้ามมื้อ / กินไม่ลงเลย
+            </div>
+          </div>
+        </div>
+
+        <!-- Hygiene -->
+        <div class="fc-check-card" id="fc-card-hygiene" data-key="hygiene">
+          <div class="fc-check-row">
+            <span class="fc-check-icon">🚿</span>
+            <span class="fc-check-label">ร่างกายรู้สึกสบายตัวไหม?</span>
+          </div>
+          <div class="fc-check-options">
+            <div class="fc-radio" data-val="ok" data-key="hygiene" onclick="fcSelect('hygiene','ok',this)">
+              <div class="fc-radio-dot"></div>สบายดี / เพิ่งอาบน้ำ
+            </div>
+            <div class="fc-radio" data-val="low" data-key="hygiene" onclick="fcSelect('hygiene','low',this)">
+              <div class="fc-radio-dot"></div>อยู่ชุดเดิม / ยังไม่ได้ล้างหน้า
+            </div>
+          </div>
+        </div>
+
+        <!-- Light/Air -->
+        <div class="fc-check-card" id="fc-card-light" data-key="light">
+          <div class="fc-check-row">
+            <span class="fc-check-icon">☀️</span>
+            <span class="fc-check-label">ได้เจอแสงแดดหรืออากาศโปร่งๆ บ้างไหม?</span>
+          </div>
+          <div class="fc-check-options">
+            <div class="fc-radio" data-val="ok" data-key="light" onclick="fcSelect('light','ok',this)">
+              <div class="fc-radio-dot"></div>ได้เจอแล้ว
+            </div>
+            <div class="fc-radio" data-val="low" data-key="light" onclick="fcSelect('light','low',this)">
+              <div class="fc-radio-dot"></div>อยู่แต่ในห้องมืดๆ สลัวๆ
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:6px;">
+          <button class="fc-btn-primary" id="fc-checklist-next" onclick="fcGoStep(3)" style="opacity:0.45;pointer-events:none;">บันทึกและดูคำแนะนำ →</button>
+          <button class="fc-btn-secondary" style="margin-top:8px;" onclick="fcSkipToSit()">ข้ามไปคุยเลย</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Micro-steps -->
+      <div id="fc-step-3" class="fc-step" style="padding:0 20px 24px;">
+        <div style="margin-bottom:20px;">
+          <div style="font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:var(--dark);margin-bottom:6px;" id="fc-result-title">🌟 แผนการกู้คืนพลังงานของคุณ</div>
+          <div style="font-size:12px;font-weight:300;color:var(--soft);">ทำแค่นี้พอวันนี้ ไม่ต้องฝืนทำเยอะนะ</div>
+        </div>
+        <div id="fc-microsteps"></div>
+        <div style="margin-top:6px;border-top:1px solid var(--cream-border);padding-top:16px;">
+          <div style="font-size:12px;font-weight:300;color:var(--soft);font-family:'Noto Serif Thai',serif;text-align:center;margin-bottom:14px;" id="fc-transition-msg">เก่งมาก! ตอนนี้มาดูแลใจกันต่อเลยนะ</div>
+          <button class="fc-btn-primary" onclick="fcDone()">👍 ทำเสร็จแล้ว! รู้สึกดีขึ้นนิดนึง</button>
+          <button class="fc-btn-secondary" style="margin-top:8px;" onclick="fcSkipToSit()">💬 ทำไม่ไหว... อยากคุยกับใจดีต่อเลย</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- SITUATION SHEET -->
   <div id="sit-overlay" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0);pointer-events:none;transition:background 0.3s;" onclick="handleSitOverlay(event)">
@@ -769,8 +951,11 @@ const TIERS = [
       { emoji:'🍚', label:'หิวแต่จะกินดีมั้ย',   key:'hungry'     },
       { emoji:'📱', label:'เล่นมือถือจนดึก',     key:'phone'      },
       { emoji:'☀️', label:'ไม่ค่อยได้ออกไปไหน', key:'no_sun'     },
-      { emoji:'🪫', label:'เหนื่อยตลอดเวลา',     key:'tired'      },
-      { emoji:'🛏️', label:'ไม่อยากลุกจากเตียง',  key:'no_energy'  },
+      { emoji:'🪫', label:'เหนื่อยตลอดเวลา',         key:'tired'       },
+      { emoji:'🛏️', label:'ไม่อยากลุกจากเตียง',    key:'no_energy'   },
+      { emoji:'🥛', label:'วันนี้ดื่มน้ำน้อยมาก',   key:'low_water'   },
+      { emoji:'🚿', label:'ดองเค็ม/ยังไม่ได้อาบน้ำ', key:'no_shower'  },
+      { emoji:'🧺', label:'ห้องรกจนไม่มีที่เดิน',   key:'messy_room'  },
     ]
   },
   {
@@ -903,7 +1088,276 @@ const SIT_DATA = {
     ],
     talk: 'ไม่กินมาหลายวันหรือมีความคิดเรื่องอาหารที่กวนใจ?',
   },
+  low_water: {
+    emoji: '🥛', title: 'วันนี้ดื่มน้ำน้อยมาก',
+    note: 'การขาดน้ำเพียงเล็กน้อยทำให้สมองทำงานช้าลง อารมณ์หงุดหงิด และรู้สึกเหนื่อยโดยไม่มีเหตุผล บางทีแค่จิบน้ำก็เปลี่ยนได้เยอะ',
+    tools: [
+      { icon:'💧', name:'ดื่มน้ำ 2 อึกก่อนเลย', desc:'ไม่ต้องรีบดื่มทั้งแก้ว แค่เริ่มก็พอ', href:'#' },
+      { icon:'📖', name:'น้ำกับสมอง: เชื่อมกันยังไง', desc:'อ่าน 2 นาที', href:'notebook.html?id=water' },
+    ],
+    talk: 'รู้สึกหน้ามืดหรือหมดแรงอย่างหนัก?',
+  },
+  no_shower: {
+    emoji: '🚿', title: 'ดองเค็ม / ยังไม่ได้อาบน้ำ',
+    note: 'เมื่อพลังงานต่ำมาก แม้แต่การอาบน้ำก็รู้สึกหนักเกินไป นั่นไม่ใช่ความขี้เกียจ แต่เป็นสัญญาณว่าร่างกายและจิตใจกำลังขอความช่วยเหลือ',
+    tools: [
+      { icon:'💡', name:'รีเซ็ต 10 วินาที', desc:'แค่ล้างหน้าด้วยน้ำเย็น หรือเปลี่ยนเสื้อตัวใหม่', href:'#' },
+      { icon:'🪞', name:"What's This Feeling?", desc:'ถ้ามันเกี่ยวข้องกับอารมณ์ที่หนักกว่านั้น', href:'reflection.html' },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'ไม่ต้องแบกคนเดียว', href:'peer.html' },
+    ],
+    talk: 'รู้สึกแบบนี้มาหลายวันแล้ว ไม่ฟื้นตัวเลย?',
+  },
+  messy_room: {
+    emoji: '🧺', title: 'ห้องรกจนไม่มีที่เดิน',
+    note: 'ห้องที่รกมักสะท้อนสภาพจิตใจที่ล้นเกิน ไม่ใช่เรื่องน่าละอาย แต่บางทีการจัดของแค่มุมเล็กๆ ก็ช่วยให้ใจเบาขึ้นได้จริง',
+    tools: [
+      { icon:'📦', name:'จัดมุมเล็ก 5 นาที', desc:'ไม่ต้องจัดทั้งห้อง แค่เก็บของบนโต๊ะนอนก็พอ', href:'#' },
+      { icon:'🏃', name:'ขยับตัวก่อน', desc:'เพิ่มพลังงานก่อนจัดของ', href:'alltools.html#move' },
+      { icon:'📖', name:'ทำไมห้องรกแล้วใจก็รก', desc:'จิตวิทยาของพื้นที่', href:'notebook.html?id=space' },
+    ],
+    talk: 'รู้สึกท่วมหมดทุกอย่าง ไม่รู้จะเริ่มตรงไหน?',
+  },
 };
+// Keys that trigger the Foundation Check before opening sit-sheet
+const FOUNDATION_KEYS = new Set([
+  'sleep','burnout','foggy','tired','no_energy',
+  'study_fog','overwhelm','pressure',
+  'low_water','no_shower','messy_room','no_appetite','hungry',
+]);
+
+// Heuristic: pill → which checklist items to surface first
+const FC_PRIORITY = {
+  sleep:      ['light','hygiene','water'],
+  burnout:    ['water','food','light'],
+  foggy:      ['water','food','light'],
+  tired:      ['water','food','hygiene'],
+  no_energy:  ['hygiene','food','light'],
+  study_fog:  ['water','food','light'],
+  overwhelm:  ['water','food','hygiene'],
+  pressure:   ['water','food','light'],
+  low_water:  ['water','food','light','hygiene'],
+  no_shower:  ['hygiene','water','light','food'],
+  messy_room: ['hygiene','light','water','food'],
+  no_appetite:['food','water','hygiene','light'],
+  hungry:     ['food','water','light','hygiene'],
+};
+
+// Pause screen copy tuned per pill category
+const FC_PAUSE_COPY = {
+  sleep:      { title:'ใจดีขอแวะดูพลังงานกายแป๊บนึงนะ...', desc:'บางทีที่นอนไม่หลับ\nอาจเป็นเพราะร่างกายยังได้รับไม่ครบ\nลองเช็ก 4 ข้อง่ายๆ ก่อนไหม?' },
+  burnout:    { title:'หมดไฟ... ใจดีขอแวะเช็กก่อนนะ', desc:'หมดไฟมักเริ่มจากร่างกายที่ขาดพื้นฐาน\nน้ำ อาหาร หรืออากาศโปร่ง\nลองดูกันก่อนสักแป๊บ?' },
+  foggy:      { title:'สมองตื้อ... ขอเช็กพลังงานแป๊บนึง', desc:'สมองตื้อบ่อยๆ อาจเป็นเพราะขาดน้ำ\nหรือยังไม่ได้กินอะไรเลย\nลองเช็กกันก่อนนะ?' },
+  default:    { title:'ใจดีขอแวะเช็กพลังงานกายแป๊บนึงนะ...', desc:'บางทีสิ่งที่รู้สึกอยู่\nอาจเป็นเพราะร่างกายกำลังส่งสัญญาณเตือน\nลองเช็ก 4 ข้อง่ายๆ ก่อนลุยต่อกันไหม?' },
+};
+
+// Micro-step content per neglected key
+const FC_MICROSTEPS = {
+  water: {
+    icon: '💧',
+    title: 'จิบน้ำ 2 อึกโตๆ',
+    desc: 'เดินไปหยิบแก้วน้ำ จิบแค่สองคำพอ ไม่ต้องดื่มหมดแก้ว แค่นี้สมองก็ได้ฟื้นตัวนิดนึงแล้ว',
+  },
+  food: {
+    icon: '🍚',
+    title: 'หาของกินเล็กๆ ก่อนเลย',
+    desc: 'ไม่ต้องทำอาหารเต็มมื้อ แค่ขนมเล็กน้อย ขนมปัง หรือนม เติมน้ำตาลให้สมองก่อน',
+  },
+  hygiene: {
+    icon: '🚿',
+    title: 'รีเซ็ตร่างกายแบบด่วน',
+    desc: 'ยังไม่อยากอาบน้ำก็ไม่ต้อง แค่ล้างหน้าด้วยน้ำเย็น หรือเปลี่ยนเป็นเสื้อตัวสะอาด ก็เก่งมากแล้ว',
+  },
+  light: {
+    icon: '☀️',
+    title: 'เปิดม่านแค่ช่องเล็กๆ',
+    desc: 'แค่ดึงผ้าม่านออก 20 ซม. ให้แสงเข้ามา หรือเดินไปแตะลมหน้าต่างสัก 30 วินาทีก็พอ',
+  },
+};
+
+let _fcPendingKey = null; // pill key waiting after foundation check
+let _fcState = {}; // { water: 'ok'|'low'|null, food: ..., hygiene: ..., light: ... }
+
+function openFoundationSheet(key) {
+  _fcPendingKey = key;
+  _fcState = { water: null, food: null, hygiene: null, light: null };
+
+  // Reset all steps
+  document.querySelectorAll('.fc-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('fc-step-1').classList.add('active');
+
+  // Reset checklist UI
+  document.querySelectorAll('.fc-check-card').forEach(c => {
+    c.classList.remove('checked-ok','checked-low');
+  });
+  document.querySelectorAll('.fc-radio').forEach(r => {
+    r.classList.remove('selected-ok','selected-low');
+  });
+  _fcUpdateProgress();
+
+  // Set pause copy
+  const copy = FC_PAUSE_COPY[key] || FC_PAUSE_COPY.default;
+  document.getElementById('fc-pause-title').textContent = copy.title;
+  document.getElementById('fc-pause-desc').innerHTML = copy.desc.replace(/\n/g,'<br>');
+
+  // Prioritize checklist order
+  const order = FC_PRIORITY[key] || ['water','food','hygiene','light'];
+  const container = document.getElementById('fc-step-2');
+  const cards = ['water','food','hygiene','light'].map(k => document.getElementById('fc-card-'+k));
+  order.forEach((k, i) => {
+    const card = document.getElementById('fc-card-'+k);
+    if (card) card.style.order = i;
+  });
+
+  // Open overlay
+  const ov = document.getElementById('fc-overlay');
+  ov.style.display = 'flex';
+  ov.style.alignItems = 'flex-end';
+  ov.style.justifyContent = 'center';
+  ov.style.pointerEvents = 'all';
+  requestAnimationFrame(() => {
+    ov.style.background = 'rgba(0,0,0,0.48)';
+    document.getElementById('fc-sheet').style.transform = 'translateY(0)';
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFoundationSheet(cb) {
+  const ov = document.getElementById('fc-overlay');
+  ov.style.background = 'rgba(0,0,0,0)';
+  document.getElementById('fc-sheet').style.transform = 'translateY(100%)';
+  setTimeout(() => {
+    ov.style.display = 'none';
+    ov.style.pointerEvents = 'none';
+    document.body.style.overflow = '';
+    if (typeof cb === 'function') cb();
+  }, 380);
+}
+
+function handleFcOverlay(e) {
+  // Only close if tapping the dark backdrop (not the sheet itself)
+  if (e.target === document.getElementById('fc-overlay')) fcSkipToSit();
+}
+
+function _fcUpdateProgress() {
+  // Deselect siblings in same key group
+  document.querySelectorAll(`.fc-radio[data-key="${key}"]`).forEach(r => {
+    r.classList.remove('selected-ok','selected-low');
+  });
+  el.classList.add(val === 'ok' ? 'selected-ok' : 'selected-low');
+
+  // Mark card
+  const card = document.getElementById('fc-card-' + key);
+  if (card) {
+    card.classList.remove('checked-ok','checked-low');
+    card.classList.add(val === 'ok' ? 'checked-ok' : 'checked-low');
+  }
+
+  _fcState[key] = val;
+  _fcUpdateProgress();
+
+  // Enable next button when all 4 answered
+  const answered = Object.values(_fcState).filter(v => v !== null).length;
+  const nextBtn = document.getElementById('fc-checklist-next');
+  if (answered === 4) {
+    nextBtn.style.opacity = '1';
+    nextBtn.style.pointerEvents = 'auto';
+  }
+}
+
+function fcSelect(key, val, el) {
+  // Deselect siblings in same key group
+  document.querySelectorAll(`.fc-radio[data-key="${key}"]`).forEach(r => {
+    r.classList.remove('selected-ok','selected-low');
+  });
+  el.classList.add(val === 'ok' ? 'selected-ok' : 'selected-low');
+
+  // Mark card
+  const card = document.getElementById('fc-card-' + key);
+  if (card) {
+    card.classList.remove('checked-ok','checked-low');
+    card.classList.add(val === 'ok' ? 'checked-ok' : 'checked-low');
+  }
+
+  _fcState[key] = val;
+  _fcUpdateProgress();
+
+  // Enable next button when all 4 answered
+  const answered = Object.values(_fcState).filter(v => v !== null).length;
+  const nextBtn = document.getElementById('fc-checklist-next');
+  if (answered === 4) {
+    nextBtn.style.opacity = '1';
+    nextBtn.style.pointerEvents = 'auto';
+  }
+}
+
+function _fcUpdateProgress() {
+  const answered = Object.values(_fcState).filter(v => v !== null).length;
+  const pct = (answered / 4) * 100;
+  const fill = document.getElementById('fc-progress');
+  if (fill) fill.style.width = pct + '%';
+  const count = document.getElementById('fc-count');
+  if (count) count.textContent = answered + '/4';
+}
+
+function _fcBuildMicrosteps() {
+  const lowKeys = Object.entries(_fcState).filter(([k,v]) => v === 'low').map(([k]) => k);
+  const container = document.getElementById('fc-microsteps');
+  if (!container) return;
+
+  if (lowKeys.length === 0) {
+    // All good — still show an encouraging message before routing
+    container.innerHTML = `<div class="fc-micro-card" style="background:#F3FAF4;border-color:#A8D4AC;text-align:center;padding:20px;">
+      <div style="font-size:28px;margin-bottom:8px;">✨</div>
+      <div class="fc-micro-title">พื้นฐานดีมากเลย!</div>
+      <div class="fc-micro-desc">ร่างกายของคุณโอเคอยู่ ตอนนี้เราไปดูแลใจต่อกันได้เลย</div>
+    </div>`;
+    document.getElementById('fc-transition-msg').textContent = 'เยี่ยมมาก! ตอนนี้มาดูแลใจกันต่อเลยนะ 🌱';
+  } else {
+    // Priority order: use FC_PRIORITY to sort the low keys
+    const priority = FC_PRIORITY[_fcPendingKey] || ['water','food','hygiene','light'];
+    const sorted = priority.filter(k => lowKeys.includes(k));
+    // Add any remaining low keys not in priority list
+    lowKeys.forEach(k => { if (!sorted.includes(k)) sorted.push(k); });
+
+    container.innerHTML = sorted.map(k => {
+      const m = FC_MICROSTEPS[k];
+      if (!m) return '';
+      return `<div class="fc-micro-card">
+        <div class="fc-micro-icon">${m.icon}</div>
+        <div class="fc-micro-title">${m.title}</div>
+        <div class="fc-micro-desc">${m.desc}</div>
+      </div>`;
+    }).join('');
+
+    const msg = sorted.length === 1
+      ? 'ทำแค่ข้อเดียวนี้พอวันนี้นะ แล้วเราค่อยคุยต่อ 🌱'
+      : 'ทำทีละข้อก็ได้ ไม่ต้องรีบ เสร็จแล้วมาคุยต่อกัน 🌱';
+    document.getElementById('fc-transition-msg').textContent = msg;
+  }
+}
+
+function fcGoStep(n) {
+  document.querySelectorAll('.fc-step').forEach(s => s.classList.remove('active'));
+  const step = document.getElementById('fc-step-' + n);
+  if (step) step.classList.add('active');
+  if (n === 3) _fcBuildMicrosteps();
+  const sheet = document.getElementById('fc-sheet');
+  if (sheet) sheet.scrollTop = 0;
+}
+
+function fcSkipToSit() {
+  const key = _fcPendingKey;
+  closeFoundationSheet(() => {
+    if (key) setTimeout(() => openSitSheet(key), 60);
+  });
+}
+
+function fcDone() {
+  const key = _fcPendingKey;
+  closeFoundationSheet(() => {
+    if (key) setTimeout(() => openSitSheet(key), 60);
+  });
+}
 
 // ── SWIPE DOWN TO CLOSE sit-sheet ────────────────────────────
 (function() {
@@ -960,7 +1414,13 @@ function pressPill(btn, key) {
   });
   setTimeout(() => {
     btn.classList.remove('pressing');
-    openSitSheet(key);
+    document.querySelectorAll('#tier-pills .sit-pill').forEach(p => p.style.opacity = '');
+    // Foundation gate: intercept physical/masked-mental pills
+    if (typeof FOUNDATION_KEYS !== 'undefined' && FOUNDATION_KEYS.has(key)) {
+      openFoundationSheet(key);
+    } else {
+      openSitSheet(key);
+    }
   }, 150);
 }
 
