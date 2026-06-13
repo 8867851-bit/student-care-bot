@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <title>อยากคุยกับใคร? — ใจดี TU</title>
+  <title>แบบไหนที่สบายใจกว่า? — ใจดี TU</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;600&family=Mitr:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     :root{
@@ -13,86 +13,349 @@
       --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
       --blue:#2E5FA3; --blue-soft:#EEF3FB; --blue-border:#C5D8F5;
       --purple:#7C3AED; --purple-soft:#F5F3FF; --purple-border:#DDD6FE;
+      --red:#DC2626; --red-soft:#FEF2F2; --red-border:#FECACA;
+      --green:#2D6A4F; --green-soft:#F0FAF4; --green-border:#B7DFC8;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:48px;}
+    body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:56px;}
 
-    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:44px 24px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;}
-
-    .hero{padding:16px 24px 32px;}
-    .hero-title{font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;color:var(--dark);line-height:1.3;margin-bottom:6px;}
-    .hero-sub{font-size:13px;font-weight:300;color:var(--soft);}
-
-    .options{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
-
-    .opt{
-      display:flex;align-items:center;gap:16px;
-      padding:20px 20px;border-radius:18px;
-      border:1.5px solid var(--card-border);background:var(--card);
-      text-decoration:none;
-      transition:transform 0.15s,border-color 0.15s;
+    /* ── BACK ── */
+    .back-btn{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:calc(env(safe-area-inset-top) + 16px) 24px 0;
+      font-size:13px;color:var(--soft);cursor:pointer;
+      background:none;border:none;font-family:'Mitr',sans-serif;
+      position:sticky;top:env(safe-area-inset-top);z-index:10;
     }
-    .opt:active{transform:scale(0.97);}
-    .opt.gold{ border-color:var(--gold-border); background:var(--gold-soft); }
-    .opt.blue{ border-color:var(--blue-border); background:var(--blue-soft); }
-    .opt.purple{ border-color:var(--purple-border); background:var(--purple-soft); }
 
-    .opt-emoji{font-size:28px;flex-shrink:0;width:44px;text-align:center;}
-    .opt-body{flex:1;}
-    .opt-label{display:block;font-size:16px;font-weight:500;color:var(--dark);margin-bottom:3px;}
-    .opt.gold .opt-label{color:#5C3D00;}
-    .opt.blue .opt-label{color:#1E3A6E;}
-    .opt.purple .opt-label{color:#4C1D95;}
-    .opt-hint{display:block;font-size:12px;font-weight:300;color:var(--soft);}
-    .opt-arrow{font-size:15px;color:var(--faint);flex-shrink:0;}
+    /* ── HERO ── */
+    .hero{
+      padding:12px 24px 28px;
+      transition:opacity 0.3s ease, max-height 0.35s ease, padding 0.3s ease;
+      overflow:hidden; max-height:200px;
+    }
+    .hero.gone{opacity:0; max-height:0; padding-top:0; padding-bottom:0;}
+    .hero-title{
+      font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;
+      color:var(--dark);line-height:1.3;margin-bottom:6px;
+    }
 
-    .note{margin:28px 24px 0;font-size:12px;font-weight:300;color:var(--faint);line-height:1.75;text-align:center;}
-    .note a{color:var(--soft);text-decoration:underline;text-underline-offset:3px;}
+    /* ── INTENT BUTTONS ── */
+    .intent-wrap{padding:0 16px;}
+    .intent-list{display:flex;flex-direction:column;gap:8px;}
+
+    .intent-btn{
+      display:flex;align-items:center;gap:16px;padding:18px 20px;
+      border-radius:18px;border:1.5px solid var(--card-border);background:var(--card);
+      cursor:pointer;font-family:'Mitr',sans-serif;text-align:left;width:100%;
+      transition:transform 0.15s, border-color 0.15s, background 0.15s,
+                 max-height 0.32s ease, opacity 0.22s ease,
+                 padding 0.28s ease, margin 0.28s ease, border-width 0.28s ease;
+      overflow:hidden; max-height:120px;
+    }
+    .intent-btn:active{transform:scale(0.98);}
+
+    /* active states */
+    .intent-btn.intent-peer.active { border-color:var(--gold-border); background:var(--gold-soft); transform:scale(1.02); box-shadow:0 6px 20px rgba(0,0,0,0.06); }
+    .intent-btn.intent-adult.active{ border-color:var(--blue-border); background:var(--blue-soft); transform:scale(1.02); box-shadow:0 6px 20px rgba(0,0,0,0.06); }
+    .intent-btn.intent-expert.active{ border-color:var(--purple-border); background:var(--purple-soft); transform:scale(1.02); box-shadow:0 6px 20px rgba(0,0,0,0.06); }
+
+    .intent-btn.intent-peer.active   .intent-label{color:#5C3D00;}
+    .intent-btn.intent-adult.active  .intent-label{color:#1E3A6E;}
+    .intent-btn.intent-expert.active .intent-label{color:#4C1D95;}
+
+    /* collapsed */
+    .intent-btn.gone{
+      max-height:0 !important; opacity:0 !important;
+      padding-top:0 !important; padding-bottom:0 !important;
+      margin:0 !important; border-width:0 !important;
+      pointer-events:none;
+    }
+
+    .intent-emoji{font-size:26px;flex-shrink:0;width:40px;text-align:center;}
+    .intent-body{flex:1;}
+    .intent-label{display:block;font-size:15px;font-weight:500;color:var(--dark);margin-bottom:2px;}
+    .intent-hint{display:block;font-size:12px;font-weight:300;color:var(--soft);}
+    .intent-arrow{font-size:14px;color:var(--faint);flex-shrink:0;}
+
+
+    /* ── SUB-PANELS ── */
+    .sub-panel{
+      overflow:hidden; max-height:0;
+      transition:max-height 0.38s ease, opacity 0.28s ease;
+      opacity:0;
+    }
+    .sub-panel.open{max-height:1600px; opacity:1;}
+
+    /* ── ACTION CARDS ── */
+    .action-list{display:flex;flex-direction:column;gap:8px;padding:12px 16px 0;}
+    .action-card{
+      display:flex;align-items:center;gap:14px;
+      padding:14px 16px;border-radius:16px;text-decoration:none;
+      border:1.5px solid var(--card-border);background:var(--card);
+      transition:transform 0.15s;
+    }
+    .action-card:active{transform:scale(0.97);}
+    .action-card.gold{background:var(--gold);border-color:var(--gold);}
+    .action-card.gold .ac-name,.action-card.gold .ac-desc,.action-card.gold .ac-arrow{color:#fff;}
+    .ac-icon{font-size:22px;flex-shrink:0;width:36px;text-align:center;}
+    .ac-body{flex:1;min-width:0;}
+    .ac-name{font-size:14px;font-weight:500;line-height:1.3;color:var(--dark);}
+    .ac-desc{font-size:11px;font-weight:300;opacity:0.65;margin-top:2px;line-height:1.5;color:var(--mid);}
+
+    /* stagger */
+    .stagger{opacity:0;transform:translateY(6px);transition:opacity 0.28s ease,transform 0.28s ease;}
+    .stagger.in{opacity:1;transform:translateY(0);}
+
+    /* ── EXPERT SECTIONS ── */
+    .expert-section-label{
+      font-size:12px;font-weight:400;color:var(--soft);
+      padding:20px 16px 8px;
+    }
+    .expert-divider{height:1px;background:var(--cream-border);margin:20px 16px 0;}
+
+    /* ── QUIET 1323 FOOTER ── */
+    .quiet-footer{
+      text-align:center;padding:36px 32px 20px;
+      border-top:1px solid var(--cream-border);margin:32px 16px 0;
+    }
+    .quiet-footer-text{font-size:13px;color:var(--soft);line-height:2;font-family:'Noto Serif Thai',serif;font-weight:300;}
   </style>
 </head>
 <body>
 
-<button class="back-btn" onclick="history.back()">← กลับ</button>
+<button class="back-btn" id="back-btn" onclick="goBack()">← กลับ</button>
 
-<div class="hero">
-  <div class="hero-title">อยากคุยกับใคร?</div>
-  <div class="hero-sub">ไม่ต้องรู้ว่าจะพูดอะไรก่อน</div>
+<div class="hero" id="hero">
+  <div class="hero-title">แบบไหนที่สบายใจกว่า?</div>
 </div>
 
-<div class="options">
+<!-- ── INTENT BUTTONS ── -->
+<div class="intent-wrap">
+  <div class="intent-list" id="intent-list">
 
-  <a class="opt gold" href="peer.html">
-    <span class="opt-emoji">💛</span>
-    <span class="opt-body">
-      <span class="opt-label">คนวัยเดียวกัน</span>
-      <span class="opt-hint">เพื่อนที่ปรึกษา หรืออาสารับฟัง</span>
-    </span>
-    <span class="opt-arrow">›</span>
-  </a>
+    <button class="intent-btn intent-peer" id="btn-peer" onclick="choose('peer')">
+      <span class="intent-emoji">💛</span>
+      <span class="intent-body">
+        <span class="intent-label">คนวัยเดียวกัน</span>
+        <span class="intent-hint">เพื่อนที่ปรึกษา หรืออาสารับฟัง</span>
+      </span>
+      <span class="intent-arrow">›</span>
+    </button>
 
-  <a class="opt blue" href="guidance.html">
-    <span class="opt-emoji">👩‍🏫</span>
-    <span class="opt-body">
-      <span class="opt-label">ผู้ใหญ่ในโรงเรียน</span>
-      <span class="opt-hint">ครูแนะแนว · นัดล่วงหน้า</span>
-    </span>
-    <span class="opt-arrow">›</span>
-  </a>
+    <button class="intent-btn intent-adult" id="btn-adult" onclick="choose('adult')">
+      <span class="intent-emoji">👩‍🏫</span>
+      <span class="intent-body">
+        <span class="intent-label">ผู้ใหญ่ในโรงเรียน</span>
+        <span class="intent-hint">ครูแนะแนว</span>
+      </span>
+      <span class="intent-arrow">›</span>
+    </button>
 
-  <a class="opt purple" href="therapist.html">
-    <span class="opt-emoji">🧠</span>
-    <span class="opt-body">
-      <span class="opt-label">ผู้เชี่ยวชาญ</span>
-      <span class="opt-hint">นักจิตวิทยาโรงเรียน</span>
-    </span>
-    <span class="opt-arrow">›</span>
-  </a>
+    <button class="intent-btn intent-expert" id="btn-expert" onclick="choose('expert')">
+      <span class="intent-emoji">🧠</span>
+      <span class="intent-body">
+        <span class="intent-label">ผู้เชี่ยวชาญ</span>
+        <span class="intent-hint">นักจิตวิทยา หรือบริการภายนอก</span>
+      </span>
+      <span class="intent-arrow">›</span>
+    </button>
 
+  </div>
 </div>
 
-<div class="note">
-  ต้องการความช่วยเหลือด่วน? <a href="tel:1323">โทร 1323</a>
+
+
+<!-- ══ SUB-PANEL: PEER ══════════════════════════════════════ -->
+<div class="sub-panel" id="sub-peer">
+  <div class="action-list">
+    <a class="action-card gold stagger" href="peer.html">
+      <span class="ac-icon">💛</span>
+      <span class="ac-body">
+        <span class="ac-name">นัดคุยกับเพื่อนที่ปรึกษา</span>
+        <span class="ac-desc">นัดล่วงหน้า · จ–ศ หลังเลิกเรียน · ฟรี</span>
+      </span>
+    </a>
+    <a class="action-card stagger" href="https://satiapp.co" target="_blank" rel="noopener">
+      <span class="ac-icon">🎧</span>
+      <span class="ac-body">
+        <span class="ac-name">Sati — อาสานักรับฟัง</span>
+        <span class="ac-desc">ฟังโดยไม่ตัดสิน · ฟรี · 24 ชม.</span>
+      </span>
+    </a>
+    <a class="action-card stagger" href="https://heretohealproject.com" target="_blank" rel="noopener">
+      <span class="ac-icon">🟡</span>
+      <span class="ac-body">
+        <span class="ac-name">Here to Heal</span>
+        <span class="ac-desc">ผู้เชี่ยวชาญสุขภาพจิต ผ่านข้อความ · ทุกวัน 10:00–22:00</span>
+      </span>
+    </a>
+  </div>
 </div>
+
+<!-- ══ SUB-PANEL: ADULT ══════════════════════════════════════ -->
+<div class="sub-panel" id="sub-adult">
+  <div class="action-list">
+    <a class="action-card stagger" href="guidance.html">
+      <span class="ac-icon">👩‍🏫</span>
+      <span class="ac-body">
+        <span class="ac-name">ครูแนะแนว</span>
+        <span class="ac-desc">TCAS · portfolio · ปัญหาชีวิตในโรงเรียน · ทัก LINE เพื่อนัด · ฟรี</span>
+      </span>
+    </a>
+  </div>
+</div>
+
+<!-- ══ SUB-PANEL: EXPERT ══════════════════════════════════════ -->
+<div class="sub-panel" id="sub-expert">
+
+  <!-- SECTION 1: อยากเข้าใจสิ่งที่กำลังเกิดขึ้น -->
+  <div class="expert-section-label">🤍 อยากเข้าใจสิ่งที่กำลังเกิดขึ้น</div>
+  <div style="padding:0 16px;">
+    <div class="stagger" style="background:var(--gold);border-radius:18px;padding:22px 20px;">
+      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;">
+        <span style="font-size:26px;flex-shrink:0;">🤖</span>
+        <span style="flex:1;">
+          <span style="display:block;font-size:13px;font-weight:400;color:rgba(255,255,255,0.7);margin-bottom:4px;">D-Mind</span>
+          <span style="display:block;font-size:15px;font-weight:500;color:#fff;line-height:1.4;margin-bottom:6px;">คุยและเรียบเรียงความคิด</span>
+          <span style="display:block;font-size:12px;font-weight:400;color:rgba(255,255,255,0.8);line-height:1.7;">ช่วยมองสถานการณ์จากอีกมุมหนึ่ง<br>และเข้าใจสิ่งที่กำลังเกิดขึ้นมากขึ้น</span>
+        </span>
+      </div>
+      <a href="https://capstone.chatbot.dmind.app/" target="_blank" rel="noopener"
+         style="display:block;text-align:center;padding:11px 0;background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.35);border-radius:12px;text-decoration:none;font-size:14px;font-weight:500;color:#fff;">
+        เริ่มคุย →
+      </a>
+    </div>
+  </div>
+
+  <!-- SECTION 2: อยากคุยกับผู้เชี่ยวชาญ -->
+  <div class="expert-divider"></div>
+  <div class="expert-section-label">🤍 อยากคุยกับผู้เชี่ยวชาญ</div>
+  <div class="action-list" style="padding-top:0;">
+    <a class="action-card stagger" href="professionals.html#therapist">
+      <span class="ac-icon">🧠</span>
+      <span class="ac-body">
+        <span class="ac-name">นักจิตวิทยาโรงเรียน</span>
+        <span class="ac-desc">คุยเรื่องเรียน ความเครียด ความสัมพันธ์ หรือเรื่องที่อยู่ในใจ · ฟรี</span>
+      </span>
+    </a>
+    <a class="action-card stagger" href="https://ooca.co" target="_blank" rel="noopener">
+      <span class="ac-icon">💜</span>
+      <span class="ac-body">
+        <span class="ac-name">Ooca</span>
+        <span class="ac-desc">พบนักจิตวิทยาออนไลน์ผ่านวิดีโอคอล</span>
+      </span>
+    </a>
+  </div>
+
+  <!-- SECTION 3: อยากเช็กสุขภาวะทางใจ -->
+  <div class="expert-divider"></div>
+  <div class="expert-section-label">📋 อยากเช็กสุขภาวะทางใจ</div>
+  <div style="padding:0 16px;">
+    <div class="stagger" style="background:var(--card);border:1.5px solid var(--card-border);border-radius:16px;padding:16px 18px;">
+      <div style="font-size:13px;font-weight:500;color:var(--dark);margin-bottom:3px;">📋 แบบประเมินสุขภาวะทางใจ</div>
+      <div style="font-size:11px;color:var(--soft);margin-bottom:12px;line-height:1.6;">เลือกแบบที่เหมาะกับคุณ</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="https://checkin.dmh.go.th/" target="_blank" rel="noopener"
+           style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--cream);border:1px solid var(--cream-border);border-radius:10px;text-decoration:none;">
+          <span style="font-size:13px;font-weight:400;color:var(--dark);">แบบประเมินกรมสุขภาพจิต</span>
+          <span style="font-size:11px;color:var(--soft);">ฟรี →</span>
+        </a>
+        <a href="https://kku.prescreening.dmind.app/" target="_blank" rel="noopener"
+           style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--cream);border:1px solid var(--cream-border);border-radius:10px;text-decoration:none;">
+          <span style="font-size:13px;font-weight:400;color:var(--dark);">D-Mind Prescreening</span>
+          <span style="font-size:11px;color:var(--soft);">ฟรี →</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: ต้องการการดูแลทางการแพทย์ -->
+  <div class="expert-divider"></div>
+  <div class="expert-section-label">🌿 ต้องการการดูแลทางการแพทย์</div>
+  <div class="action-list" style="padding-top:0;padding-bottom:8px;">
+    <a class="action-card stagger" href="care.html?tab=professional">
+      <span class="ac-icon">🌿</span>
+      <span class="ac-body">
+        <span class="ac-name">คลินิกและผู้เชี่ยวชาญภายนอก</span>
+        <span class="ac-desc">สำหรับกรณีที่ต้องการจิตแพทย์ การวินิจฉัย หรือยา</span>
+      </span>
+    </a>
+  </div>
+
+</div>
+<!-- ── END SUB-PANELS ── -->
+
+<!-- quiet footer 1323 -->
+<div class="quiet-footer" id="quiet-footer">
+  <div class="quiet-footer-text">ถ้าวันนี้แค่อยากมีใครสักคนอยู่ด้วย</div>
+  <a href="tel:1323" style="display:block;font-size:20px;font-weight:600;color:var(--dark);text-decoration:none;font-family:'Noto Serif Thai',serif;margin:4px 0 2px;">📞 1323</a>
+  <div style="font-size:11px;color:var(--soft);">ฟรี · 24 ชั่วโมง</div>
+</div>
+
+<script>
+let _chosen = null;
+
+function choose(type) {
+  if (_chosen === type) return; // already open — no toggle
+  _chosen = type;
+
+  // Update back button
+  document.getElementById('back-btn').textContent = '← เลือกใหม่';
+
+  // Collapse hero
+  setTimeout(() => document.getElementById('hero').classList.add('gone'), 200);
+
+  // Collapse unchosen, activate chosen
+  ['peer','adult','expert'].forEach(t => {
+    const btn = document.getElementById('btn-' + t);
+    if (t === type) {
+      btn.classList.add('active');
+      btn.classList.remove('gone');
+    } else {
+      btn.classList.remove('active');
+      btn.classList.add('gone');
+    }
+    // Close all other sub-panels
+    if (t !== type) {
+      document.getElementById('sub-' + t).classList.remove('open');
+    }
+  });
+
+  // Open chosen sub-panel
+  const panel = document.getElementById('sub-' + type);
+  panel.classList.add('open');
+
+  // Stagger cards
+  const cards = panel.querySelectorAll('.stagger');
+  cards.forEach((c, i) => {
+    c.classList.remove('in');
+    setTimeout(() => c.classList.add('in'), 60 + i * 80);
+  });
+}
+
+function goBack() {
+  if (_chosen) {
+    // Reset to initial state
+    _chosen = null;
+    document.getElementById('back-btn').textContent = '← กลับ';
+    document.getElementById('hero').classList.remove('gone');
+    ['peer','adult','expert'].forEach(t => {
+      const btn = document.getElementById('btn-' + t);
+      btn.classList.remove('active','gone');
+      const panel = document.getElementById('sub-' + t);
+      panel.classList.remove('open');
+      panel.querySelectorAll('.stagger').forEach(c => c.classList.remove('in'));
+    });
+  } else {
+    history.back();
+  }
+}
+
+// Deep link support: talk_who.html#peer / #adult / #expert
+const h = window.location.hash.replace('#','');
+if (['peer','adult','expert'].includes(h)) choose(h);
+</script>
 
 </body>
 </html>
