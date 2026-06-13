@@ -572,6 +572,17 @@
     </div>
     <button class="pr-btn" onclick="window.location.href='peer.html'">นัดคุย →</button>
   </div>
+
+  <!-- Alltools rounded card — appears after listening state, below peer banner -->
+  <div id="alltools-pill-wrap" style="opacity:0;transition:opacity 1s ease;pointer-events:none;margin:12px 20px 0 28px;">
+    <a href="alltools.html" style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#EEF7EE,#E6F5E6);border:1px solid #B2D9B4;border-radius:var(--radius-card);padding:16px 18px;text-decoration:none;box-shadow:0 2px 16px rgba(45,106,48,0.07);transition:transform 0.15s;" ontouchstart="this.style.transform='scale(0.98)'" ontouchend="this.style.transform=''">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="font-size:11px;font-weight:400;color:#4A8A4D;letter-spacing:1px;text-transform:uppercase;font-family:'Mitr',sans-serif;">เครื่องมือทั้งหมด</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:#1C3A1F;">ดูเครื่องมือสำหรับคุณทั้งหมด</div>
+      </div>
+      <span style="font-size:18px;color:#4A8A4D;opacity:0.7;">→</span>
+    </a>
+  </div>
 <script>
 const BASE_URL  = "https://jaidee-tu.vercel.app";
 const SCHOOL_SUPPORT_URL = BASE_URL + "/school.html";
@@ -778,7 +789,9 @@ const TIERS = [
 let _currentTier = 0;
 
 // Flat list of every situation pill across all tiers — for the infinite scroll row
-const ALL_PILLS = TIERS.reduce((acc, tier) => acc.concat(tier.pills), []);
+// Deduplicate by key so pills that appear in multiple tiers only show once in the tab bar
+const ALL_PILLS = TIERS.reduce((acc, tier) => acc.concat(tier.pills), [])
+  .filter((p, idx, arr) => arr.findIndex(x => x.key === p.key) === idx);
 
 function renderTier(index) {
   // Label still reflects the current tier for context, but the row shows everything
@@ -1145,6 +1158,9 @@ function openSitSheet(key) {
     if (lbl) { setTimeout(() => { lbl.style.transition='opacity 0.4s ease'; lbl.style.opacity='0'; setTimeout(()=>{ lbl.textContent='ลองค่อย ๆ ดูก็ได้'; lbl.style.opacity='1'; },400); }, 600); }
     _startNotebookWhispers && _startNotebookWhispers();
     _triggerPermissionSentence && _triggerPermissionSentence();
+    // Show the alltools green pill
+    const ap = document.getElementById('alltools-pill-wrap');
+    if (ap) { setTimeout(() => { ap.style.opacity='1'; ap.style.pointerEvents='all'; }, 1200); }
   }
   if (SESSION_OPENED.size === 3) document.body.classList.add('quieted');
   if (SESSION_OPENED.size === 2) {
@@ -1759,6 +1775,9 @@ setTimeout(_initPillPreview, 400);
       // Deep scroll = first meaningful interaction too
       if (SESSION_OPENED.size === 0) _triggerPermissionSentence();
       _startNotebookWhispers();
+      // Show alltools green pill
+      const ap = document.getElementById('alltools-pill-wrap');
+      if (ap) { setTimeout(() => { ap.style.opacity='1'; ap.style.pointerEvents='all'; }, 1200); }
     }
     if (hero.classList.contains('locked')) return;
     if (!faded && y >= 150) {
