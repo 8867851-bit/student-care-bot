@@ -574,13 +574,10 @@
   </div>
 
   <!-- Alltools rounded card — appears after listening state, below peer banner -->
-  <div id="alltools-pill-wrap" style="opacity:0;transition:opacity 1s ease;pointer-events:none;margin:12px 20px 0 28px;">
-    <a href="alltools.html" style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#EEF7EE,#E6F5E6);border:1px solid #B2D9B4;border-radius:var(--radius-card);padding:16px 18px;text-decoration:none;box-shadow:0 2px 16px rgba(45,106,48,0.07);transition:transform 0.15s;" ontouchstart="this.style.transform='scale(0.98)'" ontouchend="this.style.transform=''">
-      <div style="display:flex;flex-direction:column;gap:2px;">
-        <div style="font-size:11px;font-weight:400;color:#4A8A4D;letter-spacing:1px;text-transform:uppercase;font-family:'Mitr',sans-serif;">เครื่องมือทั้งหมด</div>
-        <div style="font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:#1C3A1F;">ดูเครื่องมือสำหรับคุณทั้งหมด</div>
-      </div>
-      <span style="font-size:18px;color:#4A8A4D;opacity:0.7;">→</span>
+  <div id="alltools-pill-wrap" style="opacity:0;transition:opacity 1s ease;pointer-events:none;margin:10px 20px 0 28px;">
+    <a href="alltools.html" style="display:flex;align-items:center;justify-content:space-between;background:#F2F8F2;border:1px solid #C4DEC6;border-radius:var(--radius-card);padding:13px 16px;text-decoration:none;box-shadow:0 1px 8px rgba(45,106,48,0.05);transition:transform 0.15s;" ontouchstart="this.style.transform='scale(0.98)'" ontouchend="this.style.transform=''">
+      <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:500;color:#2D5C30;">ดูเครื่องมือสำหรับคุณทั้งหมด</div>
+      <span style="font-size:14px;color:#4A8A4D;opacity:0.6;">→</span>
     </a>
   </div>
 <script>
@@ -909,23 +906,43 @@ const SIT_DATA = {
 // ── SWIPE DOWN TO CLOSE sit-sheet ────────────────────────────
 (function() {
   const sheet = document.getElementById('sit-sheet');
-  let startY = 0, currentY = 0, dragging = false;
+  const content = document.getElementById('sit-sheet-content');
+  let startY = 0, startX = 0, currentY = 0, dragging = false, locked = false;
+
   sheet.addEventListener('touchstart', e => {
-    if (sheet.scrollTop > 0) return;
-    startY = e.touches[0].clientY; dragging = true;
+    // Only allow dismiss drag when sheet content is scrolled to top
+    if (content.scrollTop > 4) return;
+    startY = e.touches[0].clientY;
+    startX = e.touches[0].clientX;
+    dragging = true;
+    locked = false;
+    currentY = 0;
     sheet.style.transition = 'none';
   }, {passive:true});
+
   sheet.addEventListener('touchmove', e => {
     if (!dragging) return;
-    const delta = e.touches[0].clientY - startY;
-    if (delta > 0) { currentY = delta; sheet.style.transform = `translateY(${delta}px)`; }
+    const dy = e.touches[0].clientY - startY;
+    const dx = e.touches[0].clientX - startX;
+
+    // If first meaningful move is more horizontal or upward → not a dismiss gesture
+    if (!locked && (Math.abs(dx) > Math.abs(dy) || dy < 0)) {
+      dragging = false;
+      sheet.style.transition = 'transform 0.42s cubic-bezier(0.22,1,0.36,1)';
+      sheet.style.transform = 'translateY(0)';
+      return;
+    }
+    locked = true;
+    if (dy > 0) { currentY = dy; sheet.style.transform = `translateY(${dy}px)`; }
   }, {passive:true});
+
   sheet.addEventListener('touchend', () => {
-    if (!dragging) return; dragging = false;
+    if (!dragging) return; dragging = false; locked = false;
     sheet.style.transition = 'transform 0.3s cubic-bezier(0.34,1.05,0.64,1)';
-    if (currentY > 110) closeSitSheet();
+    // Raise threshold to 200px — needs a real intentional drag to dismiss
+    if (currentY > 200) closeSitSheet();
     else sheet.style.transform = 'translateY(0)';
-    startY = 0; currentY = 0;
+    startY = 0; startX = 0; currentY = 0;
   });
 })();
 
@@ -1935,23 +1952,32 @@ function handleAllSitOverlay(e) {
 // Swipe down to close allsit-sheet
 (function() {
   const sheet = document.getElementById('allsit-sheet');
-  let startY = 0, currentY = 0, dragging = false;
+  let startY = 0, startX = 0, currentY = 0, dragging = false, locked = false;
   sheet.addEventListener('touchstart', e => {
-    if (sheet.scrollTop > 0) return;
-    startY = e.touches[0].clientY; dragging = true;
+    if (sheet.scrollTop > 4) return;
+    startY = e.touches[0].clientY; startX = e.touches[0].clientX;
+    dragging = true; locked = false; currentY = 0;
     sheet.style.transition = 'none';
   }, {passive:true});
   sheet.addEventListener('touchmove', e => {
     if (!dragging) return;
-    const delta = e.touches[0].clientY - startY;
-    if (delta > 0) { currentY = delta; sheet.style.transform = `translateY(${delta}px)`; }
+    const dy = e.touches[0].clientY - startY;
+    const dx = e.touches[0].clientX - startX;
+    if (!locked && (Math.abs(dx) > Math.abs(dy) || dy < 0)) {
+      dragging = false;
+      sheet.style.transition = 'transform 0.42s cubic-bezier(0.22,1,0.36,1)';
+      sheet.style.transform = 'translateY(0)';
+      return;
+    }
+    locked = true;
+    if (dy > 0) { currentY = dy; sheet.style.transform = `translateY(${dy}px)`; }
   }, {passive:true});
   sheet.addEventListener('touchend', () => {
-    if (!dragging) return; dragging = false;
+    if (!dragging) return; dragging = false; locked = false;
     sheet.style.transition = 'transform 0.3s cubic-bezier(0.34,1.05,0.64,1)';
-    if (currentY > 110) closeAllSituationsSheet();
+    if (currentY > 200) closeAllSituationsSheet();
     else sheet.style.transform = 'translateY(0)';
-    startY = 0; currentY = 0;
+    startY = 0; startX = 0; currentY = 0;
   });
 })();
 </script>
