@@ -441,6 +441,22 @@
 .bp-saved-text{font-size:13px;font-weight:300;color:rgba(255,255,255,0.75);line-height:1.7;white-space:pre-wrap;}
 .bp-saved-meta{font-size:11px;color:rgba(255,255,255,0.3);margin-top:6px;}
 .bp-saved-del{position:absolute;top:10px;right:12px;background:none;border:none;color:rgba(255,255,255,0.25);font-size:14px;cursor:pointer;padding:2px 4px;}
+
+/* ── RANDOM QUEST (10-sec) ───────────────────────────── */
+.quest-phase{display:none;text-align:center;padding:8px 0 12px;}
+.quest-phase.active{display:block;}
+.quest-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:28px 20px;margin-bottom:18px;}
+.quest-icon{font-size:48px;margin-bottom:14px;}
+.quest-text{font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:500;color:#fff;line-height:1.6;}
+.quest-timer-ring{position:relative;width:90px;height:90px;margin:0 auto 14px;}
+.quest-timer-ring svg{transform:rotate(-90deg);}
+.quest-ring-bg{fill:none;stroke:rgba(255,255,255,0.08);stroke-width:6;}
+.quest-ring-fill{fill:none;stroke:#5EEAD4;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1s linear;}
+.quest-ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;color:#fff;}
+.quest-btn{width:100%;background:#fff;color:var(--dark);border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;transition:opacity 0.15s;}
+.quest-btn:active{opacity:0.85;}
+.quest-btn.secondary{background:none;color:rgba(255,255,255,0.4);border:1.5px solid rgba(255,255,255,0.15);}
+.quest-done-icon{font-size:44px;margin-bottom:10px;}
 .bp-saved-del:hover{color:rgba(255,255,255,0.6);}
 
 /* ── WATER GAME ──────────────────────────────────────── */
@@ -608,6 +624,19 @@
         <div class="card-title">จัดมุมเล็ก 5 นาที</div>
         <div class="card-sub">เลือกมุมเดียว ตั้งเวลา แล้วลงมือ</div>
         <div class="card-btn" style="background:#fff;color:var(--dark);">เริ่ม →</div>
+      </div>
+    </button>
+
+    <!-- Random 10-Second Quest -->
+    <button class="tool-img-card" onclick="markToolTapped();openQuest()">
+      <div class="card-bg" style="background:linear-gradient(135deg,#3A2E5C 0%,#6B4FA0 60%,#A07FE0 100%);"></div>
+      <div class="card-overlay"></div>
+      <div class="card-placeholder">🎲</div>
+      <div class="card-content">
+        <div class="card-badge">10 วินาที เล่นๆ</div>
+        <div class="card-title">สุ่มเควสต์เล็กๆ</div>
+        <div class="card-sub">ไม่ต้องมีเหตุผล แค่ลองดู</div>
+        <div class="card-btn" style="background:#fff;color:var(--dark);">สุ่มเลย →</div>
       </div>
     </button>
 
@@ -1345,6 +1374,7 @@ function goBackToIndex() {
   else if(h==='#posture'){switchToolsTab(1);openPosture();}
   else if(h==='#water'){switchToolsTab(1);openWater();}
   else if(h==='#corner'){switchToolsTab(1);openCorner();}
+  else if(h==='#quest'){switchToolsTab(1);openQuest();}
   else if(h==='#conflict-prep'){switchToolsTab(2);openConflictPrep();}
   else if(h==='#factlog'){switchToolsTab(2);openFactLog();}
   else if(h==='#blankpaper'){switchToolsTab(2);openBlankPaper();}
@@ -1749,6 +1779,72 @@ function _updateCornerTime() {
   const s = _cornerSec % 60;
   document.getElementById('corner-time').textContent = m + ':' + String(s).padStart(2,'0');
 }
+
+// ══════════════════════════════════════════════════
+// RANDOM 10-SECOND QUEST
+// ══════════════════════════════════════════════════
+const QUEST_POOL = [
+  { icon:'🫁', text:'หายใจเข้าลึกๆ 1 ครั้ง แล้วปล่อยออกยาวๆ' },
+  { icon:'🦶', text:'ขยับนิ้วเท้าทั้งสองข้าง 10 วินาที' },
+  { icon:'😊', text:'ยิ้มให้ตัวเอง — แม้จะไม่รู้สึกอยากยิ้มก็ได้' },
+  { icon:'👂', text:'ฟังเสียงที่ไกลที่สุดที่ได้ยินตอนนี้ 10 วินาที' },
+  { icon:'🤲', text:'สัมผัสผ้าที่อยู่ใกล้ตัว สังเกตเนื้อผ้าของมัน' },
+  { icon:'💧', text:'ดื่มน้ำ 1 อึก' },
+  { icon:'🧍', text:'ขยับไหล่ขึ้น-ลงช้าๆ 3 รอบ' },
+  { icon:'👀', text:'มองหาของสีฟ้าหรือสีเขียว 3 อย่างรอบตัว' },
+  { icon:'🖐️', text:'กำมือแน่นๆ 5 วินาที แล้วค่อยๆ ปล่อย' },
+  { icon:'🎵', text:'ฮัมเพลงอะไรก็ได้ที่ลอยมาในหัว 10 วินาที' },
+  { icon:'🧦', text:'ขยับข้อเท้าหมุนวนช้าๆ ทั้งสองข้าง' },
+  { icon:'🌬️', text:'อ้าปากกว้างๆ แล้วหายใจออกแรงๆ เหมือนถอนหายใจ' },
+  { icon:'✋', text:'ลองสัมผัสมือตัวเองข้างหนึ่งด้วยอีกข้าง สังเกตความอุ่น' },
+  { icon:'📱', text:'วางมือถือลง หลับตา นับเลข 1-10 ในใจช้าๆ' },
+  { icon:'🤗', text:'กอดหมอนหรือผ้าห่มแน่นๆ 10 วินาที' },
+  { icon:'😤', text:'ยักไหล่แรงๆ ขึ้นใกล้หู แล้วปล่อยตกลงพร้อมหายใจออก' },
+  { icon:'🪞', text:'มองไปรอบห้อง หาของ 3 อย่างที่มีสีเดียวกัน' },
+];
+
+let _questTimer = null;
+let _questSec = 10;
+
+function openQuest() {
+  questGoTo(0);
+  document.getElementById('quest-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeQuest() {
+  if (_questTimer) { clearInterval(_questTimer); _questTimer = null; }
+  document.getElementById('quest-modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function questGoTo(phase) {
+  for (let i = 0; i < 3; i++) {
+    document.getElementById('quest-p' + i).classList.toggle('active', i === phase);
+  }
+}
+function drawQuest() {
+  if (_questTimer) { clearInterval(_questTimer); _questTimer = null; }
+  const q = QUEST_POOL[Math.floor(Math.random() * QUEST_POOL.length)];
+  document.getElementById('quest-icon').textContent = q.icon;
+  document.getElementById('quest-text').textContent = q.text;
+  questGoTo(1);
+
+  _questSec = 10;
+  const ring = document.getElementById('quest-ring');
+  const circ = 245;
+  ring.style.strokeDashoffset = '0';
+  document.getElementById('quest-num').textContent = _questSec;
+
+  _questTimer = setInterval(() => {
+    _questSec--;
+    document.getElementById('quest-num').textContent = Math.max(_questSec, 0);
+    ring.style.strokeDashoffset = String(circ * (1 - _questSec / 10));
+    if (_questSec <= 0) {
+      clearInterval(_questTimer);
+      _questTimer = null;
+      questGoTo(2);
+    }
+  }, 1000);
+}
 </script>
 <!-- ══ REWIRE MODAL ══ -->
 <div class="modal-overlay" id="rewire-modal" onclick="handleOverlayClick(event,'rewire-modal',closeRewire)">
@@ -2001,6 +2097,53 @@ function _updateCornerTime() {
     <div class="corner-phase-title">เก่งมากเลย</div>
     <div class="corner-phase-sub">5 นาทีที่ผ่านไป มุมนั้นเปลี่ยนไปแล้ว<br>ไม่ต้องรีบทำต่อ — แค่นี้ก็เพียงพอสำหรับวันนี้</div>
     <button class="corner-btn" onclick="closeCorner()">เสร็จแล้ว ✓</button>
+  </div>
+</div>
+</div>
+
+<!-- ══ RANDOM QUEST MODAL ══ -->
+<div class="modal-overlay" id="quest-modal" onclick="handleOverlayClick(event,'quest-modal',closeQuest)">
+<div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 48px;">
+  <div class="modal-handle"></div>
+  <div style="font-size:10px;letter-spacing:2.5px;color:rgba(255,255,255,0.4);text-transform:uppercase;font-weight:500;margin-bottom:8px;">10 วินาที เล่นๆ</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;color:#fff;">สุ่มเควสต์เล็กๆ</div>
+  <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.45);margin-bottom:22px;line-height:1.7;">ไม่ต้องมีเหตุผล ไม่ต้องเตรียมตัว<br>กดสุ่มแล้วลองดูว่าจะได้อะไร</div>
+
+  <!-- Phase 0: intro -->
+  <div class="quest-phase active" id="quest-p0">
+    <div class="quest-card">
+      <div class="quest-icon">🎲</div>
+      <div class="quest-text">พร้อมสุ่มหรือยัง?</div>
+    </div>
+    <button class="quest-btn" onclick="drawQuest()">สุ่มเลย →</button>
+    <button class="quest-btn secondary" onclick="closeQuest()">ไว้ก่อน</button>
+  </div>
+
+  <!-- Phase 1: drawn quest + 10s timer -->
+  <div class="quest-phase" id="quest-p1">
+    <div class="quest-card">
+      <div class="quest-icon" id="quest-icon">✨</div>
+      <div class="quest-text" id="quest-text">...</div>
+    </div>
+    <div class="quest-timer-ring">
+      <svg width="90" height="90" viewBox="0 0 90 90">
+        <circle class="quest-ring-bg" cx="45" cy="45" r="39"/>
+        <circle id="quest-ring" class="quest-ring-fill" cx="45" cy="45" r="39"
+          stroke-dasharray="245" stroke-dashoffset="0"/>
+      </svg>
+      <div class="quest-ring-num" id="quest-num">10</div>
+    </div>
+    <button class="quest-btn secondary" onclick="closeQuest()">ปิด</button>
+  </div>
+
+  <!-- Phase 2: done -->
+  <div class="quest-phase" id="quest-p2">
+    <div class="quest-card">
+      <div class="quest-done-icon">🌿</div>
+      <div class="quest-text">เก่งมาก แค่นี้ก็พอแล้ว</div>
+    </div>
+    <button class="quest-btn" onclick="drawQuest()">สุ่มอีกครั้ง 🎲</button>
+    <button class="quest-btn secondary" onclick="closeQuest()">เสร็จแล้ว</button>
   </div>
 </div>
 </div>
