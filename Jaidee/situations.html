@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <title>เรื่องที่หลายคนเคยเจอ — ใจดี TU</title>
+  <title>ตอนนี้คุณอยากได้อะไร? — ใจดี TU</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;600&family=Mitr:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     :root{
@@ -101,6 +101,28 @@
 
 <button class="back-btn" onclick="history.back()">← กลับ</button>
 
+<!-- P0-3: Jaidee mascot — companion, not teacher. Small, sitting, not speaking. -->
+<div style="display:flex;align-items:center;gap:12px;padding:16px 24px 8px;">
+  <div style="width:44px;height:44px;border-radius:50%;background:var(--green-soft);border:1.5px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🌱</div>
+  <div>
+    <div style="font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;color:var(--dark);">ตอนนี้คุณอยากได้อะไร?</div>
+    <div style="font-size:12px;font-weight:300;color:var(--soft);">ใจดีอยู่ตรงนี้ด้วยกัน</div>
+  </div>
+</div>
+
+<!-- P2-1: Situation Search -->
+<div style="padding:10px 20px 4px;position:relative;">
+  <div style="display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:50px;padding:10px 16px;transition:border-color 0.2s;" id="search-wrap">
+    <span style="font-size:14px;color:var(--soft);">🔍</span>
+    <input id="sit-search" type="text" placeholder="ค้นหาอาการหรือความรู้สึก..." autocomplete="off"
+      style="flex:1;border:none;outline:none;font-family:'Mitr',sans-serif;font-size:13px;background:transparent;color:var(--dark);"
+      oninput="onSitSearch(this.value)" onfocus="document.getElementById('search-wrap').style.borderColor='var(--green)'" onblur="document.getElementById('search-wrap').style.borderColor='var(--cream-border)'"/>
+    <button id="search-clear" onclick="clearSitSearch()" style="display:none;background:none;border:none;font-size:14px;color:var(--soft);cursor:pointer;padding:0;">✕</button>
+  </div>
+  <!-- Search results dropdown -->
+  <div id="search-results" style="display:none;position:absolute;left:20px;right:20px;top:calc(100% - 4px);background:var(--card);border:1.5px solid var(--cream-border);border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:50;overflow:hidden;max-height:320px;overflow-y:auto;"></div>
+</div>
+
 <div id="tiers-container"></div>
 
 <!-- SIT OVERLAY -->
@@ -117,10 +139,10 @@ const TIERS = [
   {
     label: 'วันนี้เป็นยังไงบ้าง?',
     pills: [
+      { emoji:'🪞', label:'ไม่แน่ใจว่าตัวเองกำลังรู้สึกอะไร', key:'__unsure__' },
       { emoji:'😴', label:'นอนไม่หลับ',              key:'sleep'    },
       { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
       { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
-      { emoji:'🤔', label:'ไม่แน่ใจว่ารู้สึกอะไร',  key:'unsure'   },
       { emoji:'😞', label:'ผิดหวัง',                key:'disappointed' },
       { emoji:'😵‍💫', label:'สับสน เลือกไม่ได้',     key:'confused'     },
       { emoji:'🌿', label:'เป็นห่วงเพื่อน',          key:'friend'   },
@@ -219,14 +241,6 @@ const SIT_DATA = {
     ],
     talk: 'เป็นมานานแล้ว หรือไม่ใช่แค่เรื่องเรียน?',
   },
-  unsure: {
-    emoji: '🤔', title: 'ยังอธิบายตัวเองไม่ถูก',
-    note: 'ไม่ต้องรีบหาคำตอบ แค่รู้ว่ามีบางอย่างอยู่ก็พอ ลองสำรวจดูว่ามันคืออะไร',
-    tools: [
-      { icon:'🪞', name:"What's This Feeling?", desc:'เริ่มจากสังเกตข้างใน · ไม่ต้องรู้คำตอบก่อน', href:'reflection.html', primary: true },
-    ],
-    talk: 'อยากคุยกับคนจริงๆ มากกว่า?',
-  },
   friend: {
     emoji: '🌿', title: 'เป็นห่วงเพื่อน',
     note: 'การที่คุณเป็นห่วงเพื่อนอยู่นั้น สำคัญมาก แต่การช่วยเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว',
@@ -307,6 +321,12 @@ const SIT_DATA = {
 
 
 function pressPill(btn, key) {
+  // P0-2: "I don't know" → directly open What's This Feeling, no extra screen
+  if (key === '__unsure__') {
+    window.location.href = 'reflection.html';
+    return;
+  }
+
   // Anonymous tap counter — no user ID, no cookies, fire-and-forget.
   try {
     if (window.goatcounter && typeof window.goatcounter.count === 'function') {
@@ -325,6 +345,14 @@ function openSitSheet(key) {
   const d = SIT_DATA[key];
   if (!d) return;
   SESSION_OPENED.add(key); _lastOpenedKey = key; _currentSitKey = key;
+
+  // P0-4: Track recent situations in localStorage
+  try {
+    const recent = JSON.parse(localStorage.getItem('jaidee_recent_sit') || '[]');
+    const filtered = recent.filter(k => k !== key);
+    filtered.unshift(key);
+    localStorage.setItem('jaidee_recent_sit', JSON.stringify(filtered.slice(0, 3)));
+  } catch(e) {}
 
   // ── Guide-first tool rendering (mirrors index.html _buildSheetContent) ──
   const guideTools  = d.tools.filter(t => t.href && t.href.indexOf('notebook.html') !== -1);
@@ -358,12 +386,12 @@ function openSitSheet(key) {
     </div>`).join('');
 
   const toolsDivider = (guideHtml && actionTools.length)
-    ? `<div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px;"><div style="flex:1;height:1px;background:var(--cream-border);"></div><div style="font-size:9px;color:var(--faint);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;">เครื่องมือ</div><div style="flex:1;height:1px;background:var(--cream-border);"></div></div>`
+    ? `<div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px;"><div style="flex:1;height:1px;background:var(--cream-border);"></div><div style="font-size:9px;color:var(--faint);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;">ลองแบบนี้ดูไหม</div><div style="flex:1;height:1px;background:var(--cream-border);"></div></div>`
     : '';
 
   const toolsHtml = guideHtml + toolsDivider + actionTools.map(_toolCard).join('');
 
-  // Talk nudge — index style: big button → talk_who.html, mid color, no continue-exploring
+  // Talk nudge — original style → talk_who.html
   const talkHtml = d.talk ? `
     <div style="margin-top:36px;padding-top:22px;border-top:1px solid var(--cream-border);">
       <a href="talk_who.html" style="display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:18px;text-decoration:none;background:var(--cream-warm);border:1.5px solid var(--cream-border);">
@@ -376,6 +404,21 @@ function openSitSheet(key) {
       </a>
     </div>` : '';
 
+  // P1-2: Emotional breadcrumbs — show adjacent situations visited this session
+  const visited = [...SESSION_OPENED].filter(k => k !== key && k !== '__unsure__' && SIT_DATA_COMBINED[k]);
+  const breadcrumbsHtml = visited.length ? `
+    <div style="margin-top:20px;padding:14px 16px;background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:14px;">
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:600;color:var(--soft);margin-bottom:10px;">วันนี้คุณเคยดู</div>
+      ${visited.slice(-3).map(k => {
+        const s = SIT_DATA_COMBINED[k];
+        return `<button onclick="closeSitSheet();setTimeout(()=>pressPill(null,'${k}'),400)" style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;font-family:'Mitr',sans-serif;padding:4px 0;cursor:pointer;text-align:left;">
+          <span style="font-size:15px;">${s.emoji}</span>
+          <span style="font-size:12px;font-weight:400;color:var(--mid);">${s.title}</span>
+          <span style="font-size:10px;color:var(--green);margin-left:auto;">✓</span>
+        </button>`;
+      }).join('')}
+    </div>` : '';
+
   document.getElementById('sit-sheet-content').innerHTML = `
     <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
@@ -384,6 +427,7 @@ function openSitSheet(key) {
       </div>
       <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--cream-border);">${d.note}</div>
       ${toolsHtml}
+      ${breadcrumbsHtml}
       ${talkHtml}
     </div>`;
 
@@ -752,9 +796,131 @@ const SIT_DATA_EXTRA = {
 
 // Merge into SIT_DATA
 Object.assign(SIT_DATA, SIT_DATA_EXTRA);
+const SIT_DATA_COMBINED = SIT_DATA; // alias for breadcrumbs
 
+// ── P2-1: SITUATION SEARCH ─────────────────────────────────────
+// Alias map: Thai synonyms/slang → situation key
+const SEARCH_ALIASES = {
+  // sleep
+  'นอนไม่หลับ':['sleep'],'นอนไม่ได้':['sleep'],'ตื่นกลางดึก':['sleep'],'นอนไม่พอ':['sleep'],
+  // burnout
+  'หมดไฟ':['burnout'],'เบื่อ':['burnout','foggy'],'เหนื่อย':['burnout','tired'],'ไม่อยากทำอะไร':['burnout','no_energy'],
+  'หมดแรง':['burnout','tired'],'ท้อ':['burnout'],'ล้า':['burnout','tired'],
+  // foggy
+  'สมองตื้อ':['foggy'],'คิดไม่ออก':['foggy'],'โฟกัสไม่ได้':['foggy'],'ไม่มีสมาธิ':['foggy'],
+  // stress / overwhelm
+  'เครียด':['overwhelm','pressure'],'งานเยอะ':['overwhelm'],'ล้นมือ':['overwhelm'],
+  'กดดัน':['pressure'],'กลัว':['exam','pressure'],'กลัวสอบ':['exam'],
+  // lonely
+  'เหงา':['lonely'],'โดดเดี่ยว':['lonely','no_place'],'ไม่มีเพื่อน':['lonely','social'],
+  // heartbreak
+  'อกหัก':['heartbreak'],'เลิกกัน':['heartbreak'],'แฟนทิ้ง':['heartbreak'],'รักไม่สมหวัง':['heartbreak'],
+  'แอบชอบ':['crush'],'ชอบใครอยู่':['crush'],
+  // fight / social
+  'ทะเลาะ':['fight'],'ทะเลาะกับเพื่อน':['fight'],'เคลียร์':['fight'],
+  'เข้ากับคนไม่ได้':['social'],'เข้าสังคมไม่ได้':['social'],
+  'โดนทิ้ง':['abandoned'],'โดนทอดทิ้ง':['abandoned'],
+  // family
+  'คิดถึงบ้าน':['homesick'],'คิดถึงแม่':['homesick'],'บ้าน':['homesick'],
+  'ปัญหาครอบครัว':['family'],'ครอบครัว':['family'],
+  // body
+  'ไม่อยากกิน':['no_appetite'],'กินไม่ลง':['no_appetite'],'หิว':['hungry'],
+  'เล่นมือถือเยอะ':['phone'],'ติดมือถือ':['phone'],
+  'ไม่ได้ออกไปข้างนอก':['no_sun'],'อยู่แต่ในห้อง':['no_sun'],
+  'เหนื่อยตลอด':['tired'],'เหนื่อยตลอดเวลา':['tired'],
+  'ไม่อยากลุก':['no_energy'],'ลุกไม่ไหว':['no_energy'],'ไม่มีแรง':['no_energy'],
+  // self
+  'ไม่รู้จักตัวเอง':['self_know','who_am_i'],'อยากรู้จักตัวเอง':['self_know'],
+  'อยากเปลี่ยน':['grow'],'อยากพัฒนาตัวเอง':['grow'],
+  'ไม่เหมือนเดิม':['changed'],'ตัวเองเปลี่ยนไป':['changed'],
+  'ไม่รู้ว่าต้องการอะไร':['lost'],'หลงทาง':['lost'],
+  'ค่อยๆหายไป':['fading'],'รู้สึกหายไป':['fading'],
+  // academic
+  'อ่านหนังสือไม่เข้าหัว':['study_fog'],'อ่านไม่เข้าหัว':['study_fog'],
+  'รู้สึกไม่เก่ง':['not_enough'],'ไม่เก่งพอ':['not_enough'],'ด้อยกว่าคนอื่น':['not_enough'],
+  'ล้าหลัง':['behind'],'คนอื่นไปไกลกว่า':['behind'],
+  // misc
+  'ผิดหวัง':['disappointed'],'สับสน':['confused'],'เลือกไม่ได้':['confused'],
+  'เป็นห่วงเพื่อน':['friend'],'เพื่อนไม่ดี':['friend'],
+  'ห้องรก':['messy_room'],'ไม่ได้อาบน้ำ':['no_shower'],'ดองเค็ม':['no_shower'],
+  'ไม่ดื่มน้ำ':['low_water'],'ดื่มน้ำน้อย':['low_water'],
+};
 
-// ── BOOKMARK MEMORY (green glow on visited pills) ────────────
+function onSitSearch(val) {
+  const q = val.trim();
+  const clear = document.getElementById('search-clear');
+  const results = document.getElementById('search-results');
+  const tiers = document.getElementById('tiers-container');
+
+  clear.style.display = q ? 'block' : 'none';
+
+  if (!q) {
+    results.style.display = 'none';
+    tiers.style.display = '';
+    return;
+  }
+
+  tiers.style.display = 'none';
+
+  // Search: direct key match, alias match, title/label substring
+  const hits = new Map(); // key → score
+
+  // 1. Alias exact match
+  Object.entries(SEARCH_ALIASES).forEach(([alias, keys]) => {
+    if (alias.includes(q) || q.includes(alias.replace(/ๆ/g,''))) {
+      keys.forEach(k => hits.set(k, (hits.get(k)||0) + 3));
+    }
+  });
+
+  // 2. Pill label substring match across all tiers
+  TIERS.forEach(tier => {
+    tier.pills.forEach(p => {
+      if (p.key === '__unsure__') return;
+      if (p.label.includes(q)) hits.set(p.key, (hits.get(p.key)||0) + 2);
+    });
+  });
+
+  // 3. SIT_DATA title match
+  Object.entries(SIT_DATA_COMBINED).forEach(([k, d]) => {
+    if (d.title && d.title.includes(q)) hits.set(k, (hits.get(k)||0) + 2);
+    if (d.note && d.note.includes(q)) hits.set(k, (hits.get(k)||0) + 1);
+  });
+
+  const sorted = [...hits.entries()]
+    .sort((a,b) => b[1]-a[1])
+    .map(([k]) => k)
+    .filter(k => SIT_DATA_COMBINED[k])
+    .slice(0, 8);
+
+  if (!sorted.length) {
+    results.innerHTML = `<div style="padding:16px 18px;font-size:13px;color:var(--soft);text-align:center;">ไม่พบตรงๆ — ลองดูความรู้สึกใกล้เคียงด้านล่าง</div>`;
+    results.style.display = 'block';
+    tiers.style.display = '';
+    return;
+  }
+
+  results.innerHTML = sorted.map(k => {
+    const d = SIT_DATA_COMBINED[k];
+    return `<button onclick="clearSitSearch();pressPill(null,'${k}')"
+      style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 18px;background:none;border:none;border-bottom:1px solid var(--cream-border);font-family:'Mitr',sans-serif;cursor:pointer;text-align:left;transition:background 0.12s;"
+      onmouseenter="this.style.background='var(--cream-warm)'" onmouseleave="this.style.background='none'"
+      ontouchstart="this.style.background='var(--cream-warm)'" ontouchend="this.style.background='none'">
+      <span style="font-size:20px;flex-shrink:0;">${d.emoji}</span>
+      <span style="flex:1;">
+        <span style="display:block;font-size:13px;font-weight:500;color:var(--dark);">${d.title}</span>
+      </span>
+      <span style="font-size:12px;color:var(--faint);">→</span>
+    </button>`;
+  }).join('');
+  results.style.display = 'block';
+}
+
+function clearSitSearch() {
+  const inp = document.getElementById('sit-search');
+  inp.value = '';
+  onSitSearch('');
+  inp.focus();
+}
 const SESSION_OPENED = new Set();
 let _lastOpenedKey = null, _currentSitKey = null;
 function _updatePillStates(){
@@ -768,7 +934,34 @@ function _updatePillStates(){
 // ── RENDER ALL TIERS ─────────────────────────────────────────
 function renderAllTiers() {
   const container = document.getElementById('tiers-container');
-  container.innerHTML = TIERS.map(tier => `
+
+  // P0-4: Show recent situations from localStorage at the top
+  let recentSection = '';
+  try {
+    const recent = JSON.parse(localStorage.getItem('jaidee_recent_sit') || '[]')
+      .filter(k => k !== '__unsure__' && SIT_DATA[k]);
+    if (recent.length) {
+      const pills = recent.map(k => {
+        const s = SIT_DATA[k];
+        const touched = SESSION_OPENED.has(k);
+        const cls = touched ? (k === _lastOpenedKey ? ' touched-last' : ' touched') : '';
+        return `<button class="sit-pill${cls}" onclick="pressPill(this,'${k}')">
+          <span class="sit-emoji">${s.emoji}</span>
+          <span class="sit-label">${s.title}</span>
+        </button>`;
+      }).join('');
+      recentSection = `<div class="tier-section">
+        <div class="tier-label">
+          <div class="tier-dot" style="background:var(--gold);"></div>
+          <div class="tier-text" style="color:var(--gold);">ครั้งก่อนคุณดู</div>
+          <div class="tier-line"></div>
+        </div>
+        <div class="tier-pills">${pills}</div>
+      </div>`;
+    }
+  } catch(e) {}
+
+  container.innerHTML = recentSection + TIERS.map(tier => `
     <div class="tier-section">
       <div class="tier-label">
         <div class="tier-dot"></div>
@@ -776,11 +969,17 @@ function renderAllTiers() {
         <div class="tier-line"></div>
       </div>
       <div class="tier-pills">
-        ${tier.pills.map(p => `
-          <button class="sit-pill${SESSION_OPENED.has(p.key)?(p.key===_lastOpenedKey?' touched-last':' touched'):''}" onclick="pressPill(this,'${p.key}')">
+        ${tier.pills.map(p => {
+          const isUnsure = p.key === '__unsure__';
+          const base = isUnsure
+            ? `style="background:var(--gold-soft);border-color:var(--gold-border);"`
+            : '';
+          return `
+          <button class="sit-pill${SESSION_OPENED.has(p.key)?(p.key===_lastOpenedKey?' touched-last':' touched'):''}" onclick="pressPill(this,'${p.key}')" ${base}>
             <span class="sit-emoji">${p.emoji}</span>
-            <span class="sit-label">${p.label}</span>
-          </button>`).join('')}
+            <span class="sit-label"${isUnsure ? ' style="color:#7A5C00;font-weight:500;"' : ''}>${p.label}</span>
+          </button>`;
+        }).join('')}
       </div>
     </div>
   `).join('');
