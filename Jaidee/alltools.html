@@ -427,6 +427,33 @@
 .fl-done-state .fl-done-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:#fff;margin-bottom:8px;}
 .fl-done-state .fl-done-sub{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:24px;}
 .fl-close-btn{width:100%;background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);border-radius:28px;padding:12px;font-family:'Sarabun',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;}
+
+/* ── WATER GAME ──────────────────────────────────────── */
+.water-cups{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.water-cup{aspect-ratio:1;border-radius:16px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;transition:all 0.25s cubic-bezier(0.34,1.3,0.64,1);position:relative;overflow:hidden;}
+.water-cup.filled{background:linear-gradient(180deg,rgba(94,234,212,0.25),rgba(13,148,136,0.35));border-color:#5EEAD4;transform:scale(1.04);}
+.water-cup.filled::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 120%,rgba(94,234,212,0.4),transparent 70%);}
+.water-cup span{position:relative;z-index:1;transition:transform 0.3s;}
+.water-cup.filled span{transform:scale(1.15);}
+.water-progress-text{text-align:center;font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:#fff;margin-bottom:6px;}
+.water-progress-sub{text-align:center;font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:22px;line-height:1.7;}
+.water-msg{background:rgba(94,234,212,0.1);border:1px solid rgba(94,234,212,0.3);border-radius:14px;padding:14px 16px;text-align:center;font-size:13px;color:#fff;line-height:1.75;margin-bottom:8px;min-height:48px;display:flex;align-items:center;justify-content:center;transition:opacity 0.25s;}
+.water-reset-btn{width:100%;background:none;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);border-radius:28px;padding:11px;font-family:'Sarabun',sans-serif;font-size:12px;cursor:pointer;margin-top:12px;}
+
+/* ── CORNER RESET ────────────────────────────────────── */
+.corner-phase{display:none;text-align:center;padding:4px 0 12px;}
+.corner-phase.active{display:block;}
+.corner-phase-icon{font-size:48px;margin-bottom:12px;}
+.corner-phase-title{font-family:'Noto Serif Thai',serif;font-size:19px;font-weight:600;color:#fff;margin-bottom:8px;line-height:1.4;}
+.corner-phase-sub{font-size:13px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.8;margin-bottom:22px;}
+.corner-ring-wrap{position:relative;width:140px;height:140px;margin:0 auto 22px;}
+.corner-ring-wrap svg{transform:rotate(-90deg);}
+.corner-ring-bg{fill:none;stroke:rgba(255,255,255,0.08);stroke-width:8;}
+.corner-ring-fill{fill:none;stroke:#5EEAD4;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s linear;}
+.corner-ring-time{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif Thai',serif;font-size:32px;font-weight:600;color:#fff;}
+.corner-prompt{font-size:14px;font-weight:400;color:rgba(255,255,255,0.7);line-height:1.85;min-height:72px;transition:opacity 0.4s;padding:0 8px;}
+.corner-btn{width:100%;background:#fff;color:var(--dark);border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;}
+.corner-btn.secondary{background:none;color:rgba(255,255,255,0.4);border:1.5px solid rgba(255,255,255,0.15);}
 </style>
 </head>
 <body>
@@ -540,6 +567,32 @@
         <div class="card-title">Power Posture</div>
         <div class="card-sub">รีเซ็ตร่างกายและลมหายใจ · 2 นาที</div>
         <div class="card-btn dark">เริ่ม →</div>
+      </div>
+    </button>
+
+    <!-- Water Drinking Game -->
+    <button class="tool-img-card" onclick="markToolTapped();openWater()">
+      <div class="card-bg" style="background:linear-gradient(135deg,#0F2A2E 0%,#0D9488 70%,#5EEAD4 100%);"></div>
+      <div class="card-overlay"></div>
+      <div class="card-placeholder">💧</div>
+      <div class="card-content">
+        <div class="card-badge">เติมพลังให้สมอง</div>
+        <div class="card-title">เติมน้ำให้ตัวเอง</div>
+        <div class="card-sub">แตะทีละแก้ว ครบ 8 แก้วต่อวัน</div>
+        <div class="card-btn" style="background:#5EEAD4;color:#0F2A2E;">เริ่ม →</div>
+      </div>
+    </button>
+
+    <!-- 5-Minute Corner Reset -->
+    <button class="tool-img-card" onclick="markToolTapped();openCorner()">
+      <div class="card-bg" style="background:linear-gradient(135deg,#2A2418 0%,#5C4A30 60%,#8C7355 100%);"></div>
+      <div class="card-overlay"></div>
+      <div class="card-placeholder">🧺</div>
+      <div class="card-content">
+        <div class="card-badge">ไม่ต้องจัดทั้งห้อง</div>
+        <div class="card-title">จัดมุมเล็ก 5 นาที</div>
+        <div class="card-sub">เลือกมุมเดียว ตั้งเวลา แล้วลงมือ</div>
+        <div class="card-btn" style="background:#fff;color:var(--dark);">เริ่ม →</div>
       </div>
     </button>
 
@@ -1262,6 +1315,8 @@ function goBackToIndex() {
   else if(h==='#grounding'){switchToolsTab(3);openGrounding();}
   else if(h==='#listen'){switchToolsTab(1);if(AUDIO_TRACKS.length)openListen();}
   else if(h==='#posture'){switchToolsTab(1);openPosture();}
+  else if(h==='#water'){switchToolsTab(1);openWater();}
+  else if(h==='#corner'){switchToolsTab(1);openCorner();}
   else if(h==='#conflict-prep'){switchToolsTab(2);openConflictPrep();}
   else if(h==='#factlog'){switchToolsTab(2);openFactLog();}
   else if(h.indexOf('#rewire')===0){switchToolsTab(4);const id=h.split('-')[1];if(id)openRewire(id);}
@@ -1466,6 +1521,138 @@ function cpDeleteSaved(idx) {
   localStorage.setItem('jaidee_imessages', JSON.stringify(saved));
   _cpRenderSaved();
 }
+
+// ══════════════════════════════════════════════════
+// WATER DRINKING GAME
+// ══════════════════════════════════════════════════
+const WATER_GOAL = 8;
+const WATER_MSGS = [
+  'แตะแก้วแรกเลย — ไม่ต้องรอให้หิวน้ำก่อนก็ได้',
+  'ดีมาก เริ่มแล้ว 💧',
+  'สมองเริ่มได้รับน้ำมันแล้ว',
+  'ครึ่งทางแล้วนะ',
+  'กำลังไปได้ดี',
+  'เกือบครบแล้ว',
+  'อีกแก้วเดียว!',
+  'ครบ 8 แก้วแล้ว! สมองขอบคุณมากเลย 🌿'
+];
+
+function _waterTodayKey() {
+  const d = new Date();
+  return 'jaidee_water_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+
+function openWater() {
+  _waterRender();
+  document.getElementById('water-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeWater() {
+  document.getElementById('water-modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function _waterGetCount() {
+  return parseInt(localStorage.getItem(_waterTodayKey()) || '0', 10);
+}
+function _waterRender() {
+  const count = _waterGetCount();
+  const cupsEl = document.getElementById('water-cups');
+  cupsEl.innerHTML = '';
+  for (let i = 0; i < WATER_GOAL; i++) {
+    const cup = document.createElement('div');
+    cup.className = 'water-cup' + (i < count ? ' filled' : '');
+    cup.innerHTML = '<span>' + (i < count ? '💧' : '🥛') + '</span>';
+    cup.onclick = () => waterToggle(i);
+    cupsEl.appendChild(cup);
+  }
+  document.getElementById('water-progress-text').textContent = count + ' / ' + WATER_GOAL + ' แก้ว';
+  document.getElementById('water-msg').textContent = WATER_MSGS[Math.min(count, WATER_MSGS.length - 1)];
+}
+function waterToggle(idx) {
+  let count = _waterGetCount();
+  // Tapping a filled cup that is the last one removes it; tapping next empty cup fills up to it
+  if (idx < count) {
+    count = idx; // un-fill back to this point
+  } else {
+    count = idx + 1; // fill up to this point
+  }
+  localStorage.setItem(_waterTodayKey(), String(count));
+  _waterRender();
+}
+function waterReset() {
+  localStorage.setItem(_waterTodayKey(), '0');
+  _waterRender();
+}
+
+// ══════════════════════════════════════════════════
+// 5-MINUTE CORNER RESET
+// ══════════════════════════════════════════════════
+const CORNER_PROMPTS = [
+  'หยิบของชิ้นแรกที่เห็น — แค่ชิ้นเดียวก่อน แล้ววางมันในที่ที่มันควรอยู่',
+  'มีขยะหรือของที่ไม่ต้องการอยู่ไหม ลองทิ้งดู',
+  'พับหรือจัดเรียงสิ่งที่กองอยู่ ไม่ต้องเนี้ยบ แค่จัดให้เป็นกอง',
+  'เก็บของชิ้นต่อไปที่เห็น วางมันกลับที่เดิม',
+  'เหลือเวลาไม่มาก — ทำเท่าที่ทำได้ก็พอแล้ว'
+];
+let _cornerTimer = null;
+let _cornerSec = 0;
+let _cornerPromptIdx = 0;
+
+function openCorner() {
+  cornerGoTo(0);
+  document.getElementById('corner-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeCorner() {
+  if (_cornerTimer) { clearInterval(_cornerTimer); _cornerTimer = null; }
+  document.getElementById('corner-modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function cornerGoTo(phase) {
+  for (let i = 0; i < 3; i++) {
+    document.getElementById('corner-p' + i).classList.toggle('active', i === phase);
+  }
+}
+function startCorner() {
+  cornerGoTo(1);
+  _cornerSec = 5 * 60;
+  _cornerPromptIdx = 0;
+  const ring = document.getElementById('corner-ring');
+  const circ = 389;
+  ring.style.strokeDashoffset = '0';
+  document.getElementById('corner-prompt').textContent = CORNER_PROMPTS[0];
+  _updateCornerTime();
+
+  _cornerTimer = setInterval(() => {
+    _cornerSec--;
+    _updateCornerTime();
+    ring.style.strokeDashoffset = String(circ * (1 - _cornerSec / (5*60)));
+
+    // Rotate prompts every ~60s
+    const newIdx = Math.min(CORNER_PROMPTS.length - 1, Math.floor((5*60 - _cornerSec) / 60));
+    if (newIdx !== _cornerPromptIdx) {
+      _cornerPromptIdx = newIdx;
+      const p = document.getElementById('corner-prompt');
+      p.style.opacity = '0';
+      setTimeout(() => { p.textContent = CORNER_PROMPTS[_cornerPromptIdx]; p.style.opacity = '1'; }, 300);
+    }
+
+    if (_cornerSec <= 0) {
+      clearInterval(_cornerTimer);
+      _cornerTimer = null;
+      cornerGoTo(2);
+    }
+  }, 1000);
+}
+function stopCorner() {
+  if (_cornerTimer) { clearInterval(_cornerTimer); _cornerTimer = null; }
+  cornerGoTo(2);
+}
+function _updateCornerTime() {
+  const m = Math.floor(_cornerSec / 60);
+  const s = _cornerSec % 60;
+  document.getElementById('corner-time').textContent = m + ':' + String(s).padStart(2,'0');
+}
 </script>
 <!-- ══ REWIRE MODAL ══ -->
 <div class="modal-overlay" id="rewire-modal" onclick="handleOverlayClick(event,'rewire-modal',closeRewire)">
@@ -1665,7 +1852,62 @@ function cpDeleteSaved(idx) {
 </div>
 </div>
 
-<!-- ══ CONFLICT PREP MODAL ══ -->
+<!-- ══ WATER GAME MODAL ══ -->
+<div class="modal-overlay" id="water-modal" onclick="handleOverlayClick(event,'water-modal',closeWater)">
+<div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 48px;">
+  <div class="modal-handle"></div>
+  <div style="font-size:10px;letter-spacing:2.5px;color:rgba(255,255,255,0.4);text-transform:uppercase;font-weight:500;margin-bottom:8px;">ร่างกาย · ดื่มน้ำ</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;color:#fff;">เติมน้ำให้ตัวเอง</div>
+  <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.45);margin-bottom:24px;line-height:1.7;">แตะแต่ละแก้วเมื่อดื่มน้ำ<br>แค่ขาดน้ำเล็กน้อยก็ทำให้สมองทำงานช้าลงได้</div>
+
+  <div class="water-cups" id="water-cups"></div>
+  <div class="water-progress-text" id="water-progress-text">0 / 8 แก้ว</div>
+  <div class="water-msg" id="water-msg">แตะแก้วแรกเลย — ไม่ต้องรอให้หิวน้ำก่อนก็ได้</div>
+  <button class="cp-next" onclick="closeWater()" style="margin-top:14px;">เสร็จแล้ว</button>
+  <button class="water-reset-btn" onclick="waterReset()">รีเซ็ตวันนี้</button>
+</div>
+</div>
+
+<!-- ══ CORNER RESET MODAL ══ -->
+<div class="modal-overlay" id="corner-modal" onclick="handleOverlayClick(event,'corner-modal',closeCorner)">
+<div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 48px;">
+  <div class="modal-handle"></div>
+  <div style="font-size:10px;letter-spacing:2.5px;color:rgba(255,255,255,0.4);text-transform:uppercase;font-weight:500;margin-bottom:8px;">พื้นที่ · 5 นาที</div>
+  <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;margin-bottom:4px;color:#fff;">จัดมุมเล็ก 5 นาที</div>
+  <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.45);margin-bottom:24px;line-height:1.7;">ไม่ต้องจัดทั้งห้อง แค่มุมเดียวที่มองเห็นตอนนี้</div>
+
+  <!-- Phase 0: Pick a corner -->
+  <div class="corner-phase active" id="corner-p0">
+    <div class="corner-phase-icon">👀</div>
+    <div class="corner-phase-title">เลือกมุมเดียว</div>
+    <div class="corner-phase-sub">มองไปรอบๆ ตัวคุณตอนนี้<br>เลือกพื้นที่เล็กๆ ที่มองเห็นง่ายที่สุด — โต๊ะ มุมเตียง หรือพื้นที่ตรงหน้า<br>ไม่ต้องเลือกที่รกที่สุด แค่ที่ใกล้ที่สุดก็พอ</div>
+    <button class="corner-btn" onclick="startCorner()">เลือกแล้ว เริ่มเลย →</button>
+    <button class="corner-btn secondary" onclick="closeCorner()">ยังไม่พร้อม</button>
+  </div>
+
+  <!-- Phase 1: Timer running -->
+  <div class="corner-phase" id="corner-p1">
+    <div class="corner-ring-wrap">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle class="corner-ring-bg" cx="70" cy="70" r="62"/>
+        <circle id="corner-ring" class="corner-ring-fill" cx="70" cy="70" r="62"
+          stroke-dasharray="389" stroke-dashoffset="0"/>
+      </svg>
+      <div class="corner-ring-time" id="corner-time">5:00</div>
+    </div>
+    <div class="corner-prompt" id="corner-prompt">หยิบของชิ้นแรกที่เห็น — แค่ชิ้นเดียวก่อน แล้ววางมันในที่ที่มันควรอยู่</div>
+    <button class="corner-btn secondary" onclick="stopCorner()" style="margin-top:18px;">หยุดก่อน</button>
+  </div>
+
+  <!-- Phase 2: Done -->
+  <div class="corner-phase" id="corner-p2">
+    <div class="corner-phase-icon">✨</div>
+    <div class="corner-phase-title">เก่งมากเลย</div>
+    <div class="corner-phase-sub">5 นาทีที่ผ่านไป มุมนั้นเปลี่ยนไปแล้ว<br>ไม่ต้องรีบทำต่อ — แค่นี้ก็เพียงพอสำหรับวันนี้</div>
+    <button class="corner-btn" onclick="closeCorner()">เสร็จแล้ว ✓</button>
+  </div>
+</div>
+</div>
 <div class="modal-overlay" id="cp-modal" onclick="handleOverlayClick(event,'cp-modal',closeConflictPrep)">
 <div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 48px;max-height:88vh;overflow-y:auto;">
   <div class="modal-handle"></div>
