@@ -467,6 +467,15 @@
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
           async src="//gc.zgo.at/count.js"></script>
+<!-- ══ ANONYMOUS PILL-TAP COUNTER (GoatCounter) ══════════════════
+     1. Sign up free at https://www.goatcounter.com (no card needed)
+     2. Replace YOURCODE below with your site code (e.g. jaideetu)
+     3. Dashboard shows tap counts per pill as "pill-sleep", "pill-burnout", etc.
+     No cookies, no user ID, no LIFF required — fully anonymous.
+     If you don't set this up yet, the script 404s silently and
+     pressPill() just skips tracking (wrapped in try/catch). -->
+<script data-goatcounter="https://YOURCODE.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -908,6 +917,8 @@ const TIERS = [
       { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
       { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
       { emoji:'🤔', label:'ไม่แน่ใจว่ารู้สึกอะไร',  key:'unsure'   },
+      { emoji:'😞', label:'ผิดหวัง',                key:'disappointed' },
+      { emoji:'😵‍💫', label:'สับสน เลือกไม่ได้',     key:'confused'     },
       { emoji:'🌿', label:'เป็นห่วงเพื่อน',          key:'friend'   },
     ]
   },
@@ -1392,6 +1403,14 @@ function fcDone() {
 
 let _currentSitKey=null;
 function pressPill(btn, key) {
+  // Anonymous tap counter — no user ID, no cookies, fire-and-forget.
+  // Safe no-op if GoatCounter script isn't loaded/blocked.
+  try {
+    if (window.goatcounter && typeof window.goatcounter.count === 'function') {
+      window.goatcounter.count({ path: 'pill-' + key, title: key, event: true });
+    }
+  } catch (e) {}
+
   btn.classList.add('pressing');
   // Soften all other pills briefly so this one anchors
   document.querySelectorAll('#tier-pills .sit-pill').forEach(p => {
@@ -1427,6 +1446,8 @@ const SIT_RELATED = {
   burnout:    ['not_enough','pressure','tired'],
   foggy:      ['sleep','overwhelm','burnout'],
   unsure:     ['not_enough','who_am_i','lost'],
+  disappointed: ['not_enough','confused','exam'],
+  confused:   ['unsure','lost','need_space'],
   friend:     ['fight','lonely','abandoned'],
   hungry:     ['no_appetite','tired','no_energy'],
   exam:       ['pressure','not_enough','sleep'],
@@ -1789,6 +1810,28 @@ function _animateToNotebook(rect, href) {
 })();
 // Extended situation data
 const SIT_DATA_EXTRA = {
+  disappointed: {
+    emoji:'😞', title:'ผิดหวัง',
+    note:'ความผิดหวังเป็นเรื่องของสมองที่หลั่ง dopamine ไว้รอล่วงหน้าแล้วโดนหักดิบกะทันหัน ไม่ใช่แค่ "คิดมากไปเอง" — ร่างกายเจ็บจริงในตอนนี้',
+    tools:[
+      { icon:'📄', name:'Hope with Acceptance Log', desc:'เขียน 1 สิ่งที่เสียใจ แต่ปล่อยให้ผ่านไปคืนนี้', href:'alltools.html#blankpaper-hope', primary:true },
+      { icon:'🧩', name:'Fact-Log', desc:'แยก Disappointment กับ Regret', href:'alltools.html#factlog' },
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'บอกระบบประสาทว่าเหตุการณ์ผ่านไปแล้ว', href:'alltools.html#breathe' },
+      { icon:'📖', name:'ความผิดหวังที่กำลังเผชิญอยู่ — เกิดอะไรขึ้นในสมอง', desc:'อ่าน 4 นาที', href:'notebook.html?id=disappointed' },
+    ],
+    talk:'ผิดหวังมากจนรู้สึกไม่ไหวหรือกระทบชีวิตประจำวัน?',
+  },
+  confused: {
+    emoji:'😵‍💫', title:'สับสน เลือกไม่ได้',
+    note:'การที่ใจรู้สึกสองอย่างที่ดูขัดกันพร้อมกันได้จริง สมองสามารถเปิดสวิตช์ทั้งสองฝั่งพร้อมกัน — ไม่ใช่ความโลเล แต่เป็นมิติจิตใจที่ซับซ้อนขึ้น',
+    tools:[
+      { icon:'📄', name:'"AND" Space', desc:'เขียน 2 ความรู้สึกที่ขัดกัน แล้วให้มันอยู่ร่วมกันได้', href:'alltools.html#blankpaper-and', primary:true },
+      { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ถ้าสับสนเรื่องความรู้สึก', href:'alltools.html#rain' },
+      { icon:'🧩', name:'Fact-Log', desc:'ถ้าสับสนเรื่องการตัดสินใจ', href:'alltools.html#factlog' },
+      { icon:'📖', name:'ทำไมใจถึงรู้สึกสองอย่างพร้อมกันได้', desc:'อ่าน 4 นาที', href:'notebook.html?id=confused' },
+    ],
+    talk:'สับสนจนนอนไม่หลับหรือกระทบการตัดสินใจสำคัญ?',
+  },
   exam: {
     emoji:'📚', title:'กลัวสอบ',
     note:'ความกังวลก่อนสอบเป็นเรื่องปกติมาก แต่ถ้ามันมากเกินจนกระทบการนอนหรือทำให้อ่านไม่ได้เลย อาจต้องการความช่วยเหลือ',
