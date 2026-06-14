@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <title>เครื่องมือดูแลใจ — ใจดี TU</title>
+  <title>ตอนนี้คุณอยากได้อะไร? — ใจดี TU</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>
     /* Sarabun — Thai + Latin, clean, highly readable, less decorative than Mitr */
@@ -172,15 +172,6 @@
     .entry-a{font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;}
     .entry-a.empty{color:var(--soft);font-style:italic;}
     .entries-more{display:block;width:100%;margin-top:8px;background:none;border:1px solid var(--cream-border);border-radius:12px;padding:10px;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:400;color:var(--soft);cursor:pointer;text-align:center;}
-
-    /* ── IDLE NUDGE ── */
-    #idle-nudge{display:none;margin:0 16px 16px;background:var(--cream-warm);border:1px solid var(--gold-border);border-radius:14px;padding:14px 16px;opacity:0;transition:opacity 0.5s;}
-    .idle-nudge-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:5px;}
-    .idle-nudge-text{font-size:14px;font-weight:300;color:var(--mid);line-height:1.65;margin-bottom:10px;}
-    .idle-nudge-btns{display:flex;gap:8px;}
-    .idle-nudge-btns a{flex:1;display:block;text-align:center;border-radius:12px;padding:10px;font-size:13px;font-weight:500;text-decoration:none;}
-    .idle-nudge-btns .a-dark{background:var(--dark);color:var(--cream);}
-    .idle-nudge-btns .a-light{background:var(--card);border:1px solid var(--cream-border);color:var(--dark);}
 
     /* ── SECTION DIVIDER ── */
     .sec-div{display:flex;align-items:center;gap:8px;padding:0 16px;margin:0 0 12px;}
@@ -493,22 +484,44 @@
 <div class="tab-bar" id="tab-bar">
   <button onclick="goBackToIndex()" style="flex-shrink:0;display:inline-flex;align-items:center;gap:4px;padding:8px 10px 8px 4px;border-radius:20px;border:none;background:none;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:400;color:var(--soft);cursor:pointer;white-space:nowrap;">← กลับ</button>
   <div style="width:1px;height:20px;background:var(--cream-border);flex-shrink:0;margin:0 2px;align-self:center;"></div>
-  <button class="tab-btn active" data-panel="1" onclick="switchToolsTab(1)">🌿 โซนทั่วไป</button>
-  <button class="tab-btn" data-panel="2" onclick="switchToolsTab(2)">🔄 ปรับความคิด</button>
-  <button class="tab-btn" data-panel="3" onclick="switchToolsTab(3)">✨ เสริมพลัง</button>
-  <button class="tab-btn" data-panel="4" onclick="switchToolsTab(4)">⚡ Rewire</button>
+  <!-- P0-2: "I don't know" pill — universal entry point, always first -->
+  <button class="tab-btn" id="tab-unsure" onclick="openReflectionDirect()" style="background:var(--gold-soft);color:#7A5C00;border:1px solid var(--gold-border);">🪞 ไม่แน่ใจว่ารู้สึกอะไร</button>
+  <button class="tab-btn active" data-panel="1" onclick="switchToolsTab(1)">🌿 สงบลงก่อน</button>
+  <button class="tab-btn" data-panel="2" onclick="switchToolsTab(2)">🪞 เข้าใจตัวเอง</button>
+  <button class="tab-btn" data-panel="3" onclick="switchToolsTab(3)">⚡ กลับมามีพลัง</button>
+  <button class="tab-btn" data-panel="4" onclick="switchToolsTab(4)">💬 เตรียมคุยกับใคร</button>
   <a class="care-link" href="care.html">🧠 ระบบจิตใจ 6 ชั้น</a>
 </div>
 
 <!-- ══════════════════════════════
-     PANEL 1 — โซนทั่วไป
+     PANEL 1 — สงบลงก่อน
 ══════════════════════════════ -->
 <div class="panel active" id="panel-1">
   <div class="panel-header">
-    <div class="ph-zone teal">โซนทั่วไป</div>
-    <div class="ph-title">ไม่รู้จะเริ่มจากไหน</div>
-    <div class="ph-sub">เริ่มจากนี้ได้เลย ไม่ต้องรู้ว่ารู้สึกอะไร</div>
+    <div class="ph-zone teal">🌿 สงบลงก่อน</div>
+    <div class="ph-title">ลองแบบนี้ดูไหม</div>
+    <div class="ph-sub">สิ่งที่อาจช่วยได้ตอนนี้</div>
   </div>
+
+  <!-- P0-5: Recommended — single primary tool -->
+  <div style="padding:0 16px 4px;">
+    <div class="sec-div" style="padding:0 0 10px;"><span class="sec-div-text">เริ่มตรงนี้</span><div class="sec-div-line"></div></div>
+    <button class="tool-img-card wide" onclick="markToolTapped();openBreathe()" style="margin-bottom:16px;">
+      <div class="card-bg bg-teal" id="bg-breathe-rec"></div>
+      <div class="card-overlay"></div>
+      <div class="card-placeholder">🌬️</div>
+      <div class="card-content">
+        <div class="card-badge">แนะนำ · ใช้ได้เลย</div>
+        <div class="card-title" style="font-size:20px;">หายใจ</div>
+        <div class="card-sub">เมื่ออึดอัด อยากรีเซ็ต หรือยังไม่รู้จะเริ่มจากไหน</div>
+        <div class="card-btn teal">เริ่ม →</div>
+      </div>
+    </button>
+    <div class="sec-div" style="padding:0 0 10px;margin-top:4px;"><span class="sec-div-text">ตัวเลือกอื่น</span><div class="sec-div-line"></div></div>
+  </div>
+
+  <!-- P1-1: Continue where you left off -->
+  <div id="continue-card" style="display:none;margin:0 16px 16px;padding:16px;background:var(--cream-warm);border:1.5px solid var(--gold-border);border-radius:16px;"></div>
 
   <!-- Entries (journal history) -->
   <div id="entries-section" style="display:none;">
@@ -524,42 +537,15 @@
   </div>
 
   <div class="cards-grid">
-    <!-- หายใจ -->
-    <button class="tool-img-card" onclick="markToolTapped();openBreathe()" id="card-breathe">
-      <div class="card-bg bg-teal" id="bg-breathe"></div>
+    <!-- ฟัง — ปลดล็อกอัตโนมัติเมื่อใส่ URL เสียงใน AUDIO_TRACKS -->
+    <button class="tool-img-card coming" id="card-listen" onclick="markToolTapped();openListen()">
+      <div class="card-bg bg-slate"></div>
       <div class="card-overlay"></div>
-      <div class="card-placeholder">🌬️</div>
-      <div class="card-content">
-        <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">หายใจ</div>
-        <div class="card-sub">เมื่ออึดอัดหรืออยากรีเซ็ต</div>
-        <div class="card-btn teal">เริ่ม →</div>
-      </div>
-    </button>
-
-    <!-- บันทึก -->
-    <button class="tool-img-card" onclick="markToolTapped();openJournal()" id="card-journal">
-      <div class="card-bg bg-purple" id="bg-journal"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">📓</div>
-      <div class="card-content">
-        <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">บันทึก</div>
-        <div class="card-sub">เขียนระบาย 3 คำถาม</div>
-        <div class="card-btn dark">เริ่ม →</div>
-      </div>
-    </button>
-
-    <!-- เคลื่อนไหว -->
-    <button class="tool-img-card wide" onclick="markToolTapped();openMove()" id="card-move">
-      <div class="card-bg bg-green"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">🏃</div>
-      <div class="card-content">
-        <div class="card-badge">เพิ่มพลังงาน</div>
-        <div class="card-title">เคลื่อนไหว</div>
-        <div class="card-sub">เมื่อรู้สึกชา เฉื่อย หรืออยากเปลี่ยนอารมณ์</div>
-        <div class="card-btn" style="background:var(--green);color:#fff;">เริ่ม →</div>
+      <div class="card-placeholder">🎧</div>
+      <div class="card-content" id="card-listen-content">
+        <div class="card-badge soon">เร็วๆ นี้</div>
+        <div class="card-title">ฟัง</div>
+        <div class="card-sub">เสียงนำทาง body scan</div>
       </div>
     </button>
 
@@ -576,31 +562,6 @@
       </div>
     </button>
 
-    <!-- เล่น -->
-    <button class="tool-img-card" onclick="markToolTapped();openPlay()" id="card-play">
-      <div class="card-bg bg-blue"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">🎮</div>
-      <div class="card-content">
-        <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">เล่น</div>
-        <div class="card-sub">เกมเบาๆ ช่วย ground ความคิด</div>
-        <div class="card-btn" style="background:var(--blue);color:#fff;">เริ่ม →</div>
-      </div>
-    </button>
-    <!-- Power Posture -->
-    <button class="tool-img-card" onclick="markToolTapped();openPosture()">
-      <div class="card-bg" style="background:linear-gradient(135deg,#2D2420 0%,#4A3828 60%,#6B5040 100%);"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">💪</div>
-      <div class="card-content">
-        <div class="card-badge">ก่อนเผชิญสิ่งที่กดดัน</div>
-        <div class="card-title">Power Posture</div>
-        <div class="card-sub">รีเซ็ตร่างกายและลมหายใจ · 2 นาที</div>
-        <div class="card-btn dark">เริ่ม →</div>
-      </div>
-    </button>
-
     <!-- Water Drinking Game -->
     <button class="tool-img-card" onclick="markToolTapped();openWater()">
       <div class="card-bg" style="background:linear-gradient(135deg,#0F2A2E 0%,#0D9488 70%,#5EEAD4 100%);"></div>
@@ -613,97 +574,85 @@
         <div class="card-btn" style="background:#5EEAD4;color:#0F2A2E;">เริ่ม →</div>
       </div>
     </button>
-
-    <!-- 5-Minute Corner Reset -->
-    <button class="tool-img-card" onclick="markToolTapped();openCorner()">
-      <div class="card-bg" style="background:linear-gradient(135deg,#2A2418 0%,#5C4A30 60%,#8C7355 100%);"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">🧺</div>
-      <div class="card-content">
-        <div class="card-badge">ไม่ต้องจัดทั้งห้อง</div>
-        <div class="card-title">จัดมุมเล็ก 5 นาที</div>
-        <div class="card-sub">เลือกมุมเดียว ตั้งเวลา แล้วลงมือ</div>
-        <div class="card-btn" style="background:#fff;color:var(--dark);">เริ่ม →</div>
-      </div>
-    </button>
-
-    <!-- Random 10-Second Quest -->
-    <button class="tool-img-card" onclick="markToolTapped();openQuest()">
-      <div class="card-bg" style="background:linear-gradient(135deg,#3A2E5C 0%,#6B4FA0 60%,#A07FE0 100%);"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">🎲</div>
-      <div class="card-content">
-        <div class="card-badge">10 วินาที เล่นๆ</div>
-        <div class="card-title">สุ่มเควสต์เล็กๆ</div>
-        <div class="card-sub">ไม่ต้องมีเหตุผล แค่ลองดู</div>
-        <div class="card-btn" style="background:#fff;color:var(--dark);">สุ่มเลย →</div>
-      </div>
-    </button>
-
-    <!-- ฟัง — ปลดล็อกอัตโนมัติเมื่อใส่ URL เสียงใน AUDIO_TRACKS -->
-    <button class="tool-img-card coming" id="card-listen" onclick="markToolTapped();openListen()">
-      <div class="card-bg bg-slate"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">🎧</div>
-      <div class="card-content" id="card-listen-content">
-        <div class="card-badge soon">เร็วๆ นี้</div>
-        <div class="card-title">ฟัง</div>
-        <div class="card-sub">เสียงนำทาง body scan</div>
-      </div>
-    </button>
   </div>
 
-  <div id="idle-nudge">
-    <div class="idle-nudge-label">ยังหาจุดเริ่มต้นอยู่ไหม?</div>
-    <div class="idle-nudge-text">ลอง Reflection ก่อนก็ได้<br>ช่วยหาชื่อความรู้สึกแล้วแนะนำเครื่องมือที่ใช่</div>
-    <div class="idle-nudge-btns">
-      <a href="reflection.html" class="a-dark">🪞 Reflection</a>
-      <a href="care.html" class="a-light">🌿 6 ชั้น</a>
-    </div>
-  </div>
+  <div class="sec-div" style="margin-top:4px;"><span class="sec-div-text">เครื่องมืออื่น</span><div class="sec-div-line"></div></div>
+  <div class="rw-list">
+    <!-- อยู่กับมัน — RAIN -->
+    <button class="rw-item" onclick="markToolTapped();openRain()">
+      <div class="rw-item-icon">🌊</div>
+      <div class="rw-item-body">
+        <div class="rw-item-name">อยู่กับมัน</div>
+        <div class="rw-item-desc">RAIN · อยู่กับความรู้สึกโดยไม่จม</div>
+      </div>
+      <div class="rw-item-time">เริ่ม →</div>
+    </button>
 
-  <a href="reflection.html" style="display:inline-flex;align-items:center;gap:8px;margin:4px 16px 8px;padding:10px 18px;background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:99px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;color:#7A5C00;text-decoration:none;transition:background 0.15s;" onmouseenter="this.style.background='#FDE8A0'" onmouseleave="this.style.background='var(--gold-soft)'">🪞 ไม่รู้จะเริ่มจากไหน? ลอง Reflection ก่อน →</a>
+    <!-- พักใจ -->
+    <button class="rw-item" onclick="markToolTapped();openRest()">
+      <div class="rw-item-icon">🤍</div>
+      <div class="rw-item-body">
+        <div class="rw-item-name">พักใจ</div>
+        <div class="rw-item-desc">เมื่อกดดันตัวเองมากเกิน</div>
+      </div>
+      <div class="rw-item-time">เริ่ม →</div>
+    </button>
+
+    <!-- เล่น -->
+    <button class="rw-item" onclick="markToolTapped();openPlay()">
+      <div class="rw-item-icon">🎮</div>
+      <div class="rw-item-body">
+        <div class="rw-item-name">เล่น</div>
+        <div class="rw-item-desc">เกมเบาๆ ช่วย ground ความคิด</div>
+      </div>
+      <div class="rw-item-time">เริ่ม →</div>
+    </button>
+  </div>
 </div>
 
 <!-- ══════════════════════════════
-     PANEL 2 — ปรับความคิด
+     PANEL 2 — เข้าใจตัวเอง
 ══════════════════════════════ -->
 <div class="panel" id="panel-2">
   <div class="panel-header">
-    <div class="ph-zone rose">ปรับความคิด</div>
-    <div class="ph-title">เมื่อรู้แล้วว่า</div>
-    <div class="ph-sub">รู้สึกอะไรอยู่ และอยากทำงานกับมัน</div>
+    <div class="ph-zone rose">🪞 เข้าใจตัวเอง</div>
+    <div class="ph-title">ลองแบบนี้ดูไหม</div>
+    <div class="ph-sub">สิ่งที่อาจช่วยให้เข้าใจตัวเองมากขึ้น</div>
+  </div>
+
+  <!-- P0-5: Recommended -->
+  <div style="padding:0 16px 4px;">
+    <div class="sec-div" style="padding:0 0 10px;"><span class="sec-div-text">เริ่มตรงนี้</span><div class="sec-div-line"></div></div>
+    <a href="reflection.html" class="tool-img-card wide" style="margin-bottom:16px;display:block;text-decoration:none;" onclick="markToolTapped()">
+      <div class="card-bg bg-rose"></div>
+      <div class="card-overlay"></div>
+      <div class="card-placeholder">🪞</div>
+      <div class="card-content">
+        <div class="card-badge">แนะนำ · ใช้ได้เลย</div>
+        <div class="card-title" style="font-size:20px;">What's This Feeling?</div>
+        <div class="card-sub">สำรวจข้างในก่อน แล้วค่อยเดินต่อ</div>
+        <div class="card-btn rose">เริ่ม →</div>
+      </div>
+    </a>
+    <div class="sec-div" style="padding:0 0 10px;margin-top:4px;"><span class="sec-div-text">ตัวเลือกอื่น</span><div class="sec-div-line"></div></div>
   </div>
 
   <div class="cards-grid">
-    <!-- ปรับความคิด -->
-    <button class="tool-img-card" onclick="markToolTapped();openReframe()" id="card-reframe">
-      <div class="card-bg bg-rose"></div>
+    <!-- บันทึก -->
+    <button class="tool-img-card" onclick="markToolTapped();openJournal()" id="card-journal">
+      <div class="card-bg bg-purple" id="bg-journal"></div>
       <div class="card-overlay"></div>
-      <div class="card-placeholder">🔄</div>
+      <div class="card-placeholder">📓</div>
       <div class="card-content">
         <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">ปรับความคิด</div>
-        <div class="card-sub">เมื่อความคิดเกาะแน่นจนเจ็บ — คลายมือ</div>
-        <div class="card-btn rose">เริ่ม →</div>
-      </div>
-    </button>
-
-    <!-- คลายกังวล -->
-    <button class="tool-img-card" onclick="markToolTapped();openWorry()" id="card-worry">
-      <div class="card-bg bg-blue"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">🌀</div>
-      <div class="card-content">
-        <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">คลายกังวล</div>
-        <div class="card-sub">ความกังวลวนหาทางออกไม่เจอ</div>
+        <div class="card-title">บันทึก</div>
+        <div class="card-sub">เขียนระบาย 3 คำถาม</div>
         <div class="card-btn dark">เริ่ม →</div>
       </div>
     </button>
 
-    <!-- หาความชัด — wide -->
-    <button class="tool-img-card wide" onclick="markToolTapped();openClarity()">
+    <!-- หาความชัด -->
+    <button class="tool-img-card" onclick="markToolTapped();openClarity()">
       <div class="card-bg bg-gold"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🧭</div>
@@ -714,33 +663,157 @@
         <div class="card-btn gold">เริ่ม →</div>
       </div>
     </button>
+  </div>
 
-    <!-- เตรียมใจก่อนคุย -->
-    <button class="tool-img-card" onclick="markToolTapped();openConflictPrep()">
+  <div class="sec-div" style="margin-top:4px;"><span class="sec-div-text">เครื่องมืออื่น</span><div class="sec-div-line"></div></div>
+  <div class="rw-list">
+    <!-- ปรับความคิด -->
+    <button class="rw-item" onclick="markToolTapped();openReframe()">
+      <div class="rw-item-icon">🔄</div>
+      <div class="rw-item-body">
+        <div class="rw-item-name">ปรับความคิด</div>
+        <div class="rw-item-desc">เมื่อความคิดเกาะแน่นจนเจ็บ — คลายมือ</div>
+      </div>
+      <div class="rw-item-time">เริ่ม →</div>
+    </button>
+
+    <!-- คลายกังวล -->
+    <button class="rw-item" onclick="markToolTapped();openWorry()">
+      <div class="rw-item-icon">🌀</div>
+      <div class="rw-item-body">
+        <div class="rw-item-name">คลายกังวล</div>
+        <div class="rw-item-desc">ความกังวลวนหาทางออกไม่เจอ</div>
+      </div>
+      <div class="rw-item-time">เริ่ม →</div>
+    </button>
+
+    <!-- กระดาษเปล่า -->
+    <button class="rw-item" onclick="markToolTapped();openBlankPaper()">
+      <div class="rw-item-icon">📄</div>
+      <div class="rw-item-body">
+        <div class="rw-item-name">กระดาษเปล่า</div>
+        <div class="rw-item-desc">เขียนอะไรก็ได้ แล้วเก็บไว้สำหรับตัวเอง</div>
+      </div>
+      <div class="rw-item-time">เริ่ม →</div>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANEL 3 — กลับมามีพลัง
+══════════════════════════════ -->
+<div class="panel" id="panel-3">
+  <div class="panel-header">
+    <div class="ph-zone green">⚡ กลับมามีพลัง</div>
+    <div class="ph-title">ลองแบบนี้ดูไหม</div>
+    <div class="ph-sub">สิ่งที่อาจช่วยได้ตอนนี้</div>
+  </div>
+
+  <!-- P0-5: Recommended -->
+  <div style="padding:0 16px 4px;">
+    <div class="sec-div" style="padding:0 0 10px;"><span class="sec-div-text">เริ่มตรงนี้</span><div class="sec-div-line"></div></div>
+    <button class="tool-img-card wide" onclick="markToolTapped();openMove()" style="margin-bottom:16px;">
+      <div class="card-bg bg-green-move"></div>
+      <div class="card-overlay"></div>
+      <div class="card-placeholder">🏃</div>
+      <div class="card-content">
+        <div class="card-badge">แนะนำ · เพิ่มพลังงาน</div>
+        <div class="card-title" style="font-size:20px;">เคลื่อนไหว</div>
+        <div class="card-sub">เมื่อรู้สึกชา เฉื่อย หรืออยากเปลี่ยนอารมณ์</div>
+        <div class="card-btn" style="background:var(--green);color:#fff;">เริ่ม →</div>
+      </div>
+    </button>
+    <div class="sec-div" style="padding:0 0 10px;margin-top:4px;"><span class="sec-div-text">ตัวเลือกอื่น</span><div class="sec-div-line"></div></div>
+  </div>
+
+  <div class="cards-grid single-col">
+    <!-- Power Posture -->
+    <button class="tool-img-card wide" onclick="markToolTapped();openPosture()">
+      <div class="card-bg" style="background:linear-gradient(135deg,#2D2420 0%,#4A3828 60%,#6B5040 100%);"></div>
+      <div class="card-overlay"></div>
+      <div class="card-placeholder">💪</div>
+      <div class="card-content">
+        <div class="card-badge">ก่อนเผชิญสิ่งที่กดดัน</div>
+        <div class="card-title">Power Posture</div>
+        <div class="card-sub">รีเซ็ตร่างกายและลมหายใจ · 2 นาที</div>
+        <div class="card-btn dark">เริ่ม →</div>
+      </div>
+    </button>
+  </div>
+
+  <!-- ✨ Rewire — today's micro-habit -->
+  <div class="rw-spark-row">
+    <div class="rw-sparks" id="rw-sparks"></div>
+    <div class="rw-spark-label" id="rw-spark-label"></div>
+  </div>
+  <button class="rw-today" id="rw-today"></button>
+
+  <div class="sec-div" style="margin-top:4px;"><span class="sec-div-text">เครื่องมืออื่น</span><div class="sec-div-line"></div></div>
+  <div class="rw-list">
+    <!-- สุ่มเควสต์เล็กๆ -->
+    <button class="rw-item" onclick="markToolTapped();openQuest()">
+      <div class="rw-item-icon">🎲</div>
+      <div class="rw-item-body">
+        <div class="rw-item-name">สุ่มเควสต์เล็กๆ</div>
+        <div class="rw-item-desc">10 วินาที เล่นๆ · ไม่ต้องมีเหตุผล</div>
+      </div>
+      <div class="rw-item-time">สุ่ม →</div>
+    </button>
+
+    <!-- จัดมุมเล็ก 5 นาที -->
+    <button class="rw-item" onclick="markToolTapped();openCorner()">
+      <div class="rw-item-icon">🧺</div>
+      <div class="rw-item-body">
+        <div class="rw-item-name">จัดมุมเล็ก 5 นาที</div>
+        <div class="rw-item-desc">เลือกมุมเดียว ตั้งเวลา แล้วลงมือ</div>
+      </div>
+      <div class="rw-item-time">เริ่ม →</div>
+    </button>
+
+    <!-- เตรียมตัว — grounding -->
+    <button class="rw-item" onclick="markToolTapped();openGrounding()">
+      <div class="rw-item-icon">🎯</div>
+      <div class="rw-item-body">
+        <div class="rw-item-name">เตรียมตัว</div>
+        <div class="rw-item-desc">Pre-performance grounding ก่อนสอบ ก่อนพูด</div>
+      </div>
+      <div class="rw-item-time">เริ่ม →</div>
+    </button>
+  </div>
+
+  <!-- ✨ Rewire — สวิตช์อื่นๆ -->
+  <div class="sec-div" style="margin-top:4px;"><span class="sec-div-text">✨ สวิตช์ Rewire อื่นๆ</span><div class="sec-div-line"></div></div>
+  <div class="rw-list" id="rw-list"></div>
+</div>
+
+<!-- ══════════════
+     PANEL 4 — เตรียมคุยกับใคร
+══════════════ -->
+<div class="panel" id="panel-4">
+  <div class="panel-header">
+    <div class="ph-zone" style="color:var(--gold);">💬 เตรียมคุยกับใคร</div>
+    <div class="ph-title">ลองแบบนี้ดูไหม</div>
+    <div class="ph-sub">สิ่งที่อาจช่วยเตรียมใจก่อนคุย</div>
+  </div>
+
+  <!-- P0-5: Recommended -->
+  <div style="padding:0 16px 4px;">
+    <div class="sec-div" style="padding:0 0 10px;"><span class="sec-div-text">เริ่มตรงนี้</span><div class="sec-div-line"></div></div>
+    <button class="tool-img-card wide" onclick="markToolTapped();openConflictPrep()" style="margin-bottom:16px;">
       <div class="card-bg" style="background:linear-gradient(135deg,#1E3A2F 0%,#2D5A42 60%,#3D7A58 100%);"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🗣️</div>
       <div class="card-content">
-        <div class="card-badge">ก่อนเคลียร์ใจกับเพื่อน</div>
-        <div class="card-title">เตรียมใจก่อนคุย</div>
+        <div class="card-badge">แนะนำ · ก่อนเคลียร์ใจกับเพื่อน</div>
+        <div class="card-title" style="font-size:20px;">เตรียมใจก่อนคุย</div>
         <div class="card-sub">I-Message · ระบายก่อน · Cooldown timer</div>
         <div class="card-btn" style="background:var(--green);color:#fff;">เริ่ม →</div>
       </div>
     </button>
+    <div class="sec-div" style="padding:0 0 10px;margin-top:4px;"><span class="sec-div-text">ตัวเลือกอื่น</span><div class="sec-div-line"></div></div>
+  </div>
 
-    <!-- กระดาษเปล่า -->
-    <button class="tool-img-card" onclick="markToolTapped();openBlankPaper()">
-      <div class="card-bg" style="background:linear-gradient(135deg,#2A2A2A 0%,#4A4A45 60%,#6B6258 100%);"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">📄</div>
-      <div class="card-content">
-        <div class="card-badge">ไม่มีคำถาม ไม่มีโครงสร้าง</div>
-        <div class="card-title">กระดาษเปล่า</div>
-        <div class="card-sub">เขียนอะไรก็ได้ แล้วเก็บไว้สำหรับตัวเอง</div>
-        <div class="card-btn" style="background:#fff;color:var(--dark);">เริ่ม →</div>
-      </div>
-    </button>
-
+  <div class="cards-grid">
     <!-- Fact-Log -->
     <button class="tool-img-card" onclick="markToolTapped();openFactLog()">
       <div class="card-bg" style="background:linear-gradient(135deg,#1C2B3A 0%,#2A4060 60%,#3A5880 100%);"></div>
@@ -753,80 +826,25 @@
         <div class="card-btn" style="background:var(--indigo);color:#fff;">เริ่ม →</div>
       </div>
     </button>
-  </div>
-</div>
 
-<!-- ══════════════════════════════
-     PANEL 3 — เสริมความแข็งแกร่ง
-══════════════════════════════ -->
-<div class="panel" id="panel-3">
-  <div class="panel-header">
-    <div class="ph-zone green">เสริมความแข็งแกร่ง</div>
-    <div class="ph-title">ฝึกทักษะระยะยาว</div>
-    <div class="ph-sub">ใช้ได้เลย — เลือกตามสิ่งที่ต้องการ</div>
-  </div>
-
-  <div class="cards-grid">
-    <button class="tool-img-card" onclick="markToolTapped();openRest()">
-      <div class="card-bg bg-teal"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">🤍</div>
-      <div class="card-content">
-        <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">พักใจ</div>
-        <div class="card-sub">เมื่อกดดันตัวเองมากเกิน</div>
-        <div class="card-btn teal">เริ่ม →</div>
-      </div>
-    </button>
-
-    <button class="tool-img-card" onclick="markToolTapped();openRain()">
-      <div class="card-bg bg-blue"></div>
-      <div class="card-overlay"></div>
-      <div class="card-placeholder">🌊</div>
-      <div class="card-content">
-        <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">อยู่กับมัน</div>
-        <div class="card-sub">RAIN อยู่กับความรู้สึกโดยไม่จม</div>
-        <div class="card-btn dark">เริ่ม →</div>
-      </div>
-    </button>
-
-    <button class="tool-img-card wide" onclick="markToolTapped();openGrounding()">
-      <div class="card-bg bg-indigo"></div>
+    <!-- Success metric placeholder -->
+    <button class="tool-img-card coming">
+      <div class="card-bg bg-gold"></div>
       <div class="card-overlay"></div>
       <div class="card-placeholder">🎯</div>
       <div class="card-content">
-        <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">เตรียมตัว</div>
-        <div class="card-sub">Pre-performance grounding ก่อนสอบ ก่อนพูด ก่อนเรื่องสำคัญ</div>
-        <div class="card-btn" style="background:var(--indigo);color:#fff;">เริ่ม →</div>
+        <div class="card-badge soon">เร็วๆ นี้</div>
+        <div class="card-title">Success Metric</div>
+        <div class="card-sub">กำหนดความสำเร็จของการสนทนา</div>
       </div>
     </button>
   </div>
-</div>
 
-<!-- ══════════════
-     PANEL 4 — REWIRE
-══════════════ -->
-<div class="panel" id="panel-4">
-  <div class="panel-header">
-    <div class="ph-zone gold">Rewire</div>
-    <div class="ph-title">ฝึกสมองให้หาความสุขเอง</div>
-    <div class="ph-sub">สวิตช์เล็กๆ ใช้เวลาไม่ถึงครึ่งนาที — เล็กจนสมองเปลี่ยนไปโดยไม่ทันรู้ตัว</div>
+  <!-- P1-3: Peer Counselor — always visible at bottom of this panel -->
+  <div style="margin:8px 16px 24px;padding:18px 20px;background:var(--gold-soft);border:1.5px solid var(--gold-border);border-radius:16px;text-align:center;">
+    <div style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">ยังอยากมีใครอยู่ด้วยไหม?</div>
+    <a href="peer.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--dark);color:var(--cream);padding:12px 24px;border-radius:99px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;text-decoration:none;">💛 เพื่อนที่ปรึกษา</a>
   </div>
-
-  <div class="rw-spark-row">
-    <span class="rw-spark-label" id="rw-spark-label"></span>
-    <div class="rw-sparks" id="rw-sparks"></div>
-  </div>
-
-  <button class="rw-today" id="rw-today"></button>
-
-  <div class="sec-div"><span class="sec-div-text">สวิตช์ทั้งหมด</span><div class="sec-div-line"></div></div>
-  <div class="rw-list" id="rw-list"></div>
-
-  <div class="rw-note">ทำไมต้องเล็กขนาดนี้? — เพราะสมองเรียนรู้จากความถี่ ไม่ใช่ความแรง สิ่งที่เล็กพอจะทำได้ทุกวัน ชนะสิ่งที่ใหญ่แต่ทำครั้งเดียวเสมอ</div>
-</div>
 
 <!-- ── MODALS (unchanged from before) ── -->
 <div class="modal-overlay" id="breathe-modal" onclick="handleOverlayClick(event,'breathe-modal',closeBreathe)">
@@ -918,6 +936,43 @@
 </div>
 
 <script>
+// P0-2: "I don't know" — goes directly to What's This Feeling without extra screen
+function openReflectionDirect(){
+  window.location.href = 'reflection.html';
+}
+
+// P1-1: Progression memory — show "continue where you left off" card
+function renderContinueCard(){
+  try {
+    const last = localStorage.getItem('jaidee_last_tool');
+    if (!last) return;
+    const data = JSON.parse(last);
+    const cont = document.getElementById('continue-card');
+    if (!cont) return;
+    const minutesAgo = Math.round((Date.now() - data.ts) / 60000);
+    if (minutesAgo > 1440) return; // only show within 24h
+    const timeStr = minutesAgo < 2 ? 'เมื่อกี้' : minutesAgo < 60 ? minutesAgo + ' นาทีที่แล้ว' : Math.round(minutesAgo/60) + ' ชั่วโมงที่แล้ว';
+    cont.innerHTML = `
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:600;color:var(--gold);margin-bottom:6px;">ครั้งก่อนคุณกำลัง...</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span style="font-size:28px;">${data.icon}</span>
+        <div>
+          <div style="font-size:15px;font-weight:600;color:var(--dark);">${data.name}</div>
+          <div style="font-size:12px;color:var(--soft);">${timeStr}</div>
+        </div>
+      </div>
+      <button onclick="${data.fn}()" style="display:block;width:100%;padding:11px;background:var(--dark);color:var(--cream);border:none;border-radius:14px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">ทำต่อ →</button>
+    `;
+    cont.style.display = 'block';
+  } catch(e) {}
+}
+
+function trackToolOpen(icon, name, fn) {
+  try {
+    localStorage.setItem('jaidee_last_tool', JSON.stringify({ icon, name, fn, ts: Date.now() }));
+  } catch(e) {}
+}
+
 function switchToolsTab(n){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+n).classList.add('active');
@@ -946,7 +1001,7 @@ const PATTERNS={box:{phases:[{l:'หายใจเข้า',c:4,cls:'expand'},
 let bDur=3,bPat='box',bTimer=null,bCI=null,bRem=0,bPi=0,bCnt=0;
 function setDur(b,m){bDur=m;document.querySelectorAll('.dur-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}
 function setPat(b,p){bPat=p;document.querySelectorAll('.pat-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const pt=PATTERNS[p];document.getElementById('preview-label').textContent=pt.label;document.getElementById('preview-sub').textContent=pt.sub;}
-function openBreathe(){openModal('breathe-modal');}
+function openBreathe(){trackToolOpen('🌬️','หายใจ','openBreathe');openModal('breathe-modal');}
 function closeBreathe(){if(bTimer)clearInterval(bTimer);if(bCI)clearInterval(bCI);bTimer=null;bCI=null;closeModal('breathe-modal',()=>setTimeout(()=>{document.getElementById('b-pick').style.display='block';document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='none';},50));}
 function startBreathe(){document.getElementById('b-pick').style.display='none';document.getElementById('b-session').style.display='block';document.getElementById('b-done').style.display='none';bRem=bDur*60;bPi=0;updateTimer();runPhase();bTimer=setInterval(()=>{bRem--;updateTimer();if(bRem<=0){clearInterval(bTimer);clearInterval(bCI);document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='block';}},1000);}
 function updateTimer(){const m=Math.floor(bRem/60),s=bRem%60;const el=document.getElementById('s-timer');if(el)el.textContent=m+':'+String(s).padStart(2,'0')+' เหลืออยู่';}
@@ -956,7 +1011,7 @@ function resetBreathe(){document.getElementById('b-pick').style.display='block';
 let jStep=0,jMode=null,jQ=[],jAns=[];
 const J_HEAVY=[{label:'เทออกมา',q:'ในหัวมีอะไรค้างอยู่บ้าง?',sub:'เทออกมาเลย ไม่ต้องเรียบร้อย',ph:'ทุกอย่างที่ค้างอยู่...'},{label:'พูดกับตัวเอง',q:'ถ้าจะบอกตัวเองสักประโยคให้ใจเบาลงนิดนึง จะบอกว่าอะไร?',sub:'พูดแบบที่จะพูดกับเพื่อนสนิท',ph:'เช่น ไม่เป็นไรนะ วันนี้ก็ทำดีที่สุดแล้ว...'},{label:'จุดที่ยังโอเค',q:'มีอะไรเล็กๆ วันนี้ที่ยังพอโอเคบ้าง?',sub:'แม้แค่นิดเดียวก็นับ',ph:'เช่น กาแฟอุ่นๆ ตอนเช้า...'}];
 const J_GOOD=[{label:'ขอบคุณ',q:'วันนี้มีอะไรที่รู้สึกขอบคุณบ้าง?',sub:'ไม่ต้องเป็นเรื่องใหญ่',ph:'เช่น มีคนทักมาถามไถ่...'},{label:'ตัวเอง',q:'ตอนนี้ตัวเองอยากได้อะไรต่อ?',sub:'ฟังตัวเองโดยไม่ตัดสิน',ph:'เช่น อยากพัก อยากเล่นต่อ...'},{label:'เก็บไว้',q:'ถ้าจะเก็บความรู้สึกดีวันนี้ไว้หนึ่งอย่าง จะเป็นอะไร?',sub:'สมองจำสิ่งดีได้ไม่เก่งเท่าสิ่งแย่ — จดไว้ช่วยได้',ph:'...'}];
-function openJournal(){jStep=-1;jMode=null;jQ=[];jAns=[];openModal('journal-modal');renderJ();}
+function openJournal(){trackToolOpen('📓','บันทึก','openJournal');jStep=-1;jMode=null;jQ=[];jAns=[];openModal('journal-modal');renderJ();}
 function closeJournal(){closeModal('journal-modal');}
 function jPick(m){jMode=m;jQ=(m==='heavy'?J_HEAVY:J_GOOD);jAns=jQ.map(()=>'');jStep=0;renderJ();}
 function renderJ(){const el=document.getElementById('journal-inner');
@@ -972,9 +1027,7 @@ const STILL='<div class="still-heavy-note"><strong>เครื่องมื�
 function stillOk(b){b.closest('.still-strip').innerHTML='<div style="text-align:center;font-size:13px;color:var(--teal);padding:6px;">🌿 ดีใจที่ได้ยิน</div>';}
 function stillHeavy(b){const s=b.closest('.still-strip'),h=s.querySelector('.still-heavy');h.innerHTML=STILL;h.classList.add('show');s.querySelector('.still-btns').style.display='none';s.querySelector('.still-q').style.display='none';setTimeout(()=>h.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}
 
-let _it=null,_tt=false;
-function startIdleTimer(){_it=setTimeout(()=>{if(_tt)return;const n=document.getElementById('idle-nudge');if(n){n.style.display='block';requestAnimationFrame(()=>n.style.opacity='1');}},45000);}
-function markToolTapped(){_tt=true;clearTimeout(_it);const n=document.getElementById('idle-nudge');if(n)n.style.display='none';}
+function markToolTapped(){}
 
 // ══ REFRAME → DEFUSION (คลายมือจากความคิด · ACT cognitive defusion) ══
 // แทนการ "เถียงกับความคิด" (CBT restructuring) ด้วยการเปลี่ยน "ความสัมพันธ์" กับมัน
@@ -1027,7 +1080,7 @@ function cNext(){const t=document.getElementById('c-ta');if(t)cAns[cStep]=t.valu
 function cBack(){const t=document.getElementById('c-ta');if(t)cAns[cStep]=t.value.trim();cStep--;renderC();}
 
 renderEntries();
-startIdleTimer();
+renderContinueCard();
 
 
 // ══ MOVE ══════════════════════════════════════════════════
@@ -1359,28 +1412,28 @@ function goBackToIndex() {
 (function(){
   const h=window.location.hash;
   if(h==='#breathe'){switchToolsTab(1);openBreathe();}
-  else if(h==='#journal'){switchToolsTab(1);openJournal();}
+  else if(h==='#journal'){switchToolsTab(2);openJournal();}
   else if(h==='#reframe'){switchToolsTab(2);openReframe();}
   else if(h==='#worry'){switchToolsTab(2);openWorry();}
   else if(h==='#clarity'){switchToolsTab(2);openClarity();}
-  else if(h==='#move'){switchToolsTab(1);openMove();}
+  else if(h==='#move'){switchToolsTab(3);openMove();}
   else if(h==='#play'){switchToolsTab(1);openPlay();}
-  else if(h==='#rest'){switchToolsTab(3);openRest();}
-  else if(h==='#act'){switchToolsTab(1);openMove();}
-  else if(h==='#savor'){switchToolsTab(4);openRewire('snapshot');}
-  else if(h==='#rain'){switchToolsTab(3);openRain();}
+  else if(h==='#rest'){switchToolsTab(1);openRest();}
+  else if(h==='#act'){switchToolsTab(3);openMove();}
+  else if(h==='#savor'){switchToolsTab(3);openRewire('snapshot');}
+  else if(h==='#rain'){switchToolsTab(1);openRain();}
   else if(h==='#grounding'){switchToolsTab(3);openGrounding();}
   else if(h==='#listen'){switchToolsTab(1);if(AUDIO_TRACKS.length)openListen();}
-  else if(h==='#posture'){switchToolsTab(1);openPosture();}
+  else if(h==='#posture'){switchToolsTab(3);openPosture();}
   else if(h==='#water'){switchToolsTab(1);openWater();}
-  else if(h==='#corner'){switchToolsTab(1);openCorner();}
-  else if(h==='#quest'){switchToolsTab(1);openQuest();}
-  else if(h==='#conflict-prep'){switchToolsTab(2);openConflictPrep();}
-  else if(h==='#factlog'){switchToolsTab(2);openFactLog();}
+  else if(h==='#corner'){switchToolsTab(3);openCorner();}
+  else if(h==='#quest'){switchToolsTab(3);openQuest();}
+  else if(h==='#conflict-prep'){switchToolsTab(4);openConflictPrep();}
+  else if(h==='#factlog'){switchToolsTab(4);openFactLog();}
   else if(h==='#blankpaper'){switchToolsTab(2);openBlankPaper();}
   else if(h==='#blankpaper-hope'){switchToolsTab(2);openBlankPaper('hope');}
   else if(h==='#blankpaper-and'){switchToolsTab(2);openBlankPaper('and');}
-  else if(h.indexOf('#rewire')===0){switchToolsTab(4);const id=h.split('-')[1];if(id)openRewire(id);}
+  else if(h.indexOf('#rewire')===0){switchToolsTab(3);const id=h.split('-')[1];if(id)openRewire(id);}
 })();
 
 // ══════════════════════════════════════════════════
