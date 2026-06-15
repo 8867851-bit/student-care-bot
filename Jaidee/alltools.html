@@ -890,7 +890,7 @@
         <div class="b-phase-label" id="s-phase-label">หายใจเข้า</div>
         <div class="b-timer" id="s-timer"></div>
       </div>
-      <button class="breathe-cta stop" onclick="stopSession()">หยุด</button>
+      <button class="breathe-cta stop" onclick="closeBreathe()">หยุด</button>
     </div>
     <div id="b-done" style="display:none;" class="b-done">
       <div class="b-done-icon">🌊</div>
@@ -1007,6 +1007,86 @@ function startBreathe(){document.getElementById('b-pick').style.display='none';d
 function updateTimer(){const m=Math.floor(bRem/60),s=bRem%60;const el=document.getElementById('s-timer');if(el)el.textContent=m+':'+String(s).padStart(2,'0')+' เหลืออยู่';}
 function runPhase(){clearInterval(bCI);const ph=PATTERNS[bPat].phases[bPi%PATTERNS[bPat].phases.length];const c=document.getElementById('s-circle'),l=document.getElementById('s-phase-label'),n=document.getElementById('s-count');c.className='c-main '+ph.cls;l.textContent=ph.l;bCnt=ph.c;n.textContent=bCnt;bCI=setInterval(()=>{bCnt--;if(bCnt<=0){clearInterval(bCI);bPi++;runPhase();}else if(n)n.textContent=bCnt;},1000);}
 function resetBreathe(){document.getElementById('b-pick').style.display='block';document.getElementById('b-session').style.display='none';document.getElementById('b-done').style.display='none';}
+
+// ── Power Posture ──
+let _ptTimerA=null,_ptTimerB=null;
+const POSTURE_CUES=['ยืนหรือนั่งให้หลังตรง<br>เปิดหน้าอก วางไหล่ให้ต่ำและผ่อนคลาย','ยกคางขึ้นนิดหนึ่ง<br>มองตรงไปข้างหน้า','วางเท้าทั้งสองให้มั่นกับพื้น<br>รู้สึกถึงน้ำหนักตัวที่กดลง'];
+const POSTURE_SIGH=['สูดเข้าลึกทางจมูก','สูดเติมอีกครั้งสั้นๆ','ถอนยาวออกทางปาก'];
+const POSTURE_RING_CIRC=327;
+
+function _ptShowPhase(id){
+  document.querySelectorAll('#posture-modal .posture-phase').forEach(p=>p.classList.remove('active'));
+  const el=document.getElementById(id);if(el)el.classList.add('active');
+}
+function _ptClearTimers(){if(_ptTimerA){clearInterval(_ptTimerA);_ptTimerA=null;}if(_ptTimerB){clearInterval(_ptTimerB);_ptTimerB=null;}}
+
+function openPosture(){
+  trackToolOpen('💪','Power Posture','openPosture');
+  _ptClearTimers();
+  _ptShowPhase('posture-p0');
+  openModal('posture-modal');
+}
+function closePosture(){
+  _ptClearTimers();
+  closeModal('posture-modal',()=>setTimeout(()=>_ptShowPhase('posture-p0'),50));
+}
+function startPosture(){
+  _ptShowPhase('posture-p1');
+  _ptRunRing1();
+}
+function _ptRunRing1(){
+  let n=30,ci=0;
+  const ring=document.getElementById('posture-ring-1'),num=document.getElementById('posture-num-1'),cue=document.getElementById('posture-cue-1');
+  if(ring)ring.style.strokeDashoffset='0';
+  if(num)num.textContent=n;
+  if(cue)cue.innerHTML=POSTURE_CUES[0];
+  _ptTimerB=setInterval(()=>{
+    ci=(ci+1)%POSTURE_CUES.length;
+    if(cue){cue.style.opacity='0';setTimeout(()=>{cue.innerHTML=POSTURE_CUES[ci];cue.style.opacity='1';},300);}
+  },10000);
+  _ptTimerA=setInterval(()=>{
+    n--;
+    if(num)num.textContent=Math.max(n,0);
+    if(ring)ring.style.strokeDashoffset=String(POSTURE_RING_CIRC*(1-Math.max(n,0)/30));
+    if(n<=0){
+      _ptClearTimers();
+      _ptShowPhase('posture-p2');
+      _ptRunRing2();
+    }
+  },1000);
+}
+function _ptRunRing2(){
+  const totalSec=27;
+  let elapsed=0,step=0,stepN=3,round=0;
+  const ring=document.getElementById('posture-ring-2'),num=document.getElementById('posture-num-2'),cue=document.getElementById('posture-cue-2'),count=document.getElementById('posture-breath-count');
+  if(ring)ring.style.strokeDashoffset='0';
+  if(num)num.textContent=stepN;
+  if(cue)cue.innerHTML=POSTURE_SIGH[0];
+  if(count)count.textContent=round;
+  _ptTimerA=setInterval(()=>{
+    elapsed++;stepN--;
+    if(num)num.textContent=Math.max(stepN,0);
+    if(ring)ring.style.strokeDashoffset=String(POSTURE_RING_CIRC*Math.min(elapsed/totalSec,1));
+    if(stepN<=0){
+      step++;
+      if(step>=POSTURE_SIGH.length){
+        step=0;round++;
+        if(count)count.textContent=Math.min(round,3);
+      }
+      stepN=3;
+      if(num)num.textContent=stepN;
+      if(cue){cue.style.opacity='0';setTimeout(()=>{cue.innerHTML=POSTURE_SIGH[step];cue.style.opacity='1';},250);}
+    }
+    if(elapsed>=totalSec){
+      _ptClearTimers();
+      _ptShowPhase('posture-p3');
+    }
+  },1000);
+}
+function finishPosture(){
+  _ptClearTimers();
+  _ptShowPhase('posture-p4');
+}
 
 let jStep=0,jMode=null,jQ=[],jAns=[];
 const J_HEAVY=[{label:'เทออกมา',q:'ในหัวมีอะไรค้างอยู่บ้าง?',sub:'เทออกมาเลย ไม่ต้องเรียบร้อย',ph:'ทุกอย่างที่ค้างอยู่...'},{label:'พูดกับตัวเอง',q:'ถ้าจะบอกตัวเองสักประโยคให้ใจเบาลงนิดนึง จะบอกว่าอะไร?',sub:'พูดแบบที่จะพูดกับเพื่อนสนิท',ph:'เช่น ไม่เป็นไรนะ วันนี้ก็ทำดีที่สุดแล้ว...'},{label:'จุดที่ยังโอเค',q:'มีอะไรเล็กๆ วันนี้ที่ยังพอโอเคบ้าง?',sub:'แม้แค่นิดเดียวก็นับ',ph:'เช่น กาแฟอุ่นๆ ตอนเช้า...'}];
