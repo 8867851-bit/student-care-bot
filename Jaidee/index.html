@@ -14,6 +14,7 @@
       --radius-card:20px; --radius-btn:14px;
       --m4:#2E5FA3; --m4-soft:#EEF3FB; --m4-border:#C5D8F5;
       --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#99E6DC;
+      --rose:#C48FA3; --sage:#94A37C;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;}
@@ -295,7 +296,7 @@
     .pill-preview-line{
       width:2px;flex-shrink:0;margin-top:3px;
       background:var(--cream-border);border-radius:2px;align-self:stretch;
-      min-height:28px;
+      min-height:28px;transition:background 0.4s ease;
     }
     .pill-preview-text{
       font-family:'Noto Serif Thai',serif;
@@ -305,7 +306,7 @@
     .pill-preview-action{
       display:block;margin-top:5px;
       font-family:'Mitr',sans-serif;font-size:10px;font-weight:400;
-      color:var(--soft);opacity:0.6;letter-spacing:0.5px;
+      color:var(--soft);opacity:0.6;letter-spacing:0.5px;transition:color 0.4s ease;
     }
     .sit-more{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:10px 14px;border-radius:50px;background:none;border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;white-space:nowrap;}
     .sit-more-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--soft);}
@@ -349,6 +350,16 @@
     .awareness-video img{width:92px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;background:var(--cream-border);}
     .awareness-video-text{font-size:11.5px;line-height:1.6;color:var(--mid);}
     .awareness-video-text b{display:block;font-size:12.5px;color:var(--dark);font-weight:600;margin-bottom:2px;}
+    .awareness-tool-link{
+      display:flex;align-items:center;gap:12px;
+      background:var(--teal-soft);border:1px solid var(--teal-border);
+      border-radius:14px;padding:12px 14px;margin:14px 0 4px;
+      text-decoration:none;
+    }
+    .awareness-tool-link .awareness-tool-icon{font-size:24px;flex-shrink:0;width:40px;height:40px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;}
+    .awareness-tool-text b{display:block;font-size:12.5px;color:var(--dark);font-weight:600;margin-bottom:2px;}
+    .awareness-tool-text span{font-size:11.5px;line-height:1.5;color:var(--mid);}
+    .awareness-tool-arrow{font-size:13px;color:var(--teal);flex-shrink:0;}
     .awareness-related{margin-top:14px;padding-top:14px;border-top:1px solid var(--cream-border);}
     .awareness-related-label{
       font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;
@@ -769,7 +780,7 @@
     </div>
     <div class="pill-preview" id="pill-preview">
       <div class="pill-preview-inner" id="pill-preview-inner">
-        <div class="pill-preview-line"></div>
+        <div class="pill-preview-line" id="pill-preview-line"></div>
         <div>
           <div class="pill-preview-text" id="pill-preview-text"></div>
           <span class="pill-preview-action" id="pill-preview-action"></span>
@@ -2310,39 +2321,56 @@ const SIT_DATA_EXTRA = {
 // One quiet line that shows what's inside the centered pill.
 // Teaches the interaction model without requiring a tap.
 const PILL_PREVIEWS = {
-  sleep:       { text: 'บางทีที่รู้สึกไม่ไหว อาจเป็นแค่ร่างกายยังพักไม่พอ', action: '🌙 Sleep Reset · หายใจผ่อนคลาย' },
-  burnout:     { text: 'หมดไฟไม่ใช่ความอ่อนแอ — มันคือสัญญาณที่ต้องรับฟัง', action: '🌱 เช็กเรื่องพื้นฐาน · เคลื่อนไหวก่อนเลย' },
-  foggy:       { text: 'สมองที่ล้าไม่ต่างจากกล้ามเนื้อที่เหนื่อย บังคับต่อไม่ได้ผล', action: '🌬️ รีเซ็ตสมาธิ 2 นาที' },
-  unsure:      { text: 'ไม่ต้องรีบหาคำตอบ แค่รู้ว่ามีบางอย่างอยู่ก็พอ', action: '🪞 สำรวจข้างใน' },
-  friend:      { text: 'การเป็นห่วงเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว', action: '📖 คู่มือ: เป็นห่วงเพื่อน' },
-  exam:        { text: 'ความกังวลก่อนสอบเป็นเรื่องปกติ แต่ถ้ามันมากเกินจนนอนไม่หลับ...', action: '🌬️ ลด cortisol ก่อนสอบ · 🌙 Sleep Reset' },
-  study_fog:   { text: 'บางทีปัญหาไม่ใช่ที่การอ่าน แต่ที่สภาพข้างใน', action: '🌬️ รีเซ็ตก่อน · 🏃 ขยับตัว 5 นาที' },
-  overwhelm:   { text: 'ความรู้สึก "ล้น" มักทำให้ทำอะไรไม่ได้เลย — แค่ระบายก็ช่วยได้', action: '📓 Brain Dump' },
-  pressure:    { text: 'การกดดันตัวเองเป็นสัญญาณว่าคุณใส่ใจ แต่มากเกินพอดีก็สึกหรอ', action: '🪞 ความกดดันนี้มาจากไหน' },
-  not_enough:  { text: 'ความรู้สึกนี้พบได้บ่อยในคนที่เก่งจริงๆ แต่ยังไม่รู้ตัว', action: '🪞 สำรวจข้างใน · 🧩 ค้นพบจุดแข็ง' },
-  behind:      { text: 'เราเห็นแค่ highlight ของคนอื่น ไม่เห็น struggle ข้างหลังของพวกเขา', action: '🪞 สำรวจข้างใน' },
-  social:      { text: 'การหากลุ่มเพื่อนใหม่ใช้เวลา — ไม่ได้แปลว่ามีอะไรผิดปกติกับคุณ', action: '💛 คุยกับเพื่อนที่ปรึกษา' },
-  no_place:    { text: 'ความรู้สึกนี้มักเกิดในช่วงเปลี่ยนผ่าน คุณไม่ได้อยู่คนเดียว', action: '🪞 สำรวจข้างใน · 💛 มีคนที่พร้อมรับฟัง' },
-  fight:       { text: 'ความขัดแย้งเป็นส่วนของมิตรภาพ แต่มันก็เจ็บปวดได้มากเหมือนกัน', action: '📖 คู่มือ: จะพูดยังไงดี' },
-  abandoned:   { text: 'ความเจ็บปวดจากการถูกทิ้งเป็นของจริงและสำคัญมาก', action: '🪞 ให้พื้นที่กับความรู้สึกนี้' },
-  crush:       { text: 'ความรู้สึกชอบใครก็ทำให้วุ่นวายและไม่สบายใจได้เหมือนกัน', action: '🪞 สำรวจข้างใน · 📓 เขียนระบาย' },
-  heartbreak:  { text: 'สมองเราประมวลผลความอกหักคล้ายความเจ็บปวดทางกาย — ให้เวลาตัวเอง', action: '🪞 ให้พื้นที่กับมัน · 🌬️ ผ่อนคลาย' },
-  lonely:      { text: 'ความเหงาไม่ได้แปลว่าคุณอยู่คนเดียวจริงๆ เสมอไป', action: '💛 คุยกับเพื่อนที่ปรึกษา' },
-  homesick:    { text: 'คิดถึงบ้านไม่ใช่ความอ่อนแอ — มันคือรักที่มีอยู่', action: '📓 เขียนระบาย' },
-  family:      { text: 'ความสัมพันธ์ในครอบครัวซับซ้อนได้มาก และเจ็บปวดในแบบที่บอกคนอื่นยาก', action: '💛 มีคนที่พร้อมรับฟัง' },
-  misunderstood:{ text: 'รู้สึกว่าบ้านไม่เข้าใจ — ความรู้สึกนี้พบบ่อยในช่วงนี้ของชีวิต', action: '🪞 สำรวจข้างใน' },
-  need_space:  { text: 'ต้องการพื้นที่เป็นเรื่องปกติมาก ไม่ใช่เรื่องผิด', action: '💛 คุยกับเพื่อนที่ปรึกษา' },
-  no_appetite: { text: 'ร่างกายบอกอะไรบางอย่างเมื่อเราไม่อยากกิน', action: '🌱 เช็กเรื่องพื้นฐาน' },
-  phone:       { text: 'เล่นมือถือจนดึกมักเป็นวิธีหนีจากความรู้สึกที่ไม่อยากเผชิญ', action: '🌙 Sleep Reset' },
-  no_sun:      { text: 'แสงแดดและการขยับตัวเปลี่ยนอารมณ์ได้จริงๆ', action: '🏃 เคลื่อนไหวก่อนเลย' },
-  tired:       { text: 'เหนื่อยตลอดเวลาแม้พักแล้ว — ร่างกายกำลังบอกอะไรบางอย่าง', action: '🌱 เช็กเรื่องพื้นฐาน' },
-  no_energy:   { text: 'ไม่อยากลุกจากเตียง — บางทีนั่นคือร่างกายที่ต้องการความเห็นใจ ไม่ใช่แรงผลักดัน', action: '🌱 เช็กเรื่องพื้นฐาน' },
-  self_know:   { text: 'อยากรู้จักตัวเองมากขึ้น — นั่นคือจุดเริ่มต้นที่ดีมากแล้ว', action: '🪞 สำรวจข้างใน · 🧩 ค้นพบตัวเอง' },
-  who_am_i:   { text: 'คำถาม "ฉันเป็นใคร" ไม่มีคำตอบเดียว — แต่การถามคือการเติบโต', action: '🧩 ค้นพบตัวเอง' },
-  grow:        { text: 'อยากเปลี่ยนแปลงตัวเอง — ความอยากเปลี่ยนคือสัญญาณที่ดีแล้ว', action: '🌱 เช็กเรื่องพื้นฐาน' },
-  changed:     { text: 'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้ไม่คุ้นเคยตัวเอง...', action: '🪞 สำรวจสิ่งที่เปลี่ยนไป' },
-  lost:        { text: 'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว', action: '🪞 ลองสำรวจข้างในก่อน' },
+  // ── Understand (teal) — "Oh, that's why this happens." ──
+  sleep:       { group:'understand', text: 'บางครั้งปัญหาไม่ได้อยู่ที่การนอน แต่อยู่ที่ระบบตื่นตัวของสมอง' },
+  foggy:       { group:'understand', text: 'สมองที่ล้าไม่ต่างจากกล้ามเนื้อที่เหนื่อย บังคับต่อไม่ได้ผล' },
+  hungry:      { group:'understand', text: 'ร่างกายส่งสัญญาณตลอดเวลา แค่เราไม่ค่อยได้ฟังมัน' },
+  low_water:   { group:'understand', text: 'แค่ขาดน้ำเล็กน้อย สมองก็ทำงานได้ไม่เต็มที่แล้ว' },
+  pressure:    { group:'understand', text: 'การกดดันตัวเองเป็นสัญญาณว่าคุณใส่ใจ แต่มากเกินพอดีก็สึกหรอ' },
+  phone:       { group:'understand', text: 'เล่นมือถือจนดึกมักเป็นวิธีหนีจากความรู้สึกที่ไม่อยากเผชิญ' },
+  tired:       { group:'understand', text: 'เหนื่อยตลอดเวลาแม้พักแล้ว — ร่างกายกำลังบอกอะไรบางอย่าง' },
+  no_appetite: { group:'understand', text: 'ร่างกายบอกอะไรบางอย่างเมื่อเราไม่อยากกิน' },
+  self_know:   { group:'understand', text: 'ทำไมเราถึงเป็นแบบนี้ — คำถามนี้เองคือจุดเริ่มต้นของการเข้าใจตัวเอง' },
+  confused:    { group:'understand', text: 'สมองที่ต้องเลือกตลอดเวลามักจะค้าง ไม่ใช่เพราะตัดสินใจไม่ดี' },
+  unsure:      { group:'understand', text: 'ไม่ต้องรีบหาคำตอบ แค่รู้ว่ามีบางอย่างอยู่ก็พอ' },
+
+  // ── Comfort (rose) — "I'm not weird." ──
+  not_enough:  { group:'comfort', text: 'บางครั้งเราพูดกับตัวเองแรงกว่าที่เราพูดกับคนอื่น' },
+  behind:      { group:'comfort', text: 'เราเห็นแค่ highlight ของคนอื่น ไม่เห็น struggle ข้างหลังของพวกเขา' },
+  abandoned:   { group:'comfort', text: 'ความเจ็บปวดจากการถูกทิ้งเป็นของจริงและสำคัญมาก' },
+  crush:       { group:'comfort', text: 'ความรู้สึกชอบใครก็ทำให้วุ่นวายและไม่สบายใจได้เหมือนกัน' },
+  heartbreak:  { group:'comfort', text: 'สมองเราประมวลผลความอกหักคล้ายความเจ็บปวดทางกาย — ให้เวลาตัวเอง' },
+  lonely:      { group:'comfort', text: 'ความเหงาไม่ได้แปลว่าคุณอยู่คนเดียวจริงๆ เสมอไป' },
+  misunderstood:{ group:'comfort', text: 'รู้สึกว่าบ้านไม่เข้าใจ — ความรู้สึกนี้พบบ่อยในช่วงนี้ของชีวิต' },
+  need_space:  { group:'comfort', text: 'ต้องการพื้นที่เป็นเรื่องปกติมาก ไม่ใช่เรื่องผิด' },
+  no_energy:   { group:'comfort', text: 'ไม่อยากลุกจากเตียง — บางทีนั่นคือร่างกายที่ต้องการความเห็นใจ ไม่ใช่แรงผลักดัน' },
+  lost:        { group:'comfort', text: 'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว' },
+  disappointed:{ group:'comfort', text: 'ความผิดหวังเจ็บเพราะเรื่องนั้นมีความหมายกับเรา ไม่ใช่เพราะเราอ่อนแอ' },
+  no_shower:   { group:'comfort', text: 'มีบางวันที่ทำได้แค่เท่านี้ — และนั่นก็พอแล้วสำหรับวันนี้' },
+
+  // ── Grow (gold/amber) — "I can do something about this." ──
+  burnout:     { group:'grow', text: 'สิ่งที่คุณเรียกว่าขี้เกียจ อาจไม่ใช่ความขี้เกียจเลย' },
+  exam:        { group:'grow', text: 'ความกังวลก่อนสอบเป็นเรื่องปกติ แต่ถ้ามันมากเกินจนนอนไม่หลับ...' },
+  study_fog:   { group:'grow', text: 'บางทีปัญหาไม่ใช่ที่การอ่าน แต่ที่สภาพข้างใน' },
+  overwhelm:   { group:'grow', text: 'ความรู้สึก "ล้น" มักทำให้ทำอะไรไม่ได้เลย — แค่ระบายก็ช่วยได้' },
+  no_sun:      { group:'grow', text: 'แสงแดดและการขยับตัวเปลี่ยนอารมณ์ได้จริงๆ' },
+  grow:        { group:'grow', text: 'อยากเป็นเวอร์ชันที่ดีกว่านี้ — ความอยากเปลี่ยนคือจุดเริ่มต้นที่ดีมากแล้ว' },
+  messy_room:  { group:'grow', text: 'ห้องที่รก มักเป็นภาพสะท้อนของหัวที่ล้น — เริ่มจากมุมเดียวก็พอ' },
+
+  // ── Belong (sage) — "I am finding my place." ──
+  friend:      { group:'belong', text: 'การเป็นห่วงเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว' },
+  social:      { group:'belong', text: 'การหากลุ่มเพื่อนใหม่ใช้เวลา — ไม่ได้แปลว่ามีอะไรผิดปกติกับคุณ' },
+  no_place:    { group:'belong', text: 'ความรู้สึกนี้มักเกิดในช่วงเปลี่ยนผ่าน คุณไม่ได้อยู่คนเดียว' },
+  fight:       { group:'belong', text: 'ความขัดแย้งเป็นส่วนของมิตรภาพ แต่มันก็เจ็บปวดได้มากเหมือนกัน' },
+  homesick:    { group:'belong', text: 'การคิดถึงบ้านอาจไม่ใช่ความอ่อนแอ แต่มันคือความผูกพัน' },
+  family:      { group:'belong', text: 'ความสัมพันธ์ในครอบครัวซับซ้อนได้มาก และเจ็บปวดในแบบที่บอกคนอื่นยาก' },
+  who_am_i:    { group:'belong', text: 'คำถาม "ฉันเป็นใคร" ไม่มีคำตอบเดียว — แต่การถามคือการเติบโต' },
+  changed:     { group:'belong', text: 'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้ไม่คุ้นเคยตัวเอง...' },
 };
+
+// 4 archetypes — calm, recognizable conversation types (not 38 separate personalities)
+const GROUP_ACCENT = { understand:'var(--teal)', comfort:'var(--rose)', grow:'var(--gold)', belong:'var(--sage)' };
+const GROUP_CTA    = { understand:'เข้าใจต่อ →', comfort:'อ่านต่อ →', grow:'เริ่มจากตรงนี้ →', belong:'สำรวจต่อ →' };
 
 // Which pill is visually centered in the scroll row
 function _getCenteredPillKey() {
@@ -2374,14 +2402,20 @@ function _updatePillPreview(key) {
   const inner = document.getElementById('pill-preview-inner');
   const textEl = document.getElementById('pill-preview-text');
   const actionEl = document.getElementById('pill-preview-action');
+  const lineEl = document.getElementById('pill-preview-line');
   if (!inner || !textEl || !actionEl) return;
   const data = PILL_PREVIEWS[key];
   if (!data) { inner.classList.remove('visible'); return; }
+  const accent = GROUP_ACCENT[data.group] || 'var(--cream-border)';
+  const cta = GROUP_CTA[data.group] || '';
   // Fade out, swap, fade in
   inner.classList.remove('visible');
   setTimeout(() => {
     textEl.textContent = data.text;
-    actionEl.textContent = data.action;
+    actionEl.textContent = cta;
+    actionEl.style.color = accent;
+    actionEl.style.opacity = '1';
+    if (lineEl) lineEl.style.background = accent;
     inner.classList.add('visible');
   }, 180);
 }
@@ -2506,7 +2540,7 @@ const AWARENESS_CARDS = [
       'การเปลี่ยนแปลงเกิดง่ายขึ้นเมื่อเรา <strong>โฟกัสจริงๆ</strong> กับสิ่งนั้น ไม่ใช่ทำผ่านๆ — และสมองจะ "เซ็ตการเปลี่ยนแปลง" ตอนที่เราพักหรือนอนหลับ นี่คือเหตุผลที่นอนพอสำคัญกับการเรียนรู้มากกว่าที่หลายคนคิด',
       'ลองดู: เลือกสิ่งเล็กๆ ที่อยากเปลี่ยน ทำซ้ำด้วยความตั้งใจ แล้วให้เวลาตัวเองพักจริงๆ — สมองจะค่อยๆ จดจำทางใหม่ไว้เอง'
     ],
-    related: ['focus','teen-brain']
+    related: ['focus','rewire']
   },
   {
     id: 'focus',
@@ -2554,6 +2588,25 @@ const AWARENESS_CARDS = [
       'ลองดู: เวลาที่รู้สึกอารมณ์ขึ้นๆ ลงๆ หรือใส่ใจเรื่องที่เพื่อนคิดมากเป็นพิเศษ — นั่นเป็นเรื่องที่สมองวัยนี้ทำงานแบบนี้จริงๆ ไม่ใช่ว่าเราคิดมากเกินไปคนเดียว'
     ],
     related: ['neuroplasticity','food']
+  },
+  {
+    id: 'rewire',
+    icon: '✨',
+    short: 'ฝึกความสุข',
+    hook: 'ความสุขไม่ใช่แค่สิ่งที่เกิดขึ้นเอง — มันเป็นทักษะที่ฝึกได้ทีละนิด',
+    title: 'ฝึกสมองให้หาความสุขง่ายขึ้น',
+    body: [
+      'เวลาพูดถึง neuroplasticity เรามักนึกถึงการเรียนหรือทักษะใหม่ๆ แต่หลักการเดียวกันนี้ใช้ได้กับ "ความสุข" ด้วย — ทางเดินประสาทที่เกี่ยวกับอารมณ์ดีๆ ก็แข็งแรงขึ้นได้จากการถูกใช้ซ้ำๆ เหมือนกัน',
+      'นั่นแปลว่าการสังเกตสิ่งดีๆ เล็กๆ การขอบคุณ หรือการทำอะไรเพื่อคนอื่นสักนิด ไม่ใช่แค่ "ทำให้รู้สึกดีตอนนั้น" แต่ค่อยๆ ฝึกให้สมองหาทางกลับไปสู่ความรู้สึกดีได้ง่ายขึ้นในระยะยาว',
+      'ไม่ต้องเปลี่ยนชีวิตทั้งหมดในวันเดียว — แค่ลองสวิตช์พฤติกรรมเล็กๆ หนึ่งอย่างต่อวันก็พอ ทำซ้ำได้เรื่อยๆ จนกลายเป็นทางที่สมองคุ้นเคย'
+    ],
+    tool: {
+      url: 'alltools.html#rewire',
+      icon: '✨',
+      name: 'ลองเครื่องมือ Rewire',
+      desc: 'สวิตช์พฤติกรรมเล็กๆ ทีละวัน อยู่ในกลับมามีพลัง'
+    },
+    related: ['neuroplasticity','focus']
   }
 ];
 
@@ -2587,6 +2640,12 @@ function awRenderExpanded(){
       <img src="${c.video.thumb}" alt=""/>
       <div class="awareness-video-text"><b>ดูคลิปเต็ม</b>${c.video.caption}</div>
     </a>` : '';
+  const toolHtml = c.tool ? `
+    <a class="awareness-tool-link" href="${c.tool.url}" onclick="event.stopPropagation()">
+      <div class="awareness-tool-icon">${c.tool.icon}</div>
+      <div class="awareness-tool-text" style="flex:1;"><b>${c.tool.name}</b><span>${c.tool.desc}</span></div>
+      <div class="awareness-tool-arrow">→</div>
+    </a>` : '';
   const relatedHtml = (c.related && c.related.length) ? `
     <div class="awareness-related">
       <div class="awareness-related-label">อยากรู้ต่อ</div>
@@ -2599,6 +2658,7 @@ function awRenderExpanded(){
     <div class="awareness-title">${c.title}</div>
     <div class="awareness-body">${c.body.map(p => '<p>'+p+'</p>').join('')}</div>
     ${videoHtml}
+    ${toolHtml}
     ${relatedHtml}
     <button class="awareness-close" onclick="event.stopPropagation();awCollapse()">เก็บไว้แค่นี้ก่อน ✓</button>
   `;
