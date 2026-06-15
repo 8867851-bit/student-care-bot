@@ -113,7 +113,7 @@
 <!-- P2-1: Situation Search -->
 <div style="padding:10px 20px 4px;position:relative;">
   <div style="display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:50px;padding:10px 16px;transition:border-color 0.2s;" id="search-wrap">
-    <span style="font-size:14px;color:var(--soft);">🔍</span>
+    <span style="font-size:14px;color:var(--soft);">💭</span>
     <input id="sit-search" type="text" placeholder="มีอะไรอยู่ในใจไหม?" autocomplete="off"
       style="flex:1;border:none;outline:none;font-family:'Mitr',sans-serif;font-size:13px;background:transparent;color:var(--dark);"
       oninput="onSitSearch(this.value)" onfocus="document.getElementById('search-wrap').style.borderColor='var(--green)'" onblur="document.getElementById('search-wrap').style.borderColor='var(--cream-border)'"/>
@@ -392,7 +392,7 @@ function openSitSheet(key) {
     const href = t.href && t.href !== '#' ? `href="${t.href}"` : 'href="#"';
     const onclick = t.onclick ? ` onclick="${t.onclick}"` : '';
     return `<div style="margin-bottom:16px;">
-      <div style="font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:6px;padding-left:2px;">${label}</div>
+      <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">${label}</div>
       <a ${href}${onclick} style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:18px;text-decoration:none;background:var(--dark);">
         <span style="font-size:26px;flex-shrink:0;">${t.icon}</span>
         <span style="flex:1;">
@@ -410,7 +410,7 @@ function openSitSheet(key) {
     const pad = big ? '16px 18px' : '14px 16px';
     const iconSize = big ? '20px' : '17px';
     return `<div style="margin-bottom:16px;">
-      <div style="font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:6px;padding-left:2px;">${label}</div>
+      <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">${label}</div>
       <a href="${t.href}" style="display:flex;align-items:flex-start;gap:14px;padding:${pad};border-radius:16px;text-decoration:none;background:var(--cream);border:1.5px dashed #D8D0C6;">
         <span style="font-size:${iconSize};flex-shrink:0;width:28px;text-align:center;margin-top:2px;">📖</span>
         <span style="flex:1;">
@@ -425,7 +425,7 @@ function openSitSheet(key) {
   // Type C — "อยากมีคนอยู่ด้วยไหม?" — always present for human-first situations
   function _peerCard() {
     return `<div style="margin-bottom:16px;">
-      <div style="font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">อยากมีคนอยู่ด้วยไหม?</div>
+      <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">อยากมีคนอยู่ด้วยไหม?</div>
       <a href="peer.html" style="display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:18px;text-decoration:none;background:var(--gold-soft);border:1.5px solid var(--gold-border);">
         <span style="font-size:24px;flex-shrink:0;">💛</span>
         <span style="flex:1;">
@@ -438,7 +438,7 @@ function openSitSheet(key) {
   }
 
   function _divider(text) {
-    return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px;"><div style="flex:1;height:1px;background:var(--cream-border);"></div><div style="font-size:9px;color:var(--faint);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;">${text}</div><div style="flex:1;height:1px;background:var(--cream-border);"></div></div>`;
+    return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px;"><div style="flex:1;height:1px;background:var(--cream-border);"></div><div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;color:var(--gold);text-transform:uppercase;white-space:nowrap;">${text}</div><div style="flex:1;height:1px;background:var(--cream-border);"></div></div>`;
   }
 
   const restHtml = restTools.length ? (_divider('ตัวเลือกอื่น') + restTools.map(_toolCard).join('')) : '';
@@ -492,11 +492,11 @@ function openSitSheet(key) {
 
   document.getElementById('sit-sheet-content').innerHTML = `
     <div class="_sl" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s ease,transform 0.25s ease;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <span style="font-size:28px;">${d.emoji}</span>
-        <span style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);">${d.title}</span>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:28px;line-height:1;margin-bottom:8px;">${d.emoji}</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);">${d.title}</div>
       </div>
-      <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--cream-border);">${d.note}</div>
+      <div style="font-size:14px;font-weight:300;color:var(--mid);line-height:1.8;max-width:34ch;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--cream-border);">${d.note}</div>
       ${toolsHtml}
       ${breadcrumbsHtml}
       ${talkHtml}
