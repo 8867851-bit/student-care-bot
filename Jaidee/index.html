@@ -260,18 +260,17 @@
       box-shadow:0 0 0 3px rgba(87,143,98,0.12);
       transition:transform 0.08s ease,border-color 0.08s,box-shadow 0.08s;
     }
+    /* Visited — warmer cream, like a bookmarked page, not a completed task */
     .sit-pill.touched{
-      /* A gentle hand was placed here — pale green-cream, muted gold border */
-      background:#F7FBF5;
-      border-color:rgba(230,199,122,0.55);
-      box-shadow:0 0 0 2px rgba(87,143,98,0.08), 0 2px 10px rgba(87,143,98,0.06);
+      background:rgba(216,184,191,0.06);
+      border-color:#D8B8BF;
+      box-shadow:none;
       transition:border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
     }
     .sit-pill.touched-last{
-      /* The bookmark — most recent, slightly warmer glow */
-      background:#FAF8F1;
-      border-color:#E6C77A;
-      box-shadow:0 0 0 3px rgba(87,143,98,0.10), 0 2px 12px rgba(87,143,98,0.08);
+      background:rgba(216,184,191,0.10);
+      border-color:#C7A6BA;
+      box-shadow:none;
       transition:border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
     }
     .sit-pill{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:11px 18px;border-radius:99px;background:#FDFCFA;border:1.5px solid #E8E3D8;cursor:pointer;text-decoration:none;transition:transform 0.12s ease,box-shadow 0.12s ease;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);}
@@ -401,15 +400,20 @@
       display:inline-flex;align-items:center;gap:5px;
       padding:7px 12px;border-radius:99px;
       border:1.5px solid var(--cream-border);
-      background:var(--cream-warm);
+      background:transparent;
       font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;
-      color:var(--mid);cursor:pointer;white-space:nowrap;
+      color:var(--soft);cursor:pointer;white-space:nowrap;
       transition:all 0.18s;
     }
     .sit-nav-pill.active{
-      background:var(--gold-soft);
-      border-color:var(--gold-border);
-      color:var(--dark);font-weight:500;
+      background:#1C1917;
+      border-color:#1C1917;
+      color:#FDFBF7;font-weight:500;
+    }
+    .sit-nav-pill.visited{
+      border-color:#D8B8BF;
+      background:rgba(216,184,191,0.06);
+      color:var(--mid);
     }
     /* Scrollable content area */
     #sit-sheet-content{
@@ -1567,7 +1571,8 @@ function _renderSheetNavPills(activeKey) {
     const d = _getSitData(p.key);
     if (!d) return '';
     const active = p.key === activeKey;
-    return `<button class="sit-nav-pill${active?' active':''}"
+    const visited = !active && SESSION_OPENED.has(p.key);
+    return `<button class="sit-nav-pill${active?' active':''}${visited?' visited':''}"
       onclick="switchSitSheet('${p.key}')"
       id="snp-${p.key}">${p.emoji} ${p.label}</button>`;
   }).join('');
@@ -1584,9 +1589,12 @@ function switchSitSheet(key) {
   SESSION_OPENED.add(key);
   _lastOpenedKey = key;
   _currentSitKey = key;
-  // Update nav active state
+  // Update nav active/visited state
   document.querySelectorAll('.sit-nav-pill').forEach(p => {
-    p.classList.toggle('active', p.id === 'snp-' + key);
+    const k = p.id.replace('snp-','');
+    const isActive = p.id === 'snp-' + key;
+    p.classList.toggle('active', isActive);
+    p.classList.toggle('visited', !isActive && SESSION_OPENED.has(k));
   });
   const active = document.getElementById('snp-' + key);
   if (active) active.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
