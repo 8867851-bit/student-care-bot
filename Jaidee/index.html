@@ -1629,6 +1629,7 @@ function _buildSheetContent(key, contentEl) {
 
   // ── Type A/B/C layout — situation sheet UX spec v1 (mirrors situations.html) ──
   const type = d.type || 'B';
+  const group = (PILL_PREVIEWS[key] || {}).group;
   const articleTool = d.tools.find(t => t.href && t.href.indexOf('notebook.html') !== -1);
   const peerTool    = d.tools.find(t => t.href === 'peer.html');
   const primaryTool = d.tools.find(t => t.primary && t !== articleTool && t !== peerTool)
@@ -1668,20 +1669,30 @@ function _buildSheetContent(key, contentEl) {
     </div>`;
   }
 
+  // Notebook-family atmosphere — neutral card, colored identity (icon/border/top-glow only)
+  const GROUP_STYLES = {
+    understand: { icon:'rgba(13,148,136,0.10)',  border:'rgba(13,148,136,0.35)',  glow:'rgba(13,148,136,0.045)'  },
+    comfort:    { icon:'rgba(216,184,191,0.20)', border:'rgba(216,184,191,0.6)',  glow:'rgba(216,184,191,0.05)'  },
+    grow:       { icon:'rgba(232,150,12,0.12)',  border:'rgba(232,150,12,0.35)',  glow:'rgba(232,150,12,0.045)'  },
+    belong:     { icon:'rgba(127,163,135,0.16)', border:'rgba(127,163,135,0.4)',  glow:'rgba(127,163,135,0.045)' },
+  };
+
   // Article (📖 notebook guide) — white/cream card = "secondary action / other options"
-  function _articleCard(t, label, big) {
+  function _articleCard(t, label, big, group) {
     if (!t) return '';
     const pad = big ? '16px 18px' : '14px 16px';
     const iconSize = big ? '20px' : '17px';
+    const gs = GROUP_STYLES[group] || { icon:'var(--cream-warm)', border:'#D8D0C6', glow:'transparent' };
     return `<div style="margin-bottom:16px;">
       <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">${label}</div>
-      <a href="${t.href}" style="display:flex;align-items:flex-start;gap:14px;padding:${pad};border-radius:16px;text-decoration:none;background:var(--cream);border:1.5px dashed #D8D0C6;">
-        <span style="font-size:${iconSize};flex-shrink:0;width:28px;text-align:center;margin-top:2px;">📖</span>
-        <span style="flex:1;">
+      <a href="${t.href}" style="position:relative;overflow:hidden;display:flex;align-items:flex-start;gap:14px;padding:${pad};border-radius:16px;text-decoration:none;background:var(--cream);border:1.5px dashed ${gs.border};">
+        <div style="position:absolute;top:0;left:0;right:0;height:44px;background:linear-gradient(180deg, ${gs.glow}, transparent);pointer-events:none;"></div>
+        <span style="position:relative;font-size:${iconSize};flex-shrink:0;width:32px;height:32px;border-radius:9px;background:${gs.icon};display:flex;align-items:center;justify-content:center;">📖</span>
+        <span style="position:relative;flex:1;">
           <span style="display:block;font-size:13px;font-weight:500;color:var(--dark);line-height:1.45;margin-bottom:4px;">${t.name}</span>
           <span style="display:block;font-size:11px;font-weight:400;color:var(--soft);line-height:1.5;">${t.desc || ''}</span>
         </span>
-        <span style="font-size:12px;color:var(--faint);flex-shrink:0;margin-top:3px;">→</span>
+        <span style="position:relative;font-size:12px;color:var(--faint);flex-shrink:0;margin-top:3px;">→</span>
       </a>
     </div>`;
   }
@@ -1710,16 +1721,16 @@ function _buildSheetContent(key, contentEl) {
   let toolsHtml;
   if (type === 'A') {
     toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้')
-      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false)
+      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false, group)
       + restHtml;
   } else if (type === 'C') {
     toolsHtml = _peerCard()
-      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false)
+      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false, group)
       + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม')
       + restHtml;
   } else {
     toolsHtml = articleTool
-      ? (_articleCard(articleTool, 'เริ่มตรงนี้', true) + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม') + restHtml)
+      ? (_articleCard(articleTool, 'เริ่มตรงนี้', true, group) + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม') + restHtml)
       : (_primaryCard(primaryTool, 'เริ่มตรงนี้') + restHtml);
   }
 
@@ -2366,6 +2377,7 @@ const PILL_PREVIEWS = {
   family:      { group:'belong', text: 'ความสัมพันธ์ในครอบครัวซับซ้อนได้มาก และเจ็บปวดในแบบที่บอกคนอื่นยาก' },
   who_am_i:    { group:'belong', text: 'คำถาม "ฉันเป็นใคร" ไม่มีคำตอบเดียว — แต่การถามคือการเติบโต' },
   changed:     { group:'belong', text: 'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้ไม่คุ้นเคยตัวเอง...' },
+  fading:      { group:'comfort', text: 'ความรู้สึก "จางลง" บางครั้งคือสัญญาณว่าต้องการให้คนเห็น ไม่ใช่ว่าหายไปจริงๆ' },
 };
 
 // 4 archetypes — calm, recognizable conversation types (not 38 separate personalities)
