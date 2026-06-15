@@ -13,6 +13,7 @@
       --card-bg:#FFFFFF; --card-border:#EDE9E0;
       --radius-card:20px; --radius-btn:14px;
       --m4:#2E5FA3; --m4-soft:#EEF3FB; --m4-border:#C5D8F5;
+      --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#99E6DC;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;}
@@ -309,6 +310,64 @@
     }
     .sit-more{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:10px 14px;border-radius:50px;background:none;border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;white-space:nowrap;}
     .sit-more-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--soft);}
+
+    /* ── Awareness Card — one rotating insight, no library, no progress ── */
+    .awareness-wrap{padding:0 16px;margin:28px 0 4px;}
+    .awareness-card{
+      background:var(--card-bg);border:1px solid var(--teal-border);
+      border-radius:var(--radius-card);padding:18px 20px;
+      box-shadow:0 1px 8px rgba(13,148,136,0.07);
+      cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;
+    }
+    .awareness-card:active{transform:scale(0.99);}
+    .awareness-card.expanded{cursor:default;}
+    .awareness-eyebrow{
+      display:flex;align-items:center;gap:6px;
+      font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;
+      color:var(--teal);margin-bottom:8px;
+    }
+    .awareness-hook{
+      font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;
+      line-height:1.65;color:var(--dark);
+    }
+    .awareness-cta{margin-top:10px;font-size:12px;font-weight:500;color:var(--teal);}
+    .awareness-title{
+      font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;
+      line-height:1.4;margin:2px 0 12px;color:var(--dark);
+    }
+    .awareness-body p{
+      font-size:13px;font-weight:300;line-height:1.9;color:var(--mid);
+      margin-bottom:10px;
+    }
+    .awareness-body p:last-child{margin-bottom:0;}
+    .awareness-body strong{font-weight:600;color:var(--dark);}
+    .awareness-video{
+      display:flex;align-items:center;gap:12px;
+      background:var(--cream-warm);border:1px solid var(--cream-border);
+      border-radius:14px;padding:10px;margin:14px 0 4px;
+      text-decoration:none;
+    }
+    .awareness-video img{width:92px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;background:var(--cream-border);}
+    .awareness-video-text{font-size:11.5px;line-height:1.6;color:var(--mid);}
+    .awareness-video-text b{display:block;font-size:12.5px;color:var(--dark);font-weight:600;margin-bottom:2px;}
+    .awareness-related{margin-top:14px;padding-top:14px;border-top:1px solid var(--cream-border);}
+    .awareness-related-label{
+      font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;
+      color:var(--soft);margin-bottom:10px;
+    }
+    .awareness-chips{display:flex;gap:8px;flex-wrap:wrap;}
+    .awareness-chip{
+      display:inline-flex;align-items:center;gap:6px;
+      background:var(--teal-soft);border:1px solid var(--teal-border);
+      border-radius:99px;padding:8px 14px;
+      font-family:'Mitr',sans-serif;font-size:12px;font-weight:500;color:#0A5C53;
+      cursor:pointer;
+    }
+    .awareness-close{
+      display:block;width:100%;margin-top:16px;padding:6px 0 0;
+      text-align:center;font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;
+      color:var(--soft);background:none;border:none;cursor:pointer;
+    }
 
     /* Invitation card — the notebook page turn */
     #invitation-card{-webkit-tap-highlight-color:transparent;}
@@ -736,7 +795,7 @@
            onclick="openAllSituationsSheet()"
            style="display:inline-block;cursor:pointer;padding:20px 24px;border-radius:16px;background:var(--cream-warm);border:1px solid var(--cream-border);text-align:center;transition:transform 0.12s ease,box-shadow 0.12s ease;user-select:none;-webkit-user-select:none;">
         <div id="permission-sentence" style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
-          บางทีสิ่งที่กำลังเกิดขึ้น<br>อาจมีชื่อเรียกอยู่แล้ว
+          บางทีสิ่งที่กำลังเกิดขึ้น อาจมีชื่อเรียกอยู่แล้ว
         </div>
         <div style="margin-top:8px;font-size:12px;font-weight:400;color:var(--soft);opacity:0.85;letter-spacing:0.2px;font-family:'Mitr',sans-serif;">
           ดูเรื่องอื่นๆ →
@@ -745,7 +804,16 @@
     </div>
   </div>
 
-  <div style="height:40px;"></div>
+  <div style="height:24px;"></div>
+
+  <!-- ── Awareness Card — one rotating insight, tap to read, no library ── -->
+  <div class="awareness-wrap">
+    <div class="awareness-card" id="awareness-card" onclick="awHandleCardClick(event)">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+
+  <div style="height:16px;"></div>
 
   <div id="m4-section-root"></div>
   <div id="m5-section-root"></div>
@@ -916,7 +984,7 @@ const TIERS = [
       { emoji:'😴', label:'นอนไม่หลับ',              key:'sleep'    },
       { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
       { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
-      { emoji:'🤔', label:'ไม่แน่ใจว่ารู้สึกอะไร',  key:'unsure'   },
+      { emoji:'🪞', label:'ไม่แน่ใจว่าตัวเองกำลังรู้สึกอะไร',  key:'unsure'   },
       { emoji:'😞', label:'ผิดหวัง',                key:'disappointed' },
       { emoji:'😵‍💫', label:'สับสน เลือกไม่ได้',     key:'confused'     },
       { emoji:'🌿', label:'เป็นห่วงเพื่อน',          key:'friend'   },
@@ -1043,6 +1111,7 @@ function nextTier() {
 const SIT_DATA = {
   sleep: {
     emoji: '😴', title: 'นอนไม่หลับ',
+    type: 'A',
     note: 'การนอนไม่เพียงพอสะสมส่งผลต่ออารมณ์และสมาธิโดยตรง บางทีที่รู้สึกว่า "ไม่ไหว" อาจเป็นแค่ว่าร่างกายยังพักไม่พอ',
     tools: [
       { icon:'🌙', name:'Sleep Reset', desc:'ปรับร่างกายให้พร้อมนอน · มีไกด์แนะแนว', href:'alltools.html#sleep', primary: true },
@@ -1053,6 +1122,7 @@ const SIT_DATA = {
   },
   burnout: {
     emoji: '🪫', title: 'หมดไฟ',
+    type: 'B',
     note: 'หมดไฟมักเกิดเมื่อร่างกายและจิตใจทำงานหนักเกินไปนานเกินไป โดยไม่ได้รับการดูแลเรื่องพื้นฐาน ไม่ใช่ความอ่อนแอ แต่เป็นสัญญาณที่ต้องรับฟัง',
     tools: [
       { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจว่าหมดไฟจากอะไรกันแน่', href:'reflection.html', primary: true },
@@ -1064,6 +1134,7 @@ const SIT_DATA = {
   },
   foggy: {
     emoji: '🤯', title: 'สมองตื้อ',
+    type: 'A',
     note: 'สมองที่อ่อนล้าไม่ต่างจากกล้ามเนื้อที่เหนื่อย บังคับให้ทำต่อไปไม่ได้ผล แต่การพักสั้นๆ มักช่วยได้เร็วกว่าที่คิด',
     tools: [
       { icon:'🫁', name:'หายใจรีเซ็ตสมาธิ', desc:'2 นาที ออกซิเจนเข้าสมองก่อน', href:'alltools.html#breathe', primary: true },
@@ -1074,6 +1145,7 @@ const SIT_DATA = {
   },
   unsure: {
     emoji: '🤔', title: 'ยังอธิบายตัวเองไม่ถูก',
+    type: 'B',
     note: 'ไม่ต้องรีบหาคำตอบ แค่รู้ว่ามีบางอย่างอยู่ก็พอ ลองสำรวจดูว่ามันคืออะไร',
     tools: [
       { icon:'🪞', name:"What's This Feeling?", desc:'เริ่มจากสังเกตข้างใน · ไม่ต้องรู้คำตอบก่อน', href:'reflection.html', primary: true },
@@ -1082,6 +1154,7 @@ const SIT_DATA = {
   },
   friend: {
     emoji: '🌿', title: 'เป็นห่วงเพื่อน',
+    type: 'C',
     note: 'การที่คุณเป็นห่วงเพื่อนอยู่นั้น สำคัญมาก แต่การช่วยเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว',
     tools: [
       { icon:'📖', name:'คู่มือ: เป็นห่วงเพื่อน', desc:'ทำอะไรได้บ้าง · พูดยังไงดี', href:'notebook.html?id=friend' },
@@ -1092,6 +1165,7 @@ const SIT_DATA = {
   },
   hungry: {
     emoji: '🍚', title: 'หิวแต่จะกินดีมั้ย',
+    type: 'B',
     note: 'ร่างกายส่งสัญญาณ ไม่ว่าจะเป็นอาการสมองตื้อในห้องเรียน กดดันตัวเองไม่กิน หรือหิวกลางดึก มาทำความเข้าใจกัน',
     tools: [
       { icon:'📖', name:'คู่มือ: หิวแต่จะกินดีมั้ย', desc:'เข้าใจสัญญาณร่างกายของคุณ 3 นาที', href:'notebook.html?id=hungry', primary: true },
@@ -1102,6 +1176,7 @@ const SIT_DATA = {
   },
   low_water: {
     emoji: '🥛', title: 'วันนี้ดื่มน้ำน้อยมาก',
+    type: 'A',
     note: 'การขาดน้ำเพียงเล็กน้อยทำให้สมองทำงานช้าลง อารมณ์หงุดหงิด และรู้สึกเหนื่อยโดยไม่มีเหตุผล บางทีแค่จิบน้ำก็เปลี่ยนได้เยอะ',
     tools: [
       { icon:'💧', name:'เติมน้ำให้ตัวเอง', desc:'แตะทีละแก้ว ครบ 8 แก้วต่อวัน', href:'alltools.html#water', primary: true },
@@ -1111,6 +1186,7 @@ const SIT_DATA = {
   },
   no_shower: {
     emoji: '🚿', title: 'ดองเค็ม / ยังไม่ได้อาบน้ำ',
+    type: 'A',
     note: 'ยังไม่ได้อาบน้ำวันนี้ เกิดได้จากหลายเหตุผลมาก — เหนื่อย ลืม ไม่อยากเปียก หรือพลังงานต่ำ ไม่มีอันไหนผิดปกติ',
     tools: [
       { icon:'📖', name:'ไม่อาบน้ำวันนี้ก็ไม่เป็นไร', desc:'อ่าน 2 นาที — No Shame', href:'notebook.html?id=no_shower', primary: true },
@@ -1121,6 +1197,7 @@ const SIT_DATA = {
   },
   messy_room: {
     emoji: '🧺', title: 'ห้องรกจนไม่มีที่เดิน',
+    type: 'A',
     note: 'ห้องรกไม่ได้แปลว่าผิดปกติเสมอไป — มีเส้นแบ่งระหว่าง "ห้องรกแบบที่อยู่ได้สบาย" กับสัญญาณที่ควรใส่ใจมากขึ้น',
     tools: [
       { icon:'🧺', name:'จัดมุมเล็ก 5 นาที', desc:'เลือกมุมเดียว ตั้งเวลา แล้วลงมือ', href:'alltools.html#corner', primary: true },
@@ -1531,12 +1608,19 @@ function _buildSheetContent(key, contentEl) {
   const d = _getSitData(key);
   if (!d || !contentEl) return;
 
-  // Separate guide (notebook.html) from action tools
-  const guideTools = d.tools.filter(t => t.href && t.href.indexOf('notebook.html') !== -1);
-  const actionTools = d.tools.filter(t => !t.href || t.href.indexOf('notebook.html') === -1);
+  // ── Type A/B/C layout — situation sheet UX spec v1 (mirrors situations.html) ──
+  const type = d.type || 'B';
+  const articleTool = d.tools.find(t => t.href && t.href.indexOf('notebook.html') !== -1);
+  const peerTool    = d.tools.find(t => t.href === 'peer.html');
+  const primaryTool = d.tools.find(t => t.primary && t !== articleTool && t !== peerTool)
+                    || d.tools.find(t => t !== articleTool && t !== peerTool)
+                    || d.tools[0];
+  const restTools   = d.tools.filter(t => t !== articleTool && t !== primaryTool && !(type === 'C' && t === peerTool));
 
   function _toolCard(t) {
-    return `<a href="${t.href}"${t.onclick ? ` onclick="${t.onclick}"` : ''} style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary?'var(--dark)':'var(--cream-warm)'};border:1px solid ${t.primary?'var(--dark)':'var(--cream-border)'};margin-bottom:8px;">
+    const href = t.href && t.href !== '#' ? `href="${t.href}"` : 'href="#"';
+    const onclick = t.onclick ? ` onclick="${t.onclick}"` : '';
+    return `<a ${href}${onclick} style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;background:${t.primary?'var(--dark)':'var(--cream-warm)'};border:1px solid ${t.primary?'var(--dark)':'var(--cream-border)'};margin-bottom:8px;">
       <span style="font-size:18px;flex-shrink:0;width:28px;text-align:center;">${t.icon}</span>
       <span style="flex:1;">
         <span style="display:block;font-size:13px;font-weight:500;color:${t.primary?'#FDFBF7':'var(--dark)'};">${t.name}</span>
@@ -1546,29 +1630,80 @@ function _buildSheetContent(key, contentEl) {
     </a>`;
   }
 
-  // T4/T5/T10 — Signature guide card: "เริ่มตรงนี้" label + meta line, dashed border
-  // desc field is repurposed as the meta subtitle (e.g. "เข้าใจสิ่งที่เกิดขึ้น + วิธีที่ช่วยได้")
-  const guideHtml = guideTools.map(t => `
-    <div style="margin-bottom:16px;">
-      <div style="font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">เริ่มตรงนี้</div>
-      <a href="${t.href}" style="display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:16px;text-decoration:none;background:var(--cream);border:1.5px dashed #D8D0C6;">
-        <span style="font-size:20px;flex-shrink:0;width:28px;text-align:center;margin-top:2px;">📖</span>
+  // The one large recommendation — "เริ่มตรงนี้" or "ลองแบบนี้ดูไหม"
+  // Dark card = primary action. Label = handwritten notebook annotation (gold, letter-spaced).
+  function _primaryCard(t, label) {
+    if (!t) return '';
+    const href = t.href && t.href !== '#' ? `href="${t.href}"` : 'href="#"';
+    const onclick = t.onclick ? ` onclick="${t.onclick}"` : '';
+    return `<div style="margin-bottom:16px;">
+      <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">${label}</div>
+      <a ${href}${onclick} style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:18px;text-decoration:none;background:var(--dark);">
+        <span style="font-size:26px;flex-shrink:0;">${t.icon}</span>
+        <span style="flex:1;">
+          <span style="display:block;font-size:16px;font-weight:600;color:#FDFBF7;margin-bottom:3px;line-height:1.4;">${t.name}</span>
+          <span style="display:block;font-size:12px;font-weight:300;color:rgba(253,251,247,0.55);line-height:1.5;">${t.desc || ''}</span>
+        </span>
+        <span style="font-size:14px;color:rgba(255,255,255,0.3);flex-shrink:0;">→</span>
+      </a>
+    </div>`;
+  }
+
+  // Article (📖 notebook guide) — white/cream card = "secondary action / other options"
+  function _articleCard(t, label, big) {
+    if (!t) return '';
+    const pad = big ? '16px 18px' : '14px 16px';
+    const iconSize = big ? '20px' : '17px';
+    return `<div style="margin-bottom:16px;">
+      <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">${label}</div>
+      <a href="${t.href}" style="display:flex;align-items:flex-start;gap:14px;padding:${pad};border-radius:16px;text-decoration:none;background:var(--cream);border:1.5px dashed #D8D0C6;">
+        <span style="font-size:${iconSize};flex-shrink:0;width:28px;text-align:center;margin-top:2px;">📖</span>
         <span style="flex:1;">
           <span style="display:block;font-size:13px;font-weight:500;color:var(--dark);line-height:1.45;margin-bottom:4px;">${t.name}</span>
-          <span style="display:block;font-size:11px;font-weight:400;color:var(--soft);line-height:1.5;">${t.desc}</span>
+          <span style="display:block;font-size:11px;font-weight:400;color:var(--soft);line-height:1.5;">${t.desc || ''}</span>
         </span>
         <span style="font-size:12px;color:var(--faint);flex-shrink:0;margin-top:3px;">→</span>
       </a>
-    </div>`).join('');
+    </div>`;
+  }
 
-  // T1 — action tools stay warm, visually distinct from guide
-  const actionHtml = actionTools.map(_toolCard).join('');
+  // Type C — "อยากมีคนอยู่ด้วยไหม?" — always present for human-first situations
+  function _peerCard() {
+    return `<div style="margin-bottom:16px;">
+      <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">อยากมีคนอยู่ด้วยไหม?</div>
+      <a href="peer.html" style="display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:18px;text-decoration:none;background:var(--gold-soft);border:1.5px solid var(--gold-border);">
+        <span style="font-size:24px;flex-shrink:0;">💛</span>
+        <span style="flex:1;">
+          <span style="display:block;font-size:15px;font-weight:600;color:#5C3D00;margin-bottom:2px;">เพื่อนที่ปรึกษา</span>
+          <span style="display:block;font-size:11px;font-weight:300;color:#8B6000;">มีคนพร้อมรับฟัง ไม่ตัดสิน</span>
+        </span>
+        <span style="font-size:14px;color:#8B6000;flex-shrink:0;">→</span>
+      </a>
+    </div>`;
+  }
 
-  // T3 — guide first, then divider only if both exist, then tools
-  const toolsDivider = (guideHtml && actionHtml)
-    ? `<div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px;"><div style="flex:1;height:1px;background:var(--cream-border);"></div><div style="font-size:9px;color:var(--faint);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;">เครื่องมือ</div><div style="flex:1;height:1px;background:var(--cream-border);"></div></div>`
-    : '';
-  const toolsHtml = guideHtml + toolsDivider + actionHtml;
+  function _divider(text) {
+    return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px;"><div style="flex:1;height:1px;background:var(--cream-border);"></div><div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;color:var(--gold);text-transform:uppercase;white-space:nowrap;">${text}</div><div style="flex:1;height:1px;background:var(--cream-border);"></div></div>`;
+  }
+
+  const restHtml = restTools.length ? (_divider('ตัวเลือกอื่น') + restTools.map(_toolCard).join('')) : '';
+
+  let toolsHtml;
+  if (type === 'A') {
+    toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้')
+      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false)
+      + restHtml;
+  } else if (type === 'C') {
+    toolsHtml = _peerCard()
+      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false)
+      + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม')
+      + restHtml;
+  } else {
+    toolsHtml = articleTool
+      ? (_articleCard(articleTool, 'เริ่มตรงนี้', true) + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม') + restHtml)
+      : (_primaryCard(primaryTool, 'เริ่มตรงนี้') + restHtml);
+  }
+
 
   // Continue exploring — T1: already neutral dashed
   const related = (SIT_RELATED[key] || []).slice(0,3);
@@ -1607,11 +1742,11 @@ function _buildSheetContent(key, contentEl) {
 
   contentEl.innerHTML = `
     <div class="_sl" style="opacity:0;transform:translateY(4px);transition:opacity 0.22s ease,transform 0.22s ease;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <span style="font-size:28px;">${d.emoji}</span>
-        <span style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);">${d.title}</span>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:28px;line-height:1;margin-bottom:8px;">${d.emoji}</div>
+        <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--dark);">${d.title}</div>
       </div>
-      <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.75;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--cream-border);">${d.note}</div>
+      <div style="font-size:14px;font-weight:300;color:var(--mid);line-height:1.8;max-width:34ch;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--cream-border);">${d.note}</div>
       ${toolsHtml}
       ${talkHtml}
       ${continueHtml}
@@ -1641,7 +1776,6 @@ function openSitSheet(key) {
     document.body.style.background = '#FDF9F4';
     const lbl = document.getElementById('tier-label');
     if (lbl) { setTimeout(() => { lbl.style.transition='opacity 0.4s ease'; lbl.style.opacity='0'; setTimeout(()=>{ lbl.textContent='ลองค่อย ๆ ดูก็ได้'; lbl.style.opacity='1'; },400); }, 600); }
-    _startNotebookWhispers && _startNotebookWhispers();
     _triggerPermissionSentence && _triggerPermissionSentence();
     // Show the alltools green pill
     const ap = document.getElementById('alltools-pill-wrap');
@@ -1812,6 +1946,7 @@ function _animateToNotebook(rect, href) {
 const SIT_DATA_EXTRA = {
   disappointed: {
     emoji:'😞', title:'ผิดหวัง',
+    type: 'A',
     note:'ความผิดหวังเป็นเรื่องของสมองที่หลั่ง dopamine ไว้รอล่วงหน้าแล้วโดนหักดิบกะทันหัน ไม่ใช่แค่ "คิดมากไปเอง" — ร่างกายเจ็บจริงในตอนนี้',
     tools:[
       { icon:'📄', name:'Hope with Acceptance Log', desc:'เขียน 1 สิ่งที่เสียใจ แต่ปล่อยให้ผ่านไปคืนนี้', href:'alltools.html#blankpaper-hope', primary:true },
@@ -1823,6 +1958,7 @@ const SIT_DATA_EXTRA = {
   },
   confused: {
     emoji:'😵‍💫', title:'สับสน เลือกไม่ได้',
+    type: 'A',
     note:'การที่ใจรู้สึกสองอย่างที่ดูขัดกันพร้อมกันได้จริง สมองสามารถเปิดสวิตช์ทั้งสองฝั่งพร้อมกัน — ไม่ใช่ความโลเล แต่เป็นมิติจิตใจที่ซับซ้อนขึ้น',
     tools:[
       { icon:'📄', name:'"AND" Space', desc:'เขียน 2 ความรู้สึกที่ขัดกัน แล้วให้มันอยู่ร่วมกันได้', href:'alltools.html#blankpaper-and', primary:true },
@@ -1834,6 +1970,7 @@ const SIT_DATA_EXTRA = {
   },
   exam: {
     emoji:'📚', title:'กลัวสอบ',
+    type: 'B',
     note:'ความกังวลก่อนสอบเป็นเรื่องปกติมาก แต่ถ้ามันมากเกินจนกระทบการนอนหรือทำให้อ่านไม่ได้เลย อาจต้องการความช่วยเหลือ',
     tools:[
       { icon:'💪', name:'Power Posture', desc:'2 นาที รีเซ็ตร่างกายก่อนเข้าห้องสอบ', href:'alltools.html#posture' },
@@ -1845,6 +1982,7 @@ const SIT_DATA_EXTRA = {
   },
   study_fog: {
     emoji:'📖', title:'อ่านหนังสือแล้วไม่เข้าหัว',
+    type: 'B',
     note:'สมองที่ล้าหรือวิตกกังวลอยู่ข้างในไม่สามารถจดจำได้ดี บางทีปัญหาไม่ใช่ที่การอ่าน แต่ที่สภาพข้างใน',
     tools:[
       { icon:'🌬️', name:'รีเซ็ตสมาธิ 2 นาที', desc:'หายใจก่อน กลับมาใหม่', href:'alltools.html#breathe' },
@@ -1855,6 +1993,7 @@ const SIT_DATA_EXTRA = {
   },
   overwhelm: {
     emoji:'⏰', title:'งานเยอะจนล้น',
+    type: 'A',
     note:'ความรู้สึก "ล้น" มักทำให้ paralyzed แทนที่จะทำได้มากขึ้น บางครั้งแค่ระบายออกมาก็ช่วยได้',
     tools:[
       { icon:'📓', name:'เขียนระบาย Brain Dump', desc:'ระบายทุกอย่างในหัวออกมาก่อน', href:'alltools.html#journal' },
@@ -1865,6 +2004,7 @@ const SIT_DATA_EXTRA = {
   },
   pressure: {
     emoji:'🎯', title:'กดดันตัวเองมากเกินไป',
+    type: 'B',
     note:'การกดดันตัวเองเป็นสัญญาณว่าคุณใส่ใจ แต่มากเกินพอดีทำให้ร่างกายและจิตใจสึกหรอเร็ว',
     tools:[
       { icon:'🎯', name:'เตรียมตัว — ลด tension', desc:'Grounding 3 นาที ก่อนเผชิญสิ่งที่กดดัน', href:'alltools.html#grounding' },
@@ -1877,6 +2017,7 @@ const SIT_DATA_EXTRA = {
   },
   not_enough: {
     emoji:'📉', title:'รู้สึกว่าตัวเองไม่เก่งพอ',
+    type: 'B',
     note:'ความรู้สึกนี้พบได้บ่อยมากในคนที่เก่งจริงๆ แต่ยังไม่รู้ตัว ไม่ได้แปลว่าเป็นความจริง',
     tools:[
       { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อ "ไม่เก่งพอ" เกาะแน่นจนเจ็บ — คลายมือจากมัน', href:'alltools.html#reframe', primary:true },
@@ -1888,6 +2029,7 @@ const SIT_DATA_EXTRA = {
   },
   behind: {
     emoji:'🏃', title:'ทุกคนดูไปไกลกว่าฉัน',
+    type: 'B',
     note:'เราเห็นแค่ highlight ของคนอื่น ไม่ได้เห็น struggle ข้างหลัง สมองของเราถูกออกแบบมาให้เปรียบเทียบ แต่มันมักเลือกเปรียบกับเวอร์ชันที่ดีที่สุดของคนอื่นเสมอ',
     tools:[
       { icon:'🍃', name:'คลายมือจากความคิด', desc:'ปล่อยเรื่อง "ฉันตามไม่ทัน" ที่สมองเล่าซ้ำ', href:'alltools.html#reframe', primary:true },
@@ -1899,6 +2041,7 @@ const SIT_DATA_EXTRA = {
   },
   social: {
     emoji:'👥', title:'เข้ากับเพื่อนไม่ได้',
+    type: 'C',
     note:'สมองวัยรุ่นกำลังสร้าง social map ใหม่ทั้งหมด มันต้องใช้เวลา และมันเหนื่อยจริงๆ ไม่ได้แปลว่ามีอะไรผิดปกติกับคุณ',
     tools:[
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'อยู่กับความรู้สึกโดดเดี่ยวโดยไม่ต้องรีบแก้', href:'alltools.html#rain', primary:true },
@@ -1910,6 +2053,7 @@ const SIT_DATA_EXTRA = {
   },
   no_place: {
     emoji:'🫥', title:'รู้สึกเหมือนไม่มีที่ของตัวเอง',
+    type: 'C',
     note:'มีความต่างที่สำคัญระหว่าง "ยังไม่เจอที่ของตัวเอง" กับ "ไม่มีที่ให้เรา" — ส่วนใหญ่เป็นอย่างแรก แต่ตอนที่รู้สึกอยู่มันเหมือนอย่างหลังเสมอ',
     tools:[
       { icon:'🤍', name:'พักใจ', desc:'self-compassion เมื่อรู้สึกไม่มีที่ของตัวเอง', href:'alltools.html#rest', primary:true },
@@ -1921,6 +2065,7 @@ const SIT_DATA_EXTRA = {
   },
   fight: {
     emoji:'💬', title:'ทะเลาะกับเพื่อน',
+    type: 'C',
     note:'ความขัดแย้งเป็นส่วนของมิตรภาพ แต่มันก็เจ็บปวดได้มาก โดยเฉพาะถ้ายังแก้ไขไม่ได้',
     tools:[
       { icon:'🗣️', name:'เตรียมใจก่อนคุย', desc:'I-Message + Cooldown timer', href:'alltools.html#conflict-prep', primary:true },
@@ -1932,6 +2077,7 @@ const SIT_DATA_EXTRA = {
   },
   abandoned: {
     emoji:'🥲', title:'รู้สึกโดนทิ้ง',
+    type: 'C',
     note:'สมองประมวลผลการถูกทิ้งผ่านพื้นที่เดียวกับความเจ็บปวดทางกาย มันไม่ใช่การคิดมาก มันเจ็บจริงๆ ในระดับ biology',
     tools:[
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ให้พื้นที่กับความเจ็บโดยไม่จมไปกับมัน', href:'alltools.html#rain', primary:true },
@@ -1943,6 +2089,7 @@ const SIT_DATA_EXTRA = {
   },
   crush: {
     emoji:'❤️', title:'แอบชอบใครสักคน',
+    type: 'A',
     note:'Dopamine ที่หลั่งตอน crush นั้น activate พื้นที่สมองเดียวกับที่ทำให้ addicted ได้ ไม่แปลกเลยที่มันจะครอบครองความคิดขนาดนี้',
     tools:[
       { icon:'📓', name:'เขียนระบาย', desc:'ระบายความรู้สึกออกมาก่อน', href:'alltools.html#journal', primary:true },
@@ -1955,6 +2102,7 @@ const SIT_DATA_EXTRA = {
   },
   heartbreak: {
     emoji:'💔', title:'เพิ่งอกหัก',
+    type: 'C',
     note:'ความเจ็บปวดจากการอกหักเป็นของจริงมาก สมองเราประมวลผลมันคล้ายกับความเจ็บปวดทางกาย ให้เวลาตัวเอง',
     tools:[
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ความเจ็บนี้ต้องการพื้นที่ ไม่ใช่การรีบแก้', href:'alltools.html#rain', primary:true },
@@ -1967,6 +2115,7 @@ const SIT_DATA_EXTRA = {
   },
   lonely: {
     emoji:'😔', title:'รู้สึกเหงา',
+    type: 'C',
     note:'ความเหงาไม่ได้แปลว่าไม่มีเพื่อน บางทีรู้สึกเหงาแม้จะอยู่กับคนรอบข้าง นั่นก็เป็นสัญญาณสำคัญ',
     tools:[
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนพร้อมรับฟัง', href:'peer.html' },
@@ -1979,6 +2128,7 @@ const SIT_DATA_EXTRA = {
   },
   homesick: {
     emoji:'🏠', title:'คิดถึงบ้าน',
+    type: 'C',
     note:'การคิดถึงบ้านเป็นเรื่องปกติมากสำหรับนักเรียนที่เพิ่งย้ายมา มันไม่ได้แปลว่าคุณอ่อนแอ',
     tools:[
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'รับฟัง โดยไม่ตัดสิน', href:'peer.html' },
@@ -1990,6 +2140,7 @@ const SIT_DATA_EXTRA = {
   },
   family: {
     emoji:'👨‍👩‍👧', title:'มีปัญหากับครอบครัว',
+    type: 'C',
     note:'ปัญหาครอบครัวไม่มีคำตอบง่ายๆ และมักไม่มีใครผิดทั้งหมด แต่มันเหนื่อยจริงๆ และคุณไม่ต้องแบกมันคนเดียว',
     tools:[
       { icon:'📓', name:'เขียนระบาย', desc:'ระบายออกมาก่อนโดยไม่ต้องหาคำตอบ', href:'alltools.html#journal', primary:true },
@@ -2002,6 +2153,7 @@ const SIT_DATA_EXTRA = {
   },
   misunderstood: {
     emoji:'🫤', title:'รู้สึกว่าที่บ้านไม่เข้าใจ',
+    type: 'C',
     note:'สมองวัยรุ่นกับสมองผู้ใหญ่ประมวลผลสถานการณ์เดียวกันด้วยวิธีที่ต่างกันจริงๆ ทางชีววิทยา มันไม่ใช่แค่ generation gap',
     tools:[
       { icon:'🪞', name:"What's This Feeling?", desc:'ทำความเข้าใจตัวเองก่อน', href:'reflection.html', primary:true },
@@ -2013,6 +2165,7 @@ const SIT_DATA_EXTRA = {
   },
   need_space: {
     emoji:'😮‍💨', title:'อยากมีพื้นที่ของตัวเอง',
+    type: 'B',
     note:'การต้องการ solitude ไม่ใช่ความผิดปกติ มันเป็น developmental need ที่สำคัญมาก โดยเฉพาะในวัยที่กำลังสร้างตัวตน',
     tools:[
       { icon:'🌬️', name:'หายใจในพื้นที่ของตัวเอง', desc:'2 นาที คนเดียว ไม่ต้องอธิบายใคร', href:'alltools.html#breathe', primary:true },
@@ -2024,6 +2177,7 @@ const SIT_DATA_EXTRA = {
   },
   no_appetite: {
     emoji:'🍚', title:'กินข้าวไม่ค่อยลง',
+    type: 'A',
     note:'ความเครียดและความวิตกกังวลส่งผลต่อความอยากอาหารโดยตรง ถ้าเป็นนานหลายวันควรใส่ใจ',
     tools:[
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ให้พื้นที่กับความรู้สึกที่กดทับความอยากอาหารอยู่', href:'alltools.html#rain', primary:true },
@@ -2034,6 +2188,7 @@ const SIT_DATA_EXTRA = {
   },
   phone: {
     emoji:'📱', title:'เล่นมือถือจนดึก',
+    type: 'A',
     note:'การเล่นมือถือดึกมักเป็นสัญญาณว่าเราหนีจากบางอย่าง ไม่ใช่แค่ชอบเล่น',
     tools:[
       { icon:'🌙', name:'Sleep Reset', desc:'ช่วยปิดสมองก่อนนอน', href:'alltools.html#sleep' },
@@ -2043,6 +2198,7 @@ const SIT_DATA_EXTRA = {
   },
   no_sun: {
     emoji:'☀️', title:'ไม่ค่อยได้ออกไปไหน',
+    type: 'A',
     note:'แสงธรรมชาติมีผลต่อ serotonin และอารมณ์โดยตรง แค่ 10-15 นาทีนอกอาคารต่อวันช่วยได้จริง',
     tools:[
       { icon:'🏃', name:'ขยับตัว + อากาศสดชื่น', desc:'3–5 นาทีก็เปลี่ยนได้ · มี guided prompts', href:'alltools.html#move', primary:true },
@@ -2053,6 +2209,7 @@ const SIT_DATA_EXTRA = {
   },
   tired: {
     emoji:'🪫', title:'เหนื่อยตลอดเวลา',
+    type: 'A',
     note:'ความเหนื่อยล้าเรื้อรังอาจมาจากหลายสาเหตุ นอน ความเครียด หรือบางอย่างที่ต้องการความใส่ใจมากกว่านี้',
     tools:[
       { icon:'⚡', name:'Rewire สวิตช์ 30 วิ', desc:'ไมโครแฮบิตเล็กที่สุดที่ทำได้ตอนนี้เลย', href:'alltools.html#rewire', primary:true },
@@ -2063,6 +2220,7 @@ const SIT_DATA_EXTRA = {
   },
   no_energy: {
     emoji:'🛏️', title:'ไม่อยากลุกจากเตียง',
+    type: 'A',
     note:'ความรู้สึกนี้อาจเป็นสัญญาณสำคัญ โดยเฉพาะถ้าเป็นบ่อยหรือนาน ไม่ใช่แค่เรื่องเกียจคร้าน',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
@@ -2073,6 +2231,7 @@ const SIT_DATA_EXTRA = {
   },
   self_know: {
     emoji:'🤔', title:'อยากรู้จักตัวเองมากขึ้น',
+    type: 'B',
     note:'การอยากเข้าใจตัวเองเป็นจุดเริ่มต้นของการเติบโต มีหลายทางที่ช่วยได้',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'เริ่มจากสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html', primary:true },
@@ -2082,6 +2241,7 @@ const SIT_DATA_EXTRA = {
   },
   who_am_i: {
     emoji:'🧩', title:'ฉันเป็นคนแบบไหนกันนะ',
+    type: 'B',
     note:'นักจิตวิทยาบอกว่าเราไม่ได้ "ค้นพบ" ตัวตน แต่เรา "สร้าง" มันขึ้นมาทีละนิด การสำรวจตัวเองตอนนี้คือกระบวนการที่สำคัญมาก ไม่ใช่ความสับสนที่ต้องรีบแก้',
     tools:[
       { icon:'🪞', name:"What's This Feeling?", desc:'เข้าใจอารมณ์ก็ส่วนหนึ่งของการรู้จักตัวเอง', href:'reflection.html', primary:true },
@@ -2093,6 +2253,7 @@ const SIT_DATA_EXTRA = {
   },
   grow: {
     emoji:'🌱', title:'อยากเปลี่ยนแปลงตัวเอง',
+    type: 'B',
     note:'สมองเปลี่ยนแปลงได้ตลอดชีวิต แต่ self-compassion คือ prerequisite ไม่ใช่ reward — คนที่ใจดีกับตัวเองมี motivation เพื่อ self-improvement สูงกว่า เพราะไม่กลัว failure',
     tools:[
       { icon:'🤍', name:'พักใจ', desc:'ความเมตตาต่อตัวเองคือพื้นฐานของการเปลี่ยนแปลง', href:'alltools.html#rest', primary:true },
@@ -2104,6 +2265,7 @@ const SIT_DATA_EXTRA = {
   },
   changed: {
     emoji:'🎭', title:'รู้สึกว่าตัวเองไม่เหมือนเดิม',
+    type: 'B',
     note:'สมองสร้างความรู้สึกว่า "เรา" ต่อเนื่องผ่านเรื่องเล่าที่ memory สร้างขึ้น เมื่อเรื่องเล่านั้น disrupted ความรู้สึกไม่เหมือนเดิมจึงเกิดขึ้น มันไม่ได้แปลว่าคุณสูญเสียตัวเองไป',
     tools:[
       { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจสิ่งที่เปลี่ยนไปและสิ่งที่ยังเหมือนเดิม', href:'reflection.html', primary:true },
@@ -2115,6 +2277,7 @@ const SIT_DATA_EXTRA = {
   },
   lost: {
     emoji:'❓', title:'ไม่รู้ว่าตัวเองต้องการอะไร',
+    type: 'B',
     note:'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html', primary:true },
@@ -2125,6 +2288,7 @@ const SIT_DATA_EXTRA = {
   },
   fading: {
     emoji:'🫥', title:'รู้สึกว่าตัวเองค่อย ๆ หายไป',
+    type: 'C',
     note:'บางช่วงของชีวิต เราอาจรู้สึกเหมือนตัวเองค่อย ๆ หายไปจากสายตาของใครหลายคน จากที่เคยมีบทบาท เคยรู้สึกว่าตัวเองสำคัญ<br><br>วันหนึ่งอาจเริ่มสงสัยว่า "วันนี้ฉันยังมีความหมายอยู่ไหมนะ"<br><br>ความรู้สึกแบบนี้ไม่ได้แปลว่าอ่อนแอ มันอาจเป็นสัญญาณว่าใจเรากำลังอยากถูกรับฟัง และอยากถูกมองเห็นอีกครั้ง',
     tools:[
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่พร้อมมองเห็นคุณ', href:'peer.html', primary:true },
@@ -2171,57 +2335,6 @@ const PILL_PREVIEWS = {
   changed:     { text: 'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้ไม่คุ้นเคยตัวเอง...', action: '🪞 สำรวจสิ่งที่เปลี่ยนไป' },
   lost:        { text: 'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว', action: '🪞 ลองสำรวจข้างในก่อน' },
 };
-
-// ── Notebook whispers — rotate into preview strip after listening state ──
-// Shown occasionally when user has swiped 2+ pills and hero is in listening mode.
-const NOTEBOOK_WHISPERS = [
-  { text: 'บางทีการมีใครสักคนช่วยเรียบเรียงสิ่งที่เรารู้สึก ก็ทำให้เราได้เจอคำที่ก่อนหน้านี้ยังอธิบายไม่ถูกเลยก็ได้', action: '💛 คุยกับเพื่อนที่ปรึกษา' },
-  { text: 'ไม่ต้องรีบหาคำที่ถูกต้องที่สุด — บางทีการเริ่มพูดก็คือจุดเริ่มต้นแล้ว', action: '🪞 ลองสำรวจข้างใน' },
-  { text: 'สิ่งที่อยู่ในหัวบางอย่างอธิบายได้ยาก แต่เมื่อเริ่มเขียนออกมา มันมักชัดขึ้นเองโดยไม่รู้ตัว', action: '📓 เขียนระบาย' },
-];
-let _whisperIndex = 0;
-let _whisperInterval = null;
-
-function _startNotebookWhispers() {
-  if (_whisperInterval) return; // already running
-  // Wait 8s after listening state, then show first whisper
-  setTimeout(() => {
-    _injectWhisper();
-    _whisperInterval = setInterval(_injectWhisper, 18000); // every 18s
-  }, 8000);
-}
-
-function _injectWhisper() {
-  const hero = document.querySelector('.hero');
-  // Only whisper when in listening state and no sheet is open
-  if (!hero || !hero.classList.contains('listening')) return;
-  if (document.getElementById('sit-overlay').style.display !== 'none') return;
-  const w = NOTEBOOK_WHISPERS[_whisperIndex % NOTEBOOK_WHISPERS.length];
-  _whisperIndex++;
-  // Temporarily swap the preview text for any centered pill
-  const inner = document.getElementById('pill-preview-inner');
-  const textEl = document.getElementById('pill-preview-text');
-  const actionEl = document.getElementById('pill-preview-action');
-  if (!inner || !textEl || !actionEl) return;
-  const prevText = textEl.textContent;
-  const prevAction = actionEl.textContent;
-  // Fade out
-  inner.classList.remove('visible');
-  setTimeout(() => {
-    textEl.textContent = w.text;
-    actionEl.textContent = w.action;
-    inner.classList.add('visible');
-    // Restore after 12s
-    setTimeout(() => {
-      inner.classList.remove('visible');
-      setTimeout(() => {
-        textEl.textContent = prevText;
-        actionEl.textContent = prevAction;
-        inner.classList.add('visible');
-      }, 200);
-    }, 12000);
-  }, 200);
-}
 
 // Which pill is visually centered in the scroll row
 function _getCenteredPillKey() {
@@ -2302,7 +2415,6 @@ setTimeout(_initPillPreview, 400);
       document.body.style.background = '#FDF9F4';
       // Deep scroll = first meaningful interaction too
       if (SESSION_OPENED.size === 0) _triggerPermissionSentence();
-      _startNotebookWhispers();
       // Show alltools green pill
       const ap = document.getElementById('alltools-pill-wrap');
       if (ap) { setTimeout(() => { ap.style.opacity='1'; ap.style.pointerEvents='all'; }, 1200); }
@@ -2372,6 +2484,131 @@ Object.assign(SIT_DATA, SIT_DATA_EXTRA);
 
 // Render first tier on load
 renderTier(0);
+
+// ═══ AWARENESS CARD — one rotating insight, no library, no progress ═══
+const AWARENESS_CARDS = [
+  {
+    id: 'neuroplasticity',
+    icon: '🧠',
+    short: 'สมองเปลี่ยนได้',
+    hook: 'สมองเปลี่ยนแปลงตัวเองได้ตลอดชีวิต ไม่ใช่แค่ตอนเด็ก',
+    title: 'สมองเปลี่ยนได้จริงไหม?',
+    body: [
+      'สมองมีความสามารถที่เรียกว่า <strong>neuroplasticity</strong> — ปรับการเชื่อมต่อของเซลล์ประสาทใหม่ได้ตามสิ่งที่เราทำซ้ำๆ ช่วงวัยรุ่นจนถึงประมาณ 25 ปี สมองยืดหยุ่นเป็นพิเศษ แต่หลังจากนั้นก็ยังเปลี่ยนได้ถ้าตั้งใจพอ',
+      'การเปลี่ยนแปลงเกิดง่ายขึ้นเมื่อเรา <strong>โฟกัสจริงๆ</strong> กับสิ่งนั้น ไม่ใช่ทำผ่านๆ — และสมองจะ "เซ็ตการเปลี่ยนแปลง" ตอนที่เราพักหรือนอนหลับ นี่คือเหตุผลที่นอนพอสำคัญกับการเรียนรู้มากกว่าที่หลายคนคิด',
+      'ลองดู: เลือกสิ่งเล็กๆ ที่อยากเปลี่ยน ทำซ้ำด้วยความตั้งใจ แล้วให้เวลาตัวเองพักจริงๆ — สมองจะค่อยๆ จดจำทางใหม่ไว้เอง'
+    ],
+    related: ['focus','teen-brain']
+  },
+  {
+    id: 'focus',
+    icon: '🎯',
+    short: 'โฟกัสทำงานยังไง',
+    hook: 'ความอึดอัดก่อนเริ่มงาน ไม่ใช่สัญญาณว่าทำไม่ได้ — มันคือประตูสู่โฟกัส',
+    title: 'ทำไมเริ่มงานทีไรรู้สึกอึดอัดทุกที',
+    body: [
+      'ความรู้สึกอึดอัด เครียด หรือสับสนก่อนเริ่มอะไรสักอย่าง เป็นเรื่องปกติของสมอง — มันคือ "ประตู" ที่ต้องผ่านก่อนจะเข้าสู่ช่วงโฟกัสจริงๆ ไม่ใช่สัญญาณว่าเราทำไม่ได้',
+      'สมองมีระบบให้รางวัลที่ทำงานเป็นขั้นๆ — ยิ่งเราแบ่งงานเป็นก้าวเล็กๆ และรู้สึกว่า "ทำสำเร็จ" บ่อยๆ สมองจะยิ่งอยากโฟกัสต่อไปเรื่อยๆ',
+      'หลักที่น่าจำ: <strong>"อารมณ์มาทีหลังการกระทำ"</strong> — บางทีการลงมือทำเล็กๆ ก่อน โดยไม่ต้องรอให้รู้สึกพร้อม จะทำให้ความรู้สึกค่อยๆ ดีขึ้นตามมาเอง',
+      'ลองดู: เลือกขั้นแรกที่เล็กที่สุดของงาน — เล็กจนทำได้แน่ๆ ภายในไม่กี่นาที แล้วลงมือ ไม่ต้องรอแรงจูงใจมาก่อน'
+    ],
+    related: ['neuroplasticity','food']
+  },
+  {
+    id: 'food',
+    icon: '🥑',
+    short: 'อาหารกับสมอง',
+    hook: 'สมองหนักแค่ 2% ของร่างกาย แต่ใช้พลังงานเกือบ 20% ของทั้งหมด',
+    title: 'อาหารที่กิน ส่งผลกับสมาธิและอารมณ์ได้จริง',
+    body: [
+      'สมองเป็นอวัยวะที่ใช้พลังงานสูงมากเมื่อเทียบกับขนาด อาหารที่เรากินจึงเหมือน "เชื้อเพลิง" ที่ส่งผลต่อสมาธิ อารมณ์ และความจำโดยตรง ไม่ใช่แค่เรื่องน้ำหนักตัว',
+      'อาหารที่มักถูกพูดถึงว่าเป็นมิตรกับสมอง ได้แก่ ผักใบเขียวเข้ม ไข่ ถั่วต่างๆ ปลาที่มีโอเมก้า 3 และผลไม้ตระกูลเบอร์รี่ ซึ่งมีสารต้านอนุมูลอิสระสูง',
+      'ไม่ต้องเปลี่ยนทุกอย่างพร้อมกัน — แค่ลองสังเกตว่าหลังกินอะไรแล้วรู้สึกมีพลังหรือล้า มีสมาธิหรือฟุ้งง่าย ก็เป็นข้อมูลที่มีค่ากับตัวเองแล้ว',
+      'ลองดู: เพิ่มอาหารกลุ่มนี้สักสองสามอย่างในมื้อต่อไป แล้วลองสังเกตความรู้สึกของตัวเองหลังจากนั้นสักหน่อย'
+    ],
+    video: {
+      url: 'https://youtu.be/4ohxeYnjSPE',
+      thumb: 'https://img.youtube.com/vi/4ohxeYnjSPE/hqdefault.jpg',
+      caption: 'เนื้อหานี้สรุปมาจากคลิปนี้ — กดเพื่อดูแบบเต็มๆ'
+    },
+    related: ['focus','teen-brain']
+  },
+  {
+    id: 'teen-brain',
+    icon: '🌱',
+    short: 'สมองวัยรุ่น',
+    hook: 'สมองวัยรุ่นไม่ได้ "พัง" — มันกำลังถูกปรับโครงสร้างใหม่ทั้งระบบ',
+    title: 'สมองวัยรุ่นกำลังทำอะไรอยู่',
+    body: [
+      'งานวิจัยพบว่าช่วงวัยรุ่น สมองมีการเปลี่ยนแปลงเชิงโครงสร้างต่อเนื่อง เส้นใยประสาทเชื่อมต่อกันเร็วและมีประสิทธิภาพขึ้น พร้อมๆ กับการ "ตัดแต่ง" เส้นทางที่ไม่ได้ใช้บ่อยออกไป',
+      'การเปลี่ยนแปลงนี้ทำให้วัยรุ่นมีความอ่อนไหวต่อความรู้สึกของกลุ่มเพื่อนสูงกว่าผู้ใหญ่มาก การถูกมองข้ามหรือถูกตัดออกจากกลุ่มจึงรู้สึกหนักกว่าที่คนนอกจะเข้าใจ',
+      'พฤติกรรมที่มักถูกมองว่า "หุนหันพลันแล่น" จริงๆ คือส่วนหนึ่งของการเรียนรู้และทดลองของสมองที่กำลังพัฒนา ไม่ใช่ความบกพร่อง',
+      'ลองดู: เวลาที่รู้สึกอารมณ์ขึ้นๆ ลงๆ หรือใส่ใจเรื่องที่เพื่อนคิดมากเป็นพิเศษ — นั่นเป็นเรื่องที่สมองวัยนี้ทำงานแบบนี้จริงๆ ไม่ใช่ว่าเราคิดมากเกินไปคนเดียว'
+    ],
+    related: ['neuroplasticity','food']
+  }
+];
+
+let _awCurrentId = null;
+let _awExpanded = false;
+
+function awFind(id){ return AWARENESS_CARDS.find(c => c.id === id); }
+function awTodayId(){ return AWARENESS_CARDS[Math.floor(Date.now()/86400000) % AWARENESS_CARDS.length].id; }
+
+function awRenderCollapsed(){
+  _awExpanded = false;
+  const c = awFind(_awCurrentId);
+  const el = document.getElementById('awareness-card');
+  if(!el || !c) return;
+  el.classList.remove('expanded');
+  el.innerHTML = `
+    <div class="awareness-eyebrow"><span>${c.icon}</span><span>น่ารู้วันนี้</span></div>
+    <div class="awareness-hook">${c.hook}</div>
+    <div class="awareness-cta">อ่านต่อ →</div>
+  `;
+}
+
+function awRenderExpanded(){
+  _awExpanded = true;
+  const c = awFind(_awCurrentId);
+  const el = document.getElementById('awareness-card');
+  if(!el || !c) return;
+  el.classList.add('expanded');
+  const videoHtml = c.video ? `
+    <a class="awareness-video" href="${c.video.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+      <img src="${c.video.thumb}" alt=""/>
+      <div class="awareness-video-text"><b>ดูคลิปเต็ม</b>${c.video.caption}</div>
+    </a>` : '';
+  const relatedHtml = (c.related && c.related.length) ? `
+    <div class="awareness-related">
+      <div class="awareness-related-label">อยากรู้ต่อ</div>
+      <div class="awareness-chips">
+        ${c.related.map(rid => { const r = awFind(rid); return `<button class="awareness-chip" onclick="event.stopPropagation();awOpen('${rid}')"><span>${r.icon}</span><span>${r.short}</span></button>`; }).join('')}
+      </div>
+    </div>` : '';
+  el.innerHTML = `
+    <div class="awareness-eyebrow"><span>${c.icon}</span><span>น่ารู้</span></div>
+    <div class="awareness-title">${c.title}</div>
+    <div class="awareness-body">${c.body.map(p => '<p>'+p+'</p>').join('')}</div>
+    ${videoHtml}
+    ${relatedHtml}
+    <button class="awareness-close" onclick="event.stopPropagation();awCollapse()">เก็บไว้แค่นี้ก่อน ✓</button>
+  `;
+}
+
+function awOpen(id){
+  _awCurrentId = id;
+  awRenderExpanded();
+}
+function awCollapse(){
+  awRenderCollapsed();
+}
+function awHandleCardClick(){
+  if(!_awExpanded) awRenderExpanded();
+}
+
+_awCurrentId = awTodayId();
+awRenderCollapsed();
 
 
 
