@@ -220,6 +220,20 @@
     }
 
     /* ────────────────────────────────────────────
+       SCREEN: PROGRESSIVE MUSCLE RELAXATION
+    ──────────────────────────────────────────── */
+    .pmr-icon{
+      font-size:46px; margin-bottom:28px;
+      animation: pmrPulse 5s ease-in-out infinite;
+    }
+    @keyframes pmrPulse{
+      0%, 100% { transform:scale(1);    opacity:0.6; }
+      45%      { transform:scale(1.18); opacity:1;   }
+      55%      { transform:scale(1.18); opacity:1;   }
+      90%      { transform:scale(1);    opacity:0.6; }
+    }
+
+    /* ────────────────────────────────────────────
        SCREEN 4: BREATHE (4-7-8)
     ──────────────────────────────────────────── */
     #s-breathe{ align-items:center; justify-content:space-between; }
@@ -341,16 +355,39 @@
       line-height:1.6; margin-bottom:12px;
       opacity:0; animation:fadeIn 2s 1.2s ease forwards;
     }
+    .dk-permission{
+      font-family:'Noto Serif Thai',serif;
+      font-size:14px; font-weight:400; color:rgba(253,251,247,0.5);
+      line-height:1.9; margin:4px 0 18px;
+      opacity:0; animation:fadeIn 2s 2.2s ease forwards;
+    }
     .dk-sub{
       font-size:12px; font-weight:300; color:rgba(253,251,247,0.18);
       line-height:1.8;
-      opacity:0; animation:fadeIn 2s 2s ease forwards;
+      opacity:0; animation:fadeIn 2s 3.2s ease forwards;
     }
     .dk-restart{
-      margin-top:48px; background:none; border:none;
+      margin-top:20px; background:none; border:none;
       font-family:'Mitr',sans-serif; font-size:11px;
       color:rgba(255,255,255,0.1); cursor:pointer;
-      opacity:0; animation:fadeIn 1s 4s ease forwards;
+      opacity:0; animation:fadeIn 1s 4.5s ease forwards;
+    }
+
+    /* Optional tips — tiny, collapsed, easy to ignore */
+    .dk-tips{
+      margin-top:44px;
+      opacity:0; animation:fadeIn 1s 4.2s ease forwards;
+    }
+    .dk-tips summary{
+      font-family:'Mitr',sans-serif; font-size:11px; font-weight:300;
+      color:rgba(253,251,247,0.18); cursor:pointer; list-style:none;
+    }
+    .dk-tips summary::-webkit-details-marker{ display:none; }
+    .dk-tips[open] summary{ color:rgba(253,251,247,0.32); margin-bottom:12px; }
+    .dk-tips-list{
+      display:flex; flex-direction:column; gap:8px;
+      font-size:12px; font-weight:300; color:rgba(253,251,247,0.28);
+      line-height:1.6; text-align:left;
     }
   </style>
 </head>
@@ -376,6 +413,7 @@
   <button class="back-btn" onclick="goTo('s-welcome')">← กลับ</button>
   <div class="step-dots">
     <div class="step-dot active"></div>
+    <div class="step-dot"></div>
     <div class="step-dot"></div>
     <div class="step-dot"></div>
     <div class="step-dot"></div>
@@ -417,6 +455,7 @@
     <div class="step-dot active"></div>
     <div class="step-dot"></div>
     <div class="step-dot"></div>
+    <div class="step-dot"></div>
   </div>
 
   <div class="bs-body">
@@ -452,11 +491,38 @@
 
 
 <!-- ══════════════════════════════════════════════
+     SCREEN: PROGRESSIVE MUSCLE RELAXATION
+══════════════════════════════════════════════ -->
+<div class="screen" id="s-pmr">
+  <button class="back-btn" onclick="goTo('s-body')">← กลับ</button>
+  <div class="step-dots">
+    <div class="step-dot done"></div>
+    <div class="step-dot done"></div>
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <div class="bs-body">
+    <div class="pmr-icon">💪</div>
+    <div class="bs-eyebrow">ขั้นที่ 3 · เกร็งแล้วปล่อย</div>
+    <div class="bs-instruction">กำมือ เกร็งแขน เกร็งไหล่<br>เกร็งทั้งตัวไว้ 5 วินาที</div>
+    <div class="bs-hint">แล้วปล่อย<br><br>สังเกตความต่างระหว่าง<br>"เกร็ง" กับ "ผ่อนคลาย"</div>
+  </div>
+
+  <div class="bs-foot">
+    <button class="bs-btn primary" onclick="goTo('s-breathe')">หายใจต่อ →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
      SCREEN 4: BREATHE (4-7-8)
 ══════════════════════════════════════════════ -->
 <div class="screen" id="s-breathe">
-  <button class="back-btn" onclick="stopBreathe();goTo('s-body')">← กลับ</button>
+  <button class="back-btn" onclick="stopBreathe();goTo('s-pmr')">← กลับ</button>
   <div class="step-dots">
+    <div class="step-dot done"></div>
     <div class="step-dot done"></div>
     <div class="step-dot done"></div>
     <div class="step-dot active"></div>
@@ -494,6 +560,7 @@
     <div class="step-dot done"></div>
     <div class="step-dot done"></div>
     <div class="step-dot done"></div>
+    <div class="step-dot done"></div>
     <div class="step-dot active"></div>
   </div>
 
@@ -523,7 +590,19 @@
 <div class="screen" id="s-dark">
   <div class="dk-moon">🌙</div>
   <div class="dk-title">วางโทรศัพท์ลงได้แล้ว<br>ทุกอย่างรอพรุ่งนี้ได้</div>
+  <div class="dk-permission">คืนนี้ไม่ต้องแก้ทุกเรื่อง<br>พรุ่งนี้ค่อยเป็นคนจัดการ<br>ตอนนี้เป็นแค่คนที่กำลังพักก็พอ</div>
   <div class="dk-sub">ไม่ต้องทำอะไรอีกแล้วคืนนี้<br>แค่หลับตาลง</div>
+
+  <details class="dk-tips">
+    <summary>💡 ถ้ายังไม่ง่วง ลองเพิ่มได้</summary>
+    <div class="dk-tips-list">
+      <div>🧦 ใส่ถุงเท้า</div>
+      <div>💧 ล้างหน้าหรือล้างมือด้วยน้ำเย็น</div>
+      <div>😮‍💨 ปล่อยกรามและลิ้น</div>
+      <div>📱 วางโทรศัพท์ให้ไกลมือ</div>
+    </div>
+  </details>
+
   <button class="dk-restart" onclick="goTo('s-welcome')">เริ่มใหม่</button>
 </div>
 
@@ -627,7 +706,7 @@ const BS_STEPS = [
     region: ['bs-head'],
     instruction: 'ใบหน้าและศีรษะ',
     hint: 'ขมับ หน้าผาก กรามตึงไหม\nปล่อยให้กล้ามเนื้อในหน้าอ่อนลง',
-    btn: 'หายใจต่อ →',
+    btn: 'ต่อไป →',
   },
 ];
 
@@ -635,7 +714,7 @@ let bsStep = 0;
 
 function renderBodyStep() {
   const step = BS_STEPS[bsStep];
-  if (!step) { goTo('s-breathe'); return; }
+  if (!step) { goTo('s-pmr'); return; }
 
   // SVG regions
   document.querySelectorAll('.bs-region').forEach(r => {
@@ -673,7 +752,7 @@ function renderBodyStep() {
 function nextBodyStep() {
   bsStep++;
   if (bsStep >= BS_STEPS.length) {
-    goTo('s-breathe');
+    goTo('s-pmr');
   } else {
     renderBodyStep();
   }
