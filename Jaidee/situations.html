@@ -216,6 +216,7 @@ const SIT_DATA = {
   sleep: {
     emoji: '😴', title: 'นอนไม่หลับ',
     type: 'A',
+    group: 'understand',
     note: 'การนอนไม่เพียงพอสะสมส่งผลต่ออารมณ์และสมาธิโดยตรง บางทีที่รู้สึกว่า "ไม่ไหว" อาจเป็นแค่ว่าร่างกายยังพักไม่พอ',
     tools: [
       { icon:'🌙', name:'Sleep Reset', desc:'ปรับร่างกายให้พร้อมนอน · มีไกด์แนะแนว', href:'alltools.html#sleep', primary: true },
@@ -227,6 +228,7 @@ const SIT_DATA = {
   burnout: {
     emoji: '🪫', title: 'หมดไฟ',
     type: 'B',
+    group: 'grow',
     note: 'หมดไฟมักเกิดเมื่อร่างกายและจิตใจทำงานหนักเกินไปนานเกินไป โดยไม่ได้รับการดูแลเรื่องพื้นฐาน ไม่ใช่ความอ่อนแอ แต่เป็นสัญญาณที่ต้องรับฟัง',
     tools: [
       { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจว่าหมดไฟจากอะไรกันแน่', href:'reflection.html', primary: true },
@@ -239,6 +241,7 @@ const SIT_DATA = {
   foggy: {
     emoji: '🤯', title: 'สมองตื้อ',
     type: 'A',
+    group: 'understand',
     note: 'สมองที่อ่อนล้าไม่ต่างจากกล้ามเนื้อที่เหนื่อย บังคับให้ทำต่อไปไม่ได้ผล แต่การพักสั้นๆ มักช่วยได้เร็วกว่าที่คิด',
     tools: [
       { icon:'🫁', name:'หายใจรีเซ็ตสมาธิ', desc:'2 นาที ออกซิเจนเข้าสมองก่อน', href:'alltools.html#breathe', primary: true },
@@ -250,6 +253,7 @@ const SIT_DATA = {
   friend: {
     emoji: '🌿', title: 'เพื่อนดูไม่โอเคเลย',
     type: 'C',
+    group: 'belong',
     note: 'การที่คุณเป็นห่วงเพื่อนอยู่นั้น สำคัญมาก แต่การช่วยเพื่อนไม่ได้แปลว่าต้องแบกทุกอย่างคนเดียว',
     tools: [
       { icon:'📖', name:'คู่มือ: เป็นห่วงเพื่อน', desc:'ทำอะไรได้บ้าง · พูดยังไงดี', href:'notebook.html?id=friend' },
@@ -261,6 +265,7 @@ const SIT_DATA = {
   hungry: {
     emoji: '🍚', title: 'หิวแต่จะกินดีมั้ย',
     type: 'B',
+    group: 'understand',
     note: 'ร่างกายส่งสัญญาณ ไม่ว่าจะเป็นอาการสมองตื้อในห้องเรียน กดดันตัวเองไม่กิน หรือหิวกลางดึก มาทำความเข้าใจกัน',
     tools: [
       { icon:'📖', name:'คู่มือ: หิวแต่จะกินดีมั้ย', desc:'เข้าใจสัญญาณร่างกายของคุณ 3 นาที', href:'notebook.html?id=hungry', primary: true },
@@ -272,6 +277,7 @@ const SIT_DATA = {
   low_water: {
     emoji: '🥛', title: 'วันนี้ดื่มน้ำน้อยมาก',
     type: 'A',
+    group: 'understand',
     note: 'การขาดน้ำเพียงเล็กน้อยทำให้สมองทำงานช้าลง อารมณ์หงุดหงิด และรู้สึกเหนื่อยโดยไม่มีเหตุผล บางทีแค่จิบน้ำก็เปลี่ยนได้เยอะ',
     tools: [
       { icon:'💧', name:'เติมน้ำให้ตัวเอง', desc:'แตะทีละแก้ว ครบ 8 แก้วต่อวัน', href:'alltools.html#water', primary: true },
@@ -282,6 +288,7 @@ const SIT_DATA = {
   no_shower: {
     emoji: '🚿', title: 'ดองเค็ม / ยังไม่ได้อาบน้ำ',
     type: 'A',
+    group: 'comfort',
     note: 'ยังไม่ได้อาบน้ำวันนี้ เกิดได้จากหลายเหตุผลมาก — เหนื่อย ลืม ไม่อยากเปียก หรือพลังงานต่ำ ไม่มีอันไหนผิดปกติ',
     tools: [
       { icon:'📖', name:'ไม่อาบน้ำวันนี้ก็ไม่เป็นไร', desc:'อ่าน 2 นาที — No Shame', href:'notebook.html?id=no_shower', primary: true },
@@ -293,6 +300,7 @@ const SIT_DATA = {
   messy_room: {
     emoji: '🧺', title: 'ห้องรกจนไม่มีที่เดิน',
     type: 'A',
+    group: 'grow',
     note: 'ห้องรกไม่ได้แปลว่าผิดปกติเสมอไป — มีเส้นแบ่งระหว่าง "ห้องรกแบบที่อยู่ได้สบาย" กับสัญญาณที่ควรใส่ใจมากขึ้น',
     tools: [
       { icon:'🧺', name:'จัดมุมเล็ก 5 นาที', desc:'เลือกมุมเดียว ตั้งเวลา แล้วลงมือ', href:'alltools.html#corner', primary: true },
@@ -367,6 +375,7 @@ function openSitSheet(key) {
 
   // ── Type A/B/C layout — situation sheet UX spec v1 ──
   const type = d.type || 'B';
+  const group = d.group;
   const articleTool  = d.tools.find(t => t.href && t.href.indexOf('notebook.html') !== -1);
   const peerTool     = d.tools.find(t => t.href === 'peer.html');
   const primaryTool  = d.tools.find(t => t.primary && t !== articleTool && t !== peerTool)
@@ -407,20 +416,30 @@ function openSitSheet(key) {
     </div>`;
   }
 
+  // Notebook-family atmosphere — neutral card, colored identity (icon/border/top-glow only)
+  const GROUP_STYLES = {
+    understand: { icon:'rgba(13,148,136,0.10)',  border:'rgba(13,148,136,0.35)',  glow:'rgba(13,148,136,0.045)'  },
+    comfort:    { icon:'rgba(216,184,191,0.20)', border:'rgba(216,184,191,0.6)',  glow:'rgba(216,184,191,0.05)'  },
+    grow:       { icon:'rgba(201,163,90,0.16)',  border:'rgba(201,163,90,0.4)',   glow:'rgba(201,163,90,0.045)'  },
+    belong:     { icon:'rgba(127,163,135,0.16)', border:'rgba(127,163,135,0.4)',  glow:'rgba(127,163,135,0.045)' },
+  };
+
   // Article (📖 notebook guide) — a white/cream card = "secondary action / other options"
-  function _articleCard(t, label, big) {
+  function _articleCard(t, label, big, group) {
     if (!t) return '';
     const pad = big ? '16px 18px' : '14px 16px';
     const iconSize = big ? '20px' : '17px';
+    const gs = GROUP_STYLES[group] || { icon:'var(--cream-warm)', border:'#D8D0C6', glow:'transparent' };
     return `<div style="margin-bottom:16px;">
       <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">${label}</div>
-      <a href="${t.href}" style="display:flex;align-items:flex-start;gap:14px;padding:${pad};border-radius:16px;text-decoration:none;background:var(--cream);border:1.5px dashed #D8D0C6;">
-        <span style="font-size:${iconSize};flex-shrink:0;width:28px;text-align:center;margin-top:2px;">📖</span>
-        <span style="flex:1;">
+      <a href="${t.href}" style="position:relative;overflow:hidden;display:flex;align-items:flex-start;gap:14px;padding:${pad};border-radius:16px;text-decoration:none;background:var(--cream);border:1.5px dashed ${gs.border};">
+        <div style="position:absolute;top:0;left:0;right:0;height:44px;background:linear-gradient(180deg, ${gs.glow}, transparent);pointer-events:none;"></div>
+        <span style="position:relative;font-size:${iconSize};flex-shrink:0;width:32px;height:32px;border-radius:9px;background:${gs.icon};display:flex;align-items:center;justify-content:center;">📖</span>
+        <span style="position:relative;flex:1;">
           <span style="display:block;font-size:13px;font-weight:500;color:var(--dark);line-height:1.45;margin-bottom:4px;">${t.name}</span>
           <span style="display:block;font-size:11px;font-weight:400;color:var(--soft);line-height:1.5;">${t.desc || ''}</span>
         </span>
-        <span style="font-size:12px;color:var(--faint);flex-shrink:0;margin-top:3px;">→</span>
+        <span style="position:relative;font-size:12px;color:var(--faint);flex-shrink:0;margin-top:3px;">→</span>
       </a>
     </div>`;
   }
@@ -450,18 +469,18 @@ function openSitSheet(key) {
   if (type === 'A') {
     // Regulation first: one primary tool, article (if any) de-emphasized below it
     toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้')
-      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false)
+      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false, group)
       + restHtml;
   } else if (type === 'C') {
     // Human first: peer card always on top, then understanding, then a primary tool
     toolsHtml = _peerCard()
-      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false)
+      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false, group)
       + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม')
       + restHtml;
   } else {
     // Type B — understanding first: article large/primary, then a primary tool
     toolsHtml = articleTool
-      ? (_articleCard(articleTool, 'เริ่มตรงนี้', true) + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม') + restHtml)
+      ? (_articleCard(articleTool, 'เริ่มตรงนี้', true, group) + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม') + restHtml)
       : (_primaryCard(primaryTool, 'เริ่มตรงนี้') + restHtml);
   }
 
@@ -547,6 +566,7 @@ const SIT_DATA_EXTRA = {
   disappointed: {
     emoji:'😞', title:'ผิดหวัง',
     type: 'A',
+    group: 'comfort',
     note:'ความผิดหวังเป็นเรื่องของสมองที่หลั่ง dopamine ไว้รอล่วงหน้าแล้วโดนหักดิบกะทันหัน ไม่ใช่แค่ "คิดมากไปเอง" — ร่างกายเจ็บจริงในตอนนี้',
     tools:[
       { icon:'📄', name:'Hope with Acceptance Log', desc:'เขียน 1 สิ่งที่เสียใจ แต่ปล่อยให้ผ่านไปคืนนี้', href:'alltools.html#blankpaper-hope', primary:true },
@@ -559,6 +579,7 @@ const SIT_DATA_EXTRA = {
   confused: {
     emoji:'😵‍💫', title:'สับสน เลือกไม่ได้',
     type: 'A',
+    group: 'understand',
     note:'การที่ใจรู้สึกสองอย่างที่ดูขัดกันพร้อมกันได้จริง สมองสามารถเปิดสวิตช์ทั้งสองฝั่งพร้อมกัน — ไม่ใช่ความโลเล แต่เป็นมิติจิตใจที่ซับซ้อนขึ้น',
     tools:[
       { icon:'📄', name:'"AND" Space', desc:'เขียน 2 ความรู้สึกที่ขัดกัน แล้วให้มันอยู่ร่วมกันได้', href:'alltools.html#blankpaper-and', primary:true },
@@ -571,6 +592,7 @@ const SIT_DATA_EXTRA = {
   exam: {
     emoji:'📚', title:'กลัวสอบ',
     type: 'B',
+    group: 'grow',
     note:'ความกังวลก่อนสอบเป็นเรื่องปกติมาก แต่ถ้ามันมากเกินจนกระทบการนอนหรือทำให้อ่านไม่ได้เลย อาจต้องการความช่วยเหลือ',
     tools:[
       { icon:'💪', name:'Power Posture', desc:'2 นาที รีเซ็ตร่างกายก่อนเข้าห้องสอบ', href:'alltools.html#posture' },
@@ -583,6 +605,7 @@ const SIT_DATA_EXTRA = {
   study_fog: {
     emoji:'📖', title:'อ่านหนังสือแล้วไม่เข้าหัว',
     type: 'B',
+    group: 'grow',
     note:'สมองที่ล้าหรือวิตกกังวลอยู่ข้างในไม่สามารถจดจำได้ดี บางทีปัญหาไม่ใช่ที่การอ่าน แต่ที่สภาพข้างใน',
     tools:[
       { icon:'🌬️', name:'รีเซ็ตสมาธิ 2 นาที', desc:'หายใจก่อน กลับมาใหม่', href:'alltools.html#breathe' },
@@ -594,6 +617,7 @@ const SIT_DATA_EXTRA = {
   overwhelm: {
     emoji:'⏰', title:'งานเยอะจนล้น',
     type: 'A',
+    group: 'grow',
     note:'ความรู้สึก "ล้น" มักทำให้ paralyzed แทนที่จะทำได้มากขึ้น บางครั้งแค่ระบายออกมาก็ช่วยได้',
     tools:[
       { icon:'📓', name:'เขียนระบาย Brain Dump', desc:'ระบายทุกอย่างในหัวออกมาก่อน', href:'alltools.html#journal' },
@@ -605,6 +629,7 @@ const SIT_DATA_EXTRA = {
   pressure: {
     emoji:'🎯', title:'กดดันตัวเองมากเกินไป',
     type: 'B',
+    group: 'understand',
     note:'การกดดันตัวเองเป็นสัญญาณว่าคุณใส่ใจ แต่มากเกินพอดีทำให้ร่างกายและจิตใจสึกหรอเร็ว',
     tools:[
       { icon:'🎯', name:'เตรียมตัว — ลด tension', desc:'Grounding 3 นาที ก่อนเผชิญสิ่งที่กดดัน', href:'alltools.html#grounding' },
@@ -618,6 +643,7 @@ const SIT_DATA_EXTRA = {
   not_enough: {
     emoji:'📉', title:'รู้สึกว่าตัวเองไม่เก่งพอ',
     type: 'B',
+    group: 'comfort',
     note:'ความรู้สึกนี้พบได้บ่อยมากในคนที่เก่งจริงๆ แต่ยังไม่รู้ตัว ไม่ได้แปลว่าเป็นความจริง',
     tools:[
       { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อ "ไม่เก่งพอ" เกาะแน่นจนเจ็บ — คลายมือจากมัน', href:'alltools.html#reframe', primary:true },
@@ -630,6 +656,7 @@ const SIT_DATA_EXTRA = {
   behind: {
     emoji:'🏃', title:'ทุกคนดูไปไกลกว่าฉัน',
     type: 'B',
+    group: 'comfort',
     note:'เราเห็นแค่ highlight ของคนอื่น ไม่ได้เห็น struggle ข้างหลัง สมองของเราถูกออกแบบมาให้เปรียบเทียบ แต่มันมักเลือกเปรียบกับเวอร์ชันที่ดีที่สุดของคนอื่นเสมอ',
     tools:[
       { icon:'🍃', name:'คลายมือจากความคิด', desc:'ปล่อยเรื่อง "ฉันตามไม่ทัน" ที่สมองเล่าซ้ำ', href:'alltools.html#reframe', primary:true },
@@ -642,6 +669,7 @@ const SIT_DATA_EXTRA = {
   social: {
     emoji:'👥', title:'เข้ากับเพื่อนไม่ได้',
     type: 'C',
+    group: 'belong',
     note:'สมองวัยรุ่นกำลังสร้าง social map ใหม่ทั้งหมด มันต้องใช้เวลา และมันเหนื่อยจริงๆ ไม่ได้แปลว่ามีอะไรผิดปกติกับคุณ',
     tools:[
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'อยู่กับความรู้สึกโดดเดี่ยวโดยไม่ต้องรีบแก้', href:'alltools.html#rain', primary:true },
@@ -654,6 +682,7 @@ const SIT_DATA_EXTRA = {
   no_place: {
     emoji:'🫥', title:'รู้สึกเหมือนไม่มีที่ของตัวเอง',
     type: 'C',
+    group: 'belong',
     note:'มีความต่างที่สำคัญระหว่าง "ยังไม่เจอที่ของตัวเอง" กับ "ไม่มีที่ให้เรา" — ส่วนใหญ่เป็นอย่างแรก แต่ตอนที่รู้สึกอยู่มันเหมือนอย่างหลังเสมอ',
     tools:[
       { icon:'🤍', name:'พักใจ', desc:'self-compassion เมื่อรู้สึกไม่มีที่ของตัวเอง', href:'alltools.html#rest', primary:true },
@@ -666,6 +695,7 @@ const SIT_DATA_EXTRA = {
   fight: {
     emoji:'💬', title:'ทะเลาะกับเพื่อน',
     type: 'C',
+    group: 'belong',
     note:'ความขัดแย้งเป็นส่วนของมิตรภาพ แต่มันก็เจ็บปวดได้มาก โดยเฉพาะถ้ายังแก้ไขไม่ได้',
     tools:[
       { icon:'🗣️', name:'เตรียมใจก่อนคุย', desc:'I-Message + Cooldown timer', href:'alltools.html#conflict-prep', primary:true },
@@ -678,6 +708,7 @@ const SIT_DATA_EXTRA = {
   abandoned: {
     emoji:'🥲', title:'รู้สึกโดนทิ้ง',
     type: 'C',
+    group: 'comfort',
     note:'สมองประมวลผลการถูกทิ้งผ่านพื้นที่เดียวกับความเจ็บปวดทางกาย มันไม่ใช่การคิดมาก มันเจ็บจริงๆ ในระดับ biology',
     tools:[
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ให้พื้นที่กับความเจ็บโดยไม่จมไปกับมัน', href:'alltools.html#rain', primary:true },
@@ -690,6 +721,7 @@ const SIT_DATA_EXTRA = {
   crush: {
     emoji:'❤️', title:'แอบชอบใครสักคน',
     type: 'A',
+    group: 'comfort',
     note:'Dopamine ที่หลั่งตอน crush นั้น activate พื้นที่สมองเดียวกับที่ทำให้ addicted ได้ ไม่แปลกเลยที่มันจะครอบครองความคิดขนาดนี้',
     tools:[
       { icon:'📓', name:'เขียนระบาย', desc:'ระบายความรู้สึกออกมาก่อน', href:'alltools.html#journal', primary:true },
@@ -703,6 +735,7 @@ const SIT_DATA_EXTRA = {
   heartbreak: {
     emoji:'💔', title:'เพิ่งอกหัก',
     type: 'C',
+    group: 'comfort',
     note:'ความเจ็บปวดจากการอกหักเป็นของจริงมาก สมองเราประมวลผลมันคล้ายกับความเจ็บปวดทางกาย ให้เวลาตัวเอง',
     tools:[
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ความเจ็บนี้ต้องการพื้นที่ ไม่ใช่การรีบแก้', href:'alltools.html#rain', primary:true },
@@ -716,6 +749,7 @@ const SIT_DATA_EXTRA = {
   lonely: {
     emoji:'😔', title:'รู้สึกเหงา',
     type: 'C',
+    group: 'comfort',
     note:'ความเหงาไม่ได้แปลว่าไม่มีเพื่อน บางทีรู้สึกเหงาแม้จะอยู่กับคนรอบข้าง นั่นก็เป็นสัญญาณสำคัญ',
     tools:[
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนพร้อมรับฟัง', href:'peer.html' },
@@ -729,6 +763,7 @@ const SIT_DATA_EXTRA = {
   homesick: {
     emoji:'🏠', title:'คิดถึงบ้าน',
     type: 'C',
+    group: 'belong',
     note:'การคิดถึงบ้านเป็นเรื่องปกติมากสำหรับนักเรียนที่เพิ่งย้ายมา มันไม่ได้แปลว่าคุณอ่อนแอ',
     tools:[
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'รับฟัง โดยไม่ตัดสิน', href:'peer.html' },
@@ -741,6 +776,7 @@ const SIT_DATA_EXTRA = {
   family: {
     emoji:'👨‍👩‍👧', title:'มีปัญหากับครอบครัว',
     type: 'C',
+    group: 'belong',
     note:'ปัญหาครอบครัวไม่มีคำตอบง่ายๆ และมักไม่มีใครผิดทั้งหมด แต่มันเหนื่อยจริงๆ และคุณไม่ต้องแบกมันคนเดียว',
     tools:[
       { icon:'📓', name:'เขียนระบาย', desc:'ระบายออกมาก่อนโดยไม่ต้องหาคำตอบ', href:'alltools.html#journal', primary:true },
@@ -754,6 +790,7 @@ const SIT_DATA_EXTRA = {
   misunderstood: {
     emoji:'🫤', title:'รู้สึกว่าที่บ้านไม่เข้าใจ',
     type: 'C',
+    group: 'comfort',
     note:'สมองวัยรุ่นกับสมองผู้ใหญ่ประมวลผลสถานการณ์เดียวกันด้วยวิธีที่ต่างกันจริงๆ ทางชีววิทยา มันไม่ใช่แค่ generation gap',
     tools:[
       { icon:'🪞', name:"What's This Feeling?", desc:'ทำความเข้าใจตัวเองก่อน', href:'reflection.html', primary:true },
@@ -766,6 +803,7 @@ const SIT_DATA_EXTRA = {
   need_space: {
     emoji:'😮‍💨', title:'อยากอยู่คนเดียวสักพัก',
     type: 'B',
+    group: 'comfort',
     note:'การต้องการ solitude ไม่ใช่ความผิดปกติ มันเป็น developmental need ที่สำคัญมาก โดยเฉพาะในวัยที่กำลังสร้างตัวตน',
     tools:[
       { icon:'🌬️', name:'หายใจในพื้นที่ของตัวเอง', desc:'2 นาที คนเดียว ไม่ต้องอธิบายใคร', href:'alltools.html#breathe', primary:true },
@@ -778,6 +816,7 @@ const SIT_DATA_EXTRA = {
   no_appetite: {
     emoji:'🍚', title:'กินข้าวไม่ค่อยลง',
     type: 'A',
+    group: 'understand',
     note:'ความเครียดและความวิตกกังวลส่งผลต่อความอยากอาหารโดยตรง ถ้าเป็นนานหลายวันควรใส่ใจ',
     tools:[
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ให้พื้นที่กับความรู้สึกที่กดทับความอยากอาหารอยู่', href:'alltools.html#rain', primary:true },
@@ -789,6 +828,7 @@ const SIT_DATA_EXTRA = {
   phone: {
     emoji:'📱', title:'เล่นมือถือจนดึก',
     type: 'A',
+    group: 'understand',
     note:'การเล่นมือถือดึกมักเป็นสัญญาณว่าเราหนีจากบางอย่าง ไม่ใช่แค่ชอบเล่น',
     tools:[
       { icon:'🌙', name:'Sleep Reset', desc:'ช่วยปิดสมองก่อนนอน', href:'alltools.html#sleep' },
@@ -799,6 +839,7 @@ const SIT_DATA_EXTRA = {
   no_sun: {
     emoji:'☀️', title:'ไม่ค่อยได้ออกไปไหน',
     type: 'A',
+    group: 'grow',
     note:'แสงธรรมชาติมีผลต่อ serotonin และอารมณ์โดยตรง แค่ 10-15 นาทีนอกอาคารต่อวันช่วยได้จริง',
     tools:[
       { icon:'🏃', name:'ขยับตัว + อากาศสดชื่น', desc:'3–5 นาทีก็เปลี่ยนได้ · มี guided prompts', href:'alltools.html#move', primary:true },
@@ -810,6 +851,7 @@ const SIT_DATA_EXTRA = {
   tired: {
     emoji:'🪫', title:'เหนื่อยตลอดเวลา',
     type: 'A',
+    group: 'understand',
     note:'ความเหนื่อยล้าเรื้อรังอาจมาจากหลายสาเหตุ นอน ความเครียด หรือบางอย่างที่ต้องการความใส่ใจมากกว่านี้',
     tools:[
       { icon:'⚡', name:'Rewire สวิตช์ 30 วิ', desc:'ไมโครแฮบิตเล็กที่สุดที่ทำได้ตอนนี้เลย', href:'alltools.html#rewire', primary:true },
@@ -821,6 +863,7 @@ const SIT_DATA_EXTRA = {
   no_energy: {
     emoji:'🛏️', title:'ไม่อยากลุกจากเตียง',
     type: 'A',
+    group: 'comfort',
     note:'ความรู้สึกนี้อาจเป็นสัญญาณสำคัญ โดยเฉพาะถ้าเป็นบ่อยหรือนาน ไม่ใช่แค่เรื่องเกียจคร้าน',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
@@ -832,6 +875,7 @@ const SIT_DATA_EXTRA = {
   self_know: {
     emoji:'🤔', title:'ทำไมฉันถึงเป็นแบบนี้นะ',
     type: 'B',
+    group: 'understand',
     note:'การอยากเข้าใจตัวเองเป็นจุดเริ่มต้นของการเติบโต มีหลายทางที่ช่วยได้',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'เริ่มจากสิ่งที่เกิดขึ้นข้างใน', href:'reflection.html', primary:true },
@@ -842,6 +886,7 @@ const SIT_DATA_EXTRA = {
   who_am_i: {
     emoji:'🧩', title:'ฉันเป็นคนแบบไหนกันนะ',
     type: 'B',
+    group: 'belong',
     note:'นักจิตวิทยาบอกว่าเราไม่ได้ "ค้นพบ" ตัวตน แต่เรา "สร้าง" มันขึ้นมาทีละนิด การสำรวจตัวเองตอนนี้คือกระบวนการที่สำคัญมาก ไม่ใช่ความสับสนที่ต้องรีบแก้',
     tools:[
       { icon:'🪞', name:"What's This Feeling?", desc:'เข้าใจอารมณ์ก็ส่วนหนึ่งของการรู้จักตัวเอง', href:'reflection.html', primary:true },
@@ -854,6 +899,7 @@ const SIT_DATA_EXTRA = {
   grow: {
     emoji:'🌱', title:'อยากเป็นตัวเองในเวอร์ชันที่ดีกว่านี้',
     type: 'B',
+    group: 'grow',
     note:'สมองเปลี่ยนแปลงได้ตลอดชีวิต แต่ self-compassion คือ prerequisite ไม่ใช่ reward — คนที่ใจดีกับตัวเองมี motivation เพื่อ self-improvement สูงกว่า เพราะไม่กลัว failure',
     tools:[
       { icon:'🤍', name:'พักใจ', desc:'ความเมตตาต่อตัวเองคือพื้นฐานของการเปลี่ยนแปลง', href:'alltools.html#rest', primary:true },
@@ -866,6 +912,7 @@ const SIT_DATA_EXTRA = {
   changed: {
     emoji:'🎭', title:'รู้สึกว่าตัวเองไม่เหมือนเดิม',
     type: 'B',
+    group: 'belong',
     note:'สมองสร้างความรู้สึกว่า "เรา" ต่อเนื่องผ่านเรื่องเล่าที่ memory สร้างขึ้น เมื่อเรื่องเล่านั้น disrupted ความรู้สึกไม่เหมือนเดิมจึงเกิดขึ้น มันไม่ได้แปลว่าคุณสูญเสียตัวเองไป',
     tools:[
       { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจสิ่งที่เปลี่ยนไปและสิ่งที่ยังเหมือนเดิม', href:'reflection.html', primary:true },
@@ -878,6 +925,7 @@ const SIT_DATA_EXTRA = {
   lost: {
     emoji:'❓', title:'ไม่รู้ว่าตัวเองต้องการอะไร',
     type: 'B',
+    group: 'comfort',
     note:'ความไม่แน่ใจในตัวเองเป็นเรื่องปกติ โดยเฉพาะในวัยนี้ที่ทุกอย่างเปลี่ยนเร็ว',
     tools:[
       { icon:'🪞', name:'What\'s This Feeling?', desc:'ลองสำรวจข้างในก่อน', href:'reflection.html', primary:true },
@@ -889,6 +937,7 @@ const SIT_DATA_EXTRA = {
   fading: {
     emoji:'🫥', title:'รู้สึกว่าตัวเองค่อย ๆ หายไป',
     type: 'C',
+    group: 'comfort',
     note:'บางช่วงของชีวิต เราอาจรู้สึกเหมือนตัวเองค่อย ๆ หายไปจากสายตาของใครหลายคน จากที่เคยมีบทบาท เคยรู้สึกว่าตัวเองสำคัญ<br><br>วันหนึ่งอาจเริ่มสงสัยว่า "วันนี้ฉันยังมีความหมายอยู่ไหมนะ"<br><br>ความรู้สึกแบบนี้ไม่ได้แปลว่าอ่อนแอ มันอาจเป็นสัญญาณว่าใจเรากำลังอยากถูกรับฟัง และอยากถูกมองเห็นอีกครั้ง',
     tools:[
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนที่พร้อมมองเห็นคุณ', href:'peer.html', primary:true },
