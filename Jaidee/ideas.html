@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ไอเดีย · ใจดี TU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Noto+Serif+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F1EA;
+  --ink:#2F2B28;
+  --soft:#726B64;
+  --blue:#556B8A;
+  --line:#DED8CF;
+  --accent:#C8B89A;
+
+  /* post-it colours */
+  --y1:#FFF3B0;
+  --y2:#FDEEA0;
+  --p1:#FFD6C2;
+  --p2:#FFE0CC;
+  --g1:#C8E6C9;
+  --g2:#D4EDD5;
+  --b1:#C5D8F0;
+  --b2:#D0E2F5;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Mitr',sans-serif;
+  background:var(--bg);color:var(--ink);
+  font-size:15px;line-height:1.9;
+  min-height:100vh;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:14px 32px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(245,241,234,.94);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:30px;height:30px;border-radius:50%;object-fit:cover}
+.nav-brand-text{font-size:12px;color:var(--soft)}
+.nav-brand-text strong{display:block;font-size:14px;color:var(--ink);font-weight:600;line-height:1.2}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-active{font-size:13px;font-weight:500;color:var(--ink);padding:7px 14px;border-radius:3px;background:rgba(0,0,0,.06)}
+.nav-cta{
+  font-size:13px;font-weight:500;color:var(--blue);
+  border:1px solid rgba(85,107,138,.3);border-radius:3px;padding:7px 18px;
+  text-decoration:none;transition:background .18s,color .18s;letter-spacing:.02em;
+}
+.nav-cta:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* PAGE HEADER */
+.page-top{
+  max-width:520px;margin:0 auto;
+  padding:128px 24px 40px;
+  text-align:center;
+}
+.page-eye{font-size:10px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;margin-bottom:12px;display:block}
+.page-title{
+  font-family:'Noto Serif Thai',serif;
+  font-size:clamp(22px,3.5vw,32px);
+  font-weight:600;color:var(--ink);line-height:1.5;margin-bottom:12px;
+}
+.page-sub{font-size:14px;color:var(--soft);line-height:1.9}
+
+/* WALL */
+.wall{
+  max-width:1000px;margin:0 auto;
+  padding:24px 32px 80px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:24px;
+  align-items:start;
+}
+
+/* POST-IT */
+.postit{
+  position:relative;
+  cursor:pointer;
+  /* random offsets via inline style */
+}
+
+/* the card itself — flip container */
+.flip{
+  width:100%;
+  aspect-ratio:1/1.05;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.4,0,.2,1);
+}
+.postit.open .flip{transform:rotateY(180deg)}
+
+.face{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  border-radius:2px;
+  padding:22px 20px 18px;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+}
+
+/* pin */
+.face::before{
+  content:'';
+  position:absolute;
+  top:-6px;left:50%;transform:translateX(-50%);
+  width:10px;height:10px;
+  background:#C0A06A;
+  border-radius:50%;
+  box-shadow:0 2px 4px rgba(0,0,0,.2);
+  z-index:2;
+}
+
+/* FRONT — the letter text */
+.front{
+  box-shadow:2px 4px 14px rgba(0,0,0,.10),0 1px 3px rgba(0,0,0,.07);
+}
+.front-text{
+  font-family:'Noto Serif Thai',serif;
+  font-size:13px;line-height:1.85;
+  color:rgba(0,0,0,.72);
+  flex:1;
+}
+.front-from{
+  font-size:10px;letter-spacing:.07em;
+  color:rgba(0,0,0,.38);
+  margin-top:14px;
+  padding-top:10px;
+  border-top:1px solid rgba(0,0,0,.08);
+}
+.tap-hint{
+  font-size:10px;letter-spacing:.07em;
+  color:rgba(0,0,0,.3);
+  text-align:center;
+  margin-top:10px;
+}
+
+/* BACK — the situation */
+.back{
+  transform:rotateY(180deg);
+  background:#FDFAF4;
+  border:1px solid #E0D8CC;
+  box-shadow:2px 4px 14px rgba(0,0,0,.10);
+}
+.back-tag{
+  font-size:10px;letter-spacing:.1em;font-weight:500;
+  text-transform:uppercase;color:var(--blue);
+  margin-bottom:12px;display:block;
+}
+.back-text{
+  font-size:12px;line-height:1.9;color:var(--soft);
+  flex:1;overflow:hidden;
+}
+.back-cta{
+  display:inline-block;margin-top:14px;
+  font-size:11px;font-weight:500;color:var(--blue);
+  text-decoration:none;letter-spacing:.04em;
+  border-bottom:1px solid rgba(85,107,138,.3);
+  padding-bottom:1px;
+  transition:border-color .15s;
+}
+.back-cta:hover{border-color:var(--blue)}
+
+/* CTA STRIP */
+.cta-strip{
+  text-align:center;
+  padding:56px 24px 72px;
+  border-top:1px solid var(--line);
+}
+.cta-strip-title{
+  font-family:'Noto Serif Thai',serif;
+  font-size:clamp(17px,2.8vw,24px);
+  font-weight:600;color:var(--ink);margin-bottom:10px;
+}
+.cta-strip-sub{font-size:13px;color:var(--soft);margin-bottom:28px;line-height:1.9}
+.btn-primary{
+  display:inline-block;font-family:'Mitr',sans-serif;
+  font-size:14px;font-weight:500;background:var(--blue);color:#fff;
+  border:none;border-radius:3px;padding:13px 36px;
+  cursor:pointer;text-decoration:none;letter-spacing:.04em;
+  transition:opacity .18s,transform .15s;
+}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+
+footer{border-top:1px solid var(--line);padding:24px;text-align:center;font-size:11px;color:var(--accent);letter-spacing:.05em}
+
+@media(max-width:520px){
+  nav{padding:13px 16px}
+  .wall{grid-template-columns:repeat(2,1fr);gap:16px;padding:16px 16px 60px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <img class="nav-logo" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_466,w_355,x_1075,y_266/9e05abd4-56b6-4885-ab10-21e15dd98e1c_yiqgkt.png" alt="ใจดี TU">
+    <div class="nav-brand-text"><strong>ใจดี TU</strong>บริการฝากข้อความ</div>
+  </a>
+  <div class="nav-links">
+    <span class="nav-active">💭 ไอเดีย</span>
+    <a class="nav-cta" href="index.html#services">ฝากข้อความ</a>
+  </div>
+</nav>
+
+<div class="page-top">
+  <span class="page-eye">ไอเดีย</span>
+  <h1 class="page-title">มีใครบางคน<br>ที่คุณนึกถึงอยู่ไหม?</h1>
+  <p class="page-sub">กดที่การ์ดเพื่อดูว่าคนอื่น<br>เคยรู้สึกแบบเดียวกับคุณไหม</p>
+</div>
+
+<div class="wall" id="wall">
+
+  <!-- 1 yellow -->
+  <div class="postit" style="transform:rotate(-1.5deg);margin-top:8px" onclick="this.classList.toggle('open')">
+    <div class="flip">
+      <div class="face front" style="background:var(--y1)">
+        <div class="front-text">เราไม่รู้ว่าเธอกำลังรู้สึกยังไงอยู่<br><br>แต่เราอยากให้รู้ว่า<br>มีคนเอาใจช่วยเธออยู่นะ</div>
+        <div class="front-from">ใจดี TU</div>
+        <div class="tap-hint">แตะเพื่อดูเรื่องราว</div>
+      </div>
+      <div class="face back">
+        <span class="back-tag">🌱 เพื่อนที่ดูอยู่คนเดียว</span>
+        <div class="back-text">มีเพื่อนในห้องที่มักนั่งคนเดียว ไม่ค่อยได้คุยกับใคร เวลาต้องจับคู่ทำงาน เขามักเป็นคนสุดท้ายที่ถูกเลือก<br><br>แม้ใบหน้าเขาอาจถือรอยยิ้ม แต่คุณกลับสัมผัสได้ถึงบางอย่าง<br><br>คุณไม่รู้ว่าจะเข้าไปคุยยังไง แต่ก็ไม่อยากปล่อยผ่าน</div>
+        <a class="back-cta" href="index.html#services">ฝากข้อความแบบนี้ →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 peach -->
+  <div class="postit" style="transform:rotate(1.2deg);margin-top:24px" onclick="this.classList.toggle('open')">
+    <div class="flip">
+      <div class="face front" style="background:var(--p1)">
+        <div class="front-text">แกอาจจำไม่ได้แล้ว<br><br>แต่สิ่งที่แกทำวันนั้น<br>ช่วยเราไว้มากจริง ๆ</div>
+        <div class="front-from">ใจดี TU</div>
+        <div class="tap-hint">แตะเพื่อดูเรื่องราว</div>
+      </div>
+      <div class="face back">
+        <span class="back-tag">🤝 คนที่เคยช่วยเรา</span>
+        <div class="back-text">มีคนบางคนที่ช่วยเราไว้มาก บางทีแค่พูดอะไรบางอย่างในวันที่เราต้องการ<br><br>แต่เราไม่มีโอกาสได้บอกเขาเลย เวลาผ่านไป มันก็ยิ่งรู้สึกว่าพูดยากขึ้น</div>
+        <a class="back-cta" href="index.html#services">ฝากข้อความแบบนี้ →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 green -->
+  <div class="postit" style="transform:rotate(-0.8deg);margin-top:0" onclick="this.classList.toggle('open')">
+    <div class="flip">
+      <div class="face front" style="background:var(--g1)">
+        <div class="front-text">ตั้งแต่แยกห้องกัน<br><br>เรายังคิดถึงมุกของเธออยู่เลย</div>
+        <div class="front-from">ใจดี TU</div>
+        <div class="tap-hint">แตะเพื่อดูเรื่องราว</div>
+      </div>
+      <div class="face back">
+        <span class="back-tag">📬 เพื่อนที่ไม่ได้เจอกัน</span>
+        <div class="back-text">ขึ้น ม.5 แล้วก็ไม่ค่อยได้เจอกันเหมือนก่อน แยกห้องกัน แยกทางกัน ต่างคนต่างเติบโต<br><br>แต่บางทีก็ยังนึกถึงกันอยู่ แค่ไม่รู้จะทักยังไงหลังจากนาน</div>
+        <a class="back-cta" href="index.html#services">ฝากข้อความแบบนี้ →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 blue -->
+  <div class="postit" style="transform:rotate(1.8deg);margin-top:16px" onclick="this.classList.toggle('open')">
+    <div class="flip">
+      <div class="face front" style="background:var(--b1)">
+        <div class="front-text">สู้ ๆ นะ<br><br>เราเชื่อว่าเธอทำได้</div>
+        <div class="front-from">ใจดี TU</div>
+        <div class="tap-hint">แตะเพื่อดูเรื่องราว</div>
+      </div>
+      <div class="face back">
+        <span class="back-tag">🎯 ก่อนอีเวนต์สำคัญ</span>
+        <div class="back-text">มีงานสำคัญที่เขามุ่งมั่นเตรียมมานาน คุณเห็นว่าเขาพยายามอยู่<br><br>คุณอยากส่งกำลังใจ แต่ไม่อยากให้รู้สึกว่ากดดัน</div>
+        <a class="back-cta" href="index.html#services">ฝากข้อความแบบนี้ →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 yellow -->
+  <div class="postit" style="transform:rotate(-1.1deg);margin-top:4px" onclick="this.classList.toggle('open')">
+    <div class="flip">
+      <div class="face front" style="background:var(--y2)">
+        <div class="front-text">เราเห็นนะ<br><br>ว่าเธอพยายามอยู่</div>
+        <div class="front-from">ใจดี TU</div>
+        <div class="tap-hint">แตะเพื่อดูเรื่องราว</div>
+      </div>
+      <div class="face back">
+        <span class="back-tag">🌿 คนที่พยายามอยู่เงียบ ๆ</span>
+        <div class="back-text">มีคนบางคนที่ไม่ค่อยได้รับคำชม เพราะผลลัพธ์ที่เห็นอาจยังไม่โดดเด่น<br><br>แต่คุณเห็นว่าเขาพยายามมาตลอด และอยากให้เขารู้ว่ามีคนสังเกตเห็น</div>
+        <a class="back-cta" href="index.html#services">ฝากข้อความแบบนี้ →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 peach -->
+  <div class="postit" style="transform:rotate(0.9deg);margin-top:20px" onclick="this.classList.toggle('open')">
+    <div class="flip">
+      <div class="face front" style="background:var(--p2)">
+        <div class="front-text">วันนี้ขอให้เป็นวันที่ดีนะ</div>
+        <div class="front-from">ใจดี TU</div>
+        <div class="tap-hint">แตะเพื่อดูเรื่องราว</div>
+      </div>
+      <div class="face back">
+        <span class="back-tag">☀️ แค่อยากทำให้วันของใครดีขึ้น</span>
+        <div class="back-text">ไม่มีเหตุผลพิเศษ ไม่ต้องมีเรื่องใหญ่<br><br>แค่อยากให้ใครสักคนรู้ว่าวันนี้มีคนคิดถึงเขาอยู่</div>
+        <a class="back-cta" href="index.html#services">ฝากข้อความแบบนี้ →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="cta-strip">
+  <h2 class="cta-strip-title">นึกถึงใครบางคนขึ้นมาไหม?</h2>
+  <p class="cta-strip-sub">ไม่ต้องรู้ว่าจะพูดยังไง เล่าให้เราฟัง ที่เหลือเราช่วย</p>
+  <a class="btn-primary" href="index.html#services">ฝากข้อความ</a>
+</div>
+
+<footer>ใจดี TU · บริการฝากข้อความ · เตรียมอุดมศึกษาพัฒนาการ</footer>
+
+</body>
+</html>
