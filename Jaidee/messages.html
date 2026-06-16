@@ -3,419 +3,639 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>บริการฝากข้อความ · ใจดี TU</title>
+<title>ใจดี | ฝากข้อความ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Noto+Serif+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;500;600;700&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#F5F1EA;
-  --paper:#EDE6DB;
-  --card:#FDFAF4;
-  --white:#FFFFFF;
-  --ink:#2F2B28;
-  --soft:#726B64;
-  --blue:#556B8A;
-  --line:#DED8CF;
-  --accent:#C8B89A;
-  --orange:#C2550A;
-  --orange-light:#FDF1EA;
-  --orange-mid:#FAEADE;
-}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Mitr',sans-serif;
-  background:var(--bg);color:var(--ink);
-  font-size:16px;line-height:1.9;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-}
+  :root{
+    --bg:#F7F3EC;
+    --card:#FFFFFF;
+    --text:#243447;
+    --text-secondary:#6D6D6D;
+    --border:#E5DED3;
+    --accent:#5C7291;
+    --accent-soft:#5C7291;
+  }
 
-/* NAV */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  padding:14px 32px;
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(245,241,234,.94);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--line);
-}
-.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo{width:30px;height:30px;border-radius:50%;object-fit:cover}
-.nav-brand-text{font-size:12px;font-weight:400;color:var(--soft)}
-.nav-brand-text strong{display:block;font-size:14px;color:var(--ink);font-weight:600;line-height:1.2}
-.nav-links{display:flex;align-items:center;gap:6px}
-.nav-idea{
-  font-size:13px;font-weight:400;color:var(--soft);
-  text-decoration:none;padding:7px 14px;
-  border-radius:3px;
-  transition:color .15s,background .15s;
-}
-.nav-idea:hover{color:var(--ink);background:rgba(0,0,0,.04)}
-.nav-cta{
-  font-size:13px;font-weight:500;color:var(--blue);
-  border:1px solid rgba(85,107,138,.3);
-  border-radius:3px;padding:7px 18px;
-  text-decoration:none;
-  transition:background .18s,color .18s,border-color .18s;
-  letter-spacing:.02em;
-}
-.nav-cta:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+  *{box-sizing:border-box;margin:0;padding:0;}
 
-/* HERO */
-.hero{max-width:580px;margin:0 auto;text-align:center;padding:152px 24px 80px}
-.hero-mascot{width:56px;height:56px;border-radius:50%;object-fit:cover;margin-bottom:36px;opacity:.88;filter:saturate(.85)}
-.hero-title{
-  font-family:'Noto Serif Thai',serif;
-  font-size:clamp(26px,4.5vw,44px);
-  line-height:1.55;font-weight:600;color:var(--ink);margin-bottom:20px;
-}
-.hero-sub{font-size:15px;color:var(--soft);margin-bottom:40px;line-height:2}
-.btn-primary{
-  display:inline-block;font-family:'Mitr',sans-serif;
-  font-size:14px;font-weight:500;background:var(--blue);color:#fff;
-  border:none;border-radius:3px;padding:13px 36px;
-  cursor:pointer;text-decoration:none;letter-spacing:.04em;
-  transition:opacity .18s,transform .15s;
-}
-.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
-.hero-hint{margin-top:18px;font-size:12px;color:var(--accent);line-height:2.1;letter-spacing:.03em}
+  html{scroll-behavior:smooth;}
 
-/* SECTION */
-.section{max-width:840px;margin:0 auto;padding:72px 24px}
-.label{font-size:10px;letter-spacing:.13em;font-weight:500;text-transform:uppercase;margin-bottom:10px;display:block;color:var(--blue)}
-.section-title{font-family:'Noto Serif Thai',serif;font-size:clamp(19px,2.8vw,26px);font-weight:600;margin-bottom:32px;color:var(--ink)}
-.hr{border:none;border-top:1px solid var(--line);max-width:840px;margin:0 auto}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Mitr', sans-serif;
+    font-weight:300;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
 
-/* WHY */
-.band{background:var(--orange-mid);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:72px 24px}
-.band-inner{max-width:560px;margin:0 auto}
-.band-label{font-size:10px;letter-spacing:.13em;font-weight:500;text-transform:uppercase;color:var(--orange);margin-bottom:16px;display:block}
-.why-text{font-size:16px;line-height:2.2;color:var(--soft)}
-.why-text p{margin-bottom:20px}
-.why-text p:last-child{margin-bottom:0}
-.why-text strong{color:var(--ink);font-weight:500}
-.photo-box{
-  margin-top:40px;width:100%;height:200px;
-  background:rgba(255,255,255,.4);border:1px dashed var(--line);
-  border-radius:6px;display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:6px;
-}
-.photo-box span{font-size:11px;color:var(--accent);letter-spacing:.08em}
-.photo-cap{margin-top:10px;font-size:11px;color:var(--accent);letter-spacing:.05em;text-align:right}
+  h1,h2,h3,.serif{
+    font-family:'Noto Serif Thai', serif;
+  }
 
-/* TUESDAY */
-.tuesday-inner{max-width:500px;margin:0 auto;text-align:center}
-.tuesday-eye{font-size:10px;letter-spacing:.15em;color:rgba(194,85,10,.6);text-transform:uppercase;margin-bottom:28px;display:block}
-.tuesday-title{font-family:'Noto Serif Thai',serif;font-size:clamp(20px,3.2vw,30px);font-weight:600;color:var(--ink);line-height:1.65;margin-bottom:28px}
-.tuesday-scene{font-size:14px;color:var(--soft);line-height:2.4;margin-bottom:32px}
-.tuesday-scene em{color:#8B3A06;font-style:normal}
-.tuesday-rule{width:24px;height:1px;background:rgba(194,85,10,.3);margin:0 auto 24px}
-.tuesday-detail{font-size:12px;color:rgba(194,85,10,.6);line-height:2;letter-spacing:.03em}
+  a{text-decoration:none;color:inherit;}
 
-/* MIRROR SECTION — สิ่งที่เราอยากบอก */
-.mirror-inner{max-width:600px;margin:0 auto}
-.mirror-lines{display:flex;flex-direction:column;gap:0}
-.mirror-line{
-  padding:22px 0;
-  border-bottom:1px solid var(--line);
-  font-family:'Noto Serif Thai',serif;
-  font-size:clamp(15px,2.2vw,18px);
-  color:var(--soft);
-  line-height:1.75;
-}
-.mirror-line:first-child{border-top:1px solid var(--line)}
-.mirror-line em{font-style:normal;color:var(--ink)}
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 24px;
+  }
 
-/* WRITING HELP */
-.help-inner{max-width:520px;margin:0 auto}
-.help-title{font-family:'Noto Serif Thai',serif;font-size:clamp(20px,3vw,27px);font-weight:600;color:var(--ink);margin-bottom:24px;line-height:1.5}
-.help-body{font-size:15px;color:var(--soft);line-height:2.1;margin-bottom:20px}
-.help-chips{display:flex;flex-direction:column;gap:10px;margin:24px 0 28px}
-.help-chip{
-  display:inline-block;align-self:flex-start;
-  background:var(--white);border:1px solid var(--line);
-  border-radius:3px;padding:10px 18px;
-  font-family:'Noto Serif Thai',serif;
-  font-size:14px;color:var(--ink);line-height:1.6;
-}
-.help-after{font-size:14px;color:var(--soft);line-height:2}
-.help-after strong{color:var(--ink);font-weight:500}
+  /* ---------- NAVBAR ---------- */
+  .navbar{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(247,243,236,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .navbar .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:68px;
+  }
+  .logo{
+    font-family:'Noto Serif Thai', serif;
+    font-weight:600;
+    font-size:22px;
+    color:var(--text);
+    letter-spacing:0.02em;
+  }
+  .nav-links{
+    display:flex;
+    gap:32px;
+    align-items:center;
+  }
+  .nav-links a{
+    font-size:14.5px;
+    color:var(--text);
+    opacity:0.85;
+    transition:opacity 0.2s ease;
+    white-space:nowrap;
+  }
+  .nav-links a:hover{opacity:1;}
+  .nav-links .nav-cta{
+    background:var(--accent);
+    color:#fff;
+    padding:9px 20px;
+    border-radius:100px;
+    opacity:1;
+    font-weight:400;
+  }
+  .nav-links .nav-cta:hover{
+    background:#4c5f7a;
+  }
+  .nav-toggle{display:none;}
 
-/* LETTER CARDS */
-.letters-scroll{display:flex;gap:20px;overflow-x:auto;padding:16px 4px 20px;scrollbar-width:none}
-.letters-scroll::-webkit-scrollbar{display:none}
-.letter-card{
-  flex:0 0 268px;background:#FEFCF7;border:1px solid #E0D8CC;
-  border-radius:2px;padding:30px 24px 22px;position:relative;
-  box-shadow:1px 2px 0 #E0D8CC,3px 6px 18px rgba(0,0,0,.05);
-  transition:transform .22s,box-shadow .22s;
-}
-.letter-card:nth-child(1){transform:rotate(-1.1deg)}
-.letter-card:nth-child(2){transform:rotate(0.7deg)}
-.letter-card:nth-child(3){transform:rotate(-0.5deg)}
-.letter-card:nth-child(4){transform:rotate(1.0deg)}
-.letter-card:hover{transform:rotate(0deg) translateY(-4px);box-shadow:3px 10px 32px rgba(0,0,0,.1);z-index:3}
-.letter-card::before{
-  content:'';position:absolute;inset:0;
-  background-image:repeating-linear-gradient(transparent,transparent 29px,rgba(85,107,138,.055) 29px,rgba(85,107,138,.055) 30px);
-  pointer-events:none;
-}
-.letter-card::after{content:'';position:absolute;top:0;bottom:0;left:48px;width:1px;background:rgba(210,185,165,.25);pointer-events:none}
-.letter-intent{font-size:10px;letter-spacing:.09em;color:rgba(85,107,138,.65);font-weight:500;text-transform:uppercase;margin-bottom:18px;display:block;position:relative;z-index:1;padding-left:10px}
-.letter-card p{font-size:14px;line-height:2;color:var(--ink);position:relative;z-index:1;padding-left:10px}
-.letter-footer{margin-top:22px;padding-top:14px;border-top:1px solid rgba(224,216,204,.8);font-size:10px;color:var(--accent);letter-spacing:.06em;position:relative;z-index:1;padding-left:10px}
+  @media (max-width:640px){
+    .nav-links{gap:14px;}
+    .nav-links a:not(.nav-cta){display:none;}
+    .nav-links .nav-cta{padding:9px 16px;font-size:13.5px;}
+  }
 
-/* TESTIMONIALS */
-.testimonials{display:flex;flex-direction:column;gap:12px;max-width:440px;margin-top:36px}
-.testimonial{padding:14px 18px;background:var(--white);border-left:1.5px solid var(--blue);font-size:14px;color:var(--soft);line-height:1.8;border-radius:0 4px 4px 0}
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:42vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:56px 24px 40px;
+  }
+  .hero-inner{max-width:620px;}
+  .hero h1{
+    font-size:clamp(28px,4.2vw,40px);
+    font-weight:600;
+    line-height:1.4;
+    color:var(--text);
+    margin-bottom:18px;
+  }
+  .hero .sub{
+    font-size:clamp(16px,2vw,18px);
+    color:var(--text);
+    opacity:0.85;
+    line-height:1.8;
+    margin-bottom:22px;
+    font-weight:400;
+  }
+  .hero .micro{
+    font-size:14.5px;
+    color:var(--text-secondary);
+    line-height:1.9;
+    margin-bottom:30px;
+  }
+  .hero-cta{
+    display:inline-block;
+    background:var(--accent);
+    color:#fff;
+    font-size:15.5px;
+    padding:14px 36px;
+    border-radius:100px;
+    border:none;
+    cursor:pointer;
+    transition:background 0.2s ease, transform 0.2s ease;
+    font-family:'Mitr',sans-serif;
+  }
+  .hero-cta:hover{
+    background:#4c5f7a;
+    transform:translateY(-1px);
+  }
 
-/* PRICING */
-.service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;align-items:start}
-.service-card{background:var(--white);border:1px solid var(--line);border-radius:4px;padding:28px 22px;position:relative}
-.service-card.featured{border:1.5px solid var(--blue);transform:translateY(-8px);box-shadow:0 16px 48px rgba(85,107,138,.1)}
-.featured-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;font-size:10px;font-weight:600;letter-spacing:.1em;padding:3px 14px;border-radius:2px;text-transform:uppercase;white-space:nowrap}
-.service-emoji{font-size:18px;margin-bottom:12px;display:block}
-.service-name{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px}
-.service-price{font-size:24px;font-weight:600;color:var(--blue);margin-bottom:10px;line-height:1}
-.service-price span{font-size:12px;font-weight:400;color:var(--soft)}
-.service-hook{font-size:13px;color:var(--ink);line-height:1.9;margin-bottom:16px;font-style:italic}
-.service-list{list-style:none;font-size:12px;color:var(--soft);line-height:2.1}
-.service-list li{display:flex;align-items:baseline;gap:6px}
-.service-list li::before{content:'–';color:var(--blue);flex-shrink:0}
+  /* ---------- SECTION SHARED ---------- */
+  section{padding:64px 24px;}
+  .section-title{
+    text-align:center;
+    font-size:clamp(22px,3vw,28px);
+    font-weight:600;
+    color:var(--text);
+    margin-bottom:44px;
+  }
 
-/* PROCESS */
-.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
-.timeline::before{content:'';position:absolute;top:24px;left:12.5%;right:12.5%;height:1px;background:var(--line)}
-.step{text-align:center;position:relative;padding:0 6px}
-.step-num{width:48px;height:48px;border-radius:50%;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:16px;font-weight:600;color:var(--blue);position:relative;z-index:1}
-.step-text{font-size:12px;color:var(--soft);line-height:1.7}
+  /* ---------- PRICING ---------- */
+  .pricing{
+    padding-top:8px;
+    background:var(--bg);
+  }
+  .pricing-grid{
+    display:grid;
+    grid-template-columns:1fr 1.12fr 1fr;
+    gap:20px;
+    align-items:center;
+    max-width:980px;
+    margin:0 auto;
+  }
+  .price-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:36px 26px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    transition:transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .price-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 16px 32px -16px rgba(36,52,71,0.18);
+  }
+  .price-card.featured{
+    padding:44px 30px 38px;
+    border-color:var(--accent);
+    box-shadow:0 20px 40px -18px rgba(92,114,145,0.28);
+    position:relative;
+  }
+  .badge{
+    position:absolute;
+    top:-13px;
+    background:var(--accent);
+    color:#fff;
+    font-size:12.5px;
+    padding:5px 16px;
+    border-radius:100px;
+    letter-spacing:0.02em;
+  }
+  .card-icon{font-size:30px;margin-bottom:14px;}
+  .price-card.featured .card-icon{font-size:34px;}
+  .card-title{
+    font-family:'Noto Serif Thai',serif;
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:10px;
+    color:var(--text);
+  }
+  .price-card.featured .card-title{font-size:19px;}
+  .price{
+    font-family:'Noto Serif Thai',serif;
+    font-weight:700;
+    font-size:30px;
+    color:var(--accent);
+    margin-bottom:16px;
+  }
+  .price-card.featured .price{
+    font-size:42px;
+    margin-bottom:18px;
+  }
+  .card-desc{
+    font-size:14px;
+    color:var(--text-secondary);
+    line-height:1.85;
+    margin-bottom:20px;
+    flex-grow:1;
+  }
+  .card-features{
+    list-style:none;
+    width:100%;
+    margin-bottom:24px;
+    text-align:left;
+    padding:16px 4px 0;
+    border-top:1px solid var(--border);
+  }
+  .card-features li{
+    font-size:13.5px;
+    color:var(--text);
+    line-height:1.6;
+    padding-left:20px;
+    position:relative;
+    margin-bottom:9px;
+  }
+  .card-features li::before{
+    content:"·";
+    position:absolute;
+    left:4px;
+    color:var(--accent);
+    font-weight:600;
+    font-size:18px;
+    line-height:1.1;
+  }
+  .card-features li:last-child{margin-bottom:0;}
+  .card-btn{
+    width:100%;
+    padding:12px 0;
+    border-radius:100px;
+    border:1.5px solid var(--accent);
+    background:transparent;
+    color:var(--accent);
+    font-size:14.5px;
+    font-family:'Mitr',sans-serif;
+    cursor:pointer;
+    transition:background 0.2s ease, color 0.2s ease;
+  }
+  .card-btn:hover{
+    background:var(--accent);
+    color:#fff;
+  }
+  .price-card.featured .card-btn{
+    background:var(--accent);
+    color:#fff;
+  }
+  .price-card.featured .card-btn:hover{
+    background:#4c5f7a;
+    border-color:#4c5f7a;
+  }
 
-/* BELIEF + TEAM */
-.belief-inner{max-width:440px;margin:0 auto;text-align:center}
-.belief-rule{width:24px;height:1px;background:rgba(194,85,10,.25);margin:28px auto}
-.belief-inner blockquote{font-family:'Noto Serif Thai',serif;font-size:clamp(16px,2.5vw,21px);line-height:1.95;color:var(--ink);font-weight:400}
-.belief-inner blockquote strong{font-weight:600}
-.belief-sub{font-size:12px;color:var(--accent);margin-top:8px;line-height:1.9;letter-spacing:.02em}
-.team-photo-box{width:100%;max-width:380px;height:180px;background:var(--white);border:1px dashed var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;margin:0 auto 14px}
-.team-photo-box span{font-size:11px;color:var(--accent);letter-spacing:.06em}
-.team-caption{font-size:12px;color:var(--soft);letter-spacing:.04em}
+  @media (max-width:860px){
+    .pricing-grid{grid-template-columns:1fr;max-width:380px;}
+    .price-card.featured{order:-1;}
+  }
 
-footer{border-top:1px solid var(--line);padding:26px 24px;text-align:center;font-size:11px;color:var(--accent);letter-spacing:.05em}
+  /* ---------- PROCESS ---------- */
+  .process{background:var(--bg);}
+  .process-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:32px;
+    max-width:920px;
+    margin:0 auto;
+    position:relative;
+  }
+  .process-grid::before{
+    content:"";
+    position:absolute;
+    top:22px;
+    left:60px;
+    right:60px;
+    height:1px;
+    background:var(--border);
+  }
+  .step{
+    text-align:center;
+    position:relative;
+  }
+  .step-num{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:var(--card);
+    border:1.5px solid var(--accent);
+    color:var(--accent);
+    font-family:'Noto Serif Thai',serif;
+    font-weight:600;
+    font-size:17px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 16px;
+    position:relative;
+    z-index:1;
+  }
+  .step-label{
+    font-size:14.5px;
+    color:var(--text);
+    line-height:1.6;
+  }
+  @media (max-width:760px){
+    .process-grid{grid-template-columns:1fr 1fr;gap:36px 20px;}
+    .process-grid::before{display:none;}
+  }
 
-@media(max-width:640px){
-  nav{padding:13px 18px}
-  .nav-idea{display:none}
-  .hero{padding:118px 20px 56px}
-  .timeline{grid-template-columns:repeat(2,1fr);gap:28px}
-  .timeline::before{display:none}
-  .service-card.featured{transform:none;margin-top:8px}
-}
+  /* ---------- MESSAGE EXAMPLES ---------- */
+  .examples{background:var(--bg);}
+  .examples-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    max-width:1040px;
+    margin:0 auto;
+  }
+  .msg-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:26px 22px;
+    transition:transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .msg-card:hover{
+    transform:translateY(-3px) rotate(-0.4deg);
+    box-shadow:0 14px 28px -16px rgba(36,52,71,0.16);
+  }
+  .msg-tag{
+    display:inline-block;
+    font-size:12px;
+    color:var(--accent);
+    border:1px solid var(--accent);
+    border-radius:100px;
+    padding:3px 12px;
+    margin-bottom:16px;
+  }
+  .msg-body{
+    font-family:'Noto Serif Thai',serif;
+    font-size:14.5px;
+    color:var(--text);
+    line-height:1.95;
+    margin-bottom:18px;
+    min-height:118px;
+  }
+  .msg-sign{
+    font-size:12.5px;
+    color:var(--text-secondary);
+    text-align:right;
+  }
+  @media (max-width:900px){
+    .examples-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:540px){
+    .examples-grid{grid-template-columns:1fr;}
+    .msg-body{min-height:auto;}
+  }
+
+  /* ---------- SOCIAL PROOF ---------- */
+  .proof{background:var(--bg);}
+  .proof-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    max-width:1040px;
+    margin:0 auto;
+  }
+  .quote-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:24px 20px;
+    font-size:14px;
+    color:var(--text);
+    line-height:1.8;
+    position:relative;
+  }
+  .quote-card::before{
+    content:"”";
+    font-family:'Noto Serif Thai',serif;
+    font-size:38px;
+    color:var(--border);
+    position:absolute;
+    top:6px;
+    right:14px;
+    line-height:1;
+  }
+  @media (max-width:900px){
+    .proof-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:540px){
+    .proof-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta{
+    text-align:center;
+    padding:80px 24px 90px;
+  }
+  .final-cta h2{
+    font-size:clamp(24px,3.6vw,32px);
+    font-weight:600;
+    margin-bottom:16px;
+  }
+  .final-cta p{
+    font-size:16px;
+    color:var(--text-secondary);
+    margin-bottom:30px;
+  }
+  .final-btn{
+    display:inline-block;
+    background:var(--accent);
+    color:#fff;
+    padding:15px 42px;
+    border-radius:100px;
+    font-size:16px;
+    border:none;
+    cursor:pointer;
+    font-family:'Mitr',sans-serif;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .final-btn:hover{
+    background:#4c5f7a;
+    transform:translateY(-1px);
+  }
+
+  footer{
+    text-align:center;
+    padding:28px 24px;
+    border-top:1px solid var(--border);
+    font-size:13px;
+    color:var(--text-secondary);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
 </style>
 </head>
 <body>
 
-<nav>
-  <a class="nav-brand" href="#">
-    <img class="nav-logo" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_466,w_355,x_1075,y_266/9e05abd4-56b6-4885-ab10-21e15dd98e1c_yiqgkt.png" alt="ใจดี TU">
-    <div class="nav-brand-text"><strong>ใจดี TU</strong>บริการฝากข้อความ</div>
-  </a>
-  <div class="nav-links">
-    <a class="nav-idea" href="ideas.html">💭 ไอเดีย</a>
-    <a class="nav-cta" href="#services">ฝากข้อความ</a>
+<nav class="navbar">
+  <div class="wrap">
+    <div class="logo">ใจดี</div>
+    <div class="nav-links">
+      <a href="#examples">ตัวอย่างข้อความ</a>
+      <a href="#faq">คำถามที่พบบ่อย</a>
+      <a href="#pricing" class="nav-cta">ฝากข้อความ</a>
+    </div>
   </div>
 </nav>
 
-<section class="hero">
-  <img class="hero-mascot" src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_466,w_355,x_1075,y_266/9e05abd4-56b6-4885-ab10-21e15dd98e1c_yiqgkt.png" alt="">
-  <h1 class="hero-title">
-    มีใครบางคน<br>ที่คุณนึกถึงอยู่ไหม?
-  </h1>
-  <p class="hero-sub">
-    บางคำพูดดี ๆ<br>
-    อาจกำลังรอให้ไปถึงเขาอยู่
-  </p>
-  <a class="btn-primary" href="#services">ฝากข้อความ</a>
-  <p class="hero-hint">เขียนด้วยลายมือ · ส่งถึงโต๊ะเรียน · ทุกเช้าวันอังคาร</p>
-</section>
-
-<!-- WHY -->
-<div class="band" style="margin-top:56px">
-  <div class="band-inner">
-    <span class="band-label">ทำไมบริการนี้ถึงมีอยู่</span>
-    <div class="why-text">
-      <p>เราเชื่อว่ามีคำพูดดี ๆ มากมายในโรงเรียนนี้<br>ที่ยังไม่เคยได้ไปถึงคนที่ควรได้ยิน</p>
-      <p>ไม่ใช่เพราะไม่มีใครรู้สึก<br>แต่เพราะไม่มีใครรู้ว่าจะเริ่มต้นยังไง</p>
-      <p>ใจดี TU มีอยู่<br>เพื่อช่วยให้คำพูดเหล่านั้น<strong>ได้ออกเดินทาง</strong></p>
-    </div>
-    <div class="photo-box"><span>PHOTO 1 — นักเรียนกำลังเขียนจดหมาย</span></div>
-    <div class="photo-cap">ภาพจากทีมงานใจดี TU</div>
+<header class="hero">
+  <div class="hero-inner">
+    <h1>มีใครบางคน<br>ที่คุณนึกถึงอยู่ไหม?</h1>
+    <p class="sub">ส่งถึงใต้โต๊ะของเพื่อน ทุกวันอังคาร!</p>
   </div>
-</div>
+</header>
 
-<!-- TUESDAY -->
-<div class="band" style="margin-top:0;border-top:none">
-  <div class="tuesday-inner">
-    <span class="tuesday-eye">การส่ง</span>
-    <h2 class="tuesday-title">
-      ทุกข้อความจะถูกส่ง<br>
-      ถึงโต๊ะเรียนของผู้รับ<br>
-      ในเช้าวันอังคาร
-    </h2>
-    <p class="tuesday-scene">
-      <em>เดินเข้าห้อง</em><br>
-      วางกระเป๋า<br>
-      <em>เห็นบางอย่างรอคุณอยู่</em>
-    </p>
-    <div class="tuesday-rule"></div>
-    <p class="tuesday-detail">ก่อนคาบแรก · ทุกวันอังคาร<br>โดยทีมใจดี TU</p>
-  </div>
-</div>
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="pricing-grid">
 
-<!-- MIRROR — สิ่งที่เราอยากบอก -->
-<section class="section">
-  <span class="label">สิ่งที่เราอยากบอก แต่ไม่เคยได้บอก</span>
-  <div class="mirror-inner">
-    <div class="mirror-lines">
-      <div class="mirror-line"><em>เราเห็นนะว่าเธอพยายามอยู่</em></div>
-      <div class="mirror-line">ขอบคุณที่นั่งเป็นเพื่อนเราในวันนั้น</div>
-      <div class="mirror-line"><em>จริง ๆ เราว่าเธอเก่งกว่าที่เธอคิดนะ</em></div>
-      <div class="mirror-line">เราไม่รู้จักเธอดีนัก<br>แต่เราอยากให้รู้ว่ามีคนเอาใจช่วยอยู่</div>
-      <div class="mirror-line"><em>เราชอบที่เธอคอยชวนคนอื่นเข้ากลุ่มเสมอ</em></div>
-      <div class="mirror-line">ตั้งแต่แยกห้องกัน<br>เรายังคิดถึงมุกของเธออยู่เลย</div>
-    </div>
-  </div>
-</section>
+      <div class="price-card">
+        <div class="card-icon">💛</div>
+        <div class="card-title">ฝากกำลังใจ</div>
+        <div class="price">19 บาท</div>
+        <div class="card-desc">
+          เล่าให้เราฟังสั้น ๆ ทีมใจดีจะช่วยเปลี่ยน<br>
+          ความตั้งใจดีของคุณ<br>
+          ให้กลายเป็นข้อความหนึ่งใบ
+        </div>
+        <ul class="card-features">
+          <li>การ์ดเขียนด้วยลายมือ</li>
+          <li>ส่งแบบไม่เปิดเผยตัวตนได้</li>
+        </ul>
+        <button class="card-btn">เลือกแบบนี้</button>
+      </div>
 
-<!-- WRITING HELP -->
-<div class="band">
-  <div class="help-inner">
-    <h2 class="help-title">ถ้าฉันเขียนไม่เก่งล่ะ?</h2>
-    <p class="help-body">
-      คุณไม่จำเป็นต้องมีคำพูดที่สวยงาม<br>
-      คุณไม่จำเป็นต้องเขียนเป็นประโยค<br>
-      คุณไม่จำเป็นต้องรู้ว่าจะพูดอะไร
-    </p>
-    <p class="help-body" style="margin-bottom:4px">บางคนส่งมาแค่</p>
-    <div class="help-chips">
-      <span class="help-chip">"เขาช่วยเราเยอะมาก"</span>
-      <span class="help-chip">"เราไม่รู้จะขอบคุณยังไง"</span>
-      <span class="help-chip">"อยากให้เขารู้ว่าเราเห็น"</span>
-    </div>
-    <p class="help-after">
-      <strong>ทีมใจดีจะช่วยเรียบเรียง</strong><br>
-      ให้กลายเป็นข้อความที่ส่งต่อได้จริง<br>
-      เขียนด้วยลายมือ ใส่ซอง วางถึงโต๊ะ
-    </p>
-  </div>
-</div>
+      <div class="price-card featured">
+        <div class="badge">แนะนำ</div>
+        <div class="card-icon">✉️</div>
+        <div class="card-title">ฝากความในใจ</div>
+        <div class="price">59 บาท</div>
+        <div class="card-desc">
+          คุณไม่จำเป็นต้องเรียบเรียงให้สวย<br>
+          คุณไม่จำเป็นต้องเขียนเป็นประโยค<br>
+          เล่าให้เราฟังตามที่คิด<br>
+          ที่เหลือเราช่วย
+        </div>
+        <ul class="card-features">
+          <li>ข้อความเขียนเฉพาะบุคคล</li>
+          <li>ทีมใจดีช่วยเรียบเรียงความรู้สึก</li>
+          <li>เขียนด้วยลายมือทุกฉบับ</li>
+        </ul>
+        <button class="card-btn">เลือกแบบนี้</button>
+      </div>
 
-<!-- PRICING -->
-<section class="section" id="services">
-  <span class="label">เลือกรูปแบบ</span>
-  <h2 class="section-title">ฝากความรู้สึกแบบไหนดี</h2>
-  <div class="service-grid">
-    <div class="service-card">
-      <span class="service-emoji">💛</span>
-      <div class="service-name">ฝากกำลังใจ</div>
-      <div class="service-price">19 <span>บาท</span></div>
-      <p class="service-hook">เล่าให้เราฟังสั้น ๆ<br>ทีมใจดีจะช่วยเปลี่ยน<br>ความตั้งใจดีของคุณ<br>ให้กลายเป็นข้อความหนึ่งใบ</p>
-      <ul class="service-list">
-        <li>การ์ดเขียนด้วยลายมือ</li>
-        <li>ส่งแบบไม่เปิดเผยตัวตนได้</li>
-      </ul>
-    </div>
-    <div class="service-card featured">
-      <div class="featured-badge">แนะนำ</div>
-      <span class="service-emoji">✉️</span>
-      <div class="service-name">ฝากความในใจ</div>
-      <div class="service-price">59 <span>บาท</span></div>
-      <p class="service-hook">คุณไม่จำเป็นต้องเรียบเรียงให้สวย<br>คุณไม่จำเป็นต้องเขียนเป็นประโยค<br>เล่าให้เราฟังตามที่คิด<br>ที่เหลือเราช่วย</p>
-      <ul class="service-list">
-        <li>ข้อความเขียนเฉพาะบุคคล</li>
-        <li>ทีมใจดีช่วยเรียบเรียงความรู้สึก</li>
-        <li>เขียนด้วยลายมือทุกฉบับ</li>
-      </ul>
-    </div>
-    <div class="service-card">
-      <span class="service-emoji">🌷</span>
-      <div class="service-name">ฝากความรู้สึก</div>
-      <div class="service-price">69 <span>บาท</span></div>
-      <p class="service-hook">เล่าให้เราฟังตามจริง<br>ทีมใจดีจะช่วยเรียบเรียง<br>ให้ออกมาอบอุ่น จริงใจ<br>และให้เกียรติผู้รับ</p>
-      <ul class="service-list">
-        <li>ไม่มีการกดดันผู้รับ</li>
-        <li>ไม่มีการคาดหวังการตอบกลับ</li>
-      </ul>
+      <div class="price-card">
+        <div class="card-icon">🌷</div>
+        <div class="card-title">ฝากความรู้สึก</div>
+        <div class="price">69 บาท</div>
+        <div class="card-desc">
+          เล่าให้เราฟังตามจริง<br>
+          ทีมใจดีจะช่วยเรียบเรียง<br>
+          ให้ออกมาอบอุ่น จริงใจ<br>
+          และให้เกียรติผู้รับ
+        </div>
+        <ul class="card-features">
+          <li>ไม่มีการกดดันผู้รับ</li>
+          <li>ไม่มีการคาดหวังการตอบกลับ</li>
+        </ul>
+        <button class="card-btn">เลือกแบบนี้</button>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- PROCESS -->
-<hr class="hr">
-<section class="section">
-  <span class="label">ขั้นตอน</span>
-  <h2 class="section-title">จากความตั้งใจ ถึงมือผู้รับ</h2>
-  <div class="timeline">
-    <div class="step"><div class="step-num">1</div><div class="step-text">เล่าให้เราฟัง</div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-text">ทีมใจดีช่วยเรียบเรียง</div></div>
-    <div class="step"><div class="step-num">3</div><div class="step-text">เขียนด้วยลายมือ</div></div>
-    <div class="step"><div class="step-num">4</div><div class="step-text">ส่งถึงโต๊ะเรียน<br>วันอังคาร</div></div>
+<section class="process">
+  <div class="wrap">
+    <h2 class="section-title">จากความตั้งใจ ถึงมือผู้รับ</h2>
+    <div class="process-grid">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-label">เล่าให้เราฟัง</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-label">ทีมใจดีช่วยเรียบเรียง</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-label">เขียนด้วยลายมือ</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-label">ส่งถึงโต๊ะเรียน<br>วันอังคาร</div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- REAL MESSAGES -->
-<hr class="hr">
-<section class="section">
-  <span class="label">ข้อความที่เคยถูกส่ง</span>
-  <div style="width:100%;height:200px;background:rgba(255,255,255,.5);border:1px dashed var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;margin-bottom:40px">
-    <span style="font-size:11px;color:var(--accent);letter-spacing:.08em">PHOTO 2 — การ์ดลายมือ · ซองจดหมาย · กระดาษจริง</span>
-  </div>
-  <div class="letters-scroll">
-    <div class="letter-card">
-      <span class="letter-intent">ส่งกำลังใจ</span>
-      <p>สู้ ๆ กับพรีเซนต์พรุ่งนี้นะ<br><br>เราไม่รู้ว่าเธอกังวลไหม<br>แต่เราเชื่อว่าเธอทำได้</p>
-      <div class="letter-footer">ใจดี TU</div>
+<section class="examples" id="examples">
+  <div class="wrap">
+    <h2 class="section-title">ข้อความที่เคยถูกส่ง</h2>
+    <div class="examples-grid">
+
+      <div class="msg-card">
+        <span class="msg-tag">ส่งกำลังใจ</span>
+        <div class="msg-body">
+          สู้ ๆ กับพรีเซนต์พรุ่งนี้นะ<br><br>
+          เราไม่รู้ว่าเธอกังวลไหม<br>
+          แต่เราเชื่อว่าเธอทำได้
+        </div>
+        <div class="msg-sign">ใจดี TU</div>
+      </div>
+
+      <div class="msg-card">
+        <span class="msg-tag">ขอบคุณ</span>
+        <div class="msg-body">
+          ขอบคุณสำหรับวันนั้นนะ<br><br>
+          เธออาจจำไม่ได้<br>
+          แต่สิ่งที่เธอพูดวันนั้น<br>
+          ช่วยเราไว้มากจริง ๆ
+        </div>
+        <div class="msg-sign">ใจดี TU</div>
+      </div>
+
+      <div class="msg-card">
+        <span class="msg-tag">ชื่นชม</span>
+        <div class="msg-body">
+          เราชอบที่เธอคอยเติมรอยยิ้ม<br>
+          ให้คนรอบตัวอยู่เสมอ<br><br>
+          แค่อยากให้รู้ว่ามีคนเห็นนะ
+        </div>
+        <div class="msg-sign">ใจดี TU</div>
+      </div>
+
+      <div class="msg-card">
+        <span class="msg-tag">ให้กำลังใจ</span>
+        <div class="msg-body">
+          เธอเก่งกว่าที่เธอคิดนะ<br><br>
+          บางทีเธออาจมองไม่เห็น<br>
+          แต่หลายคนชื่นชมใน<br>
+          ความพยายามของเธออยู่เสมอ
+        </div>
+        <div class="msg-sign">ใจดี TU</div>
+      </div>
+
     </div>
-    <div class="letter-card">
-      <span class="letter-intent">ขอบคุณ</span>
-      <p>ขอบคุณสำหรับวันนั้นนะ<br><br>เธออาจจำไม่ได้<br>แต่สิ่งที่เธอพูดวันนั้น<br>ช่วยเราไว้มากจริง ๆ</p>
-      <div class="letter-footer">ใจดี TU</div>
-    </div>
-    <div class="letter-card">
-      <span class="letter-intent">ชื่นชม</span>
-      <p>เราชอบที่เธอคอยเติมรอยยิ้ม<br>ให้คนรอบตัวอยู่เสมอ<br><br>แค่อยากให้รู้ว่ามีคนเห็นนะ</p>
-      <div class="letter-footer">ใจดี TU</div>
-    </div>
-    <div class="letter-card">
-      <span class="letter-intent">ให้กำลังใจ</span>
-      <p>เธอเก่งกว่าที่เธอคิดนะ<br><br>บางทีเธออาจมองไม่เห็น<br>แต่หลายคนชื่นชมใน<br>ความพยายามของเธออยู่เสมอ</p>
-      <div class="letter-footer">ใจดี TU</div>
-    </div>
-  </div>
-  <div class="testimonials">
-    <div class="testimonial">วันนั้นเราแอบร้องไห้เลย</div>
-    <div class="testimonial">ไม่คิดว่าจะมีคนสังเกต</div>
-    <div class="testimonial">เป็นข้อความที่เราเก็บไว้จนถึงตอนนี้</div>
-    <div class="testimonial">เราอ่านหลายรอบมาก</div>
   </div>
 </section>
 
-<!-- BELIEF + TEAM -->
-<div class="band">
-  <div class="belief-inner">
-    <div class="belief-rule"></div>
-    <blockquote>
-      เราเชื่อว่า<br>บางความรู้สึก<br><strong>ควรได้ไปถึงกัน</strong>
-    </blockquote>
-    <div class="belief-rule"></div>
-    <p class="belief-sub">แม้ว่าบางครั้ง<br>เราจะไม่รู้ว่าจะเริ่มพูดยังไงก็ตาม</p>
-    <div style="margin-top:36px"><a class="btn-primary" href="#services">ฝากข้อความ</a></div>
+<section class="proof">
+  <div class="wrap">
+    <div class="proof-grid">
+      <div class="quote-card">วันนั้นเราแอบร้องไห้เลย</div>
+      <div class="quote-card">ไม่คิดว่าจะมีคนสังเกต</div>
+      <div class="quote-card">เป็นข้อความที่เราเก็บไว้จนถึงตอนนี้</div>
+      <div class="quote-card">เราอ่านหลายรอบมาก</div>
+    </div>
   </div>
-  <div style="margin-top:56px;text-align:center">
-    <div class="team-photo-box"><span>PHOTO 3 — ทีมใจดี TU</span></div>
-    <div class="team-caption">ทีมใจดี TU · โรงเรียนเตรียมอุดมศึกษาพัฒนาการ</div>
-  </div>
-</div>
+</section>
 
-<footer>ใจดี TU · บริการฝากข้อความ · เตรียมอุดมศึกษาพัฒนาการ</footer>
+<section class="final-cta">
+  <h2>มีใครบางคนที่คุณนึกถึงอยู่ไหม?</h2>
+  <p>เริ่มเล่าให้เราฟังได้เลย</p>
+  <a href="#pricing" class="final-btn">ฝากข้อความ</a>
+</section>
+
+<footer>ใจดี · เขียนด้วยใจ ส่งถึงคนที่คุณนึกถึง</footer>
+
 </body>
 </html>
