@@ -313,15 +313,15 @@
     .sit-more-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--soft);}
 
     /* ── Awareness Card — one rotating insight, no library, no progress ── */
-    .awareness-wrap{padding:0 16px;margin:10px 0 6px;}
+    .awareness-wrap{padding:0;margin:0;}
     .awareness-card{
-      background:var(--card-bg);
-      border:1px solid var(--teal-border);
-      border-radius:var(--radius-card);
-      padding:13px 16px;
-      box-shadow:0 1px 4px rgba(13,148,136,0.05);
+      background:transparent;
+      border:none;
+      border-radius:0;
+      padding:0;
+      box-shadow:none;
       cursor:pointer;
-      transition:transform 0.15s,box-shadow 0.15s;
+      transition:transform 0.15s;
     }
     .awareness-card:active{transform:scale(0.99);}
     .awareness-card.expanded{cursor:default;}
@@ -333,7 +333,7 @@
     }
     .awareness-hook{
       font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;
-      line-height:1.65;color:var(--mid);
+      line-height:1.7;color:var(--mid);letter-spacing:0.1px;
     }
     .awareness-cta{margin-top:7px;font-size:11px;font-weight:500;color:var(--teal);opacity:0.85;letter-spacing:0.3px;}
     .awareness-title{
@@ -922,19 +922,32 @@
     </div>
   </div>
 
-  <div style="height:40px;"></div>
+  <div style="height:16px;"></div>
 
-  <!-- น่ารู้วันนี้ -->
-  <div class="awareness-wrap">
-    <div class="awareness-card" id="awareness-card" onclick="awHandleCardClick(event)">
+  <!-- น่ารู้ pill button — taps to open awareness expanded -->
+  <div style="margin:0 16px 20px;">
+    <button id="awareness-card" onclick="awHandleCardClick(event)"
+      style="display:inline-flex;align-items:center;gap:7px;
+             background:#FFFFFF;border:1.5px solid var(--teal);
+             border-radius:99px;padding:8px 16px;
+             cursor:pointer;-webkit-tap-highlight-color:transparent;
+             transition:transform 0.12s ease,box-shadow 0.12s ease;
+             box-shadow:0 1px 6px rgba(13,148,136,0.10);"
+      ontouchstart="this.style.transform='scale(0.97)'" 
+      ontouchend="this.style.transform=''">
       <!-- rendered by JS -->
+    </button>
+    <!-- Short line — slightly wider than pill -->
+    <div style="height:1px;background:var(--teal-border);width:90px;
+                margin-top:10px;opacity:0.5;"></div>
+    <!-- Expand panel — hidden, shown when pill tapped -->
+    <div id="awareness-expand-panel"
+         style="display:none;margin-top:14px;padding:16px;
+                background:var(--card-bg);border:1px solid var(--teal-border);
+                border-radius:16px;box-shadow:0 2px 12px rgba(13,148,136,0.08);
+                opacity:0;transition:opacity 0.2s ease;">
     </div>
   </div>
-
-  <div style="height:20px;"></div>
-
-  <!-- Thin divider before stories -->
-  <div style="height:1px;background:var(--cream-border);margin:0 20px;opacity:0.5;"></div>
 
   <div id="m4-section-root"></div>
   <div id="m5-section-root"></div>
@@ -1080,7 +1093,7 @@ function renderAll() {
   wrap.innerHTML = "";
   let d = 30;
 
-  document.getElementById("m4-section-root").style.marginTop = "24px";
+  document.getElementById("m4-section-root").style.marginTop = "0";
   d = renderYearRow("m4-section-root", "ม.4", "#2E5FA3", M4_IMGS, d);
   document.getElementById("m5-section-root").style.marginTop = "16px";   /* +16 */
   d = renderYearRow("m5-section-root", "ม.5", "#E8960C", M5_IMGS, d + 10);
@@ -2797,24 +2810,32 @@ function awTodayId(){ return AWARENESS_CARDS[Math.floor(Date.now()/86400000) % A
 function awRenderCollapsed(){
   _awExpanded = false;
   const c = awFind(_awCurrentId);
-  const el = document.getElementById('awareness-card');
+  const btn = document.getElementById('awareness-card');
+  const panel = document.getElementById('awareness-expand-panel');
+  if (panel) panel.style.display = 'none';
+  if (btn) { btn.style.boxShadow = '0 1px 6px rgba(13,148,136,0.10)'; }
+  const el = btn; // el still needed for innerHTML
   if(!el || !c) return;
   el.classList.remove('expanded');
+  // Pill button: icon + label only — tap opens expanded
   el.innerHTML = `
-    <div style="font-family:'Mitr',sans-serif;font-size:10px;font-weight:600;
-                color:var(--teal);letter-spacing:2px;text-transform:uppercase;
-                margin-bottom:7px;">น่ารู้วันนี้</div>
-    <div class="awareness-hook">${c.hook}</div>
-    <div class="awareness-cta">เข้าใจต่อ →</div>
+    <span style="font-size:14px;line-height:1;">${c.icon}</span>
+    <span style="font-family:'Mitr',sans-serif;font-size:12px;font-weight:600;
+                 color:var(--teal);letter-spacing:0.5px;">น่ารู้วันนี้</span>
   `;
 }
 
 function awRenderExpanded(){
   _awExpanded = true;
   const c = awFind(_awCurrentId);
-  const el = document.getElementById('awareness-card');
-  if(!el || !c) return;
-  el.classList.add('expanded');
+  const btn = document.getElementById('awareness-card');
+  if(!c) return;
+  // Render full content into expand panel, not into the button
+  const el = document.getElementById('awareness-expand-panel');
+  if (!el) return;
+  if (btn) btn.style.boxShadow = '0 0 0 3px rgba(13,148,136,0.15)';
+  el.style.display = 'block';
+  requestAnimationFrame(() => { el.style.opacity = '1'; });
   const videoHtml = c.video ? `
     <a class="awareness-video" href="${c.video.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
       <img src="${c.video.thumb}" alt=""/>
@@ -2854,10 +2875,13 @@ function awCollapse(){
 function awHandleCardClick(){
   _triggerPermissionSentence(0);
   const card = document.getElementById('awareness-card');
-  if (card && !_awExpanded) {
-    card.style.transform = 'scale(0.98)';
-    setTimeout(() => { card.style.transform = ''; awRenderExpanded(); }, 100);
-  } else if (!_awExpanded) {
+  if (card) {
+    card.style.transform = 'scale(0.97)';
+    setTimeout(() => { card.style.transform = ''; }, 100);
+  }
+  if (_awExpanded) {
+    awCollapse();
+  } else {
     awRenderExpanded();
   }
 }
