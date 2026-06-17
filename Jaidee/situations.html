@@ -146,6 +146,7 @@ const TIERS = [
       { emoji:'😴', label:'นอนไม่หลับ',              key:'sleep'    },
       { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
       { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
+      { emoji:'🪷', label:'จินตนาการว่าตัวเองตายทุกวัน', key:'maranasati' },
       { emoji:'😞', label:'ผิดหวัง',                key:'disappointed' },
       { emoji:'😵‍💫', label:'สับสน เลือกไม่ได้',     key:'confused'     },
       { emoji:'🌿', label:'เพื่อนดูไม่โอเคเลย',          key:'friend'   },
@@ -165,6 +166,7 @@ const TIERS = [
   {
     label: 'เรื่องเพื่อนและความสัมพันธ์...',
     pills: [
+      { emoji:'🫧', label:'อยู่กับเพื่อนก็ไม่คุยด้วย',   key:'friend_silent' },
       { emoji:'👥', label:'เข้ากับเพื่อนไม่ได้',          key:'social'    },
       { emoji:'🫥', label:'รู้สึกเหมือนไม่มีที่ของตัวเอง', key:'no_place'  },
       { emoji:'💬', label:'ทะเลาะกับเพื่อน',              key:'fight'     },
@@ -186,6 +188,7 @@ const TIERS = [
   {
     label: 'ร่างกายและชีวิตประจำวัน...',
     pills: [
+      { emoji:'🌫️', label:'เครียดอยู่ แต่ไม่รู้ว่าเรื่องอะไร', key:'stress_chronic' },
       { emoji:'😴', label:'นอนไม่หลับ',          key:'sleep'      },
       { emoji:'🍚', label:'กินข้าวไม่ค่อยลง',    key:'no_appetite'},
       { emoji:'🍚', label:'หิวแต่จะกินดีมั้ย',   key:'hungry'     },
@@ -934,6 +937,43 @@ const SIT_DATA_EXTRA = {
     ],
     talk:'รู้สึก lost มากและกระทบชีวิตประจำวัน?',
   },
+  maranasati: {
+    emoji:'🪷', title:'จินตนาการว่าตัวเองตายทุกวัน',
+    type: 'B',
+    group: 'comfort',
+    note:'ไม่ใช่เพราะอยากตาย แต่เพราะมันทำให้สงบ — ความรู้สึกนี้มีรากฐานมาจากการฝึกสมาธิโบราณ และวิทยาศาสตร์พอจะอธิบายได้ว่าทำไมมันถึงได้ผล',
+    tools:[
+      { icon:'📖', name:'จินตนาการว่าตัวเองตายทุกวัน — มันช่วยได้จริง หรือติดแล้ว?', desc:'อ่าน 6 นาที · มรณานุสติ + จิตวิทยาสมัยใหม่', href:'notebook.html?id=maranasati', primary:true },
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ทางตรงสู่ความสงบ ไม่ต้องผ่านภาพหนัก', href:'alltools.html#breathe' },
+      { icon:'🌱', name:'Grounding 5-4-3-2-1', desc:'ดึงกลับมาอยู่กับปัจจุบัน', href:'alltools.html#grounding' },
+    ],
+    talk:'ภาพความตายเริ่มรู้สึกหนักหรือมาเองโดยไม่ได้เชิญ?',
+  },
+  friend_silent: {
+    emoji:'🫧', title:'อยู่กับเพื่อนก็ไม่คุยด้วย',
+    type: 'B',
+    group: 'understand',
+    note:'นั่งอยู่ข้างๆ กัน แต่รู้สึกเหมือนอยู่คนละโลก ไม่รู้ว่าทำอะไรผิด และสมองก็เริ่มเล่นฉากนั้นซ้ำ ค้นหาจุดที่ผิดพลาด',
+    tools:[
+      { icon:'📖', name:'อยู่กับเพื่อนก็ไม่คุยด้วย — มันเกิดอะไรขึ้นกันแน่?', desc:'อ่าน 5 นาที · 5 สถานการณ์ที่ให้ผลลัพธ์เดียวกัน', href:'notebook.html?id=friend_silent', primary:true },
+      { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อความคิดวนซ้ำว่าทำอะไรผิด', href:'alltools.html#reframe' },
+      { icon:'📓', name:'เขียนระบาย', desc:'ระบายออกมาก่อนที่มันจะล้นหัว', href:'alltools.html#journal' },
+    ],
+    talk:'สถานการณ์ซับซ้อนหรืออยากคุยกับใครสักคน?',
+  },
+  stress_chronic: {
+    emoji:'🌫️', title:'เครียดอยู่ แต่ไม่รู้ว่าเครียดเรื่องอะไร',
+    type: 'B',
+    group: 'understand',
+    note:'ไม่มีเรื่องใหญ่เกิดขึ้น แต่ร่างกายมันหนัก หายใจไม่ค่อยเต็มปอด นอนแล้วก็ยังเหนื่อย นั่นไม่ได้แปลว่าคิดมากเกินเหตุ',
+    tools:[
+      { icon:'📖', name:'เครียดอยู่ แต่ไม่รู้ว่าเครียดเรื่องอะไร', desc:'อ่าน 5 นาที · เข้าใจ allostatic load และวิธีลดภาระสะสม', href:'notebook.html?id=stress_chronic', primary:true },
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ส่งสัญญาณตรงไปที่ระบบประสาทว่าปลอดภัยแล้ว', href:'alltools.html#breathe' },
+      { icon:'📓', name:'เขียนระบาย', desc:'ไม่ต้องหาคำตอบ แค่ระบายออกมา', href:'alltools.html#journal' },
+      { icon:'🏃', name:'ขยับร่างกาย', desc:'ปลดปล่อยพลังงานความเครียดที่ค้างอยู่', href:'alltools.html#move' },
+    ],
+    talk:'เครียดสะสมมาหลายสัปดาห์และไม่ดีขึ้น?',
+  },
   fading: {
     emoji:'🫥', title:'รู้สึกว่าตัวเองค่อย ๆ หายไป',
     type: 'C',
@@ -992,6 +1032,10 @@ const SEARCH_ALIASES = {
   'อ่านหนังสือไม่เข้าหัว':['study_fog'],'อ่านไม่เข้าหัว':['study_fog'],
   'รู้สึกไม่เก่ง':['not_enough'],'ไม่เก่งพอ':['not_enough'],'ด้อยกว่าคนอื่น':['not_enough'],
   'ล้าหลัง':['behind'],'คนอื่นไปไกลกว่า':['behind'],
+  // new pills
+  'คิดถึงความตาย':['maranasati'],'มรณานุสติ':['maranasati'],
+  'เพื่อนไม่คุย':['friend_silent'],'คุยไม่ค่อยหลง':['friend_silent'],'เพื่อนเงียบ':['friend_silent'],
+  'เครียดโดยไม่รู้สาเหตุ':['stress_chronic'],'เครียดสะสม':['stress_chronic'],'เครียดเรื้อรัง':['stress_chronic'],
   // misc
   'ผิดหวัง':['disappointed'],'สับสน':['confused'],'เลือกไม่ได้':['confused'],
   'เป็นห่วงเพื่อน':['friend'],'เพื่อนไม่ดี':['friend'],
