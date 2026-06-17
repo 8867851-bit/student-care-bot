@@ -537,6 +537,63 @@
       cursor:pointer;transition:background 0.15s;
     }
     .fc-btn-secondary:active{background:var(--cream-border);}
+
+    /* ── SITUATION SEARCH (ported from situations.html) ── */
+    #idx-search-wrap {
+      display:flex;align-items:center;gap:10px;
+      background:#FFFFFF;border:1.5px solid var(--cream-border);
+      border-radius:50px;padding:10px 16px;
+      transition:border-color 0.2s;margin:0 16px 4px;
+    }
+    #idx-search-wrap.focused { border-color:var(--teal); }
+    #idx-search { flex:1;border:none;outline:none;font-family:'Mitr',sans-serif;font-size:13px;background:transparent;color:var(--dark); }
+    #idx-search::placeholder { color:var(--soft); }
+    #idx-search-results {
+      display:none;position:absolute;left:16px;right:16px;
+      background:#FFFFFF;border:1.5px solid var(--cream-border);
+      border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.1);
+      z-index:100;overflow:hidden;max-height:300px;overflow-y:auto;
+    }
+
+    /* ── T3 PROGRESSIVE LIBRARY ────────────────────────────── */
+    .lib-card {
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:18px;
+      padding:20px 18px 16px;
+      cursor:pointer;
+      transition:opacity 0.22s ease-out, transform 0.22s ease-out, box-shadow 0.15s;
+      display:flex;flex-direction:column;gap:8px;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+    }
+    .lib-card:active { transform:scale(0.97); box-shadow:none; }
+    .lib-card-emoji { font-size:28px; line-height:1; }
+    .lib-card-name {
+      font-family:'Noto Serif Thai',serif;
+      font-size:15px;font-weight:600;color:var(--dark);line-height:1.4;
+    }
+    .lib-card-count {
+      font-family:'Mitr',sans-serif;
+      font-size:12px;font-weight:300;color:var(--soft);opacity:0.6;
+    }
+    /* Level 2 — situation list items */
+    .lib-sit-item {
+      display:flex;align-items:center;gap:14px;
+      padding:14px 20px;border-bottom:1px solid var(--cream-border);
+      cursor:pointer;transition:background 0.12s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .lib-sit-item:last-child { border-bottom:none; }
+    .lib-sit-item:active { background:var(--cream-warm); }
+    .lib-sit-emoji { font-size:20px;flex-shrink:0;width:28px;text-align:center; }
+    .lib-sit-label { font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--dark);flex:1; }
+    .lib-sit-arrow { font-size:12px;color:var(--soft);flex-shrink:0; }
+    /* Transition states */
+    .lib-fade-out { opacity:0;transform:translateY(8px);transition:opacity 0.22s ease-out,transform 0.22s ease-out; }
+    .lib-fade-in  { opacity:1;transform:translateY(0);transition:opacity 0.22s ease-out,transform 0.22s ease-out; }
+    .lib-hidden   { opacity:0;transform:translateY(8px); }
+
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -771,6 +828,20 @@
 
 
   <!-- ── วันนี้เป็นยังไงบ้าง? — Tier system ── -->
+
+  <!-- Situation Search -->
+  <div style="position:relative;margin-bottom:4px;" id="idx-search-container">
+    <div id="idx-search-wrap">
+      <span style="font-size:14px;color:var(--soft);">&#x1F4AD;</span>
+      <input id="idx-search" type="text" placeholder="มีอะไรอยู่ในใจไหม?" autocomplete="off"
+        oninput="idxSearch(this.value)"
+        onfocus="document.getElementById('idx-search-wrap').classList.add('focused')"
+        onblur="document.getElementById('idx-search-wrap').classList.remove('focused')"/>
+      <button id="idx-search-clear" onclick="idxSearchClear()" style="display:none;background:none;border:none;font-size:14px;color:var(--soft);cursor:pointer;padding:0;">✕</button>
+    </div>
+    <div id="idx-search-results"></div>
+  </div>
+
   <div class="situation-wrap" id="situation-section">
     <div class="situation-header">
       <div class="situation-label" id="tier-label">วันนี้เป็นยังไงบ้าง?</div>
@@ -789,47 +860,73 @@
     </div>
   </div>
 
-  <!-- ALL SITUATIONS SHEET -->
+  <!-- T3: Progressive Disclosure Library Sheet -->
   <div id="allsit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0);z-index:450;align-items:flex-end;justify-content:center;transition:background 0.3s;pointer-events:none;" onclick="handleAllSitOverlay(event)">
     <div id="allsit-sheet" style="background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:480px;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);padding-bottom:env(safe-area-inset-bottom,24px);height:calc(100vh - 28px);overflow-y:auto;position:relative;">
-      <div style="position:sticky;top:0;background:var(--cream);z-index:2;padding:14px 20px 10px;border-bottom:1px solid var(--cream-border);">
-        <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:0 auto 12px;"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--soft);">เรื่องที่หลายคนเคยเจอ</div>
+
+      <!-- Sticky header — changes between level 1 and level 2 -->
+      <div id="allsit-header" style="position:sticky;top:0;background:var(--cream);z-index:2;padding:14px 20px 10px;border-bottom:1px solid transparent;transition:border-color 0.2s;">
+        <div style="width:36px;height:4px;background:var(--cream-border);border-radius:2px;margin:0 auto 14px;"></div>
+        <!-- Level 1 header -->
+        <div id="allsit-header-l1" style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:var(--dark);">เรื่องที่หลายคนเคยเจอ</div>
+          <button onclick="closeAllSituationsSheet()" style="background:none;border:none;font-size:16px;color:var(--soft);cursor:pointer;padding:4px 6px;line-height:1;">✕</button>
+        </div>
+        <!-- Level 2 header (back + category name) -->
+        <div id="allsit-header-l2" style="display:none;align-items:center;gap:10px;">
+          <button onclick="allsitBack()" style="background:none;border:none;padding:4px;cursor:pointer;display:flex;align-items:center;color:var(--soft);">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9L11 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div id="allsit-back-label" style="font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--mid);flex:1;"></div>
           <button onclick="closeAllSituationsSheet()" style="background:none;border:none;font-size:16px;color:var(--soft);cursor:pointer;padding:4px 6px;line-height:1;">✕</button>
         </div>
       </div>
-      <div id="allsit-content" style="padding:16px 16px 32px;"></div>
+
+      <!-- Content area — swaps between L1 and L2 -->
+      <div id="allsit-content" style="padding:0 0 40px;position:relative;"></div>
+
     </div>
   </div>
 
   <!-- The entire cream card is the page turn — no arrows, no underlines, no affordance -->
-  <div id="session-recognition" style="opacity:0.18;padding:36px 28px 0;text-align:center;transition:opacity 0.9s ease;">
-    <div id="library-entry" style="opacity:0;transition:opacity 0.6s ease 0.4s;">
-      <div id="invitation-card"
-           onclick="openAllSituationsSheet()"
-           style="display:inline-block;cursor:pointer;padding:20px 24px;border-radius:16px;background:var(--cream-warm);border:1px solid var(--cream-border);text-align:center;transition:transform 0.12s ease,box-shadow 0.12s ease;user-select:none;-webkit-user-select:none;">
-        <div id="permission-sentence" style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;">
-          บางทีสิ่งที่กำลังเกิดขึ้น อาจมีชื่อเรียกอยู่แล้ว
-        </div>
-        <div style="margin-top:8px;font-size:12px;font-weight:400;color:var(--soft);opacity:0.85;letter-spacing:0.2px;font-family:'Mitr',sans-serif;">
-          ดูเรื่องอื่นๆ →
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- T5: Awareness is now the bridge — lives BEFORE explore zone -->
+  <div style="height:20px;"></div>
 
-  <div style="height:24px;"></div>
-
-  <!-- ── Awareness Card — one rotating insight, tap to read, no library ── -->
+  <!-- ── Awareness Card ── -->
   <div class="awareness-wrap">
     <div class="awareness-card" id="awareness-card" onclick="awHandleCardClick(event)">
       <!-- rendered by JS -->
     </div>
   </div>
 
-  <div style="height:16px;"></div>
+  <div style="height:32px;"></div>
 
+  <!-- T4: Divider — clear ending of listening zone, appears with library entry -->
+  <div style="display:flex;align-items:center;gap:12px;margin:0 20px 28px;opacity:0;transition:opacity 1.4s ease 0.2s;" id="explore-divider">
+    <div style="flex:1;height:1px;background:var(--cream-border);"></div>
+    <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);white-space:nowrap;">หรือถ้าอยากลองสำรวจต่อ</div>
+    <div style="flex:1;height:1px;background:var(--cream-border);"></div>
+  </div>
+
+  <!-- T1+T2: "เรื่องที่หลายคนเคยเจอ" — moved BELOW awareness, replaces old ดูเรื่องอื่นๆ -->
+  <div id="session-recognition" style="opacity:0;padding:0 16px;transition:opacity 0.9s ease;pointer-events:none;">
+    <div id="library-entry" style="opacity:0;transition:opacity 0.6s ease 0.4s;">
+      <div id="invitation-card"
+           onclick="openAllSituationsSheet()"
+           style="cursor:pointer;padding:20px 20px 18px;border-radius:18px;background:var(--cream-warm);border:1px solid var(--cream-border);transition:transform 0.12s ease,box-shadow 0.12s ease;user-select:none;-webkit-user-select:none;display:block;">
+        <div style="font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:var(--dark);margin-bottom:4px;">เรื่องที่หลายคนเคยเจอ</div>
+        <div id="permission-sentence" style="font-family:'Mitr',sans-serif;font-size:13px;font-weight:300;color:var(--soft);line-height:1.65;letter-spacing:0.2px;">ลองเริ่มจากสิ่งที่ใกล้เคียงที่สุดก่อน →</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:28px;"></div>
+
+  <!-- T6: Stories section — "จากคนที่เคยอยู่ตรงนี้มาก่อน" -->
+  <!-- T6: Section header — "จากคนที่เคยอยู่ตรงนี้มาก่อน" -->
+  <div style="padding:0 20px;margin-bottom:4px;" id="stories-section-header">
+    <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);">จากคนที่เคยอยู่ตรงนี้มาก่อน</div>
+  </div>
   <div id="m4-section-root"></div>
   <div id="m5-section-root"></div>
   <div class="worlds-wrap" id="worlds-wrap"></div>
@@ -1000,6 +1097,7 @@ const TIERS = [
       { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
       { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
       { emoji:'🪞', label:'ไม่แน่ใจว่าตัวเองกำลังรู้สึกอะไร',  key:'unsure'   },
+      { emoji:'🪷', label:'จินตนาการว่าตัวเองตายทุกวัน', key:'maranasati' },
       { emoji:'😞', label:'ผิดหวัง',                key:'disappointed' },
       { emoji:'😵‍💫', label:'สับสน เลือกไม่ได้',     key:'confused'     },
       { emoji:'🌿', label:'เป็นห่วงเพื่อน',          key:'friend'   },
@@ -1019,6 +1117,7 @@ const TIERS = [
   {
     label: 'เรื่องเพื่อนและความสัมพันธ์...',
     pills: [
+      { emoji:'🫧', label:'อยู่กับเพื่อนก็ไม่คุยด้วย',         key:'friend_silent' },
       { emoji:'👥', label:'เข้ากับเพื่อนไม่ได้',          key:'social'    },
       { emoji:'🫥', label:'รู้สึกเหมือนไม่มีที่ของตัวเอง', key:'no_place'  },
       { emoji:'💬', label:'ทะเลาะกับเพื่อน',              key:'fight'     },
@@ -1040,6 +1139,7 @@ const TIERS = [
   {
     label: 'ร่างกายและชีวิตประจำวัน...',
     pills: [
+      { emoji:'🌫️', label:'เครียดอยู่ แต่ไม่รู้ว่าเรื่องอะไร', key:'stress_chronic' },
       { emoji:'😴', label:'นอนไม่หลับ',          key:'sleep'      },
       { emoji:'🍚', label:'กินข้าวไม่ค่อยลง',    key:'no_appetite'},
       { emoji:'🍚', label:'หิวแต่จะกินดีมั้ย',   key:'hungry'     },
@@ -2316,6 +2416,40 @@ const SIT_DATA_EXTRA = {
     ],
     talk:'รู้สึก lost มากและกระทบชีวิตประจำวัน?',
   },
+  maranasati: {
+    emoji:'🪷', title:'จินตนาการว่าตัวเองตายทุกวัน',
+    type: 'B',
+    note:'ไม่ใช่เพราะอยากตาย แต่เพราะมันทำให้สงบ — ความรู้สึกนี้มีรากฐานมาจากการฝึกสมาธิโบราณ และวิทยาศาสตร์พอจะอธิบายได้ว่าทำไมมันถึงได้ผล',
+    tools:[
+      { icon:'📖', name:'จินตนาการว่าตัวเองตายทุกวัน — มันช่วยได้จริง หรือติดแล้ว?', desc:'อ่าน 6 นาที · มรณานุสติ + จิตวิทยาสมัยใหม่', href:'notebook.html?id=maranasati', primary:true },
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ทางตรงสู่ความสงบ ไม่ต้องผ่านภาพหนัก', href:'alltools.html#breathe' },
+      { icon:'🌱', name:'Grounding 5-4-3-2-1', desc:'ดึงกลับมาอยู่กับปัจจุบัน', href:'alltools.html#grounding' },
+    ],
+    talk:'ภาพความตายเริ่มรู้สึกหนักหรือมาเองโดยไม่ได้เชิญ?',
+  },
+  friend_silent: {
+    emoji:'🫧', title:'อยู่กับเพื่อนก็ไม่คุยด้วย',
+    type: 'B',
+    note:'นั่งอยู่ข้างๆ กัน แต่รู้สึกเหมือนอยู่คนละโลก ไม่รู้ว่าทำอะไรผิด และสมองก็เริ่มเล่นฉากนั้นซ้ำ ค้นหาจุดที่ผิดพลาด',
+    tools:[
+      { icon:'📖', name:'อยู่กับเพื่อนก็ไม่คุยด้วย — มันเกิดอะไรขึ้นกันแน่?', desc:'อ่าน 5 นาที · 5 สถานการณ์ที่ให้ผลลัพธ์เดียวกัน', href:'notebook.html?id=friend_silent', primary:true },
+      { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อความคิดวนซ้ำว่าทำอะไรผิด', href:'alltools.html#reframe' },
+      { icon:'📓', name:'เขียนระบาย', desc:'ระบายออกมาก่อนที่มันจะล้นหัว', href:'alltools.html#journal' },
+    ],
+    talk:'สถานการณ์ซับซ้อนหรืออยากคุยกับใครสักคน?',
+  },
+  stress_chronic: {
+    emoji:'🌫️', title:'เครียดอยู่ แต่ไม่รู้ว่าเครียดเรื่องอะไร',
+    type: 'B',
+    note:'ไม่มีเรื่องใหญ่เกิดขึ้น แต่ร่างกายมันหนัก หายใจไม่ค่อยเต็มปอด นอนแล้วก็ยังเหนื่อย นั่นไม่ได้แปลว่าคิดมากเกินเหตุ',
+    tools:[
+      { icon:'📖', name:'เครียดอยู่ แต่ไม่รู้ว่าเครียดเรื่องอะไร', desc:'อ่าน 5 นาที · เข้าใจ allostatic load และวิธีลดภาระสะสม', href:'notebook.html?id=stress_chronic', primary:true },
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ส่งสัญญาณตรงไปที่ระบบประสาทว่าปลอดภัยแล้ว', href:'alltools.html#breathe' },
+      { icon:'📓', name:'เขียนระบาย', desc:'ไม่ต้องหาคำตอบ แค่ระบายออกมา', href:'alltools.html#journal' },
+      { icon:'🏃', name:'ขยับร่างกาย', desc:'ปลดปล่อยพลังงานความเครียดที่ค้างอยู่', href:'alltools.html#move' },
+    ],
+    talk:'เครียดสะสมมาหลายสัปดาห์และไม่ดีขึ้น?',
+  },
   fading: {
     emoji:'🫥', title:'รู้สึกว่าตัวเองค่อย ๆ หายไป',
     type: 'C',
@@ -2377,6 +2511,9 @@ const PILL_PREVIEWS = {
   family:      { group:'belong', text: 'ความสัมพันธ์ในครอบครัวซับซ้อนได้มาก และเจ็บปวดในแบบที่บอกคนอื่นยาก' },
   who_am_i:    { group:'belong', text: 'คำถาม "ฉันเป็นใคร" ไม่มีคำตอบเดียว — แต่การถามคือการเติบโต' },
   changed:     { group:'belong', text: 'การเปลี่ยนแปลงเป็นส่วนปกติของการเติบโต แต่ถ้ามันทำให้ไม่คุ้นเคยตัวเอง...' },
+  maranasati:   { group:'comfort',     text: 'ไม่ใช่เพราะอยากตาย แต่เพราะมันทำให้สงบ มีคำอธิบายทั้งในพุทธศาสนาและวิทยาศาสตร์' },
+  friend_silent:{ group:'understand', text: 'นั่งอยู่ข้างๆ กัน แต่รู้สึกเหมืออยู่คนละโลก มีหลายสาเหตุที่ให้ผลลัพธ์เดียวกัน' },
+  stress_chronic:{ group:'understand', text: 'ไม่รู้ว่าเครียดเรื่องอะไร ไม่ได้แปลว่าไม่มีเหตุผล มันแปลว่าเหตุผลมีมากเกินกว่าจะมีชื่อเดียว' },
   fading:      { group:'comfort', text: 'ความรู้สึก "จางลง" บางครั้งคือสัญญาณว่าต้องการให้คนเห็น ไม่ใช่ว่าหายไปจริงๆ' },
 };
 
@@ -2528,8 +2665,10 @@ function _triggerPermissionSentence(delay) {
   setTimeout(() => {
     const rec = document.getElementById('session-recognition');
     const lib = document.getElementById('library-entry');
-    if (rec) { rec.style.transition = 'opacity 1.4s ease'; rec.style.opacity = '1'; }
+    const divider = document.getElementById('explore-divider');
+    if (rec) { rec.style.transition = 'opacity 1.4s ease'; rec.style.opacity = '1'; rec.style.pointerEvents = 'all'; }
     if (lib) lib.style.opacity = '1';
+    if (divider) { divider.style.transition = 'opacity 1.4s ease 0.2s'; divider.style.opacity = '1'; }
   }, delay !== undefined ? delay : 2500);
 }
 
@@ -2720,33 +2859,181 @@ function handleCareOverlay(e) {
 }
 
 // ═══ ALL SITUATIONS SHEET ════════════════════════════════════
-function openAllSituationsSheet() {
+// ── T3 PROGRESSIVE DISCLOSURE LIBRARY ──────────────────────
+// Category → Situation → Sit-Sheet (max 2 levels, back returns to categories)
+
+const LIB_CATEGORIES = [
+  {
+    emoji: '📚', name: 'เรื่องการเรียน',
+    tier: 2,
+  },
+  {
+    emoji: '👥', name: 'เรื่องเพื่อนและความสัมพันธ์',
+    tier: 3,
+  },
+  {
+    emoji: '🏠', name: 'เรื่องบ้านและครอบครัว',
+    tier: 4,
+  },
+  {
+    emoji: '🌱', name: 'ชีวิตประจำวัน',
+    tier: 5,
+  },
+  {
+    emoji: '🪞', name: 'เรื่องตัวเอง',
+    tier: 6,
+  },
+  {
+    emoji: '💭', name: 'ยังไม่แน่ใจ',
+    tier: null, // special → reflection.html
+  },
+];
+
+let _libLevel = 1; // 1 = categories, 2 = situations
+
+function _libGetPills(tierIndex) {
+  if (tierIndex === null) return [];
+  const tier = TIERS[tierIndex - 1];
+  if (!tier) return [];
+  return tier.pills.filter(p => p.key !== '__unsure__');
+}
+
+function _libRenderL1(animate) {
+  _libLevel = 1;
   const content = document.getElementById('allsit-content');
+  const h1 = document.getElementById('allsit-header-l1');
+  const h2 = document.getElementById('allsit-header-l2');
+  if (h1) { h1.style.display = 'flex'; }
+  if (h2) { h2.style.display = 'none'; }
 
-  // Render all tiers as grouped pill lists
-  content.innerHTML = TIERS.map(tier => `
-    <div style="margin-bottom:22px;">
-      <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:10px;padding:0 4px;">${tier.label}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;" data-tier-pills>
-        ${tier.pills.map(p => `
-          <button class="sit-pill${SESSION_OPENED.has(p.key) ? (p.key === _lastOpenedKey ? ' touched-last' : ' touched') : ''}"
-            data-key="${p.key}">
-            <span class="sit-emoji">${p.emoji}</span>
-            <span class="sit-label">${p.label}</span>
-          </button>`).join('')}
+  const cards = LIB_CATEGORIES.map((cat, i) => {
+    const count = cat.tier ? _libGetPills(cat.tier).length : null;
+    const countHtml = count ? `<div class="lib-card-count">${count} เรื่อง</div>` : '';
+    return `<div class="lib-card lib-hidden" data-cat-idx="${i}" style="transition-delay:${i * 30}ms;">
+      <div class="lib-card-emoji">${cat.emoji}</div>
+      <div class="lib-card-name">${cat.name}</div>
+      ${countHtml}
+    </div>`;
+  }).join('');
+
+  // T11: Intro text every time
+  content.innerHTML = `
+    <div style="padding:20px 20px 8px;">
+      <div style="font-family:'Noto Serif Thai',serif;font-size:14px;font-weight:300;color:var(--soft);line-height:2;letter-spacing:0.3px;margin-bottom:20px;">
+        บางทีสิ่งที่กำลังเกิดขึ้น<br>อาจมีชื่อเรียกอยู่แล้ว
       </div>
-    </div>
-  `).join('');
+      <div style="font-family:'Mitr',sans-serif;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:14px;">ช่วงนี้อะไรใกล้เคียงที่สุด?</div>
+      <div id="lib-cards-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        ${cards}
+      </div>
+    </div>`;
 
-  // Wire up pills: close this sheet, then open the sit-sheet
-  content.querySelectorAll('.sit-pill[data-key]').forEach(btn => {
-    btn.onclick = () => {
-      const key = btn.dataset.key;
-      closeAllSituationsSheet(() => {
-        setTimeout(() => pressPill(btn, key), 60);
-      });
+  // Wire category taps
+  content.querySelectorAll('.lib-card[data-cat-idx]').forEach(card => {
+    const idx = parseInt(card.dataset.catIdx);
+    const cat = LIB_CATEGORIES[idx];
+    card.onclick = () => {
+      if (cat.tier === null) {
+        // ยังไม่แน่ใจ → reflection.html
+        closeAllSituationsSheet();
+        setTimeout(() => { window.location.href = 'reflection.html'; }, 260);
+        return;
+      }
+      _libRenderL2(cat);
     };
   });
+
+  // Stagger fade-in
+  requestAnimationFrame(() => {
+    content.querySelectorAll('.lib-card.lib-hidden').forEach((el, i) => {
+      setTimeout(() => {
+        el.classList.remove('lib-hidden');
+        el.classList.add('lib-fade-in');
+      }, animate ? i * 35 : 0);
+    });
+  });
+}
+
+function _libRenderL2(cat) {
+  _libLevel = 2;
+  const content = document.getElementById('allsit-content');
+  const h1 = document.getElementById('allsit-header-l1');
+  const h2 = document.getElementById('allsit-header-l2');
+  const backLabel = document.getElementById('allsit-back-label');
+
+  // T12: update header
+  if (h1) h1.style.display = 'none';
+  if (h2) { h2.style.display = 'flex'; }
+  if (backLabel) backLabel.textContent = cat.name;
+
+  // Fade out current (category cards)
+  content.style.opacity = '0';
+  content.style.transform = 'translateY(8px)';
+  content.style.transition = 'opacity 0.22s ease-out, transform 0.22s ease-out';
+
+  setTimeout(() => {
+    const pills = _libGetPills(cat.tier);
+    const allData = (typeof SIT_DATA !== 'undefined') ? SIT_DATA : {};
+
+    content.innerHTML = `<div style="padding:8px 0 8px;">` +
+      pills.map(p => {
+        const d = allData[p.key];
+        if (!d) return '';
+        const visited = SESSION_OPENED.has(p.key);
+        return `<div class="lib-sit-item${visited ? ' lib-sit-visited' : ''}" data-key="${p.key}">
+          <span class="lib-sit-emoji">${p.emoji}</span>
+          <span class="lib-sit-label">${p.label}</span>
+          <span class="lib-sit-arrow">→</span>
+        </div>`;
+      }).join('') +
+    `</div>`;
+
+    // Reset transition and fade in
+    content.style.transition = 'none';
+    content.style.transform = 'translateY(8px)';
+    content.style.opacity = '0';
+    requestAnimationFrame(() => {
+      content.style.transition = 'opacity 0.22s ease-out, transform 0.22s ease-out';
+      content.style.opacity = '1';
+      content.style.transform = 'translateY(0)';
+    });
+
+    // Scroll to top
+    const sheet = document.getElementById('allsit-sheet');
+    if (sheet) sheet.scrollTop = 0;
+
+    // Wire situation taps
+    content.querySelectorAll('.lib-sit-item[data-key]').forEach(item => {
+      const key = item.dataset.key;
+      item.onclick = () => {
+        closeAllSituationsSheet(() => {
+          setTimeout(() => pressPill(null, key), 60);
+        });
+      };
+      item.ontouchstart = () => { item.style.background = 'var(--cream-warm)'; };
+      item.ontouchend = () => { item.style.background = ''; };
+    });
+  }, 220);
+}
+
+function allsitBack() {
+  // Animate back to category cards
+  const content = document.getElementById('allsit-content');
+  content.style.opacity = '0';
+  content.style.transform = 'translateY(8px)';
+  content.style.transition = 'opacity 0.22s ease-out, transform 0.22s ease-out';
+  setTimeout(() => {
+    content.style.transition = 'none';
+    content.style.opacity = '1';
+    content.style.transform = 'translateY(0)';
+    const sheet = document.getElementById('allsit-sheet');
+    if (sheet) sheet.scrollTop = 0;
+    _libRenderL1(true);
+  }, 220);
+}
+
+function openAllSituationsSheet() {
+  _libRenderL1(true);
 
   const ov = document.getElementById('allsit-overlay');
   ov.style.display = 'flex';
@@ -2761,6 +3048,7 @@ function openAllSituationsSheet() {
 function closeAllSituationsSheet(cb) {
   const ov = document.getElementById('allsit-overlay');
   const sheet = document.getElementById('allsit-sheet');
+  const content = document.getElementById('allsit-content');
   ov.style.background = 'rgba(0,0,0,0)';
   sheet.style.transition = 'transform 0.28s ease-in';
   sheet.style.transform = 'translateY(100%)';
@@ -2769,6 +3057,9 @@ function closeAllSituationsSheet(cb) {
     ov.style.pointerEvents = 'none';
     document.body.style.overflow = '';
     sheet.style.transition = 'transform 0.42s cubic-bezier(0.22,1,0.36,1)';
+    // Reset content opacity for next open
+    if (content) { content.style.opacity = ''; content.style.transform = ''; content.style.transition = ''; }
+    _libLevel = 1;
     if (typeof cb === 'function') cb();
   }, 280);
 }
@@ -2808,6 +3099,97 @@ function handleAllSitOverlay(e) {
     startY = 0; startX = 0; currentY = 0;
   });
 })();
+
+
+// ── INDEX SEARCH ─────────────────────────────────────────────
+const IDX_SEARCH_ALIASES = {
+  'คิดถึงความตาย':['maranasati'],'มรณานุสติ':['maranasati'],
+  'เพื่อนไม่คุย':['friend_silent'],'เงียบผิดปกติ':['friend_silent'],'เพื่อนไม่สนใจ':['friend_silent'],
+  'เครียดโดยไม่รู้สาเหตุ':['stress_chronic'],'เครียดสะสม':['stress_chronic'],'เครียดเรื้อรัง':['stress_chronic'],
+  'นอนไม่หลับ':['sleep'],'นอนไม่ได้':['sleep'],
+  'หมดไฟ':['burnout'],'เบื่อ':['burnout','foggy'],'เหนื่อย':['burnout','tired'],
+  'สมองตื้อ':['foggy'],'คิดไม่ออก':['foggy'],'ไม่มีสมาธิ':['foggy'],
+  'เครียด':['stress_chronic','overwhelm','pressure'],'งานเยอะ':['overwhelm'],'กดดัน':['pressure'],
+  'เหงา':['lonely'],'โดดเดี่ยว':['lonely','no_place'],
+  'อกหัก':['heartbreak'],'แอบชอบ':['crush'],
+  'ทะเลาะ':['fight'],'โดนทิ้ง':['abandoned'],
+  'คิดถึงบ้าน':['homesick'],'ปัญหาครอบครัว':['family'],
+  'ไม่อยากกิน':['no_appetite'],'หิว':['hungry'],
+  'เหนื่อยตลอด':['tired'],'ไม่อยากลุก':['no_energy'],
+  'ผิดหวัง':['disappointed'],'สับสน':['confused'],
+  'เห้าไม่เก่ง':['not_enough'],'ล้าหลัง':['behind'],
+  'เข้ากับเพื่อนไม่ได้':['social'],'ไม่มีที่':['no_place'],
+  'ห้องรก':['messy_room'],'ไม่ได้อาบน้ำ':['no_shower'],'ดื่มน้ำน้อย':['low_water'],
+  'อยากรู้จักตัวเอง':['self_know'],'อยากเปลี่ยน':['grow'],
+  'ไม่เหมือนเดิม':['changed'],'ไม่รู้ว่าต้องการอะไร':['lost'],'ค่อยๆหายไป':['fading'],
+};
+
+function idxSearch(val) {
+  const q = val.trim();
+  const clearBtn = document.getElementById('idx-search-clear');
+  const results = document.getElementById('idx-search-results');
+  if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
+  if (!q) { results.style.display = 'none'; return; }
+
+  const allData = (typeof SIT_DATA !== 'undefined' ? SIT_DATA : {});
+  const hits = new Map();
+
+  // Alias match
+  Object.entries(IDX_SEARCH_ALIASES).forEach(([alias, keys]) => {
+    if (alias.includes(q) || q.includes(alias)) {
+      keys.forEach(k => hits.set(k, (hits.get(k)||0) + 3));
+    }
+  });
+  // ALL_PILLS label match
+  if (typeof ALL_PILLS !== 'undefined') {
+    ALL_PILLS.forEach(p => {
+      if (p.label.includes(q)) hits.set(p.key, (hits.get(p.key)||0) + 2);
+    });
+  }
+  // SIT_DATA title/note match
+  Object.entries(allData).forEach(([k, d]) => {
+    if (d.title && d.title.includes(q)) hits.set(k, (hits.get(k)||0) + 2);
+    if (d.note && d.note.includes(q)) hits.set(k, (hits.get(k)||0) + 1);
+  });
+
+  const sorted = [...hits.entries()]
+    .sort((a,b)=>b[1]-a[1]).map(([k])=>k)
+    .filter(k => allData[k]).slice(0,8);
+
+  if (!sorted.length) {
+    results.innerHTML = '<div style="padding:16px 18px;font-size:13px;color:var(--soft);text-align:center;">ไม่พบตรงๆ — ลองเลื่อนคลิกดู pill ด้านล่าง</div>';
+    results.style.display = 'block';
+    return;
+  }
+
+  results.innerHTML = sorted.map(k => {
+    const d = allData[k];
+    const pill = (typeof ALL_PILLS!=='undefined') ? ALL_PILLS.find(p=>p.key===k) : null;
+    const label = pill ? pill.label : d.title;
+    return `<button onclick="idxSearchClear();pressPill(null,'${k}')"
+      style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 18px;background:none;border:none;border-bottom:1px solid var(--cream-border);font-family:'Mitr',sans-serif;cursor:pointer;text-align:left;transition:background 0.12s;"
+      ontouchstart="this.style.background='var(--cream-warm)'" ontouchend="this.style.background='none'">
+      <span style="font-size:20px;flex-shrink:0;">${d.emoji}</span>
+      <span style="flex:1;font-size:13px;font-weight:500;color:var(--dark);">${d.title}</span>
+      <span style="font-size:12px;color:var(--faint);">→</span>
+    </button>`;
+  }).join('');
+  results.style.display = 'block';
+}
+
+function idxSearchClear() {
+  const inp = document.getElementById('idx-search');
+  if (inp) { inp.value = ''; idxSearch(''); }
+}
+
+// Close search results on outside tap
+document.addEventListener('click', function(e) {
+  const container = document.getElementById('idx-search-container');
+  if (container && !container.contains(e.target)) {
+    const r = document.getElementById('idx-search-results');
+    if (r) r.style.display = 'none';
+  }
+});
 </script>
   <div id="exit-line" style="text-align:center;padding:32px 24px 48px;opacity:0;transition:opacity 1.2s ease;pointer-events:none;">
     <div style="font-size:12px;color:var(--soft);font-family:'Noto Serif Thai',serif;font-weight:300;letter-spacing:0.3px;">วันนี้พอแค่นี้ก็ได้ 🤍</div>
