@@ -312,25 +312,19 @@
     .sit-more-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--soft);}
 
     /* ── Awareness Card — one rotating insight, no library, no progress ── */
-    .awareness-wrap{padding:0 16px;margin:28px 0 4px;}
+    .awareness-wrap{padding:0 20px;margin:12px 0 0;}
     .awareness-card{
-      background:var(--card-bg);border:1px solid var(--teal-border);
-      border-radius:var(--radius-card);padding:18px 20px;
-      box-shadow:0 1px 8px rgba(13,148,136,0.07);
-      cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;
+      background:transparent;border:none;padding:0;
+      cursor:pointer;
     }
     .awareness-card:active{transform:scale(0.99);}
     .awareness-card.expanded{cursor:default;}
-    .awareness-eyebrow{
-      display:flex;align-items:center;gap:6px;
-      font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;
-      color:var(--teal);margin-bottom:8px;
-    }
+    .awareness-eyebrow{display:none;}
     .awareness-hook{
-      font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:600;
+      font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;
       line-height:1.65;color:var(--dark);
     }
-    .awareness-cta{margin-top:10px;font-size:12px;font-weight:500;color:var(--teal);}
+    .awareness-cta{display:none;}
     .awareness-title{
       font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;
       line-height:1.4;margin:2px 0 12px;color:var(--dark);
@@ -914,8 +908,7 @@
       <div id="invitation-card"
            onclick="openAllSituationsSheet()"
            style="cursor:pointer;padding:20px 20px 18px;border-radius:18px;background:var(--cream-warm);border:1px solid var(--cream-border);transition:transform 0.12s ease,box-shadow 0.12s ease;user-select:none;-webkit-user-select:none;display:block;">
-        <div style="font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:var(--dark);margin-bottom:4px;">เรื่องที่หลายคนเคยเจอ</div>
-        <div id="permission-sentence" style="font-family:'Mitr',sans-serif;font-size:13px;font-weight:300;color:var(--soft);line-height:1.65;letter-spacing:0.2px;">ลองเริ่มจากสิ่งที่ใกล้เคียงที่สุดก่อน →</div>
+        <div id="permission-sentence" style="font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--mid);line-height:1.65;letter-spacing:0.2px;">สำรวจเรื่องอื่นๆ →</div>
       </div>
     </div>
   </div>
@@ -2773,10 +2766,10 @@ function awRenderCollapsed(){
   const el = document.getElementById('awareness-card');
   if(!el || !c) return;
   el.classList.remove('expanded');
+  // Margin-note energy: just a quiet label + one sentence
   el.innerHTML = `
-    <div class="awareness-eyebrow"><span>${c.icon}</span><span>น่ารู้วันนี้</span></div>
-    <div class="awareness-hook">${c.hook}</div>
-    <div class="awareness-cta">อ่านต่อ →</div>
+    <div style="font-family:'Mitr',sans-serif;font-size:10px;font-weight:500;letter-spacing:1.8px;text-transform:uppercase;color:var(--soft);margin-bottom:5px;opacity:0.7;">น่ารู้วันนี้</div>
+    <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;letter-spacing:0.1px;">${c.hook}</div>
   `;
 }
 
