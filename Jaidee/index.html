@@ -19,7 +19,7 @@
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Mitr',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;}
 
-    .hero{padding:10px 24px 6px;position:relative;overflow:hidden;text-align:center;transition:padding-top 0.4s ease;}
+    .hero{padding:28px 24px 10px;position:relative;overflow:hidden;text-align:center;transition:padding-top 0.4s ease;}
     .hero.scrolled{padding-top:26px;}
     .hero.locked{padding-top:22px;}
     .hero-name,.hero-eyebrow,.hero-sub{transition:opacity 0.6s ease;}
@@ -245,7 +245,7 @@
     .library-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(226,192,96,0.6),rgba(176,125,16,0.9));transition:width 1s ease;}
 
     /* ── วันนี้เป็นยังไงบ้าง? ── */
-    .situation-wrap{padding:16px 0 0 16px;} /* no right padding — 4th pill clips at edge */
+    .situation-wrap{padding:12px 0 0 16px;} /* no right padding — 4th pill clips at edge */
     .situation-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
     .situation-label{font-size:10px;font-weight:500;color:var(--soft);letter-spacing:2px;text-transform:uppercase;}
     .situation-scroll{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;-webkit-mask-image:linear-gradient(to right,black 0%,black 88%,transparent 100%);mask-image:linear-gradient(to right,black 0%,black 88%,transparent 100%);}
@@ -278,14 +278,14 @@
 
     .sit-pill:active{transform:translateY(2px) scale(0.97);box-shadow:0 1px 3px rgba(0,0,0,0.08);}
     .sit-pill.primary{background:var(--dark);border-color:var(--dark);}
-    .sit-emoji{font-size:16px;line-height:1;}
-    .sit-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:500;color:var(--dark);}
+    .sit-emoji{font-size:14px;line-height:1;}
+    .sit-label{font-family:'Mitr',sans-serif;font-size:11px;font-weight:400;color:var(--dark);}
     .sit-pill.primary .sit-label{color:var(--cream);}
 
     /* ── Pill preview strip — teaches the interaction model passively ── */
     .pill-preview{
-      padding:14px 20px 0;
-      min-height:48px;
+      padding:10px 20px 0;
+      min-height:40px;
     }
     .pill-preview-inner{
       display:flex;align-items:flex-start;gap:10px;
@@ -300,31 +300,41 @@
     }
     .pill-preview-text{
       font-family:'Noto Serif Thai',serif;
-      font-size:12px;font-weight:300;
+      font-size:11px;font-weight:300;
       color:var(--soft);line-height:1.75;letter-spacing:0.2px;
     }
     .pill-preview-action{
-      display:block;margin-top:5px;
-      font-family:'Mitr',sans-serif;font-size:10px;font-weight:400;
+      display:block;margin-top:4px;
+      font-family:'Mitr',sans-serif;font-size:9px;font-weight:400;
       color:var(--soft);opacity:0.6;letter-spacing:0.5px;transition:color 0.4s ease;
     }
     .sit-more{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:10px 14px;border-radius:50px;background:none;border:1.5px solid var(--cream-border);cursor:pointer;text-decoration:none;white-space:nowrap;}
     .sit-more-label{font-family:'Mitr',sans-serif;font-size:12px;font-weight:400;color:var(--soft);}
 
     /* ── Awareness Card — one rotating insight, no library, no progress ── */
-    .awareness-wrap{padding:0 20px;margin:12px 0 0;}
+    .awareness-wrap{padding:0 16px;margin:14px 0 4px;}
     .awareness-card{
-      background:transparent;border:none;padding:0;
+      background:var(--card-bg);
+      border:1px solid var(--teal-border);
+      border-radius:var(--radius-card);
+      padding:13px 16px;
+      box-shadow:0 1px 4px rgba(13,148,136,0.05);
       cursor:pointer;
+      transition:transform 0.15s,box-shadow 0.15s;
     }
     .awareness-card:active{transform:scale(0.99);}
     .awareness-card.expanded{cursor:default;}
-    .awareness-eyebrow{display:none;}
+    .awareness-eyebrow{
+      display:flex;align-items:center;gap:5px;
+      font-size:9px;font-weight:500;letter-spacing:1.8px;
+      text-transform:uppercase;color:var(--teal);
+      margin-bottom:6px;
+    }
     .awareness-hook{
       font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;
-      line-height:1.65;color:var(--dark);
+      line-height:1.65;color:var(--mid);
     }
-    .awareness-cta{display:none;}
+    .awareness-cta{margin-top:7px;font-size:11px;font-weight:400;color:var(--teal);opacity:0.75;}
     .awareness-title{
       font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;
       line-height:1.4;margin:2px 0 12px;color:var(--dark);
@@ -588,6 +598,22 @@
     .lib-fade-in  { opacity:1;transform:translateY(0);transition:opacity 0.22s ease-out,transform 0.22s ease-out; }
     .lib-hidden   { opacity:0;transform:translateY(8px); }
 
+
+    /* ── SUGGESTION CHIPS ────────────────────────────────────── */
+    .idx-chip {
+      display:inline-flex;align-items:center;gap:5px;
+      padding:7px 11px;border-radius:50px;
+      background:var(--cream-warm);border:1px solid var(--cream-border);
+      font-family:'Mitr',sans-serif;font-size:12px;font-weight:300;
+      color:var(--dark);cursor:pointer;white-space:nowrap;
+      transition:background 0.12s,transform 0.1s;
+      -webkit-tap-highlight-color:transparent;user-select:none;
+    }
+    .idx-chip:active { background:var(--cream-border);transform:scale(0.97); }
+    .idx-chip .chip-emoji { font-size:13px; }
+    /* Fade-in for suggestion panel */
+    #idx-suggestions { transition:opacity 0.15s ease; }
+
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -732,7 +758,7 @@
   </div>
 
   <!-- SITUATION SHEET -->
-  <div id="sit-overlay" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0);pointer-events:none;transition:background 0.3s;" onclick="handleSitOverlay(event)">
+  <div id="sit-overlay" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0);pointer-events:none;transition:background 0.3s;" onclick="handleSitOverlay(event)">
     <div id="sit-sheet" style="position:absolute;bottom:0;left:0;right:0;background:var(--cream);border-radius:28px 28px 0 0;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);display:flex;flex-direction:column;max-height:92vh;max-width:480px;margin:0 auto;">
 
       <!-- Quiet close -->
@@ -824,22 +850,24 @@
   <!-- ── วันนี้เป็นยังไงบ้าง? — Tier system ── -->
 
   <!-- Situation Search -->
+  <div style="height:20px;"></div>
   <div style="position:relative;margin-bottom:4px;" id="idx-search-container">
     <div id="idx-search-wrap">
       <span style="font-size:14px;color:var(--soft);">&#x1F4AD;</span>
-      <input id="idx-search" type="text" placeholder="มีอะไรอยู่ในใจไหม?" autocomplete="off"
+      <input id="idx-search" type="text" placeholder="วันนี้เป็นยังไงบ้าง?" autocomplete="off"
         oninput="idxSearch(this.value)"
-        onfocus="document.getElementById('idx-search-wrap').classList.add('focused')"
-        onblur="document.getElementById('idx-search-wrap').classList.remove('focused')"/>
+        onfocus="idxSearchFocus()"
+        onblur="setTimeout(idxSearchBlur,180)"/>
       <button id="idx-search-clear" onclick="idxSearchClear()" style="display:none;background:none;border:none;font-size:14px;color:var(--soft);cursor:pointer;padding:0;">✕</button>
     </div>
     <div id="idx-search-results"></div>
+    <!-- Suggestion chips — shown on focus when search empty -->
+    <div id="idx-suggestions" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--cream);border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.10),0 2px 8px rgba(0,0,0,0.06);z-index:100;padding:14px 14px 10px;max-height:72vh;overflow-y:auto;">
+      <div id="idx-suggestion-chips" style="display:flex;flex-wrap:wrap;gap:7px;"></div>
+    </div>
   </div>
 
   <div class="situation-wrap" id="situation-section">
-    <div class="situation-header">
-      <div class="situation-label" id="tier-label">วันนี้เป็นยังไงบ้าง?</div>
-    </div>
     <div class="situation-scroll" id="tier-pills">
       <!-- rendered by JS -->
     </div>
@@ -851,6 +879,17 @@
           <span class="pill-preview-action" id="pill-preview-action"></span>
         </div>
       </div>
+    </div>
+
+    <!-- สำรวจเรื่องทั้งหมด — plain text, grows + glows gold in listening phase -->
+    <div style="text-align:center;padding:14px 0 6px;">
+      <span id="explore-footer" onclick="openAllSituationsSheet()"
+        style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:400;
+               color:var(--soft);letter-spacing:0.5px;opacity:0.55;
+               cursor:pointer;transition:font-size 0.4s ease,opacity 0.4s ease,color 0.4s ease,text-shadow 0.4s ease;
+               -webkit-tap-highlight-color:transparent;user-select:none;">
+        สำรวจเรื่องทั้งหมด →
+      </span>
     </div>
   </div>
 
@@ -882,44 +921,20 @@
     </div>
   </div>
 
-  <!-- The entire cream card is the page turn — no arrows, no underlines, no affordance -->
-  <!-- T5: Awareness is now the bridge — lives BEFORE explore zone -->
-  <div style="height:20px;"></div>
+  <div style="height:16px;"></div>
 
-  <!-- ── Awareness Card ── -->
+  <!-- น่ารู้วันนี้ — margin note -->
   <div class="awareness-wrap">
     <div class="awareness-card" id="awareness-card" onclick="awHandleCardClick(event)">
       <!-- rendered by JS -->
     </div>
   </div>
 
-  <div style="height:32px;"></div>
-
-  <!-- T4: Divider — clear ending of listening zone, appears with library entry -->
-  <div style="display:flex;align-items:center;gap:12px;margin:0 20px 28px;opacity:0;transition:opacity 1.4s ease 0.2s;" id="explore-divider">
-    <div style="flex:1;height:1px;background:var(--cream-border);"></div>
-    <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);white-space:nowrap;">หรือถ้าอยากลองสำรวจต่อ</div>
-    <div style="flex:1;height:1px;background:var(--cream-border);"></div>
-  </div>
-
-  <!-- T1+T2: "เรื่องที่หลายคนเคยเจอ" — moved BELOW awareness, replaces old ดูเรื่องอื่นๆ -->
-  <div id="session-recognition" style="opacity:0;padding:0 16px;transition:opacity 0.9s ease;pointer-events:none;">
-    <div id="library-entry" style="opacity:0;transition:opacity 0.6s ease 0.4s;">
-      <div id="invitation-card"
-           onclick="openAllSituationsSheet()"
-           style="cursor:pointer;padding:20px 20px 18px;border-radius:18px;background:var(--cream-warm);border:1px solid var(--cream-border);transition:transform 0.12s ease,box-shadow 0.12s ease;user-select:none;-webkit-user-select:none;display:block;">
-        <div id="permission-sentence" style="font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--mid);line-height:1.65;letter-spacing:0.2px;">สำรวจเรื่องอื่นๆ →</div>
-      </div>
-    </div>
-  </div>
-
   <div style="height:28px;"></div>
 
-  <!-- T6: Stories section — "จากคนที่เคยอยู่ตรงนี้มาก่อน" -->
-  <!-- T6: Section header — "จากคนที่เคยอยู่ตรงนี้มาก่อน" -->
-  <div style="padding:0 20px;margin-bottom:4px;" id="stories-section-header">
-    <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);">จากคนที่เคยอยู่ตรงนี้มาก่อน</div>
-  </div>
+  <!-- Thin divider before stories -->
+  <div style="height:1px;background:var(--cream-border);margin:4px 20px 0;opacity:0.6;"></div>
+
   <div id="m4-section-root"></div>
   <div id="m5-section-root"></div>
   <div class="worlds-wrap" id="worlds-wrap"></div>
@@ -947,6 +962,8 @@
     </a>
   </div>
 <script>
+  var _awExpanded = false; // hoisted — must be var for early access
+  var _awCurrentId = null;
 const BASE_URL  = "https://jaidee-tu.vercel.app";
 const SCHOOL_SUPPORT_URL = BASE_URL + "/school.html";
 
@@ -1110,7 +1127,7 @@ const TIERS = [
   {
     label: 'เรื่องเพื่อนและความสัมพันธ์...',
     pills: [
-      { emoji:'🫧', label:'อยู่กับเพื่อนก็ไม่คุยด้วย',         key:'friend_silent' },
+      { emoji:'🫧', label:'อยู่ๆ เพื่อนก็ไม่คุยด้วย',         key:'friend_silent' },
       { emoji:'👥', label:'เข้ากับเพื่อนไม่ได้',          key:'social'    },
       { emoji:'🫥', label:'รู้สึกเหมือนไม่มีที่ของตัวเอง', key:'no_place'  },
       { emoji:'💬', label:'ทะเลาะกับเพื่อน',              key:'fight'     },
@@ -1167,7 +1184,7 @@ const ALL_PILLS = TIERS.reduce((acc, tier) => acc.concat(tier.pills), [])
 function renderTier(index) {
   // Label still reflects the current tier for context, but the row shows everything
   const tier = TIERS[index];
-  document.getElementById('tier-label').textContent = tier.label;
+  const _tl = document.getElementById('tier-label'); if (_tl) _tl.textContent = tier.label;
   _renderAllPillsInfinite();
 }
 
@@ -1596,6 +1613,16 @@ function pressPill(btn, key) {
     }
   } catch (e) {}
 
+  // btn may be null when called from search results or library sheet
+  if (!btn) {
+    if (typeof _libOpenedFromLib !== 'undefined' && _libOpenedFromLib) {
+      // Opening from library — use lighter overlay so lib feels "underneath"
+      openSitSheet(key, true);
+    } else {
+      openSitSheet(key);
+    }
+    return;
+  }
   btn.classList.add('pressing');
   // Soften all other pills briefly so this one anchors
   document.querySelectorAll('#tier-pills .sit-pill').forEach(p => {
@@ -1883,7 +1910,7 @@ function _buildSheetContent(key, contentEl) {
   });
 }
 
-function openSitSheet(key) {
+function openSitSheet(key, fromLib) {
   const d = _getSitData(key);
   if (!d) return;
 
@@ -1913,16 +1940,7 @@ function openSitSheet(key) {
   if (SESSION_OPENED.size === 2 && !sessionStorage.getItem('_bookmark_shown')) {
     sessionStorage.setItem('_bookmark_shown','1');
     // inject quietly below pill row, fade in after sheet closes
-    const existing = document.getElementById('bookmark-micro');
-    if (!existing) {
-      const el = document.createElement('div');
-      el.id = 'bookmark-micro';
-      el.style.cssText = 'text-align:center;padding:10px 24px 0;opacity:0;transition:opacity 1s ease;font-size:11px;font-weight:300;color:var(--soft);font-family:Noto Serif Thai,serif;letter-spacing:0.3px;';
-      el.textContent = 'เราจำที่ที่คุณเคยแวะไว้ให้แล้ว 🌱';
-      const preview = document.getElementById('pill-preview');
-      if (preview) preview.after(el);
-      setTimeout(() => { el.style.opacity = '1'; }, 1800);
-    }
+
   }
 
   // Build nav + content
@@ -1935,7 +1953,7 @@ function openSitSheet(key) {
   ov.style.display = 'flex';
   ov.style.pointerEvents = 'all';
   requestAnimationFrame(() => {
-    ov.style.background = 'rgba(0,0,0,0.52)';
+    ov.style.background = fromLib ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.52)';
     document.getElementById('sit-sheet').style.transform = 'translateY(0)';
   });
   document.body.style.overflow = 'hidden';
@@ -1972,6 +1990,13 @@ function closeSitSheet() {
       }, 250);
     }, 80);
   }, 280);
+  // Return to library category list if opened from lib
+  if (typeof _libOpenedFromLib !== 'undefined' && _libOpenedFromLib && _libCurrentCat) {
+    _libOpenedFromLib = false;
+    setTimeout(() => { _libRenderL2(_libCurrentCat); }, 320);
+  } else if (typeof _libOpenedFromLib !== 'undefined') {
+    _libOpenedFromLib = false;
+  }
 }
 
 function handleSitOverlay(e) {
@@ -2421,11 +2446,11 @@ const SIT_DATA_EXTRA = {
     talk:'ภาพความตายเริ่มรู้สึกหนักหรือมาเองโดยไม่ได้เชิญ?',
   },
   friend_silent: {
-    emoji:'🫧', title:'อยู่กับเพื่อนก็ไม่คุยด้วย',
+    emoji:'🫧', title:'อยู่ๆ เพื่อนก็ไม่คุยด้วย',
     type: 'B',
     note:'นั่งอยู่ข้างๆ กัน แต่รู้สึกเหมือนอยู่คนละโลก ไม่รู้ว่าทำอะไรผิด และสมองก็เริ่มเล่นฉากนั้นซ้ำ ค้นหาจุดที่ผิดพลาด',
     tools:[
-      { icon:'📖', name:'อยู่กับเพื่อนก็ไม่คุยด้วย — มันเกิดอะไรขึ้นกันแน่?', desc:'อ่าน 5 นาที · 5 สถานการณ์ที่ให้ผลลัพธ์เดียวกัน', href:'notebook.html?id=friend_silent', primary:true },
+      { icon:'📖', name:'อยู่ๆ เพื่อนก็ไม่คุยด้วย — มันเกิดอะไรขึ้นกันแน่?', desc:'อ่าน 5 นาที · 5 สถานการณ์ที่ให้ผลลัพธ์เดียวกัน', href:'notebook.html?id=friend_silent', primary:true },
       { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อความคิดวนซ้ำว่าทำอะไรผิด', href:'alltools.html#reframe' },
       { icon:'📓', name:'เขียนระบาย', desc:'ระบายออกมาก่อนที่มันจะล้นหัว', href:'alltools.html#journal' },
     ],
@@ -2658,10 +2683,15 @@ function _triggerPermissionSentence(delay) {
   setTimeout(() => {
     const rec = document.getElementById('session-recognition');
     const lib = document.getElementById('library-entry');
-    const divider = document.getElementById('explore-divider');
+    const footer = document.getElementById('explore-footer');
     if (rec) { rec.style.transition = 'opacity 1.4s ease'; rec.style.opacity = '1'; rec.style.pointerEvents = 'all'; }
     if (lib) lib.style.opacity = '1';
-    if (divider) { divider.style.transition = 'opacity 1.4s ease 0.2s'; divider.style.opacity = '1'; }
+    if (footer) {
+      footer.style.fontSize = '13px';
+      footer.style.opacity = '1';
+      footer.style.color = 'var(--gold)';
+      footer.style.textShadow = '0 0 12px rgba(232,150,12,0.45)';
+    }
   }, delay !== undefined ? delay : 2500);
 }
 
@@ -2754,8 +2784,6 @@ const AWARENESS_CARDS = [
   }
 ];
 
-let _awCurrentId = null;
-let _awExpanded = false;
 
 function awFind(id){ return AWARENESS_CARDS.find(c => c.id === id); }
 function awTodayId(){ return AWARENESS_CARDS[Math.floor(Date.now()/86400000) % AWARENESS_CARDS.length].id; }
@@ -2766,10 +2794,10 @@ function awRenderCollapsed(){
   const el = document.getElementById('awareness-card');
   if(!el || !c) return;
   el.classList.remove('expanded');
-  // Margin-note energy: just a quiet label + one sentence
   el.innerHTML = `
-    <div style="font-family:'Mitr',sans-serif;font-size:10px;font-weight:500;letter-spacing:1.8px;text-transform:uppercase;color:var(--soft);margin-bottom:5px;opacity:0.7;">น่ารู้วันนี้</div>
-    <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;letter-spacing:0.1px;">${c.hook}</div>
+    <div class="awareness-eyebrow"><span>${c.icon}</span><span>น่ารู้วันนี้</span></div>
+    <div class="awareness-hook">${c.hook}</div>
+    <div class="awareness-cta">อ่านต่อ →</div>
   `;
 }
 
@@ -2816,6 +2844,7 @@ function awCollapse(){
   awRenderCollapsed();
 }
 function awHandleCardClick(){
+  _triggerPermissionSentence(0);
   if(!_awExpanded) awRenderExpanded();
 }
 
@@ -2883,6 +2912,15 @@ const LIB_CATEGORIES = [
 ];
 
 let _libLevel = 1; // 1 = categories, 2 = situations
+let _libCurrentCat = null; // the category active when a pill was opened from library
+let _libOpenedFromLib = false; // true when sit-sheet was opened via library
+
+function openSitSheetFromLib(key) {
+  _libOpenedFromLib = true;
+  _libCurrentCat = _libCurrentCat; // preserve current category
+  // Keep library open underneath — sit-sheet opens on top (higher z-index)
+  pressPill(null, key);
+}
 
 function _libGetPills(tierIndex) {
   if (tierIndex === null) return [];
@@ -2995,13 +3033,13 @@ function _libRenderL2(cat) {
     const sheet = document.getElementById('allsit-sheet');
     if (sheet) sheet.scrollTop = 0;
 
-    // Wire situation taps
+    // Wire situation taps — open sit-sheet then return to this category list on close
     content.querySelectorAll('.lib-sit-item[data-key]').forEach(item => {
       const key = item.dataset.key;
       item.onclick = () => {
-        closeAllSituationsSheet(() => {
-          setTimeout(() => pressPill(null, key), 60);
-        });
+        // Open sit-sheet; when it closes, stay in library at this category
+        _libCurrentCat = cat;
+        openSitSheetFromLib(key);
       };
       item.ontouchstart = () => { item.style.background = 'var(--cream-warm)'; };
       item.ontouchend = () => { item.style.background = ''; };
@@ -3026,6 +3064,7 @@ function allsitBack() {
 }
 
 function openAllSituationsSheet() {
+  _triggerPermissionSentence(0);
   _libRenderL1(true);
 
   const ov = document.getElementById('allsit-overlay');
@@ -3094,6 +3133,91 @@ function handleAllSitOverlay(e) {
 })();
 
 
+
+// ── SEARCH FOCUS / SUGGESTIONS ─────────────────────────────
+const IDX_ALL_CHIPS = [
+  {e:'😴',l:'นอนไม่หลับ',k:'sleep'},
+  {e:'🪫',l:'หมดไฟ',k:'burnout'},
+  {e:'🤯',l:'สมองตื้อ',k:'foggy'},
+  {e:'🪞',l:'ไม่แน่ใจว่าตัวเองกำลังรู้สึกอะไร',k:'__unsure__'},
+  {e:'🪷',l:'จินตนาการว่าตัวเองตายทุกวัน',k:'maranasati'},
+  {e:'😞',l:'ผิดหวัง',k:'disappointed'},
+  {e:'😵‍💫',l:'สับสน เลือกไม่ได้',k:'confused'},
+  {e:'🌿',l:'เป็นห่วงเพื่อน',k:'worried_friend'},
+  {e:'📚',l:'กลัวสอบ',k:'exam_fear'},
+  {e:'📖',l:'อ่านหนังสือแล้วไม่เข้าหัว',k:'cant_focus'},
+  {e:'⏰',l:'งานเยอะจนล้น',k:'overwhelm'},
+  {e:'🎯',l:'กดดันตัวเองมากเกินไป',k:'pressure'},
+  {e:'📉',l:'รู้สึกว่าตัวเองไม่เก่งพอ',k:'not_enough'},
+  {e:'🏃',l:'ทุกคนดูไปไกลกว่าฉัน',k:'behind'},
+  {e:'🫧',l:'อยู่ๆ เพื่อนก็ไม่คุยด้วย',k:'friend_silent'},
+  {e:'👥',l:'เข้ากับเพื่อนไม่ได้',k:'social'},
+  {e:'🫥',l:'รู้สึกเหมือนไม่มีที่ของตัวเอง',k:'no_place'},
+  {e:'💬',l:'ทะเลาะกับเพื่อน',k:'fight'},
+  {e:'🥲',l:'รู้สึกโดนทิ้ง',k:'abandoned'},
+  {e:'❤️',l:'แอบชอบใครสักคน',k:'crush'},
+  {e:'💔',l:'เพิ่งอกหัก',k:'heartbreak'},
+  {e:'😔',l:'รู้สึกเหงา',k:'lonely'},
+  {e:'🏠',l:'คิดถึงบ้าน',k:'homesick'},
+  {e:'👨‍👩‍👧',l:'มีปัญหากับครอบครัว',k:'family'},
+  {e:'🫤',l:'รู้สึกว่าที่บ้านไม่เข้าใจ',k:'not_understood'},
+  {e:'😮‍💨',l:'อยากมีพื้นที่ของตัวเอง',k:'need_space'},
+  {e:'🌫️',l:'เครียดอยู่ แต่ไม่รู้ว่าเรื่องอะไร',k:'stress_chronic'},
+  {e:'🍚',l:'กินข้าวไม่ค่อยลง',k:'no_appetite'},
+  {e:'🍚',l:'หิวแต่จะกินดีมั้ย',k:'hungry'},
+  {e:'📱',l:'เล่นมือถือจนดึก',k:'late_phone'},
+  {e:'☀️',l:'ไม่ค่อยได้ออกไปไหน',k:'no_outside'},
+  {e:'🪫',l:'เหนื่อยตลอดเวลา',k:'tired'},
+  {e:'🛏️',l:'ไม่อยากลุกจากเตียง',k:'no_energy'},
+  {e:'🥛',l:'วันนี้ดื่มน้ำน้อยมาก',k:'low_water'},
+  {e:'🚿',l:'ดองเค็ม/ยังไม่ได้อาบน้ำ',k:'no_shower'},
+  {e:'🧺',l:'ห้องรกจนไม่มีที่เดิน',k:'messy_room'},
+  {e:'🤔',l:'อยากรู้จักตัวเองมากขึ้น',k:'self_know'},
+  {e:'🧩',l:'ฉันเป็นคนแบบไหนกันนะ',k:'personality'},
+  {e:'🌱',l:'อยากเปลี่ยนแปลงตัวเอง',k:'grow'},
+  {e:'🎭',l:'รู้สึกว่าตัวเองไม่เหมือนเดิม',k:'changed'},
+  {e:'❓',l:'ไม่รู้ว่าตัวเองต้องการอะไร',k:'lost'}
+];
+
+function idxSearchFocus() {
+  document.getElementById('idx-search-wrap').classList.add('focused');
+  _triggerPermissionSentence(0);
+  const inp = document.getElementById('idx-search');
+  if (!inp || inp.value.trim()) return;
+  idxShowSuggestions();
+}
+
+function idxSearchBlur() {
+  document.getElementById('idx-search-wrap').classList.remove('focused');
+  const inp = document.getElementById('idx-search');
+  if (inp && !inp.value.trim()) idxHideSuggestions();
+}
+
+function idxShowSuggestions() {
+  const panel = document.getElementById('idx-suggestions');
+  const chips = document.getElementById('idx-suggestion-chips');
+  if (!panel || !chips) return;
+  chips.innerHTML = IDX_ALL_CHIPS.map(p =>
+    `<button class="idx-chip" onclick="idxChipTap('${p.k}')" type="button">
+      <span class="chip-emoji">${p.e}</span><span>${p.l}</span>
+    </button>`
+  ).join('');
+  panel.style.display = 'block';
+  requestAnimationFrame(() => { panel.style.opacity = '1'; });
+}
+
+function idxHideSuggestions() {
+  const panel = document.getElementById('idx-suggestions');
+  if (panel) panel.style.display = 'none';
+}
+
+function idxChipTap(key) {
+  idxHideSuggestions();
+  const inp = document.getElementById('idx-search');
+  if (inp) inp.blur();
+  pressPill(null, key);
+}
+
 // ── INDEX SEARCH ─────────────────────────────────────────────
 const IDX_SEARCH_ALIASES = {
   'คิดถึงความตาย':['maranasati'],'มรณานุสติ':['maranasati'],
@@ -3122,7 +3246,8 @@ function idxSearch(val) {
   const clearBtn = document.getElementById('idx-search-clear');
   const results = document.getElementById('idx-search-results');
   if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
-  if (!q) { results.style.display = 'none'; return; }
+  if (!q) { results.style.display = 'none'; idxShowSuggestions(); return; }
+  idxHideSuggestions();
 
   const allData = (typeof SIT_DATA !== 'undefined' ? SIT_DATA : {});
   const hits = new Map();
@@ -3181,6 +3306,7 @@ document.addEventListener('click', function(e) {
   if (container && !container.contains(e.target)) {
     const r = document.getElementById('idx-search-results');
     if (r) r.style.display = 'none';
+    idxHideSuggestions();
   }
 });
 </script>
