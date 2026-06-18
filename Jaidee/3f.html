@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>เทคนิค 3F — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#FDFBF7; --card:#FFFFFF;
+      --cream-border:#EDE9E0; --cream-warm:#FFF8EE;
+      --dark:#1C1917; --mid:#6B6560; --soft:#A8A099; --faint:#C8C2B8;
+      --teal:#0D9488; --teal-soft:#F0FDFA; --teal-border:#99E6DC;
+      --gold:#E8960C; --gold-soft:#FFF3DC; --gold-border:#FFE0A0;
+      --rose:#C48FA3; --rose-soft:#FAF0F4; --rose-border:#E8C8D4;
+      --sage:#94A37C; --sage-soft:#F2F5EE; --sage-border:#C8D9B8;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    html,body{background:var(--bg);color:var(--dark);font-family:'Mitr',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .fade-up{animation:fadeUp 0.4s ease forwards;}
+
+    .screen{display:none;min-height:100vh;flex-direction:column;}
+    .screen.active{display:flex;}
+
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:20px 20px 0;font-size:13px;color:var(--soft);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;text-decoration:none;}
+
+    /* STEP DOTS */
+    .step-dots{display:flex;gap:6px;justify-content:center;padding:20px 0 0;}
+    .step-dot{width:7px;height:7px;border-radius:50%;background:var(--cream-border);transition:all 0.3s;}
+    .step-dot.done{background:var(--faint);}
+    .step-dot.active{width:20px;border-radius:4px;}
+    .step-dot.f1{background:var(--teal);}
+    .step-dot.f2{background:var(--rose);}
+    .step-dot.f3{background:var(--sage);}
+
+    /* INTRO */
+    #s-intro{padding:0 0 40px;}
+    .intro-hero{padding:40px 24px 24px;text-align:center;}
+    .intro-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:var(--teal-soft);border:1px solid var(--teal-border);border-radius:20px;font-size:10px;font-weight:500;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+    .intro-title{font-family:'Noto Serif Thai',serif;font-size:26px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:8px;}
+    .intro-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;}
+    .intro-steps{display:flex;flex-direction:column;gap:3px;padding:0 16px;margin-bottom:28px;}
+    .intro-step{display:flex;align-items:flex-start;gap:14px;padding:16px;background:var(--card);border:1px solid var(--cream-border);border-radius:16px;}
+    .intro-step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;margin-top:2px;}
+    .intro-step-dot.f1{background:var(--teal-soft);color:var(--teal);}
+    .intro-step-dot.f2{background:var(--rose-soft);color:var(--rose);}
+    .intro-step-dot.f3{background:var(--sage-soft);color:var(--sage);}
+    .intro-step-info{}
+    .intro-step-name{font-size:14px;font-weight:500;color:var(--dark);margin-bottom:3px;}
+    .intro-step-desc{font-size:12px;font-weight:300;color:var(--soft);line-height:1.7;}
+    .intro-start-btn{display:block;width:calc(100% - 32px);margin:0 16px;padding:15px;background:var(--teal);border:none;border-radius:20px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:#fff;cursor:pointer;transition:opacity 0.15s;}
+    .intro-start-btn:active{opacity:0.85;}
+
+    /* REFLECTION SCREENS */
+    .ref-screen{padding:0 0 48px;}
+    .ref-header{padding:24px 20px 20px;}
+    .ref-eyebrow{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+    .ref-eyebrow.teal{color:var(--teal);}
+    .ref-eyebrow.rose{color:var(--rose);}
+    .ref-eyebrow.sage{color:var(--sage);}
+    .ref-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;color:var(--dark);line-height:1.4;margin-bottom:6px;}
+    .ref-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.7;}
+    .ref-prompt-card{margin:0 16px 16px;padding:18px;background:var(--cream-warm);border-radius:18px;border:1px solid var(--cream-border);}
+    .ref-prompt{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:400;color:var(--mid);line-height:1.85;margin-bottom:14px;}
+    .ref-prompt:last-child{margin-bottom:0;}
+    .ref-textarea{width:100%;min-height:120px;padding:14px 16px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:14px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:300;color:var(--dark);line-height:1.7;resize:none;outline:none;transition:border-color 0.2s;}
+    .ref-textarea:focus{border-color:var(--teal);}
+    .ref-textarea.rose:focus{border-color:var(--rose);}
+    .ref-textarea.sage:focus{border-color:var(--sage);}
+    .ref-hint{font-size:11px;font-weight:300;color:var(--faint);margin:6px 16px 0;line-height:1.6;}
+    .ref-next-btn{display:block;width:calc(100% - 32px);margin:20px 16px 0;padding:14px;border:none;border-radius:18px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity 0.15s;}
+    .ref-next-btn:active{opacity:0.85;}
+    .ref-next-btn.teal{background:var(--teal-soft);color:var(--teal);border:1px solid var(--teal-border);}
+    .ref-next-btn.rose{background:var(--rose-soft);color:var(--rose);border:1px solid var(--rose-border);}
+    .ref-next-btn.sage{background:var(--sage-soft);color:var(--sage);border:1px solid var(--sage-border);}
+    .ref-skip{display:block;text-align:center;margin-top:12px;font-size:12px;color:var(--faint);cursor:pointer;padding:8px;}
+
+    /* DONE */
+    #s-done{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:16px;}
+    .done-emoji{font-size:52px;}
+    .done-title{font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;color:var(--dark);line-height:1.5;}
+    .done-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;}
+    .done-summary{width:100%;background:var(--card);border:1px solid var(--cream-border);border-radius:20px;padding:20px;text-align:left;margin-top:8px;}
+    .done-section{margin-bottom:16px;}
+    .done-section:last-child{margin-bottom:0;}
+    .done-section-label{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+    .done-section-label.teal{color:var(--teal);}
+    .done-section-label.rose{color:var(--rose);}
+    .done-section-label.sage{color:var(--sage);}
+    .done-section-text{font-size:13px;font-weight:300;color:var(--mid);line-height:1.7;font-style:italic;}
+    .done-section-empty{font-size:13px;font-weight:300;color:var(--faint);}
+    .done-back{display:inline-flex;align-items:center;gap:6px;margin-top:20px;padding:12px 24px;background:var(--cream-warm);border:1px solid var(--cream-border);border-radius:20px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--soft);text-decoration:none;}
+  </style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div class="screen active" id="s-intro">
+  <a class="back-btn" href="alltools.html">← กลับ</a>
+  <div class="intro-hero">
+    <div class="intro-badge">🔍 เทคนิค 3F</div>
+    <div class="intro-title">ทบทวนตัวเอง<br>ด้วยสามคำถาม</div>
+    <div class="intro-sub">ค้นพบ → รู้สึก → ก้าวต่อ<br>ไม่ต้องมีคำตอบสมบูรณ์แบบ</div>
+  </div>
+  <div class="intro-steps">
+    <div class="intro-step">
+      <div class="intro-step-dot f1">F1</div>
+      <div class="intro-step-info">
+        <div class="intro-step-name">Found — ค้นพบ</div>
+        <div class="intro-step-desc">วันนี้เราเจออะไรบ้างที่กระทบใจ ทั้งดีและไม่ดี ทั้งเรื่องเล็กและเรื่องใหญ่</div>
+      </div>
+    </div>
+    <div class="intro-step">
+      <div class="intro-step-dot f2">F2</div>
+      <div class="intro-step-info">
+        <div class="intro-step-name">Feeling — รู้สึก</div>
+        <div class="intro-step-desc">วันนี้เรารู้สึกอะไรบ้าง ความรู้สึกที่ชัดเจนหรือยังคลุมเครือก็ได้</div>
+      </div>
+    </div>
+    <div class="intro-step">
+      <div class="intro-step-dot f3">F3</div>
+      <div class="intro-step-info">
+        <div class="intro-step-name">Forward — ก้าวต่อ</div>
+        <div class="intro-step-desc">หลังสำรวจสิ่งที่ค้นพบและรู้สึก อยากก้าวต่อไปอย่างไร มีอะไรเล็กๆ ที่ทำได้?</div>
+      </div>
+    </div>
+  </div>
+  <button class="intro-start-btn" onclick="startReflection()">เริ่มทบทวนเลย →</button>
+</div>
+
+<!-- F1: FOUND -->
+<div class="screen ref-screen" id="s-f1">
+  <a class="back-btn" onclick="showScreen('s-intro')">← กลับ</a>
+  <div class="step-dots" id="dots-f1">
+    <div class="step-dot f1 active"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+  </div>
+  <div class="ref-header">
+    <div class="ref-eyebrow teal">F1 — Found · ค้นพบ</div>
+    <div class="ref-title">วันนี้เจออะไรบ้าง?</div>
+    <div class="ref-sub">ทั้งดีและไม่ดี เรื่องเล็กก็นับ</div>
+  </div>
+  <div class="ref-prompt-card">
+    <div class="ref-prompt">🌟 มีอะไรที่ทำให้รู้สึกดี แม้เพียงเล็กน้อย?</div>
+    <div class="ref-prompt">🌀 มีอะไรที่รู้สึกยากหรือกระทบใจ?</div>
+    <div class="ref-prompt">💡 มีอะไรที่ทำให้คิดหรือสังเกตบางอย่าง?</div>
+  </div>
+  <div style="padding:0 16px;">
+    <textarea id="ta-found" class="ref-textarea" placeholder="เขียนได้อิสระ ไม่มีผิดถูก..." rows="5"></textarea>
+  </div>
+  <div class="ref-hint">ไม่ต้องครบทุกคำถาม เขียนเท่าที่อยากเขียน</div>
+  <button class="ref-next-btn teal" onclick="goToF2()">ถัดไป: รู้สึก →</button>
+  <span class="ref-skip" onclick="goToF2()">ข้ามไปก่อน</span>
+</div>
+
+<!-- F2: FEELING -->
+<div class="screen ref-screen" id="s-f2">
+  <a class="back-btn" onclick="showScreen('s-f1')">← กลับ</a>
+  <div class="step-dots" id="dots-f2">
+    <div class="step-dot done"></div>
+    <div class="step-dot f2 active"></div>
+    <div class="step-dot"></div>
+  </div>
+  <div class="ref-header">
+    <div class="ref-eyebrow rose">F2 — Feeling · รู้สึก</div>
+    <div class="ref-title">วันนี้รู้สึกอย่างไรบ้าง?</div>
+    <div class="ref-sub">ไม่ต้องหาเหตุผล แค่สังเกต</div>
+  </div>
+  <div class="ref-prompt-card">
+    <div class="ref-prompt">💭 ความรู้สึกหลักในวันนี้คืออะไร?</div>
+    <div class="ref-prompt">🌊 มีความรู้สึกที่ยังค้างอยู่ไหม?</div>
+    <div class="ref-prompt">🫁 ร่างกายรู้สึกอย่างไร หนัก เบา ตึง หรือสบาย?</div>
+  </div>
+  <div style="padding:0 16px;">
+    <textarea id="ta-feeling" class="ref-textarea rose" placeholder="ความรู้สึกใดก็ได้ ไม่ต้องสมเหตุสมผล..." rows="5"></textarea>
+  </div>
+  <div class="ref-hint">บางครั้งแค่ตั้งชื่อความรู้สึกก็ทำให้มันเบาลง</div>
+  <button class="ref-next-btn rose" onclick="goToF3()">ถัดไป: ก้าวต่อ →</button>
+  <span class="ref-skip" onclick="goToF3()">ข้ามไปก่อน</span>
+</div>
+
+<!-- F3: FORWARD -->
+<div class="screen ref-screen" id="s-f3">
+  <a class="back-btn" onclick="showScreen('s-f2')">← กลับ</a>
+  <div class="step-dots" id="dots-f3">
+    <div class="step-dot done"></div>
+    <div class="step-dot done"></div>
+    <div class="step-dot f3 active"></div>
+  </div>
+  <div class="ref-header">
+    <div class="ref-eyebrow sage">F3 — Forward · ก้าวต่อ</div>
+    <div class="ref-title">อยากก้าวต่อไปอย่างไร?</div>
+    <div class="ref-sub">ไม่ต้องแก้ทุกอย่าง แค่หนึ่งก้าวเล็กๆ</div>
+  </div>
+  <div class="ref-prompt-card">
+    <div class="ref-prompt">🌱 มีอะไรเล็กๆ ที่อยากทำหรือเปลี่ยน?</div>
+    <div class="ref-prompt">🙏 มีอะไรที่อยากปล่อยวางหรือยอมรับ?</div>
+    <div class="ref-prompt">💛 อยากดูแลตัวเองอย่างไรในช่วงถัดไป?</div>
+  </div>
+  <div style="padding:0 16px;">
+    <textarea id="ta-forward" class="ref-textarea sage" placeholder="ก้าวเล็กๆ ก็นับเป็นก้าวเสมอ..." rows="5"></textarea>
+  </div>
+  <div class="ref-hint">ไม่ต้องมี action plan สมบูรณ์แบบ แค่รู้สึกถึงทิศทางก็พอ</div>
+  <button class="ref-next-btn sage" onclick="finishReflection()">เสร็จแล้ว ✓</button>
+  <span class="ref-skip" onclick="finishReflection()">ข้ามไปก่อน</span>
+</div>
+
+<!-- DONE -->
+<div class="screen" id="s-done">
+  <a class="back-btn" href="alltools.html">← กลับ</a>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 20px 40px;">
+    <div class="done-emoji" style="margin-bottom:16px;">🌱</div>
+    <div class="done-title" style="margin-bottom:8px;">ทบทวนเสร็จแล้ว</div>
+    <div class="done-sub" style="margin-bottom:20px;">การสำรวจตัวเองเป็นของขวัญที่ให้กับตัวเองได้ทุกวัน</div>
+    <div class="done-summary" id="done-summary"></div>
+    <a href="alltools.html" class="done-back">← กลับหน้าหลัก</a>
+  </div>
+</div>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startReflection() { showScreen('s-f1'); }
+function goToF2() { showScreen('s-f2'); }
+function goToF3() { showScreen('s-f3'); }
+
+function finishReflection() {
+  const found = document.getElementById('ta-found').value.trim();
+  const feeling = document.getElementById('ta-feeling').value.trim();
+  const forward = document.getElementById('ta-forward').value.trim();
+  const summary = document.getElementById('done-summary');
+  summary.innerHTML = `
+    <div class="done-section">
+      <div class="done-section-label teal">F1 — ค้นพบ</div>
+      ${found ? `<div class="done-section-text">${found}</div>` : '<div class="done-section-empty">ข้ามไป</div>'}
+    </div>
+    <div class="done-section">
+      <div class="done-section-label rose">F2 — รู้สึก</div>
+      ${feeling ? `<div class="done-section-text">${feeling}</div>` : '<div class="done-section-empty">ข้ามไป</div>'}
+    </div>
+    <div class="done-section">
+      <div class="done-section-label sage">F3 — ก้าวต่อ</div>
+      ${forward ? `<div class="done-section-text">${forward}</div>` : '<div class="done-section-empty">ข้ามไป</div>'}
+    </div>`;
+  showScreen('s-done');
+}
+</script>
+</body>
+</html>
