@@ -145,8 +145,8 @@ const TIERS = [
       { emoji:'🪞', label:'ไม่แน่ใจว่าตัวเองกำลังรู้สึกอะไร', key:'__unsure__' },
       { emoji:'😴', label:'นอนไม่หลับ',              key:'sleep'    },
       { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
+      { emoji:'🫥', label:'รู้สึกชา อยากหายไป ไม่อยากทำอะไรเลย', key:'shutdown' },
       { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
-      { emoji:'🪷', label:'จินตนาการว่าตัวเองตายทุกวัน', key:'maranasati' },
       { emoji:'😞', label:'ผิดหวัง',                key:'disappointed' },
       { emoji:'😵‍💫', label:'สับสน เลือกไม่ได้',     key:'confused'     },
       { emoji:'🌿', label:'เพื่อนดูไม่โอเคเลย',          key:'friend'   },
@@ -166,7 +166,6 @@ const TIERS = [
   {
     label: 'เรื่องเพื่อนและความสัมพันธ์...',
     pills: [
-      { emoji:'🫧', label:'อยู่กับเพื่อนก็ไม่คุยด้วย',   key:'friend_silent' },
       { emoji:'👥', label:'เข้ากับเพื่อนไม่ได้',          key:'social'    },
       { emoji:'🫥', label:'รู้สึกเหมือนไม่มีที่ของตัวเอง', key:'no_place'  },
       { emoji:'💬', label:'ทะเลาะกับเพื่อน',              key:'fight'     },
@@ -188,7 +187,6 @@ const TIERS = [
   {
     label: 'ร่างกายและชีวิตประจำวัน...',
     pills: [
-      { emoji:'🌫️', label:'เครียดอยู่ แต่ไม่รู้ว่าเรื่องอะไร', key:'stress_chronic' },
       { emoji:'😴', label:'นอนไม่หลับ',          key:'sleep'      },
       { emoji:'🍚', label:'กินข้าวไม่ค่อยลง',    key:'no_appetite'},
       { emoji:'🍚', label:'หิวแต่จะกินดีมั้ย',   key:'hungry'     },
@@ -233,6 +231,7 @@ const SIT_DATA = {
     type: 'B',
     group: 'grow',
     note: 'หมดไฟมักเกิดเมื่อร่างกายและจิตใจทำงานหนักเกินไปนานเกินไป โดยไม่ได้รับการดูแลเรื่องพื้นฐาน ไม่ใช่ความอ่อนแอ แต่เป็นสัญญาณที่ต้องรับฟัง',
+    understand:'หมดไฟมักเกิดขึ้นหลังจากทำงานหนักเกินไปนานเกินไป โดยไม่ได้รับการดูแลเรื่องพื้นฐานเลย ร่างกายไม่ได้ขี้เกียจ มันแค่หมดถัง สิ่งที่ต้องการตอนนี้ไม่ใช่แรงบันดาลใจ แต่คือการพักฟื้นจริงๆ — ทีละก้าว ไม่ต้องทั้งหมดในคืนเดียว',
     tools: [
       { icon:'🪞', name:"What's This Feeling?", desc:'สำรวจว่าหมดไฟจากอะไรกันแน่', href:'reflection.html', primary: true },
       { icon:'🏃', name:'เคลื่อนไหวก่อนเลย', desc:'3 นาที เปลี่ยนพลังงาน', href:'alltools.html#move' },
@@ -466,25 +465,73 @@ function openSitSheet(key) {
     return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px;"><div style="flex:1;height:1px;background:var(--cream-border);"></div><div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;color:var(--gold);text-transform:uppercase;white-space:nowrap;">${text}</div><div style="flex:1;height:1px;background:var(--cream-border);"></div></div>`;
   }
 
-  const restHtml = restTools.length ? (_divider('ตัวเลือกอื่น') + restTools.map(_toolCard).join('')) : '';
+  // ── เข้าใจสิ่งที่เกิดขึ้น block — 30-80 words, every situation ──
+  function _understandBlock(d, group) {
+    const copy = d.understand || (d.note ? d.note.slice(0, 120) + (d.note.length > 120 ? '…' : '') : '');
+    if (!copy) return '';
+    const gs = GROUP_STYLES[group] || { border:'rgba(0,0,0,0.06)' };
+    return `<div style="margin-bottom:20px;">
+      <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;padding-left:2px;">🪞 เข้าใจสิ่งที่เกิดขึ้น</div>
+      <div style="padding:14px 16px;border-radius:14px;background:var(--cream-warm);border:1px solid ${gs.border || 'var(--cream-border)'};">
+        <div style="font-family:'Noto Serif Thai',serif;font-size:13px;font-weight:300;color:var(--mid);line-height:2;letter-spacing:0.1px;">${copy}</div>
+      </div>
+    </div>`;
+  }
+
+  const understandHtml = _understandBlock(d, group);
+
+  // ── Related situations — "ยังดูต่อ" ──
+  function _relatedBlock(d) {
+    const related = d.related || [];
+    if (!related.length) return '';
+    const allData = typeof SIT_DATA_COMBINED !== 'undefined' ? SIT_DATA_COMBINED : (typeof SIT_DATA !== 'undefined' ? SIT_DATA : {});
+    const items = related.map(k => {
+      const s = allData[k];
+      if (!s) return '';
+      return `<button onclick="closeSitSheet();setTimeout(()=>pressPill(null,'${k}'),400)"
+        style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;border-bottom:1px solid var(--cream-border);font-family:'Mitr',sans-serif;padding:11px 0;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;">
+        <span style="font-size:18px;flex-shrink:0;width:26px;text-align:center;">${s.emoji}</span>
+        <span style="font-size:13px;font-weight:400;color:var(--dark);flex:1;">${s.title}</span>
+        <span style="font-size:11px;color:var(--faint);">→</span>
+      </button>`;
+    }).filter(Boolean).join('');
+    if (!items) return '';
+    return `<div style="margin-top:8px;">
+      <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--soft);margin-bottom:6px;padding-left:2px;">ยังดูต่อ</div>
+      <div>${items}</div>
+    </div>`;
+  }
+
+  const relatedHtml = _relatedBlock(d);
+
+  const otherTools = restTools.filter(t => t !== articleTool);
+  const otherHtml = otherTools.length
+    ? (`<div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;padding-left:2px;">ลองแบบนี้ดูไหม</div>` + otherTools.map(_toolCard).join(''))
+    : '';
 
   let toolsHtml;
   if (type === 'A') {
-    // Regulation first: one primary tool, article (if any) de-emphasized below it
+    // Regulate first: primary tool → เข้าใจ → others → article → related
     toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้')
-      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false, group)
-      + restHtml;
+      + understandHtml
+      + otherHtml
+      + _articleCard(articleTool, 'อ่านเพิ่มเติม', false, group)
+      + relatedHtml;
   } else if (type === 'C') {
-    // Human first: peer card always on top, then understanding, then a primary tool
+    // Human first: peer → primary → เข้าใจ → others → article → related
     toolsHtml = _peerCard()
-      + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false, group)
       + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม')
-      + restHtml;
+      + understandHtml
+      + otherHtml
+      + _articleCard(articleTool, 'อ่านเพิ่มเติม', false, group)
+      + relatedHtml;
   } else {
-    // Type B — understanding first: article large/primary, then a primary tool
-    toolsHtml = articleTool
-      ? (_articleCard(articleTool, 'เริ่มตรงนี้', true, group) + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม') + restHtml)
-      : (_primaryCard(primaryTool, 'เริ่มตรงนี้') + restHtml);
+    // Type B — primary first → เข้าใจ → article → others → related
+    toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้')
+      + understandHtml
+      + _articleCard(articleTool, 'อ่านเพิ่มเติม', true, group)
+      + otherHtml
+      + relatedHtml;
   }
 
   // Talk nudge — original style → talk_who.html
@@ -584,6 +631,7 @@ const SIT_DATA_EXTRA = {
     type: 'A',
     group: 'understand',
     note:'การที่ใจรู้สึกสองอย่างที่ดูขัดกันพร้อมกันได้จริง สมองสามารถเปิดสวิตช์ทั้งสองฝั่งพร้อมกัน — ไม่ใช่ความโลเล แต่เป็นมิติจิตใจที่ซับซ้อนขึ้น',
+    understand:'ความสับสนที่หนักจนเลือกไม่ได้ มักไม่ได้มาจากขาดข้อมูล — แต่มาจากข้อมูลมากเกินไป หรือจากความกลัวว่าจะเลือกผิด บางครั้งหัวที่วนซ้ำต้องการพื้นที่ว่างก่อน ไม่ใช่ตัวเลือกเพิ่ม',
     tools:[
       { icon:'📄', name:'"AND" Space', desc:'เขียน 2 ความรู้สึกที่ขัดกัน แล้วให้มันอยู่ร่วมกันได้', href:'alltools.html#blankpaper-and', primary:true },
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ถ้าสับสนเรื่องความรู้สึก', href:'alltools.html#rain' },
@@ -648,6 +696,7 @@ const SIT_DATA_EXTRA = {
     type: 'B',
     group: 'comfort',
     note:'ความรู้สึกนี้พบได้บ่อยมากในคนที่เก่งจริงๆ แต่ยังไม่รู้ตัว ไม่ได้แปลว่าเป็นความจริง',
+    understand:'ความรู้สึกว่าไม่เก่งพอมักไม่ได้มาจากความจริง แต่มาจากการเปรียบเทียบ — กับคนอื่น กับเวอร์ชันที่คิดว่าตัวเองควรจะเป็น สมองที่กำลังเครียดมักหยิบหลักฐานที่แย่ที่สุดมายืนยันสิ่งที่กลัวอยู่แล้ว ไม่ได้แปลว่าหลักฐานนั้นคือทั้งหมดของความจริง',
     tools:[
       { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อ "ไม่เก่งพอ" เกาะแน่นจนเจ็บ — คลายมือจากมัน', href:'alltools.html#reframe', primary:true },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจว่าความรู้สึกนี้มาจากไหน', href:'reflection.html' },
@@ -687,6 +736,7 @@ const SIT_DATA_EXTRA = {
     type: 'C',
     group: 'belong',
     note:'มีความต่างที่สำคัญระหว่าง "ยังไม่เจอที่ของตัวเอง" กับ "ไม่มีที่ให้เรา" — ส่วนใหญ่เป็นอย่างแรก แต่ตอนที่รู้สึกอยู่มันเหมือนอย่างหลังเสมอ',
+    understand:'ความรู้สึกว่าไม่มีที่ของตัวเองในกลุ่ม ในห้อง หรือในโลก ไม่ได้แปลว่าเธอไม่เป็นที่ต้องการ บางครั้งมันแปลว่าเธอยังไม่เจอสภาพแวดล้อมที่ใช่ หรือเธอกำลังอยู่ในช่วงที่ตัวตนกำลังเปลี่ยนแปลง และพื้นที่เก่ายังตามไม่ทัน',
     tools:[
       { icon:'🤍', name:'พักใจ', desc:'self-compassion เมื่อรู้สึกไม่มีที่ของตัวเอง', href:'alltools.html#rest', primary:true },
       { icon:'🪞', name:"What's This Feeling?", desc:'ลองสำรวจข้างในก่อน', href:'reflection.html' },
@@ -713,6 +763,7 @@ const SIT_DATA_EXTRA = {
     type: 'C',
     group: 'comfort',
     note:'สมองประมวลผลการถูกทิ้งผ่านพื้นที่เดียวกับความเจ็บปวดทางกาย มันไม่ใช่การคิดมาก มันเจ็บจริงๆ ในระดับ biology',
+    understand:'ความรู้สึกโดนทิ้งไม่ได้ต้องการการพิสูจน์ว่าจริงหรือเปล่า มันเจ็บปวดโดยตัวมันเองอยู่แล้ว ไม่ว่าจะเกิดจากอะไร สิ่งที่ทำให้มันซับซ้อนคือบางครั้งมันไปกระตุกความเจ็บที่เก่ากว่านั้น ที่ไม่ได้เกี่ยวกับคนคนนี้เลยด้วยซ้ำ',
     tools:[
       { icon:'🌊', name:'อยู่กับมัน (RAIN)', desc:'ให้พื้นที่กับความเจ็บโดยไม่จมไปกับมัน', href:'alltools.html#rain', primary:true },
       { icon:'🤍', name:'พักใจ', desc:'self-compassion เมื่อรู้สึกถูกทิ้ง', href:'alltools.html#rest' },
@@ -754,6 +805,7 @@ const SIT_DATA_EXTRA = {
     type: 'C',
     group: 'comfort',
     note:'ความเหงาไม่ได้แปลว่าไม่มีเพื่อน บางทีรู้สึกเหงาแม้จะอยู่กับคนรอบข้าง นั่นก็เป็นสัญญาณสำคัญ',
+    understand:'ความเหงาไม่ได้แปลว่าอยู่คนเดียว หลายคนรู้สึกเหงาที่สุดตอนอยู่ท่ามกลางคนเยอะๆ มันคือความรู้สึกว่าไม่มีใครเห็นเธอจริงๆ ไม่มีใครรู้ว่าข้างในกำลังเป็นอะไร และนั่นคือความต้องการที่สมเหตุสมผลมาก',
     tools:[
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'มีคนพร้อมรับฟัง', href:'peer.html' },
       { icon:'🪞', name:'What\'s This Feeling?', desc:'สำรวจความรู้สึกข้างใน', href:'reflection.html' },
@@ -937,42 +989,19 @@ const SIT_DATA_EXTRA = {
     ],
     talk:'รู้สึก lost มากและกระทบชีวิตประจำวัน?',
   },
-  maranasati: {
-    emoji:'🪷', title:'จินตนาการว่าตัวเองตายทุกวัน',
-    type: 'B',
+  shutdown: {
+    emoji:'🫥', title:'รู้สึกชา อยากหายไป ไม่อยากทำอะไรเลย',
+    type: 'C',
     group: 'comfort',
-    note:'ไม่ใช่เพราะอยากตาย แต่เพราะมันทำให้สงบ — ความรู้สึกนี้มีรากฐานมาจากการฝึกสมาธิโบราณ และวิทยาศาสตร์พอจะอธิบายได้ว่าทำไมมันถึงได้ผล',
+    understand:'นี่ไม่ใช่ความอ่อนแอ — มันคือระบบประสาทที่ปิดตัวเพื่อปกป้องคุณ เมื่อทุกอย่างหนักเกินไปนานเกินไป ร่างกายจะเลือกปิดแทนที่จะให้ไหม้',
+    note:'ไม่รู้สึกอะไร ไม่อยากขยับ อยากหายออกไปจากทุกอย่าง นั่นไม่ใช่ความขี้เกียจ — มันคือสัญญาณที่ระบบประสาทส่งมาบอก',
     tools:[
-      { icon:'📖', name:'จินตนาการว่าตัวเองตายทุกวัน — มันช่วยได้จริง หรือติดแล้ว?', desc:'อ่าน 6 นาที · มรณานุสติ + จิตวิทยาสมัยใหม่', href:'notebook.html?id=maranasati', primary:true },
-      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ทางตรงสู่ความสงบ ไม่ต้องผ่านภาพหนัก', href:'alltools.html#breathe' },
-      { icon:'🌱', name:'Grounding 5-4-3-2-1', desc:'ดึงกลับมาอยู่กับปัจจุบัน', href:'alltools.html#grounding' },
+      { icon:'🌿', name:'Safety Cues', desc:'ส่งสัญญาณปลอดภัยผ่านร่างกาย — ก่อนทำอย่างอื่น', href:'safety_cues.html', primary:true },
+      { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'การอยู่ใกล้คนที่ปลอดภัยคือยาที่ดีที่สุด', href:'talk_who.html' },
+      { icon:'📖', name:'ทำไมถึงรู้สึกแบบนี้?', desc:'อ่าน 6 นาที · Window of Tolerance + Dorsal Vagal', href:'notebook.html?id=shutdown' },
+      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ลมหายใจออกยาว — shortcut ที่เร็วที่สุด', href:'alltools.html#breathe' },
     ],
-    talk:'ภาพความตายเริ่มรู้สึกหนักหรือมาเองโดยไม่ได้เชิญ?',
-  },
-  friend_silent: {
-    emoji:'🫧', title:'อยู่กับเพื่อนก็ไม่คุยด้วย',
-    type: 'B',
-    group: 'understand',
-    note:'นั่งอยู่ข้างๆ กัน แต่รู้สึกเหมือนอยู่คนละโลก ไม่รู้ว่าทำอะไรผิด และสมองก็เริ่มเล่นฉากนั้นซ้ำ ค้นหาจุดที่ผิดพลาด',
-    tools:[
-      { icon:'📖', name:'อยู่กับเพื่อนก็ไม่คุยด้วย — มันเกิดอะไรขึ้นกันแน่?', desc:'อ่าน 5 นาที · 5 สถานการณ์ที่ให้ผลลัพธ์เดียวกัน', href:'notebook.html?id=friend_silent', primary:true },
-      { icon:'🍃', name:'คลายมือจากความคิด', desc:'เมื่อความคิดวนซ้ำว่าทำอะไรผิด', href:'alltools.html#reframe' },
-      { icon:'📓', name:'เขียนระบาย', desc:'ระบายออกมาก่อนที่มันจะล้นหัว', href:'alltools.html#journal' },
-    ],
-    talk:'สถานการณ์ซับซ้อนหรืออยากคุยกับใครสักคน?',
-  },
-  stress_chronic: {
-    emoji:'🌫️', title:'เครียดอยู่ แต่ไม่รู้ว่าเครียดเรื่องอะไร',
-    type: 'B',
-    group: 'understand',
-    note:'ไม่มีเรื่องใหญ่เกิดขึ้น แต่ร่างกายมันหนัก หายใจไม่ค่อยเต็มปอด นอนแล้วก็ยังเหนื่อย นั่นไม่ได้แปลว่าคิดมากเกินเหตุ',
-    tools:[
-      { icon:'📖', name:'เครียดอยู่ แต่ไม่รู้ว่าเครียดเรื่องอะไร', desc:'อ่าน 5 นาที · เข้าใจ allostatic load และวิธีลดภาระสะสม', href:'notebook.html?id=stress_chronic', primary:true },
-      { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ส่งสัญญาณตรงไปที่ระบบประสาทว่าปลอดภัยแล้ว', href:'alltools.html#breathe' },
-      { icon:'📓', name:'เขียนระบาย', desc:'ไม่ต้องหาคำตอบ แค่ระบายออกมา', href:'alltools.html#journal' },
-      { icon:'🏃', name:'ขยับร่างกาย', desc:'ปลดปล่อยพลังงานความเครียดที่ค้างอยู่', href:'alltools.html#move' },
-    ],
-    talk:'เครียดสะสมมาหลายสัปดาห์และไม่ดีขึ้น?',
+    talk:'ความรู้สึกนี้อยู่มานานไหม? คุยกับใครได้เลย',
   },
   fading: {
     emoji:'🫥', title:'รู้สึกว่าตัวเองค่อย ๆ หายไป',
@@ -1032,10 +1061,6 @@ const SEARCH_ALIASES = {
   'อ่านหนังสือไม่เข้าหัว':['study_fog'],'อ่านไม่เข้าหัว':['study_fog'],
   'รู้สึกไม่เก่ง':['not_enough'],'ไม่เก่งพอ':['not_enough'],'ด้อยกว่าคนอื่น':['not_enough'],
   'ล้าหลัง':['behind'],'คนอื่นไปไกลกว่า':['behind'],
-  // new pills
-  'คิดถึงความตาย':['maranasati'],'มรณานุสติ':['maranasati'],
-  'เพื่อนไม่คุย':['friend_silent'],'คุยไม่ค่อยหลง':['friend_silent'],'เพื่อนเงียบ':['friend_silent'],
-  'เครียดโดยไม่รู้สาเหตุ':['stress_chronic'],'เครียดสะสม':['stress_chronic'],'เครียดเรื้อรัง':['stress_chronic'],
   // misc
   'ผิดหวัง':['disappointed'],'สับสน':['confused'],'เลือกไม่ได้':['confused'],
   'เป็นห่วงเพื่อน':['friend'],'เพื่อนไม่ดี':['friend'],
