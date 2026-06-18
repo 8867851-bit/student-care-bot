@@ -579,7 +579,7 @@
 
   <div class="sh-foot">
     <button class="sh-btn" onclick="nextShuffle()">ภาพถัดไป →</button>
-    <button class="sh-end" onclick="goTo('s-dark')">ง่วงแล้ว วางโทรศัพท์ได้เลย</button>
+    <button class="sh-end" onclick="goTo('s-rewire-gate')">ง่วงแล้ว วางโทรศัพท์ได้เลย</button>
   </div>
 </div>
 
@@ -913,5 +913,130 @@ if (window.location.hash === '#sleep') {
   goTo('s-welcome');
 }
 </script>
+
+
+  <!-- ══════════════════════════════
+       REWIRE GATE — yes / no
+  ══════════════════════════════ -->
+  <div class="screen" id="s-rewire-gate" style="align-items:center;justify-content:center;text-align:center;padding:48px 28px;">
+    <div style="font-size:40px;margin-bottom:24px;">🧠</div>
+    <div style="font-size:10px;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;font-weight:400;margin-bottom:10px;">ก่อนวางโทรศัพท์</div>
+    <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--cream);line-height:1.6;margin-bottom:8px;">อยากฝากอะไรดีๆ<br>ให้สมองก่อนนอนไหม?</div>
+    <div style="font-size:12px;font-weight:300;color:var(--soft);line-height:1.85;margin-bottom:36px;">ใช้เวลาแค่ 2 นาที<br>สมองซ้อมสิ่งที่คิดถึงก่อนนอนข้ามคืน</div>
+    <div style="display:flex;gap:12px;width:100%;max-width:280px;">
+      <button onclick="goTo('s-rewire-why')"
+        style="flex:1;padding:14px 0;background:rgba(129,140,248,0.15);border:1.5px solid rgba(129,140,248,0.35);border-radius:20px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:var(--accent);cursor:pointer;transition:opacity 0.15s;">
+        ✓ ลองเลย
+      </button>
+      <button onclick="goTo('s-dark')"
+        style="flex:1;padding:14px 0;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-radius:20px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:400;color:rgba(253,251,247,0.35);cursor:pointer;transition:opacity 0.15s;">
+        ไม่เป็นไร
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       REWIRE WHY — why it works
+  ══════════════════════════════ -->
+  <div class="screen" id="s-rewire-why" style="padding:0 0 40px;">
+    <div style="padding:36px 24px 20px;text-align:center;">
+      <div style="font-size:10px;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;font-weight:400;margin-bottom:10px;">ทำไมถึงได้ผล</div>
+      <div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;color:var(--cream);line-height:1.5;margin-bottom:10px;">สมองซ้อมสิ่งที่คิดถึงก่อนนอน</div>
+      <div style="font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;">ความคิดก่อนนอนจะถูก reinforce ข้ามคืน<br>เหมือนซ้อมดนตรีในฝัน — ทั้งดีและไม่ดี</div>
+    </div>
+    <div style="margin:0 16px 14px;padding:16px 18px;background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:16px;">
+      <div style="font-size:11px;font-weight:500;color:var(--accent);letter-spacing:0.5px;margin-bottom:6px;">🔁 Neural Pathway Rehearsal</div>
+      <div style="font-size:12px;font-weight:300;color:var(--soft);line-height:1.8;">ความคิดเชิงลบก่อนนอน = สมองซ้อมเส้นทางนั้นข้ามคืน<br>ความคิดเชิงบวก = สมองสร้างเส้นทางใหม่แทน</div>
+    </div>
+    <div style="margin:0 16px 20px;padding:16px 18px;background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:16px;">
+      <div style="font-size:11px;font-weight:500;color:var(--accent);letter-spacing:0.5px;margin-bottom:6px;">🧠 Memory Consolidation</div>
+      <div style="font-size:12px;font-weight:300;color:var(--soft);line-height:1.8;">ในช่วง sleep สมองจัด consolidate ความจำของวัน สิ่งที่อยู่ในหัวก่อนนอนมีโอกาสสูงที่จะถูก reinforce ข้ามคืน</div>
+    </div>
+    <button onclick="startRewireStatements()"
+      style="display:block;width:calc(100% - 32px);margin:0 16px;padding:15px;background:rgba(129,140,248,0.15);border:1px solid rgba(129,140,248,0.3);border-radius:20px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:var(--accent);cursor:pointer;">
+      เริ่มเลย →
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════
+       REWIRE STATEMENTS
+  ══════════════════════════════ -->
+  <div class="screen" id="s-rewire-stmt" style="align-items:center;justify-content:center;text-align:center;padding:32px 28px 48px;min-height:100vh;">
+    <div class="step-dots" id="rw-dots" style="margin-bottom:20px;"></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:20px;letter-spacing:1px;" id="rw-progress"></div>
+    <div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:600;color:var(--cream);line-height:1.7;margin-bottom:18px;min-height:110px;display:flex;align-items:center;justify-content:center;transition:opacity 0.35s ease;" id="rw-text"></div>
+    <div style="font-size:12px;font-weight:300;color:var(--muted);line-height:1.85;max-width:280px;margin:0 auto 36px;transition:opacity 0.35s ease 0.15s;" id="rw-why"></div>
+    <button onclick="nextRewire()"
+      style="width:100%;max-width:260px;padding:14px;background:rgba(129,140,248,0.15);border:1px solid rgba(129,140,248,0.3);border-radius:24px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:var(--accent);cursor:pointer;transition:transform 0.12s;"
+      id="rw-next-btn">ถัดไป →</button>
+  </div>
+
+
+
+<script>
+// ── SLEEP REWIRE ──────────────────────────────────────────
+const RW_STATEMENTS = [
+  { text:'วันนี้ฉันทำดีที่สุดแล้ว และนั่นก็เพียงพอ', why:'สมองต้องการ closure ไม่ใช่การวิจารณ์ตัวเอง การบอกว่า "พอแล้ว" ปลดล็อก pressure และอนุญาตให้ระบบพัก' },
+  { text:'วันนี้มีบางอย่างดีเกิดขึ้น แม้เพียงเล็กน้อย', why:'การหาสิ่งที่ดีฝึกให้สมองมองหาหลักฐานเชิงบวก แม้ในวันที่ยาก ยิ่งฝึก ยิ่งเก่งขึ้น' },
+  { text:'ฉันภูมิใจในตัวเองที่กำลังเติบโตขึ้นทุกวัน', why:'การระลึกถึงตัวเองเชิงบวกกระตุ้น resourceful parts of the brain แทนที่จะ activate emotional reactivity' },
+  { text:'พรุ่งนี้คือการเริ่มต้นใหม่ และฉันก็ต้อนรับมัน', why:'การนอนในความคาดหวังของสิ่งดีๆ เปลี่ยน baseline mood และคุณภาพการนอน' },
+  { text:'สิ่งที่รู้สึกหนักตอนนี้ จะดูต่างออกไปในตอนเช้า', why:'สมองขยายปัญหาเมื่อเหนื่อย ความชัดเจนมาพร้อมการพักผ่อน ไม่ใช่การคิดเพิ่ม' },
+  { text:'คุณค่าของฉันไม่ได้วัดจากสิ่งที่ทำสำเร็จวันนี้', why:'บางวันก็ productive บางวันก็ไม่ — ทั้งสองแบบคือชีวิตที่ปกติ ไม่มีแบบไหนลดคุณค่าของเธอ' },
+  { text:'ชีวิตของฉันกำลังดำเนินไปในแบบที่ฉันยังมองไม่เห็นทั้งหมด', why:'ไม่ใช่ทุกอย่างต้องเข้าใจตอนนี้ ความไว้วางใจให้กระบวนการดำเนินต่อไปเป็นทักษะที่ฝึกได้' },
+  { text:'ฉันมีความสามารถมากกว่าที่ตัวเองคิดเสมอ', why:'โฟกัสที่ข้อบกพร่องทำให้ติดอยู่กับมุมมองนั้น โฟกัสที่ความสามารถเปิดเส้นทางใหม่ให้สมอง' },
+];
+
+let _rwCurrent = 0;
+
+function startRewireStatements() {
+  _rwCurrent = 0;
+  buildRwDots();
+  renderRwStatement();
+  goTo('s-rewire-stmt');
+}
+
+function buildRwDots() {
+  const dots = document.getElementById('rw-dots');
+  if (!dots) return;
+  dots.innerHTML = RW_STATEMENTS.map((_, i) =>
+    `<div class="step-dot" id="rw-dot-${i}"></div>`
+  ).join('');
+}
+
+function renderRwStatement() {
+  const s = RW_STATEMENTS[_rwCurrent];
+  const prog = document.getElementById('rw-progress');
+  const textEl = document.getElementById('rw-text');
+  const whyEl = document.getElementById('rw-why');
+  const btn = document.getElementById('rw-next-btn');
+  if (prog) prog.textContent = `${_rwCurrent + 1} / ${RW_STATEMENTS.length}`;
+
+  // Fade out then in
+  if (textEl) { textEl.style.opacity = '0'; }
+  if (whyEl)  { whyEl.style.opacity  = '0'; }
+  setTimeout(() => {
+    if (textEl) { textEl.textContent = s.text; textEl.style.opacity = '1'; }
+    if (whyEl)  { whyEl.textContent  = s.why;  whyEl.style.opacity  = '1'; }
+  }, 180);
+
+  // Dots
+  RW_STATEMENTS.forEach((_, i) => {
+    const d = document.getElementById(`rw-dot-${i}`);
+    if (!d) return;
+    d.className = 'step-dot' + (i < _rwCurrent ? ' done' : i === _rwCurrent ? ' active' : '');
+  });
+
+  if (btn) btn.textContent = _rwCurrent < RW_STATEMENTS.length - 1 ? 'ถัดไป →' : 'ราตรีสวัสดิ์ 🌙';
+}
+
+function nextRewire() {
+  if (_rwCurrent < RW_STATEMENTS.length - 1) {
+    _rwCurrent++;
+    renderRwStatement();
+  } else {
+    goTo('s-dark');
+  }
+}
+</script>
+
 </body>
-</html>
