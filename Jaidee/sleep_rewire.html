@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>ก่อนนอน — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#08090F; --bg2:#0F1018; --bg3:#161720;
+      --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+      --cream:#FDFBF7; --soft:rgba(253,251,247,0.45); --muted:rgba(253,251,247,0.22);
+      --accent:#818CF8; --accent-soft:rgba(129,140,248,0.12); --accent-border:rgba(129,140,248,0.28);
+      --gold:#E8960C; --gold-soft:rgba(232,150,12,0.10);
+      --sage:#94A37C; --sage-soft:rgba(148,163,124,0.10);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    html,body{background:var(--bg);color:var(--cream);font-family:'Mitr',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes pulse{0%,100%{opacity:0.5}50%{opacity:1}}
+
+    .screen{display:none;min-height:100vh;flex-direction:column;}
+    .screen.active{display:flex;}
+
+    /* BACK */
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:20px 20px 0;font-size:13px;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;text-decoration:none;}
+
+    /* STEP DOTS */
+    .step-dots{display:flex;gap:6px;justify-content:center;padding:16px 0 0;}
+    .step-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all 0.3s;}
+    .step-dot.done{background:rgba(129,140,248,0.4);}
+    .step-dot.active{background:var(--accent);width:18px;border-radius:3px;}
+
+    /* ── SCREEN: GATE ── */
+    #s-gate{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:0;}
+    .gate-moon{font-size:52px;margin-bottom:32px;opacity:0;animation:fadeUp 0.8s 0.2s ease forwards;}
+    .gate-eyebrow{font-size:10px;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;font-weight:400;margin-bottom:12px;opacity:0;animation:fadeUp 0.6s 0.4s ease forwards;}
+    .gate-title{font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;line-height:1.5;color:var(--cream);margin-bottom:10px;opacity:0;animation:fadeUp 0.6s 0.55s ease forwards;}
+    .gate-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;margin-bottom:40px;opacity:0;animation:fadeUp 0.6s 0.7s ease forwards;}
+    .gate-btn{width:100%;max-width:280px;margin:0 auto 12px;display:block;padding:15px 24px;border-radius:28px;border:none;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:transform 0.15s,opacity 0.15s;opacity:0;animation:fadeUp 0.5s 0.9s ease forwards;}
+    .gate-btn:active{transform:scale(0.97);}
+    .gate-btn.yes{background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent);}
+    .gate-btn.no{background:transparent;border:1px solid var(--border2);color:var(--muted);font-size:13px;padding:12px 24px;}
+
+    /* ── SCREEN: NOT READY ── */
+    #s-notready{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:20px;}
+    .nr-emoji{font-size:44px;}
+    .nr-title{font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--cream);line-height:1.5;}
+    .nr-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;}
+    .nr-btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:var(--sage-soft);border:1px solid rgba(148,163,124,0.3);border-radius:24px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--sage);text-decoration:none;margin-top:8px;}
+
+    /* ── SCREEN: WHY ── */
+    #s-why{padding:0 0 40px;}
+    .why-hero{padding:36px 24px 24px;text-align:center;}
+    .why-eyebrow{font-size:10px;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;margin-bottom:12px;}
+    .why-title{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;color:var(--cream);line-height:1.5;margin-bottom:10px;}
+    .why-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;}
+    .why-card{margin:0 16px 16px;padding:18px;background:var(--bg2);border:1px solid var(--border);border-radius:18px;}
+    .why-card-title{font-size:12px;font-weight:500;color:var(--accent);letter-spacing:0.5px;margin-bottom:8px;}
+    .why-card-text{font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;}
+    .why-start-btn{display:block;width:calc(100% - 32px);margin:8px 16px 0;padding:15px;background:var(--accent-soft);border:1px solid var(--accent-border);border-radius:20px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:var(--accent);cursor:pointer;text-align:center;}
+
+    /* ── SCREEN: STATEMENT ── */
+    #s-stmt{align-items:center;justify-content:center;text-align:center;padding:32px 28px 48px;min-height:100vh;}
+    .stmt-progress{font-size:11px;color:var(--muted);margin-bottom:24px;letter-spacing:1px;}
+    .stmt-text{font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:600;color:var(--cream);line-height:1.65;margin-bottom:20px;min-height:120px;display:flex;align-items:center;justify-content:center;}
+    .stmt-why{font-size:12px;font-weight:300;color:var(--muted);line-height:1.85;max-width:280px;margin:0 auto 36px;}
+    .stmt-next-btn{width:100%;max-width:260px;padding:14px;background:var(--accent-soft);border:1px solid var(--accent-border);border-radius:24px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:var(--accent);cursor:pointer;transition:transform 0.12s;}
+    .stmt-next-btn:active{transform:scale(0.97);}
+
+    /* ── SCREEN: DONE ── */
+    #s-done{align-items:center;justify-content:center;text-align:center;padding:48px 28px;gap:20px;}
+    .done-moon{font-size:52px;animation:pulse 3s ease-in-out infinite;}
+    .done-title{font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;color:var(--cream);line-height:1.5;}
+    .done-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;}
+    .done-back{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:12px 24px;background:transparent;border:1px solid var(--border2);border-radius:20px;font-family:'Mitr',sans-serif;font-size:13px;color:var(--muted);text-decoration:none;}
+  </style>
+</head>
+<body>
+
+<!-- SCREEN 1: GATE -->
+<div class="screen active" id="s-gate">
+  <div class="gate-moon">🌙</div>
+  <div class="gate-eyebrow">ก่อนนอน</div>
+  <div class="gate-title">ป้อนความคิดที่ถูกต้อง<br>ให้สมองก่อนนอน</div>
+  <div class="gate-sub">สมองซ้อมสิ่งที่คิดถึงก่อนนอนข้ามคืน<br>คืนนี้อยากเลือกว่าจะซ้อมอะไร?</div>
+  <button class="gate-btn yes" onclick="showScreen('s-why')">ใช่ พร้อมแล้ว →</button>
+  <button class="gate-btn no" onclick="showScreen('s-notready')">ยังไม่แน่ใจ / ไม่พร้อมคืนนี้</button>
+</div>
+
+<!-- SCREEN: NOT READY -->
+<div class="screen" id="s-notready">
+  <a class="back-btn" onclick="showScreen('s-gate')">← กลับ</a>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;text-align:center;gap:16px;">
+    <div class="nr-emoji">🌿</div>
+    <div class="nr-title">ไม่เป็นไรเลย<br>ร่างกายรู้ดีว่าต้องการอะไร</div>
+    <div class="nr-sub">ถ้าตอนนี้รู้สึกหนักหรือไม่ปลอดภัย<br>ลองเริ่มจาก Safety Cues ก่อนได้เลย<br>ไม่ต้องรีบ</div>
+    <a href="safety_cues.html" class="nr-btn">🌿 ไปที่ Safety Cues</a>
+  </div>
+</div>
+
+<!-- SCREEN 2: WHY IT WORKS -->
+<div class="screen" id="s-why">
+  <a class="back-btn" onclick="showScreen('s-gate')">← กลับ</a>
+  <div class="why-hero">
+    <div class="why-eyebrow">ทำไมถึงได้ผล</div>
+    <div class="why-title">สมองซ้อมสิ่งที่คิดถึงก่อนนอน</div>
+    <div class="why-sub">เมื่อคิดถึงสิ่งใดซ้ำๆ ก่อนนอน สมองจะประมวลผลและเสริม neural pathway นั้นข้ามคืน เหมือนซ้อมดนตรีในฝัน</div>
+  </div>
+  <div class="why-card">
+    <div class="why-card-title">🔁 Neural Pathway Rehearsal</div>
+    <div class="why-card-text">ความคิดเชิงลบก่อนนอน = สมองซ้อมเส้นทางนั้นข้ามคืน ความคิดเชิงบวกก่อนนอน = สมองซ้อมเส้นทางใหม่แทน ไม่ใช่การโกหกตัวเอง แต่คือการเลือกว่าจะให้สมองฝึกอะไร</div>
+  </div>
+  <div class="why-card">
+    <div class="why-card-title">🧠 Memory Consolidation</div>
+    <div class="why-card-text">ในช่วง sleep สมองจัด consolidate ความจำของวัน สิ่งที่อยู่ในหัวก่อนนอนมีโอกาสสูงที่จะถูก reinforce ข้ามคืน — ทั้งดีและไม่ดี</div>
+  </div>
+  <button class="why-start-btn" onclick="startStatements()">เริ่มเลย →</button>
+</div>
+
+<!-- SCREEN 3: STATEMENTS -->
+<div class="screen" id="s-stmt">
+  <div class="step-dots" id="stmt-dots"></div>
+  <div class="stmt-progress" id="stmt-progress"></div>
+  <div class="stmt-text" id="stmt-text"></div>
+  <div class="stmt-why" id="stmt-why"></div>
+  <button class="stmt-next-btn" id="stmt-next-btn" onclick="nextStatement()">ถัดไป →</button>
+</div>
+
+<!-- SCREEN 4: DONE -->
+<div class="screen" id="s-done">
+  <div class="done-moon">🌙</div>
+  <div class="done-title">ราตรีสวัสดิ์</div>
+  <div class="done-sub">สมองของเธอได้รับสิ่งที่ดีแล้ว<br>ปล่อยให้มันทำงานข้ามคืน<br>พักได้เลย</div>
+  <a href="alltools.html" class="done-back">← กลับ</a>
+</div>
+
+<script>
+const STATEMENTS = [
+  {
+    text: 'วันนี้ฉันทำดีที่สุดแล้ว และนั่นก็เพียงพอ',
+    why: 'สมองต้องการ closure ไม่ใช่การวิจารณ์ตัวเอง การบอกว่า "พอแล้ว" ปลดล็อก pressure และอนุญาตให้ระบบพัก'
+  },
+  {
+    text: 'วันนี้มีบางอย่างดีเกิดขึ้น แม้เล็กน้อย',
+    why: 'การหาสิ่งที่ดีฝึกให้สมองมองหาหลักฐานเชิงบวก แม้ในวันที่ยาก ยิ่งฝึก ยิ่งเก่งขึ้น'
+  },
+  {
+    text: 'ฉันภูมิใจในตัวเองที่กำลังเติบโตขึ้นทุกวัน',
+    why: 'การระลึกถึงตัวเองเชิงบวกกระตุ้น resourceful parts of the brain แทนที่จะ activate emotional reactivity'
+  },
+  {
+    text: 'พรุ่งนี้คือการเริ่มต้นใหม่ และฉันก็ต้อนรับมัน',
+    why: 'การนอนในความคาดหวังของสิ่งดีๆ เปลี่ยน baseline mood และคุณภาพการนอน'
+  },
+  {
+    text: 'สิ่งที่รู้สึกหนักตอนนี้ จะดูต่างออกไปในตอนเช้า',
+    why: 'สมองขยายปัญหาเมื่อเหนื่อย ความชัดเจนมาพร้อมการพักผ่อน ไม่ใช่การคิดเพิ่ม'
+  },
+  {
+    text: 'คุณค่าของฉันไม่ได้วัดจากสิ่งที่ทำสำเร็จวันนี้',
+    why: 'บางวันก็ productive บางวันก็ไม่ — ทั้งสองแบบคือชีวิตที่ปกติ ไม่มีแบบไหนลดคุณค่าของเธอ'
+  },
+  {
+    text: 'ชีวิตของฉันกำลังดำเนินไปในแบบที่ฉันยังมองไม่เห็นทั้งหมด',
+    why: 'ไม่ใช่ทุกอย่างต้องเข้าใจตอนนี้ ความไว้วางใจให้กระบวนการดำเนินต่อไปเป็นทักษะที่ฝึกได้'
+  },
+  {
+    text: 'ฉันมีความสามารถมากกว่าที่ตัวเองคิดเสมอ',
+    why: 'โฟกัสที่ข้อบกพร่องทำให้ติดอยู่กับมุมมองนั้น โฟกัสที่ความสามารถเปิดเส้นทางใหม่ให้สมอง'
+  }
+];
+
+let _current = 0;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startStatements() {
+  _current = 0;
+  buildDots();
+  renderStatement();
+  showScreen('s-stmt');
+}
+
+function buildDots() {
+  const dots = document.getElementById('stmt-dots');
+  dots.innerHTML = STATEMENTS.map((_, i) => `<div class="step-dot" id="dot-${i}"></div>`).join('');
+}
+
+function renderStatement() {
+  const s = STATEMENTS[_current];
+  document.getElementById('stmt-progress').textContent = `${_current + 1} / ${STATEMENTS.length}`;
+  const textEl = document.getElementById('stmt-text');
+  textEl.style.opacity = '0';
+  textEl.style.transform = 'translateY(10px)';
+  textEl.style.transition = 'none';
+  setTimeout(() => {
+    textEl.textContent = s.text;
+    textEl.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+    textEl.style.opacity = '1';
+    textEl.style.transform = 'translateY(0)';
+  }, 60);
+  const whyEl = document.getElementById('stmt-why');
+  whyEl.style.opacity = '0';
+  setTimeout(() => {
+    whyEl.textContent = s.why;
+    whyEl.style.transition = 'opacity 0.45s ease 0.2s';
+    whyEl.style.opacity = '1';
+  }, 60);
+  // Update dots
+  STATEMENTS.forEach((_, i) => {
+    const dot = document.getElementById(`dot-${i}`);
+    dot.className = 'step-dot' + (i < _current ? ' done' : i === _current ? ' active' : '');
+  });
+  // Update button
+  const btn = document.getElementById('stmt-next-btn');
+  btn.textContent = _current < STATEMENTS.length - 1 ? 'ถัดไป →' : 'ราตรีสวัสดิ์ 🌙';
+}
+
+function nextStatement() {
+  if (_current < STATEMENTS.length - 1) {
+    _current++;
+    renderStatement();
+  } else {
+    showScreen('s-done');
+  }
+}
+</script>
+</body>
+</html>
