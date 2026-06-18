@@ -400,7 +400,7 @@
   <div style="width:100%;margin-bottom:0;">
     <img src="https://res.cloudinary.com/dlixucdqx/image/upload/v1781785018/Screenshot_2026-06-18_191639_fzjx5a.png"
          alt="ใจดี TU Sleep"
-         style="width:100%;width:auto;max-width:75%;max-height:75vw;display:block;margin:0 auto;border-radius:16px;"/>
+         style="width:auto;max-width:70%;max-height:55vw;display:block;margin:0 auto;"/>
   </div>
   <button class="w-btn" onclick="goTo('s-unload')" style="margin-top:24px;">เริ่มต้น →</button>
   <button class="w-btn-alt" onclick="goTo('s-breathe');startBreathe()">แค่หายใจก็พอ →</button>
@@ -580,7 +580,7 @@
 
   <div class="sh-foot">
     <button class="sh-btn" onclick="nextShuffle()">ภาพถัดไป →</button>
-    <button class="sh-end" onclick="goTo('s-rewire-gate')">ง่วงแล้ว วางโทรศัพท์ได้เลย</button>
+    <button class="sh-end" onclick="goTo('s-dark')">ง่วงแล้ว วางโทรศัพท์ได้เลย</button>
   </div>
 </div>
 
@@ -921,7 +921,7 @@ if (window.location.hash === '#sleep') {
   ══════════════════════════════ -->
   <div class="screen" id="s-rewire-gate" style="align-items:center;justify-content:center;text-align:center;padding:48px 28px;">
     <div style="font-size:40px;margin-bottom:24px;">🧠</div>
-    <div style="font-size:10px;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;font-weight:400;margin-bottom:10px;">ก่อนวางโทรศัพท์</div>
+    <div style="font-size:10px;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;font-weight:400;margin-bottom:10px;">ก่อนผ่อนคลาย</div>
     <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:var(--cream);line-height:1.6;margin-bottom:8px;">อยากฝากอะไรดีๆ<br>ให้สมองก่อนนอนไหม?</div>
     <div style="font-size:12px;font-weight:300;color:var(--soft);line-height:1.85;margin-bottom:36px;">ใช้เวลาแค่ 2 นาที<br>สมองซ้อมสิ่งที่คิดถึงก่อนนอนข้ามคืน</div>
     <div style="display:flex;gap:12px;width:100%;max-width:280px;">
@@ -1027,7 +1027,7 @@ function renderRwStatement() {
     d.className = 'step-dot' + (i < _rwCurrent ? ' done' : i === _rwCurrent ? ' active' : '');
   });
 
-  if (btn) btn.textContent = _rwCurrent < RW_STATEMENTS.length - 1 ? 'ถัดไป →' : 'ราตรีสวัสดิ์ 🌙';
+  if (btn) btn.textContent = _rwCurrent < RW_STATEMENTS.length - 1 ? 'ถัดไป →' : 'ไปต่อ →';
 }
 
 function nextRewire() {
