@@ -483,7 +483,7 @@
       border-radius:28px 28px 0 0;
       transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);
       display:flex;flex-direction:column;
-      max-height:90vh;
+      max-height:94vh;
     }
     /* Step containers */
     .fc-step{display:none;flex-direction:column;flex:1;overflow-y:auto;}
@@ -652,7 +652,7 @@
 
   <!-- FOUNDATION CHECK SHEET -->
   <div id="fc-overlay" style="display:none;position:fixed;inset:0;z-index:250;background:rgba(0,0,0,0);pointer-events:none;transition:background 0.3s;" onclick="handleFcOverlay(event)">
-    <div id="fc-sheet" style="position:absolute;bottom:0;left:0;right:0;background:var(--cream);border-radius:28px 28px 0 0;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);display:flex;flex-direction:column;max-height:90vh;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom,24px);">
+    <div id="fc-sheet" style="position:absolute;bottom:0;left:0;right:0;background:var(--cream);border-radius:28px 28px 0 0;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.22,1,0.36,1);display:flex;flex-direction:column;max-height:94vh;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom,24px);">
 
       <!-- Drag handle + close -->
       <div style="padding:14px 20px 0;flex-shrink:0;">
@@ -660,7 +660,7 @@
       </div>
 
       <!-- STEP 1: Gentle Pause -->
-      <div id="fc-step-1" class="fc-step active" style="padding:0 20px 24px;">
+      <div id="fc-step-1" class="fc-step active" style="padding:0 20px 16px;">
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
           <div style="flex-shrink:0;width:80px;">
             <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_517,w_396,x_92/%E0%B8%94%E0%B8%B2%E0%B8%A7%E0%B8%99%E0%B9%8C%E0%B9%82%E0%B8%AB%E0%B8%A5%E0%B8%94_4_tgmuuw.png"
@@ -1132,7 +1132,7 @@ const TIERS = [
     pills: [
       { emoji:'😴', label:'นอนไม่หลับ',              key:'sleep'    },
       { emoji:'🪫', label:'หมดไฟ',                   key:'burnout'  },
-      { emoji:'🫥', label:'รู้สึกชา อยากหายไป ไม่อยากทำอะไรเลย', key:'shutdown' },
+      { emoji:'🫥', label:'รู้สึกชา ไม่อยากทำอะไรเลย', key:'shutdown' },
       { emoji:'🤯', label:'สมองตื้อ',                key:'foggy'    },
       { emoji:'🪞', label:'ไม่แน่ใจว่าตัวเองกำลังรู้สึกอะไร',  key:'unsure'   },
       { emoji:'🪷', label:'จินตนาการว่าตัวเองตายทุกวัน', key:'maranasati' },
@@ -1221,7 +1221,7 @@ function _renderAllPillsInfinite() {
 
   // Single finite render — no looping duplicate
   container.innerHTML = ALL_PILLS.map(p =>
-    `<button class="sit-pill${SESSION_OPENED.has(p.key) ? (p.key === _lastOpenedKey ? ' touched-last' : ' touched') : ''}" onclick="pressPill(this,'${p.key}')">
+    `<button class="sit-pill${SESSION_OPENED.has(p.key) ? (p.key === _lastOpenedKey ? ' touched-last' : ' touched') : ''}${(SIT_DATA[p.key]||{}).group==='comfort' ? ' family-comfort' : ''}" onclick="pressPill(this,'${p.key}')">
       <span class="sit-emoji">${p.emoji}</span>
       <span class="sit-label">${p.label}</span>
     </button>`
@@ -1800,13 +1800,13 @@ function _buildSheetContent(key, contentEl) {
 
   // The one large recommendation — "เริ่มตรงนี้" or "ลองแบบนี้ดูไหม"
   // Dark card = primary action. Label = handwritten notebook annotation (gold, letter-spaced).
-  function _primaryCard(t, label) {
+  function _primaryCard(t, label, group) {
     if (!t) return '';
     const href = t.href && t.href !== '#' ? `href="${t.href}"` : 'href="#"';
     const onclick = t.onclick ? ` onclick="${t.onclick}"` : '';
     return `<div style="margin-bottom:16px;">
       <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">${label}</div>
-      <a ${href}${onclick} style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:18px;text-decoration:none;background:var(--dark);">
+      <a ${href}${onclick} style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:18px;text-decoration:none;background:${(GROUP_STYLES[group]||{}).primary||'var(--dark)'};">
         <span style="font-size:26px;flex-shrink:0;">${t.icon}</span>
         <span style="flex:1;">
           <span style="display:block;font-size:16px;font-weight:600;color:#FDFBF7;margin-bottom:3px;line-height:1.4;">${t.name}</span>
@@ -1820,7 +1820,7 @@ function _buildSheetContent(key, contentEl) {
   // Notebook-family atmosphere — neutral card, colored identity (icon/border/top-glow only)
   const GROUP_STYLES = {
     understand: { icon:'rgba(13,148,136,0.10)',  border:'rgba(13,148,136,0.35)',  glow:'rgba(13,148,136,0.045)'  },
-    comfort:    { icon:'rgba(216,184,191,0.20)', border:'rgba(216,184,191,0.6)',  glow:'rgba(216,184,191,0.05)'  },
+    comfort:    { icon:'rgba(216,184,191,0.20)', border:'rgba(216,184,191,0.6)',  glow:'rgba(216,184,191,0.05)', primary:'#7B3550' },
     grow:       { icon:'rgba(232,150,12,0.12)',  border:'rgba(232,150,12,0.35)',  glow:'rgba(232,150,12,0.045)'  },
     belong:     { icon:'rgba(127,163,135,0.16)', border:'rgba(127,163,135,0.4)',  glow:'rgba(127,163,135,0.045)' },
   };
@@ -1868,18 +1868,18 @@ function _buildSheetContent(key, contentEl) {
 
   let toolsHtml;
   if (type === 'A') {
-    toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้')
+    toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้', group)
       + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false, group)
       + restHtml;
   } else if (type === 'C') {
     toolsHtml = _peerCard()
       + _articleCard(articleTool, 'เข้าใจสิ่งที่เกิดขึ้น', false, group)
-      + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม')
+      + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม', group)
       + restHtml;
   } else {
     toolsHtml = articleTool
-      ? (_articleCard(articleTool, 'เริ่มตรงนี้', true, group) + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม') + restHtml)
-      : (_primaryCard(primaryTool, 'เริ่มตรงนี้') + restHtml);
+      ? (_articleCard(articleTool, 'เริ่มตรงนี้', true, group) + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม', group) + restHtml)
+      : (_primaryCard(primaryTool, 'เริ่มตรงนี้', group) + restHtml);
   }
 
 
@@ -2497,7 +2497,7 @@ const SIT_DATA_EXTRA = {
     talk:'เครียดสะสมมาหลายสัปดาห์และไม่ดีขึ้น?',
   },
   shutdown: {
-    emoji:'🫥', title:'รู้สึกชา อยากหายไป ไม่อยากทำอะไรเลย',
+    emoji:'🫥', title:'รู้สึกชา ไม่อยากทำอะไรเลย',
     type: 'C',
     group: 'comfort',
     understand:'นี่ไม่ใช่ความอ่อนแอ — มันคือระบบประสาทที่ปิดตัวเพื่อปกป้องคุณ เมื่อทุกอย่างหนักเกินไปนานเกินไป ร่างกายจะเลือกปิดแทนที่จะให้ไหม้',
@@ -3206,7 +3206,7 @@ function handleAllSitOverlay(e) {
 const IDX_ALL_CHIPS = [
   {e:'😴',l:'นอนไม่หลับ',k:'sleep'},
   {e:'🪫',l:'หมดไฟ',k:'burnout'},
-  {e:'🫥',l:'รู้สึกชา อยากหายไป',k:'shutdown'},
+  {e:'🫥',l:'รู้สึกชา ไม่อยากทำอะไร',k:'shutdown'},
   {e:'🤯',l:'สมองตื้อ',k:'foggy'},
   {e:'🪞',l:'ไม่แน่ใจว่าตัวเองกำลังรู้สึกอะไร',k:'__unsure__'},
   {e:'🪷',l:'จินตนาการว่าตัวเองตายทุกวัน',k:'maranasati'},
