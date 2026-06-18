@@ -397,11 +397,12 @@
      SCREEN 1: WELCOME
 ══════════════════════════════════════════════ -->
 <div class="screen active" id="s-welcome">
-  <div class="w-moon">🌙</div>
-  <div class="w-eyebrow">ใจดี TU · Sleep</div>
-  <div class="w-title">ยังหลับไม่ได้<br>ก็โอเค</div>
-  <div class="w-sub">เราจะพาผ่านทีละขั้น<br>ใช้เวลาประมาณ 10 นาที<br>แล้วค่อยวางโทรศัพท์ลง</div>
-  <button class="w-btn" onclick="goTo('s-unload')">เริ่มต้น →</button>
+  <div style="width:100%;margin-bottom:0;">
+    <img src="https://res.cloudinary.com/dlixucdqx/image/upload/v1781785018/Screenshot_2026-06-18_191639_fzjx5a.png"
+         alt="ใจดี TU Sleep"
+         style="width:100%;display:block;object-fit:cover;"/>
+  </div>
+  <button class="w-btn" onclick="goTo('s-unload')" style="margin-top:24px;">เริ่มต้น →</button>
   <button class="w-btn-alt" onclick="goTo('s-breathe');startBreathe()">แค่หายใจก็พอ →</button>
 </div>
 
@@ -547,7 +548,7 @@
   </div>
 
   <div class="br-foot">
-    <button class="br-skip" id="br-skip" onclick="goTo('s-shuffle')">ข้ามไปขั้นสุดท้าย →</button>
+    <button class="br-skip" id="br-skip" onclick="goTo('s-rewire-gate')">ข้ามไปขั้นสุดท้าย →</button>
   </div>
 </div>
 
@@ -825,7 +826,7 @@ function runPhase478() {
       if (bCycle >= TOTAL_CYCLES) {
         // Done — go to shuffle
         stopBreathe();
-        setTimeout(() => goTo('s-shuffle'), 800);
+        setTimeout(() => goTo('s-rewire-gate'), 800);
         return;
       }
     }
@@ -928,7 +929,7 @@ if (window.location.hash === '#sleep') {
         style="flex:1;padding:14px 0;background:rgba(129,140,248,0.15);border:1.5px solid rgba(129,140,248,0.35);border-radius:20px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:var(--accent);cursor:pointer;transition:opacity 0.15s;">
         ✓ ลองเลย
       </button>
-      <button onclick="goTo('s-dark')"
+      <button onclick="goTo('s-shuffle')"
         style="flex:1;padding:14px 0;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-radius:20px;font-family:'Mitr',sans-serif;font-size:14px;font-weight:400;color:rgba(253,251,247,0.35);cursor:pointer;transition:opacity 0.15s;">
         ไม่เป็นไร
       </button>
@@ -1034,7 +1035,7 @@ function nextRewire() {
     _rwCurrent++;
     renderRwStatement();
   } else {
-    goTo('s-dark');
+    goTo('s-shuffle');
   }
 }
 </script>
