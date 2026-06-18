@@ -490,7 +490,7 @@
   <button class="tab-btn" data-panel="2" onclick="switchToolsTab(2)">🪞 เข้าใจตัวเอง</button>
   <button class="tab-btn" data-panel="3" onclick="switchToolsTab(3)">⚡ กลับมามีพลัง</button>
   <button class="tab-btn" data-panel="4" onclick="switchToolsTab(4)">💬 เตรียมคุยกับใคร</button>
-  <a class="care-link" href="care.html">🧠 ระบบจิตใจ 6 ชั้น</a>
+  <button class="tab-btn" data-panel="5" onclick="switchToolsTab(5)">⭐ ยอดนิยม</button>
 </div>
 
 <!-- ══════════════════════════════
@@ -2353,5 +2353,219 @@ function drawQuest() {
   </div>
 </div>
 </div>
+
+<!-- ══════════════════════════════
+     PANEL 5 — ยอดนิยม
+══════════════════════════════ -->
+<div class="panel" id="panel-5">
+  <div class="panel-header">
+    <div class="ph-zone" style="color:var(--gold);">⭐ ยอดนิยม</div>
+    <div class="ph-title">เครื่องมือที่คนใช้มากที่สุด</div>
+    <div class="ph-sub">คัดมาให้แล้ว — ลองแค่อันเดียวก็นับ</div>
+  </div>
+
+  <div class="cards-grid">
+
+    <a class="tool-img-card bg-sage" href="safety_cues.html" style="background:linear-gradient(135deg,#e8f0e0,#c8d9b8);">
+      <div class="card-placeholder">🌿</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">Safety Cues</div>
+        <div class="card-title">ส่งสัญญาณปลอดภัย</div>
+        <div class="card-sub">เมื่อรู้สึกชาหรือหนัก — ผ่านร่างกายก่อน</div>
+      </div>
+    </a>
+
+    <a class="tool-img-card" href="3f.html" style="background:linear-gradient(135deg,#F0FDFA,#99E6DC);">
+      <div class="card-placeholder">🔍</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">เทคนิค 3F</div>
+        <div class="card-title">ทบทวนตัวเอง</div>
+        <div class="card-sub">ค้นพบ · รู้สึก · ก้าวต่อ</div>
+      </div>
+    </a>
+
+    <a class="tool-img-card" href="sleep.html" style="background:linear-gradient(135deg,#1a1b2e,#2d2f5e);">
+      <div class="card-placeholder">🌙</div>
+      <div class="card-overlay" style="background:linear-gradient(to top,rgba(10,8,20,0.85) 0%,rgba(10,8,20,0.2) 60%,transparent 100%);"></div>
+      <div class="card-content">
+        <div class="card-badge">ก่อนนอน</div>
+        <div class="card-title">Rewire ก่อนนอน</div>
+        <div class="card-sub">8 ประโยค เปลี่ยนสิ่งที่สมองซ้อมข้ามคืน</div>
+      </div>
+    </a>
+
+    <button class="tool-img-card bg-green" onclick="openModal('move-sheet')" style="background:linear-gradient(135deg,#1a5c2a,#3aaa58);">
+      <div class="card-placeholder">🏃</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">Movement</div>
+        <div class="card-title">เคลื่อนไหวก่อนเลย</div>
+        <div class="card-sub">3 นาที เปลี่ยนพลังงาน</div>
+        <div class="card-btn green">เริ่ม →</div>
+      </div>
+    </button>
+
+    <button class="tool-img-card bg-indigo" onclick="openModal('clarity-modal')" style="background:linear-gradient(135deg,#2d3561,#4a5bbf);">
+      <div class="card-placeholder">🎯</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">Pre-performance</div>
+        <div class="card-title">เตรียมตัวก่อนสำคัญ</div>
+        <div class="card-sub">Grounding ก่อนสอบ ก่อนพูด</div>
+        <div class="card-btn" style="background:var(--indigo);">เริ่ม →</div>
+      </div>
+    </button>
+
+    <button class="tool-img-card bg-rose" onclick="openModal('breathe-sheet')" style="background:linear-gradient(135deg,#3d0a1a,#8b1a3a);">
+      <div class="card-placeholder">🫁</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">หายใจ</div>
+        <div class="card-title">Physiological Sigh</div>
+        <div class="card-sub">ลมหายใจเดียว เปลี่ยนทั้งระบบ</div>
+        <div class="card-btn rose">เริ่ม →</div>
+      </div>
+    </button>
+
+  </div>
+
+  <!-- Rewire Switches section -->
+  <div class="sec-div" style="margin-top:8px;">
+    <div class="sec-div-line"></div>
+    <div class="sec-div-text">⚡ จุดสวิตช์วันนี้</div>
+    <div class="sec-div-line"></div>
+  </div>
+  <div style="padding:8px 16px 0;font-size:12px;font-weight:300;color:var(--soft);line-height:1.7;margin-bottom:12px;text-align:center;">
+    แค่อันเดียวก็นับ — ใช้เวลาไม่เกิน 30 วินาที
+  </div>
+
+  <div class="cards-grid">
+
+    <button class="tool-img-card bg-gold" onclick="openSwitchTimer(this,'ยิ้ม 3 วินาที','ใบหน้าส่งสัญญาณกลับไปบอกสมอง',3)" style="background:linear-gradient(135deg,#3d2a00,#8b6000);">
+      <div class="card-placeholder">🙂</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">3 วิ</div>
+        <div class="card-title">ยิ้ม 3 วินาที</div>
+        <div class="card-sub">ใบหน้าส่งสัญญาณกลับไปบอกสมอง</div>
+      </div>
+    </button>
+
+    <button class="tool-img-card" onclick="openSwitchTimer(this,'หายใจครั้งเดียว','ลมหายใจเดียว เปลี่ยนสัญญาณทั้งระบบ',10)" style="background:linear-gradient(135deg,#0a2a2a,#0d5c5c);">
+      <div class="card-placeholder">🌬️</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">10 วิ</div>
+        <div class="card-title">หายใจครั้งเดียว</div>
+        <div class="card-sub">ลมหายใจเดียว เปลี่ยนสัญญาณทั้งระบบ</div>
+      </div>
+    </button>
+
+    <button class="tool-img-card" onclick="openSwitchTimer(this,'ถ่ายภาพในใจ','เก็บสิ่งดีหนึ่งอย่างที่อยู่ตรงหน้า',5)" style="background:linear-gradient(135deg,#1a1a2e,#3a3a6e);">
+      <div class="card-placeholder">📸</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">5 วิ</div>
+        <div class="card-title">ถ่ายภาพในใจ</div>
+        <div class="card-sub">เก็บสิ่งดีหนึ่งอย่างที่อยู่ตรงหน้า</div>
+      </div>
+    </button>
+
+    <button class="tool-img-card bg-green" onclick="openSwitchTimer(this,'ยืดตัว 10 วินาที','ท่าทางเปลี่ยน สารเคมีในสมองก็เปลี่ยน',10)" style="background:linear-gradient(135deg,#0a2a10,#1a5c2a);">
+      <div class="card-placeholder">🌳</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">10 วิ</div>
+        <div class="card-title">ยืดตัว 10 วินาที</div>
+        <div class="card-sub">ท่าทางเปลี่ยน สารเคมีในสมองก็เปลี่ยน</div>
+      </div>
+    </button>
+
+    <button class="tool-img-card bg-rose" onclick="openSwitchTimer(this,'เรียกชื่อมัน','ตั้งชื่อความรู้สึก เสียงในหัวก็เบาลง',5)" style="background:linear-gradient(135deg,#2a0a10,#6e1a2a);">
+      <div class="card-placeholder">🏷️</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">5 วิ</div>
+        <div class="card-title">เรียกชื่อมัน</div>
+        <div class="card-sub">ตั้งชื่อความรู้สึก เสียงในหัวก็เบาลง</div>
+      </div>
+    </button>
+
+    <button class="tool-img-card" onclick="openSwitchTimer(this,'มองไกล 5 วินาที','เปิดมุมมองกว้าง บอกร่างกายว่าปลอดภัย',5)" style="background:linear-gradient(135deg,#0a1a2a,#1a3a5c);">
+      <div class="card-placeholder">🪟</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">5 วิ</div>
+        <div class="card-title">มองไกล 5 วินาที</div>
+        <div class="card-sub">เปิดมุมมองกว้าง บอกร่างกายว่าปลอดภัย</div>
+      </div>
+    </button>
+
+    <button class="tool-img-card bg-purple" onclick="openSwitchTimer(this,'ถามตัวเองในวันหน้า','เราเวอร์ชันที่ผ่านมันมาแล้ว จะพูดว่าอะไร',10)" style="background:linear-gradient(135deg,#1a0a3d,#3d1a8b);">
+      <div class="card-placeholder">🔭</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">10 วิ</div>
+        <div class="card-title">ถามตัวเองในวันหน้า</div>
+        <div class="card-sub">เราเวอร์ชันที่ผ่านมันมาแล้ว จะพูดว่าอะไร</div>
+      </div>
+    </button>
+
+    <button class="tool-img-card bg-gold" onclick="openSwitchTimer(this,'ชมหนึ่งคน','คำชมจริงใจหนึ่งครั้ง ดีต่อใจทั้งสองฝั่ง',30)" style="background:linear-gradient(135deg,#2a1a00,#6e4a00);">
+      <div class="card-placeholder">💛</div>
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <div class="card-badge">30 วิ</div>
+        <div class="card-title">ชมหนึ่งคน</div>
+        <div class="card-sub">คำชมจริงใจหนึ่งครั้ง ดีต่อใจทั้งสองฝั่ง</div>
+      </div>
+    </button>
+
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="switch-modal" onclick="closeModal('switch-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 40px;text-align:center;">
+    <div class="modal-handle"></div>
+    <div style="font-size:40px;margin:16px 0 12px;" id="sw-emoji"></div>
+    <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:#FDFBF7;margin-bottom:6px;" id="sw-title"></div>
+    <div style="font-size:13px;font-weight:300;color:rgba(253,251,247,0.5);margin-bottom:28px;" id="sw-desc"></div>
+    <div style="font-size:56px;font-weight:600;color:#FDFBF7;font-family:'Mitr',sans-serif;line-height:1;margin-bottom:8px;" id="sw-timer">0</div>
+    <div style="font-size:12px;color:rgba(253,251,247,0.35);margin-bottom:28px;" id="sw-status">กำลังนับ...</div>
+    <button onclick="closeModal('switch-modal')" style="padding:12px 32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:20px;font-family:'Mitr',sans-serif;font-size:13px;color:rgba(253,251,247,0.6);cursor:pointer;">ปิด</button>
+  </div>
+</div>
+
+<script>
+// ── Switch Timer
+let _swInterval = null;
+const SW_EMOJIS = {'ยิ้ม 3 วินาที':'🙂','หายใจครั้งเดียว':'🌬️','ถ่ายภาพในใจ':'📸','ยืดตัว 10 วินาที':'🌳','เรียกชื่อมัน':'🏷️','มองไกล 5 วินาที':'🪟','ถามตัวเองในวันหน้า':'🔭','ชมหนึ่งคน':'💛'};
+
+function openSwitchTimer(btn, title, desc, seconds) {
+  if (_swInterval) { clearInterval(_swInterval); _swInterval = null; }
+  document.getElementById('sw-emoji').textContent = SW_EMOJIS[title] || '⚡';
+  document.getElementById('sw-title').textContent = title;
+  document.getElementById('sw-desc').textContent = desc;
+  const timerEl = document.getElementById('sw-timer');
+  const statusEl = document.getElementById('sw-status');
+  let remaining = seconds;
+  timerEl.textContent = remaining;
+  statusEl.textContent = 'กำลังนับ...';
+  document.getElementById('switch-modal').style.display = 'flex';
+  document.getElementById('switch-modal').style.background = 'rgba(0,0,0,0.55)';
+  _swInterval = setInterval(() => {
+    remaining--;
+    timerEl.textContent = remaining;
+    if (remaining <= 0) {
+      clearInterval(_swInterval); _swInterval = null;
+      timerEl.textContent = '✓';
+      statusEl.textContent = 'เสร็จแล้ว 🎉';
+    }
+  }, 1000);
+}
+</script>
+
 </body>
-</html>
