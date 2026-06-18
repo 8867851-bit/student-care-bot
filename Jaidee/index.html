@@ -615,6 +615,14 @@
     /* Fade-in for suggestion panel */
     #idx-suggestions { transition:opacity 0.15s ease; }
 
+
+    /* ── Comfort family — rose tint ── */
+    .sit-pill.family-comfort {
+      background:rgba(196,143,163,0.10);
+      border-color:rgba(196,143,163,0.40);
+    }
+    .sit-pill.family-comfort .sit-label { color:var(--dark); }
+
   </style>
   <!-- GoatCounter visitor tracking -->
   <script data-goatcounter="https://jaidee-tu.goatcounter.com/count"
@@ -653,10 +661,15 @@
 
       <!-- STEP 1: Gentle Pause -->
       <div id="fc-step-1" class="fc-step active" style="padding:0 20px 24px;">
-        <div style="text-align:center;margin-bottom:24px;">
-          <div style="font-size:36px;margin-bottom:12px;">💧</div>
-          <div style="font-family:'Noto Serif Thai',serif;font-size:17px;font-weight:600;color:var(--dark);margin-bottom:10px;" id="fc-pause-title">ใจดีขอแวะเช็กพลังงานกายแป๊บนึงนะ...</div>
-          <div style="font-size:13px;font-weight:300;color:var(--mid);line-height:1.85;font-family:'Noto Serif Thai',serif;" id="fc-pause-desc">บางทีสิ่งที่รู้สึกอยู่<br>อาจเป็นเพราะร่างกายกำลังส่งสัญญาณเตือน<br>ลองเช็ก 4 ข้อง่ายๆ ก่อนลุยต่อกันไหม?</div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+          <div style="flex-shrink:0;width:80px;">
+            <img src="https://res.cloudinary.com/dlixucdqx/image/upload/c_crop,g_north_west,h_517,w_396,x_92/%E0%B8%94%E0%B8%B2%E0%B8%A7%E0%B8%99%E0%B9%8C%E0%B9%82%E0%B8%AB%E0%B8%A5%E0%B8%94_4_tgmuuw.png"
+                 alt="" style="width:80px;height:80px;object-fit:cover;border-radius:12px;display:block;"/>
+          </div>
+          <div style="flex:1;">
+            <div style="font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:600;color:var(--dark);margin-bottom:6px;line-height:1.4;" id="fc-pause-title">ใจดีขอแวะเช็กพลังงานกายแป๊บนึงนะ</div>
+            <div style="font-size:12px;font-weight:300;color:var(--mid);line-height:1.8;font-family:'Noto Serif Thai',serif;" id="fc-pause-desc">บางทีที่รู้สึกแบบนี้ อาจเป็นเพราะร่างกายยังได้รับไม่ครบ ลองเช็ก 4 ข้อง่ายๆ ก่อนไหม?</div>
+          </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
           <button class="fc-btn-primary" onclick="fcGoStep(2)">แน่นอน เช็กหน่อย 🔋</button>
@@ -2735,6 +2748,7 @@ Object.assign(SIT_DATA, SIT_DATA_EXTRA);
 
 // Render first tier on load
 renderTier(0);
+applyFamilyColours();
 
 // ═══ AWARENESS CARD — one rotating insight, no library, no progress ═══
 const AWARENESS_CARDS = [
@@ -3368,6 +3382,13 @@ document.addEventListener('click', function(e) {
     idxHideSuggestions();
   }
 });
+
+// ── Apply comfort pill colours after render ──
+function applyFamilyColours() {
+  document.querySelectorAll('.sit-pill[data-family="comfort"]').forEach(el => {
+    el.classList.add('family-comfort');
+  });
+}
 </script>
   <div id="exit-line" style="text-align:center;padding:32px 24px 48px;opacity:0;transition:opacity 1.2s ease;pointer-events:none;">
     <div style="font-size:12px;color:var(--soft);font-family:'Noto Serif Thai',serif;font-weight:300;letter-spacing:0.3px;">วันนี้พอแค่นี้ก็ได้ 🤍</div>
