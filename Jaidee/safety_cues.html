@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Safety Cues — ใจดี TU</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#08090F; --bg2:#0F1018; --bg3:#161720;
+      --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+      --cream:#FDFBF7; --soft:rgba(253,251,247,0.45); --muted:rgba(253,251,247,0.22);
+      --sage:#94A37C; --sage-soft:rgba(148,163,124,0.12); --sage-border:rgba(148,163,124,0.28);
+      --teal:#5EEAD4; --teal-soft:rgba(94,234,212,0.10);
+      --gold:#E8960C; --gold-soft:rgba(232,150,12,0.12);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    html,body{background:var(--bg);color:var(--cream);font-family:'Mitr',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .fade-up{animation:fadeUp 0.45s ease forwards;}
+
+    /* ── BACK ── */
+    .back-btn{display:inline-flex;align-items:center;gap:6px;padding:20px 20px 0;font-size:13px;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Mitr',sans-serif;text-decoration:none;}
+
+    /* ── HERO ── */
+    .hero{padding:32px 24px 8px;text-align:center;}
+    .hero-emoji{font-size:48px;margin-bottom:20px;display:block;opacity:0;animation:fadeUp 0.8s 0.1s ease forwards;}
+    .hero-eyebrow{font-size:10px;letter-spacing:2.5px;color:var(--sage);text-transform:uppercase;font-weight:400;margin-bottom:10px;opacity:0;animation:fadeUp 0.6s 0.3s ease forwards;}
+    .hero-title{font-family:'Noto Serif Thai',serif;font-size:24px;font-weight:600;line-height:1.4;color:var(--cream);margin-bottom:10px;opacity:0;animation:fadeUp 0.6s 0.45s ease forwards;}
+    .hero-sub{font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;opacity:0;animation:fadeUp 0.6s 0.6s ease forwards;}
+
+    /* ── INTRO NOTE ── */
+    .intro-note{margin:24px 20px 8px;padding:16px 18px;background:var(--sage-soft);border:1px solid var(--sage-border);border-radius:16px;opacity:0;animation:fadeUp 0.5s 0.75s ease forwards;}
+    .intro-note p{font-size:13px;font-weight:300;color:var(--soft);line-height:1.9;}
+
+    /* ── SECTION LABEL ── */
+    .sec-label{padding:24px 20px 12px;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+
+    /* ── CUE CARDS ── */
+    .cues-list{display:flex;flex-direction:column;gap:3px;padding:0 16px;}
+    .cue-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:border-color 0.2s;}
+    .cue-card.open{border-color:var(--sage-border);}
+    .cue-header{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+    .cue-emoji{font-size:24px;flex-shrink:0;width:36px;text-align:center;}
+    .cue-info{flex:1;}
+    .cue-name{font-size:14px;font-weight:500;color:var(--cream);margin-bottom:2px;}
+    .cue-tagline{font-size:12px;font-weight:300;color:var(--soft);}
+    .cue-chevron{font-size:12px;color:var(--muted);transition:transform 0.25s;flex-shrink:0;}
+    .cue-card.open .cue-chevron{transform:rotate(180deg);}
+    .cue-body{max-height:0;overflow:hidden;transition:max-height 0.35s ease;}
+    .cue-card.open .cue-body{max-height:400px;}
+    .cue-body-inner{padding:0 18px 20px 18px;}
+    .cue-guide{font-size:13px;font-weight:300;color:var(--soft);line-height:1.9;margin-bottom:12px;}
+    .cue-science{font-size:11px;font-weight:300;color:var(--muted);line-height:1.7;padding:10px 12px;background:var(--bg3);border-radius:10px;}
+    .cue-science span{color:var(--sage);font-weight:500;}
+    .cue-try-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:12px;padding:11px;background:var(--sage-soft);border:1px solid var(--sage-border);border-radius:12px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:400;color:var(--sage);cursor:pointer;transition:opacity 0.15s;}
+    .cue-try-btn:active{opacity:0.7;}
+    .timer-text{font-size:22px;font-weight:500;color:var(--sage);}
+
+    /* ── BOTTOM NOTE ── */
+    .bottom-note{margin:32px 20px 24px;padding:16px 18px;background:rgba(148,163,124,0.07);border:1px solid var(--sage-border);border-radius:16px;text-align:center;}
+    .bottom-note p{font-size:13px;font-weight:300;color:var(--soft);line-height:1.85;}
+    .bottom-note strong{color:var(--sage);}
+
+    /* ── PEER CARD ── */
+    .peer-card{margin:0 16px 40px;padding:18px;background:var(--bg2);border:1px solid rgba(232,150,12,0.2);border-radius:18px;text-align:center;}
+    .peer-title{font-size:13px;font-weight:400;color:var(--soft);margin-bottom:12px;line-height:1.7;}
+    .peer-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:var(--gold-soft);border:1px solid rgba(232,150,12,0.3);border-radius:20px;font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;color:var(--gold);text-decoration:none;}
+  </style>
+</head>
+<body>
+
+<a class="back-btn" href="alltools.html">← กลับ</a>
+
+<div class="hero">
+  <span class="hero-emoji">🌿</span>
+  <div class="hero-eyebrow">Safety Cues</div>
+  <div class="hero-title">ส่งสัญญาณว่าปลอดภัยแล้ว<br>ผ่านร่างกาย</div>
+  <div class="hero-sub">ไม่ต้องคิดออก ไม่ต้องเข้าใจ<br>แค่เลือกหนึ่งอย่างที่ทำได้ตอนนี้</div>
+</div>
+
+<div class="intro-note">
+  <p>เมื่อระบบประสาทอยู่ใน shutdown หรือ freeze — สมองส่วนคิดออฟไลน์ไปแล้ว วิธีเดียวที่ได้ผลคือผ่านประสาทสัมผัส ไออุ่น สัมผัสนุ่ม เสียงเบา ลมหายใจช้า — ทั้งหมดนี้คือภาษาที่ระบบประสาทเข้าใจได้โดยตรง</p>
+</div>
+
+<div class="sec-label">เลือกหนึ่งอย่างที่ทำได้ตอนนี้</div>
+
+<div class="cues-list" id="cues-list">
+
+  <div class="cue-card" id="cue-blanket">
+    <div class="cue-header" onclick="toggleCue('cue-blanket')">
+      <span class="cue-emoji">🛋️</span>
+      <div class="cue-info">
+        <div class="cue-name">ผ้าห่มอุ่น</div>
+        <div class="cue-tagline">น้ำหนักและไออุ่นบอกร่างกายว่าปลอดภัย</div>
+      </div>
+      <span class="cue-chevron">▼</span>
+    </div>
+    <div class="cue-body">
+      <div class="cue-body-inner">
+        <p class="cue-guide">หยิบผ้าห่มที่หนาพอสมควร คลุมตั้งแต่ไหล่ลงมา ให้รู้สึกถึงน้ำหนักบนตัว ไม่ต้องทำอะไรเพิ่ม แค่นั่งหรือนอนอยู่กับมันสักครู่</p>
+        <div class="cue-science"><span>ทำไมถึงได้ผล:</span> Deep pressure stimulation กระตุ้น parasympathetic nervous system ตรงๆ ลด cortisol และเพิ่ม serotonin เหมือนกับการกอด</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cue-card" id="cue-light">
+    <div class="cue-header" onclick="toggleCue('cue-light')">
+      <span class="cue-emoji">🕯️</span>
+      <div class="cue-info">
+        <div class="cue-name">แสงนวล</div>
+        <div class="cue-tagline">แสงสีเหลืองอุ่นบอกว่านี่คือเวลาพัก</div>
+      </div>
+      <span class="cue-chevron">▼</span>
+    </div>
+    <div class="cue-body">
+      <div class="cue-body-inner">
+        <p class="cue-guide">ปิดไฟแรงๆ เปิดโคมไฟเล็กหรือเทียน หรือเปิดไฟฝ้าไว้ต่ำสุด ให้ห้องมีแสงน้อยลงและอุ่นขึ้น แค่นั่งอยู่ในนั้น</p>
+        <div class="cue-science"><span>ทำไมถึงได้ผล:</span> แสงสีขาวจ้ากระตุ้น cortical arousal — แสงสีเหลืองอุ่นลดมัน ระบบประสาทอ่านแสงเป็นสัญญาณเวลา กลางวัน = ตื่นตัว กลางคืนนุ่ม = ปลอดภัย</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cue-card" id="cue-tea">
+    <div class="cue-header" onclick="toggleCue('cue-tea')">
+      <span class="cue-emoji">🍵</span>
+      <div class="cue-info">
+        <div class="cue-name">เครื่องดื่มอุ่น</div>
+        <div class="cue-tagline">ชา น้ำร้อน นม — ไออุ่นในมือและลำคอ</div>
+      </div>
+      <span class="cue-chevron">▼</span>
+    </div>
+    <div class="cue-body">
+      <div class="cue-body-inner">
+        <p class="cue-guide">ชงชาหรือน้ำร้อน ถือแก้วไว้ในมือทั้งสองข้าง ให้รู้สึกถึงความอุ่น ค่อยๆ ดื่มช้าๆ สังเกตความอุ่นที่ไหลลงคอ ไม่ต้องเพิ่มเติมอะไร</p>
+        <div class="cue-science"><span>ทำไมถึงได้ผล:</span> ความอุ่นที่ฝ่ามือส่งสัญญาณตรงไปที่ vagus nerve ผ่าน thermoreceptors ในผิวหนัง ลด heart rate และลด cortisol ได้จริง</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cue-card" id="cue-breath">
+    <div class="cue-header" onclick="toggleCue('cue-breath')">
+      <span class="cue-emoji">🌬️</span>
+      <div class="cue-info">
+        <div class="cue-name">ลมหายใจช้า</div>
+        <div class="cue-tagline">หายใจออกยาวกว่าเข้า ระบบจะเริ่มคลาย</div>
+      </div>
+      <span class="cue-chevron">▼</span>
+    </div>
+    <div class="cue-body">
+      <div class="cue-body-inner">
+        <p class="cue-guide">ไม่ต้องนับ ไม่ต้องทำให้สมบูรณ์แบบ แค่หายใจเข้าปกติ แล้วหายใจออกให้ยาวกว่าเข้าเล็กน้อย ทำแค่สามครั้งก็พอ</p>
+        <div class="cue-science"><span>ทำไมถึงได้ผล:</span> การหายใจออกยาวกระตุ้น parasympathetic system โดยตรงผ่าน vagus nerve — เป็น shortcut ทางชีววิทยาที่เร็วที่สุดในการออกจาก stress response</div>
+        <button class="cue-try-btn" onclick="startTimer(this, 30)">
+          <span>ลองเลย</span><span class="timer-text" style="display:none"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cue-card" id="cue-rock">
+    <div class="cue-header" onclick="toggleCue('cue-rock')">
+      <span class="cue-emoji">🫧</span>
+      <div class="cue-info">
+        <div class="cue-name">โยกตัวช้าๆ</div>
+        <div class="cue-tagline">จังหวะสม่ำเสมอบอก vestibular ว่าปลอดภัย</div>
+      </div>
+      <span class="cue-chevron">▼</span>
+    </div>
+    <div class="cue-body">
+      <div class="cue-body-inner">
+        <p class="cue-guide">นั่งหรือยืน โยกตัวไปหน้าหลังหรือซ้ายขวาช้าๆ สม่ำเสมอ เหมือนจังหวะการเดิน ไม่ต้องมากไม่ต้องเร็ว แค่จังหวะที่รู้สึกสบาย</p>
+        <div class="cue-science"><span>ทำไมถึงได้ผล:</span> Rhythmic vestibular input (การโยกสม่ำเสมอ) ส่งสัญญาณตรงไปที่ brainstem และ vagus nerve — เป็น co-regulation ที่ทารกได้รับจากการอุ้มมาตั้งแต่ต้น</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cue-card" id="cue-hand">
+    <div class="cue-header" onclick="toggleCue('cue-hand')">
+      <span class="cue-emoji">🤲</span>
+      <div class="cue-info">
+        <div class="cue-name">มือบนหัวใจ</div>
+        <div class="cue-tagline">สัมผัสตัวเองส่งสัญญาณความปลอดภัย</div>
+      </div>
+      <span class="cue-chevron">▼</span>
+    </div>
+    <div class="cue-body">
+      <div class="cue-body-inner">
+        <p class="cue-guide">วางมือขวาบนหน้าอกตรงหัวใจ มือซ้ายทับ กดเบาๆ ให้รู้สึกถึงไออุ่นจากมือ รู้สึกถึงการเต้นของหัวใจถ้ารู้สึกได้ หายใจช้าๆ อยู่อย่างนั้นสักครู่</p>
+        <div class="cue-science"><span>ทำไมถึงได้ผล:</span> Self-touch กระตุ้น oxytocin เช่นเดียวกับการถูกกอดโดยคนอื่น ความอุ่นจากมือและแรงกดเบาๆ ส่ง safety signal ผ่าน C-tactile afferents</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cue-card" id="cue-texture">
+    <div class="cue-header" onclick="toggleCue('cue-texture')">
+      <span class="cue-emoji">🪨</span>
+      <div class="cue-info">
+        <div class="cue-name">สัมผัสพื้นผิว</div>
+        <div class="cue-tagline">จับสิ่งที่มีพื้นผิวชัดเจน ดึงกลับสู่ปัจจุบัน</div>
+      </div>
+      <span class="cue-chevron">▼</span>
+    </div>
+    <div class="cue-body">
+      <div class="cue-body-inner">
+        <p class="cue-guide">หยิบสิ่งใดก็ได้ที่มีพื้นผิวชัดเจน — หิน กุญแจ ผ้าขนสัตว์ กระดาษหนา ลองวาดนิ้วไปตามพื้นผิวช้าๆ สังเกตว่ามันรู้สึกอย่างไร หยาบ เรียบ เย็น อุ่น</p>
+        <div class="cue-science"><span>ทำไมถึงได้ผล:</span> Tactile grounding ดึง attention ออกจาก threat response และนำมาที่ present moment โดยตรง ผ่าน somatosensory cortex แทน amygdala</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cue-card" id="cue-sound">
+    <div class="cue-header" onclick="toggleCue('cue-sound')">
+      <span class="cue-emoji">🎵</span>
+      <div class="cue-info">
+        <div class="cue-name">เสียงนุ่ม</div>
+        <div class="cue-tagline">น้ำเสียงต่ำช้า — ภาษาที่ vagus nerve เข้าใจ</div>
+      </div>
+      <span class="cue-chevron">▼</span>
+    </div>
+    <div class="cue-body">
+      <div class="cue-body-inner">
+        <p class="cue-guide">เปิดเพลงช้าๆ เสียงต่ำๆ หรือแค่เสียงธรรมชาติ ฝน ลม คลื่น ปิดเสียงอื่นๆ ให้เหลือแค่สิ่งนั้น ไม่ต้องฟังอย่างตั้งใจ แค่ให้มันอยู่ตรงนั้น</p>
+        <div class="cue-science"><span>ทำไมถึงได้ผล:</span> Prosodic safety cues — น้ำเสียงต่ำและช้ากระตุ้น ventral vagal system โดยตรง นี่คือเหตุผลที่น้ำเสียงของคนที่ไว้ใจได้ทำให้รู้สึกดีขึ้นแม้ไม่ได้ยินคำ</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-note">
+  <p>ไม่ต้องทำทั้งหมด<br>เลือก<strong>หนึ่งอย่าง</strong>ที่ทำได้ตอนนี้<br>แค่นั้นก็นับแล้ว</p>
+</div>
+
+<div class="peer-card">
+  <div class="peer-title">บางครั้งสิ่งที่ช่วยได้มากที่สุด<br>คือการอยู่ใกล้ๆ กับใครสักคนที่รู้สึกปลอดภัย</div>
+  <a href="talk_who.html" class="peer-btn">💛 คุยกับเพื่อนที่ปรึกษา</a>
+</div>
+
+<script>
+function toggleCue(id) {
+  const card = document.getElementById(id);
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.cue-card.open').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+
+let _timerInterval = null;
+function startTimer(btn, seconds) {
+  if (_timerInterval) { clearInterval(_timerInterval); _timerInterval = null; }
+  const textSpan = btn.querySelector('.timer-text');
+  const labelSpan = btn.querySelector('span:first-child');
+  let remaining = seconds;
+  labelSpan.style.display = 'none';
+  textSpan.style.display = 'inline';
+  textSpan.textContent = remaining + 's';
+  _timerInterval = setInterval(() => {
+    remaining--;
+    textSpan.textContent = remaining + 's';
+    if (remaining <= 0) {
+      clearInterval(_timerInterval);
+      _timerInterval = null;
+      textSpan.style.display = 'none';
+      labelSpan.style.display = 'inline';
+      labelSpan.textContent = '✓ เสร็จแล้ว';
+    }
+  }, 1000);
+}
+</script>
+</body>
+</html>
