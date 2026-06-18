@@ -186,6 +186,11 @@
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;align-items:flex-end;justify-content:center;transition:background 0.3s;}
     .modal-overlay.active{display:flex;}
     .modal-sheet{background:#1C1917;border-radius:24px 24px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,24px);}
+    @media(min-width:520px){
+      .modal-sheet{max-width:640px;max-height:82vh;border-radius:28px 28px 0 0;}
+      .modal-overlay{align-items:flex-end;}
+      .mstep-inner{padding:0 32px 32px;}
+    }
     @media(min-width:600px){
       .modal-overlay{align-items:center;}
       .modal-sheet{border-radius:24px;margin:0 auto;max-height:76vh;max-width:420px;width:420px;}
@@ -945,7 +950,8 @@ const PROMPTS=[{label:'ขอบคุณ',q:'วันนี้มีอะไ�
 function previewText(e){if(e.type==='worry')return(e.text||'').slice(0,100);if(e.qa&&e.qa.length){const f=e.qa.filter(x=>x.a&&x.a.trim());return f.length?f[0].a.slice(0,100):'(ไม่มีข้อความ)';}const f=(e.answers||[]).filter(a=>a&&a.trim());return f.length?f[0].slice(0,100):'(ไม่มีข้อความ)';}
 function buildFull(e){if(e.type==='worry')return'<div class="entry-q">ความกังวล</div><div class="entry-a">'+(e.text||'')+'</div>';if(e.qa&&e.qa.length)return e.qa.map(x=>'<div class="entry-q">'+x.q+'</div><div class="entry-a '+(x.a?'':'empty')+'">'+(x.a||'—')+'</div>').join('');return PROMPTS.map((p,i)=>{const a=(e.answers||[])[i];return'<div class="entry-q">'+p.label+'</div><div class="entry-a '+(a?'':'empty')+'">'+(a||'ข้ามไป')+'</div>';}).join('');}
 let showAll=false;
-function renderEntries(){const entries=loadEntries();const sec=document.getElementById('entries-section');const list=document.getElementById('entries-list');const more=document.getElementById('entries-more');if(!entries.length){sec.style.display='none';return;}sec.style.display='block';const show=showAll?entries:entries.slice(0,3);list.innerHTML='';show.forEach(e=>{const c=document.createElement('div');c.className='entry-card '+e.type;const BADGES={journal:'📓 บันทึก',worry:'🔒 ความกังวล',savor:'✨ สิ่งดี',clarity:'🧭 ความชัด'};const badge=BADGES[e.type]||'📓 บันทึก';c.innerHTML='<div class="entry-top"><span class="entry-badge">'+badge+'</span><span class="entry-date">'+relativeTime(e.ts)+'</span></div><div class="entry-preview">'+previewText(e)+'</div><div class="entry-full">'+buildFull(e)+'</div>';c.onclick=()=>c.classList.toggle('expanded');list.appendChild(c);});if(entries.length>3){more.style.display='block';more.textContent=showAll?'ย่อกลับ ↑':'ดูทั้งหมด '+entries.length+' รายการ →';}else more.style.display='none';}
+function renderEntries(){const entries=loadEntries();const sec=document.getElementById('entries-section');const list=document.getElementById('entries-list');const more=document.getElementById('entries-more');if(!entries.length){sec.style.display='none';return;}sec.style.display='block';const show=showAll?entries:entries.slice(0,3);list.innerHTML='';show.forEach(e=>{const c=document.createElement('div');c.className='entry-card '+e.type;const BADGES={journal:'📓 บันทึก',worry:'🔒 ความกังวล',savor:'✨ สิ่งดี',clarity:'🧭 ความชัด'};
+      const badge_override = (e.type==='worry' && e.source==='sleep') ? '🌙 ความกังวล (ก่อนนอน)' : null;const badge=badge_override||BADGES[e.type]||'📓 บันทึก';c.innerHTML='<div class="entry-top"><span class="entry-badge">'+badge+'</span><span class="entry-date">'+relativeTime(e.ts)+'</span></div><div class="entry-preview">'+previewText(e)+'</div><div class="entry-full">'+buildFull(e)+'</div>';c.onclick=()=>c.classList.toggle('expanded');list.appendChild(c);});if(entries.length>3){more.style.display='block';more.textContent=showAll?'ย่อกลับ ↑':'ดูทั้งหมด '+entries.length+' รายการ →';}else more.style.display='none';}
 function toggleAllEntries(){showAll=!showAll;renderEntries();}
 function confirmClear(){if(confirm('ลบบันทึกทั้งหมดใช่ไหม?'))deleteAllEntries();}
 
