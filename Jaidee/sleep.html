@@ -400,7 +400,7 @@
   <div style="width:100%;margin-bottom:0;">
     <img src="https://res.cloudinary.com/dlixucdqx/image/upload/v1781785018/Screenshot_2026-06-18_191639_fzjx5a.png"
          alt="ใจดี TU Sleep"
-         style="width:auto;max-width:70%;max-height:55vw;display:block;margin:0 auto;"/>
+         style="width:auto;max-width:60%;max-height:48vw;display:block;margin:0 auto;"/>
   </div>
   <button class="w-btn" onclick="goTo('s-unload')" style="margin-top:24px;">เริ่มต้น →</button>
   <button class="w-btn-alt" onclick="goTo('s-breathe');startBreathe()">แค่หายใจก็พอ →</button>
@@ -589,7 +589,10 @@
      SCREEN 6: DARK
 ══════════════════════════════════════════════ -->
 <div class="screen" id="s-dark">
-  <div class="dk-moon">🌙</div>
+  <div class="dk-moon">
+    <img src="https://res.cloudinary.com/dlixucdqx/image/upload/f_auto/q_auto/%E0%B8%94%E0%B8%B2%E0%B8%A7%E0%B8%99%E0%B9%8C%E0%B9%82%E0%B8%AB%E0%B8%A5%E0%B8%94_5_m2u5f2.png"
+         alt="" style="width:52px;height:52px;object-fit:contain;display:block;margin:0 auto;"/>
+  </div>
   <div class="dk-title">วางโทรศัพท์ลงได้แล้ว<br>ทุกอย่างรอพรุ่งนี้ได้</div>
   <div class="dk-permission">คืนนี้ไม่ต้องแก้ทุกเรื่อง<br>พรุ่งนี้ค่อยเป็นคนจัดการ<br>ตอนนี้เป็นแค่คนที่กำลังพักก็พอ</div>
   <div class="dk-sub">ไม่ต้องทำอะไรอีกแล้วคืนนี้<br>แค่หลับตาลง</div>
@@ -641,7 +644,7 @@ function parkWorries() {
   try {
     const STORAGE_KEY = 'jaidee_entries';
     const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    existing.unshift({ id:Date.now(), type:'worry', ts:new Date().toISOString(), text:ta.value.trim() });
+    existing.unshift({ id:Date.now(), type:'worry', ts:new Date().toISOString(), text:ta.value.trim(), source:'sleep' });
     if (existing.length > 50) existing.splice(50);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
   } catch(e) {}
