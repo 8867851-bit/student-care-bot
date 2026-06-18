@@ -94,6 +94,12 @@
     .s-tool:active{transform:scale(0.98);}
     .s-deep{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;border:1.5px solid var(--card-border);background:var(--card);margin-bottom:8px;transition:transform 0.15s;}
     .s-deep:active{transform:scale(0.97);}
+
+    /* ── Family colour pills ── */
+    .sit-pill[data-family='comfort']   { background:rgba(196,143,163,0.10); border-color:rgba(196,143,163,0.35); }
+    .sit-pill[data-family='understand']{ background:rgba(13,148,136,0.08);  border-color:rgba(13,148,136,0.30); }
+    .sit-pill[data-family='grow']      { background:rgba(148,163,124,0.10); border-color:rgba(148,163,124,0.35); }
+    .sit-pill[data-family='belong']    { background:rgba(232,150,12,0.10);  border-color:rgba(232,150,12,0.35); }
   </style>
 <script data-goatcounter="https://jaideetu-countpillvisit.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
@@ -111,10 +117,10 @@
 
 <!-- P2-1: Situation Search -->
 <div style="padding:10px 20px 4px;position:relative;">
-  <div style="display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--cream-border);border-radius:50px;padding:10px 16px;transition:border-color 0.2s;" id="search-wrap">
-    <span style="font-size:14px;color:var(--soft);">💭</span>
-    <input id="sit-search" type="text" placeholder="มีอะไรอยู่ในใจไหม?" autocomplete="off"
-      style="flex:1;border:none;outline:none;font-family:'Mitr',sans-serif;font-size:13px;background:transparent;color:var(--dark);"
+  <div style="display:flex;align-items:center;gap:12px;background:var(--card);border:2px solid var(--dark);border-radius:16px;padding:14px 20px;transition:border-color 0.2s;box-shadow:0 2px 12px rgba(0,0,0,0.08);" id="search-wrap">
+    <span style="font-size:18px;color:var(--soft);">💭</span>
+    <input id="sit-search" type="text" placeholder="พิมพ์สถานการณ์ที่อยู่ในใจ..." autocomplete="off"
+      style="flex:1;border:none;outline:none;font-family:'Mitr',sans-serif;font-size:15px;font-weight:400;background:transparent;color:var(--dark);"
       oninput="onSitSearch(this.value)" onfocus="document.getElementById('search-wrap').style.borderColor='var(--green)'" onblur="document.getElementById('search-wrap').style.borderColor='var(--cream-border)'"/>
     <button id="search-clear" onclick="clearSitSearch()" style="display:none;background:none;border:none;font-size:14px;color:var(--soft);cursor:pointer;padding:0;">✕</button>
   </div>
@@ -397,13 +403,15 @@ function openSitSheet(key) {
   // The one large recommendation — "เริ่มตรงนี้" or "ลองแบบนี้ดูไหม"
   // Color system: dark card = primary action, gold = human support only, white/cream = everything else.
   // The label above it is a neutral caption — the dark card itself signals "do this".
-  function _primaryCard(t, label) {
+  function _primaryCard(t, label, group) {
     if (!t) return '';
     const href = t.href && t.href !== '#' ? `href="${t.href}"` : 'href="#"';
     const onclick = t.onclick ? ` onclick="${t.onclick}"` : '';
+    const gs = GROUP_STYLES[group] || {};
+    const bgColor = gs.primary || 'var(--dark)';
     return `<div style="margin-bottom:16px;">
       <div style="font-family:'Mitr',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;padding-left:2px;">${label}</div>
-      <a ${href}${onclick} style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:18px;text-decoration:none;background:var(--dark);">
+      <a ${href}${onclick} style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:18px;text-decoration:none;background:${bgColor};">
         <span style="font-size:26px;flex-shrink:0;">${t.icon}</span>
         <span style="flex:1;">
           <span style="display:block;font-size:16px;font-weight:600;color:#FDFBF7;margin-bottom:3px;line-height:1.4;">${t.name}</span>
@@ -417,7 +425,7 @@ function openSitSheet(key) {
   // Notebook-family atmosphere — neutral card, colored identity (icon/border/top-glow only)
   const GROUP_STYLES = {
     understand: { icon:'rgba(13,148,136,0.10)',  border:'rgba(13,148,136,0.35)',  glow:'rgba(13,148,136,0.045)'  },
-    comfort:    { icon:'rgba(216,184,191,0.20)', border:'rgba(216,184,191,0.6)',  glow:'rgba(216,184,191,0.05)'  },
+    comfort:    { icon:'rgba(216,184,191,0.20)', border:'rgba(216,184,191,0.6)',  glow:'rgba(216,184,191,0.05)', primary:'#7B3550' },
     grow:       { icon:'rgba(201,163,90,0.16)',  border:'rgba(201,163,90,0.4)',   glow:'rgba(201,163,90,0.045)'  },
     belong:     { icon:'rgba(127,163,135,0.16)', border:'rgba(127,163,135,0.4)',  glow:'rgba(127,163,135,0.045)' },
   };
@@ -508,7 +516,7 @@ function openSitSheet(key) {
   let toolsHtml;
   if (type === 'A') {
     // Regulate first: primary tool → เข้าใจ → others → article → related
-    toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้')
+    toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้', group)
       + understandHtml
       + otherHtml
       + _articleCard(articleTool, 'อ่านเพิ่มเติม', false, group)
@@ -516,14 +524,14 @@ function openSitSheet(key) {
   } else if (type === 'C') {
     // Human first: peer → primary → เข้าใจ → others → article → related
     toolsHtml = _peerCard()
-      + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม')
+      + _primaryCard(primaryTool, 'ลองแบบนี้ดูไหม', group)
       + understandHtml
       + otherHtml
       + _articleCard(articleTool, 'อ่านเพิ่มเติม', false, group)
       + relatedHtml;
   } else {
     // Type B — primary first → เข้าใจ → article → others → related
-    toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้')
+    toolsHtml = _primaryCard(primaryTool, 'เริ่มตรงนี้', group)
       + understandHtml
       + _articleCard(articleTool, 'อ่านเพิ่มเติม', true, group)
       + otherHtml
@@ -994,8 +1002,8 @@ const SIT_DATA_EXTRA = {
     tools:[
       { icon:'🌿', name:'Safety Cues', desc:'ส่งสัญญาณปลอดภัยผ่านร่างกาย — ก่อนทำอย่างอื่น', href:'safety_cues.html', primary:true },
       { icon:'💛', name:'คุยกับเพื่อนที่ปรึกษา', desc:'การอยู่ใกล้คนที่ปลอดภัยคือยาที่ดีที่สุด', href:'talk_who.html' },
-      { icon:'📖', name:'ทำไมถึงรู้สึกแบบนี้?', desc:'อ่าน 6 นาที · Window of Tolerance + Dorsal Vagal', href:'notebook.html?id=shutdown' },
       { icon:'🫁', name:'หายใจผ่อนคลาย', desc:'ลมหายใจออกยาว — shortcut ที่เร็วที่สุด', href:'alltools.html#breathe' },
+      { icon:'📖', name:'ทำไมถึงรู้สึกแบบนี้?', desc:'อ่าน 6 นาที · Window of Tolerance + Dorsal Vagal', href:'notebook.html?id=shutdown' },
     ],
     talk:'ความรู้สึกนี้อยู่มานานไหม? คุยกับใครได้เลย',
   },
