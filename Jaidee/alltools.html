@@ -21,6 +21,7 @@
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;padding-bottom:80px;overflow-x:hidden;}
+    .page-shell{max-width:680px;margin:0 auto;position:relative;}
 
     /* ── FIXED TAB BAR ── */
     .tab-bar{
@@ -28,7 +29,7 @@
       background:var(--cream);border-bottom:1px solid var(--cream-border);
       display:flex;gap:0;padding:10px 12px;
       overflow-x:auto;scrollbar-width:none;
-    }
+    ;max-width:680px;margin-left:auto;margin-right:auto;}
     .tab-bar::-webkit-scrollbar{display:none;}
     .tab-btn{
       flex-shrink:0;display:inline-flex;align-items:center;gap:5px;
@@ -60,6 +61,9 @@
 
     /* ── IMAGE CARDS GRID ── */
     .cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px;margin-bottom:24px;}
+    @media(min-width:520px){
+      .cards-grid{grid-template-columns:1fr 1fr 1fr;gap:14px;}
+    }
     .cards-grid.single-col{grid-template-columns:1fr;}
 
     /* THE CARD — image background style */
@@ -479,6 +483,7 @@
 </style>
 </head>
 <body>
+<div class="page-shell">
 
 <!-- ── PILL TAB BAR ── -->
 <div class="tab-bar" id="tab-bar">
@@ -2592,4 +2597,5 @@ function openSwitchTimer(btn, title, desc, seconds) {
   </div>
 </div>
 
+</div><!-- /page-shell -->
 </body>
