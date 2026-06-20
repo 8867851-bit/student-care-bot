@@ -483,6 +483,36 @@
 .corner-btn{width:100%;background:#fff;color:var(--dark);border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;}
 .corner-btn.secondary{background:none;color:rgba(255,255,255,0.4);border:1.5px solid rgba(255,255,255,0.15);}
 </style>
+<script>
+// ── Swipe-to-tab (panels 1-6, ignores Y-scroll, no drag needed on desktop — click ← → arrows auto-advance) ──
+(function(){
+  const PANEL_COUNT = 6;
+  let _sx=null,_sy=null;
+  function _curTab(){
+    const b=document.querySelector('.tab-btn.active[data-panel]');
+    return b ? parseInt(b.dataset.panel) : 1;
+  }
+  function _go(n){
+    if(n<1||n>PANEL_COUNT)return;
+    if(typeof switchToolsTab==='function') switchToolsTab(n);
+  }
+  document.addEventListener('touchstart',function(e){
+    _sx=e.touches[0].clientX; _sy=e.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(_sx===null)return;
+    const dx=e.changedTouches[0].clientX-_sx;
+    const dy=e.changedTouches[0].clientY-_sy;
+    _sx=_sy=null;
+    // only horizontal swipes (dx > dy*1.4, min 40px)
+    if(Math.abs(dx)<40||Math.abs(dx)<Math.abs(dy)*1.4)return;
+    // ignore swipes on modals / interactive elements
+    const t=e.target;
+    if(t.closest('.modal-overlay,.modal-sheet,.bp-textarea,.mstep-ta,input,textarea,select'))return;
+    _go(_curTab()+(dx<0?1:-1));
+  },{passive:true});
+})();
+</script>
 </head>
 <body>
 <div class="page-shell">
@@ -659,10 +689,10 @@
     <button class="tool-img-card" onclick="markToolTapped();openClarity()">
       <div class="card-bg bg-gold"></div>
       <div class="card-overlay"></div>
-      <div style="position:absolute;inset:0;background-image:url('https://res.cloudinary.com/dlixucdqx/image/upload/v1781874263/reflecttt_s33k61.png');background-size:cover;background-position:center;"></div>
+      <div style="position:absolute;inset:0;background-image:url('https://res.cloudinary.com/dlixucdqx/image/upload/v1781874265/clarity_aexcox.png');background-size:cover;background-position:center;"></div>
       <div class="card-content">
         <div class="card-badge">ใช้ได้เลย</div>
-        <div class="card-title">หาความชัด</div>
+        <div class="card-title">หาความต้องการ</div>
         <div class="card-sub">รู้สึกหลงทางหรือไม่รู้ว่าตัวเองต้องการอะไร</div>
         <div class="card-btn gold">เริ่ม →</div>
       </div>
@@ -925,6 +955,80 @@ function trackToolOpen(icon, name, fn) {
 
 // ── Fix 1: defer Rewire panel — only render when Tab 3 is first opened ──
 // Prevents 70-button DOM write from blocking the main thread at page load.
+function markToolTapped(){}
+const REWIRE_HABITS=[
+ {id:'smile', icon:'🙂', name:'ยิ้ม 3 วินาที', desc:'ใบหน้าส่งสัญญาณกลับไปบอกสมอง', time:'3 วิ',
+  how:'สมองไม่ได้สั่งใบหน้าทางเดียว — ใบหน้าก็ส่งสัญญาณกลับไปบอกสมองด้วย\nยิ้มเล็กๆ แม้จะตั้งใจยิ้ม ก็พอให้สมองเริ่มปรับสารเคมีแล้ว',
+  done:'สังเกตไหมว่ามีอะไรเบาขึ้นนิดหนึ่ง?\nนั่นไม่ใช่จินตนาการ — มันคือวงจรป้อนกลับระหว่างใบหน้ากับสมอง'},
+ {id:'breath1', icon:'🌬️', name:'หายใจครั้งเดียว', desc:'ลมหายใจเดียว เปลี่ยนสัญญาณทั้งระบบ', time:'10 วิ',
+  how:'ลมหายใจคือระบบเดียวในร่างกายที่ทั้งอัตโนมัติและสั่งได้\nหายใจออกยาวกว่าเข้า = บอกระบบประสาทว่า "ปลอดภัยแล้ว"',
+  done:'แค่ครั้งเดียวก็เปลี่ยนสัญญาณได้แล้ว\nและไม่มีใครรู้เลยว่าเราเพิ่งกดสวิตช์ไป'},
+ {id:'snapshot', icon:'📸', name:'ถ่ายภาพในใจ', desc:'เก็บสิ่งดีหนึ่งอย่างที่อยู่ตรงหน้า', time:'5 วิ',
+  how:'สมองถูกตั้งค่าให้มองหาปัญหาก่อนเสมอ\nการหยุดอยู่กับสิ่งดีเล็กๆ สัก 5 วินาที คือการสอนให้มันสแกนหาสิ่งดีเองเป็น',
+  done:'ภาพนี้ถูกเก็บแล้ว\nยิ่งถ่ายบ่อย สมองยิ่งหาสิ่งดีเองเก่งขึ้น'},
+ {id:'posture', icon:'🌳', name:'ยืดตัว 10 วินาที', desc:'ท่าทางเปลี่ยน สารเคมีในสมองก็เปลี่ยน', time:'10 วิ',
+  how:'ตัวงอ ไหล่ห่อ = สมองอ่านว่า "กำลังแย่"\nยืดหลัง เปิดไหล่ = สัญญาณกลับด้านภายในไม่กี่วินาที',
+  done:'ร่างกายเพิ่งบอกสมองว่า "เรายังไหว"\nมันฟังท่าทางของเรามากกว่าที่คิด'},
+ {id:'nameit', icon:'🏷️', name:'เรียกชื่อมัน', desc:'ตั้งชื่อความรู้สึก เสียงในหัวก็เบาลง', time:'5 วิ',
+  how:'ความรู้สึกที่ไม่มีชื่อจะดังที่สุด\nแค่เรียกชื่อมันออกมา สมองส่วนอารมณ์ก็ลดความแรงลงทันที',
+  done:'พอเรียกชื่อ มันก็กลายเป็นแค่ "สิ่งที่เรากำลังรู้สึก"\nไม่ใช่ทั้งหมดของตัวเรา'},
+ {id:'fargaze', icon:'🪟', name:'มองไกล 5 วินาที', desc:'เปิดมุมมองกว้าง บอกร่างกายว่าปลอดภัย', time:'5 วิ',
+  how:'ตอนเครียด สายตาเราจะแคบลงเหมือนโดนล็อกเป้า\nการมองไกลๆ เปิดมุมมองกว้าง คือสวิตช์ธรรมชาติที่บอกระบบประสาทว่าไม่มีอันตราย',
+  done:'โลกกว้างขึ้นนิดหนึ่งไหม?\nสวิตช์นี้พกติดตัวได้ทุกที่ — แค่เงยหน้าจากจอ'},
+ {id:'futureme', icon:'🔭', name:'ถามตัวเองในวันหน้า', desc:'เราเวอร์ชันที่ผ่านมันมาแล้ว จะพูดว่าอะไร', time:'10 วิ',
+  how:'ตอนอารมณ์พาไป สมองส่วนตอบสนองไวจะคุมเกม\nคำถามเดียว — "ตัวเราในวันหน้าจะบอกอะไร" — สลับไปใช้สมองส่วนคิดยาวทันที',
+  done:'เก็บประโยคนั้นไว้\nมันมาจากเราเอง — เวอร์ชันที่ใจเย็นกว่านี้นิดหนึ่ง'},
+ {id:'kindword', icon:'💛', name:'ชมหนึ่งคน', desc:'คำชมจริงใจหนึ่งครั้ง ดีต่อใจทั้งสองฝั่ง', time:'30 วิ',
+  how:'การชมคนอื่นแบบจริงใจ ทำให้สมอง "ของเรา" หลั่งสารแห่งความเชื่อมต่อด้วย\nไม่ใช่แค่เขาที่รู้สึกดี — เราได้ก่อนเขาอีก',
+  done:'ส่งต่อไปแล้วหนึ่งดวง 💛\nความรู้สึกดีแบบนี้แพร่กระจายเก่งกว่าที่คิด'},
+];
+function _rwKey(){const d=new Date();return 'jaidee_rewire_'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function rwDoneMap(){try{return JSON.parse(localStorage.getItem(_rwKey())||'{}');}catch(e){return{};}}
+function rwMarkDone(id){try{const m=rwDoneMap();m[id]=1;localStorage.setItem(_rwKey(),JSON.stringify(m));}catch(e){}renderRewirePanel();}
+function renderRewirePanel(){
+  const list=document.getElementById('rw-list');if(!list)return;
+  const m=rwDoneMap();const n=Object.keys(m).length;const total=REWIRE_HABITS.length;
+  document.getElementById('rw-sparks').innerHTML=REWIRE_HABITS.map(h=>'<div class="rw-spark '+(m[h.id]?'lit':'')+'"></div>').join('');
+  document.getElementById('rw-spark-label').textContent=
+    n===0?'วันนี้ยังไม่ได้จุดสวิตช์เลย — อันเดียวก็นับ':
+    n>=total?'ครบทั้ง '+total+' แล้ววันนี้ ✨':
+    'วันนี้จุดไปแล้ว '+n+' สวิตช์';
+  const today=REWIRE_HABITS[Math.floor(Date.now()/86400000)%total];
+  const t=document.getElementById('rw-today');
+  t.onclick=()=>{markToolTapped();openRewire(today.id);};
+  t.innerHTML='<div class="rw-today-eyebrow">วันนี้ลองอันนี้'+(m[today.id]?' · ทำแล้ว ✓':'')+'</div><div class="rw-today-row"><div class="rw-today-icon">'+today.icon+'</div><div><div class="rw-today-name">'+today.name+'</div><div class="rw-today-desc">'+today.desc+'</div></div></div>';
+  list.innerHTML=REWIRE_HABITS.map(h=>'<button class="rw-item '+(m[h.id]?'done-today':'')+'" onclick="markToolTapped();openRewire(\''+h.id+'\')"><div class="rw-item-icon">'+h.icon+'</div><div class="rw-item-body"><div class="rw-item-name">'+h.name+'</div><div class="rw-item-desc">'+h.desc+'</div></div><div class="rw-item-time">'+(m[h.id]?'✓':h.time)+'</div></button>').join('');
+}
+let _rwHabit=null,_rwT1=null,_rwT2=null;
+function openRewire(id){_rwHabit=REWIRE_HABITS.find(h=>h.id===id);if(!_rwHabit)return;openModal('rewire-modal');rwIntro();}
+function closeRewire(){clearInterval(_rwT1);clearInterval(_rwT2);_rwT1=_rwT2=null;const d=document.getElementById('rw-dim');if(d){d.classList.remove('show');d.style.opacity='0';}closeModal('rewire-modal');}
+function rwEl(){return document.getElementById('rewire-inner');}
+function rwIntro(){
+  const h=_rwHabit;
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">Rewire · '+h.time+'</div><div class="rw-stage fade-up"><div style="font-size:52px;margin-bottom:10px;">'+h.icon+'</div><div style="font-family:\'Noto Serif Thai\',serif;font-size:22px;font-weight:700;color:#FDFBF7;margin-bottom:12px;">'+h.name+'</div><div style="font-size:13.5px;font-weight:300;color:rgba(253,251,247,0.55);line-height:1.85;white-space:pre-line;">'+h.how+'</div></div><button class="rw-cta" onclick="rwStart()">เริ่มเลย →</button><button class="rw-skipline" onclick="closeRewire()">ปิด</button>';
+}
+function rwStart(){({smile:rwSmile,breath1:rwBreath,snapshot:rwSnapshot,posture:rwPosture,nameit:rwNameIt,fargaze:rwFarGaze,futureme:rwFutureMe,kindword:rwKindWord})[_rwHabit.id]();}
+function rwDone(extraHtml){
+  rwMarkDone(_rwHabit.id);
+  const m=rwDoneMap();const next=REWIRE_HABITS.find(h=>!m[h.id]);
+  rwEl().innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">'+_rwHabit.icon+'</div><div class="tool-done-title">จุดติดแล้ว</div><div class="tool-done-sub" style="white-space:pre-line;">'+_rwHabit.done+'</div>'+(extraHtml||'')+(next?'<button class="rw-cta" style="margin:0 0 8px;width:100%;" onclick="openRewire(\''+next.id+'\')">อีกสวิตช์หนึ่ง — '+next.icon+' '+next.name+' →</button>':'')+'<button class="tool-done-close" onclick="closeRewire()">พอแค่นี้ก่อน ✓</button></div>';
+}
+function rwSmile(){
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">ยิ้ม 3 วินาที</div><div class="rw-stage"><div class="rw-circle" id="rw-c" style="box-shadow:0 0 0 rgba(232,150,12,0);"><span class="rw-count" id="rw-n">3</span></div><div style="font-size:15px;color:#FDFBF7;font-weight:500;margin-bottom:4px;">ยิ้มค้างไว้...</div><div style="font-size:12px;color:rgba(253,251,247,0.4);">มุมปากขยับนิดเดียวก็นับ</div></div>';
+  let n=3;const glow=[0.25,0.5,0.85];
+  _rwT1=setInterval(()=>{n--;const c=document.getElementById('rw-c');if(n<=0){clearInterval(_rwT1);rwDone();return;}document.getElementById('rw-n').textContent=n;if(c)c.style.boxShadow='0 0 '+(40*glow[3-n-1]||20)+'px rgba(232,150,12,'+glow[2-n]+')';},1000);
+  const c=document.getElementById('rw-c');if(c)c.style.boxShadow='0 0 18px rgba(232,150,12,0.25)';
+}
+function rwBreath(){
+  rwEl().innerHTML='<div class="mstep-eyebrow" style="color:var(--teal);">หายใจครั้งเดียว</div><div class="rw-stage"><div class="rw-circle" id="rw-c" style="background:radial-gradient(circle,rgba(13,148,136,0.7),rgba(13,148,136,0.2));transform:scale(0.75);"><span class="rw-count" id="rw-n">4</span><span class="rw-circle-sub" id="rw-sub">หายใจเข้า</span></div><div style="font-size:12px;color:rgba(253,251,247,0.4);">เข้า 4 · ค้าง 1 · ออกยาวๆ 6</div></div>';
+  const phases=[{l:'หายใจเข้า',c:4,sc:1.3},{l:'ค้างไว้',c:1,sc:1.3},{l:'ออกยาวๆ...',c:6,sc:0.7}];let pi=0;
+  function run(){if(pi>=phases.length){rwDone('<a href="#" onclick="closeRewire();openBreathe();return false;" style="display:block;text-align:center;margin-bottom:14px;font-size:12px;color:rgba(94,234,212,0.7);text-decoration:none;">อยากหายใจต่อ → เครื่องมือหายใจแบบเต็ม</a>');return;}
+    const p=phases[pi];const c=document.getElementById('rw-c');if(!c)return;
+    c.style.transition='transform '+p.c+'s ease-in-out, background 1s';c.style.transform='scale('+p.sc+')';
+    document.getElementById('rw-sub').textContent=p.l;let n=p.c;document.getElementById('rw-n').textContent=n;
+    clearInterval(_rwT1);_rwT1=setInterval(()=>{n--;if(n<=0){clearInterval(_rwT1);pi++;run();}else document.getElementById('rw-n').textContent=n;},1000);}
+  setTimeout(run,300);
+}
 let _rwRendered = false;
 function switchToolsTab(n){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
