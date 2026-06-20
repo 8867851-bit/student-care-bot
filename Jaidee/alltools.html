@@ -1259,6 +1259,9 @@ function switchToolsTab(n){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+n).classList.add('active');
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.panel==n));
+  // scroll active tab into view inside the tab bar (shows next tabs peeking)
+  const activeBtn=document.querySelector('.tab-btn.active[data-panel]');
+  if(activeBtn) activeBtn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   window.scrollTo(0,0);
   if(n===3 && !_rwRendered){ _rwRendered=true; renderRewirePanel(); }
 }
