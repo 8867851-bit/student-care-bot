@@ -484,33 +484,42 @@
 .corner-btn.secondary{background:none;color:rgba(255,255,255,0.4);border:1.5px solid rgba(255,255,255,0.15);}
 </style>
 <script>
-// ── Swipe-to-tab (panels 1-6, ignores Y-scroll, no drag needed on desktop — click ← → arrows auto-advance) ──
+// ── Tab swipe (touch) + click-drag (desktop) ──
 (function(){
-  const PANEL_COUNT = 6;
-  let _sx=null,_sy=null;
-  function _curTab(){
-    const b=document.querySelector('.tab-btn.active[data-panel]');
-    return b ? parseInt(b.dataset.panel) : 1;
-  }
-  function _go(n){
-    if(n<1||n>PANEL_COUNT)return;
-    if(typeof switchToolsTab==='function') switchToolsTab(n);
-  }
-  document.addEventListener('touchstart',function(e){
-    _sx=e.touches[0].clientX; _sy=e.touches[0].clientY;
+  const N=6;
+  function cur(){const b=document.querySelector('.tab-btn.active[data-panel]');return b?parseInt(b.dataset.panel):1;}
+  function go(n){if(n>=1&&n<=N&&typeof switchToolsTab==='function')switchToolsTab(n);}
+  function blocked(el){return el.closest('.modal-overlay,.modal-sheet,input,textarea,select,.tab-bar');}
+  // ── touch ──
+  let tx=null,ty=null;
+  document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(tx===null)return;
+    const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+    tx=ty=null;
+    if(Math.abs(dx)<40||Math.abs(dx)<Math.abs(dy)*1.3)return;
+    if(blocked(e.target))return;
+    go(cur()+(dx<0?1:-1));
   },{passive:true});
-  document.addEventListener('touchend',function(e){
-    if(_sx===null)return;
-    const dx=e.changedTouches[0].clientX-_sx;
-    const dy=e.changedTouches[0].clientY-_sy;
-    _sx=_sy=null;
-    // only horizontal swipes (dx > dy*1.4, min 40px)
-    if(Math.abs(dx)<40||Math.abs(dx)<Math.abs(dy)*1.4)return;
-    // ignore swipes on modals / interactive elements
-    const t=e.target;
-    if(t.closest('.modal-overlay,.modal-sheet,.bp-textarea,.mstep-ta,input,textarea,select'))return;
-    _go(_curTab()+(dx<0?1:-1));
-  },{passive:true});
+  // ── mouse drag (desktop) ──
+  let mx=null,my=null,dragging=false;
+  document.addEventListener('mousedown',e=>{
+    if(blocked(e.target))return;
+    mx=e.clientX;my=e.clientY;dragging=false;
+  });
+  document.addEventListener('mousemove',e=>{
+    if(mx===null)return;
+    if(Math.abs(e.clientX-mx)>8)dragging=true;
+  });
+  document.addEventListener('mouseup',e=>{
+    if(mx===null)return;
+    const dx=e.clientX-mx,dy=e.clientY-my;
+    mx=my=null;
+    if(!dragging)return;
+    if(Math.abs(dx)<60||Math.abs(dx)<Math.abs(dy)*1.3)return;
+    if(blocked(e.target))return;
+    go(cur()+(dx<0?1:-1));
+  });
 })();
 </script>
 </head>
@@ -775,13 +784,7 @@
     </button>
   </div>
 
-  <!-- ✨ Rewire — today's micro-habit -->
-  <div class="rw-spark-row">
-    <div class="rw-sparks" id="rw-sparks"></div>
-    <div class="rw-spark-label" id="rw-spark-label"></div>
-  </div>
-  <button class="rw-today" id="rw-today"></button>
-
+  <!-- เครื่องมืออื่น — แสดงก่อน spark row -->
   <div class="sec-div" style="margin-top:4px;"><span class="sec-div-text">เครื่องมืออื่น</span><div class="sec-div-line"></div></div>
   <div class="rw-list">
     <!-- สุ่มเควสต์เล็กๆ -->
@@ -814,6 +817,13 @@
       <div class="rw-item-time">เริ่ม →</div>
     </button>
   </div>
+
+  <!-- ✨ Rewire — today's micro-habit -->
+  <div class="rw-spark-row">
+    <div class="rw-sparks" id="rw-sparks"></div>
+    <div class="rw-spark-label" id="rw-spark-label"></div>
+  </div>
+  <button class="rw-today" id="rw-today"></button>
 
   <!-- ✨ Rewire — สวิตช์อื่นๆ -->
   <div class="sec-div" style="margin-top:4px;"><span class="sec-div-text">✨ สวิตช์ Rewire อื่นๆ</span><div class="sec-div-line"></div></div>
@@ -1029,6 +1039,221 @@ function rwBreath(){
     clearInterval(_rwT1);_rwT1=setInterval(()=>{n--;if(n<=0){clearInterval(_rwT1);pi++;run();}else document.getElementById('rw-n').textContent=n;},1000);}
   setTimeout(run,300);
 }
+let jStep=0,jMode=null,jQ=[],jAns=[];
+const J_HEAVY=[{label:'เทออกมา',q:'ในหัวมีอะไรค้างอยู่บ้าง?',sub:'เทออกมาเลย ไม่ต้องเรียบร้อย',ph:'ทุกอย่างที่ค้างอยู่...'},{label:'พูดกับตัวเอง',q:'ถ้าจะบอกตัวเองสักประโยคให้ใจเบาลงนิดนึง จะบอกว่าอะไร?',sub:'พูดแบบที่จะพูดกับเพื่อนสนิท',ph:'เช่น ไม่เป็นไรนะ วันนี้ก็ทำดีที่สุดแล้ว...'},{label:'จุดที่ยังโอเค',q:'มีอะไรเล็กๆ วันนี้ที่ยังพอโอเคบ้าง?',sub:'แม้แค่นิดเดียวก็นับ',ph:'เช่น กาแฟอุ่นๆ ตอนเช้า...'}];
+const J_GOOD=[{label:'ขอบคุณ',q:'วันนี้มีอะไรที่รู้สึกขอบคุณบ้าง?',sub:'ไม่ต้องเป็นเรื่องใหญ่',ph:'เช่น มีคนทักมาถามไถ่...'},{label:'ตัวเอง',q:'ตอนนี้ตัวเองอยากได้อะไรต่อ?',sub:'ฟังตัวเองโดยไม่ตัดสิน',ph:'เช่น อยากพัก อยากเล่นต่อ...'},{label:'เก็บไว้',q:'ถ้าจะเก็บความรู้สึกดีวันนี้ไว้หนึ่งอย่าง จะเป็นอะไร?',sub:'สมองจำสิ่งดีได้ไม่เก่งเท่าสิ่งแย่ — จดไว้ช่วยได้',ph:'...'}];
+function openJournal(){trackToolOpen('📓','บันทึก','openJournal');jStep=-1;jMode=null;jQ=[];jAns=[];openModal('journal-modal');renderJ();}
+function closeJournal(){closeModal('journal-modal');}
+function jPick(m){jMode=m;jQ=(m==='heavy'?J_HEAVY:J_GOOD);jAns=jQ.map(()=>'');jStep=0;renderJ();}
+function renderJ(){const el=document.getElementById('journal-inner');
+  if(jStep===-1){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--purple);">บันทึก</div><div class="mstep-q">วันนี้เป็นวันแบบไหน?</div><div class="mstep-sub">เลือกเพื่อให้คำถามเข้ากับใจตอนนี้</div><div class="mstep-choices"><button class="mstep-choice" onclick="jPick(\'heavy\')"><div class="mstep-choice-title">🌧 วันนี้หนัก</div><div class="mstep-choice-sub">เทของในหัวออกก่อน แล้วค่อยหาจุดที่ยังโอเค</div></button><button class="mstep-choice" onclick="jPick(\'good\')"><div class="mstep-choice-title">☀️ วันนี้พอไหว</div><div class="mstep-choice-sub">เก็บสิ่งดีๆ ไว้ก่อนมันผ่านไป</div></button></div>';return;}
+  if(jStep>=jQ.length){const qa=jQ.map((p,i)=>({q:p.q,a:jAns[i]})).filter(x=>x.a&&x.a.trim());if(qa.length)saveEntry({id:Date.now(),type:'journal',ts:new Date().toISOString(),qa:qa});const d=jMode==='heavy'?{ic:'🌙',t:'เทออกมาแล้ว',sb:'เบาลงนิดนึงไหม? สิ่งที่เขียนอยู่ใน "บันทึกล่าสุด" แล้ว<br>พรุ่งนี้ค่อยว่ากันใหม่นะ'}:{ic:'☀️',t:'วันแบบนี้ก็มีจริง',sb:'ดีใจที่คุณหยุดสังเกตมัน<br>เก็บไว้ใน "บันทึกล่าสุด" แล้ว — กลับมาอ่านวันที่ใจหนักได้'};el.innerHTML='<div class="j-done fade-up"><div class="j-done-icon">'+d.ic+'</div><div class="j-done-title">'+d.t+'</div><div class="j-done-sub">'+d.sb+'</div><button class="j-done-close" onclick="closeJournal()">← กลับ</button></div>';return;}
+  const p=jQ[jStep];const dots=jQ.map((_,i)=>'<div class="j-dot '+(i<jStep?'done':i===jStep?'active':'')+'"></div>').join('');
+  el.innerHTML='<div class="j-progress">'+dots+'</div><div class="fade-up"><div class="j-label">'+p.label+'</div><div class="j-q">'+p.q+'</div><div class="j-sub">'+p.sub+'</div><textarea class="j-ta" id="j-ta" placeholder="'+p.ph+'" rows="5">'+jAns[jStep]+'</textarea><button class="j-next" onclick="jNext()" style="background:var(--purple);">'+(jStep<jQ.length-1?'ถัดไป →':'เสร็จแล้ว ✓')+'</button>'+(jStep===0?'<button class="j-skip" onclick="jStep=-1;renderJ()">← เปลี่ยนโหมด</button>':'<button class="j-skip" onclick="jSkip()">ข้ามข้อนี้</button>')+'</div>';
+  setTimeout(()=>{const t=document.getElementById('j-ta');if(t)t.focus();},320);}
+function jNext(){const t=document.getElementById('j-ta');if(t)jAns[jStep]=t.value.trim();jStep++;renderJ();}
+function jSkip(){jAns[jStep]='';jStep++;renderJ();}
+
+const STILL='<div class="still-heavy-note"><strong>เครื่องมือไม่ได้ผลกับทุกคนในทุกวัน</strong><br>นั่นไม่ใช่ความล้มเหลวของคุณ</div><div class="still-heavy-links"><a class="still-link" href="tel:1323"><span class="still-link-icon">📞</span><span class="still-link-body"><span class="still-link-name">โทร 1323</span><span class="still-link-desc">ฟรี 24 ชั่วโมง</span></span><span class="still-link-arrow">→</span></a><a class="still-link" href="peer.html"><span class="still-link-icon">💛</span><span class="still-link-body"><span class="still-link-name">คุยกับเพื่อนที่ปรึกษา</span><span class="still-link-desc">บางทีแค่มีคนรับฟัง</span></span><span class="still-link-arrow">→</span></a></div>';
+function stillOk(b){b.closest('.still-strip').innerHTML='<div style="text-align:center;font-size:13px;color:var(--teal);padding:6px;">🌿 ดีใจที่ได้ยิน</div>';}
+function stillHeavy(b){const s=b.closest('.still-strip'),h=s.querySelector('.still-heavy');h.innerHTML=STILL;h.classList.add('show');s.querySelector('.still-btns').style.display='none';s.querySelector('.still-q').style.display='none';setTimeout(()=>h.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}
+
+function markToolTapped(){}
+
+// ══ REFRAME → DEFUSION (คลายมือจากความคิด · ACT cognitive defusion) ══
+// แทนการ "เถียงกับความคิด" (CBT restructuring) ด้วยการเปลี่ยน "ความสัมพันธ์" กับมัน
+// — มองมันเป็นเหตุการณ์ในใจที่ลอยผ่าน ไม่ใช่ความจริงที่ต้องเชื่อทั้งหมด
+let rfThought='',rfStory='',rfStep=0,rfFuse=0;
+const RF_STORIES=['เรื่อง "ไม่ดีพอ"','เรื่อง "ฉันต้องสมบูรณ์แบบ"','เรื่อง "ไม่มีใครเข้าใจ"','เรื่อง "ฉันจัดการไม่ได้"','เรื่อง "มันจะแย่แน่ๆ"','เรื่อง "เป็นความผิดฉัน"'];
+function rfEsc(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function rfDots(n){return [0,1,2,3].map(i=>'<div class="mstep-dot '+(i<n?'done':i===n?'active':'')+'"></div>').join('');}
+function openReframe(){rfThought='';rfStory='';rfStep=0;rfFuse=0;openModal('reframe-modal');renderRf();}
+function closeReframe(){closeModal('reframe-modal');}
+function rfN0(){const t=document.getElementById('rf-ta');rfThought=t?t.value.trim():'';if(!rfThought)rfThought='ความคิดที่กำลังเกาะอยู่';rfStep=1;rfFuse=0;renderRf();}
+function rfNext(){rfStep++;renderRf();}
+function rfPickStory(i){rfStory=RF_STORIES[i];rfNext();}
+function rfStoryCustom(){const inp=document.getElementById('rf-story-in');const v=inp?inp.value.trim():'';if(v){rfStory='เรื่อง "'+v+'"';rfNext();}}
+function renderRf(){
+  const el=document.getElementById('reframe-inner');
+  const th=rfEsc(rfThought);
+  if(rfStep===0){
+    el.innerHTML='<div class="mstep-eyebrow" style="color:var(--rose);">คลายมือ</div><div class="mstep-q">ความคิดไหนกำลังเกาะแน่นจนเจ็บ?</div><div class="mstep-sub">พิมพ์มันออกมาตรงๆ — คำที่มันพูดอยู่ในหัว</div><textarea class="mstep-ta" id="rf-ta" placeholder="เช่น ฉันไม่เก่งพอ · ฉันทำพังอีกแล้ว..." style="border-color:var(--rose-border);">'+th+'</textarea><button class="mstep-next" onclick="rfN0()" style="background:var(--rose);">ถัดไป →</button>';
+    setTimeout(()=>{const t=document.getElementById('rf-ta');if(t)t.focus();},320);
+  } else if(rfStep===1){
+    el.innerHTML='<div class="mstep-progress">'+rfDots(1)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">มองมัน</div><div class="mstep-q">อ่านมันช้าๆ อีกหนึ่งครั้ง</div><div class="reframe-phrase"><div class="reframe-thought" style="text-align:center;">"'+th+'"</div></div><div class="mstep-sub">นี่คือสิ่งที่สมองพูด ไม่ใช่สิ่งที่เกิดขึ้นจริงทั้งหมด<br>มันเป็นเหตุการณ์ในใจ เหมือนเมฆก้อนหนึ่งที่ลอยผ่าน</div><button class="mstep-next" onclick="rfNext()" style="background:var(--rose);">ถัดไป →</button><button class="mstep-back" onclick="rfStep=0;renderRf()">← เปลี่ยนความคิด</button>';
+  } else if(rfStep===2){
+    const layers=['"'+th+'"','ฉันกำลังมีความคิดว่า "'+th+'"','ฉันสังเกตเห็นว่า ฉันกำลังมีความคิดว่า "'+th+'"'];
+    const cur=layers[rfFuse];const isLast=rfFuse===layers.length-1;
+    el.innerHTML='<div class="mstep-progress">'+rfDots(2)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">เพิ่มระยะห่าง</div><div class="mstep-q" style="margin-bottom:14px;">แตะการ์ดเพื่อถอยออกมาทีละก้าว</div><div class="reframe-permission" '+(isLast?'':'onclick="rfFuse++;renderRf()" ')+'style="cursor:'+(isLast?'default':'pointer')+';min-height:120px;display:flex;align-items:center;justify-content:center;"><div class="reframe-permission-text" style="text-align:center;line-height:1.8;">'+cur+'</div></div><div class="mstep-sub">'+(isLast?'สังเกตไหม — พอเติม "ฉันสังเกตเห็นว่า" ความคิดนั้นกลายเป็นสิ่งที่คุณ <b>มอง</b> ไม่ใช่สิ่งที่คุณ <b>เป็น</b>':'แตะเพื่อเติมระยะห่างอีกชั้น')+'</div>'+(isLast?'<button class="mstep-next" onclick="rfNext()" style="background:var(--rose);">ถัดไป →</button>':'');
+  } else if(rfStep===3){
+    el.innerHTML='<div class="mstep-progress">'+rfDots(3)+'</div><div class="mstep-eyebrow" style="color:var(--rose);">ตั้งชื่อมัน</div><div class="mstep-q">ความคิดแบบนี้เคยแวะมาก่อนไหม?</div><div class="mstep-sub">ตั้งชื่อเล่นให้ "เรื่อง" ที่สมองชอบเล่าซ้ำ — พอมันมีชื่อ ครั้งหน้าคุณจะจับได้ไวขึ้น</div><div class="mstep-choices">'+RF_STORIES.map((sName,i)=>'<button class="mstep-choice" onclick="rfPickStory('+i+')"><div class="mstep-choice-title">'+sName+'</div></button>').join('')+'</div><div style="display:flex;gap:8px;margin:10px 20px 0;"><input id="rf-story-in" placeholder="หรือพิมพ์ชื่อเอง" style="flex:1;padding:12px 14px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:12px;color:#FDFBF7;font-family:\'Sarabun\',sans-serif;font-size:13px;"/><button class="mstep-next" style="flex:0 0 auto;width:auto;padding:0 18px;margin:0;background:var(--rose);" onclick="rfStoryCustom()">ตั้ง</button></div>';
+  } else {
+    const story=rfEsc(rfStory)||'เรื่องเดิม';
+    el.innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">🍃</div><div class="tool-done-title">ถือมันให้หลวมลง</div><div class="tool-done-sub">'+story+' แวะมาอีกแล้ว — คุณไม่ต้องไล่มันไป และไม่ต้องเชื่อมันทั้งหมด<br><br>คุณแค่คลายมือที่กำมันแน่นจนเจ็บ ความคิดยังอยู่ตรงนั้น แต่ตอนนี้ <b>คุณถือมัน ไม่ใช่มันถือคุณ</b></div><button class="tool-done-close" onclick="closeReframe()">← กลับ</button><a href="care.html?tab=belief" onclick="closeReframe()" style="display:block;text-align:center;margin-top:10px;font-size:12px;color:rgba(253,251,247,0.35);text-decoration:none;padding:6px;">อยากเข้าใจ "เรื่อง" ที่สมองเล่าซ้ำ? → <span style="color:var(--rose);">ชั้นความเชื่อ</span></a><div class="still-strip" style="margin:16px 20px 0;"><div class="still-q">ยังรู้สึกหนักอยู่ไหม?</div><div class="still-btns"><button class="still-ok" onclick="stillOk(this)">เบาขึ้นบ้างแล้ว</button><button class="still-no" onclick="stillHeavy(this)">ยังหนักอยู่</button></div><div class="still-heavy"></div></div></div>';
+  }
+}
+
+let wText='',wBranch=0,wStep=0;
+function openWorry(){wStep=0;wText='';wBranch=0;openModal('worry-modal');renderW();}
+function closeWorry(){closeModal('worry-modal');}
+function renderW(){const el=document.getElementById('worry-inner');if(wStep===0){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--blue);">คลายกังวล</div><div class="mstep-q">ตอนนี้กังวลเรื่องอะไรอยู่?</div><div class="mstep-sub">เขียนออกมาก่อน</div><textarea class="mstep-ta" id="w-ta" placeholder="เขียนทุกอย่างที่ค้างอยู่ในหัว..." style="border-color:var(--blue-border);"></textarea><button class="mstep-next" onclick="wN0()" style="background:var(--blue);">ถัดไป →</button>';setTimeout(()=>{const t=document.getElementById("w-ta");if(t)t.focus();},320);}else if(wStep===1){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--blue);">แยกประเภท</div><div class="mstep-q">มีบางอย่างที่ทำได้ตอนนี้ไหม?</div><div class="worry-fork"><button class="worry-fork-btn" onclick="wFork(1)" style="border-color:var(--green-border);"><div class="worry-fork-icon">✅</div><div class="worry-fork-label">มี</div><div class="worry-fork-sub">อยู่ในมือฉัน</div></button><button class="worry-fork-btn" onclick="wFork(2)" style="border-color:var(--blue-border);"><div class="worry-fork-icon">☁️</div><div class="worry-fork-label">ยังไม่มี</div><div class="worry-fork-sub">ยังควบคุมไม่ได้</div></button></div>';}else if(wStep===2&&wBranch===1){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--green);">ก้าวเล็กๆ</div><div class="mstep-q">สิ่งเล็กที่สุดที่ทำได้วันนี้?</div><textarea class="mstep-ta" id="a-ta" placeholder="เช่น ส่ง email ถาม..." style="border-color:var(--green-border);"></textarea><button class="mstep-next" onclick="wN2()" style="background:var(--green);">บันทึกแผน ✓</button>';}else if(wStep===2&&wBranch===2){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--blue);">จอดความกังวล</div><div class="mstep-q">บอกตัวเองสักประโยค</div><div class="reframe-permission" style="border-color:var(--blue-border);background:rgba(46,95,163,0.1);"><div class="reframe-permission-label" style="color:var(--blue);">Worry Parking</div><div class="reframe-permission-text">"ฉันรับรู้ความกังวลนี้แล้ว<br>ตอนนี้ขอวางไว้ก่อนนะ"</div></div><button class="mstep-next" onclick="wN2()" style="background:var(--blue);margin-top:14px;">วางไว้แล้ว ✓</button>';}else{const act=wBranch===1,at=document.getElementById('a-ta')?.value.trim()||'';el.innerHTML='<div class="tool-done fade-up"><div class="tool-done-icon">'+(act?'🌿':'☁️')+'</div><div class="tool-done-title">'+(act?'แผนพร้อมแล้ว':'วางไว้ดีแล้ว')+'</div><div class="tool-done-sub">'+(act?'ก้าวเล็กๆ หนึ่งก้าว ดีกว่าไม่มีก้าวเลย':'ความกังวลนี้รับรู้แล้ว')+'</div>'+(act&&at?'<div style="background:rgba(58,125,68,0.15);border:1px solid rgba(58,125,68,0.3);border-radius:12px;padding:12px;margin-bottom:20px;font-size:13px;color:var(--teal);">📝 '+at+'</div>':'')+'<button class="tool-done-close" onclick="closeWorry()">← กลับ</button></div>';if(act&&at)saveEntry({id:Date.now(),type:'worry',ts:new Date().toISOString(),text:'แผน: '+at});}}
+function wN0(){const t=document.getElementById('w-ta');wText=t?t.value.trim():'';wStep=1;renderW();}
+function wFork(b){wBranch=b;wStep=2;renderW();}
+function wN2(){wStep=3;renderW();}
+
+const CQ=[{label:'เวลา',q:'มีอะไรที่ทำแล้วลืมเวลาบ้าง?',sub:'ไม่ต้องเป็นเรื่องโรงเรียน',ph:'เช่น วาดรูป ฟังเพลง...'},{label:'ตัวเอง',q:'ถ้าไม่มีใครดูอยู่ คุณจะเลือกทำอะไร?',sub:'ไม่มีการตัดสิน',ph:'เช่น เรียนอะไรบางอย่าง...'},{label:'อยากมี',q:'มีอะไรในคนอื่นที่คุณอยากมีบ้าง?',sub:'สิ่งที่อิจฉาบอกอะไรเกี่ยวกับเรา',ph:'เช่น ความมั่นใจ เวลาว่าง...'}];
+let cStep=0,cAns=['','',''];
+function openClarity(){cStep=0;cAns=['','',''];openModal('clarity-modal');renderC();}
+function closeClarity(){closeModal('clarity-modal');}
+function renderC(){const el=document.getElementById('clarity-inner');if(cStep<CQ.length){const q=CQ[cStep];const dots=CQ.map((_,i)=>'<div class="mstep-dot '+(i<cStep?'done':i===cStep?'active':'')+'"></div>').join('');el.innerHTML='<div class="mstep-progress">'+dots+'</div><div class="mstep-eyebrow fade-up" style="color:var(--gold);">'+q.label+'</div><div class="mstep-q fade-up">'+q.q+'</div><div class="mstep-sub fade-up">'+q.sub+'</div><textarea class="mstep-ta fade-up" id="c-ta" placeholder="'+q.ph+'" style="border-color:var(--gold-border);">'+cAns[cStep]+'</textarea><button class="mstep-next" onclick="cNext()" style="background:var(--dark);">'+(cStep<CQ.length-1?'ถัดไป →':'ดูผลลัพธ์ →')+'</button>'+(cStep>0?'<button class="mstep-back" onclick="cBack()">← ย้อนกลับ</button>':'');setTimeout(()=>{const t=document.getElementById('c-ta');if(t)t.focus();},320);}else{const f=cAns.map((a,i)=>({l:CQ[i].label,q:CQ[i].q,t:a.trim()})).filter(x=>x.t);window._clarityAnswers=f;if(!f.length){el.innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">กระจก</div><div class="mstep-q">ยังไม่มีคำตอบ — ไม่เป็นไร</div><div class="mstep-sub">บางวันคำตอบยังไม่พร้อมจะออกมา กลับมาเมื่อไหร่ก็ได้</div><button class="tool-done-close" onclick="closeClarity()" style="margin:16px 20px;">← กลับ</button>';return;}el.innerHTML='<div class="mstep-eyebrow" style="color:var(--gold);">กระจกสะท้อน</div><div class="mstep-q" style="margin-bottom:14px;">เสียงของคุณเอง</div>'+f.map(x=>'<div class="clarity-mirror" style="margin:0 20px 8px;"><div class="cm-label">'+x.l+'</div><div class="cm-line" style="margin:0;"><strong>'+x.t+'</strong></div></div>').join('')+'<div class="mstep-sub" style="padding-top:10px;">สามคำตอบนี้ออกมาจากคุณเองทั้งหมด<br>ลองอ่านอีกครั้งช้าๆ — มีเส้นอะไรเชื่อมพวกมันอยู่ไหม?</div><button class="mstep-next" id="clarity-save" onclick="claritySave(this)" style="background:var(--gold);">เก็บไว้อ่านทีหลัง ✓</button><button class="tool-done-close" onclick="closeClarity()" style="margin:8px 20px;">← กลับ</button>';}}
+function claritySave(btn){const f=window._clarityAnswers||[];if(!f.length)return;saveEntry({id:Date.now(),type:'clarity',ts:new Date().toISOString(),qa:f.map(x=>({q:x.l,a:x.t}))});btn.textContent='เก็บแล้ว ✓';btn.disabled=true;btn.style.opacity='0.55';btn.onclick=null;}
+function cNext(){const t=document.getElementById('c-ta');if(t)cAns[cStep]=t.value.trim();cStep++;renderC();}
+function cBack(){const t=document.getElementById('c-ta');if(t)cAns[cStep]=t.value.trim();cStep--;renderC();}
+
+renderEntries();
+renderContinueCard();
+// renderRewirePanel() is deferred — called on first Tab 3 open via switchToolsTab(3)
+
+
+// ══ MOVE ══════════════════════════════════════════════════
+let _moveTimer=null, _lastLevel='mid';
+const _moveAudio=new Audio('https://res.cloudinary.com/dlixucdqx/video/upload/v1779977789/Upbeat_Music_-_Happy_Songs_That_Improve_Your_Mood_hchxdl.mp3');
+_moveAudio.loop=true; _moveAudio.volume=0.35;
+const MOVE_DATA={
+  low:{
+    emoji:'🌿', title:'ลุกแล้วเดิน',
+    sub:'ออกจากห้องสักครู่ หรือแค่เดินวนในที่ก็ได้\nไม่ต้องเป็นอะไรมาก แค่ขยับ',
+    secs:180, music:'เพลงเบาๆ เพื่อเป็นเพื่อนระหว่างเดิน',
+    color:'var(--green)'
+  },
+  mid:{
+    emoji:'⚡', title:'เดินเร็ว 5 นาที',
+    sub:'เดินเร็วจนรู้สึกหัวใจเต้นขึ้นนิดหน่อย\nออกไปข้างนอกได้ยิ่งดี',
+    secs:300, music:'เปิดเพลง upbeat แล้วเดินตามจังหวะ',
+    color:'var(--gold)'
+  },
+  high:{
+    emoji:'🔥', title:'ระบายออกทางร่างกาย',
+    sub:'กระโดด วิ่งอยู่กับที่ หรือยกของหนักๆ\nร่างกายต้องการ discharge ตอนนี้',
+    secs:240, music:'เปิดเพลงดัง — ปล่อยออกมาเลย',
+    color:'var(--rose)'
+  }
+};
+
+function openMove(){
+  document.getElementById('move-pick').style.display='block';
+  document.getElementById('move-active').style.display='none';
+  document.getElementById('move-done').style.display='none';
+  const ov=document.getElementById('move-overlay');
+  const sh=document.getElementById('move-sheet');
+  const isTablet=window.innerWidth>=600;
+  ov.style.display='block';
+  if(isTablet){
+    sh.style.top='50%'; sh.style.bottom='auto';
+    sh.style.transform='translateX(-50%) translateY(calc(-50% - 20px))';
+    sh.style.borderRadius='24px'; sh.style.maxHeight='70vh';
+  } else {
+    sh.style.top='auto'; sh.style.bottom='0';
+    sh.style.transform='translateX(-50%) translateY(100%)';
+    sh.style.borderRadius='28px 28px 0 0'; sh.style.maxHeight='88vh';
+  }
+  requestAnimationFrame(()=>{
+    ov.style.background='rgba(0,0,0,0.45)';
+    if(isTablet) sh.style.transform='translateX(-50%) translateY(-50%)';
+    else sh.style.transform='translateX(-50%) translateY(0)';
+  });
+}
+function closeMove(){
+  clearInterval(_moveTimer);
+  _moveAudio.pause();
+  _moveAudio.currentTime=0;
+  const ov=document.getElementById('move-overlay');
+  const sh=document.getElementById('move-sheet');
+  ov.style.background='rgba(0,0,0,0)';
+  sh.style.transform='translateX(-50%) translateY(100%)';
+  setTimeout(()=>{ ov.style.display='none'; },360);
+}
+function startMove(level){
+  _lastLevel=level;
+  const d=MOVE_DATA[level];
+  document.getElementById('move-pick').style.display='none';
+  document.getElementById('move-done').style.display='none';
+  const act=document.getElementById('move-active');
+  act.style.display='block';
+  document.getElementById('move-emoji').textContent=d.emoji;
+  document.getElementById('move-action-title').textContent=d.title;
+  document.getElementById('move-action-sub').textContent=d.sub;
+  document.getElementById('move-music-note').textContent='🎵 '+d.music;
+  document.getElementById('move-ring').style.stroke=d.color;
+  document.getElementById('move-done-btn').style.display='none';
+  clearInterval(_moveTimer);
+  _moveAudio.currentTime=0;
+  _moveAudio.play().catch(()=>{});
+  let remaining=d.secs;
+  const total=d.secs;
+  const circ=377;
+  const updateDisplay=()=>{
+    const m=Math.floor(remaining/60);
+    const s=remaining%60;
+    document.getElementById('move-timer-display').textContent=m+':'+(s<10?'0':'')+s;
+    const offset=circ*(1-(remaining/total));
+    document.getElementById('move-ring').style.strokeDashoffset=offset;
+  };
+  updateDisplay();
+  _moveTimer=setInterval(()=>{
+    remaining--;
+    updateDisplay();
+    if(remaining<=0){
+      clearInterval(_moveTimer);
+      _moveAudio.pause();
+      document.getElementById('move-done-btn').style.display='block';
+    }
+  },1000);
+}
+function moveDone(){
+  clearInterval(_moveTimer);
+  _moveAudio.pause();
+  document.getElementById('move-active').style.display='none';
+  document.getElementById('move-done').style.display='block';
+}
+
+// ══ PLAY ══════════════════════════════════════════
+let _playInterval=null,_playScore=0,_playStreak=0,_playTarget=null,_playActive=false;
+const PLAY_COLORS=['#0D9488','#7C3AED','#E8960C','#E11D48'];
+const PLAY_EMOJIS=['🌿','⭐','🌊','🔥'];
+function openPlay(){_playScore=0;_playStreak=0;_playActive=false;clearInterval(_playInterval);document.getElementById('play-score-row').style.display='none';document.getElementById('play-start-btn').style.display='block';document.getElementById('play-grid').innerHTML='';openModal('play-modal');}
+function closePlay(){clearInterval(_playInterval);closeModal('play-modal');}
+function startPlay(){document.getElementById('play-start-btn').style.display='none';document.getElementById('play-score-row').style.display='block';_playScore=0;_playStreak=0;_playActive=true;renderPlayGrid();scheduleNext();}
+function renderPlayGrid(){const g=document.getElementById('play-grid');g.innerHTML='';for(let i=0;i<4;i++){const btn=document.createElement('button');btn.id='play-btn-'+i;btn.style.cssText=`aspect-ratio:1;border-radius:20px;border:none;background:${PLAY_COLORS[i]}22;font-size:32px;cursor:pointer;transition:transform 0.1s,background 0.15s;`;btn.textContent=PLAY_EMOJIS[i];btn.onclick=()=>handleTap(i);g.appendChild(btn);}}
+function scheduleNext(){if(!_playActive)return;const delay=900+Math.random()*900;_playInterval=setTimeout(()=>{const idx=Math.floor(Math.random()*4);_playTarget=idx;const btn=document.getElementById('play-btn-'+idx);if(btn){btn.style.background=PLAY_COLORS[idx];btn.style.transform='scale(1.1)';}setTimeout(()=>{if(_playTarget===idx){if(btn){btn.style.background=PLAY_COLORS[idx]+'22';btn.style.transform='';}  _playTarget=null;scheduleNext();}},1200);},delay);}
+function handleTap(idx){if(!_playActive)return;const btn=document.getElementById('play-btn-'+idx);if(_playTarget===idx){_playScore++;_playStreak++;clearTimeout(_playInterval);if(btn){btn.style.background='#22c55e';btn.style.transform='scale(0.95)';}setTimeout(()=>{if(btn){btn.style.background=PLAY_COLORS[idx]+'22';btn.style.transform='';}},200);_playTarget=null;document.getElementById('play-score').textContent=_playScore;document.getElementById('play-streak').textContent=_playStreak>2?'🔥 Streak '+_playStreak:'';if(_playScore>=15){_playActive=false;document.getElementById('play-score').textContent='🎉';document.getElementById('play-streak').textContent='ทำได้ '+_playScore+' คะแนน เยี่ยม!';return;}scheduleNext();}else{if(btn){btn.style.background='rgba(168,160,153,0.18)';}setTimeout(()=>{if(btn)btn.style.background=PLAY_COLORS[idx]+'22';},200);}}
+
+// ══ REST (พักใจ / Self-compassion) ════════════════
+const REST_STEPS=[{icon:'🤍',title:'สิ่งที่คุณรู้สึกอยู่ตอนนี้...',body:'ไม่ว่ามันจะเป็นอะไร — เจ็บ กลัว ล้า หรือแค่ไม่โอเค\nทั้งหมดนั้นล้วนเป็นส่วนหนึ่งของการเป็นมนุษย์'},{icon:'🌍',title:'คุณไม่ได้เผชิญมันคนเดียว',body:'มีคนนับล้านในโลกตอนนี้\nที่กำลังรู้สึกบางอย่างที่คล้ายกับที่คุณรู้สึกอยู่'},{icon:'🫶',title:'พูดกับตัวเองเหมือนพูดกับเพื่อน',body:'ถ้าเพื่อนคนสนิทมาบอกคุณว่ารู้สึกแบบนี้\nคุณจะพูดกับเขายังไง?\n\nพูดกับตัวเองแบบนั้นบ้าง'},{icon:'🌿',title:'วางมือบนหน้าอก',body:'รู้สึกถึงความอบอุ่นของมือ\nและบอกตัวเองเบาๆ ว่า\n\n"ตอนนี้ฉันกำลังทุกข์ใจอยู่\nและนั่นก็โอเค"'}];
+let _restStep=0;
+function openRest(){_restStep=0;renderRest();openModal('rest-modal');}
+function closeRest(){closeModal('rest-modal');}
+function renderRest(){const s=REST_STEPS[_restStep];const isLast=_restStep===REST_STEPS.length-1;document.getElementById('rest-body').innerHTML=`<div style="text-align:center;padding:8px 0 20px;"><div style="font-size:52px;margin-bottom:16px;">${s.icon}</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:12px;">${s.title}</div><div style="font-size:14px;color:var(--mid);line-height:1.8;white-space:pre-line;margin-bottom:28px;">${s.body}</div><div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px;">${REST_STEPS.map((_,i)=>`<div style="width:${i===_restStep?16:6}px;height:6px;border-radius:3px;background:${i===_restStep?'var(--teal)':'var(--cream-border)'};transition:all 0.3s;"></div>`).join('')}</div></div><button onclick="${isLast?'closeRest()':'nextRest()'}" style="width:100%;background:var(--teal);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">${isLast?'เสร็จแล้ว 🤍':'ถัดไป →'}</button>`;}
+function nextRest(){if(_restStep<REST_STEPS.length-1){_restStep++;renderRest();}}
+
+// (ACT + SAVOR tools retired — replaced by Rewire snapshot/micro-actions)
+
+// ══ RAIN (อยู่กับมัน) ════════════════════════════
+const RAIN_STEPS=[{letter:'R',word:'Recognize',icon:'👁',title:'สังเกต',body:'มีความรู้สึกอะไรกำลังเกิดขึ้นอยู่ตอนนี้?\nไม่ต้องตั้งชื่อให้ถูก แค่รับรู้ว่ามีอะไรบางอย่างอยู่'},{letter:'A',word:'Allow',icon:'🤲',title:'ปล่อยให้มันอยู่',body:'ไม่ต้องแก้ ไม่ต้องผลัก ไม่ต้องหนี\nแค่บอกตัวเองว่า "โอเค ความรู้สึกนี้อยู่ที่นี่ได้"'},{letter:'I',word:'Investigate',icon:'🔍',title:'สำรวจเบาๆ',body:'มันอยู่ที่ไหนในร่างกาย?\nหน้าอก ไหล่ กระเพาะ หรือที่อื่น?\nรู้สึกหนัก แน่น หรือตึงแบบไหน?'},{letter:'N',word:'Nurture',icon:'🌿',title:'ดูแลตัวเอง',body:'วางมือบนจุดที่รู้สึกนั้น\nและบอกตัวเองเบาๆ ว่า\n\n"ฉันเห็นเธอ และฉันอยู่กับเธอ"'}];
+let _rainStep=0;
+function openRain(){_rainStep=0;renderRain();openModal('rain-modal');}
+function closeRain(){closeModal('rain-modal');}
+function renderRain(){const s=RAIN_STEPS[_rainStep];const isLast=_rainStep===RAIN_STEPS.length-1;document.getElementById('rain-body').innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">${RAIN_STEPS.map((r,i)=>`<div style="flex:1;text-align:center;padding:10px 4px;border-radius:12px;background:${i===_rainStep?'var(--blue-soft)':'transparent'};border:${i===_rainStep?'1.5px solid var(--blue-border)':'1.5px solid transparent'};transition:all 0.3s;"><div style="font-size:16px;font-weight:700;color:${i===_rainStep?'var(--blue)':i<_rainStep?'var(--green)':'var(--soft)'};">${r.letter}</div><div style="font-size:9px;color:var(--soft);">${r.word}</div></div>`).join('')}</div><div style="text-align:center;margin-bottom:20px;"><div style="font-size:48px;margin-bottom:12px;">${s.icon}</div><div style="font-family:'Noto Serif Thai',serif;font-size:22px;font-weight:700;margin-bottom:10px;">${s.title}</div><div style="font-size:14px;color:var(--mid);line-height:1.8;white-space:pre-line;">${s.body}</div></div><button onclick="${isLast?'closeRain()':'nextRain()'}" style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">${isLast?'เสร็จแล้ว 🌊':'ถัดไป →'}</button>`;}
+function nextRain(){if(_rainStep<RAIN_STEPS.length-1){_rainStep++;renderRain();}}
+
+// ══ GROUNDING (เตรียมตัว) ═══════════════════════
+const GROUNDING_STEPS=[{icon:'🧭',title:'ก่อนอะไรสักอย่างสำคัญ...',body:'ระบบประสาทจะเตรียมตัวก่อนทุกครั้ง\nบางทีมันเตรียมแบบที่เราไม่ต้องการ\nเราช่วยนำมันได้'},{icon:'🦶',title:'5-4-3-2-1 Grounding',body:'มองรอบๆ แล้วนับ:\n\n5 สิ่งที่มองเห็น\n4 สิ่งที่สัมผัสได้\n3 เสียงที่ได้ยิน\n2 สิ่งที่ได้กลิ่น\n1 สิ่งที่ลิ้มรส'},{icon:'🌬️',title:'หายใจ Box Breathing',body:'หายใจเข้า 4 วินาที\nกลั้น 4 วินาที\nหายใจออก 4 วินาที\nกลั้น 4 วินาที\n\nทำ 3 รอบ'},{icon:'💪',title:'บอกตัวเองหนึ่งประโยค',body:'ไม่ต้องบอกว่า "ฉันทำได้แน่ๆ"\nแค่บอกว่า\n\n"ฉันพร้อมแล้วสำหรับตอนนี้"\n"ฉันได้เตรียมมาแล้วเท่าที่ทำได้"'}];
+let _groundStep=0;
+function openGrounding(){_groundStep=0;renderGrounding();openModal('grounding-modal');}
+function closeGrounding(){closeModal('grounding-modal');}
+function renderGrounding(){const s=GROUNDING_STEPS[_groundStep];const isLast=_groundStep===GROUNDING_STEPS.length-1;document.getElementById('grounding-body').innerHTML=`<div style="text-align:center;margin-bottom:20px;"><div style="font-size:52px;margin-bottom:14px;">${s.icon}</div><div style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:700;line-height:1.35;margin-bottom:12px;">${s.title}</div><div style="font-size:14px;color:var(--mid);line-height:1.9;white-space:pre-line;margin-bottom:24px;">${s.body}</div><div style="display:flex;gap:6px;justify-content:center;margin-bottom:4px;">${GROUNDING_STEPS.map((_,i)=>`<div style="width:${i===_groundStep?16:6}px;height:6px;border-radius:3px;background:${i===_groundStep?'var(--indigo)':'var(--cream-border)'};transition:all 0.3s;"></div>`).join('')}</div></div><button onclick="${isLast?'closeGrounding()':'nextGrounding()'}" style="width:100%;background:var(--indigo);color:#fff;border:none;border-radius:28px;padding:14px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">${isLast?'พร้อมแล้ว 🎯':'ถัดไป →'}</button>`;}
+function nextGrounding(){if(_groundStep<GROUNDING_STEPS.length-1){_groundStep++;renderGrounding();}}
+
 let _rwRendered = false;
 function switchToolsTab(n){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
