@@ -106,22 +106,22 @@
       background:rgba(255,255,255,0.15);
       border:1px solid rgba(255,255,255,0.2);
       border-radius:20px;padding:2px 8px;
-      font-size:10px;font-weight:500;color:rgba(255,255,255,0.85);
+      font-size:clamp(9px,2.2vw,10px);font-weight:500;color:rgba(255,255,255,0.85);
       letter-spacing:0.5px;margin-bottom:5px;backdrop-filter:blur(4px);
     }
     .card-badge.soon{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);}
     .card-title{
-      font-family:'Noto Serif Thai',serif;font-size:16px;font-weight:700;
+      font-family:'Noto Serif Thai',serif;font-size:clamp(12px,3.8vw,16px);font-weight:700;
       color:#FFFFFF;line-height:1.25;margin-bottom:3px;
     }
-    .card-sub{font-family:'Mitr',sans-serif;font-size:13px;font-weight:300;color:rgba(255,255,255,0.72);line-height:1.65;margin-bottom:12px;}
+    .card-sub{font-family:'Mitr',sans-serif;font-size:clamp(10px,3vw,13px);font-weight:300;color:rgba(255,255,255,0.72);line-height:1.55;margin-bottom:8px;}
 
     /* action button on card */
     .card-btn{
       display:inline-flex;align-items:center;gap:6px;
-      margin-top:10px;padding:8px 14px;
+      margin-top:6px;padding:clamp(5px,1.5vw,8px) clamp(10px,3vw,14px);
       border-radius:20px;border:none;
-      font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;
+      font-family:'Sarabun',sans-serif;font-size:clamp(11px,2.8vw,13px);font-weight:600;
       cursor:pointer;transition:transform 0.15s;color:#fff;
     }
     .card-btn.teal{background:var(--teal);color:#fff;}
@@ -994,7 +994,7 @@ const REWIRE_HABITS=[
 ];
 function _rwKey(){const d=new Date();return 'jaidee_rewire_'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function rwDoneMap(){try{return JSON.parse(localStorage.getItem(_rwKey())||'{}');}catch(e){return{};}}
-function rwMarkDone(id){try{const m=rwDoneMap();m[id]=1;localStorage.setItem(_rwKey(),JSON.stringify(m));}catch(e){}renderRewirePanel();}
+function rwMarkDone(id){try{const m=rwDoneMap();m[id]=1;localStorage.setItem(_rwKey(),JSON.stringify(m));}catch(e){}renderRewirePanel();if(typeof _p5MirrorRewire==='function')_p5MirrorRewire();}
 function renderRewirePanel(){
   const list=document.getElementById('rw-list');if(!list)return;
   const m=rwDoneMap();const n=Object.keys(m).length;const total=REWIRE_HABITS.length;
@@ -1008,6 +1008,25 @@ function renderRewirePanel(){
   t.onclick=()=>{markToolTapped();openRewire(today.id);};
   t.innerHTML='<div class="rw-today-eyebrow">วันนี้ลองอันนี้'+(m[today.id]?' · ทำแล้ว ✓':'')+'</div><div class="rw-today-row"><div class="rw-today-icon">'+today.icon+'</div><div><div class="rw-today-name">'+today.name+'</div><div class="rw-today-desc">'+today.desc+'</div></div></div>';
   list.innerHTML=REWIRE_HABITS.map(h=>'<button class="rw-item '+(m[h.id]?'done-today':'')+'" onclick="markToolTapped();openRewire(\''+h.id+'\')"><div class="rw-item-icon">'+h.icon+'</div><div class="rw-item-body"><div class="rw-item-name">'+h.name+'</div><div class="rw-item-desc">'+h.desc+'</div></div><div class="rw-item-time">'+(m[h.id]?'✓':h.time)+'</div></button>').join('');
+}
+// Mirror rewire panel into panel-5 elements
+function _p5MirrorRewire(){
+  const m=rwDoneMap();const n=Object.keys(m).length;const total=REWIRE_HABITS.length;
+  const sp=document.getElementById('p5-rw-sparks');
+  const lb=document.getElementById('p5-rw-spark-label');
+  const td=document.getElementById('p5-rw-today');
+  const ls=document.getElementById('p5-rw-list');
+  if(!ls)return;
+  if(sp)sp.innerHTML=REWIRE_HABITS.map(h=>'<div class="rw-spark '+(m[h.id]?'lit':'')+'"></div>').join('');
+  if(lb)lb.textContent=n===0?'วันนี้ยังไม่ได้จุดสวิตช์เลย — อันเดียวก็นับ':n>=total?'ครบทั้ง '+total+' แล้ววันนี้ ✨':'วันนี้จุดไปแล้ว '+n+' สวิตช์';
+  const today=REWIRE_HABITS[Math.floor(Date.now()/86400000)%total];
+  if(td){
+    td.onclick=()=>{markToolTapped();openRewire(today.id);};
+    td.innerHTML='<div class="rw-today-eyebrow">วันนี้ลองอันนี้'+(m[today.id]?' · ทำแล้ว ✓':'')
+      +'</div><div class="rw-today-row"><div class="rw-today-icon">'+today.icon+'</div>'
+      +'<div><div class="rw-today-name">'+today.name+'</div><div class="rw-today-desc">'+today.desc+'</div></div></div>';
+  }
+  ls.innerHTML=REWIRE_HABITS.map(h=>'<button class="rw-item '+(m[h.id]?'done-today':'')+' " onclick="markToolTapped();openRewire(\x27'+h.id+'\x27)"><div class="rw-item-icon">'+h.icon+'</div><div class="rw-item-body"><div class="rw-item-name">'+h.name+'</div><div class="rw-item-desc">'+h.desc+'</div></div><div class="rw-item-time">'+(m[h.id]?'✓':h.time)+'</div></button>').join('');
 }
 let _rwHabit=null,_rwT1=null,_rwT2=null;
 function openRewire(id){_rwHabit=REWIRE_HABITS.find(h=>h.id===id);if(!_rwHabit)return;openModal('rewire-modal');rwIntro();}
@@ -1264,6 +1283,7 @@ function switchToolsTab(n){
   if(activeBtn) activeBtn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   window.scrollTo(0,0);
   if(n===3 && !_rwRendered){ _rwRendered=true; renderRewirePanel(); }
+  if(n===5 && typeof _p5MirrorRewire==='function') _p5MirrorRewire();
 }
 
 const STORAGE_KEY='jaidee_entries';
@@ -2477,226 +2497,21 @@ function drawQuest() {
 
   </div>
 
-  <!-- Rewire Switches section -->
+  <!-- mirrors panel-3 rewire layout -->
   <div class="sec-div" style="margin-top:8px;">
     <div class="sec-div-line"></div>
-    <div class="sec-div-text">⚡ จุดสวิตช์วันนี้</div>
+    <div class="sec-div-text">✨ สวิตช์ Rewire อื่นๆ</div>
     <div class="sec-div-line"></div>
   </div>
-  <div style="padding:8px 16px 0;font-size:12px;font-weight:300;color:var(--soft);line-height:1.7;margin-bottom:12px;text-align:center;">
-    แค่อันเดียวก็นับ — ใช้เวลาไม่เกิน 30 วินาที
+  <div class="rw-spark-row">
+    <div class="rw-sparks" id="p5-rw-sparks"></div>
+    <div class="rw-spark-label" id="p5-rw-spark-label"></div>
   </div>
-
-  <!-- ⚡ จุดสวิตช์วันนี้ — featured switch · แตะการ์ดเพื่อเริ่ม · "เปลี่ยน" เพื่อดูอันอื่น -->
-  <div style="padding:0 16px;margin-bottom:4px;">
-    <div id="sw-feature" onclick="swStart()" role="button" tabindex="0"
-         style="position:relative;overflow:hidden;border-radius:22px;padding:24px 22px 20px;cursor:pointer;background:linear-gradient(135deg,#3d2a00,#8b6000);transition:background .5s ease;box-shadow:0 8px 24px rgba(0,0,0,0.16);-webkit-tap-highlight-color:transparent;">
-      <div id="sw-bg-emoji" aria-hidden="true" style="position:absolute;top:-12px;right:-4px;font-size:104px;line-height:1;opacity:0.15;transform:rotate(-8deg);pointer-events:none;user-select:none;">🙂</div>
-      <div id="sw-card-face" style="position:relative;transition:opacity .2s ease, transform .2s ease;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-          <span style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(253,251,247,0.55);">วันนี้ลองอันนี้</span>
-          <span id="sw-card-time" style="font-size:10px;font-weight:400;color:rgba(253,251,247,0.5);background:rgba(255,255,255,0.12);border-radius:20px;padding:2px 9px;">3 วิ</span>
-        </div>
-        <div id="sw-card-name" style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:600;color:#FDFBF7;margin-bottom:6px;">ยิ้ม 3 วินาที</div>
-        <div id="sw-card-desc" style="font-size:13px;font-weight:300;line-height:1.65;color:rgba(253,251,247,0.72);">ใบหน้าส่งสัญญาณ<br>กลับไปบอกสมอง</div>
-      </div>
-      <div style="position:relative;display:flex;align-items:center;gap:10px;margin-top:20px;">
-        <span style="flex:1;font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;color:#FDFBF7;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.18);padding:11px 0;border-radius:16px;text-align:center;">เริ่ม →</span>
-        <button onclick="event.stopPropagation();swNext()" aria-label="ดูสวิตช์อื่น" style="font-family:'Mitr',sans-serif;font-size:12px;color:rgba(253,251,247,0.72);background:rgba(0,0,0,0.18);border:1px solid rgba(255,255,255,0.12);padding:11px 16px;border-radius:16px;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;">เปลี่ยน ↻</button>
-      </div>
-    </div>
-    <div style="display:flex;gap:5px;justify-content:center;margin-top:12px;">
-      <div id="sw-dot-0" style="width:6px;height:6px;border-radius:50%;background:var(--gold);transition:background .25s ease;"></div>
-      <div id="sw-dot-1" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
-      <div id="sw-dot-2" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
-      <div id="sw-dot-3" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
-      <div id="sw-dot-4" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
-      <div id="sw-dot-5" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
-      <div id="sw-dot-6" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
-      <div id="sw-dot-7" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
-    </div>
-  </div>
-
-
-
-<div class="modal-overlay" id="switch-modal" onclick="closeModal('switch-modal')">
-  <div class="modal-sheet" onclick="event.stopPropagation()" style="padding:28px 24px 40px;text-align:center;">
-    <div class="modal-handle"></div>
-    <div style="font-size:40px;margin:16px 0 12px;" id="sw-emoji"></div>
-    <div style="font-family:'Noto Serif Thai',serif;font-size:20px;font-weight:600;color:#FDFBF7;margin-bottom:6px;" id="sw-title"></div>
-    <div style="font-size:13px;font-weight:300;color:rgba(253,251,247,0.5);margin-bottom:28px;" id="sw-desc"></div>
-    <div style="font-size:56px;font-weight:600;color:#FDFBF7;font-family:'Mitr',sans-serif;line-height:1;margin-bottom:8px;" id="sw-timer">0</div>
-    <div style="font-size:12px;color:rgba(253,251,247,0.35);margin-bottom:28px;" id="sw-status">กำลังนับ...</div>
-    <button onclick="closeModal('switch-modal')" style="padding:12px 32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:20px;font-family:'Mitr',sans-serif;font-size:13px;color:rgba(253,251,247,0.6);cursor:pointer;">ปิด</button>
-  </div>
-</div>
-
-<script>
-// ── Switch Timer
-let _swInterval = null;
-const SW_EMOJIS = {'ยิ้ม 3 วินาที':'🙂','หายใจครั้งเดียว':'🌬️','ถ่ายภาพในใจ':'📸','ยืดตัว 10 วินาที':'🌳','เรียกชื่อมัน':'🏷️','มองไกล 5 วินาที':'🪟','ถามตัวเองในวันหน้า':'🔭','ชมหนึ่งคน':'💛'};
-
-function openSwitchTimer(btn, title, desc, seconds) {
-  if (_swInterval) { clearInterval(_swInterval); _swInterval = null; }
-  document.getElementById('sw-emoji').textContent = SW_EMOJIS[title] || '⚡';
-  document.getElementById('sw-title').textContent = title;
-  document.getElementById('sw-desc').textContent = desc;
-  const timerEl = document.getElementById('sw-timer');
-  const statusEl = document.getElementById('sw-status');
-  let remaining = seconds;
-  timerEl.textContent = remaining;
-  statusEl.textContent = 'กำลังนับ...';
-  document.getElementById('switch-modal').style.display = 'flex';
-  document.getElementById('switch-modal').style.background = 'rgba(0,0,0,0.55)';
-  _swInterval = setInterval(() => {
-    remaining--;
-    timerEl.textContent = remaining;
-    if (remaining <= 0) {
-      clearInterval(_swInterval); _swInterval = null;
-      timerEl.textContent = '✓';
-      statusEl.textContent = 'เสร็จแล้ว 🎉';
-    }
-  }, 1000);
-}
-
-// ── Rewire Carousel ───────────────────────────────────────
-const SW_CAROUSEL = [
-  {e:'🙂', n:'ยิ้ม 3 วินาที',        d:'ใบหน้าส่งสัญญาณ<br>กลับไปบอกสมอง',               s:3},
-  {e:'🌬️', n:'หายใจครั้งเดียว',      d:'ลมหายใจเดียว<br>เปลี่ยนสัญญาณทั้งระบบ',           s:10},
-  {e:'📸',  n:'ถ่ายภาพในใจ',          d:'เก็บสิ่งดีหนึ่งอย่าง<br>ที่อยู่ตรงหน้า',           s:5},
-  {e:'🌳',  n:'ยืดตัว 10 วินาที',     d:'ท่าทางเปลี่ยน<br>สารเคมีในสมองก็เปลี่ยน',          s:10},
-  {e:'🏷️', n:'เรียกชื่อมัน',          d:'ตั้งชื่อความรู้สึก<br>เสียงในหัวก็เบาลง',           s:5},
-  {e:'🪟',  n:'มองไกล 5 วินาที',      d:'เปิดมุมมองกว้าง<br>บอกร่างกายว่าปลอดภัย',          s:5},
-  {e:'🔭',  n:'ถามตัวเองในวันหน้า',   d:'เราเวอร์ชันที่ผ่านมันมาแล้ว<br>จะพูดว่าอะไร',       s:10},
-  {e:'💛',  n:'ชมหนึ่งคน',            d:'คำชมจริงใจหนึ่งครั้ง<br>ดีต่อใจทั้งสองฝั่ง',        s:30},
-];
-let _swIdx = Math.floor(Date.now()/86400000) % SW_CAROUSEL.length;
-
-const SW_GRAD = [
-  'linear-gradient(135deg,#3d2a00,#8b6000)',
-  'linear-gradient(135deg,#0a2a2a,#0d5c5c)',
-  'linear-gradient(135deg,#1a1a2e,#3a3a6e)',
-  'linear-gradient(135deg,#0a2a10,#1a5c2a)',
-  'linear-gradient(135deg,#2a0a10,#6e1a2a)',
-  'linear-gradient(135deg,#0a1a2a,#1a3a5c)',
-  'linear-gradient(135deg,#1a0a3d,#3d1a8b)',
-  'linear-gradient(135deg,#2a1a00,#6e4a00)'
-];
-function swRender() {
-  const sw = SW_CAROUSEL[_swIdx];
-  const name = document.getElementById('sw-card-name');
-  const desc = document.getElementById('sw-card-desc');
-  const bg   = document.getElementById('sw-bg-emoji');
-  const card = document.getElementById('sw-feature');
-  const time = document.getElementById('sw-card-time');
-  if (name) name.textContent = sw.n;
-  if (desc) desc.innerHTML  = sw.d;
-  if (bg)   bg.textContent  = sw.e;
-  if (card) card.style.background = SW_GRAD[_swIdx % SW_GRAD.length];
-  if (time) time.textContent = sw.s + ' วิ';
-  SW_CAROUSEL.forEach((_,i) => {
-    const d = document.getElementById('sw-dot-'+i);
-    if (d) d.style.background = i===_swIdx ? 'var(--gold)' : 'var(--cream-border)';
-  });
-}
-function swNext() {
-  const face = document.getElementById('sw-card-face');
-  _swIdx = (_swIdx + 1) % SW_CAROUSEL.length;
-  if (face) {
-    face.style.opacity = '0';
-    face.style.transform = 'translateX(-10px)';
-    setTimeout(() => { swRender(); face.style.opacity = '1'; face.style.transform = 'translateX(0)'; }, 160);
-  } else { swRender(); }
-}
-function swStart() {
-  const sw = SW_CAROUSEL[_swIdx];
-  openSwitchTimer(null, sw.n, sw.d.replace(/<br>/g,' '), sw.s);
-}
-document.addEventListener('DOMContentLoaded', swRender);
-
-// ── Rewire daily pick ──────────────────────────────────────
-const _SW = [
-  {e:'🙂',n:'ยิ้ม 3 วินาที',d:'ใบหน้าส่งสัญญาณกลับไปบอกสมอง',s:3},
-  {e:'🌬️',n:'หายใจครั้งเดียว',d:'ลมหายใจเดียว เปลี่ยนสัญญาณทั้งระบบ',s:10},
-  {e:'📸',n:'ถ่ายภาพในใจ',d:'เก็บสิ่งดีหนึ่งอย่างที่อยู่ตรงหน้า',s:5},
-  {e:'🌳',n:'ยืดตัว 10 วินาที',d:'ท่าทางเปลี่ยน สารเคมีในสมองก็เปลี่ยน',s:10},
-  {e:'🏷️',n:'เรียกชื่อมัน',d:'ตั้งชื่อความรู้สึก เสียงในหัวก็เบาลง',s:5},
-  {e:'🪟',n:'มองไกล 5 วินาที',d:'เปิดมุมมองกว้าง บอกร่างกายว่าปลอดภัย',s:5},
-  {e:'🔭',n:'ถามตัวเองในวันหน้า',d:'เราเวอร์ชันที่ผ่านมันมาแล้ว จะพูดว่าอะไร',s:10},
-  {e:'💛',n:'ชมหนึ่งคน',d:'คำชมจริงใจหนึ่งครั้ง ดีต่อใจทั้งสองฝั่ง',s:30},
-];
-let _swPickIdx = Math.floor(Date.now()/86400000) % _SW.length;
-function _swInitPick(){
-  const p = _SW[_swPickIdx];
-  const em = document.getElementById('sw-pick-emoji');
-  const nm = document.getElementById('sw-pick-name');
-  const dc = document.getElementById('sw-pick-desc');
-  if(em) em.textContent=p.e;
-  if(nm) nm.textContent=p.n;
-  if(dc) dc.textContent=p.d;
-  _SW.forEach((_,i)=>{
-    const d=document.getElementById('swdot-'+i);
-    if(d) d.style.background = i===_swPickIdx ? 'var(--gold)' : 'var(--cream-border)';
-  });
-}
-function swPickTap(){
-  const p=_SW[_swPickIdx];
-  openSwitchTimer(null,p.n,p.d,p.s);
-}
-document.addEventListener('DOMContentLoaded',_swInitPick);
-</script>
-
-
-
-
-
-<!-- ══════════════════════════════
-     PANEL 6 — แหล่งช่วยเหลือภายนอก
-══════════════════════════════ -->
-  <!-- จุดสวิตช์ pack — popular tab only -->
-  <div style="margin:24px 16px 0;">
-    <div style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:8px;">⚡ จุดสวิตช์ความรู้สึก</div>
-    <div style="font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:600;color:var(--dark);margin-bottom:2px;">อันเดียวก็นับ</div>
-    <div style="font-size:12px;font-weight:300;color:var(--soft);margin-bottom:14px;">วันนี้ยังไม่ได้จุดสวิตช์เลย</div>
-
-    <!-- Daily pick -->
-    <div id="sw-daily-pick" onclick="swPickTap()" style="margin-bottom:12px;padding:14px;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:16px;cursor:pointer;">
-      <div style="font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">วันนี้ลองอันนี้</div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span style="font-size:28px;" id="sw-pick-emoji">💛</span>
-        <div style="flex:1;">
-          <div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;" id="sw-pick-name">ชมหนึ่งคน</div>
-          <div style="font-size:11px;color:var(--soft);" id="sw-pick-desc">คำชมจริงใจหนึ่งครั้ง ดีต่อใจทั้งสองฝั่ง</div>
-        </div>
-        <span style="color:var(--gold);font-size:16px;">→</span>
-      </div>
-    </div>
-
-    <!-- Progress dots -->
-    <div style="display:flex;gap:5px;justify-content:center;margin-bottom:14px;" id="sw-prog-dots">
-      <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);" id="swdot-0"></div>
-      <div style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);" id="swdot-1"></div>
-      <div style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);" id="swdot-2"></div>
-      <div style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);" id="swdot-3"></div>
-      <div style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);" id="swdot-4"></div>
-      <div style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);" id="swdot-5"></div>
-      <div style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);" id="swdot-6"></div>
-      <div style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);" id="swdot-7"></div>
-    </div>
-
-    <!-- Full list -->
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:40px;">
-      <div onclick="openSwitchTimer(this,'ยิ้ม 3 วินาที','ใบหน้าส่งสัญญาณกลับไปบอกสมอง',3)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--cream-border);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span style="font-size:24px;width:40px;text-align:center;">🙂</span><div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;">ยิ้ม 3 วินาที</div><div style="font-size:11px;color:var(--soft);">ใบหน้าส่งสัญญาณกลับไปบอกสมอง</div></div><span style="font-size:11px;color:var(--soft);background:var(--cream-warm);border:1px solid var(--cream-border);padding:3px 8px;border-radius:20px;white-space:nowrap;">3 วิ</span></div>
-      <div onclick="openSwitchTimer(this,'หายใจครั้งเดียว','ลมหายใจเดียว เปลี่ยนสัญญาณทั้งระบบ',10)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--cream-border);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span style="font-size:24px;width:40px;text-align:center;">🌬️</span><div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;">หายใจครั้งเดียว</div><div style="font-size:11px;color:var(--soft);">ลมหายใจเดียว เปลี่ยนสัญญาณทั้งระบบ</div></div><span style="font-size:11px;color:var(--soft);background:var(--cream-warm);border:1px solid var(--cream-border);padding:3px 8px;border-radius:20px;white-space:nowrap;">10 วิ</span></div>
-      <div onclick="openSwitchTimer(this,'ถ่ายภาพในใจ','เก็บสิ่งดีหนึ่งอย่างที่อยู่ตรงหน้า',5)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--cream-border);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span style="font-size:24px;width:40px;text-align:center;">📸</span><div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;">ถ่ายภาพในใจ</div><div style="font-size:11px;color:var(--soft);">เก็บสิ่งดีหนึ่งอย่างที่อยู่ตรงหน้า</div></div><span style="font-size:11px;color:var(--soft);background:var(--cream-warm);border:1px solid var(--cream-border);padding:3px 8px;border-radius:20px;white-space:nowrap;">5 วิ</span></div>
-      <div onclick="openSwitchTimer(this,'ยืดตัว 10 วินาที','ท่าทางเปลี่ยน สารเคมีในสมองก็เปลี่ยน',10)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--cream-border);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span style="font-size:24px;width:40px;text-align:center;">🌳</span><div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;">ยืดตัว 10 วินาที</div><div style="font-size:11px;color:var(--soft);">ท่าทางเปลี่ยน สารเคมีในสมองก็เปลี่ยน</div></div><span style="font-size:11px;color:var(--soft);background:var(--cream-warm);border:1px solid var(--cream-border);padding:3px 8px;border-radius:20px;white-space:nowrap;">10 วิ</span></div>
-      <div onclick="openSwitchTimer(this,'เรียกชื่อมัน','ตั้งชื่อความรู้สึก เสียงในหัวก็เบาลง',5)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--cream-border);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span style="font-size:24px;width:40px;text-align:center;">🏷️</span><div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;">เรียกชื่อมัน</div><div style="font-size:11px;color:var(--soft);">ตั้งชื่อความรู้สึก เสียงในหัวก็เบาลง</div></div><span style="font-size:11px;color:var(--soft);background:var(--cream-warm);border:1px solid var(--cream-border);padding:3px 8px;border-radius:20px;white-space:nowrap;">5 วิ</span></div>
-      <div onclick="openSwitchTimer(this,'มองไกล 5 วินาที','เปิดมุมมองกว้าง บอกร่างกายว่าปลอดภัย',5)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--cream-border);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span style="font-size:24px;width:40px;text-align:center;">🪟</span><div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;">มองไกล 5 วินาที</div><div style="font-size:11px;color:var(--soft);">เปิดมุมมองกว้าง บอกร่างกายว่าปลอดภัย</div></div><span style="font-size:11px;color:var(--soft);background:var(--cream-warm);border:1px solid var(--cream-border);padding:3px 8px;border-radius:20px;white-space:nowrap;">5 วิ</span></div>
-      <div onclick="openSwitchTimer(this,'ถามตัวเองในวันหน้า','เราเวอร์ชันที่ผ่านมันมาแล้ว จะพูดว่าอะไร',10)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--cream-border);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span style="font-size:24px;width:40px;text-align:center;">🔭</span><div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;">ถามตัวเองในวันหน้า</div><div style="font-size:11px;color:var(--soft);">เราเวอร์ชันที่ผ่านมันมาแล้ว จะพูดว่าอะไร</div></div><span style="font-size:11px;color:var(--soft);background:var(--cream-warm);border:1px solid var(--cream-border);padding:3px 8px;border-radius:20px;white-space:nowrap;">10 วิ</span></div>
-      <div onclick="openSwitchTimer(this,'ชมหนึ่งคน','คำชมจริงใจหนึ่งครั้ง ดีต่อใจทั้งสองฝั่ง',30)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--cream-border);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span style="font-size:24px;width:40px;text-align:center;">💛</span><div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:2px;">ชมหนึ่งคน</div><div style="font-size:11px;color:var(--soft);">คำชมจริงใจหนึ่งครั้ง ดีต่อใจทั้งสองฝั่ง</div></div><span style="font-size:11px;color:var(--soft);background:var(--cream-warm);border:1px solid var(--cream-border);padding:3px 8px;border-radius:20px;white-space:nowrap;">30 วิ</span></div>
-    </div>
-  </div>
+  <button class="rw-today" id="p5-rw-today"></button>
+  <div class="sec-div" style="margin-top:4px;"><span class="sec-div-text">ทั้งหมด</span><div class="sec-div-line"></div></div>
+  <div class="rw-list" id="p5-rw-list" style="margin-bottom:32px;"></div>
 </div><!-- /panel-5 -->
+
 
 <!-- ══════════════════════════════
      PANEL 6 — แหล่งช่วยเหลือภายนอก
