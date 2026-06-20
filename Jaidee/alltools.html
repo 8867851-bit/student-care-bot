@@ -2155,10 +2155,36 @@ function drawQuest() {
     แค่อันเดียวก็นับ — ใช้เวลาไม่เกิน 30 วินาที
   </div>
 
-  <div class="cards-grid">
-
+  <!-- ⚡ จุดสวิตช์วันนี้ — featured switch · แตะการ์ดเพื่อเริ่ม · "เปลี่ยน" เพื่อดูอันอื่น -->
+  <div style="padding:0 16px;margin-bottom:4px;">
+    <div id="sw-feature" onclick="swStart()" role="button" tabindex="0"
+         style="position:relative;overflow:hidden;border-radius:22px;padding:24px 22px 20px;cursor:pointer;background:linear-gradient(135deg,#3d2a00,#8b6000);transition:background .5s ease;box-shadow:0 8px 24px rgba(0,0,0,0.16);-webkit-tap-highlight-color:transparent;">
+      <div id="sw-bg-emoji" aria-hidden="true" style="position:absolute;top:-12px;right:-4px;font-size:104px;line-height:1;opacity:0.15;transform:rotate(-8deg);pointer-events:none;user-select:none;">🙂</div>
+      <div id="sw-card-face" style="position:relative;transition:opacity .2s ease, transform .2s ease;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(253,251,247,0.55);">วันนี้ลองอันนี้</span>
+          <span id="sw-card-time" style="font-size:10px;font-weight:400;color:rgba(253,251,247,0.5);background:rgba(255,255,255,0.12);border-radius:20px;padding:2px 9px;">3 วิ</span>
+        </div>
+        <div id="sw-card-name" style="font-family:'Noto Serif Thai',serif;font-size:21px;font-weight:600;color:#FDFBF7;margin-bottom:6px;">ยิ้ม 3 วินาที</div>
+        <div id="sw-card-desc" style="font-size:13px;font-weight:300;line-height:1.65;color:rgba(253,251,247,0.72);">ใบหน้าส่งสัญญาณ<br>กลับไปบอกสมอง</div>
+      </div>
+      <div style="position:relative;display:flex;align-items:center;gap:10px;margin-top:20px;">
+        <span style="flex:1;font-family:'Mitr',sans-serif;font-size:13px;font-weight:500;color:#FDFBF7;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.18);padding:11px 0;border-radius:16px;text-align:center;">เริ่ม →</span>
+        <button onclick="event.stopPropagation();swNext()" aria-label="ดูสวิตช์อื่น" style="font-family:'Mitr',sans-serif;font-size:12px;color:rgba(253,251,247,0.72);background:rgba(0,0,0,0.18);border:1px solid rgba(255,255,255,0.12);padding:11px 16px;border-radius:16px;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;">เปลี่ยน ↻</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:5px;justify-content:center;margin-top:12px;">
+      <div id="sw-dot-0" style="width:6px;height:6px;border-radius:50%;background:var(--gold);transition:background .25s ease;"></div>
+      <div id="sw-dot-1" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
+      <div id="sw-dot-2" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
+      <div id="sw-dot-3" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
+      <div id="sw-dot-4" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
+      <div id="sw-dot-5" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
+      <div id="sw-dot-6" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
+      <div id="sw-dot-7" style="width:6px;height:6px;border-radius:50%;background:var(--cream-border);transition:background .25s ease;"></div>
+    </div>
   </div>
-</div>
+
 
 
 <div class="modal-overlay" id="switch-modal" onclick="closeModal('switch-modal')">
@@ -2214,23 +2240,41 @@ const SW_CAROUSEL = [
 ];
 let _swIdx = Math.floor(Date.now()/86400000) % SW_CAROUSEL.length;
 
+const SW_GRAD = [
+  'linear-gradient(135deg,#3d2a00,#8b6000)',
+  'linear-gradient(135deg,#0a2a2a,#0d5c5c)',
+  'linear-gradient(135deg,#1a1a2e,#3a3a6e)',
+  'linear-gradient(135deg,#0a2a10,#1a5c2a)',
+  'linear-gradient(135deg,#2a0a10,#6e1a2a)',
+  'linear-gradient(135deg,#0a1a2a,#1a3a5c)',
+  'linear-gradient(135deg,#1a0a3d,#3d1a8b)',
+  'linear-gradient(135deg,#2a1a00,#6e4a00)'
+];
 function swRender() {
   const sw = SW_CAROUSEL[_swIdx];
   const name = document.getElementById('sw-card-name');
   const desc = document.getElementById('sw-card-desc');
   const bg   = document.getElementById('sw-bg-emoji');
+  const card = document.getElementById('sw-feature');
+  const time = document.getElementById('sw-card-time');
   if (name) name.textContent = sw.n;
   if (desc) desc.innerHTML  = sw.d;
   if (bg)   bg.textContent  = sw.e;
-  // Update dots
+  if (card) card.style.background = SW_GRAD[_swIdx % SW_GRAD.length];
+  if (time) time.textContent = sw.s + ' วิ';
   SW_CAROUSEL.forEach((_,i) => {
     const d = document.getElementById('sw-dot-'+i);
-    if (d) d.style.background = i===_swIdx ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)';
+    if (d) d.style.background = i===_swIdx ? 'var(--gold)' : 'var(--cream-border)';
   });
 }
 function swNext() {
+  const face = document.getElementById('sw-card-face');
   _swIdx = (_swIdx + 1) % SW_CAROUSEL.length;
-  swRender();
+  if (face) {
+    face.style.opacity = '0';
+    face.style.transform = 'translateX(-10px)';
+    setTimeout(() => { swRender(); face.style.opacity = '1'; face.style.transform = 'translateX(0)'; }, 160);
+  } else { swRender(); }
 }
 function swStart() {
   const sw = SW_CAROUSEL[_swIdx];
